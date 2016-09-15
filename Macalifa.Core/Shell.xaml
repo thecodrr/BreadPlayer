@@ -1,0 +1,66 @@
+﻿<Page
+    x:Class="Macalifa.Shell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Macalifa"
+    xmlns:controls="using:SplitViewMenu"
+    xmlns:Converters="using:Macalifa.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loaded="Page_Loaded">
+    <Page.Resources>
+        <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
+        <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" TopNavigationItems="{Binding TopMenuItems}" BottomNavigationItems="{Binding BottomMenuItems}" InitialPage="{Binding InitialPage}" Margin="0,70,0,25"/>
+        <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <AppBarButton Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,20,0">
+                <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
+                    <Image Width="66" Source="{Binding Path=Tags.AlbumArt}" Stretch="UniformToFill"/>
+                    <StackPanel Orientation="Vertical" Margin="3,2,0,0">
+                        <TextBlock Text="{Binding Path=Tags.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Path=Tags.Artist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Path=Tags.Album, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                    </StackPanel>
+                </StackPanel>
+            </AppBarButton>
+            <Grid Grid.Column="1">
+                <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
+                <Slider x:Name="positionSlider" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Length}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped"/>
+                <TextBlock Text="{Binding Path=Length, Converter={StaticResource DoubleToTime}}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <AppBarButton Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
+                <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
+                <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
+                <AppBarToggleButton VerticalAlignment="Stretch" IsCompact="True" IsEnabled="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
+                <AppBarToggleButton Icon="Sync" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  IsEnabled="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                <AppBarButton Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+
+                <TextBlock Name="ss" Text="{Binding Path=S}"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Margin="0,0,0,69" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="311">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="254*"/>
+                <ColumnDefinition Width="57*"/>
+            </Grid.ColumnDefinitions>
+            <Slider x:Name="volumeSlider" Value="{Binding Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
+            <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
+        </Grid>
+
+        <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="25" VerticalAlignment="Bottom">
+            <TextBox HorizontalAlignment="Right" x:Name="He" Height="25" Margin="0,0,5,0" KeyUp="He_KeyUp"/>
+        </Border>
+    </Grid>
+</Page>
