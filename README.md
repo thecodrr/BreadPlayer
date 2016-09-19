@@ -1,5 +1,5 @@
 # Macalifa
-An mp3 player made for Windows 10 store.
+An music player made for Windows 10 store.
 ###Screenshots:
 _(As the UI gets ready, screenshots will be made available.)_
 ###Main Features:
