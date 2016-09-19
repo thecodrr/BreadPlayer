@@ -1,4 +1,6 @@
-﻿/* 
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+/* 
 	Macalifa. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -15,29 +17,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
-using System.Globalization;
-using Macalifa.Core;
-namespace Macalifa.Converters
-{
-    public class EnumToVisiblilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            string val = value.ToString();
-            if (val == "Playing") return true;
-            else return false;
-        }
-        public object ConvertBack(object value, Type targetType,
-            object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}
+extensions: .aspx .ascx
+<%-- 
+Copyright (c) 2011 rubicon IT GmbH
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+Sample license text.
+-->
