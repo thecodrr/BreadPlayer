@@ -1,5 +1,7 @@
 # Macalifa
 An music player made for Windows 10 store.
+
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###Screenshots:
 _(As the UI gets ready, screenshots will be made available.)_
 ###Main Features:
