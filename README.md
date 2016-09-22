@@ -2,6 +2,8 @@
 An music player made for Windows 10 store.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
+<iframe src="https://ghbtns.com/github-btn.html?user=theweavrs&type=follow&count=true&size=large" frameborder="0" scrolling="0" width="220px" height="30px"></iframe>
+<iframe width="560" height="315" src="//www.youtube.com/embed/QOdW1OuZ1U0?list=PLol_ykYs3OQ4Zypr1WGaYcSowzoMmcj4G" frameborder="0" allowfullscreen></iframe>
 ###Screenshots:
 ![Imgur](http://i.imgur.com/iFWyLYK.gif)
 
