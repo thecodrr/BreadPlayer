@@ -58,7 +58,7 @@ namespace Macalifa
                     string path = jsonObject.GetNamedString(pathKey, "");
                     double position = jsonObject.GetNamedNumber(posKey);
                     Player.PlayerState = PlayerState.Paused;
-                    Shell.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
+                    ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
                 }
                 GC.Collect();              
             }

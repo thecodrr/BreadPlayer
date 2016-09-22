@@ -792,7 +792,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                         </Grid>
                                         <TextBlock x:Name="albumTxt" Text="{Binding LeadArtist}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
                                         <TextBlock Text="{Binding Date}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
-                                        <ListBox Width="100" ItemsSource="{Binding Path=Playlists}" DisplayMemberPath="Name"/>
+                                        <!--<ListBox Width="100" ItemsSource="{Binding Path=Playlists}" DisplayMemberPath="Name"/>-->
                                     </StackPanel>
 
                                 </ContentControl>

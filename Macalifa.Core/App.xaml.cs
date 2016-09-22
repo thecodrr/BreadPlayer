@@ -101,7 +101,7 @@ namespace Macalifa
         {
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
-                Shell.Play(args.Files[0]);
+               // ShellVM.Play(args.Files[0]);
             }
             else
             {

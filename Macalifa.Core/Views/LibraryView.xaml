@@ -36,7 +36,7 @@
             <RowDefinition Height="437*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Library" FontSize="44" HorizontalAlignment="Left" Width="144" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Margin="0,17,0,0" Height="69" VerticalAlignment="Center"/>
-        <ListBox AllowDrop="True" CanDrag="True" x:Name="fileBox" ItemContainerStyle="{StaticResource CustomListItemStyle}" Margin="0,0,0,331" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" HorizontalAlignment="Left" Width="1430" Grid.Row="1" Drop="fileBox_Drop" DragOver="fileBox_DragOver" Background="{ThemeResource AppBarToggleButtonBackgroundChecked}">
+        <ListBox AllowDrop="True" CanDrag="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" HorizontalAlignment="Left" Grid.Row="1" Drop="fileBox_Drop" DragOver="fileBox_DragOver" Background="{ThemeResource AppBarBackgroundThemeBrush}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate >
                     <VirtualizingStackPanel Orientation="Vertical">
@@ -73,22 +73,9 @@
             <TextBlock Text="Filter:" VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
             <Button Content="All" Background="{x:Null}" BorderBrush="{x:Null}" Margin="3,0,0,0" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Height="72"/>
             <TextBlock Text="Genre:" VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
-            <Button x:Name="genres" Content="{Binding Genre}" Background="{x:Null}" Margin="3,0,0,0" BorderBrush="{x:Null}" Flyout="{Binding GenreFlyout}" VerticalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Height="72">
+            <Button x:Name="genres" Content="All Genres" Background="{x:Null}" Margin="3,0,0,0" BorderBrush="{x:Null}" Flyout="{Binding GenreFlyout}" VerticalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Height="72">
             </Button>
-        </StackPanel>
-        <TextBlock x:Name="test" Text="{Binding ElementName=Grid, Path=Resources.Source}" Height="71" VerticalAlignment="Bottom" Margin="0,0,543,255" TextWrapping="WrapWholeWords" Grid.Row="1"/>
-        <Button Margin="0,0,15,36" Height="47" Command="{Binding LoadCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1" Width="361" AutomationProperties.AcceleratorKey="Control P"/>
-        <Button x:Name="btn" Margin="0,0,423,36" Height="47" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.Row="1" Width="321">
-            <Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=btn}">
-                    <Core:ChangePropertyAction PropertyName="Source" TargetObject="{StaticResource Source}" Value="{Binding TracksCollection}"/>
-                    <Core:ChangePropertyAction PropertyName="IsSourceGrouped" TargetObject="{StaticResource Source}" Value="True"/>
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
-        </Button>
-        <!--<ScrollViewer VerticalScrollBarVisibility="Visible" IsDeferredScrollingEnabled="True" Margin="0,10,15,255" Grid.Row="1">
-            <TextBox  Text="{Binding Album}"/>
-        </ScrollViewer>-->
+        </StackPanel>       
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid, Path=Children}"/>

@@ -49,64 +49,89 @@ namespace Macalifa.ViewModels
         DispatcherTimer timer;
         double pos = 0;
         CoreDispatcher Dispatcher;
-        RelayCommand _openSongCommand;
         #endregion
+
+        #region Commands
+
+        #region Definition
+        RelayCommand _openSongCommand;
         /// <summary>
-        /// Gets Play command. This calls the <see cref="Play(object)"/> method. <seealso cref="ICommand"/>
+        /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand OpenSongCommand
         {
             get
             { if (_openSongCommand == null) { _openSongCommand = new RelayCommand(param => this.Open(param)); } return _openSongCommand; }
         }
+        public DelegateCommand LoadCommand { get; private set; }
+        public DelegateCommand PlayPauseCommand { get; private set; }
+        public DelegateCommand PlayNextCommand { get; private set; }
+        public DelegateCommand PlayPreviousCommand { get; private set; }
+        #endregion
 
-        #region Constructor
-        public ShellViewModel()
+        #region Implementation
+        private async void PlayPause()
         {
-            Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;            
-            PlayPauseCommand = new DelegateCommand(PlayPause) { IsEnabled = false };
-            PlayNextCommand = new DelegateCommand(PlayNext);
-            PlayPreviousCommand = new DelegateCommand(PlayPrevious);
-            TopMenuItems = new ObservableCollection<SimpleNavMenuItem>();
-            BottomMenuItems = new ObservableCollection<SimpleNavMenuItem>();
-            PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
-            InitialPage = typeof(LibraryView);
-            player.PlayerState = PlayerState.Stopped;
-            DontUpdatePosition = false;
-            this.timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(10);
-            timer.Tick += Timer_Tick;
-            this.timer.Stop();
-            Repeat = false;
-            player.MediaEnded += Player_MediaEnded;
-          
-        }
-        ThreadSafeObservableCollection<int> ShuffledList;
-        void PlayNext()
-        {
-            
-            //LibVM.FileListBox.SelectedIndex = LibVM.FileListBox.SelectedIndex <= LibVM.FileListBox.Items.Count - 2? LibVM.FileListBox.SelectedIndex + 1 : 0 ;
-            //LibVM.PlayCommand.Execute(LibVM.FileListBox.SelectedItem);
-        }
-        async void PlayPrevious()
-        {
-            ShuffledList = ShuffledCollection();
-            var playlingFile = LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing);
-            var index = ShuffledList[LibVM.TracksCollection.Elements.IndexOf(playlingFile)];//ShuffledList.IndexOf(playlingFile) + 1;
-            var toPlayFile = LibVM.TracksCollection.Elements.ElementAt(index) as Mediafile;           
-            if (player.PlayerState == PlayerState.Paused || player.PlayerState == PlayerState.Stopped)
-                Load(await StorageFile.GetFileFromPathAsync(toPlayFile.Path));
-            else
+            switch (player.PlayerState)
             {
-                LibVM.PlayCommand.Execute(toPlayFile);
+                case PlayerState.Playing:
+                    await player.Pause();
+                    timer.Stop();
+                    PlayPauseIcon = new SymbolIcon(Symbol.Play);
+                    break;
+                case PlayerState.Paused:
+                case PlayerState.Ended:
+                case PlayerState.Stopped:
+                    await player.Play();
+                    timer.Start();
+                    PlayPauseIcon = new SymbolIcon(Symbol.Pause);
+                    DontUpdatePosition = false;
+                    break;
             }
         }
-        public ThreadSafeObservableCollection<int> ShuffledCollection()
+        void PlayNext()
         {
-            var numbers = new ThreadSafeObservableCollection<int>(Enumerable.Range(0, LibVM.TracksCollection.Count));
-            numbers.Shuffle();
-            return numbers;
+            Mediafile toPlayFile = null;
+
+            if (Shuffle)
+            {
+                if (ShuffledList == null)
+                    ShuffledList = ShuffledCollection();
+                var playlingFile = LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing);
+                var index = LibVM.TracksCollection.Elements.IndexOf(playlingFile) + 1;
+                toPlayFile = ShuffledList.ElementAt(index);
+            }
+            else
+            {
+                LibVM.FileListBox.SelectedIndex = LibVM.FileListBox.SelectedIndex <= LibVM.FileListBox.Items.Count - 2 ? LibVM.FileListBox.SelectedIndex + 1 : 0;
+                toPlayFile = LibVM.FileListBox.SelectedItem as Mediafile;
+            }
+            PlayFile(toPlayFile);
+
         }
+        void PlayPrevious()
+        {
+        }
+        async void Open(object para)
+        {
+            var picker = new FileOpenPicker();
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            openPicker.FileTypeFilter.Add(".mp3");
+            StorageFile file = await openPicker.PickSingleFileAsync();
+            if (player.PlayerState == PlayerState.Paused || player.PlayerState == PlayerState.Stopped)
+                Load(file);
+            else
+            {
+                Load(file, true);
+            }
+
+        }
+        #endregion
+        #endregion
+
+        #region Events
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
@@ -117,7 +142,7 @@ namespace Macalifa.ViewModels
                 if (!Repeat)
                 {
                     await player.Pause();
-                    timer.Stop();                   
+                    timer.Stop();
                     PlayPauseIcon = new SymbolIcon(Symbol.Play);
                     DontUpdatePosition = false;
                 }
@@ -125,20 +150,12 @@ namespace Macalifa.ViewModels
                 {
                     timer.Start();
                     DontUpdatePosition = false;
-                    PlayPauseCommand.Execute(null);                    
+                    PlayPauseCommand.Execute(null);
                 }
-                
-            }); 
-        }
-        #endregion
 
-
-        bool _repeat;
-        public bool Repeat
-        {
-            get { return _repeat; }
-            set { Set(ref _repeat, value, "Repeat");}
+            });
         }
+
         private void Timer_Tick(object sender, object e)
         {
             if (this.player != null)
@@ -150,6 +167,22 @@ namespace Macalifa.ViewModels
             {
                 CurrentPosition = pos;
             }
+        }
+
+        #endregion
+
+        #region Properties
+        bool _repeat = false;
+        public bool Repeat
+        {
+            get { return _repeat; }
+            set { Set(ref _repeat, value); }
+        }
+        bool _shuffle = false;
+        public bool Shuffle
+        {
+            get { return _shuffle; }
+            set { Set(ref _shuffle, value); }
         }
         public ObservableCollection<SimpleNavMenuItem> TopMenuItems { get; }
         public ObservableCollection<SimpleNavMenuItem> BottomMenuItems { get; }
@@ -163,8 +196,8 @@ namespace Macalifa.ViewModels
             set
             {
                 Set(ref _currentPosition, value);
-                if(DontUpdatePosition)
-                player.Position = _currentPosition;
+                if (DontUpdatePosition)
+                    player.Position = _currentPosition;
             }
         }
         Macalifa.Core.Tags _tags;
@@ -186,7 +219,7 @@ namespace Macalifa.ViewModels
                 return _volume;
             }
             set
-            {  
+            {
                 Set(ref _volume, value);
                 player.Volume = _volume;
             }
@@ -219,57 +252,29 @@ namespace Macalifa.ViewModels
                 Set(ref _playPauseIcon, value);
             }
         }
-        private async void PlayPause()
-        {
-            switch (player.PlayerState)
-            {
-                case PlayerState.Playing:
-                    await player.Pause();
-                    timer.Stop();
-                    PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                    break;
-                case PlayerState.Paused:
-                case PlayerState.Ended:
-                case PlayerState.Stopped:
-                    await player.Play();
-                    timer.Start();
-                    PlayPauseIcon = new SymbolIcon(Symbol.Pause);
-                    DontUpdatePosition = false;
-                    break;
-            }
-        }
+        #endregion
 
-        //private void PlayerOnPlaybackStopped(object sender, StoppedEventArgs stoppedEventArgs)
-        //{
-        //    LoadCommand.IsEnabled = true;
-        //    StopCommand.IsEnabled = false;
-        //    PlayPauseCommand.IsEnabled = false;
-        //    if (reader != null)
-        //    {
-        //        reader.Position = 0;
-        //    }
-        //}
-        async void Open(object para)
+        #region Methods
+        async void PlayFile(Mediafile toPlayFile)
         {
-            var picker = new FileOpenPicker();
-            FileOpenPicker openPicker = new FileOpenPicker();
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-            openPicker.FileTypeFilter.Add(".mp3");
-            StorageFile file = await openPicker.PickSingleFileAsync();
             if (player.PlayerState == PlayerState.Paused || player.PlayerState == PlayerState.Stopped)
-                Load(file);
+                Load(await StorageFile.GetFileFromPathAsync(toPlayFile.Path));
             else
             {
-                Load(file, true);               
+                LibVM.PlayCommand.Execute(toPlayFile);
             }
+        }
 
+        ThreadSafeObservableCollection<Mediafile> ShuffledList;
+        public ThreadSafeObservableCollection<Mediafile> ShuffledCollection()
+        {
+            var shuffled = new ThreadSafeObservableCollection<Mediafile>(LibVM.TracksCollection.Elements);
+            shuffled.Shuffle();
+            return shuffled;
         }
         private async void Load(object mp3file, bool play = false)
-        {
-            var mp3 = LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
-            if (mp3 != null) mp3.State = PlayerState.Stopped;
-            StorageFile file = mp3file  as StorageFile;
+        {          
+            StorageFile file = mp3file as StorageFile;
             if (file != null)
             {
                 await player.Load(file.Path);
@@ -284,11 +289,47 @@ namespace Macalifa.ViewModels
             }
             GC.Collect();
         }
+        public async void Play(object para, double currentPos = 0, bool play = true, double vol = 50)
+        {
+            if (para is StorageFile)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync((para as StorageFile).Path);
+                if (file != null && file.FileType == ".mp3")
+                {
+                    Load(para, play);
+                    if (play == false)
+                    {
+                        Volume = vol;
+                        DontUpdatePosition = true;
+                        CurrentPosition = currentPos;
+                    }
+                }
 
-        public DelegateCommand LoadCommand { get; private set; }
-        public DelegateCommand PlayPauseCommand { get; private set; }
-        public DelegateCommand PlayNextCommand { get; private set; }
-        public DelegateCommand PlayPreviousCommand { get; private set; }
+            }
+        }
+        #endregion
+
+        #region Constructor
+        public ShellViewModel()
+        {
+            Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;            
+            PlayPauseCommand = new DelegateCommand(PlayPause) { IsEnabled = false };
+            PlayNextCommand = new DelegateCommand(PlayNext);
+            PlayPreviousCommand = new DelegateCommand(PlayPrevious);
+            TopMenuItems = new ObservableCollection<SimpleNavMenuItem>();
+            BottomMenuItems = new ObservableCollection<SimpleNavMenuItem>();
+            PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
+            InitialPage = typeof(LibraryView);
+            player.PlayerState = PlayerState.Stopped;
+            DontUpdatePosition = false;
+            this.timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(10);
+            timer.Tick += Timer_Tick;
+            this.timer.Stop();
+            player.MediaEnded += Player_MediaEnded;
+          
+        }
+        #endregion        
 
     }
 

@@ -55,37 +55,24 @@ namespace Macalifa
         public Shell()
         {
             this.InitializeComponent();
-
-            // ShellViewModel vm = new ShellViewModel(Dispatcher);
+            
             ShellVM.TopMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Label = "Library",
                 DestinationPage = typeof(LibraryView),
                 Symbol = Symbol.Library
             });
-            ShellVM.TopMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
-            {
-                Label = "Albums",
-                DestinationPage = typeof(Albums),
-                Symbol = Symbol.Mute
-            });
             ShellVM.BottomMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Label = "Settings",
-                DestinationPage = typeof(LibraryView),
-                Symbol = Symbol.Bookmarks
-            });
-            ShellVM.BottomMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
-            {
-                Label = "Albums",
-                DestinationPage = typeof(Albums),
-                Symbol = Symbol.Emoji
+                //DestinationPage = typeof(Albums),
+                Symbol = Symbol.Setting
             });
             ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Arguments = "Hello",
-                Label = "Hello",
-                DestinationPage = typeof(Albums),
+                Label = "Playlists",
+                DestinationPage = typeof(PlaylistView),
                 Symbol = Symbol.List
             });
             this.DataContext = ShellVM;
@@ -98,36 +85,9 @@ namespace Macalifa
 
         }
 
-
-        public async static void Play(object para, double currentPos = 0, bool play = true, double vol = 50)
-        {
-            if (para is StorageFile)
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync((para as StorageFile).Path);
-                if (file != null && file.FileType == ".mp3")
-                {
-                    await Player.Load(file.Path);
-                    ShellVM.Length = Player.Length;
-                    ShellVM.PlayPauseCommand.IsEnabled = true;
-                    if (play)
-                    {
-                        ShellVM.PlayPauseCommand.Execute(null);
-                    }
-                    else
-                    {
-                        ShellVM.Volume = vol;
-                        ShellVM.DontUpdatePosition = true;
-                        ShellVM.CurrentPosition = currentPos;
-                    }
-                    ShellVM.Tags = Player.Tags;
-                }
-
-            }
-        }
-
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Play(e.Parameter);
+            ShellVM.Play(e.Parameter);
             base.OnNavigatedTo(e);
         }
         private void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
@@ -223,15 +183,6 @@ namespace Macalifa
 {
     await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
     {
-        var numbers = LibVM.LibVM.TracksCollection.Elements;
-        numbers.Shuffle();
-        string ss = "";
-        foreach (var s in numbers)
-        {
-            ss += s.Title + "\r\n";
-        }
-        ShowMessage(ss);
-
         if (He.Text.Length > 0)
         {
            

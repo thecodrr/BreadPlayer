@@ -38,23 +38,18 @@ namespace Macalifa
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Albums
+    public sealed partial class PlaylistView
     {
         public ObservableRangeCollection<Mediafile> Playlist = new ObservableRangeCollection<Mediafile>();
         PlaylistViewModel vm;
-        public Albums()
+        public PlaylistView()
         {
             this.InitializeComponent();
                      
         }
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            a.Text = "asjkdasjk ";
-            base.OnNavigatingFrom(e);
-        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-          
             vm = new PlaylistViewModel(Playlist);          
             var list =  (e.Parameter as IEnumerable<Mediafile>).ToList();
             list.ForEach(Playlist.Add);
@@ -64,9 +59,5 @@ namespace Macalifa
             base.OnNavigatedTo(e);
         }
 
-        private void playListBox_Loaded(object sender, RoutedEventArgs e)
-        {
-          
-        }
     }
 }

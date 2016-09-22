@@ -70,7 +70,6 @@ namespace Macalifa.ViewModels
         {
             LibraryViewService.vm = this;
             LibraryViewService service = LibraryViewService.Instance;
-            Album = "asdasdas";
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             LoadCommand = new DelegateCommand(Load);
             db.CreateDB();
@@ -244,25 +243,16 @@ namespace Macalifa.ViewModels
         /// <param name="path"><see cref="Macalifa.Models.Mediafile"/> to play.</param>
         public async void Play(object path)
         {
+            Mediafile mp3File = path as Mediafile;
             await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
             {
-                var mediaFile = TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
-                if (mediaFile != null) mediaFile.State = PlayerState.Stopped;
-                Mediafile mp3File = path as Mediafile;
+                var mp3 = TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
+                if (mp3 != null) mp3.State = PlayerState.Stopped;
                 StorageFile file = await StorageFile.GetFileFromPathAsync(mp3File.path);
-                if (file != null)
-                {
-                    await Player.Load(file.Path);
-                    ShellVM.Length = Player.Length;
-                    ShellVM.PlayPauseCommand.IsEnabled = true;
-                    ShellVM.PlayPauseCommand.Execute(null);
-                    ShellVM.Tags = Player.Tags;
-                }
-                Album = Player.PlayerState.ToString();
-                mp3File.State = PlayerState.Playing;
-
-                GC.Collect();
+                ShellVM.Play(file);
             });
+
+            mp3File.State = PlayerState.Playing;
         }
         #endregion
 
@@ -396,7 +386,7 @@ namespace Macalifa.ViewModels
                     {
                         Arguments = db.PlaylistSort(list.Name),
                         Label = list.Name,
-                        DestinationPage = typeof(Albums),
+                        DestinationPage = typeof(PlaylistView),
                         Symbol = Symbol.List
                     });
                     GC.Collect();
