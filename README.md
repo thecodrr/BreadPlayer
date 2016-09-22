@@ -28,7 +28,7 @@ _I am not an expert developer and as a result the code-base isn't as professiona
 1. Make sure you have the necessary tools for building [Windows Universal Apps](https://dev.windows.com/en-us/develop/building-universal-Windows-apps).
 2. Clone this repo:  `git clone https://github.com/theweavrs/Macalifa/`
 3. The current version uses the latest Aniversary Edition of UWP (Universal Windows Platform) build 14393 but it is not restricted to that, a lower build version can be used without any problems.
-4. To build and debug **Macalifa** flawlessly, the bass.dll must be placed under _Macalifa.Core\bin\PLATFORMVERSION\Debug\Appx_. This problem is currently being acknowledged and fixed. [(Get bass.dll from here.](http://www.un4seen.com/stuff/bass24-winstore.zip) Make sure to use the correct version of bass.dll for the specific platform version (x86\x64\ARM). [For more help go here](http://www.un4seen.com/forum/?topic=16665)).
+4. ~~To build and debug **Macalifa** flawlessly, the bass.dll must be placed under _Macalifa.Core\bin\PLATFORMVERSION\Debug\Appx_. This problem is currently being acknowledged and fixed. [(Get bass.dll from here.](http://www.un4seen.com/stuff/bass24-winstore.zip) Make sure to use the correct version of bass.dll for the specific platform version (x86\x64\ARM). [For more help go here](http://www.un4seen.com/forum/?topic=16665)).~~ **FIXED (Issue #4)**
 5. "Compile with .NET Native Toolchain" under Build settings of the project must be left unchecked. This is a bug in the _bass.dll_.
 
 ###NOTE:
