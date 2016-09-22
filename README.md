@@ -10,6 +10,7 @@ _(As the UI gets ready, screenshots will be made available.)_
 
 ##About the project:
 This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage** so much so that not even the UI is ready at the moment.
+ [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
 ###Main Focus:
 Currently the focus is on the **Macalifa.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
 ###Technologies used:
