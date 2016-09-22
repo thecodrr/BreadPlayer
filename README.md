@@ -3,8 +3,8 @@ An music player made for Windows 10 store.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###Screenshots:
-![Imgur](http://i.imgur.com/DZLn7du.png)
-([For more go here](http://theweavrs.imgur.com/all/))
+![Imgur](http://i.imgur.com/iFWyLYK.gif)
+
 ###Main Features:
 1. Flawlessly plays mp3 audio. (Further format support to be added in due time.)
 2. Import Library & Playlists. (other playlist formats e.g. .m3u, .pls etc. will be made available before final release.) 
