@@ -433,23 +433,33 @@ namespace Macalifa.ViewModels
 
                 if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
                 {
-                    var s = menu.Tag as Mediafile;
-                    s.Playlists.Add(new Playlist() { Name = dialog.Text });
-                    db.Update(s);
-                    ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
+                    foreach (Mediafile s in FileListBox.SelectedItems)
                     {
-                        Arguments = db.PlaylistSort(dialog.Text),
-                        Label = dialog.Text,
-                        DestinationPage = typeof(PlaylistView),
-                        Symbol = Symbol.List
-                    });
+                        if (!s.Playlists.Any(t => t.Name == menu.Text))
+                        {
+                            s.Playlists.Add(new Playlist() { Name = dialog.Text });
+                            db.Update(s);
+                        }
+                        ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
+                        {
+                            Arguments = db.PlaylistSort(dialog.Text),
+                            Label = dialog.Text,
+                            DestinationPage = typeof(PlaylistView),
+                            Symbol = Symbol.List
+                        });
+                    }
                 }
             }
             else
             {
-                var s = menu.Tag as Mediafile;
-                s.Playlists.Add(new Playlist() { Name = menu.Text });
-                db.Update(s);
+                foreach (Mediafile s in FileListBox.SelectedItems)
+                {
+                    if (!s.Playlists.Any(t => t.Name == menu.Text))
+                    {
+                        s.Playlists.Add(new Playlist() { Name = menu.Text });
+                        db.Update(s);
+                    }
+                }
             }
         }
         async void OpenSongLocation(object file)
