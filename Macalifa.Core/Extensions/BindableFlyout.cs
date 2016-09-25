@@ -81,6 +81,10 @@ namespace Macalifa.Extensions
                 };
                  item.CommandParameter =  menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
                 item.Tag = menuFlyout.DataContext as Mediafile;
+                if(menuFlyout.Items.Count == 1)
+                {
+                    menuFlyout.Items.Add(new MenuFlyoutSeparator());
+                }
                 menuFlyout.Items.Add(item);
             }
         }
