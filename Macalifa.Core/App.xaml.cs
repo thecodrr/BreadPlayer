@@ -15,11 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -43,6 +46,11 @@ namespace Macalifa
         public App()
         {
             this.InitializeComponent();
+            Object value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
+            var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
+            this.RequestedTheme = (ApplicationTheme)theme;
+            Debug.Write("ApplicationTheme: " + theme.ToString());
+
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
         }
