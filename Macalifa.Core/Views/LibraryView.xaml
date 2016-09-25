@@ -36,7 +36,7 @@
             <RowDefinition Height="437*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Library" FontSize="44" HorizontalAlignment="Left" Width="144" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Margin="0,17,0,0" Height="69" VerticalAlignment="Center"/>
-        <ListBox AllowDrop="True" CanDrag="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" HorizontalAlignment="Left" Grid.Row="1" Drop="fileBox_Drop" DragOver="fileBox_DragOver" Background="{ThemeResource AppBarBackgroundThemeBrush}">
+        <ListBox AllowDrop="True" CanDrag="True" SelectionMode="Extended" x:Name="fileBox" Background="{ThemeResource ThemeBackground}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" HorizontalAlignment="Left" Grid.Row="1" Drop="fileBox_Drop" DragOver="fileBox_DragOver">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate >
                     <VirtualizingStackPanel Orientation="Vertical">

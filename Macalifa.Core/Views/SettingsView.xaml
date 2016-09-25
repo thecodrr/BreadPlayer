@@ -22,7 +22,7 @@
                 <!--<ToggleButton x:Name="showhideListBtn" Content="Show list" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" Style="{StaticResource HyperlinkToggleBtn}"></ToggleButton>-->
                 <ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>
             </StackPanel>
-            <ListBox HorizontalAlignment="Left" Width="400" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,0,0" ItemsSource="{Binding LibraryFoldersCollection}" Height="155" Visibility="{Binding ElementName=showhideListBtn, Path=IsOn, Converter={StaticResource BoolToVisibilty}}">
+            <ListBox HorizontalAlignment="Left" Width="400" Background="{ThemeResource ThemeBackground}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,0,0" ItemsSource="{Binding LibraryFoldersCollection}" Height="155" Visibility="{Binding ElementName=showhideListBtn, Path=IsOn, Converter={StaticResource BoolToVisibilty}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
