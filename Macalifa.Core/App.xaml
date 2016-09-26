@@ -35,8 +35,8 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                     <SolidColorBrush x:Key="ThemeBackground" Color="#e5e5e5"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>
-                    <Color x:Key="SystemAccentColor">#4c4c4c</Color>-->
+                    <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>-->
+                    <Color x:Key="SystemAccentColor">#141414</Color>
                     <!--Your accent color-->
                     
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
@@ -644,14 +644,14 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                         </MenuFlyoutSubItem>-->
                                         <MenuFlyoutItem Text="Open Song Location" DataContext="{StaticResource LibVM}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                         <MenuFlyoutItem Text="Delete" DataContext="{StaticResource LibVM}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-                                         
+
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Properties"/>
-                                        
+
                                     </MenuFlyout>
 
                                     <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>
-                                   <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
+                                    <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
                                         <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
                                         <Setter Property="FontSize" Value="15" />
@@ -667,18 +667,18 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                 </Grid.Resources>
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CustomStates">
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <StateTrigger IsActive="{Binding Text, ElementName=Temp, Converter={StaticResource EnumToVisibility}}"/>
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="PlayingIndicator.Visibility" Value="Visible"/>
-                                        </VisualState.Setters>
-                                        <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
-                                            <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:10"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
+                                        <VisualState>
+                                            <VisualState.StateTriggers>
+                                                <StateTrigger IsActive="{Binding Text, ElementName=Temp, Converter={StaticResource EnumToVisibility}}"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="PlayingIndicator.Visibility" Value="Visible"/>
+                                            </VisualState.Setters>
+                                            <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
+                                                <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:10"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualState x:Name="Normal" />
                                         <VisualState x:Name="Disabled">
@@ -810,7 +810,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                             <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
                                             <AppBarButton Grid.Column="1" Icon="Play" DataContext="{StaticResource LibVM}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
                                             <AppBarButton Grid.Column="2" x:Name="button2" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
-                                                <Interactivity:Interaction.Behaviors>                                                    
+                                                <Interactivity:Interaction.Behaviors>
                                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
                                                         <Behaviours:OpenMenuFlyoutAction Parameter="BindableFlyout"/>
                                                     </Core:EventTriggerBehavior>

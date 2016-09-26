@@ -23,6 +23,8 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +32,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
 namespace Macalifa
 {
     /// <summary>
@@ -49,12 +52,12 @@ namespace Macalifa
             Object value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
             var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
             this.RequestedTheme = (ApplicationTheme)theme;
-            Debug.Write("ApplicationTheme: " + theme.ToString());
-
+            Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
         }
 
+        
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
@@ -138,7 +141,7 @@ namespace Macalifa
                 // parameter
                 rootFrame.Navigate(typeof(Shell), arguments);
             }
-
+          
             // Ensure the current window is active
             Window.Current.Activate();
             if (args.Kind != ActivationKind.File)

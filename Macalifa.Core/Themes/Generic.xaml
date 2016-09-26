@@ -159,13 +159,13 @@
         <Setter Property="AutomationProperties.Name" Value="Back" />
         <Setter Property="Content">
             <Setter.Value>
-                <Grid x:Name="RootGrid">
+                <Grid x:Name="RootGrid" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    
-                    <SymbolIcon x:Name="Glyph" Grid.Column="0" Margin="5,0,0,0"
+
+                    <SymbolIcon x:Name="Glyph" Grid.Column="0" Margin="10,0,0,0" Foreground="{ThemeResource ThemeForeground}"
                              VerticalAlignment="Center" HorizontalAlignment="Center" Symbol="List" Width="17" Height="10" />
                     <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
@@ -173,7 +173,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="CompactPlaylistButtonStyle" TargetType="Button"
+           BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Width" Value="NaN" />
+        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="AutomationProperties.Name" Value="Back" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Grid x:Name="RootGrid2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
+                    <SymbolIcon x:Name="Glyph2" Grid.Column="0" Margin="10,0,0,0" Foreground="White"
+                             VerticalAlignment="Center" HorizontalAlignment="Center" Symbol="List" Width="17" Height="10" />
+                    <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
+                               VerticalAlignment="Center" />-->
+                </Grid>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
         <Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}" />
         <Setter Property="Height" Value="48" />
@@ -311,6 +335,13 @@
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="False" />
+                                        <Setter Target="TogglePaneButton.Foreground" Value="White"/>
+                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
+                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
+                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
+                                        <Setter Target="playlistBtn.Width" Value="300"/>
+                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -358,6 +389,12 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
+                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
+                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
+                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
+                                        <Setter Target="playlistBtn.Width" Value="300"/>
+                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="60"/>                                        
                                         <!--<Setter Target="TogglePaneButton.Background" Value="Purple"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
@@ -395,19 +432,20 @@
                                     </local:NavMenuListView.Header>-->
                                         </local:NavMenuListView>
                                         <MenuFlyoutSeparator x:Name="TopSeperator" Visibility="Collapsed"/>
+                                        <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="300">
+                                            <Button x:Name="playlistBtn" 
+                                                TabIndex="2" Width="240"
+                                                Style="{StaticResource NavigationBackButtonStyle}"/>
+                                            <Button x:Name="playlistAddBtn" DataContext="{StaticResource LibVM}" Command="{Binding AddToPlaylistCommand}"
+                                                TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
+                                                Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
+                                        </StackPanel>
                                         <local:NavMenuListView x:Name="PlaylistsMenuList"
                                                        ItemsSource="{TemplateBinding PlaylistsItems}"
                                                        TabIndex="3"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{TemplateBinding NavMenuItemTemplate}">
-                                            <!--<local:NavMenuListView.Header>
-                                                <Button x:Name="BackButton"
-                                                TabIndex="2"
-                                                Style="{StaticResource NavigationBackButtonStyle}"
-                                                Width="{Binding Path=ItemsPanelRoot.Width, ElementName=NavTopMenuList}"
-                                                HorizontalAlignment="{Binding Path=ItemsPanelRoot.HorizontalAlignment, ElementName=NavTopMenuList}"/>
-                                            </local:NavMenuListView.Header>-->
                                         </local:NavMenuListView>
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">
@@ -434,7 +472,7 @@
                             <Grid>
                                  <Frame x:Name="PageFrame" Grid.Row="1"
                                    Navigating="OnNavigatingToPage"
-                                   Navigated="OnNavigatedToPage" Padding="10,0,0,0">
+                                   Navigated="OnNavigatedToPage">
                                     <Frame.ContentTransitions>
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
