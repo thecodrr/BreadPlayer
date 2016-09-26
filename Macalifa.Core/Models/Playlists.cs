@@ -25,9 +25,10 @@ namespace Macalifa.Models
 {
    public class Playlist : ViewModelBase
     {
-        public string name;
+        string name;
         public string Name { get { return name; }set { Set(ref name, value); } }
-
+        string description;
+        public string Description { get { return description; } set { Set(ref description, value); } }
         public Playlist()
         {
 

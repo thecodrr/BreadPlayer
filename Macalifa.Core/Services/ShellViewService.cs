@@ -71,4 +71,27 @@ namespace Macalifa.Services
             LibVM = vm;
         }
     }
+
+    class PlaylistViewService
+    {
+        static PlaylistViewService instance;
+        public static PlaylistViewService Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new PlaylistViewService();
+
+                return instance;
+            }
+        }
+
+        public Macalifa.ViewModels.PlaylistViewModel LibVM { get; private set; }
+
+        public PlaylistViewService()
+        {
+            // Create the player instance
+            LibVM = new PlaylistViewModel();
+        }
+    }
 }

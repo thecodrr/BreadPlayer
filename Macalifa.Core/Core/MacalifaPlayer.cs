@@ -166,7 +166,11 @@ namespace Macalifa.Core
         public double Volume
         {
             get { return _volume; }
-            set { _volume = value / 100; Bass.Volume = _volume; }
+            set {
+                _volume = value / 100;
+                Set(ref _volume, value);
+                if(Bass.Init())Bass.Volume = Volume;
+            }
         }
         public Effects Effect
         {
