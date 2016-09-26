@@ -15,6 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using Macalifa;
+using Macalifa.Extensions;
+using Macalifa.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -207,7 +210,7 @@ namespace SplitViewMenu
             BackRequested(ref ignored);
         }
 
-        private void BackRequested(ref bool handled)
+        public void BackRequested(ref bool handled)
         {
             if (_pageFrame == null)
                 return;
@@ -244,26 +247,57 @@ namespace SplitViewMenu
             ((Page) sender).Focus(FocusState.Programmatic);
             ((Page) sender).Loaded -= PageLoaded;
         }
-
+        INavigationMenuItem GetItemFromList(Type sourcePagetype)
+        {
+            if(sourcePagetype == typeof(LibraryView))
+            {
+                return TopNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
+            }
+            else if(sourcePagetype == typeof(PlaylistView))
+            {
+                return null;
+            }
+            else
+            {
+                return BottomNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
+            }
+        }
+        NavMenuListView GetParentListViewFromItem(SimpleNavMenuItem item)
+        {
+            if (item.DestinationPage == typeof(LibraryView))
+            {
+                return _navTopMenuListView;
+            }
+            else if (item.DestinationPage == typeof(PlaylistView))
+            {
+                return _playlistsMenuListView;
+            }
+            else
+            {
+                return _navBottomMenuListView;
+            }
+        }
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
-                return;
-            var item = TopNavigationItems.SingleOrDefault(p => p.DestinationPage == e.SourcePageType);
+                return;           
+            var item = GetItemFromList(e.SourcePageType); 
             if (item == null && _pageFrame.BackStackDepth > 0)
             {
                 foreach (var entry in _pageFrame.BackStack.Reverse())
                 {
-                    item = TopNavigationItems.SingleOrDefault(p => p.DestinationPage == entry.SourcePageType);
-                    if (item != null)
-                        break;
+                    var para = entry.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>; //get previous entry's parameter
+                    item = PlaylistsItems.SingleOrDefault(p => p.Label == para.First().Key.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                    if (item != null) 
+                        break;  //if item is successfully got break the loop. We got what we needed.
                 }
             }
 
-            var container = (ListViewItem)_navTopMenuListView.ContainerFromItem(item);
+            var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
             if (container != null)
                 container.IsTabStop = false;
-            _navTopMenuListView.SetSelectedItem(container);
+            GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
+            container.IsSelected = true;
             if (container != null)
                 container.IsTabStop = true;
         }
