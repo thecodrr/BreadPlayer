@@ -33,6 +33,9 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 using Macalifa.ViewModels;
+using System.Diagnostics;
+using Windows.UI.Xaml.Media.Imaging;
+
 namespace Macalifa
 {
     /// <summary>
@@ -40,22 +43,25 @@ namespace Macalifa
     /// </summary>
     public sealed partial class PlaylistView
     {
-        public ObservableRangeCollection<Mediafile> Playlist = new ObservableRangeCollection<Mediafile>();
-        PlaylistViewModel vm;
+        public ThreadSafeObservableCollection<Mediafile> Playlist = new ThreadSafeObservableCollection<Mediafile>();
+        
+        PlaylistViewModel PlaylistVM => Services.PlaylistViewService.Instance.LibVM;
         public PlaylistView()
         {
             this.InitializeComponent();
                      
         }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            vm = new PlaylistViewModel(Playlist);          
-            var list =  (e.Parameter as IEnumerable<Mediafile>).ToList();
-            list.ForEach(Playlist.Add);
-            this.DataContext = vm;
-            playListBox.ItemsSource = vm.Playlist;
-            playListBox.DataContext = vm.Playlist;
+        {      
+            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);
+            Debug.Write(list.Count);
+            list.First().Value.ToList().ForEach(Playlist.Add);
+            PlaylistVM.Songs = Playlist;
+            PlaylistVM.Playlist = list.First().Key;
+            this.DataContext = PlaylistVM;
+            playListBox.ItemsSource = PlaylistVM.Songs;
+            playListBox.DataContext = PlaylistVM.Songs;
+
             base.OnNavigatedTo(e);
         }
 

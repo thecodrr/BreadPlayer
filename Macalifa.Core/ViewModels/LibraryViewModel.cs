@@ -49,6 +49,8 @@ using System.Diagnostics;
 using Windows.System;
 using Macalifa.Events;
 using Macalifa.Dialogs;
+using System.Security.Cryptography;
+
 namespace Macalifa.ViewModels
 {
     public class LibraryViewModel : ViewModelBase
@@ -312,6 +314,7 @@ namespace Macalifa.ViewModels
         #endregion
 
         #region Helper Methods
+       
         /// <summary>
         /// Gets name of a property in a class. 
         /// </summary>
@@ -376,16 +379,21 @@ namespace Macalifa.ViewModels
                 {
                     var cmd = new ContextMenuCommand(AddToPlaylistCommand, list.Name);
                     Options.Add(cmd);
-
+                    var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                    Playlists.Add(list, db.PlaylistSort(list.Name));
                     ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
                     {
-                        Arguments = db.PlaylistSort(list.Name),
+                        Arguments =  Playlists,
                         Label = list.Name,
                         DestinationPage = typeof(PlaylistView),
                         Symbol = Symbol.List
                     });
                     GC.Collect();
                 }
+            }
+            else
+            {
+                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
             }
         }
         
@@ -395,13 +403,14 @@ namespace Macalifa.ViewModels
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
-        private async void SaveImages(ID3v2 Data)
+        public async void SaveImages(ID3v2 Data, Mediafile file)
         {
-            try
+           var albumartFolder =  ApplicationData.Current.LocalFolder;
+            //Debug.Write(albumartFolder.Path);
+            var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
+           if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path +".jpg"))
             {
-                var albumartFolder = ApplicationData.Current.LocalFolder;
-                await albumartFolder.CreateFileAsync(@"AlbumArts\" + Mediafile.Title + ".jpg", CreationCollisionOption.ReplaceExisting);
-                var albumart = await albumartFolder.GetFileAsync(@"AlbumArts\" + Mediafile.Title + ".jpg");
+                var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
                 using (var albumstream = await albumart.OpenStreamForWriteAsync())
                 {
                     BitmapDecoder decoder = await BitmapDecoder.CreateAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
@@ -416,51 +425,68 @@ namespace Macalifa.ViewModels
                     pixelStream.Dispose();
                 }
             }
-            catch { }
+
+           
         }   
         #endregion
         public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
 
         async void AddToPlaylist(object file)
         {
-            var menu = file as MenuFlyoutItem;
-            if (menu.Text == "New Playlist")
-            {
-                var dialog = new InputDialog()
-                {
-                    Title = "Name this playlist",
-                };
 
-                if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
+            if (file != null)
+            {
+                var menu = file as MenuFlyoutItem;
+                var dictPlaylist = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                if (menu.Text == "New Playlist")
                 {
+                    dictPlaylist = await ShowAddPlaylistDialog();
+                }
                     foreach (Mediafile s in FileListBox.SelectedItems)
                     {
-                        if (!s.Playlists.Any(t => t.Name == menu.Text))
+                    var playlistName = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Name : menu.Text;
+                    if (!s.Playlists.Any(t => t.Name == playlistName))
                         {
-                            s.Playlists.Add(new Playlist() { Name = dialog.Text });
-                            db.Update(s);
-                        }
-                        ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
-                        {
-                            Arguments = db.PlaylistSort(dialog.Text),
-                            Label = dialog.Text,
-                            DestinationPage = typeof(PlaylistView),
-                            Symbol = Symbol.List
-                        });
+                        s.Playlists.Add(new Playlist() { Name = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Name : menu.Text, Description = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Description : "" });
+                        db.Update(s);
                     }
                 }
             }
             else
             {
-                foreach (Mediafile s in FileListBox.SelectedItems)
-                {
-                    if (!s.Playlists.Any(t => t.Name == menu.Text))
-                    {
-                        s.Playlists.Add(new Playlist() { Name = menu.Text });
-                        db.Update(s);
-                    }
-                }
+                await ShowAddPlaylistDialog();
             }
+        }
+
+        async Task<Dictionary<Playlist, IEnumerable<Mediafile>>> ShowAddPlaylistDialog()
+        {
+            var dialog = new InputDialog()
+            {
+                Title = "Name this playlist",
+            };
+            var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
+            {
+                if(!PlaylistCollection.Any(t => t.Name == dialog.Text))
+                    {
+                    var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
+                    Playlists.Add(pl, db.PlaylistSort(pl.Name));
+                    var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
+                    Options.Add(cmd);
+
+                    ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
+                    {
+                        Arguments = Playlists,
+                        Label = dialog.Text,
+                        DestinationPage = typeof(PlaylistView),
+                        Symbol = Symbol.List
+                    });
+                    }
+                    
+
+                return Playlists;
+            }
+            return Playlists;
         }
         async void OpenSongLocation(object file)
         {

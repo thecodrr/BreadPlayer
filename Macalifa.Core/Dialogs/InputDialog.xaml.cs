@@ -31,7 +31,13 @@ namespace Macalifa.Dialogs
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
-
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
+           "Description", typeof(string), typeof(InputDialog), new PropertyMetadata(null));
+        public string Description
+        {
+            get { return (string)GetValue(DescriptionProperty); }
+            set { SetValue(DescriptionProperty, value); }
+        }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }

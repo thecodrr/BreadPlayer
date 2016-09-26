@@ -5,9 +5,273 @@
     xmlns:local="using:Macalifa"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Services="using:Macalifa.Services"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Extensions="using:Macalifa.Extensions" xmlns:Behaviours="using:Macalifa.Behaviours" 
     mc:Ignorable="d">
+    <Page.Resources>
+        <Services:PlaylistViewService x:Key="PlaylistVM"/>
+        <Style TargetType="ListBoxItem" x:Key="CustomPlaylistItemStyle">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="TabNavigation" Value="Local" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
 
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid DataContext="{StaticResource LibVM}"
+          x:Name="LayoutRoot"
+          Background="{TemplateBinding Background}"
+          BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid.Resources>
+                                <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
+                                    <MenuFlyoutItem Text="Play" DataContext="{StaticResource LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                    <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
+                                        </MenuFlyoutSubItem>-->
+                                    <MenuFlyoutItem Text="Open Song Location" DataContext="{StaticResource LibVM}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                    <MenuFlyoutItem Text="Delete from playlist" DataContext="{Binding Source={StaticResource PlaylistVM}, Path=Instance.LibVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"></MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Properties"/>
+
+                                </MenuFlyout>
+                                <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>
+                                <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
+                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                    <Setter Property="FontSize" Value="15" />
+                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                    <Setter Property="LineStackingStrategy" Value="MaxHeight" />
+                                    <Setter Property="TextLineBounds" Value="Full" />
+                                    <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+                                </Style>
+                                <Style x:Key="BodyContentPresenterStyle" TargetType="ContentPresenter" BasedOn="{StaticResource BaseContentPresenterStyle}">
+                                    <Setter Property="FontWeight" Value="Normal" />
+                                    <Setter Property="FontSize" Value="15" />
+                                </Style>
+                            </Grid.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CustomStates">
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger IsActive="{Binding Text, ElementName=Temp, Converter={StaticResource EnumToVisibility}}"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="PlayingIndicator.Visibility" Value="Visible"/>
+                                        </VisualState.Setters>
+                                        <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
+                                            <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:10"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                               Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleTxt"
+                                               Storyboard.TargetProperty="MaxWidth">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="190" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Purple" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltListAccentHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedUnfocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HoverBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleTxt"
+                                               Storyboard.TargetProperty="MaxWidth">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="190" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleTxt"
+                                               Storyboard.TargetProperty="MaxWidth">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="190" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PressedBackground"
+                                               Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleTxt"
+                                               Storyboard.TargetProperty="MaxWidth">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="190" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle
+            x:Name="PressedBackground"
+            Fill="Transparent"
+            Control.IsTemplateFocusTarget="True"/>
+                            <Rectangle
+            x:Name="Animie"
+            Fill="Transparent"
+            Control.IsTemplateFocusTarget="True"/>
+                            <ContentControl Margin="15,0,0,0" x:Name="DataStack">
+
+                                <StackPanel x:Name="Data" Orientation="Horizontal" Background="Transparent" Opacity="100" Height="50" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                                    <PathIcon x:Name="PlayingIndicator" Visibility="Collapsed" Data="F1 M 1.04036,13.8251C 1.61489,13.8251 2.08068,14.3045 2.08068,14.8962L 2.08068,18.4375C 2.08068,19.029 1.61489,19.5085 1.04036,19.5085C 0.465784,19.5085 -7.8934e-007,19.029 -7.8934e-007,18.4375L -7.87067e-007,14.8962C -7.87067e-007,14.3047 0.465784,13.8251 1.04036,13.8251 Z M 5.09366,13.8251C 5.66835,13.8251 6.13398,14.3045 6.13398,14.8962L 6.13398,18.4375C 6.13398,19.029 5.6682,19.5085 5.09366,19.5085C 4.51908,19.5085 4.05331,19.029 4.05331,18.4375L 4.05331,14.8962C 4.05331,14.3047 4.51908,13.8251 5.09366,13.8251 Z M 9.14698,12.3268C 9.72151,12.3268 10.1873,12.8063 10.1873,13.3978L 10.1873,19.9358C 10.1873,20.5273 9.72151,21.0067 9.14697,21.0067C 8.5724,21.0067 8.10661,20.5273 8.10661,19.9358L 8.10661,13.3978C 8.10661,12.8063 8.5724,12.3268 9.14698,12.3268 Z M 13.2001,10.5562C 13.7748,10.5562 14.2404,11.0356 14.2404,11.6272L 14.2404,21.7064C 14.2404,22.298 13.7747,22.7775 13.2001,22.7775C 12.6256,22.7775 12.1598,22.298 12.1598,21.7064L 12.1598,11.6272C 12.1598,11.0358 12.6256,10.5562 13.2001,10.5562 Z M 17.2536,7.4234C 17.8282,7.42346 18.2939,7.90295 18.2939,8.49445L 18.2939,24.8391C 18.2939,25.4307 17.8282,25.9102 17.2536,25.9102C 16.679,25.9102 16.2132,25.4307 16.2132,24.8391L 16.2132,8.49445C 16.2132,7.90295 16.679,7.4234 17.2536,7.4234 Z M 21.3067,0C 21.8813,0 22.3471,0.479553 22.3471,1.07111L 22.3471,32.2623C 22.3471,32.8538 21.8813,33.3334 21.3067,33.3334C 20.7322,33.3334 20.2664,32.8538 20.2664,32.2623L 20.2664,1.07111C 20.2664,0.479553 20.7322,0 21.3067,0 Z M 25.3601,2.65607C 25.9346,2.65607 26.4004,3.13544 26.4004,3.72711L 26.4004,29.6064C 26.4004,30.1979 25.9346,30.6774 25.3601,30.6774C 24.7855,30.6774 24.3197,30.1979 24.3197,29.6064L 24.3197,3.72711C 24.3197,3.13562 24.7855,2.65607 25.3601,2.65607 Z M 29.4132,7.96814C 29.9878,7.96814 30.4536,8.44763 30.4536,9.03918L 30.4536,24.2943C 30.4536,24.8858 29.9878,25.3652 29.4132,25.3652C 28.8386,25.3652 28.3729,24.8858 28.3729,24.2943L 28.3729,9.03918C 28.3729,8.44763 28.8386,7.96814 29.4132,7.96814 Z M 33.4667,11.1688C 34.0413,11.1688 34.507,11.6483 34.507,12.2399L 34.507,21.0934C 34.507,21.6849 34.0413,22.1644 33.4667,22.1644C 32.8921,22.1644 32.4263,21.6849 32.4263,21.0934L 32.4263,12.2399C 32.4263,11.6483 32.8921,11.1688 33.4667,11.1688 Z M 37.52,12.5312C 38.0946,12.5312 38.5603,13.0107 38.5603,13.6022L 38.5603,19.7314C 38.5603,20.323 38.0946,20.8025 37.52,20.8025C 36.9454,20.8025 36.4796,20.323 36.4796,19.7314L 36.4796,13.6022C 36.4796,13.0107 36.9454,12.5312 37.52,12.5312 Z M 41.5731,13.8251C 42.1477,13.8251 42.6135,14.3045 42.6135,14.8962L 42.6135,18.4375C 42.6135,19.029 42.1477,19.5085 41.5731,19.5085C 40.9986,19.5085 40.5328,19.029 40.5328,18.4375L 40.5328,14.8962C 40.5328,14.3047 40.9986,13.8251 41.5731,13.8251 Z M 45.6263,13.8251C 46.2009,13.8251 46.6667,14.3045 46.6667,14.8962L 46.6667,18.4375C 46.6667,19.029 46.2009,19.5085 45.6263,19.5085C 45.0517,19.5085 44.586,19.029 44.586,18.4375L 44.586,14.8962C 44.586,14.3047 45.0517,13.8251 45.6263,13.8251 Z " Width="55" Height="35"/>
+
+                                    <Grid Width="300" MaxWidth="300" Margin="5,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                        <AppBarButton Grid.Column="1" Icon="Play" DataContext="{StaticResource LibVM}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
+                                        <AppBarButton Grid.Column="2" x:Name="button2" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
+                                            <Interactivity:Interaction.Behaviors>
+                                                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                                                    <Behaviours:OpenMenuFlyoutAction Parameter="BindableFlyout"/>
+                                                </Core:EventTriggerBehavior>
+                                            </Interactivity:Interaction.Behaviors>
+                                        </AppBarButton>
+
+                                        <TextBlock x:Name="Temp" Visibility="Collapsed" FontSize="22" Text="{Binding Path=State, UpdateSourceTrigger=Explicit}"/>
+
+                                    </Grid>
+                                    <TextBlock x:Name="albumTxt" Text="{Binding LeadArtist}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Date}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
+                                    <!--<ListBox Width="100" ItemsSource="{Binding Path=Playlists}" DisplayMemberPath="Name"/>-->
+                                </StackPanel>
+
+                            </ContentControl>
+                            <Interactivity:Interaction.Behaviors>
+                                <Core:EventTriggerBehavior EventName="DoubleTapped">
+                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></Core:InvokeCommandAction>
+                                </Core:EventTriggerBehavior>
+                                <Core:EventTriggerBehavior EventName="RightTapped">
+                                    <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>
+                                </Core:EventTriggerBehavior>
+                            </Interactivity:Interaction.Behaviors>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListBox x:Name="playListBox" ItemContainerStyle="{StaticResource CustomListItemStyle}"></ListBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <!--<RowDefinition Height="Auto"/>-->
+        </Grid.RowDefinitions>
+        <Border x:Name="art" Margin="0,-154,0,0" Height="454" VerticalAlignment="Top" >
+            <Border.Background>
+                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding PlaylistArt}"/>
+            </Border.Background>
+        </Border>
+        <Grid Grid.Row="0" RequestedTheme="Dark" MinHeight="300" Background="#99000000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="15,15,0,0" Grid.Row="0" >
+                <TextBlock Text="{Binding Playlist.Name, FallbackValue='Unknown Playlist'}" FontSize="60" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
+                <TextBlock Text="{Binding Playlist.Description, FallbackValue='No Description'}" TextWrapping="WrapWholeWords" FontSize="18" FontFamily="Segoe UI Light"/>
+            </StackPanel>
+            <Grid VerticalAlignment="Bottom" Grid.Row="1" Margin="15,0,15,10"  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                    <TextBlock Text="{Binding TotalSongs, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
+                    <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
+                    <TextBlock Text="{Binding TotalMinutes, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
+                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#59152;"></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" Text=" Add to" ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <ListBox x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListBox>
     </Grid>
 </Page>
