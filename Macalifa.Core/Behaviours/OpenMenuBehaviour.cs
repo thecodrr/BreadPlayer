@@ -30,6 +30,7 @@ using Macalifa.Extensions;
 using Macalifa.Models;
 using System.Reflection;
 using Windows.Foundation;
+using SplitViewMenu;
 
 namespace Macalifa.Behaviours
 {
@@ -49,17 +50,29 @@ namespace Macalifa.Behaviours
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             ListBoxItem item = senderElement.GetFirstAncestorOfType<ListBoxItem>();
-            item.IsSelected = true;
+            var ListBox = item.GetFirstAncestorOfType<ListBox>();
+           // if (item != null) item.IsSelected = true;
+
+            //var items = //((Parameter as Binding).Path as ListViewItem);
             if (Parameter.ToString() == "BindableFlyout")
             {
+                if (ListBox.SelectedItems.Count == 1) { ListBox.SelectedIndex = -1;}
+                if (item != null) item.IsSelected = true;
                 var flyout = (senderElement as Button).GetAncestorsOfType<Grid>().Where(t => t.Name == "LayoutRoot").ToList()[0].Resources["PlaylistsFlyout"] as BindableFlyout;
                 flyout.ShowAt(senderElement);
             }
+            //else if ()
+            //{
+
+            //}
             else
             {
+                ListBox.SelectedIndex = -1;
+                if (item != null) item.IsSelected = true;
                 var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
                 flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
             }
+           
             GC.Collect();
             return null;
         }

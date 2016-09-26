@@ -28,7 +28,7 @@ namespace Macalifa.Common
 {
     class DirectoryWalker
     {   
-        public async static Task<IEnumerable<string>> GetFiles(string dirPath)
+        public static IEnumerable<string> GetFiles(string dirPath)
         {
             string[] files = { };
             

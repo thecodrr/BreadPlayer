@@ -49,6 +49,7 @@ namespace Macalifa
 
         private async void fileBox_Drop(object sender, DragEventArgs e)
         {
+            Core.CoreMethods Methods = new Core.CoreMethods();
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
             {
                 var files = await e.DataView.GetStorageItemsAsync();
@@ -64,7 +65,7 @@ namespace Macalifa
                             {
                                 if (vm.TracksCollection.Elements.All(t => t.Path != LibraryViewModel.Path))
                                 {
-                                    var m = await vm.CreateMediafile(stream);
+                                    var m = await Methods.CreateMediafile(stream);
                                     vm.TracksCollection.AddItem(m);
                                     vm.db.Insert(m);
                                 }

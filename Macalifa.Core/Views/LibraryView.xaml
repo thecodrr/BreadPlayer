@@ -15,7 +15,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    mc:Ignorable="d" DataContext="{StaticResource LibVM}">
+    mc:Ignorable="d" DataContext="{StaticResource LibVM}" Margin="10,0,0,0">
     <Page.Resources>
 
         <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding TracksCollection.Elements}"/>

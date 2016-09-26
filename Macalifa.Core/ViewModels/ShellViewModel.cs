@@ -272,40 +272,31 @@ namespace Macalifa.ViewModels
             shuffled.Shuffle();
             return shuffled;
         }
-        private async void Load(object mp3file, bool play = false)
+        private async void Load(object mp3file,  bool play = false, double currentPos = 0, double vol = 50)
         {          
             StorageFile file = mp3file as StorageFile;
-            if (file != null)
+            if (file != null && file.FileType == ".mp3")
             {
                 await player.Load(file.Path);
-                Length = player.Length;
-                CurrentPosition = 0;
-                Tags = player.Tags;
+                Length = player.Length;                
+                PlayPauseCommand.IsEnabled = true;
                 if (play)
                 {
-                    PlayPauseCommand.IsEnabled = true;
                     PlayPauseCommand.Execute(null);
                 }
+                else
+                {
+                    Volume = vol;
+                    DontUpdatePosition = true;
+                    CurrentPosition = currentPos;
+                }
+                Tags = player.Tags;
             }
             GC.Collect();
         }
-        public async void Play(object para, double currentPos = 0, bool play = true, double vol = 50)
+        public void Play(object para, double currentPos = 0, bool play = true, double vol = 50)
         {
-            if (para is StorageFile)
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync((para as StorageFile).Path);
-                if (file != null && file.FileType == ".mp3")
-                {
-                    Load(para, play);
-                    if (play == false)
-                    {
-                        Volume = vol;
-                        DontUpdatePosition = true;
-                        CurrentPosition = currentPos;
-                    }
-                }
-
-            }
+            Load(para, play, currentPos, vol);
         }
         #endregion
 

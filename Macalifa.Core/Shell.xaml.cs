@@ -38,6 +38,7 @@ using Windows.Storage;
 using Macalifa.Models;
 using Macalifa.Extensions;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace Macalifa
 {
@@ -65,16 +66,10 @@ namespace Macalifa
             ShellVM.BottomMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Label = "Settings",
-                //DestinationPage = typeof(Albums),
+                DestinationPage = typeof(SettingsView),
                 Symbol = Symbol.Setting
             });
-            ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
-            {
-                Arguments = "Hello",
-                Label = "Playlists",
-                DestinationPage = typeof(PlaylistView),
-                Symbol = Symbol.List
-            });
+            
             this.DataContext = ShellVM;
 
             _smtc = SystemMediaTransportControls.GetForCurrentView();
@@ -82,7 +77,12 @@ namespace Macalifa
             _smtc.IsPlayEnabled = true;
             _smtc.IsPauseEnabled = true;
             _smtc.ButtonPressed += _smtc_ButtonPressed;
-
+            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
+            {
+                var ignored = false;
+                hamburgerMenu.BackRequested(ref ignored);
+            };
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -170,7 +170,7 @@ namespace Macalifa
             vm.DontUpdatePosition = false;
 
         }
-        async void ShowMessage(string msg)
+        public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);
             await dialog.ShowAsync();
