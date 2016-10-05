@@ -50,6 +50,8 @@ using Windows.System;
 using Macalifa.Events;
 using Macalifa.Dialogs;
 using System.Security.Cryptography;
+using SplitViewMenu;
+using Windows.Storage.AccessCache;
 
 namespace Macalifa.ViewModels
 {
@@ -102,12 +104,12 @@ namespace Macalifa.ViewModels
         /// <summary>
         /// Gets the instance of <see cref="ShellViewModel"/>
         /// </summary>
-        ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
+        public ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
         /// <summary>
         /// Gets read-only instance of <see cref="MacalifaPlayer"/>
         /// </summary>
         public MacalifaPlayer Player => MacalifaPlayerService.Instance.Player;
-      
+
         GroupedObservableCollection<string, Mediafile> _TracksCollection;
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
@@ -220,7 +222,7 @@ namespace Macalifa.ViewModels
         /// <param name="path"><see cref="Macalifa.Models.Mediafile"/> to delete.</param>
         public void Delete(object path)
         {
-            if(path is ListBox)
+            if (path is ListBox)
             {
                 if (FileListBox == null) FileListBox = path as ListBox;
             }
@@ -242,13 +244,14 @@ namespace Macalifa.ViewModels
         public async void Play(object path)
         {
             Mediafile mp3File = path as Mediafile;
-            await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var mp3 = TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
                 if (mp3 != null) mp3.State = PlayerState.Stopped;
                 StorageFile file = await StorageFile.GetFileFromPathAsync(mp3File.path);
                 ShellVM.Play(file);
             });
+
 
             mp3File.State = PlayerState.Playing;
         }
@@ -278,7 +281,7 @@ namespace Macalifa.ViewModels
                 //files = genre != "All genres" ? OldItems.Where(t => t.Genre == genre) : OldItems;
                 //FileCollection.AddRange(files);
             }
-           
+
         }
 
         /// <summary>
@@ -314,7 +317,7 @@ namespace Macalifa.ViewModels
         #endregion
 
         #region Helper Methods
-       
+
         /// <summary>
         /// Gets name of a property in a class. 
         /// </summary>
@@ -325,7 +328,7 @@ namespace Macalifa.ViewModels
         {
             return src.GetType().GetTypeInfo().GetDeclaredProperty(propName).GetValue(src, null);
         }
-      
+
         public async Task<string> GetTextFrame(ID3v2 info, string FrameID)
         {
             // string Text = "";
@@ -372,9 +375,11 @@ namespace Macalifa.ViewModels
             {
                 OldItems = db.GetTracks().ToList();
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, OldItems, t => t.Title);
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 PlaylistCollection = new ThreadSafeObservableCollection<Playlist>(OldItems.SelectMany(t => t.Playlists).DistinctBy(t => t.Name).ToList());
-               
-                Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist")); 
+                PlaylistCollection.AddRange(db.playlists.FindAll());
+                Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
+                AddAlbums();
                 foreach (var list in PlaylistCollection)
                 {
                     var cmd = new ContextMenuCommand(AddToPlaylistCommand, list.Name);
@@ -383,10 +388,11 @@ namespace Macalifa.ViewModels
                     Playlists.Add(list, db.PlaylistSort(list.Name));
                     ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
                     {
-                        Arguments =  Playlists,
+                        Arguments = Playlists,
                         Label = list.Name,
                         DestinationPage = typeof(PlaylistView),
-                        Symbol = Symbol.List
+                        Symbol = Symbol.List,
+                        FontGlyph = "\ue823"
                     });
                     GC.Collect();
                 }
@@ -396,8 +402,26 @@ namespace Macalifa.ViewModels
                 PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
             }
         }
-        
 
+        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            
+        }
+
+        public void AddAlbums()
+        {
+            foreach (var song in TracksCollection.Elements)
+            {
+                if (!AlbumCollection.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
+                {
+                    Album alb = new Album();
+                    alb.AlbumName = song.Album;
+                    alb.Artist = song.LeadArtist;
+                    alb.AlbumArt = song.AttachedPicture;
+                    AlbumCollection.Add(alb);
+                }
+            }
+        }
 
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
@@ -405,10 +429,10 @@ namespace Macalifa.ViewModels
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public async void SaveImages(ID3v2 Data, Mediafile file)
         {
-           var albumartFolder =  ApplicationData.Current.LocalFolder;
+            var albumartFolder = ApplicationData.Current.LocalFolder;
             //Debug.Write(albumartFolder.Path);
             var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-           if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path +".jpg"))
+            if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
             {
                 var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
                 using (var albumstream = await albumart.OpenStreamForWriteAsync())
@@ -426,11 +450,11 @@ namespace Macalifa.ViewModels
                 }
             }
 
-           
-        }   
+
+        }
         #endregion
         public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
-
+        public ThreadSafeObservableCollection<Album> AlbumCollection { get; set; } = new ThreadSafeObservableCollection<Album>();
         async void AddToPlaylist(object file)
         {
 
@@ -467,21 +491,22 @@ namespace Macalifa.ViewModels
             var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
-                if(!PlaylistCollection.Any(t => t.Name == dialog.Text))
-                    {
+                if (!PlaylistCollection.Any(t => t.Name == dialog.Text))
+                {
                     var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
                     Playlists.Add(pl, db.PlaylistSort(pl.Name));
                     var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
                     Options.Add(cmd);
-
+                    db.playlists.Insert(pl);
                     ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
                     {
                         Arguments = Playlists,
                         Label = dialog.Text,
                         DestinationPage = typeof(PlaylistView),
-                        Symbol = Symbol.List
+                        Symbol = Symbol.List,
+                        FontGlyph = "\ue823"
                     });
-                    }
+                }
                     
 
                 return Playlists;
@@ -501,5 +526,12 @@ namespace Macalifa.ViewModels
             FileListBox = fileBox;
         }
         
+    }
+
+    public class Album
+    {
+        public string AlbumName { get; set; }
+        public string Artist { get; set; }
+        public string AlbumArt { get; set; }
     }
 }

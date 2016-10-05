@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="Macalifa.AlbumArtistView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Macalifa"
+    xmlns:Converters="using:Macalifa.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" RequestedTheme="Light">
+    <Page.Resources>
+        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource LibVM}">
+        <ListView ItemsSource="{Binding AlbumCollection}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel MaxWidth="150" Height="210">
+                        <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName}" HorizontalAlignment="Center"/>
+                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Artist}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate> 
+            </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal">
+                        <ItemsWrapGrid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition
+                            FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                                <AddDeleteThemeTransition>
+                                </AddDeleteThemeTransition>
+                                <ReorderThemeTransition/>
+                            </TransitionCollection>
+                        </ItemsWrapGrid.ChildrenTransitions>
+                    </ItemsWrapGrid>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    
+    </Grid>
+</Page>
