@@ -22,12 +22,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace SplitViewMenu
 {
-    public sealed class SimpleNavMenuItem : INavigationMenuItem
+    public sealed class SimpleNavMenuItem : ViewModelBase, INavigationMenuItem
     {
-        public string Label { get; set; }
+        string label;
+        public string Label { get { return label; } set { Set(ref label, value); } }
         public Symbol Symbol { get; set; }
         public char SymbolAsChar => (char) Symbol;
-        public object Arguments { get; set; }
+        public string FontGlyph { get; set; }
+        object args;
+        public object Arguments { get { return args; } set { Set(ref args, value); } }
 
         public Type DestinationPage { get; set; }
 

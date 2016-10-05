@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Macalifa;
 using Windows.UI.Core;
+using ManagedBass;
 
 namespace Macalifa.Core
 {
@@ -23,7 +24,7 @@ namespace Macalifa.Core
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
-        public async Task<Mediafile> CreateMediafile(Stream stream)
+        public async Task<Mediafile> CreateMediafile(Stream stream, StorageFile file)
         {
             var Mediafile = new Mediafile();
             ID3v2 Data = new ID3v2(true, stream);
@@ -32,7 +33,8 @@ namespace Macalifa.Core
             Mediafile.Title = GetStringForNullOrEmptyProperty((await LibVM.GetTextFrame(Data, "TIT2")), System.IO.Path.GetFileNameWithoutExtension(LibraryViewModel.Path));
             Mediafile.LeadArtist = GetStringForNullOrEmptyProperty(await LibVM.GetTextFrame(Data, "TPE1"), "Unknown Artist");
             Mediafile.Album = GetStringForNullOrEmptyProperty(await LibVM.GetTextFrame(Data, "TALB"), "Unknown Album");
-            Mediafile.Length = (await GetMediaDuration(stream)).ToString();/* GetStringForNullOrEmptyProperty(await LibVM.GetTextFrame(Data, "TLEN"), "0")*/;
+          
+            //Mediafile.Length = (await GetMediaDuration(stream)).ToString();/* GetStringForNullOrEmptyProperty(await LibVM.GetTextFrame(Data, "TLEN"), "0")*/;
             Mediafile.State = PlayerState.Stopped;
             Mediafile.Genre = (await LibVM.GetTextFrame(Data, "TCON")).Remove(0, (await LibVM.GetTextFrame(Data, "TCON")).IndexOf(')') + 1);
             Mediafile.Date = DateTime.Now.Date.ToString("dd/MM/yyyy");

@@ -49,12 +49,17 @@ namespace Macalifa
         public App()
         {
             this.InitializeComponent();
-            Object value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
-            var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
-            this.RequestedTheme = (ApplicationTheme)theme;
-            Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
+            var value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
+            if (value != null)
+            {
+                var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
+                this.RequestedTheme = (ApplicationTheme)theme;
+                Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
+            }
+            //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(10, 10));
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
+            
         }
 
         
@@ -141,12 +146,20 @@ namespace Macalifa
                 // parameter
                 rootFrame.Navigate(typeof(Shell), arguments);
             }
-          
-            // Ensure the current window is active
+            float DPI = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi;
+
+            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode = Windows.UI.ViewManagement.ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
+            var desiredSize = new Windows.Foundation.Size(((float)2560 * 96.0f / DPI), ((float)1600 * 96.0f / DPI));
+
+            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchViewSize = desiredSize;
+
             Window.Current.Activate();
+
+            bool result = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryResizeView(desiredSize);
             if (args.Kind != ActivationKind.File)
             {
-                logic.Replay();
+               logic.Replay();
             }
             else
             {

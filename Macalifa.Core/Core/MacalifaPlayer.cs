@@ -31,6 +31,8 @@ using Windows.UI.Xaml.Controls;
 using ManagedBass;
 using System.Runtime.InteropServices;
 using Macalifa.Events;
+using System.Diagnostics;
+
 namespace Macalifa.Core
 {
     public class MacalifaPlayer : ViewModelBase, IDisposable
@@ -53,13 +55,10 @@ namespace Macalifa.Core
             /// Initializes the player to start playing audio
             /// </summary>
             /// <returns></returns>
-        private async void Init()
+        private void Init()
         {
-            await Task.Run(() =>
-            {
                 Bass.Start();
                 Bass.Init();
-            });
         }
         private void InitializeExtensions(string filePath)
         {
@@ -90,11 +89,12 @@ namespace Macalifa.Core
         /// <returns>Boolean</returns>
         public async Task<bool> Load(string fileName)
         {           
-            StorageFile file = await StorageFile.GetFileFromPathAsync(fileName);
-            if (file != null)
+           // StorageFile file = await StorageFile.GetFileFromPathAsync(fileName);
+            if (fileName != null)
             {
-                string sPath = file.Path;
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                Init();
+                string sPath = fileName;
+                //Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(fileName);
                 await Stop();
                 await Task.Run(() =>
                 {
@@ -103,7 +103,7 @@ namespace Macalifa.Core
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                     InitializeExtensions(fileName);
-                    CurrentlyPlayingFile = file.Path;
+                    CurrentlyPlayingFile = fileName;
                     CoreWindowLogic logic = new CoreWindowLogic();
                     logic.Stringify();
                 });
@@ -162,7 +162,7 @@ namespace Macalifa.Core
         #endregion
 
         #region Properties
-        double _volume = 0.5;
+        double _volume = 50;
         public double Volume
         {
             get { return _volume; }
@@ -192,7 +192,10 @@ namespace Macalifa.Core
        
         public double Length
         {
-            get { return Bass.ChannelBytes2Seconds(handle,Bass.ChannelGetLength(handle)); }
+            get {
+                return 
+                    Bass.ChannelBytes2Seconds(handle,Bass.ChannelGetLength(handle));
+            }
         }      
 
         public PlayerState PlayerState

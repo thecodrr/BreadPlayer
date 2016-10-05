@@ -30,16 +30,18 @@ namespace Macalifa.Database
     {
         LiteDatabase db;
         LiteCollection<Mediafile> tracks;
+        public LiteCollection<Playlist> playlists;
         public QueryMethods()
         {
             LitePlatform.Initialize(new LitePlatformWindowsStore());
             CreateDB();
         }
 
-        public  void CreateDB()
+        public void CreateDB()
         {
             db = new LiteDatabase(ApplicationData.Current.LocalFolder.Path + @"\library.db");
             tracks = db.GetCollection<Mediafile>("tracks");
+            playlists = db.GetCollection<Playlist>("playlists");
         }
         public void Insert(ObservableRangeCollection<Mediafile> fileCol)
         {           
@@ -55,8 +57,8 @@ namespace Macalifa.Database
         }
         public IEnumerable<Mediafile> PlaylistSort(string PlaylistName)
         {
-            var found =tracks.Find(t => t.playlists != null);           
-            var newFound = found.Where(a => a.playlists.All(t => t.Name == PlaylistName) && a.playlists.Count == 1);
+            var found =tracks.Find(t => t.Playlists != null);           
+            var newFound = found.Where(a => a.Playlists.All(t => t.Name == PlaylistName) && a.Playlists.Count == 1);
             return newFound ;
         }
         public void Update(Mediafile file)

@@ -71,6 +71,7 @@ namespace Macalifa.Extensions
                 return;
 
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
+            menuFlyout.Opening += MenuFlyout_Opened;
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
@@ -89,13 +90,21 @@ namespace Macalifa.Extensions
             }
         }
 
+        private void MenuFlyout_Opened(object sender, object e)
+        {
+            //var oldItems = ItemsSource;
+            //Items.Clear();
+            //ItemsSource = null;
+            //ItemsSource = oldItems;
+            Setup(this);
+        }
         private void ItemsSource_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             Setup(this);
         }
     }
 
-    public class ContextMenuCommand
+    public class ContextMenuCommand : ViewModelBase
     {
         public ContextMenuCommand(ICommand command, string text, object cmdPara = null)
         {
@@ -103,12 +112,11 @@ namespace Macalifa.Extensions
             Text = text;
             CommandParameter = cmdPara;
         }
-
+        string text;
         public string Text
         {
-            get; private set;
+            get { return text; } set { Set(ref text, value); }
         }
-
         public ICommand Command
         {
             get; private set;

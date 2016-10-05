@@ -49,22 +49,27 @@ namespace Macalifa.Behaviours
         public object Execute(object sender, object parameter)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
+            var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
             ListBoxItem item = senderElement.GetFirstAncestorOfType<ListBoxItem>();
             var ListBox = item.GetFirstAncestorOfType<ListBox>();
-           // if (item != null) item.IsSelected = true;
+            // if (item != null) item.IsSelected = true;
 
             //var items = //((Parameter as Binding).Path as ListViewItem);
             if (Parameter.ToString() == "BindableFlyout")
             {
-                if (ListBox.SelectedItems.Count == 1) { ListBox.SelectedIndex = -1;}
+                if (ListBox.SelectedItems.Count == 1) { ListBox.SelectedIndex = -1; }
                 if (item != null) item.IsSelected = true;
                 var flyout = (senderElement as Button).GetAncestorsOfType<Grid>().Where(t => t.Name == "LayoutRoot").ToList()[0].Resources["PlaylistsFlyout"] as BindableFlyout;
                 flyout.ShowAt(senderElement);
             }
-            //else if ()
-            //{
-
-            //}
+            else if (Parameter.ToString() == "Playlist")
+            {
+                if(navList != null)
+                {
+                    var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                    flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
+                }
+            }
             else
             {
                 ListBox.SelectedIndex = -1;

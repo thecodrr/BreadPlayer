@@ -118,7 +118,8 @@ namespace Macalifa.Models
         private string NaN = "NaN";
         #endregion
 
-        public ThreadSafeObservableCollection<Playlist> playlists = new ThreadSafeObservableCollection<Playlist>();
+        ThreadSafeObservableCollection<Playlist> playlists = new ThreadSafeObservableCollection<Playlist>();
+        ImageSource albumart;
         #region Properties
         public ThreadSafeObservableCollection<Playlist> Playlists { get { return playlists; } set { Set(ref playlists, value); }}
         
@@ -217,77 +218,6 @@ namespace Macalifa.Models
         public Mediafile()
         {
            // GetText(Data);
-        }
-        public async void GetText(ID3v2 Data)
-        {
-            if (Data != null)
-            {
-                Album = string.IsNullOrEmpty((await GetTextFrame(Data, "TALB"))) ? "Unknown Album" : (await GetTextFrame(Data, "TALB"));
-                Title = string.IsNullOrEmpty((await GetTextFrame(Data, "TIT2"))) ? System.IO.Path.GetFileNameWithoutExtension(path) : (await GetTextFrame(Data, "TIT2"));
-                LeadArtist = string.IsNullOrEmpty((await GetTextFrame(Data, "TPE1"))) ? "Unknown LeadArtist" : (await GetTextFrame(Data, "TPE1"));
-                BeatsPerMinutes = string.IsNullOrEmpty((await GetTextFrame(Data, "TBPM"))) ? "Unknown BPM(BeatsPerMinutes)" : (await GetTextFrame(Data, "TBPM"));
-                Composer = string.IsNullOrEmpty((await GetTextFrame(Data, "TCOM"))) ? "Unknown Composer" : (await GetTextFrame(Data, "TCOM"));
-                Genre = string.IsNullOrEmpty((await GetTextFrame(Data, "TCON"))) ? "Unknown ContentType" : (await GetTextFrame(Data, "TCON"));
-                CopyrightMessage = string.IsNullOrEmpty((await GetTextFrame(Data, "TCOP"))) ? "Unknown CopyrightMessage" : (await GetTextFrame(Data, "TCOP"));
-                Date = string.IsNullOrEmpty((await GetTextFrame(Data, "TDAT"))) ? "Unknown Date" : (await GetTextFrame(Data, "TDAT"));
-                //EncodingTime = string.IsNullOrEmpty((await GetTextFrame(Data, "TDEN"))) ? "Unknown EncodingTime" : (await GetTextFrame(Data, "TDEN"));
-                //PlaylistDelay = string.IsNullOrEmpty((await GetTextFrame(Data, "TDLY"))) ? "Unknown PlaylistDelay" : (await GetTextFrame(Data, "TDLY"));
-                //OrginalReleaseTime = string.IsNullOrEmpty((await GetTextFrame(Data, "TDOR"))) ? "Unknown OrginalReleaseTime" : (await GetTextFrame(Data, "TDOR"));
-                //RecordingTime = string.IsNullOrEmpty((await GetTextFrame(Data, "TDRC"))) ? "Unknown RecordingTime" : (await GetTextFrame(Data, "TDRC"));
-                //ReleaseTime = string.IsNullOrEmpty((await GetTextFrame(Data, "TDRL"))) ? "Unknown ReleaseTime" : (await GetTextFrame(Data, "TDRL"));
-                //TaggingTime = string.IsNullOrEmpty((await GetTextFrame(Data, "TDTG"))) ? "Unknown TaggingTime" : (await GetTextFrame(Data, "TDTG"));
-                EncodedBy = string.IsNullOrEmpty((await GetTextFrame(Data, "TENC"))) ? "Unknown EncodedBy" : (await GetTextFrame(Data, "TENC"));
-                Lyric = string.IsNullOrEmpty((await GetTextFrame(Data, "TEXT"))) ? "Unknown Lyric/TextWriter" : (await GetTextFrame(Data, "TEXT"));
-                //FileType = string.IsNullOrEmpty((await GetTextFrame(Data, "TFLT"))) ? "Unknown FileType" : (await GetTextFrame(Data, "TFLT"));
-                //Time = string.IsNullOrEmpty((await GetTextFrame(Data, "TIME"))) ? "Unknown Time" : (await GetTextFrame(Data, "TIME"));
-                InvolvedPeopleList = string.IsNullOrEmpty((await GetTextFrame(Data, "TIPL"))) ? "Unknown InvolvedPeopleList" : (await GetTextFrame(Data, "TIPL"));
-                //ContentGroupDescription = string.IsNullOrEmpty((await GetTextFrame(Data, "TIT1"))) ? "Unknown ContentGroupDescription" : (await GetTextFrame(Data, "TIT1"));
-                               Subtitle = string.IsNullOrEmpty((await GetTextFrame(Data, "TIT3"))) ? "Unknown Subtitle/Desripction" : (await GetTextFrame(Data, "TIT3"));
-                //InitialKey = string.IsNullOrEmpty((await GetTextFrame(Data, "TKEY"))) ? "Unknown InitialKey" : (await GetTextFrame(Data, "TKEY"));
-                Language = string.IsNullOrEmpty((await GetTextFrame(Data, "TLAN"))) ? "Unknown Language" : (await GetTextFrame(Data, "TLAN"));
-                Length = string.IsNullOrEmpty((await GetTextFrame(Data, "TLEN"))) ? "Unknown Length" : (await GetTextFrame(Data, "TLEN"));
-                MusicianCreditsList = string.IsNullOrEmpty((await GetTextFrame(Data, "TMCL"))) ? "Unknown MusicianCreditsList" : (await GetTextFrame(Data, "TMCL"));
-                //MediaType = string.IsNullOrEmpty((await GetTextFrame(Data, "TMED"))) ? "Unknown MediaType" : (await GetTextFrame(Data, "TMED"));
-                Mood = string.IsNullOrEmpty((await GetTextFrame(Data, "TMOO"))) ? "Unknown Mood" : (await GetTextFrame(Data, "TMOO"));
-                //OrginalTitle = string.IsNullOrEmpty((await GetTextFrame(Data, "TOAL"))) ? "Unknown OrginalTitle" : (await GetTextFrame(Data, "TOAL"));
-                //OrginalFilename = string.IsNullOrEmpty((await GetTextFrame(Data, "TOFN"))) ? "Unknown OrginalFilename" : (await GetTextFrame(Data, "TOFN"));
-                //OrginalLyricist = string.IsNullOrEmpty((await GetTextFrame(Data, "TOLY"))) ? "Unknown OrginalLyricist" : (await GetTextFrame(Data, "TOLY"));
-                //OrginalArtist = string.IsNullOrEmpty((await GetTextFrame(Data, "TOPE"))) ? "Unknown OrginalArtist" : (await GetTextFrame(Data, "TOPE"));
-                //OrginalReleaseYear = string.IsNullOrEmpty((await GetTextFrame(Data, "TORY"))) ? "Unknown OrginalReleaseYear" : (await GetTextFrame(Data, "TORY"));
-                FileOwner = string.IsNullOrEmpty((await GetTextFrame(Data, "TOWN"))) ? "Unknown FileOwner" : (await GetTextFrame(Data, "TOWN"));
-                //BandArtist = string.IsNullOrEmpty((await GetTextFrame(Data, "TPE2"))) ? "Unknown BandArtist" : (await GetTextFrame(Data, "TPE2"));
-                Conductor = string.IsNullOrEmpty((await GetTextFrame(Data, "TPE3"))) ? "Unknown Conductor" : (await GetTextFrame(Data, "TPE3"));
-                //Interpreted = string.IsNullOrEmpty((await GetTextFrame(Data, "TPE4"))) ? "Unknown Interpreted" : (await GetTextFrame(Data, "TPE4"));
-                //Partofset = string.IsNullOrEmpty((await GetTextFrame(Data, "TPOS"))) ? "Unknown Partofset" : (await GetTextFrame(Data, "TPOS"));
-                //ProducedNotice = string.IsNullOrEmpty((await GetTextFrame(Data, "TPRO"))) ? "Unknown ProducedNotice" : (await GetTextFrame(Data, "TPRO"));
-                Publisher = string.IsNullOrEmpty((await GetTextFrame(Data, "TPUB"))) ? "Unknown Publisher" : (await GetTextFrame(Data, "TPUB"));
-                TrackNumber = string.IsNullOrEmpty((await GetTextFrame(Data, "TRCK"))) ? "Unknown TrackNumber" : (await GetTextFrame(Data, "TRCK"));
-                RecordingDate = string.IsNullOrEmpty((await GetTextFrame(Data, "TRDA"))) ? "Unknown RecordingDate" : (await GetTextFrame(Data, "TRDA"));
-                //InternetRadioStationName = string.IsNullOrEmpty((await GetTextFrame(Data, "TRSN"))) ? "Unknown InternetRadioStationName" : (await GetTextFrame(Data, "TRSN"));
-                //InternetRadioStationOwner = string.IsNullOrEmpty((await GetTextFrame(Data, "TRSO"))) ? "Unknown InternetRadioStationOwner" : (await GetTextFrame(Data, "TRSO"));
-                Size = string.IsNullOrEmpty((await GetTextFrame(Data, "TSIZ"))) ? "Unknown Size" : (await GetTextFrame(Data, "TSIZ"));
-                //AlbumSortOrder = string.IsNullOrEmpty((await GetTextFrame(Data, "TSOA"))) ? "Unknown AlbumSortOrder" : (await GetTextFrame(Data, "TSOA"));
-                //PreformerSortOrder = string.IsNullOrEmpty((await GetTextFrame(Data, "TSOP"))) ? "Unknown PreformerSortOrder" : (await GetTextFrame(Data, "TSOP"));
-                //TitleSortOrder = string.IsNullOrEmpty((await GetTextFrame(Data, "TSOT"))) ? "Unknown TitleSortOrder" : (await GetTextFrame(Data, "TSOT"));
-                ISRC = string.IsNullOrEmpty((await GetTextFrame(Data, "TSRC"))) ? "Unknown ISRC" : (await GetTextFrame(Data, "TSRC"));
-                //SoftwareHardwareAndSettingUsedForEncoding = string.IsNullOrEmpty((await GetTextFrame(Data, "TSSE"))) ? "Unknown Software/HardwareAndSettingUsedForEncoding" : (await GetTextFrame(Data, "TSSE"));
-                //SetSubtitle = string.IsNullOrEmpty((await GetTextFrame(Data, "TSST"))) ? "Unknown SetSubtitle" : (await GetTextFrame(Data, "TSST"));
-                Year = string.IsNullOrEmpty((await GetTextFrame(Data, "TYER"))) ? "Unknown Year" : (await GetTextFrame(Data, "TYER"));
-            }            
-        }
-        public async Task<string> GetTextFrame(ID3v2 info, string FrameID)
-        {
-            // string Text = "";
-            return await Task.Run(() =>
-            {
-                foreach (TextFrame TF in info.TextFrames)
-                    if (TF.FrameID == FrameID)
-                    {
-                        return TF.Text;
-                    }
-                return "";
-            });
-
         }
     }
 

@@ -33,6 +33,7 @@ namespace Macalifa
     {
         Macalifa.Core.MacalifaPlayer Player => MacalifaPlayerService.Instance.Player;
         ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
+        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
         private const string pathKey = "path";
         private const string posKey = "position";
         private const string volKey = "volume";
@@ -43,25 +44,37 @@ namespace Macalifa
 
         public async void Replay(bool onlyVol = false)
         {
+            string path = "";
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + "\\lastplaying.mc");
                 string text = await FileIO.ReadTextAsync(file);
-                JsonObject jsonObject = JsonObject.Parse(text);
-                var volume = jsonObject.GetNamedNumber(volKey, 50);
-                if (jsonObject.Count == 1 || onlyVol)
+                if (!string.IsNullOrEmpty(text))
                 {
-                    ShellVM.Volume = volume;
-                }
-                else
-                {
-                    string path = jsonObject.GetNamedString(pathKey, "");
-                    double position = jsonObject.GetNamedNumber(posKey);
-                    Player.PlayerState = PlayerState.Paused;
-                    ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
-                }
-                GC.Collect();              
+                    JsonObject jsonObject = JsonObject.Parse(text);
+                    var volume = jsonObject.GetNamedNumber(volKey, 50);
+                    if (jsonObject.Count == 1 || onlyVol)
+                    {
+                        ShellVM.Volume = volume;
+                    }
+                    else
+                    {
+                        path = jsonObject.GetNamedString(pathKey, "");
+                        double position = jsonObject.GetNamedNumber(posKey);
+                        Player.PlayerState = PlayerState.Paused;
+                        if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+                            LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
+                        ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
+                    }
+
+                    GC.Collect();
+                }               
             }
+            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
+                LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
+            //else if (LibVM.TracksCollection.Elements != null)
+            //    LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
+
         }    
         public async void Stringify()
         {
@@ -71,7 +84,7 @@ namespace Macalifa
                 jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile);
                 jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);               
             }
-            jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume * 100);
+            jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
                 File.Delete(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc");
             StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc");
