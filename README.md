@@ -3,7 +3,7 @@ An music player made for Windows 10 store.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###Screenshots:
-![Imgur](http://i.imgur.com/iFWyLYK.gif)
+![Imgur](http://i.imgur.com/QBZY1AB.jpg)
 
 ###Main Features:
 1. Flawlessly plays mp3 audio. (Further format support to be added in due time.)
