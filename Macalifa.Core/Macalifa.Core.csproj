@@ -105,6 +105,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\albumart_black.png" />
     <Content Include="Assets\fontello.ttf" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
@@ -193,6 +194,7 @@
     </Content>
     <Content Include="Assets\libs\x86\bass.dll" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\albumart.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />

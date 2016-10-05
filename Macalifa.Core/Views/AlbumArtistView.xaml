@@ -6,12 +6,12 @@
     xmlns:Converters="using:Macalifa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" RequestedTheme="Light">
+    mc:Ignorable="d">
     <Page.Resources>
         <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
-    </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource LibVM}">
-        <ListView ItemsSource="{Binding AlbumCollection}">
+     </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource LibVM}" >
+        <ListView ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel MaxWidth="150" Height="210">

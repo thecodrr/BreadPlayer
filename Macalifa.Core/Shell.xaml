@@ -54,7 +54,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <AppBarButton x:Name="infoBar" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,10,0" Grid.ColumnSpan="2">
+            <AppBarButton x:Name="infoBar" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,10,0" Grid.ColumnSpan="1">
                 <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
                     <Image x:Name="albumArt" Width="66" Source="{Binding Path=Tags.AlbumArt}" Stretch="UniformToFill" Margin="10,0,0,0"/>
                     <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="3,2,0,0">

@@ -23,6 +23,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -53,7 +54,7 @@ namespace Macalifa
             if (value != null)
             {
                 var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
-                this.RequestedTheme = (ApplicationTheme)theme;
+                this.RequestedTheme = (ApplicationTheme)theme;              
                 Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
             }
             //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(10, 10));
@@ -146,17 +147,16 @@ namespace Macalifa
                 // parameter
                 rootFrame.Navigate(typeof(Shell), arguments);
             }
-            float DPI = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi;
 
-            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode = Windows.UI.ViewManagement.ApplicationViewWindowingMode.PreferredLaunchViewSize;
-
-            var desiredSize = new Windows.Foundation.Size(((float)2560 * 96.0f / DPI), ((float)1600 * 96.0f / DPI));
-
-            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchViewSize = desiredSize;
+            var view = ApplicationView.GetForCurrentView();
+            if (RequestedTheme == ApplicationTheme.Dark)
+            {
+                view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
+                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
+            }
 
             Window.Current.Activate();
-
-            bool result = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryResizeView(desiredSize);
+            
             if (args.Kind != ActivationKind.File)
             {
                logic.Replay();

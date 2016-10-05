@@ -12,12 +12,13 @@ namespace Macalifa.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is string && value != null)
+            string def = App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
+            if (value is string && value != null)
             {
-                BitmapImage image = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
+                BitmapImage image = new BitmapImage(new Uri(value.ToString() ?? def, UriKind.RelativeOrAbsolute));
                 return image;
             }
-            return null;
+            return new BitmapImage(new Uri(def, UriKind.RelativeOrAbsolute));
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
