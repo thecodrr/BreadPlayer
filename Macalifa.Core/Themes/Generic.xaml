@@ -55,7 +55,8 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="White" />
                                         </ObjectAnimationUsingKeyFrames>
-                                       
+
+                                        <PointerDownThemeAnimation TargetName="LayoutRoot"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -102,7 +103,8 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                       
+
+                                        <PointerDownThemeAnimation TargetName="LayoutRoot"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="CheckedDisabled">
@@ -164,11 +166,11 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-
-                    <SymbolIcon x:Name="Glyph" Grid.Column="0" Margin="10,0,0,0" Foreground="{ThemeResource ThemeForeground}"
-                             VerticalAlignment="Center" HorizontalAlignment="Center" Symbol="List" Width="17" Height="10" />
+                    <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/fontello.ttf#fontello"/>
                     <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
+                    
                 </Grid>
             </Setter.Value>
         </Setter>
@@ -190,8 +192,8 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <SymbolIcon x:Name="Glyph2" Grid.Column="0" Margin="10,0,0,0" Foreground="White"
-                             VerticalAlignment="Center" HorizontalAlignment="Center" Symbol="List" Width="17" Height="10" />
+                    <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/fontello.ttf#fontello"/>
                     <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />-->
                 </Grid>
@@ -227,7 +229,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        
+                                        <PointerDownThemeAnimation TargetName="LayoutRoot"/>
 
                                     </Storyboard>
                                 </VisualState>
@@ -279,16 +281,19 @@
                                 <ContentPresenter x:Name="Content" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                             </StackPanel>                                                       
                         </Border>
-                        <!--<Grid.Resources>
+                        <Grid.Resources>
                             <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                <MenuFlyoutItem Text="Rename"/>
+                                <MenuFlyoutItem Text="Play"/>
+                                <!--<MenuFlyoutItem Text="Add to"/>-->
+                                <MenuFlyoutItem Text="Delete"/>
+                                <MenuFlyoutItem Text="Rename" DataContext="{Binding Source={StaticResource PlaylistVM}, Path=Instance.LibVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                             </MenuFlyout>
                         </Grid.Resources>
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="RightTapped">
-                                <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>
+                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist"/>
                             </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>-->
+                        </Interactivity:Interaction.Behaviors>
                     </Grid>                   
                 </ControlTemplate>
             </Setter.Value>
@@ -301,8 +306,8 @@
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White"/>
+            <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/fontello.ttf#fontello"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="White" Margin="5,0,0,0"/>
            
         </Grid>
@@ -313,8 +318,10 @@
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>
+            <!--<FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>-->
+            <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/fontello.ttf#fontello"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="{ThemeResource ThemeForeground}"/>
             
         </Grid>
@@ -330,7 +337,7 @@
                             <VisualStateGroup>
                                 <VisualState>
                                     <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="800" />
+                                        <AdaptiveTrigger MinWindowWidth="600" />
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
@@ -361,6 +368,21 @@
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                                        <!--<Setter Target="header.Margin" Value="55,10,0,7.5"/>-->
+                                        <!--<Setter Target="TogglePaneButton.Foreground" Value="Black"/>-->
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="1920" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
+                                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                                        <Setter Target="RootSplitView.OpenPaneLength" Value="600" />
+                                        <Setter Target="playlistBtn.Width" Value="540"/>
+                                        <Setter Target="playlistBtnPanel.Width" Value="600"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <!--<Setter Target="header.Margin" Value="55,10,0,7.5"/>-->
                                         <!--<Setter Target="TogglePaneButton.Foreground" Value="Black"/>-->
                                     </VisualState.Setters>
@@ -398,7 +420,23 @@
                                         <!--<Setter Target="TogglePaneButton.Background" Value="Purple"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
-                               
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
+                                        <AdaptiveTrigger MinWindowWidth="1920" />
+                                        <!--<StateTrigger IsActive="{Binding ElementName=TogglePaneButton, Path=IsChecked}"/>-->
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="TogglePaneButton.Foreground" Value="White"/>
+                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
+                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
+                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
+                                        <Setter Target="playlistBtn.Width" Value="600"/>
+                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
+                                        <!--<Setter Target="TogglePaneButton.Background" Value="Purple"/>-->
+                                    </VisualState.Setters>
+                                </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <SplitView x:Name="RootSplitView"

@@ -7,33 +7,66 @@
     xmlns:Converters="using:Macalifa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    mc:Ignorable="d" Loaded="Page_Loaded" >
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!--<VisualStateManager.VisualStateGroups>
+            <VisualStateGroup CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="900" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="sliderGrid.Visibility" Value="Visible" />
+                        <Setter Target="shuffleBtn.Visibility" Value="Visible" />
+                        --><!--<Setter Target="RootSplitView.IsPaneOpen" Value="False" />--><!--
+                    </VisualState.Setters>
+                </VisualState>               
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="700" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="sliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="shuffleBtn.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="sliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="shuffleBtn.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            
+        </VisualStateManager.VisualStateGroups>-->
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" TopNavigationItems="{Binding TopMenuItems}" BottomNavigationItems="{Binding BottomMenuItems}" InitialPage="{Binding InitialPage}" Margin="0,70,0,25"/>
         <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="30*"/>
                 <ColumnDefinition Width="79*"/>
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <AppBarButton Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,20,0">
+            <AppBarButton x:Name="infoBar" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,10,0" Grid.ColumnSpan="2">
                 <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
-                    <Image Width="66" Source="{Binding Path=Tags.AlbumArt}" Stretch="UniformToFill" Margin="10,0,0,0"/>
-                    <StackPanel Orientation="Vertical" Margin="3,2,0,0">
+                    <Image x:Name="albumArt" Width="66" Source="{Binding Path=Tags.AlbumArt}" Stretch="UniformToFill" Margin="10,0,0,0"/>
+                    <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="3,2,0,0">
                         <TextBlock Text="{Binding Path=Tags.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
                         <TextBlock Text="{Binding Path=Tags.Artist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
                         <TextBlock Text="{Binding Path=Tags.Album, UpdateSourceTrigger=Explicit}" Foreground="White"/>
                     </StackPanel>
                 </StackPanel>
-            </AppBarButton>
-            <Grid Grid.Column="1">
+            </AppBarButton> 
+            <Grid Grid.Column="1" x:Name="sliderGrid">
                 <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
-                <Slider x:Name="positionSlider" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Length}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped"/>
+                <Slider x:Name="positionSlider" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Length}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
                 <TextBlock Text="{Binding Path=Length, Converter={StaticResource DoubleToTime}}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
             </Grid>
 
@@ -42,9 +75,9 @@
                 <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                 <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
                 <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
-                <AppBarToggleButton VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
-                <AppBarToggleButton Icon="Sync" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
-                <AppBarButton Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                <AppBarToggleButton x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
+                <AppBarToggleButton x:Name="repeatBtn" Icon="Sync" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                <AppBarButton x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
 
             </StackPanel>
         </Grid>

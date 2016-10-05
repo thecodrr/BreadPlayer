@@ -16,13 +16,58 @@
         <VM:SettingsViewModel x:Key="SettingsVM"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource SettingsVM}">
-        <StackPanel Margin="10,10,0,0">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Add directories to library" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}"/>
-                <!--<ToggleButton x:Name="showhideListBtn" Content="Show list" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" Style="{StaticResource HyperlinkToggleBtn}"></ToggleButton>-->
-                <ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>
-            </StackPanel>
-            <ListBox HorizontalAlignment="Left" Width="400" Background="{ThemeResource ThemeBackground}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,0,0" ItemsSource="{Binding LibraryFoldersCollection}" Height="155" Visibility="{Binding ElementName=showhideListBtn, Path=IsOn, Converter={StaticResource BoolToVisibilty}}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding ElementName=showhideListBtn, Path=IsChecked}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="showSymbol.Text" Value="&#xE010;  "/>
+                        <Setter Target="showLabel.Text" Value="Show less"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="libraryGrid.MinWidth" Value="400"/>
+                        <Setter Target="fileList.MaxWidth" Value="400"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="headerText.Margin" Value="40,0,0,10"/>
+                        <Setter Target="headerText.FontSize" Value="36"/>
+                        <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel x:Name="settingsPanel" Margin="10,10,10,10">
+            <TextBlock x:Name="headerText" VerticalAlignment="Center" Margin="5,0,10,0" Text="Settings" FontSize="44" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
+            <Grid x:Name="libraryGrid" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="19*"/>
+                    <ColumnDefinition Width="16*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Add directories to library" Grid.Column="0" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
+                <ToggleButton x:Name="showhideListBtn" HorizontalContentAlignment="Right" Grid.Column="1" Padding="0" Background="{x:Null}" IsChecked="True" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="0,4" Height="20" Width="155">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock x:Name="showSymbol" Text="&#xE011;  " FontSize="12" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock x:Name="showLabel" Text="Show more" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ToggleButton>
+                <!--<ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>-->
+            </Grid>
+            <ListBox x:Name="fileList" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,10,0" ItemsSource="{Binding LibraryFoldersCollection}" Height="155" Visibility="{Binding ElementName=showhideListBtn, Path=IsChecked, Converter={StaticResource BoolToVisibilty}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -30,9 +75,9 @@
                             <TextBlock Text="{Binding Path}" Margin="20,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
-                </ListBox.ItemTemplate>                
+                </ListBox.ItemTemplate>
             </ListBox>
-            <ToggleSwitch x:Name="themeChange" Header="Theme:" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" Margin="5,10,0,0">
+            <ToggleSwitch x:Name="themeChange" Header="Theme:" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" Margin="5,10,10,0" HorizontalAlignment="Stretch">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Toggled">
                         <Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=restartNotice}" Value="Visible"/>
@@ -45,6 +90,6 @@
                 <ComboBox Margin="15,0,0,0" Width="120"></ComboBox>
             </StackPanel>-->
 
-        </StackPanel>        
+        </StackPanel>
     </Grid>
 </Page>

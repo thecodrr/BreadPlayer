@@ -9,7 +9,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Extensions="using:Macalifa.Extensions" xmlns:Behaviours="using:Macalifa.Behaviours" 
     mc:Ignorable="d">
     <Page.Resources>
-        <Services:PlaylistViewService x:Key="PlaylistVM"/>
+      
         <Style TargetType="ListBoxItem" x:Key="CustomPlaylistItemStyle">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="TabNavigation" Value="Local" />
@@ -241,8 +241,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Margin="15,15,0,0" Grid.Row="0" >
-                <TextBlock Text="{Binding Playlist.Name, FallbackValue='Unknown Playlist'}" FontSize="60" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
-                <TextBlock Text="{Binding Playlist.Description, FallbackValue='No Description'}" TextWrapping="WrapWholeWords" FontSize="18" FontFamily="Segoe UI Light"/>
+                <TextBlock Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
+                <TextBlock Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" TextWrapping="WrapWholeWords" FontSize="18" FontFamily="Segoe UI Light"/>
             </StackPanel>
             <Grid VerticalAlignment="Bottom" Grid.Row="1" Margin="15,0,15,10"  >
                 <Grid.ColumnDefinitions>
@@ -251,9 +251,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
-                    <TextBlock Text="{Binding TotalSongs, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
+                    <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
                     <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
-                    <TextBlock Text="{Binding TotalMinutes, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
+                    <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
                     <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" RequestedTheme="Dark" Background="{x:Null}" Height="20">

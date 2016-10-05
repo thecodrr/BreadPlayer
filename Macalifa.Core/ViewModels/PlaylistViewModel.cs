@@ -28,29 +28,66 @@ using System.Windows.Input;
 using Macalifa.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
+using Macalifa.Dialogs;
 
 namespace Macalifa.ViewModels
 {
     public class PlaylistViewModel : ViewModelBase
     {
-        LibraryViewService LibVM => LibraryViewService.Instance;
+        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
+        ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
         ThreadSafeObservableCollection<Mediafile> songs;
         public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
         string totalSongs;
-        public string TotalSongs { get { totalSongs = Songs.Count.ToString() + " Songs"; return totalSongs;} set { Set(ref totalSongs, value); } }
+        public string TotalSongs
+        {
+            get
+            {
+                totalSongs = Songs.Count.ToString() + " Songs";
+                return totalSongs;
+            }
+            set
+            {
+                totalSongs = "0";
+                Set(ref totalSongs, value);
+            }
+        }
         string totalMinutes;
-        public string TotalMinutes { get { totalMinutes = Songs.ToList().Sum(t => TimeSpan.FromSeconds(Convert.ToDouble(t.Length)).Minutes) + " Minutes"; return totalMinutes; } set { Set(ref totalMinutes, value); } }
+        public string TotalMinutes
+        {
+            get
+            {
+                totalMinutes = Songs.Sum(t => TimeSpan.FromSeconds(Convert.ToDouble(t.Length)).Minutes) + " Minutes";
+                return totalMinutes;
+            }
+            set
+            {
+                totalMinutes = "0";
+                Set(ref totalMinutes, value);
+            }
+        }
 
         ImageSource playlistArt;
-        public ImageSource PlaylistArt { get {
-                if (Songs.Count > 0 && Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)))
+        public ImageSource PlaylistArt
+        {
+            get
+            {
+                if (Songs.Any() && Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)))
                 {
                     BitmapImage image = new BitmapImage(new Uri(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
                     playlistArt = image;
+                    return playlistArt;
                 }
-                return playlistArt; } set { Set(ref playlistArt, value); } }
+                return null;                            
+            }
+            set {
+                if (Songs.Any())
+                    playlistArt = null;
+                Set(ref playlistArt, value);
+            }
+        }
         RelayCommand _deleteCommand;
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
@@ -66,12 +103,59 @@ namespace Macalifa.ViewModels
             var mediafile = para as Mediafile;
             mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == Playlist.Name));
             Songs.Remove(mediafile);
-            LibVM.LibVM.db.Update(mediafile);
-            
+            LibVM.db.Update(mediafile);
+            Refresh();
         }
-        
+        void Refresh()
+        {
+            //refreshes the values by getting and setting the same properties.
+            PlaylistArt = Songs.Any() ? PlaylistArt : null;
+            TotalSongs = TotalSongs;
+            TotalMinutes = TotalMinutes;
+        }
+        RelayCommand _renamePlaylistCommand;
+        /// <summary>
+        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand RenamePlaylistCommand
+        {
+            get
+            { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => this.RenamePlaylist(param)); } return _renamePlaylistCommand; }
+        }
+        async void RenamePlaylist(object playlist)
+        {
+            var selectedPlaylist = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Key;
+            var songs = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Value;
+            var dialog = new InputDialog()
+            {
+                Title = "Rename this playlist",
+                Text = selectedPlaylist.Name,
+                Description = selectedPlaylist.Description
+            };
+            var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
+
+                if (songs.Count() > 0)
+                {
+                    foreach (var file in songs)
+                    {
+                        file.Playlists.First(t => t.Name == selectedPlaylist.Name).Name = pl.Name;
+                        file.Playlists.First(t => t.Name == pl.Name).Description = pl.Description;
+                        LibVM.db.Update(file);
+                    }
+                }
+                ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name;
+                LibVM.Options.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name;
+                LibVM.db.playlists.FindOne(t => t.Name == selectedPlaylist.Name);
+                Playlists.Add(pl, LibVM.db.PlaylistSort(pl.Name));
+                ShellVM.PlaylistsItems.First(t => t.Label == pl.Name).Arguments = Playlists;
+                Playlist = pl;
+            }
+        }
         public PlaylistViewModel()
-        {            
+        {
         }
 
     }

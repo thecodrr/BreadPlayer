@@ -29,6 +29,10 @@ using Windows.UI.Xaml;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using System.Windows.Input;
+using Windows.Storage.AccessCache;
+using Windows.UI.Core;
+using Macalifa.Models;
+using ManagedBass;
 
 namespace Macalifa.ViewModels
 {
@@ -36,18 +40,21 @@ namespace Macalifa.ViewModels
     {
         public SettingsViewModel()
         {
-                       
+
         }
         DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand LoadCommand { get { if (_loadCommand == null) { _loadCommand = new DelegateCommand(Load); } return _loadCommand; } }
-      
+
         bool _isThemeDark;
         public bool IsThemeDark
         {
-            get { _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; return _isThemeDark; }
+            get
+            {
+                _isThemeDark = false; return _isThemeDark; //ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; 
+            }
             set
             {
                 Set(ref _isThemeDark, value);
@@ -70,30 +77,48 @@ namespace Macalifa.ViewModels
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
             CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
-            StorageFolder folder = await picker.PickSingleFolderAsync();            
+            StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null)
             {
-                var filelist = Macalifa.Common.DirectoryWalker.GetFiles(folder.Path);               
+                StorageApplicationPermissions.FutureAccessList.Add(folder);
+                var filelist = Macalifa.Common.DirectoryWalker.GetFiles(folder.Path); //folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName); //
+
                 LibraryFoldersCollection.Add(folder);
                 foreach (var x in filelist)
                 {
+                    Mediafile mp3file = null;
                     StorageFile file = await StorageFile.GetFileFromPathAsync(x);
                     LibraryViewModel.Path = file.Path;
-                    using (var stream = await LibVM.Dispatcher.RunTaskAsync(LibraryViewModel.GetFileAsStream))
+                    var path = file.Path;
+                    if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
                     {
-                        if (stream != null)
+                        using (var stream = await CoreWindow.GetForCurrentThread().Dispatcher.RunTaskAsync(LibraryViewModel.GetFileAsStream))
                         {
-                            var path = file.Path;
-                            if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
+                            if (stream != null)
                             {
-                                var m = await Methods.CreateMediafile(stream);
-                                LibVM.TracksCollection.AddItem(m);
-                                LibVM.db.Insert(m);
+                                mp3file = await Methods.CreateMediafile(stream, file);
                             }
                         }
+                        GetLength(mp3file);
+                        LibVM.TracksCollection.AddItem(mp3file);
+                        LibVM.db.Insert(mp3file);
+                        LibVM.AddAlbums();
                     }
                 }
+                }
             }
+
+        async void GetLength(Mediafile f)
+        {
+            string sPath = f.Path;
+            int handle = 0;
+            await Task.Run(() =>
+            {
+                Bass.MusicFree(handle);
+                Bass.ChannelStop(handle);
+                handle = Bass.CreateStream(sPath);
+            });
+            f.Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle)).ToString();
         }
     }
 }

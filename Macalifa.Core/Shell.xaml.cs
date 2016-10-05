@@ -39,6 +39,9 @@ using Macalifa.Models;
 using Macalifa.Extensions;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Shapes;
+using System.Diagnostics;
+using Windows.UI.ViewManagement;
 
 namespace Macalifa
 {
@@ -56,20 +59,31 @@ namespace Macalifa
         public Shell()
         {
             this.InitializeComponent();
-            
+           
+            //ApplicationView.PreferredLaunchViewSize = new Size(1440, 900);
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ShellVM.TopMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
-                Label = "Library",
+                Label = "Songs",
                 DestinationPage = typeof(LibraryView),
-                Symbol = Symbol.Library
+                Symbol = Symbol.Library,
+                FontGlyph = "\ue81c"
+            });
+            ShellVM.TopMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
+            {
+                Label = "Albums",
+                DestinationPage = typeof(AlbumArtistView),
+                Symbol = Symbol.Library,
+                FontGlyph = "\ue81f"
             });
             ShellVM.BottomMenuItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Label = "Settings",
                 DestinationPage = typeof(SettingsView),
-                Symbol = Symbol.Setting
+                Symbol = Symbol.Setting,
+                FontGlyph = "\ue814"
             });
-            
+
             this.DataContext = ShellVM;
 
             _smtc = SystemMediaTransportControls.GetForCurrentView();
@@ -83,8 +97,8 @@ namespace Macalifa
                 var ignored = false;
                 hamburgerMenu.BackRequested(ref ignored);
             };
+            
         }
-
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             ShellVM.Play(e.Parameter);
@@ -129,7 +143,7 @@ namespace Macalifa
                     break;
             }
         }
-
+        double newPosition;
         private void VolSliderThumb_DragStarted(object sender, DragStartedEventArgs e)
         {
             var vm = this.DataContext as ShellViewModel;
@@ -141,7 +155,6 @@ namespace Macalifa
             var vm = this.DataContext as ShellViewModel;
             if (vm != null)
             {
-
                 vm.CurrentPosition = positionSlider.Value;
                 vm.DontUpdatePosition = false;
             }
@@ -150,25 +163,50 @@ namespace Macalifa
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Thumb volSliderThumb = FrameworkElementExtensions.FindChildOfType<Thumb>(positionSlider);
-            volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
-            volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
-
-            Player.MediaStateChanged += Player_MediaStateChanged;
+            //var track = positionSlider.GetChildren().ToList()[0];
+            if (volSliderThumb != null)
+            {
+                volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
+                volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
+                volSliderThumb.PointerMoved += VolSliderThumb_PointerMoved; ;
+            }
             
-          
+            Player.MediaStateChanged += Player_MediaStateChanged;
         }
+        
+
+        private void VolSliderThumb_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            Windows.UI.Xaml.Input.Pointer ptr = e.Pointer;
+            Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
+            
+                Debug.WriteLine("Left 2123Button pressed!");
+               // (sender as Thumb).Focus(FocusState.Pointer);
+                //var vm = this.DataContext as ShellViewModel;
+                //vm.DontUpdatePosition = true;
+                //vm.CurrentPosition = positionSlider.Value;
+                //vm.DontUpdatePosition = false;
+            
+        }
+        
 
         private async void positionSlider_Tapped(object sender, TappedRoutedEventArgs e)
-        {         
+        {           
             var vm = this.DataContext as ShellViewModel;
             vm.DontUpdatePosition = true;
             if (vm != null)
             {
-                vm.CurrentPosition = positionSlider.Value;
+                //vm.CurrentPosition = e.GetPosition(positionSlider).X / 4;
+                //                
+               // ShowMessage((e.GetPosition(positionSlider).X).ToString());
             }
-            await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(2));
             vm.DontUpdatePosition = false;
 
+        }
+        private void positionSlider_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var s = positionSlider.Value;
+            var vm = this.DataContext as ShellViewModel;
         }
         public async void ShowMessage(string msg)
         {
@@ -178,32 +216,44 @@ namespace Macalifa
 
         private async void He_KeyUp(object sender, KeyRoutedEventArgs e)
         {
-          
-                await Task.Run(async () =>
+
+            await Task.Run(async () =>
 {
-    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+{
+    if (He.Text.Length > 0)
     {
-        if (He.Text.Length > 0)
-        {
-           
-            var list = LibVM.LibVM.OldItems.Where(w => w.Title.ToUpper().Contains(He.Text.ToUpper())).ToList();
-            var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), list, a => a.Title.Remove(1));
-            LibVM.LibVM.TracksCollection = null;
-            LibVM.LibVM.TracksCollection = col;
-            
-        }     
-        else
-        {
 
-            var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), LibVM.LibVM.OldItems, a => a.Title.Remove(1));
-            LibVM.LibVM.TracksCollection = null;
-            LibVM.LibVM.TracksCollection = col;
+        var list = LibVM.LibVM.OldItems.Where(w => w.Title.ToUpper().Contains(He.Text.ToUpper())).ToList();
+        var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), list, a => a.Title.Remove(1));
+        LibVM.LibVM.TracksCollection = null;
+        LibVM.LibVM.TracksCollection = col;
 
-            GC.Collect();
-        }
-    });
+    }
+    else
+    {
+
+        var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), LibVM.LibVM.OldItems, a => a.Title.Remove(1));
+        LibVM.LibVM.TracksCollection = null;
+        LibVM.LibVM.TracksCollection = col;
+
+        GC.Collect();
+    }
 });
-           
+});
+
         }
+
+        private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            Thumb volSliderThumb = FrameworkElementExtensions.FindChildOfType<Thumb>(positionSlider);
+            if (volSliderThumb != null)
+            {
+                volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
+                volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
+            }
+        }
+
+        
     }
 }

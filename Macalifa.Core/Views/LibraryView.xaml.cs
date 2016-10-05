@@ -65,7 +65,7 @@ namespace Macalifa
                             {
                                 if (vm.TracksCollection.Elements.All(t => t.Path != LibraryViewModel.Path))
                                 {
-                                    var m = await Methods.CreateMediafile(stream);
+                                    var m = await Methods.CreateMediafile(stream, file as StorageFile);
                                     vm.TracksCollection.AddItem(m);
                                     vm.db.Insert(m);
                                 }

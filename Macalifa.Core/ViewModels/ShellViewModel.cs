@@ -43,7 +43,7 @@ namespace Macalifa.ViewModels
         #region Fields
         LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
         MacalifaPlayer player => MacalifaPlayerService.Instance.Player;
-        private IconElement _playPauseIcon = new SymbolIcon(Symbol.Play);
+        private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         private string s = "0 %";
         private double _volume = 100;
         DispatcherTimer timer;
@@ -241,7 +241,7 @@ namespace Macalifa.ViewModels
                 Set(ref s, value);
             }
         }
-        public IconElement PlayPauseIcon
+        public SymbolIcon PlayPauseIcon
         {
             get
             {
@@ -249,6 +249,8 @@ namespace Macalifa.ViewModels
             }
             set
             {
+                if (_playPauseIcon == null)
+                    _playPauseIcon = new SymbolIcon(Symbol.Play);
                 Set(ref _playPauseIcon, value);
             }
         }
@@ -303,6 +305,7 @@ namespace Macalifa.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            PlayPauseIcon = new SymbolIcon(Symbol.Play);
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;            
             PlayPauseCommand = new DelegateCommand(PlayPause) { IsEnabled = false };
             PlayNextCommand = new DelegateCommand(PlayNext);

@@ -1,0 +1,128 @@
+﻿<Page
+    x:Class="Macalifa.Shell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Macalifa"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:SplitViewMenu" xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours"
+      xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:Converters="using:Macalifa.Converters" Loaded="Page_Loaded"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
+        <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        <SymbolIcon Symbol="Play" x:Key="PlayIcon"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding ElementName=posToggleBtn, Path=IsChecked}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="posToggleBtn.Content" Value="&#xE011;"/>
+                        <Setter Target="controlPanel.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState> 
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="400"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="openFileBtn.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <controls:SplitViewMenu x:Name="hamburgerMenu" Grid.Row="0" PlaylistsItems="{Binding PlaylistsItems}" TopNavigationItems="{Binding TopMenuItems}" BottomNavigationItems="{Binding BottomMenuItems}" InitialPage="{Binding InitialPage}" Grid.RowSpan="2"/>
+        <Grid x:Name="grid" Grid.Row="2" Margin="0,0,0,25" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel x:Name="controlPanel" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+                <StackPanel.RenderTransform>
+                    <TranslateTransform Y="155"/>
+                </StackPanel.RenderTransform>
+                <Grid  Visibility="{Binding ElementName=volBtn, Path=IsChecked}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="volumeSlider" Value="{Binding Volume, Mode=TwoWay, FallbackValue=50}" MinWidth="300" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="15,0,0,0" />
+                    <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Volume, FallbackValue=50}" FontSize="20" Height="30" Foreground="#FFE0E0E0" Margin="10,0,10,0"/>
+                </Grid>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="10,0,0,0" FontSize="12"/>
+                    <Slider Grid.Column="1" x:Name="positionSlider" Style="{StaticResource CircleSlider}" Maximum="{Binding Length, FallbackValue=1000}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Tapped="positionSlider_Tapped" Margin="15,0,0,0"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Length, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="15,0,10,0" FontSize="12"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top">
+                    <AppBarButton Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
+                    <AppBarButton Icon="{Binding PlayPauseIcon, UpdateSourceTrigger=Explicit, TargetNullValue={StaticResource PlayIcon}, FallbackValue={StaticResource PlayIcon}}" VerticalAlignment="Stretch" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                    <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
+                    <AppBarToggleButton x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
+                    <AppBarToggleButton x:Name="repeatBtn" Icon="Sync" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                    <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
+                    <AppBarButton x:Name="openFileBtn" Visibility="Collapsed" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                </StackPanel>
+            </StackPanel>
+            <ToggleButton Grid.Row="1" x:Name="posToggleBtn" HorizontalAlignment="Stretch" IsChecked="False" FontFamily="Segoe MDL2 Assets" Background="Transparent" Content="&#xE010;" Height="27">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Unchecked" SourceObject="{Binding ElementName=posToggleBtn}">
+                        <Media:ControlStoryboardAction>
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation EnableDependentAnimation="True"
+                        Storyboard.TargetName="controlPanel"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                        From="0"
+                                                     To="155" 
+                        Duration="0:0:0.6" />
+                                </Storyboard>
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
+                        <!--<Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=controlPanel}" Value="Collapsed"/>-->
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="Checked" SourceObject="{Binding ElementName=posToggleBtn}">
+                        <Media:ControlStoryboardAction>
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation EnableDependentAnimation="True"
+                        Storyboard.TargetName="controlPanel"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" 
+                        From="155" To="0" 
+                        Duration="0:0:0.1" />
+                                </Storyboard>
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </ToggleButton>
+        </Grid>
+        <Canvas VerticalAlignment="Bottom" Height="25" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Grid.Row="2">
+            <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                <TextBlock Text="{Binding Path=Tags.Title, UpdateSourceTrigger=Explicit, FallbackValue='...'}" Foreground="{ThemeResource ThemeForeground}"/>
+                <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Tags.Artist, UpdateSourceTrigger=Explicit, FallbackValue='...'}" Foreground="{ThemeResource ThemeForeground}" Margin="5,0,0,0"/>
+                <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
+                <TextBlock Text="{Binding Path=Tags.Album, UpdateSourceTrigger=Explicit, FallbackValue='...'}" Foreground="{ThemeResource ThemeForeground}" Margin="5,0,0,0"/>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Page>
