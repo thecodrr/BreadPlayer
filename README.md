@@ -2,7 +2,7 @@
 An music player made for Windows 10 store.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
-###Screenshots:
+###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/QBZY1AB.jpg)
 
 ###Main Features:
