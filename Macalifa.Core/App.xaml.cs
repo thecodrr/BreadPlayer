@@ -40,9 +40,7 @@ namespace Macalifa
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
-    {
-
-        CoreWindowLogic logic = new CoreWindowLogic();
+    {        
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -67,7 +65,7 @@ namespace Macalifa
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            logic.Stringify();
+            CoreWindowLogic.Stringify();
             deferral.Complete();
             
         }
@@ -109,7 +107,7 @@ namespace Macalifa
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            logic.Stringify();
+            CoreWindowLogic.Stringify();
             await Task.Delay(100);
             deferral.Complete();
         }
@@ -159,11 +157,11 @@ namespace Macalifa
             
             if (args.Kind != ActivationKind.File)
             {
-               logic.Replay();
+               CoreWindowLogic.Replay();
             }
             else
             {
-                logic.Replay(true);
+                CoreWindowLogic.Replay(true);
             }
         }
     }

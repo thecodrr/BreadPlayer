@@ -740,26 +740,47 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                         <VisualState x:Name="SelectedUnfocused">
                                             <VisualState.Setters>
                                                 <Setter Target="DataStack.Foreground" Value="White"/>
-                                                <Setter Target="DataStack.CanDrag" Value="True"/>
                                                 <Setter Target="titleTxt.MaxWidth" Value="190"/>
                                                 <Setter Target="PressedBackground.Fill" Value="{ThemeResource HoverBrush}"/>
-                                            </VisualState.Setters>                                            
+                                            </VisualState.Setters>
+                                            <VisualState.Storyboard>
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState.Storyboard>
                                         </VisualState>
                                         <VisualState x:Name="SelectedPointerOver">
                                             <VisualState.Setters>
-                                                <Setter Target="DataStack.Foreground" Value="{ThemeResource PointerOverBrush}"/>
-                                                <Setter Target="DataStack.CanDrag" Value="True"/>
+                                                <Setter Target="DataStack.Foreground" Value="{ThemeResource PointerOverBrush}"/>                                                
                                                 <Setter Target="titleTxt.MaxWidth" Value="190"/>
                                                 <Setter Target="PressedBackground.Fill" Value="{ThemeResource HoverBrush}"/>
-                                            </VisualState.Setters>                                           
+                                            </VisualState.Setters>
+                                            <VisualState.Storyboard>
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState.Storyboard>
                                         </VisualState>
                                         <VisualState x:Name="SelectedPressed">
                                             <VisualState.Setters>
                                                 <Setter Target="DataStack.Foreground" Value="White"/>
-                                                <Setter Target="DataStack.CanDrag" Value="True"/>
                                                 <Setter Target="titleTxt.MaxWidth" Value="190"/>
                                                 <Setter Target="PressedBackground.Fill" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}"/>
                                             </VisualState.Setters>
+                                            <VisualState.Storyboard>
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </VisualState.Storyboard>
                                         </VisualState>
                                     </VisualStateGroup>
                                     <VisualStateGroup>
