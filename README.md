@@ -11,6 +11,23 @@ An music player made for Windows 10 store.
 3. Other basic music player capabilities such as repeat, suffle etc.
 4. ID3 Tag Reader
 
+###Alpha Feature-List:
+This is the list of all the features that are added and/or yet to be added before first **Alpha** release.
+- [ ] Improve shuffle
+- [ ] Implement History/Recent View
+- [x] Playlist creation, import, export and adding songs to playlists. 
+- [x] Album View for Library.
+- [x] Play song directly when passed as an argument (From Windows Explorer etc.).
+- [x] Drag & Drop support.
+- [ ] Sorting, filtering, search etc.
+- [x] Full library support and features. 
+- [x] Implement SettingsView for main features.
+- [ ] Show song's properties (ID3 Info).
+- [x] Implement basic player functions.
+- [ ] Notification when new song starts playing.
+- [x] Save `CurrentlyPlayingSong` and info before `ApplicationExit`.
+- [x] Support for Windows 10 Mobile
+
 ##About the project:
 This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage** so much so that not even the UI is ready at the moment.
  [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
