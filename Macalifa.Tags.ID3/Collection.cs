@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.ComponentModel;
-
+using System.Linq;
 namespace Macalifa.Tags.ID3.ID3v2Frames
 {
     /// <summary>
@@ -101,24 +101,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         public FrameCollection(string Name)
             : base(Name) { }
 
-        /// <summary>
-        /// Add new Item to current FrameCollection
-        /// </summary>
-        /// <param name="item">item to add to collection</param>
-        public void Add(FrameType item)
-        {
-            InnerList.Remove(item);
-            List.Add(item);
-        }
-
-        /// <summary>
-        /// remove specific item from current FrameCollection
-        /// </summary>
-        /// <param name="item">item to remove from collection</param>
-        public void Remove(FrameType item)
-        {
-            List.Remove(item);
-        }
+       
 
         /// <summary>
         /// Convert current collection to FrameType array
@@ -126,7 +109,9 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         /// <returns>FrameType array</returns>
         public FrameType[] ToArray()
         {
-            return (FrameType[])InnerList.ToArray(typeof(FrameType));
+            Array arr = null;
+            base.CopyTo(arr, 0);
+            return (FrameType[])arr;
         }
 
         /// <summary>
@@ -137,23 +122,13 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         {
             return typeof(FrameType);
         }
-
-        /// <summary>
-        /// Gets specific frame from list
-        /// </summary>
-        /// <param name="index">index of frame in list</param>
-        /// <returns>Frame</returns>
-        public FrameType this[int index]
-        {
-            get
-            { return (FrameType)this.List[index]; }
-        }
+        
     }
 
     /// <summary>
     /// A base class for frame collection class
     /// </summary>
-    public class FrameCollectionBase : CollectionBase
+    public class FrameCollectionBase : SortedList
     {
         private string _Name;
 
@@ -171,7 +146,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         /// </summary>
         public void Sort()
         {
-            InnerList.Sort();
+        
         }
 
         /// <summary>
@@ -191,21 +166,12 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
             get
             {
                 int Len = 0;
-                foreach (ILengthable IL in List)
+                foreach (ILengthable IL in base.Values)
                     Len += IL.Length;
                 return Len;
             }
         }
-
-        /// <summary>
-        /// Convert current collection to Frame array
-        /// </summary>
-        /// <returns>Frame array</returns>
-        public virtual Frame[] ToFrameArray()
-        {
-            return (Frame[])InnerList.ToArray(typeof(Frame));
-        }
-
+        
         /// <summary>
         /// Get type of items in collection
         /// </summary>
@@ -223,37 +189,6 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         {
             return typeof(Frame);
         }
-
-        /// <summary>
-        /// Add specific frame to collection
-        /// </summary>
-        /// <param name="item">Frame to add to collection</param>
-        public void Add(Frame item)
-        {
-            List.Add(item);
-        }
-
-        /// <summary>
-        /// Remove specific frame from list
-        /// </summary>
-        /// <param name="item">Frame to remove from list</param>
-        public void Remove(Frame item)
-        {
-            if (List.Contains(item))
-                List.Remove(item);
-        }
-
-        /// <summary>
-        /// Indicate if list contains specific frame
-        /// </summary>
-        /// <param name="item">Frame to search for</param>
-        /// <returns>true if exists otherwise false</returns>
-        public bool Contains(Frame item)
-        { 
-            foreach(Frame F in List)
-                if(F.Equals(item))
-                    return true;
-            return false;
-        }
+        
     }
 }

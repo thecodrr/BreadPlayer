@@ -10,7 +10,7 @@
     <Page.Resources>
         <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
      </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource LibVM}" >
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" >
         <ListView ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}">
             <ListView.ItemTemplate>
                 <DataTemplate>

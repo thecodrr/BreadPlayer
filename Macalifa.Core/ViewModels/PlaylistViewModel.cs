@@ -34,8 +34,6 @@ namespace Macalifa.ViewModels
 {
     public class PlaylistViewModel : ViewModelBase
     {
-        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
-        ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
         ThreadSafeObservableCollection<Mediafile> songs;
         public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
         Playlist playlist;

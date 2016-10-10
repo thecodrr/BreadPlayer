@@ -62,7 +62,7 @@ namespace Macalifa.ViewModels
         public CoreDispatcher Dispatcher;
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
         ObservableRangeCollection<String> _GenreCollection = new ObservableRangeCollection<string>();
-        public List<Mediafile> OldItems;
+        public IEnumerable<Mediafile> OldItems;
         public ListBox FileListBox;
         public static string Path = "";
         #endregion
@@ -73,10 +73,9 @@ namespace Macalifa.ViewModels
         /// </summary>
         public LibraryViewModel()
         {
-            LibraryViewService.vm = this;
-            LibraryViewService service = LibraryViewService.Instance;
+            GenericService<LibraryViewModel>.vm = this;
+            GenericService<LibraryViewModel> service = GenericService<LibraryViewModel>.Instance;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-            db.CreateDB();
             LoadLibrary();
         }
         #endregion
@@ -101,15 +100,6 @@ namespace Macalifa.ViewModels
         {
             get { return _GenreCollection; }
         }
-        /// <summary>
-        /// Gets the instance of <see cref="ShellViewModel"/>
-        /// </summary>
-        public ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
-        /// <summary>
-        /// Gets read-only instance of <see cref="MacalifaPlayer"/>
-        /// </summary>
-        public MacalifaPlayer Player => MacalifaPlayerService.Instance.Player;
-
         GroupedObservableCollection<string, Mediafile> _TracksCollection;
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
@@ -332,15 +322,14 @@ namespace Macalifa.ViewModels
         public async Task<string> GetTextFrame(ID3v2 info, string FrameID)
         {
             // string Text = "";
-            return await Task.Run(() =>
-            {
-                foreach (TextFrame TF in info.TextFrames)
-                    if (TF.FrameID == FrameID)
-                    {
-                        return TF.Text;
-                    }
-                return "";
-            });
+            
+                return await Task.Run(() =>
+                {
+                    if ((info.TextFrames[FrameID] as TextFrame) != null)
+                        return (info.TextFrames[FrameID] as TextFrame).Text;
+                    else
+                        return "";
+                });
 
         }
         /// <summary>
@@ -373,10 +362,11 @@ namespace Macalifa.ViewModels
         {
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\library.db"))
             {
-                OldItems = db.GetTracks().ToList();
+                OldItems = db.GetTracks();
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, OldItems, t => t.Title);
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>(OldItems.SelectMany(t => t.Playlists).DistinctBy(t => t.Name).ToList());
+                //TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
+                PlaylistCollection.AddRange(OldItems.SelectMany(t => t.Playlists).DistinctBy(t => t.Name));
                 PlaylistCollection.AddRange(db.playlists.FindAll());
                 Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
                 AddAlbums();
@@ -394,7 +384,7 @@ namespace Macalifa.ViewModels
                         Symbol = Symbol.List,
                         FontGlyph = "\ue823"
                     });
-                    GC.Collect();
+                   // GC.Collect();
                 }
             }
             else
@@ -402,14 +392,9 @@ namespace Macalifa.ViewModels
                 PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
             }
         }
-
-        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            
-        }
-
         public void AddAlbums()
         {
+            var list = new List<Album>();
             foreach (var song in TracksCollection.Elements)
             {
                 if (!AlbumCollection.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
@@ -418,9 +403,14 @@ namespace Macalifa.ViewModels
                     alb.AlbumName = song.Album;
                     alb.Artist = song.LeadArtist;
                     alb.AlbumArt = song.AttachedPicture;
-                    AlbumCollection.Add(alb);
+                    list.Add(alb);
+                }
+                else
+                {
+                    return;
                 }
             }
+            AlbumCollection.AddRange(list);
         }
 
         /// <summary>
@@ -429,30 +419,31 @@ namespace Macalifa.ViewModels
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public async void SaveImages(ID3v2 Data, Mediafile file)
         {
-            var albumartFolder = ApplicationData.Current.LocalFolder;
-            //Debug.Write(albumartFolder.Path);
-            var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-            if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
-            {
-                var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
-                using (var albumstream = await albumart.OpenStreamForWriteAsync())
-                {
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
-                    WriteableBitmap bmp = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-                    await bmp.SetSourceAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream.AsRandomAccessStream());
-                    var pixelStream = bmp.PixelBuffer.AsStream();
-                    byte[] pixels = new byte[bmp.PixelBuffer.Length];
-                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bmp.PixelWidth, (uint)bmp.PixelHeight, 96, 96, pixels);
-                    await encoder.FlushAsync();
-                    pixelStream.Dispose();
-                }
-            }
+            //var albumartFolder = ApplicationData.Current.LocalFolder;
+            ////Debug.Write(albumartFolder.Path);
+            //var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
+            //if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
+            //{
+            //    var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
+            //    using (var albumstream = await albumart.OpenStreamForWriteAsync())
+            //    {
+            //        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
+            //        WriteableBitmap bmp = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+            //        await bmp.SetSourceAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
+            //        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream.AsRandomAccessStream());
+            //        var pixelStream = bmp.PixelBuffer.AsStream();
+            //        byte[] pixels = new byte[bmp.PixelBuffer.Length];
+            //        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+            //        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bmp.PixelWidth, (uint)bmp.PixelHeight, 96, 96, pixels);
+            //        await encoder.FlushAsync();
+            //        pixelStream.Dispose();
+            //    }
+            //}
 
 
         }
         #endregion
+
         public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
         public ThreadSafeObservableCollection<Album> AlbumCollection { get; set; } = new ThreadSafeObservableCollection<Album>();
         async void AddToPlaylist(object file)

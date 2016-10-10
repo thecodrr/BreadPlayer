@@ -15,7 +15,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
+    mc:Ignorable="d" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}">
     <Page.Resources>
 
         <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding TracksCollection.Elements}"/>
@@ -29,7 +29,7 @@
 
     </Page.Resources>
 
-    <Grid Name="Grid" DataContext="{StaticResource LibVM}">
+    <Grid Name="Grid" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="187*"/>
             <ColumnDefinition Width="173*"/>
@@ -78,7 +78,7 @@
 
         <Border Grid.RowSpan="2" Background="{ThemeResource ThemeBackground}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="headerText" Text="Library" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <ListBox AllowDrop="True" CanDrag="True" SelectionMode="Extended" x:Name="fileBox" Background="{ThemeResource ThemeBackground}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Drop="fileBox_Drop" DragOver="fileBox_DragOver" Grid.ColumnSpan="2">
+        <ListBox SelectionMode="Extended" x:Name="fileBox" Background="{ThemeResource ThemeBackground}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate >
                     <VirtualizingStackPanel Orientation="Vertical">

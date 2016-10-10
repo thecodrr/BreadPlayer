@@ -24,6 +24,8 @@ using LiteDB;
 using LiteDB.Platform;
 using Windows.Storage;
 using Macalifa.Models;
+using System.Diagnostics;
+
 namespace Macalifa.Database
 {
     public class QueryMethods : IDisposable
@@ -39,13 +41,18 @@ namespace Macalifa.Database
 
         public void CreateDB()
         {
-            db = new LiteDatabase(ApplicationData.Current.LocalFolder.Path + @"\library.db");
+            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\library.db;journal=false;");            
             tracks = db.GetCollection<Mediafile>("tracks");
             playlists = db.GetCollection<Playlist>("playlists");
         }
-        public void Insert(ObservableRangeCollection<Mediafile> fileCol)
-        {           
-            tracks.Insert(fileCol);                
+        public void Insert(IEnumerable<Mediafile> fileCol)
+        {
+            try
+            {
+
+                tracks.Insert(fileCol);
+            }  
+            catch(Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
         }
         public void Insert(Mediafile file)
         {            

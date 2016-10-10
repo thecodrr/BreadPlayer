@@ -41,11 +41,7 @@ namespace Macalifa.ViewModels
    public class ShellViewModel : ViewModelBase
     {
         #region Fields
-        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
-        MacalifaPlayer player => MacalifaPlayerService.Instance.Player;
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
-        private string s = "0 %";
-        private double _volume = 100;
         DispatcherTimer timer;
         double pos = 0;
         CoreDispatcher Dispatcher;
@@ -72,17 +68,17 @@ namespace Macalifa.ViewModels
         #region Implementation
         private async void PlayPause()
         {
-            switch (player.PlayerState)
+            switch (Player.PlayerState)
             {
                 case PlayerState.Playing:
-                    await player.Pause();
+                    await Player.Pause();
                     timer.Stop();
                     PlayPauseIcon = new SymbolIcon(Symbol.Play);
                     break;
                 case PlayerState.Paused:
                 case PlayerState.Ended:
                 case PlayerState.Stopped:
-                    await player.Play();
+                    await Player.Play();
                     timer.Start();
                     PlayPauseIcon = new SymbolIcon(Symbol.Pause);
                     DontUpdatePosition = false;
@@ -119,14 +115,14 @@ namespace Macalifa.ViewModels
             openPicker.ViewMode = PickerViewMode.Thumbnail;
             openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             openPicker.FileTypeFilter.Add(".mp3");
-            StorageFile file = await openPicker.PickSingleFileAsync();
-            if (player.PlayerState == PlayerState.Paused || player.PlayerState == PlayerState.Stopped)
-                Load(file);
+            StorageFile file = await openPicker.PickSingleFileAsync();            
+            var mp3file = await CoreMethods.CreateMediafile(file);
+            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+                Load(mp3file);
             else
             {
-                Load(file, true);
+                Load(mp3file, true);
             }
-
         }
         #endregion
         #endregion
@@ -138,10 +134,10 @@ namespace Macalifa.ViewModels
             {
                 DontUpdatePosition = true;
                 CurrentPosition = 0;
-                player.PlayerState = PlayerState.Stopped;
+                Player.PlayerState = PlayerState.Stopped;
                 if (!Repeat)
                 {
-                    await player.Pause();
+                    await Player.Pause();
                     timer.Stop();
                     PlayPauseIcon = new SymbolIcon(Symbol.Play);
                     DontUpdatePosition = false;
@@ -158,9 +154,9 @@ namespace Macalifa.ViewModels
 
         private void Timer_Tick(object sender, object e)
         {
-            if (this.player != null)
+            if (Player != null)
             {
-                pos = player.Position;
+                pos = Player.Position;
             }
 
             if (!this.DontUpdatePosition)
@@ -197,50 +193,9 @@ namespace Macalifa.ViewModels
             {
                 Set(ref _currentPosition, value);
                 if (DontUpdatePosition)
-                    player.Position = _currentPosition;
+                    Player.Position = _currentPosition;
             }
-        }
-        Macalifa.Core.Tags _tags;
-        public Macalifa.Core.Tags Tags
-        {
-            get
-            {
-                return _tags;
-            }
-            set
-            {
-                Set(ref _tags, value);
-            }
-        }
-        public double Volume
-        {
-            get
-            {
-                return _volume;
-            }
-            set
-            {
-                Set(ref _volume, value);
-                player.Volume = _volume;
-            }
-        }
-        double _length = 0;
-        public double Length
-        {
-            get { return _length; }
-            set { Set(ref _length, value); }
-        }
-        public String S
-        {
-            get
-            {
-                return s;
-            }
-            set
-            {
-                Set(ref s, value);
-            }
-        }
+        } 
         public SymbolIcon PlayPauseIcon
         {
             get
@@ -257,10 +212,10 @@ namespace Macalifa.ViewModels
         #endregion
 
         #region Methods
-        async void PlayFile(Mediafile toPlayFile)
+        void PlayFile(Mediafile toPlayFile)
         {
-            if (player.PlayerState == PlayerState.Paused || player.PlayerState == PlayerState.Stopped)
-                Load(await StorageFile.GetFileFromPathAsync(toPlayFile.Path));
+            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+                Load(toPlayFile);
             else
             {
                 LibVM.PlayCommand.Execute(toPlayFile);
@@ -274,13 +229,11 @@ namespace Macalifa.ViewModels
             shuffled.Shuffle();
             return shuffled;
         }
-        private async void Load(object mp3file,  bool play = false, double currentPos = 0, double vol = 50)
+        private async void Load(Mediafile mp3file,  bool play = false, double currentPos = 0, double vol = 50)
         {          
-            StorageFile file = mp3file as StorageFile;
-            if (file != null && file.FileType == ".mp3")
+            if (mp3file != null)
             {
-                await player.Load(file.Path);
-                Length = player.Length;                
+                await Player.Load(mp3file);              
                 PlayPauseCommand.IsEnabled = true;
                 if (play)
                 {
@@ -288,17 +241,19 @@ namespace Macalifa.ViewModels
                 }
                 else
                 {
-                    Volume = vol;
+                    Player.Volume = vol;
                     DontUpdatePosition = true;
                     CurrentPosition = currentPos;
                 }
-                Tags = player.Tags;
             }
-            GC.Collect();
         }
-        public void Play(object para, double currentPos = 0, bool play = true, double vol = 50)
+        public async void Play(StorageFile para, double currentPos = 0, bool play = true, double vol = 50)
         {
-            Load(para, play, currentPos, vol);
+            if(para != null)
+            {
+                var mp3File = await CreateMediafile(para);
+                Load(mp3File, play, currentPos, vol);
+            }
         }
         #endregion
 
@@ -314,13 +269,13 @@ namespace Macalifa.ViewModels
             BottomMenuItems = new ObservableCollection<SimpleNavMenuItem>();
             PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             InitialPage = typeof(LibraryView);
-            player.PlayerState = PlayerState.Stopped;
+            Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
             this.timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(10);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
-            player.MediaEnded += Player_MediaEnded;
+            Player.MediaEnded += Player_MediaEnded;
           
         }
         #endregion        

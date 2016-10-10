@@ -26,6 +26,8 @@ using Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames;
 using System.Diagnostics;
 using System.Reflection;
 using Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames;
+using System.Linq;
+
 namespace Macalifa.Tags.ID3
 {
     /// <summary>
@@ -522,7 +524,7 @@ namespace Macalifa.Tags.ID3
                         (FrameCollection<Frame>)_CollectionFrames[
                         Enum.Parse(typeof(CollectionIndex), Coll.Name)];
 
-                    Temp.Add(Fr);
+                    Temp.Add(Fr.FrameID, Fr);
                 }
             }
 
@@ -687,7 +689,7 @@ namespace Macalifa.Tags.ID3
             if (Text != "")
             {
                 HaveTag = true;
-                TextFrames.Add(new TextFrame(FrameID, new FrameFlags(),
+                TextFrames.Add(FrameID, new TextFrame(FrameID, new FrameFlags(),
                     Text, (StaticMethods.IsAscii(Text) ? TextEncodings.Ascii : _DefaultUnicodeEncoding),
                     _Version.Minor, TStream.FS));
             }
@@ -698,7 +700,7 @@ namespace Macalifa.Tags.ID3
         /// </summary>
         public void ClearAll()
         {
-            foreach (CollectionBase Coll in _CollectionFrames.Values)
+            foreach (FrameCollectionBase Coll in _CollectionFrames.Values)
                 Coll.Clear();
 
             _SingleFrames.Clear();
@@ -743,33 +745,36 @@ namespace Macalifa.Tags.ID3
                 FrameID = TStream.ReadText(FrameIDLen, TextEncodings.Ascii);
                 if (FrameIDLen == 3)
                     FrameID = FramesInfo.Get4CharID(FrameID);
-                try
+                if (!FramesInfo.ExcludedList.All(t => t == FrameID))
                 {
-                    var len = Convert.ToInt32(TStream.ReadUInt(FrameIDLen));
-                    FrameLength = len;
+                    try
+                    {
+                        var len = Convert.ToInt32(TStream.ReadUInt(FrameIDLen));
+                        FrameLength = len;
+                    }
+                    catch { FrameLength = 0; }
+                    if (FrameIDLen == 4)
+                        Flags = (FrameFlags)TStream.ReadUInt(2);
+                    else
+                        Flags = 0; // must set to default flag
+
+                    long Position = TStream.FS.Position;
+
+                    if (Length > 0x10000000)
+                        throw (new FileLoadException("This file contain frame that have more than 256MB data. This is not valid for ID3."));
+
+                    bool Added = false;
+                    if (IsAddable(FrameID)) // Check if frame is not filter
+                        Added = AddFrame(FrameID, FrameLength, Flags, TStream.FS);
+
+                    if (!Added)
+                        // if don't read this frame
+                        // we must go forward to read next frame
+                        TStream.FS.Position = Position + FrameLength;
+
+                    Length -= FrameLength + 10;
+                    // 10 for Frame Header header
                 }
-                catch{ FrameLength = 0; }
-                if (FrameIDLen == 4)
-                    Flags = (FrameFlags)TStream.ReadUInt(2);
-                else
-                    Flags = 0; // must set to default flag
-
-                long Position = TStream.FS.Position;
-
-                if (Length > 0x10000000)
-                    throw (new FileLoadException("This file contain frame that have more than 256MB data. This is not valid for ID3."));
-
-                bool Added = false;
-                if (IsAddable(FrameID)) // Check if frame is not filter
-                    Added = AddFrame(FrameID, FrameLength, Flags, TStream.FS);
-
-                if (!Added)
-                    // if don't read this frame
-                    // we must go forward to read next frame
-                    TStream.FS.Position = Position + FrameLength;
-
-                Length -= FrameLength + 10;
-                // 10 for Frame Header header
             }
         }
 
@@ -808,9 +813,9 @@ namespace Macalifa.Tags.ID3
             if (IsText == 1)
             {
                 TextFrame TempTextFrame = new TextFrame(FrameID, Flags, Length, FS);
-                if (TempTextFrame.IsValid)
+                if (TempTextFrame.IsValid && !TextFrames.ContainsKey(FrameID))
                 {
-                    TextFrames.Add(TempTextFrame);
+                    TextFrames.Add(FrameID, TempTextFrame);
                     return true;
                 }
                 return false;
@@ -818,9 +823,9 @@ namespace Macalifa.Tags.ID3
             else if (IsText == 2)
             {
                 UserTextFrame TempUserTextFrame = new UserTextFrame(FrameID, Flags, Length, FS);
-                if (TempUserTextFrame.IsValid)
+                if (TempUserTextFrame.IsValid && FrameID != "TXXX" && !UserTextFrames.ContainsKey(FrameID))
                 {
-                    UserTextFrames.Add(TempUserTextFrame);
+                    UserTextFrames.Add(FrameID, TempUserTextFrame);
                     return true;
                 }
                 return false;
@@ -828,9 +833,9 @@ namespace Macalifa.Tags.ID3
             else if (FrameID == "LINK")
             {
                 LinkFrame LF = new LinkFrame(FrameID, Flags, Length, FS);
-                if (LF.IsValid)
+                if (LF.IsValid && !LinkFrames.ContainsKey(FrameID))
                 {
-                    LinkFrames.Add(LF);
+                    LinkFrames.Add(FrameID, LF);
                     if (_LoadLinkedFrames)
                     { LoadFrameFromFile(LF.FrameIdentifier, LF.URL); return true; }
                 }
@@ -839,7 +844,7 @@ namespace Macalifa.Tags.ID3
             }
 
             Frame F = null;
-            if (FrameID != "RGAD" && FrameID != "NCON")
+            if (!FramesInfo.ExcludedList.Any(t => t == FrameID))
             {
                 FrameInfo Info = FramesInfo.GetFrame(FrameID);
 
@@ -854,30 +859,33 @@ namespace Macalifa.Tags.ID3
                     F = Info.Constuctor(FrameID, Flags, Length, TStream.FS);
                 }
                 catch { }
-                if (F.IsValid)
+                try
                 {
-                    if (Info.IsSingle)
-                    {
-                        if (_SingleFrames.Contains(FrameID))
-                            _SingleFrames.Remove(FrameID);
-
-                        _SingleFrames.Add(FrameID, F);
-                        return true;
-                    }
-                    else
-                        foreach (FrameCollectionBase Coll in _CollectionFrames.Values)
+                   
+                        if (Info.IsSingle)
                         {
-                            if (Coll.CollectionType == Info.ClassType)
-                            {
-                                Coll.Remove(F);
-                                Coll.Add(F);
-                                return true;
-                            }
+                            if (_SingleFrames.Contains(FrameID))
+                                _SingleFrames.Remove(FrameID);
+
+                            _SingleFrames.Add(FrameID, F);
+                            return true;
                         }
-                    AddError(new ID3Exception("ClassType not found in Collection list", FrameID, ExceptionLevels.Error));
+                        else
+                            foreach (FrameCollectionBase Coll in _CollectionFrames.Values)
+                            {
+                                if (Coll.CollectionType == Info.ClassType)
+                                {
+                                    Coll.Remove(F.FrameID);
+                                    Coll.Add(F.FrameID, F);
+                                    return true;
+                                }
+                            }
+                        AddError(new ID3Exception("ClassType not found in Collection list", FrameID, ExceptionLevels.Error));
+                    
+                    
                 }
-                else if (F.Exception != null)
-                    AddError(F.Exception);
+                catch {}
+               
 
             }
 

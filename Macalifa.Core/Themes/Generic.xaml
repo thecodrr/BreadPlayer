@@ -286,7 +286,7 @@
                                 <MenuFlyoutItem Text="Play"/>
                                 <!--<MenuFlyoutItem Text="Add to"/>-->
                                 <MenuFlyoutItem Text="Delete"/>
-                                <MenuFlyoutItem Text="Rename" DataContext="{Binding Source={StaticResource PlaylistVM}, Path=Instance.LibVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                <MenuFlyoutItem Text="Rename" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                             </MenuFlyout>
                         </Grid.Resources>
                         <Interactivity:Interaction.Behaviors>
@@ -474,7 +474,7 @@
                                             <Button x:Name="playlistBtn" 
                                                 TabIndex="2" Width="240"
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
-                                            <Button x:Name="playlistAddBtn" DataContext="{StaticResource LibVM}" Command="{Binding AddToPlaylistCommand}"
+                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
                                         </StackPanel>

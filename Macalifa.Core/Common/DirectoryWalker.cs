@@ -28,13 +28,15 @@ namespace Macalifa.Common
 {
     class DirectoryWalker
     {   
-        public static IEnumerable<string> GetFiles(string dirPath)
-        {
+        public static async Task<IEnumerable<string>> GetFiles(string dirPath)
+        {            
             string[] files = { };
-            
-                files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
-            GC.Collect();
-
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+() =>
+{
+    files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
+    //GC.Collect();
+});
             return files;
         }
     }

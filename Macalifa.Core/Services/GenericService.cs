@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using Macalifa.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,27 +24,28 @@ using System.Threading.Tasks;
 
 namespace Macalifa.Services
 {
-    class MacalifaPlayerService
+    class GenericService<T> where T : new()
     {
-        static MacalifaPlayerService instance;
-
-        public static MacalifaPlayerService Instance
+        static GenericService<T> instance;
+        public static T vm;
+        public static GenericService<T> Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new MacalifaPlayerService();
+                    instance = new GenericService<T>(vm);
 
                 return instance;
             }
         }
 
-        public Macalifa.Core.MacalifaPlayer Player { get; private set; }
+        public T GenericClass { get; private set; }
 
-        public MacalifaPlayerService()
+        public GenericService(T View)
         {
-            // Create the player instance
-            Player = new Macalifa.Core.MacalifaPlayer();
+            // Create the generic class instance
+            if (View == null) GenericClass = new T();
+            else GenericClass = vm;
         }
     }
 }

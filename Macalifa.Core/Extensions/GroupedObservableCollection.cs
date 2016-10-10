@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Macalifa.Models;
 using Windows.UI.Core;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Macalifa.Extensions
 {
@@ -47,19 +49,10 @@ namespace Macalifa.Extensions
             : this(readKey)
         {
             Elements = new ThreadSafeObservableCollection<TElement>();
-            var ordered = items.OrderBy(orderFunc);
-            AddRange(ordered);
-          
+           // var ordered = items.OrderBy(orderFunc);
+            Elements.AddRange(items);          
         }
-          void AddRange(IEnumerable<TElement> ordered)
-        {
-           
-                    foreach (var item in ordered)
-                    {
-                        this.AddItem(item);
-                       
-                    }
-        }
+         
         public bool Contains(TElement item)
         {
             return this.Contains(item, (a, b) => a.Equals(b));
@@ -86,8 +79,45 @@ namespace Macalifa.Extensions
             var key = this.readKey(item);
             var s = item;
             Elements.Add(item);
-            GC.Collect();
+            //GC.Collect();
             this.FindOrCreateGroup(key).Add(item);
+        }      
+        /// <summary> 
+        /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
+        /// </summary> 
+        public void AddRange(IEnumerable<TElement> range)
+        {
+            // get out if no new items
+            if (range == null || !range.Any()) return;
+
+            // prepare data for firing the events
+            int newStartingIndex = Count;
+            var newItems = new List<TElement>();
+            newItems.AddRange(range);
+
+            // add the items, making sure no events are fired
+            _isObserving = false;
+            foreach (var item in range)
+            {
+                AddItem(item);
+            }
+            _isObserving = true;
+
+            // fire the events
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+            // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
+        }
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (_isObserving) base.OnCollectionChanged(e);
+        }
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+           if (_isObserving) base.OnPropertyChanged(e);
         }
         public void RemoveItem(TElement item)
         {

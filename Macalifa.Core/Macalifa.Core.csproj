@@ -124,7 +124,6 @@
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\CoreMethods.cs" />
-    <Compile Include="Core\Tags.cs" />
     <Compile Include="Database\QueryMethods.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
@@ -143,8 +142,7 @@
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlists.cs" />
     <Compile Include="Mp3Frame.cs" />
-    <Compile Include="Services\MacalifaPlayerService.cs" />
-    <Compile Include="Services\ShellViewService.cs" />
+    <Compile Include="Services\GenericService.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -186,8 +184,6 @@
     <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\8162359511_1957b1d7a5_h.jpg" />
-    <Content Include="Assets\All I Ask.jpg" />
     <Content Include="Assets\libs\ARM\bass.dll" />
     <Content Include="Assets\libs\x64\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

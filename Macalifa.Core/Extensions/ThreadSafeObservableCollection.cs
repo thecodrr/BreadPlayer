@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -34,6 +35,12 @@ using Windows.UI.Core;
 /// <typeparam name="T"></typeparam>
 public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
 {
+    protected volatile bool _isObserving = true;
+    public bool IsObserving { get { return _isObserving; } set { _isObserving = value; } }
+
+    //public static readonly int MAX_CAPACITY = int.MaxValue - 1; // MS limit
+    //private readonly int _capacity = MAX_CAPACITY;
+    //public int Capacity { get { return _capacity; } }
     private CoreDispatcher _dispatcher;
     internal ReaderWriterLockSlim sync = new System.Threading.ReaderWriterLockSlim();
     public ThreadSafeObservableCollection()
@@ -75,15 +82,44 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
         else
            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
     }
+
+    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    {
+        if (_isObserving) base.OnCollectionChanged(e);
+    }
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        if (_isObserving) base.OnPropertyChanged(e);
+    }
+
     /// <summary> 
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
     /// </summary> 
-    public void AddRange(IEnumerable<T> collection)
+    public void AddRange(IEnumerable<T> range)
     {
-        if (collection == null) throw new ArgumentNullException("collection");
-        
-        foreach (var i in collection)
-            this.DoAdd(i);
+        // get out if no new items
+        if (range == null || !range.Any()) return;
+
+        // prepare data for firing the events
+        int newStartingIndex = Count;
+        var newItems = new List<T>();
+        newItems.AddRange(range);
+
+        // add the items, making sure no events are fired
+        _isObserving = false;
+        foreach (var item in range)
+        {
+            Add(item);
+        }
+        _isObserving = true;
+
+        // fire the events
+        OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+        OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+        // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+        // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
     }
 
     /// <summary> 

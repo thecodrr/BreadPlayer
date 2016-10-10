@@ -45,7 +45,7 @@ namespace Macalifa
     {
         public ThreadSafeObservableCollection<Mediafile> Playlist = new ThreadSafeObservableCollection<Mediafile>();
         
-        PlaylistViewModel PlaylistVM => Services.PlaylistViewService.Instance.LibVM;
+        PlaylistViewModel PlaylistVM => Core.CoreMethods.PlaylistVM;
         public PlaylistView()
         {
             this.InitializeComponent();

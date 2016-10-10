@@ -323,7 +323,7 @@ namespace SplitViewMenu
                 }
             }
 
-            GC.Collect();
+           // GC.Collect();
         }
 
        

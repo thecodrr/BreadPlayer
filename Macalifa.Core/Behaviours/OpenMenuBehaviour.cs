@@ -78,7 +78,7 @@ namespace Macalifa.Behaviours
                 flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
             }
            
-            GC.Collect();
+            //GC.Collect();
             return null;
         }
 

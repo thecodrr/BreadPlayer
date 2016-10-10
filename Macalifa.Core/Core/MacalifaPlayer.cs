@@ -32,6 +32,7 @@ using ManagedBass;
 using System.Runtime.InteropServices;
 using Macalifa.Events;
 using System.Diagnostics;
+using Macalifa.Models;
 
 namespace Macalifa.Core
 {
@@ -60,10 +61,9 @@ namespace Macalifa.Core
                 Bass.Start();
                 Bass.Init();
         }
-        private void InitializeExtensions(string filePath)
+        private void InitializeExtensions(Mediafile file)
         {
-            Effect = new Effects(handle);
-            Tags = new Tags(handle,filePath);
+            //Effect = new Effects(handle);
         }
         #endregion
 
@@ -87,25 +87,23 @@ namespace Macalifa.Core
         /// </summary>
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
-        public async Task<bool> Load(string fileName)
-        {           
-           // StorageFile file = await StorageFile.GetFileFromPathAsync(fileName);
-            if (fileName != null)
+        public async Task<bool> Load(Mediafile mp3file)
+        {
+            StorageFile file = await StorageFile.GetFileFromPathAsync(mp3file.Path);
+            if (file != null)
             {
-                Init();
-                string sPath = fileName;
-                //Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(fileName);
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                string sPath = @mp3file.Path;
                 await Stop();
                 await Task.Run(() =>
                 {
-                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);                   
+                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                     PlayerState = PlayerState.Stopped;
+                    Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                    InitializeExtensions(fileName);
-                    CurrentlyPlayingFile = fileName;
-                    CoreWindowLogic logic = new CoreWindowLogic();
-                    logic.Stringify();
+                    CurrentlyPlayingFile = mp3file;
+                    CoreWindowLogic.Stringify();
                 });
                 return true;
             }
@@ -167,8 +165,8 @@ namespace Macalifa.Core
         {
             get { return _volume; }
             set {
-                Set(ref _volume, value / 100);
-                    Bass.Volume = _volume;
+                Set(ref _volume, value);
+                    Bass.Volume = _volume / 100;
             }
         }
         public Effects Effect
@@ -189,12 +187,15 @@ namespace Macalifa.Core
                 });
             }            
         }
-       
+        double _length;
         public double Length
         {
             get {
-                return 
-                    Bass.ChannelBytes2Seconds(handle,Bass.ChannelGetLength(handle));
+                return _length;
+            }
+            set
+            {
+                Set(ref _length, value);
             }
         }      
 
@@ -202,13 +203,8 @@ namespace Macalifa.Core
         {
             get; set;
         }
-
-        public Tags Tags
-        {
-            get;set;
-        }
-        string _currentPlayingFile;
-        public string CurrentlyPlayingFile
+        Mediafile _currentPlayingFile;
+        public Mediafile CurrentlyPlayingFile
         {
             get { return _currentPlayingFile; }
             set { Set(ref _currentPlayingFile, value); }

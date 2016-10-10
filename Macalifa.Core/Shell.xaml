@@ -11,6 +11,7 @@
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <!--<VisualStateManager.VisualStateGroups>
@@ -56,18 +57,18 @@
 
             <AppBarButton x:Name="infoBar" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,10,0" Grid.ColumnSpan="1">
                 <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
-                    <Image x:Name="albumArt" Width="66" Source="{Binding Path=Tags.AlbumArt}" Stretch="UniformToFill" Margin="10,0,0,0"/>
+                    <Image x:Name="albumArt" Width="66" Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}}" Stretch="UniformToFill" Margin="10,0,0,0"/>
                     <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="3,2,0,0">
-                        <TextBlock Text="{Binding Path=Tags.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
-                        <TextBlock Text="{Binding Path=Tags.Artist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
-                        <TextBlock Text="{Binding Path=Tags.Album, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" Foreground="White"/>
                     </StackPanel>
                 </StackPanel>
             </AppBarButton> 
             <Grid Grid.Column="1" x:Name="sliderGrid">
                 <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
-                <Slider x:Name="positionSlider" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Length}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
-                <TextBlock Text="{Binding Path=Length, Converter={StaticResource DoubleToTime}}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
+                <Slider x:Name="positionSlider" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
+                <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime} , UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
             </Grid>
 
             <StackPanel Orientation="Horizontal" Grid.Column="2">
@@ -87,8 +88,8 @@
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>
             </Grid.ColumnDefinitions>
-            <Slider x:Name="volumeSlider" Value="{Binding Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
-            <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
+            <Slider x:Name="volumeSlider" Value="{Binding Source={StaticResource Core}, Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
+            <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Source={StaticResource Core}, Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
 
         <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="25" VerticalAlignment="Bottom">

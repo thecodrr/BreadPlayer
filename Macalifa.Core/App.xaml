@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:Converter="using:Macalifa.Converters"
-xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macalifa.ViewModels" xmlns:Services="using:Macalifa.Services"
+xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="using:Macalifa.Core" xmlns:Services="using:Macalifa.Services"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours" xmlns:Extensions="using:Macalifa.Extensions"
     xmlns:local="using:Macalifa">
     <Application.Resources>
@@ -63,8 +63,8 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                     <!--<SolidColorBrush x:Key="SelectionBrush" Color="DarkGray" />-->
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <VM:LibraryViewModel x:Key="LibVM"/>
-            <Services:PlaylistViewService x:Key="PlaylistVM"/>
+            <MacalifaCore:CoreMethods x:Key="Core"/>
+            
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -633,7 +633,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
             IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
             ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}"
             AutomationProperties.AccessibilityView="Raw">
-                                    <ItemsPresenter Margin="0,8,0,8" DataContext="{StaticResource LibVM}"/>
+                                    <ItemsPresenter Margin="0,8,0,8" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"/>
                                 </ScrollViewer>
                                 <Border x:Name="MenuFlyoutPresenterBorder"
             BorderBrush="{TemplateBinding BorderBrush}"
@@ -655,17 +655,17 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBoxItem">
-                            <Grid DataContext="{StaticResource LibVM}"
+                            <Grid DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"
           x:Name="LayoutRoot"
           Background="{TemplateBinding Background}"
           BorderThickness="{TemplateBinding BorderThickness}">
                                 <Grid.Resources>
                                     <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                        <MenuFlyoutItem Text="Play" DataContext="{StaticResource LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                        <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                         <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
-                                        <MenuFlyoutItem Text="Open Song Location" DataContext="{StaticResource LibVM}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
-                                        <MenuFlyoutItem Text="Delete" DataContext="{StaticResource LibVM}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                                        <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                        <MenuFlyoutItem Text="Delete" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Properties"/>
@@ -695,6 +695,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <Setter Target="PlayingIndicator.Visibility" Value="Visible"/>
+                                                <Setter Target="titleTxt.Width" Value="135"/>
                                                 <Setter Target="TitleGrid.Width" Value="245"/>
                                             </VisualState.Setters>
                                             <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
@@ -830,7 +831,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macali
                                                 <ColumnDefinition Width="50"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
-                                            <AppBarButton Grid.Column="1" Icon="Play" DataContext="{StaticResource LibVM}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
+                                            <AppBarButton Grid.Column="1" Icon="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
                                             <AppBarButton Grid.Column="2" x:Name="button2" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">

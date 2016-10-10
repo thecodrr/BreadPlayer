@@ -116,7 +116,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
                 tempText = TStream.ReadText(Length, TextEncoding, ref Length, true);
                 tempTime = TStream.ReadUInt(4);
 
-                _Syllables.Add(new Syllable(tempTime, tempText));
+                _Syllables.Add(FrameID, new Syllable(tempTime, tempText));
 
                 Length -= 4;
             }
@@ -440,7 +440,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
                 Time = TStream.ReadUInt(4);
                 Length -= 4;
 
-                _TempoCodes.Add(new TempoCode(Tempo, Time));
+                _TempoCodes.Add(FrameID, new TempoCode(Tempo, Time));
             }
         }
 
@@ -701,7 +701,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
                 FreqBuf = Convert.ToInt32(TStream.ReadUInt(2));
 
                 AdjBuf = TStream.ReadUInt(AdLen);
-                _Frequensies.Add(new FrequencyAdjustmentFrame(FreqBuf, AdjBuf));
+                _Frequensies.Add(FrameID, new FrequencyAdjustmentFrame(FreqBuf, AdjBuf));
 
                 Length -= 2 + AdLen;
             }
@@ -928,7 +928,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
 
             while (Length >= 5)
             {
-                _Events.Add(new EventCode(TStream.ReadByte(FS), TStream.ReadUInt(4)));
+                _Events.Add(FrameID, new EventCode(TStream.ReadByte(FS), TStream.ReadUInt(4)));
 
                 Length -= 5;
             }

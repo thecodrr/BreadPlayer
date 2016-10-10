@@ -33,6 +33,8 @@ using Windows.Storage.AccessCache;
 using Windows.UI.Core;
 using Macalifa.Models;
 using ManagedBass;
+using ManagedBass.Tags;
+using System.Diagnostics;
 
 namespace Macalifa.ViewModels
 {
@@ -68,22 +70,26 @@ namespace Macalifa.ViewModels
             get { if (_LibraryFoldersCollection == null) { _LibraryFoldersCollection = new ThreadSafeObservableCollection<StorageFolder>(); } return _LibraryFoldersCollection; }
             set { Set(ref _LibraryFoldersCollection, value); }
         }
-        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
         /// </summary>
         public async void Load()
         {
+            
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
             CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
             StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null)
             {
-                StorageApplicationPermissions.FutureAccessList.Add(folder);
-                var filelist = Macalifa.Common.DirectoryWalker.GetFiles(folder.Path); //folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName); //
-
                 LibraryFoldersCollection.Add(folder);
+                StorageApplicationPermissions.FutureAccessList.Add(folder);
+                var filelist = await Macalifa.Common.DirectoryWalker.GetFiles(folder.Path); //folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName); //
+                var tempList = new List<Mediafile>(filelist.Count());
+                DispatcherTimer timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromSeconds(2);
+                timer.Start();
+                var stop = System.Diagnostics.Stopwatch.StartNew();
                 foreach (var x in filelist)
                 {
                     Mediafile mp3file = null;
@@ -91,22 +97,45 @@ namespace Macalifa.ViewModels
                     LibraryViewModel.Path = file.Path;
                     var path = file.Path;
                     if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
-                    {
-                        using (var stream = await CoreWindow.GetForCurrentThread().Dispatcher.RunTaskAsync(LibraryViewModel.GetFileAsStream))
-                        {
-                            if (stream != null)
+                    { 
+                            if (file != null)
                             {
-                                mp3file = await Methods.CreateMediafile(stream, file);
+                            try
+                            {
+                                mp3file = await CoreMethods.CreateMediafile(file);
+                                GetLength(mp3file);
+                                tempList.Add(mp3file);
                             }
-                        }
-                        GetLength(mp3file);
-                        LibVM.TracksCollection.AddItem(mp3file);
-                        LibVM.db.Insert(mp3file);
-                        LibVM.AddAlbums();
+                            catch(Exception ex)
+                            {
+                                Debug.WriteLine(ex.Message + "|" + file.Path);
+                            }
+                            }                       
+                            
+                        timer.Tick += (sender, e) => 
+                        {                           
+                            LibVM.TracksCollection.AddRange(tempList);
+                            LibVM.db.Insert(tempList);
+                            if(tempList.Count <= 0)
+                            {
+                                timer.Stop();
+                            }
+                            tempList.Clear();
+                            
+                        };
                     }
                 }
-                }
+                LibVM.AddAlbums();
+                stop.Stop();
+                ShowMessage(stop.ElapsedMilliseconds.ToString() + "    " + LibVM.TracksCollection.Count.ToString());
             }
+
+            }
+        public async void ShowMessage(string msg)
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(msg);
+            await dialog.ShowAsync();
+        }
 
         async void GetLength(Mediafile f)
         {
@@ -119,6 +148,7 @@ namespace Macalifa.ViewModels
                 handle = Bass.CreateStream(sPath);
             });
             f.Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle)).ToString();
+            
         }
     }
 }

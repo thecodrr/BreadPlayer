@@ -29,20 +29,12 @@ using Macalifa.Core;
 using Macalifa.ViewModels;
 namespace Macalifa
 {
-    public class CoreWindowLogic
+    public class CoreWindowLogic : CoreMethods
     {
-        Macalifa.Core.MacalifaPlayer Player => MacalifaPlayerService.Instance.Player;
-        ShellViewModel ShellVM => ShellViewService.Instance.ShellVM;
-        LibraryViewModel LibVM => LibraryViewService.Instance.LibVM;
         private const string pathKey = "path";
         private const string posKey = "position";
         private const string volKey = "volume";
-        public CoreWindowLogic()
-        {
-           
-        }
-
-        public async void Replay(bool onlyVol = false)
+        public static async void Replay(bool onlyVol = false)
         {
             string path = "";
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
@@ -55,7 +47,7 @@ namespace Macalifa
                     var volume = jsonObject.GetNamedNumber(volKey, 50);
                     if (jsonObject.Count == 1 || onlyVol)
                     {
-                        ShellVM.Volume = volume;
+                        Player.Volume = volume;
                     }
                     else
                     {
@@ -67,7 +59,7 @@ namespace Macalifa
                         ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
                     }
 
-                    GC.Collect();
+                    //GC.Collect();
                 }               
             }
             if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
@@ -76,21 +68,29 @@ namespace Macalifa
             //    LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
 
         }    
-        public async void Stringify()
+        public static async void Stringify()
         {
             JsonObject jsonObject = new JsonObject();           
-            if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile))
+            if (Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.Path))
             {
-                jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile);
+                jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile.Path);
                 jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);               
             }
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
-            if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
-                File.Delete(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc");
-            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc");
-            Windows.Storage.CachedFileManager.DeferUpdates(file);
-            await FileIO.WriteTextAsync(file, jsonObject.Stringify());
-            GC.Collect();
+            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
+
+            using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
+            {
+                using (var outputStream = stream.GetOutputStreamAt(0))
+                {
+                    using (var dataWriter = new Windows.Storage.Streams.DataWriter(outputStream))
+                    {
+                        dataWriter.WriteString(jsonObject.Stringify());
+                        await dataWriter.StoreAsync();
+                        await outputStream.FlushAsync();
+                    }
+                }
+            }
         }
     }
 }

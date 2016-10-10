@@ -15,19 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using Macalifa.Core;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using System;
 namespace Macalifa
 {
-  public class ViewModelBase : INotifyPropertyChanged
+  public class ViewModelBase : CoreMethods, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected async virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+          await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+() =>
+{
+    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+);
+           
         }
         public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {

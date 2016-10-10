@@ -46,7 +46,7 @@ namespace Macalifa.Tags
                 return "";
             long Pos = this.FS.Position; // store current position
 
-            MemoryStream MStream = new MemoryStream();
+            MemoryBlockStream MStream = new MemoryBlockStream();
             if (DetectEncoding && MaxLength >= 3)
             {
                 byte[] Buffer = new byte[3];
@@ -172,12 +172,12 @@ namespace Macalifa.Tags
             Array.Reverse(RBuf);
             return BitConverter.ToUInt32(RBuf, 0);
         }
-        public MemoryStream ReadData(int Length)
+        public MemoryBlockStream ReadData(int Length)
         {
-            MemoryStream ms;
+            MemoryBlockStream ms;
             byte[] Buf = new byte[Length];
             FS.Read(Buf, 0, Length);
-            ms = new MemoryStream();
+            ms = new MemoryBlockStream();
             ms.Write(Buf, 0, Length);
 
             return ms;

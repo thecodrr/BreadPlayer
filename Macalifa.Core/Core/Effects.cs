@@ -28,6 +28,7 @@ namespace Macalifa.Core
         #region Fields
         int handle = 0;
         #endregion
+
         #region Initialize
         public Effects(int coreHandle)
         {
