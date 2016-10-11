@@ -147,7 +147,7 @@ namespace Macalifa.ViewModels
                 ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name;
                 LibVM.Options.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name;
                 LibVM.db.playlists.FindOne(t => t.Name == selectedPlaylist.Name);
-                Playlists.Add(pl, LibVM.db.PlaylistSort(pl.Name));
+                Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
                 ShellVM.PlaylistsItems.First(t => t.Label == pl.Name).Arguments = Playlists;
                 Playlist = pl;
             }

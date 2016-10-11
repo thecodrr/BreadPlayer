@@ -55,7 +55,10 @@ namespace Macalifa
                         double position = jsonObject.GetNamedNumber(posKey);
                         Player.PlayerState = PlayerState.Paused;
                         if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
-                            LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
+                        {
+                            var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                            foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
+                        }
                         ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
                     }
 

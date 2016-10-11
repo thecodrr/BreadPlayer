@@ -365,9 +365,9 @@ namespace Macalifa.ViewModels
                 OldItems = db.GetTracks();
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, OldItems, t => t.Title);
                 //TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
-                PlaylistCollection.AddRange(OldItems.SelectMany(t => t.Playlists).DistinctBy(t => t.Name));
-                PlaylistCollection.AddRange(db.playlists.FindAll());
+                var playlist = OldItems.SelectMany(t => t.Playlists).ToList();
+                playlist.AddRange(db.playlists.FindAll());
+                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>(playlist.DistinctBy(t => t.Name));
                 Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
                 AddAlbums();
                 foreach (var list in PlaylistCollection)
@@ -375,7 +375,7 @@ namespace Macalifa.ViewModels
                     var cmd = new ContextMenuCommand(AddToPlaylistCommand, list.Name);
                     Options.Add(cmd);
                     var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                    Playlists.Add(list, db.PlaylistSort(list.Name));
+                    Playlists.Add(list, TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == list.Name) && a.Playlists.Count == 1));
                     ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
                     {
                         Arguments = Playlists,
@@ -384,7 +384,6 @@ namespace Macalifa.ViewModels
                         Symbol = Symbol.List,
                         FontGlyph = "\ue823"
                     });
-                   // GC.Collect();
                 }
             }
             else
@@ -485,7 +484,7 @@ namespace Macalifa.ViewModels
                 if (!PlaylistCollection.Any(t => t.Name == dialog.Text))
                 {
                     var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
-                    Playlists.Add(pl, db.PlaylistSort(pl.Name));
+                    Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
                     var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
                     Options.Add(cmd);
                     db.playlists.Insert(pl);

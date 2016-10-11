@@ -43,7 +43,6 @@ namespace Macalifa
     /// </summary>
     public sealed partial class PlaylistView
     {
-        public ThreadSafeObservableCollection<Mediafile> Playlist = new ThreadSafeObservableCollection<Mediafile>();
         
         PlaylistViewModel PlaylistVM => Core.CoreMethods.PlaylistVM;
         public PlaylistView()
@@ -53,15 +52,12 @@ namespace Macalifa
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {      
-            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);
-            Debug.Write(list.Count);
-            list.First().Value.ToList().ForEach(Playlist.Add);
-            PlaylistVM.Songs = Playlist;
+            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);            
+            PlaylistVM.Songs = new ThreadSafeObservableCollection<Mediafile>(list.First().Value);
             PlaylistVM.Playlist = list.First().Key;
             this.DataContext = PlaylistVM;
             playListBox.ItemsSource = PlaylistVM.Songs;
             playListBox.DataContext = PlaylistVM.Songs;
-
             base.OnNavigatedTo(e);
         }
 
