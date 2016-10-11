@@ -94,9 +94,11 @@ namespace Macalifa.ViewModels
             {
                 if (ShuffledList == null)
                     ShuffledList = ShuffledCollection();
-                var playlingFile = LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing);
-                var index = LibVM.TracksCollection.Elements.IndexOf(playlingFile) + 1;
+                var playingFile = LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing);                
+                var index = LibVM.TracksCollection.Elements.IndexOf(playingFile) + 1;
                 toPlayFile = ShuffledList.ElementAt(index);
+
+                HistoryCollection.Add(toPlayFile);
             }
             else
             {
@@ -104,20 +106,19 @@ namespace Macalifa.ViewModels
                 toPlayFile = IndexOfCurrentlyPlayingFile <= LibVM.TracksCollection.Elements.Count - 2 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile + 1) : LibVM.TracksCollection.Elements.ElementAt(0);
             }
             PlayFile(toPlayFile);
-
         }
         void PlayPrevious()
         {
             var prevFile = new Mediafile();
             if (Shuffle)
             {
-                prevFile = HistoryCollection.ElementAt(HistoryCollection.IndexOf(HistoryCollection.Single(t => t.Path == PreviouslyPlayingFile.Path)) - 1);
+                int IndexOfCurrentlyPlayingFile = HistoryCollection.IndexOf(HistoryCollection.Single(t => t.State == PlayerState.Playing));
+                prevFile = IndexOfCurrentlyPlayingFile > 0 ? HistoryCollection.ElementAt(IndexOfCurrentlyPlayingFile - 1) : HistoryCollection.ElementAt(HistoryCollection.Count - 1);
             }
             else
             {
                 int IndexOfCurrentlyPlayingFile = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing));
-                prevFile = IndexOfCurrentlyPlayingFile > 0 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile - 1) : LibVM.TracksCollection.Elements.ElementAt(LibVM.TracksCollection.Elements.Count - 1);
-                
+                prevFile = IndexOfCurrentlyPlayingFile > 0 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile - 1) : LibVM.TracksCollection.Elements.ElementAt(LibVM.TracksCollection.Elements.Count - 1); 
             }
             PlayFile(prevFile);
         }
@@ -247,10 +248,10 @@ namespace Macalifa.ViewModels
         {
             if (mp3file != null)
             {
-                PreviouslyPlayingFile = Player.CurrentlyPlayingFile; //right before the next file is loaded we take prev file.
-                if(Player.CurrentlyPlayingFile != null)
-                    if (!HistoryCollection.Any(t => t.Path == PreviouslyPlayingFile.Path))                    
-                        HistoryCollection.Add(Player.CurrentlyPlayingFile);
+                //PreviouslyPlayingFile = Player.CurrentlyPlayingFile; //right before the next file is loaded we take prev file.
+                //if(Player.CurrentlyPlayingFile != null)
+                //    if (!HistoryCollection.Any(t => t.Path == PreviouslyPlayingFile.Path))                    
+                //        HistoryCollection.Add(Player.CurrentlyPlayingFile);
                 if (await Player.Load(mp3file))
                 {
                     PlayPauseCommand.IsEnabled = true;
