@@ -13,7 +13,7 @@ An music player made for Windows 10 store.
 
 ###Alpha Feature-List:
 This is the list of all the features that are added and/or yet to be added before first **Alpha** release.
-- [ ] Improve shuffle
+- [x] Improve shuffle
 - [ ] Implement History/Recent View
 - [x] Playlist creation, import, export and adding songs to playlists. 
 - [x] Album View for Library.
