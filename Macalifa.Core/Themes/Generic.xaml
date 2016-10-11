@@ -10,7 +10,7 @@
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
         <Setter Property="MinHeight" Value="48" />
-        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="MinWidth" Value="58" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -442,7 +442,7 @@
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                    OpenPaneLength="300"
-                                   CompactPaneLength="55"
+                                   CompactPaneLength="58"
                                    IsTabStop="False" 
                                   PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Pane>

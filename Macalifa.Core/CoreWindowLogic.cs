@@ -59,7 +59,7 @@ namespace Macalifa
                             var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                             foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
                         }
-                        ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), position, false, volume);
+                        ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                     }
 
                     //GC.Collect();

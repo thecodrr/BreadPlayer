@@ -240,7 +240,7 @@ namespace Macalifa.ViewModels
                 var mp3 = TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
                 if (mp3 != null) mp3.State = PlayerState.Stopped;
                 StorageFile file = await StorageFile.GetFileFromPathAsync(mp3File.path);
-                ShellVM.Play(file);
+                ShellVM.Play(null, mp3File);
             });
 
 
@@ -394,7 +394,6 @@ namespace Macalifa.ViewModels
         }
         public void AddAlbums()
         {
-            var list = new List<Album>();
             foreach (var song in TracksCollection.Elements)
             {
                 if (!AlbumCollection.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
@@ -403,16 +402,11 @@ namespace Macalifa.ViewModels
                     alb.AlbumName = song.Album;
                     alb.Artist = song.LeadArtist;
                     alb.AlbumArt = song.AttachedPicture;
-                    list.Add(alb);
-                }
-                else
-                {
-                    return;
+                    AlbumCollection.Add(alb);
                 }
             }
-            AlbumCollection.AddRange(list);
+            
         }
-
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>

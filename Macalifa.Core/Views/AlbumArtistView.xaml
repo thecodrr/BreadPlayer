@@ -6,23 +6,40 @@
     xmlns:Converters="using:Macalifa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" RequestedTheme="Light">
     <Page.Resources>
-        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
-     </Page.Resources>
+        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>        
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" >
         <ListView ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel MaxWidth="150" Height="210">
-                        <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName}" HorizontalAlignment="Center"/>
-                        <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Artist}" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <Grid MaxWidth="150" Height="210">
+                        <StackPanel>
+                            <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
+                                <Ellipse.Fill>
+                                    <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
+                                    <!--<ImageBrush Stretch="Uniform" ImageSource="ms-appx:///Assets/albumart.png"/>-->
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                            <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <!--<Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,58" Background="#FF9E9E9E" Height="46">
+                            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Padding="0,0,0,0" HorizontalAlignment="Center" BorderThickness="0" RequestedTheme="Dark" Width="46" Height="46" Background="#FF9E9E9E">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <Button Padding="0,0,0,0" HorizontalAlignment="Center" BorderThickness="0" RequestedTheme="Dark" Width="46" Height="46" Background="#FF9E9E9E">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#59152;"></TextBlock>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Border>-->
+                    </Grid>
                 </DataTemplate> 
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>
@@ -41,6 +58,7 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
-    
+        
+       
     </Grid>
 </Page>

@@ -25,6 +25,7 @@ namespace Macalifa
         public AlbumArtistView()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Required;
         }
     }
 }

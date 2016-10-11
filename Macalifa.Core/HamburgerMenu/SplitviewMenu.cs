@@ -322,8 +322,6 @@ namespace SplitViewMenu
                     LastItem = item;
                 }
             }
-
-           // GC.Collect();
         }
 
        

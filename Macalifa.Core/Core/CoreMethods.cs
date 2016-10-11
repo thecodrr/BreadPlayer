@@ -24,6 +24,7 @@ namespace Macalifa.Core
         public static ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static MacalifaPlayer Player => GenericService<MacalifaPlayer>.Instance.GenericClass;
         public static PlaylistViewModel PlaylistVM => GenericService<PlaylistViewModel>.Instance.GenericClass;
+       
         public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;

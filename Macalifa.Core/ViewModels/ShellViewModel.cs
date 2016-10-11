@@ -41,6 +41,7 @@ namespace Macalifa.ViewModels
    public class ShellViewModel : ViewModelBase
     {
         #region Fields
+        ThreadSafeObservableCollection<Mediafile> HistoryCollection = new ThreadSafeObservableCollection<Mediafile>();
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         DispatcherTimer timer;
         double pos = 0;
@@ -99,14 +100,26 @@ namespace Macalifa.ViewModels
             }
             else
             {
-                LibVM.FileListBox.SelectedIndex = LibVM.FileListBox.SelectedIndex <= LibVM.FileListBox.Items.Count - 2 ? LibVM.FileListBox.SelectedIndex + 1 : 0;
-                toPlayFile = LibVM.FileListBox.SelectedItem as Mediafile;
+                int IndexOfCurrentlyPlayingFile = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing));
+                toPlayFile = IndexOfCurrentlyPlayingFile <= LibVM.TracksCollection.Elements.Count - 2 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile + 1) : LibVM.TracksCollection.Elements.ElementAt(0);
             }
             PlayFile(toPlayFile);
 
         }
         void PlayPrevious()
         {
+            var prevFile = new Mediafile();
+            if (Shuffle)
+            {
+                prevFile = HistoryCollection.ElementAt(HistoryCollection.IndexOf(HistoryCollection.Single(t => t.Path == PreviouslyPlayingFile.Path)) - 1);
+            }
+            else
+            {
+                int IndexOfCurrentlyPlayingFile = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing));
+                prevFile = IndexOfCurrentlyPlayingFile > 0 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile - 1) : LibVM.TracksCollection.Elements.ElementAt(LibVM.TracksCollection.Elements.Count - 1);
+                
+            }
+            PlayFile(prevFile);
         }
         async void Open(object para)
         {
@@ -229,31 +242,38 @@ namespace Macalifa.ViewModels
             shuffled.Shuffle();
             return shuffled;
         }
+        Mediafile PreviouslyPlayingFile;
         private async void Load(Mediafile mp3file,  bool play = false, double currentPos = 0, double vol = 50)
-        {          
+        {
             if (mp3file != null)
             {
-                await Player.Load(mp3file);              
-                PlayPauseCommand.IsEnabled = true;
-                if (play)
+                PreviouslyPlayingFile = Player.CurrentlyPlayingFile; //right before the next file is loaded we take prev file.
+                if(Player.CurrentlyPlayingFile != null)
+                    if (!HistoryCollection.Any(t => t.Path == PreviouslyPlayingFile.Path))                    
+                        HistoryCollection.Add(Player.CurrentlyPlayingFile);
+                if (await Player.Load(mp3file))
                 {
-                    PlayPauseCommand.Execute(null);
-                }
-                else
-                {
-                    Player.Volume = vol;
-                    DontUpdatePosition = true;
-                    CurrentPosition = currentPos;
+                    PlayPauseCommand.IsEnabled = true;
+                    if (play)
+                    {
+                        PlayPauseCommand.Execute(null);
+                    }
+                    else
+                    {
+                        Player.Volume = vol;
+                        DontUpdatePosition = true;
+                        CurrentPosition = currentPos;
+                    }
                 }
             }
         }
-        public async void Play(StorageFile para, double currentPos = 0, bool play = true, double vol = 50)
+        public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
         {
             if(para != null)
             {
-                var mp3File = await CreateMediafile(para);
-                Load(mp3File, play, currentPos, vol);
+                mp3File = await CreateMediafile(para);               
             }
+            Load(mp3File, play, currentPos, vol);
         }
         #endregion
 
