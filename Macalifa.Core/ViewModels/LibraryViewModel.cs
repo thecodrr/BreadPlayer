@@ -52,6 +52,7 @@ using Macalifa.Dialogs;
 using System.Security.Cryptography;
 using SplitViewMenu;
 using Windows.Storage.AccessCache;
+using Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames;
 
 namespace Macalifa.ViewModels
 {
@@ -418,28 +419,23 @@ namespace Macalifa.ViewModels
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public async void SaveImages(ID3v2 Data, Mediafile file)
         {
-            //var albumartFolder = ApplicationData.Current.LocalFolder;
-            ////Debug.Write(albumartFolder.Path);
-            //var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-            //if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
-            //{
-            //    var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
-            //    using (var albumstream = await albumart.OpenStreamForWriteAsync())
-            //    {
-            //        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
-            //        WriteableBitmap bmp = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
-            //        await bmp.SetSourceAsync(Data.AttachedPictureFrames[0].Data.AsRandomAccessStream());
-            //        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream.AsRandomAccessStream());
-            //        var pixelStream = bmp.PixelBuffer.AsStream();
-            //        byte[] pixels = new byte[bmp.PixelBuffer.Length];
-            //        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-            //        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bmp.PixelWidth, (uint)bmp.PixelHeight, 96, 96, pixels);
-            //        await encoder.FlushAsync();
-            //        pixelStream.Dispose();
-            //    }
-            //}
-
-
+            var albumartFolder = ApplicationData.Current.LocalFolder;
+            var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
+            if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
+            {
+                var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
+                using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
+                    var stream = data.Data.AsRandomAccessStream();
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    var x = await decoder.GetSoftwareBitmapAsync();
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
+                    encoder.SetSoftwareBitmap(x);
+                    await encoder.FlushAsync();
+                    stream.Dispose();
+                }
+            }
         }
         #endregion
 

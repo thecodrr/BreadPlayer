@@ -40,7 +40,7 @@ namespace Macalifa.Tags.ID3
     /// Also note that by using a sufficiently small block size the blocks will avoid being placed onto the large object heap,
     ///  with various benefits, e.g. avoidance/mitigation of memory fragmentation.
     /// </summary>
-    public class MemoryBlockStream : MemoryStream
+    public class MemoryBlockStream : Stream
     {
         #region Instance Fields
 
@@ -563,10 +563,6 @@ namespace Macalifa.Tags.ID3
                 blk = _blockList[blockIdx];
                 Array.Clear(blk, 0, _blockSize);
             }
-        }
-        public override void WriteTo(Stream stream)
-        {
-            base.WriteTo(stream);
         }
         #endregion
     }

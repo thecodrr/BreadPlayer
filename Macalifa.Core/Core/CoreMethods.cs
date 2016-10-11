@@ -35,6 +35,7 @@ namespace Macalifa.Core
             using (var stream = await file.OpenStreamForWriteAsync())
             {
                 ID3v2 Data = new ID3v2(true, stream);
+
                 Mediafile._id = LiteDB.ObjectId.NewObjectId();
                 Mediafile.Path = file.Path;
                 Mediafile.Title = GetStringForNullOrEmptyProperty((await LibVM.GetTextFrame(Data, "TIT2")), System.IO.Path.GetFileNameWithoutExtension(LibraryViewModel.Path));
@@ -48,13 +49,12 @@ namespace Macalifa.Core
                 //{
                 //    LibVM.GenreCollection.Add(Mediafile.Genre);
                 //}
-                //if (Data.AttachedPictureFrames.Count > 0)
-                //{
-                //    var albumartFolder = ApplicationData.Current.LocalFolder;//Data.AttachedPictureFrames[0].Picture;
-                //    LibVM.SaveImages(Data, Mediafile);
-                //    Mediafile.AttachedPicture = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
-                //    GC.Collect();
-                //}
+                if (Data.AttachedPictureFrames.Count > 0)
+                {
+                    var albumartFolder = ApplicationData.Current.LocalFolder;
+                    LibVM.SaveImages(Data, Mediafile);
+                    Mediafile.AttachedPicture = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+                }
             }
             return Mediafile;
         }

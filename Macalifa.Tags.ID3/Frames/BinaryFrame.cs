@@ -40,7 +40,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <summary>
         /// Contains data of current frame
         /// </summary>
-        protected MemoryBlockStream _Data;
+        protected MemoryStream _Data;
         Macalifa.Tags.TagStreamUWP TStream;
         /// <summary>
         /// New BinaryFrame
@@ -62,7 +62,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="FrameID">FrameID</param>
         /// <param name="Flags">Frame Flags</param>
         /// <param name="Data">Data of BinaryFrame</param>
-        public BinaryFrame(string FrameID, FrameFlags Flags, MemoryBlockStream Data, Stream FS)
+        public BinaryFrame(string FrameID, FrameFlags Flags, MemoryStream Data, Stream FS)
             : base(FrameID, Flags, FS)
         {
             _Data = Data;
@@ -79,7 +79,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <summary>
         /// Get or Set Data of current frame
         /// </summary>
-        public MemoryBlockStream Data
+        public MemoryStream Data
         {
             get
             {
@@ -175,7 +175,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="Owner">Owner of data</param>
         /// <param name="Data">Data</param>
         public PrivateFrame(string FrameID, FrameFlags Flags, string Owner,
-            MemoryBlockStream Data, Stream FS)
+            MemoryStream Data, Stream FS)
             : base(FrameID, Flags, FS)
         {
             if (FrameID != "UFID" && FrameID != "PRIV")
@@ -212,7 +212,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <summary>
         /// Get or Set Data of current frame
         /// </summary>
-        public new MemoryBlockStream Data
+        public new MemoryStream Data
         {
             get
             { return _Data; }
@@ -421,7 +421,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="PreviewLength">PreviewLength time</param>
         /// <param name="Data">Data that this frame must contain</param>
         public AudioEncryptionFrame(FrameFlags Flags, string Owner,
-            int PreviewStart, int PreviewLength, MemoryBlockStream Data, Stream FS)
+            int PreviewStart, int PreviewLength, MemoryStream Data, Stream FS)
             : base("AENC", Flags, FS)
         {
             _PreviewStart = PreviewStart;
@@ -567,7 +567,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="TextEncoding">TextEncoding for texts</param>
         /// <param name="Data">Data of frame</param>
         protected BaseFileFrame(string FrameID, FrameFlags Flags, string Description,
-            string MIMEType, TextEncodings TextEncoding, MemoryBlockStream Data, Stream FS)
+            string MIMEType, TextEncodings TextEncoding, MemoryStream Data, Stream FS)
             : base(FrameID, Flags, FS)
         {
             _TextEncoding = TextEncoding;
@@ -658,7 +658,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="FileName">Filename</param>
         /// <param name="Data">Data contain file</param>
         public GeneralFileFrame(FrameFlags Flags, string Description,
-            string MIMEType, TextEncodings TextEncoding, string FileName, MemoryBlockStream Data, Stream FS)
+            string MIMEType, TextEncodings TextEncoding, string FileName, MemoryStream Data, Stream FS)
             : base("GEOB", Flags, Description, MIMEType, TextEncoding, Data, FS)
         {
             _FileName = FileName;
@@ -904,7 +904,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="Data">Data Contain picture</param>
         public AttachedPictureFrame(FrameFlags Flags, string Description,
             TextEncodings TextEncoding, string MIMEType, PictureTypes PictureType,
-            MemoryBlockStream Data, Stream FS)
+            MemoryStream Data, Stream FS)
             : base("APIC", Flags, Description, MIMEType, TextEncoding, Data, FS)
         {
             _PictureType = PictureType;
@@ -1170,7 +1170,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// <param name="Logo">Data Contain Seller Logo</param>
         public CommercialFrame(FrameFlags Flags, string Description,
             TextEncodings TextEncoding, Price Price, SDate ValidUntil, string ContactURL,
-            RecievedAsEnum RecievedAs, string SellerName, string MIMEType, MemoryBlockStream Logo, Stream FS)
+            RecievedAsEnum RecievedAs, string SellerName, string MIMEType, MemoryStream Logo, Stream FS)
             : base("COMR", Flags, Description, MIMEType, TextEncoding, Logo, FS)
         {
             _ValidUntil = ValidUntil;

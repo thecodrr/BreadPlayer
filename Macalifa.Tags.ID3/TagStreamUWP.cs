@@ -172,12 +172,12 @@ namespace Macalifa.Tags
             Array.Reverse(RBuf);
             return BitConverter.ToUInt32(RBuf, 0);
         }
-        public MemoryBlockStream ReadData(int Length)
+        public MemoryStream ReadData(int Length)
         {
-            MemoryBlockStream ms;
+            MemoryStream ms;
             byte[] Buf = new byte[Length];
             FS.Read(Buf, 0, Length);
-            ms = new MemoryBlockStream();
+            ms = new MemoryStream();
             ms.Write(Buf, 0, Length);
 
             return ms;

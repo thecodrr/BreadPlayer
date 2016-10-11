@@ -191,7 +191,6 @@
     <Content Include="Assets\libs\x86\bass.dll" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\albumart.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />

@@ -88,7 +88,7 @@ namespace Macalifa.ViewModels
                 var tempList = new List<Mediafile>(filelist.Count());
                 DispatcherTimer timer = new DispatcherTimer();
                 timer.Interval = TimeSpan.FromSeconds(2);
-                timer.Start();
+                //timer.Start();
                 var stop = System.Diagnostics.Stopwatch.StartNew();
                 foreach (var x in filelist)
                 {
@@ -112,20 +112,20 @@ namespace Macalifa.ViewModels
                             }
                             }                       
                             
-                        timer.Tick += (sender, e) => 
-                        {                           
-                            LibVM.TracksCollection.AddRange(tempList);
-                            LibVM.db.Insert(tempList);
-                            if(tempList.Count <= 0)
-                            {
-                                timer.Stop();
-                            }
-                            tempList.Clear();
+                        //timer.Tick += (sender, e) => 
+                        //{                           
+                        //    LibVM.TracksCollection.AddRange(tempList);
+                        //    LibVM.db.Insert(tempList);
+                        //    if(tempList.Count <= 0)
+                        //    {
+                        //        timer.Stop();
+                        //    }
+                        //    tempList.Clear();
                             
-                        };
+                        //};
                     }
                 }
-                LibVM.AddAlbums();
+                //LibVM.AddAlbums();
                 stop.Stop();
                 ShowMessage(stop.ElapsedMilliseconds.ToString() + "    " + LibVM.TracksCollection.Count.ToString());
             }
