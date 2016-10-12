@@ -4,6 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Macalifa"
     xmlns:controls="using:SplitViewMenu"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Behaviours="using:Macalifa.Behaviours"
     xmlns:Converters="using:Macalifa.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,8 +17,8 @@
         <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <!--<VisualStateManager.VisualStateGroups>
-            <VisualStateGroup CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="900" />
@@ -23,9 +26,8 @@
                     <VisualState.Setters>
                         <Setter Target="sliderGrid.Visibility" Value="Visible" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
-                        --><!--<Setter Target="RootSplitView.IsPaneOpen" Value="False" />--><!--
                     </VisualState.Setters>
-                </VisualState>               
+                </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="700" />
@@ -45,9 +47,17 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            
-        </VisualStateManager.VisualStateGroups>-->
-        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" TopNavigationItems="{Binding TopMenuItems}" BottomNavigationItems="{Binding BottomMenuItems}" InitialPage="{Binding InitialPage}" Margin="0,70,0,25"/>
+
+        </VisualStateManager.VisualStateGroups>
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
+            <controls:SplitViewMenu.TopNavigationItems>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Songs"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Label="Albums"></controls:SimpleNavMenuItem>
+            </controls:SplitViewMenu.TopNavigationItems>
+            <controls:SplitViewMenu.BottomNavigationItems>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings"></controls:SimpleNavMenuItem>
+            </controls:SplitViewMenu.BottomNavigationItems>
+        </controls:SplitViewMenu>
         <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30*"/>
@@ -57,7 +67,7 @@
 
             <AppBarButton x:Name="infoBar" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,10,0" Grid.ColumnSpan="1">
                 <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
-                    <Image x:Name="albumArt" Width="66" Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}}" Stretch="UniformToFill" Margin="10,0,0,0"/>
+                    <Image x:Name="albumArt" Width="66" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}}" Stretch="UniformToFill" Margin="10,0,0,0"/>
                     <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="3,2,0,0">
                         <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
                         <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
@@ -93,9 +103,15 @@
         </Grid>
 
         <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="25" VerticalAlignment="Bottom">
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,5,0" Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,5,0">
                 <TextBlock Text="Search: " VerticalAlignment="Center" RequestedTheme="Dark" FontFamily="Segoe UI Light"/>
-                <TextBox x:Name="He" Width="250" KeyUp="He_KeyUp" Margin="5,2,0,2" Height="21"/>
+                <TextBox x:Name="He" Width="250" Margin="5,2,0,2" Height="21" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="KeyUp">
+                            <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=He, Path=Text}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </TextBox>
             </StackPanel>
         </Border>
     </Grid>

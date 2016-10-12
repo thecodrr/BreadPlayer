@@ -35,7 +35,6 @@ namespace Macalifa.Common
 () =>
 {
     files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
-    //GC.Collect();
 });
             return files;
         }

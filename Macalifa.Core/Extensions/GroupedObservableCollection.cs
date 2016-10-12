@@ -79,7 +79,6 @@ namespace Macalifa.Extensions
             var key = this.readKey(item);
             var s = item;
             Elements.Add(item);
-            //GC.Collect();
             this.FindOrCreateGroup(key).Add(item);
         }      
         /// <summary> 

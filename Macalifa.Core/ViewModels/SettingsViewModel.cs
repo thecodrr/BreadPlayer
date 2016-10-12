@@ -75,17 +75,18 @@ namespace Macalifa.ViewModels
         /// </summary>
         public async void Load()
         {
-            
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
             CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
             StorageFolder folder = await picker.PickSingleFolderAsync();
+            LibraryFoldersCollection.Add(folder);
             if (folder != null)
             {
-                LibraryFoldersCollection.Add(folder);
+                if (StorageApplicationPermissions.FutureAccessList.Entries.Count <= 999)
+                    StorageApplicationPermissions.FutureAccessList.Clear();
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
                 var filelist = await Macalifa.Common.DirectoryWalker.GetFiles(folder.Path); //folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName); //
-                var tempList = new List<Mediafile>(filelist.Count());
+                var tempList = new List<Mediafile>();
                 DispatcherTimer timer = new DispatcherTimer();
                 timer.Interval = TimeSpan.FromSeconds(2);
                 timer.Start();
@@ -94,46 +95,43 @@ namespace Macalifa.ViewModels
                 {
                     Mediafile mp3file = null;
                     StorageFile file = await StorageFile.GetFileFromPathAsync(x);
-                    LibraryViewModel.Path = file.Path;
-                    var path = file.Path;
-                    if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
-                    { 
-                            if (file != null)
-                            {
+                    string path = file.Path;
+                  
+                        if(!LibVM.TracksCollection.Elements.Any(t => t.Path == path))
+                        {
                             try
                             {
-                                mp3file = await CoreMethods.CreateMediafile(file);
-                                GetLength(mp3file);
-                                tempList.Add(mp3file);
-                            }
-                            catch(Exception ex)
-                            {
-                                Debug.WriteLine(ex.Message + "|" + file.Path);
-                            }
-                            }
+                               
+                                    mp3file = await CoreMethods.CreateMediafile(file);                                   
+                                
+                            //GetLength(mp3file);
 
-                        if (tempList.Count <= 0)
-                        {
-                            LibVM.TracksCollection.AddRange(tempList);
-                            LibVM.db.Insert(tempList);
-                            timer.Stop();
-                            tempList.Clear();
+                            tempList.Add(mp3file);
                         }
-                        else
-                        timer.Tick += (sender, e) =>
-                        {
-                            LibVM.TracksCollection.AddRange(tempList);
-                            LibVM.db.Insert(tempList);
-                            tempList.Clear();
-                        };
-                    }
+                            catch { }
+
+                            if (tempList.Count <= 0)
+                            {
+                                LibVM.TracksCollection.AddRange(tempList);
+                                LibVM.db.Insert(tempList);
+                                timer.Stop();
+                                tempList.Clear();
+                            }
+                                timer.Tick += (sender, e) =>
+                                {
+                                    LibVM.TracksCollection.AddRange(tempList);
+                                    LibVM.db.Insert(tempList);
+                                    tempList.Clear();
+                                };
+                        }
                 }
+
                 LibVM.AddAlbums();
                 stop.Stop();
                 ShowMessage(stop.ElapsedMilliseconds.ToString() + "    " + LibVM.TracksCollection.Count.ToString());
             }
 
-            }
+        }
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);

@@ -27,13 +27,20 @@ using Windows.Storage;
 using System.IO;
 using Macalifa.Core;
 using Macalifa.ViewModels;
+using Windows.Media;
+
 namespace Macalifa
 {
     public class CoreWindowLogic : CoreMethods
     {
+        #region Fields
         private const string pathKey = "path";
         private const string posKey = "position";
         private const string volKey = "volume";
+        SystemMediaTransportControls _smtc;
+        #endregion
+
+        #region Load/Save Logic
         public static async void Replay(bool onlyVol = false)
         {
             string path = "";
@@ -61,23 +68,19 @@ namespace Macalifa
                         }
                         ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                     }
-
-                    //GC.Collect();
-                }               
+                }
             }
             if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
                 LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
-            //else if (LibVM.TracksCollection.Elements != null)
-            //    LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
 
-        }    
+        }
         public static async void Stringify()
         {
-            JsonObject jsonObject = new JsonObject();           
+            JsonObject jsonObject = new JsonObject();
             if (Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.Path))
             {
                 jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile.Path);
-                jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);               
+                jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);
             }
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
             StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
@@ -95,5 +98,64 @@ namespace Macalifa
                 }
             }
         }
+        #endregion
+
+        #region SystemMediaTransportControls Methods/Events
+        void InitSmtc()
+        {
+            _smtc = SystemMediaTransportControls.GetForCurrentView();
+            _smtc.IsEnabled = true;
+            _smtc.IsPlayEnabled = true;
+            _smtc.IsPauseEnabled = true;
+            _smtc.ButtonPressed += _smtc_ButtonPressed;
+            Player.MediaStateChanged += Player_MediaStateChanged;
+        }
+        private async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                switch (args.Button)
+                {
+                    case SystemMediaTransportControlsButton.Play:
+                        await Player.Play();
+                        break;
+                    case SystemMediaTransportControlsButton.Pause:
+                        await Player.Pause();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+        private void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
+        {
+            if (_smtc != null)
+                switch (e.NewState)
+                {
+                    case PlayerState.Playing:
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        break;
+                    case PlayerState.Paused:
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
+                        break;
+                    case PlayerState.Stopped:
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                        break;
+                    default:
+                        break;
+                }
+        }
+        #endregion
+
+        #region CoreWindow Titlebar Methods/Events
+
+        #endregion
+        #region Ctor
+        public CoreWindowLogic()
+        {
+            InitSmtc();
+        }
+        #endregion
+
     }
 }

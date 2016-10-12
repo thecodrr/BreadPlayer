@@ -24,19 +24,18 @@ namespace Macalifa.Core
         public static ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static MacalifaPlayer Player => GenericService<MacalifaPlayer>.Instance.GenericClass;
         public static PlaylistViewModel PlaylistVM => GenericService<PlaylistViewModel>.Instance.GenericClass;
-       
+        public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
         public static async Task<Mediafile> CreateMediafile(StorageFile file)
         {
-            Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+            //Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                var Mediafile = new Mediafile();
-            using (var stream = await file.OpenStreamForWriteAsync())
+            using (Stream stream = await file.OpenStreamForWriteAsync())
             {
                 ID3v2 Data = new ID3v2(true, stream);
-
                 Mediafile._id = LiteDB.ObjectId.NewObjectId();
                 Mediafile.Path = file.Path;
                 Mediafile.Title = GetStringForNullOrEmptyProperty((await LibVM.GetTextFrame(Data, "TIT2")), System.IO.Path.GetFileNameWithoutExtension(LibraryViewModel.Path));

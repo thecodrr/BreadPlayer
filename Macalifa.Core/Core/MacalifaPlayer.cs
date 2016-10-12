@@ -58,8 +58,9 @@ namespace Macalifa.Core
             /// <returns></returns>
         private void Init()
         {
-                Bass.Start();
-                Bass.Init();
+            Bass.UpdatePeriod = 10;
+            Bass.Start();
+            Bass.Init();
         }
         private void InitializeExtensions(Mediafile file)
         {

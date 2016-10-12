@@ -47,19 +47,19 @@ namespace SplitViewMenu
                 new PropertyMetadata(null));
 
         internal static readonly DependencyProperty TopNavigationItemsProperty =
-            DependencyProperty.Register("TopNavigationItems", typeof (IEnumerable<INavigationMenuItem>),
+            DependencyProperty.Register("TopNavigationItems", typeof (List<INavigationMenuItem>),
                 typeof (SplitViewMenu),
-                new PropertyMetadata(Enumerable.Empty<INavigationMenuItem>(), OnTopNavigationItemsPropertyChanged));
+                new PropertyMetadata(new List<INavigationMenuItem>(), OnTopNavigationItemsPropertyChanged));
 
         internal static readonly DependencyProperty BottomNavigationItemsProperty =
-           DependencyProperty.Register("BottomNavigationItems", typeof(IEnumerable<INavigationMenuItem>),
+           DependencyProperty.Register("BottomNavigationItems", typeof(List<INavigationMenuItem>),
                typeof(SplitViewMenu),
-               new PropertyMetadata(Enumerable.Empty<INavigationMenuItem>(), OnBottomNavigationItemsPropertyChanged));
+               new PropertyMetadata(new List<INavigationMenuItem>(), OnBottomNavigationItemsPropertyChanged));
 
         internal static readonly DependencyProperty PlaylistsItemsProperty =
-          DependencyProperty.Register("PlaylistsItems", typeof(IEnumerable<INavigationMenuItem>),
+          DependencyProperty.Register("PlaylistsItems", typeof(List<INavigationMenuItem>),
               typeof(SplitViewMenu),
-              new PropertyMetadata(Enumerable.Empty<INavigationMenuItem>(), OnPlaylistsItemsPropertyChanged));
+              new PropertyMetadata(new List<INavigationMenuItem>(), OnPlaylistsItemsPropertyChanged));
 
 
         private Button _backButton;
@@ -99,19 +99,19 @@ namespace SplitViewMenu
             set { SetValue(InitialPageProperty, value); }
         }
 
-        public IEnumerable<INavigationMenuItem> TopNavigationItems
+        public List<INavigationMenuItem> TopNavigationItems
         {
-            get { return (IEnumerable<INavigationMenuItem>) GetValue(TopNavigationItemsProperty); }
+            get { return (List<INavigationMenuItem>) GetValue(TopNavigationItemsProperty); }
             set { SetValue(TopNavigationItemsProperty, value); }
         }
-        public IEnumerable<INavigationMenuItem> BottomNavigationItems
+        public List<INavigationMenuItem> BottomNavigationItems
         {
-            get { return (IEnumerable<INavigationMenuItem>)GetValue(BottomNavigationItemsProperty); }
+            get { return (List<INavigationMenuItem>)GetValue(BottomNavigationItemsProperty); }
             set { SetValue(BottomNavigationItemsProperty, value); }
         }
-        public IEnumerable<INavigationMenuItem> PlaylistsItems
+        public List<INavigationMenuItem> PlaylistsItems
         {
-            get { return (IEnumerable<INavigationMenuItem>)GetValue(PlaylistsItemsProperty); }
+            get { return (List<INavigationMenuItem>)GetValue(PlaylistsItemsProperty); }
             set { SetValue(PlaylistsItemsProperty, value); }
         }
         private void OnSplitViewMenuLoaded(object sender, RoutedEventArgs e)
@@ -209,7 +209,6 @@ namespace SplitViewMenu
             var ignored = false;
             BackRequested(ref ignored);
         }
-
         public void BackRequested(ref bool handled)
         {
             if (_pageFrame == null)

@@ -420,14 +420,19 @@ namespace Macalifa.ViewModels
                 var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
                 using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
-                    var stream = data.Data.AsRandomAccessStream();
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                    var x = await decoder.GetSoftwareBitmapAsync();
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
-                    encoder.SetSoftwareBitmap(x);
-                    await encoder.FlushAsync();
-                    stream.Dispose();
+                    try
+                    {
+                        var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
+                        var stream = data.Data.AsRandomAccessStream();
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+
+                        var x = await decoder.GetSoftwareBitmapAsync();
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
+                        encoder.SetSoftwareBitmap(x);
+                        await encoder.FlushAsync();
+                        stream.Dispose();
+                    }
+                    catch(Exception ex) { Debug.Write(ex.Message + "||" + file.Path); }
                 }
             }
         }

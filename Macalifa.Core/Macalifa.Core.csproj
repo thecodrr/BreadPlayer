@@ -7,8 +7,8 @@
     <ProjectGuid>{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Macalifa</RootNamespace>
-    <AssemblyName>Macalifa</AssemblyName>
+    <RootNamespace>BreadPlayer</RootNamespace>
+    <AssemblyName>BreadPlayer</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>

@@ -52,10 +52,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
         //copy the collection to ourself
         if (collection != null)
         {
-            foreach (var item in collection)
-            {
-                base.Add(item);
-            }
+            AddRange(collection);
         }
         _dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
     }
