@@ -14,7 +14,7 @@
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
+        
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -69,9 +69,9 @@
                 <StackPanel Orientation="Horizontal" Margin="-4,-17,-3,-31" Height="70">
                     <Image x:Name="albumArt" Width="66" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}}" Stretch="UniformToFill" Margin="10,0,0,0"/>
                     <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="3,2,0,0">
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" Foreground="White"/>
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" Foreground="White"/>
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="18" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" Foreground="White"/>
                     </StackPanel>
                 </StackPanel>
             </AppBarButton> 
@@ -104,8 +104,8 @@
 
         <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="25" VerticalAlignment="Bottom">
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,5,0">
-                <TextBlock Text="Search: " VerticalAlignment="Center" RequestedTheme="Dark" FontFamily="Segoe UI Light"/>
-                <TextBox x:Name="He" Width="250" Margin="5,2,0,2" Height="21" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
+                <TextBlock Text="Search: " VerticalAlignment="Center" RequestedTheme="Dark" FontFamily="Segoe UI Light"></TextBlock>
+                <TextBox x:Name="He" Width="250" Margin="5,2,0,2" Height="21">
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="KeyUp">
                             <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding ElementName=He, Path=Text}"/>

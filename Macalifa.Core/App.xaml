@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:Converter="using:Macalifa.Converters"
 xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="using:Macalifa.Core" xmlns:Services="using:Macalifa.Services"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours" xmlns:Extensions="using:Macalifa.Extensions"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours" xmlns:Converters="using:Macalifa.Converters"  xmlns:Extensions="using:Macalifa.Extensions"
     xmlns:local="using:Macalifa">
     <Application.Resources>
         <ResourceDictionary>
@@ -64,7 +64,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <MacalifaCore:CoreMethods x:Key="Core"/>
-            
+            <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="VerticalAlignment" Value="Top"/>

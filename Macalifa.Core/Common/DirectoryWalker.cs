@@ -23,19 +23,18 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO;
 using Windows.UI.Core;
-
+using Windows.ApplicationModel.Core;
 namespace Macalifa.Common
 {
     class DirectoryWalker
-    {   
+    {
         public static async Task<IEnumerable<string>> GetFiles(string dirPath)
-        {            
+        {
             string[] files = { };
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-() =>
-{
-    files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
-});
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
+            });
             return files;
         }
     }

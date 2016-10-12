@@ -44,12 +44,13 @@ namespace Macalifa.Database
             db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\library.db;journal=false;");            
             tracks = db.GetCollection<Mediafile>("tracks");
             playlists = db.GetCollection<Playlist>("playlists");
+            tracks.EnsureIndex(t => t.Title);
+            tracks.EnsureIndex(t => t.LeadArtist);
         }
         public void Insert(IEnumerable<Mediafile> fileCol)
         {
             try
             {
-
                 tracks.Insert(fileCol);
             }  
             catch(Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
@@ -71,6 +72,10 @@ namespace Macalifa.Database
         public void Update(Mediafile file)
         {
             tracks.Update(file);
+        }
+        public IEnumerable<Mediafile> Query(string term)
+        {
+            return tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
         }
         public void Dispose()
         {

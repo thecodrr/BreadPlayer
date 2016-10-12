@@ -68,7 +68,7 @@
             </TransitionCollection>
         </Grid.Transitions>
         <Grid.Background>
-            <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding ShellVM.Tags.AlbumArt}"/>
+            <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="47"/>
@@ -86,8 +86,6 @@
                             <TransitionCollection>
                                 <EntranceThemeTransition
                             FromHorizontalOffset="200" />
-                                <AddDeleteThemeTransition></AddDeleteThemeTransition>
-                                <ReorderThemeTransition/>
                             </TransitionCollection>
                         </VirtualizingStackPanel.ChildrenTransitions>
                     </VirtualizingStackPanel>

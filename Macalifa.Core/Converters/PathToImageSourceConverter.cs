@@ -18,6 +18,8 @@ namespace Macalifa.Converters
                 BitmapImage image = new BitmapImage(new Uri(value.ToString() ?? def, UriKind.RelativeOrAbsolute));
                 return image;
             }
+            if(parameter != null)
+                return null;
             return new BitmapImage(new Uri(def, UriKind.RelativeOrAbsolute));
         }
         public object ConvertBack(object value, Type targetType,

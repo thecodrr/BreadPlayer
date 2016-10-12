@@ -47,7 +47,6 @@ namespace Macalifa.ViewModels
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
-        CoreDispatcher Dispatcher;
         #endregion
 
         #region Commands
@@ -274,25 +273,14 @@ namespace Macalifa.ViewModels
         }
         public async void Search(object para)
         {
-            var stop = Stopwatch.StartNew();
             await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (para.ToString().Length > 0)
                 {
-                    var list = LibVM.OldItems.Where(w => w.Title.ToUpper().Contains(para.ToString().ToUpper())).ToList();
-                    var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), list, a => a.Title.Remove(1));
-                    LibVM.TracksCollection = null;
-                    LibVM.TracksCollection = col;
-                }
-                else
-                {
-                    var col = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1), LibVM.OldItems, a => a.Title.Remove(1));
-                    LibVM.TracksCollection = null;
-                    LibVM.TracksCollection = col;
-                }
+                    LibVM.TracksCollection.Clear();
+                    LibVM.TracksCollection.AddRange(LibVM.db.Query(para.ToString()));
+                }               
             });
-            stop.Stop();
-            ShowMessage(stop.ElapsedMilliseconds.ToString());
         }
         #endregion
         public async void ShowMessage(string msg)
