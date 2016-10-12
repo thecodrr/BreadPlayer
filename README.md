@@ -1,5 +1,5 @@
 #Bread Player aka _Macalifa_
-An music player made for Windows 10 store.
+A music player with breads and burgers made for the Windows 10 store to replace history.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
