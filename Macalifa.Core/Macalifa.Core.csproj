@@ -141,6 +141,7 @@
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlists.cs" />
+    <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Mp3Frame.cs" />
     <Compile Include="Services\GenericService.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />

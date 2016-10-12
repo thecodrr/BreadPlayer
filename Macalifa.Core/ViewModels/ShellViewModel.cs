@@ -35,6 +35,7 @@ using Macalifa.Models;
 using System.Windows.Input;
 using Macalifa.Extensions;
 using System.Collections.Generic;
+using Macalifa.MomentoPattern;
 
 namespace Macalifa.ViewModels
 {
@@ -44,6 +45,7 @@ namespace Macalifa.ViewModels
         ThreadSafeObservableCollection<Mediafile> HistoryCollection = new ThreadSafeObservableCollection<Mediafile>();
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         DispatcherTimer timer;
+        UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
         double pos = 0;
         CoreDispatcher Dispatcher;
         #endregion
@@ -88,8 +90,9 @@ namespace Macalifa.ViewModels
         }
         void PlayNext()
         {
+            if (Player.CurrentlyPlayingFile != null)
+                history.Do(Player.CurrentlyPlayingFile);
             Mediafile toPlayFile = null;
-
             if (Shuffle)
             {
                 if (ShuffledList == null)
@@ -97,8 +100,6 @@ namespace Macalifa.ViewModels
                 var playingFile = LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing);                
                 var index = LibVM.TracksCollection.Elements.IndexOf(playingFile) + 1;
                 toPlayFile = ShuffledList.ElementAt(index);
-
-                HistoryCollection.Add(toPlayFile);
             }
             else
             {
@@ -106,21 +107,12 @@ namespace Macalifa.ViewModels
                 toPlayFile = IndexOfCurrentlyPlayingFile <= LibVM.TracksCollection.Elements.Count - 2 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile + 1) : LibVM.TracksCollection.Elements.ElementAt(0);
             }
             PlayFile(toPlayFile);
+            HistoryCollection.Add(toPlayFile);
         }
         void PlayPrevious()
         {
-            var prevFile = new Mediafile();
-            if (Shuffle)
-            {
-                int IndexOfCurrentlyPlayingFile = HistoryCollection.IndexOf(HistoryCollection.Single(t => t.State == PlayerState.Playing));
-                prevFile = IndexOfCurrentlyPlayingFile > 0 ? HistoryCollection.ElementAt(IndexOfCurrentlyPlayingFile - 1) : HistoryCollection.ElementAt(HistoryCollection.Count - 1);
-            }
-            else
-            {
-                int IndexOfCurrentlyPlayingFile = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.Single(t => t.State == PlayerState.Playing));
-                prevFile = IndexOfCurrentlyPlayingFile > 0 ? LibVM.TracksCollection.Elements.ElementAt(IndexOfCurrentlyPlayingFile - 1) : LibVM.TracksCollection.Elements.ElementAt(LibVM.TracksCollection.Elements.Count - 1); 
-            }
-            PlayFile(prevFile);
+            var file = history.Undo(null);
+            if(file != null) PlayFile(file);
         }
         async void Open(object para)
         {
@@ -297,7 +289,6 @@ namespace Macalifa.ViewModels
             timer.Tick += Timer_Tick;
             this.timer.Stop();
             Player.MediaEnded += Player_MediaEnded;
-          
         }
         #endregion        
 
