@@ -1,5 +1,5 @@
-# Macalifa
-An music player made for Windows 10 store.
+#Bread Player aka _Macalifa_
+A music player with breads and burgers made for the Windows 10 store to replace history.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
@@ -29,10 +29,11 @@ This is the list of all the features that are added and/or yet to be added befor
 - [x] Support for Windows 10 Mobile
 
 ##About the project:
-This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage** so much so that not even the UI is ready at the moment.
- [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
+This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
+###Why the name change?
+Basically, the main reason behind the name change is that the previous one didn't make any sense but aside from that it wasn't SEO friendly. Who would _ever_ search for the word _Macalifa_? :D The second reason that is why we chose **Bread Player**, is because it is catchy and it invokes curiousity; furthermore, it has a nice ring to it and it is metaphoric...you know breads and burgers :D
 ###Main Focus:
-Currently the focus is on the **Macalifa.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
+Currently the focus is on the **BreadPlayer.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
 ###Technologies used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
