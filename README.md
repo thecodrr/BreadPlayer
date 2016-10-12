@@ -1,4 +1,4 @@
-# Macalifa
+#Bread Player
 An music player made for Windows 10 store.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
@@ -32,7 +32,7 @@ This is the list of all the features that are added and/or yet to be added befor
 This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage** so much so that not even the UI is ready at the moment.
  [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
 ###Main Focus:
-Currently the focus is on the **Macalifa.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
+Currently the focus is on the **BreadPlayer.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
 ###Technologies used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
