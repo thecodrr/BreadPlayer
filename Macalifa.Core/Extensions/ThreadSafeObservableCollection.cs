@@ -45,7 +45,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
     internal ReaderWriterLockSlim sync = new System.Threading.ReaderWriterLockSlim();
     public ThreadSafeObservableCollection()
     {
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
+        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
     }
     public ThreadSafeObservableCollection(IEnumerable<T> collection = null)
     {
@@ -54,11 +54,12 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
         {
             AddRange(collection);
         }
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
+        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
     }
 
     public async new void Add(T item)
     {
+        if(_dispatcher == null) _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         if (_dispatcher.HasThreadAccess)
             DoAdd(item);
         else

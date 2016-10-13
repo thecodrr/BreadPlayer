@@ -29,6 +29,7 @@ using Macalifa.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
 using Macalifa.Dialogs;
+using Macalifa.Extensions;
 
 namespace Macalifa.ViewModels
 {
@@ -113,15 +114,30 @@ namespace Macalifa.ViewModels
         }
         RelayCommand _renamePlaylistCommand;
         /// <summary>
-        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
+        /// Gets command for playlist rename. This calls the <see cref="RenamePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand RenamePlaylistCommand
         {
             get
             { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => this.RenamePlaylist(param)); } return _renamePlaylistCommand; }
         }
+
+        RelayCommand _deletePlaylistCommand;
+        /// <summary>
+        /// Gets command for playlist delete. This calls the <see cref="DeletePlaylist(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand DeletePlaylistCommand
+        {
+            get
+            { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => this.DeletePlaylist(param)); } return _deletePlaylistCommand; }
+        }
+        async void DeletePlaylist(object playlist)
+        {
+
+        }
         async void RenamePlaylist(object playlist)
         {
+            var stop = System.Diagnostics.Stopwatch.StartNew();
             var selectedPlaylist = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Key;
             var songs = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Value;
             var dialog = new InputDialog()
@@ -151,10 +167,13 @@ namespace Macalifa.ViewModels
                 ShellVM.PlaylistsItems.First(t => t.Label == pl.Name).Arguments = Playlists;
                 Playlist = pl;
             }
+            stop.Stop();
+            System.Diagnostics.Debug.WriteLine("It took: " + stop.ElapsedMilliseconds.ToString());
         }
         public PlaylistViewModel()
         {
         }
-
+        
+     
     }
 }

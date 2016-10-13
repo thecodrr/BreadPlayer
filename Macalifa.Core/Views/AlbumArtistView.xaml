@@ -7,10 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" RequestedTheme="Light">
-    <Page.Resources>
-        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>        
-    </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" >
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
         <ListView ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}">
             <ListView.ItemTemplate>
                 <DataTemplate>

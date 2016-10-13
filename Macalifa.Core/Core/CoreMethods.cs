@@ -15,6 +15,7 @@ using Macalifa;
 using Windows.UI.Core;
 using ManagedBass;
 using ManagedBass.Tags;
+using BreadPlayer.ViewModels;
 
 namespace Macalifa.Core
 {
@@ -24,6 +25,7 @@ namespace Macalifa.Core
         public static ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static MacalifaPlayer Player => GenericService<MacalifaPlayer>.Instance.GenericClass;
         public static PlaylistViewModel PlaylistVM => GenericService<PlaylistViewModel>.Instance.GenericClass;
+        public static AlbumArtistViewModel AlbumArtistVM => GenericService<AlbumArtistViewModel>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {

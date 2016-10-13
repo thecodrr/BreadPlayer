@@ -59,9 +59,14 @@ namespace Macalifa.Database
         {            
             tracks.Insert(file);
         }
-        public IEnumerable<Mediafile> GetTracks()
+        public async Task<IEnumerable<Mediafile>> GetTracks()
         {
-            return tracks.FindAll();
+            IEnumerable<Mediafile> collection = null;
+            await Core.CoreMethods.Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.High, () => 
+            {
+                collection = tracks.FindAll();
+            });
+            return collection;
         }
         public IEnumerable<Mediafile> PlaylistSort(string PlaylistName)
         {

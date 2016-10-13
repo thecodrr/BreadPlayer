@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Macalifa.Core", "Macalifa.Core\Macalifa.Core.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Core", "Macalifa.Core\BreadPlayer.Core.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Macalifa.Tags.ID3", "Macalifa.Tags.ID3\Macalifa.Tags.ID3.csproj", "{7A1F5216-DAAD-477F-A56C-E7C4CD3C6FEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Tags.ID3", "Macalifa.Tags.ID3\BreadPlayer.Tags.ID3.csproj", "{7A1F5216-DAAD-477F-A56C-E7C4CD3C6FEC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94239CE0-2915-4C43-B4C9-0754E344ED5C}"
 	ProjectSection(SolutionItems) = preProject

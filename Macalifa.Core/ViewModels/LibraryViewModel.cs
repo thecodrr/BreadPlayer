@@ -74,6 +74,7 @@ namespace Macalifa.ViewModels
         /// </summary>
         public LibraryViewModel()
         {
+            MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             GenericService<LibraryViewModel>.vm = this;
             GenericService<LibraryViewModel> service = GenericService<LibraryViewModel>.Instance;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
@@ -81,13 +82,9 @@ namespace Macalifa.ViewModels
         }
         #endregion
 
-        #region Properties
-        public string _album;
-        public string Album
-        {
-            get { return _album; }
-            set { Set(ref _album, value); }
-        }
+        #region Properties  
+        public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
+ 
         public string _genre;
         public string Genre
         {
@@ -107,7 +104,7 @@ namespace Macalifa.ViewModels
         /// </summary>
         public GroupedObservableCollection<string, Mediafile> TracksCollection
         {
-            get { return _TracksCollection; }
+            get { if (_TracksCollection == null) _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title); return _TracksCollection; }
             set { Set(ref _TracksCollection, value); }
         }
         public MenuFlyout genreFlyout;
@@ -246,6 +243,18 @@ namespace Macalifa.ViewModels
 
             mp3File.State = PlayerState.Playing;
         }
+        async void OpenSongLocation(object file)
+        {
+            var mp3File = file as Mediafile;
+            StorageFolder folder = await (await StorageFile.GetFileFromPathAsync(mp3File.Path)).GetParentAsync();
+            await Launcher.LaunchFolderAsync(folder);
+        }
+        void Init(object para)
+        {
+            var childern = para as UIElementCollection;
+            var fileBox = childern.OfType<ListBox>().ToList()[0];
+            FileListBox = fileBox;
+        }
         #endregion
 
         #endregion
@@ -359,53 +368,18 @@ namespace Macalifa.ViewModels
         /// <summary>
         /// Loads library from the database file.
         /// </summary>
-        void LoadLibrary()
+        async  void LoadLibrary()
         {
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\library.db"))
             {
-                OldItems = db.GetTracks();
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, OldItems, t => t.Title);
-                //TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                var playlist = OldItems.SelectMany(t => t.Playlists).ToList();
-                playlist.AddRange(db.playlists.FindAll());
-                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>(playlist.DistinctBy(t => t.Name));
-                Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-                AddAlbums();
-                foreach (var list in PlaylistCollection)
-                {
-                    var cmd = new ContextMenuCommand(AddToPlaylistCommand, list.Name);
-                    Options.Add(cmd);
-                    var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                    Playlists.Add(list, TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == list.Name) && a.Playlists.Count == 1));
-                    ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
-                    {
-                        Arguments = Playlists,
-                        Label = list.Name,
-                        DestinationPage = typeof(PlaylistView),
-                        Symbol = Symbol.List,
-                        FontGlyph = "\ue823"
-                    });
-                }
-            }
-            else
-            {
-                PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
+                //OldItems = db.GetTracks();
+                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, await db.GetTracks(), t => t.Title);
+                if(TracksCollection.Elements.Count > 0) MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); //no use raising an event when library isn't ready.
             }
         }
-        public void AddAlbums()
+        private void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
-            foreach (var song in TracksCollection.Elements)
-            {
-                if (!AlbumCollection.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
-                {
-                    Album alb = new Album();
-                    alb.AlbumName = song.Album;
-                    alb.Artist = song.LeadArtist;
-                    alb.AlbumArt = song.AttachedPicture;
-                    AlbumCollection.Add(alb);
-                }
-            }
-            
+            LoadPlaylists();
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
@@ -438,8 +412,16 @@ namespace Macalifa.ViewModels
         }
         #endregion
 
-        public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
-        public ThreadSafeObservableCollection<Album> AlbumCollection { get; set; } = new ThreadSafeObservableCollection<Album>();
+        #region Playlist Methods
+        void LoadPlaylists()
+        {
+            Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
+            PlaylistCollection.AddRange(TracksCollection.Elements.SelectMany(t => t.Playlists));
+            foreach (var list in PlaylistCollection.DistinctBy(t => t.Name))
+            {
+                AddPlaylist(new Dictionary<Playlist, IEnumerable<Mediafile>>(), list.Name, list.Description);
+            }
+        }
         async void AddToPlaylist(object file)
         {
 
@@ -451,11 +433,11 @@ namespace Macalifa.ViewModels
                 {
                     dictPlaylist = await ShowAddPlaylistDialog();
                 }
-                    foreach (Mediafile s in FileListBox.SelectedItems)
-                    {
+                foreach (Mediafile s in FileListBox.SelectedItems)
+                {
                     var playlistName = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Name : menu.Text;
                     if (!s.Playlists.Any(t => t.Name == playlistName))
-                        {
+                    {
                         s.Playlists.Add(new Playlist() { Name = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Name : menu.Text, Description = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Description : "" });
                         db.Update(s);
                     }
@@ -478,45 +460,36 @@ namespace Macalifa.ViewModels
             {
                 if (!PlaylistCollection.Any(t => t.Name == dialog.Text))
                 {
-                    var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
-                    Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
-                    var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
-                    Options.Add(cmd);
-                    db.playlists.Insert(pl);
-                    ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
-                    {
-                        Arguments = Playlists,
-                        Label = dialog.Text,
-                        DestinationPage = typeof(PlaylistView),
-                        Symbol = Symbol.List,
-                        FontGlyph = "\ue823"
-                    });
+                    AddPlaylist(Playlists, dialog.Text, dialog.Description);
                 }
-                    
+
 
                 return Playlists;
             }
             return Playlists;
         }
-        async void OpenSongLocation(object file)
+        void AddPlaylist(Dictionary<Playlist, IEnumerable<Mediafile>> Playlists, string label, string description)
         {
-            var mp3File = file as Mediafile;
-            StorageFolder folder = await (await StorageFile.GetFileFromPathAsync(mp3File.Path)).GetParentAsync();
-            await Launcher.LaunchFolderAsync(folder);
+            var pl = new Playlist() { Name = label, Description = description };
+            Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
+            var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
+            Options.Add(cmd);
+            db.playlists.Insert(pl);
+            ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
+            {
+                Arguments = Playlists,
+                Label = label,
+                DestinationPage = typeof(PlaylistView),
+                Symbol = Symbol.List,
+                FontGlyph = "\ue823"
+            });
         }
-        void Init(object para)
-        {
-            var childern = para as UIElementCollection;
-            var fileBox = childern.OfType<ListBox>().ToList()[0];
-            FileListBox = fileBox;
-        }
-        
+        #endregion
+
+     
+      
+        public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 
-    public class Album
-    {
-        public string AlbumName { get; set; }
-        public string Artist { get; set; }
-        public string AlbumArt { get; set; }
-    }
+    public delegate void OnMusicLibraryLoaded(object sender, RoutedEventArgs e);    
 }

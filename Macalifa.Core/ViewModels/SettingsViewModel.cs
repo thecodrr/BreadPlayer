@@ -126,7 +126,7 @@ namespace Macalifa.ViewModels
                         }
                 }
 
-                LibVM.AddAlbums();
+                AlbumArtistVM.AddAlbums();
                 stop.Stop();
                 ShowMessage(stop.ElapsedMilliseconds.ToString() + "    " + LibVM.TracksCollection.Count.ToString());
             }
