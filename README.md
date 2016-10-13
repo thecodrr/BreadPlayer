@@ -3,7 +3,7 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
 ###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
-![Imgur](http://i.imgur.com/QBZY1AB.jpg)
+![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
 1. Flawlessly plays mp3 audio. (Further format support to be added in due time.)
