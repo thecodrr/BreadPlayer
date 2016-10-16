@@ -7,7 +7,7 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 
 ###Main Features:
 1. Flawlessly plays mp3 audio. (Further format support to be added in due time.)
-2. Import Library & Playlists. (other playlist formats e.g. .m3u, .pls etc. will be made available before final release.) 
+2. Import Library (10,000 songs/2m) & Playlists. (other playlist formats e.g. .m3u, .pls etc. will be made available before final release.) 
 3. Other basic music player capabilities such as repeat, suffle etc.
 4. ID3 Tag Reader
 
@@ -19,10 +19,10 @@ This is the list of all the features that are added and/or yet to be added befor
 - [x] Album View for Library.
 - [x] Play song directly when passed as an argument (From Windows Explorer etc.).
 - [x] Drag & Drop support.
-- [ ] Sorting, filtering, search etc.
+- [x] Sorting, filtering, search etc.
 - [x] Full library support and features. 
 - [x] Implement SettingsView for main features.
-- [ ] Show song's properties (ID3 Info).
+- [x] Show song's properties (ID3 Info).
 - [x] Implement basic player functions.
 - [ ] Notification when new song starts playing.
 - [x] Save `CurrentlyPlayingSong` and info before `ApplicationExit`.
