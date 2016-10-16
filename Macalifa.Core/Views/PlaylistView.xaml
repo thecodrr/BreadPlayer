@@ -26,12 +26,12 @@
           BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid.Resources>
                                 <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                    <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                    <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                     <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
                                     <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                     <MenuFlyoutItem Text="Delete from playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"></MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="Properties"/>
+                                    <MenuFlyoutItem Text="Properties" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding ShowPropertiesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
 
                                 </MenuFlyout>
                                 <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>
@@ -185,7 +185,7 @@
                             </ContentControl>
                             <Interactivity:Interaction.Behaviors>
                                 <Core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></Core:InvokeCommandAction>
+                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource Core},Path=LibVM.PlayCommand}"></Core:InvokeCommandAction>
                                 </Core:EventTriggerBehavior>
                                 <Core:EventTriggerBehavior EventName="RightTapped">
                                     <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>
@@ -196,8 +196,12 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <MenuFlyout x:Key="ExtraMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
+            <MenuFlyoutItem Text="Delete This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeletePlaylistCommand}" />
+            <MenuFlyoutItem Text="Rename This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}"/>
+        </MenuFlyout>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="Grid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -229,22 +233,21 @@
                     <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
-                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding ElementName=playListBox, Path=Items[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
                             <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
                         </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" RequestedTheme="Dark" Background="{x:Null}" Height="20">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#59152;"></TextBlock>
-                            <TextBlock FontFamily="Segoe UI" Text=" Add to" ></TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                    </Button>                
+                    <Button Style="{StaticResource HyperlinkBtn}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
                 </StackPanel>
             </Grid>
         </Grid>
         <ListBox x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListBox>
+        <Interactivity:Interaction.Behaviors>
+            <Core:EventTriggerBehavior EventName="Loaded">
+                <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid, Path=Children}"/>
+            </Core:EventTriggerBehavior>
+        </Interactivity:Interaction.Behaviors>
     </Grid>
 </Page>

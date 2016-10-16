@@ -130,12 +130,21 @@ namespace Macalifa.ViewModels
         #region Commands 
 
         #region Definitions
+        RelayCommand _showPropertiesCommand;
         RelayCommand _deleteCommand;
         RelayCommand _playCommand;
         RelayCommand _addtoplaylistCommand;
         RelayCommand _opensonglocationCommand;
         RelayCommand _refreshViewCommand;
         RelayCommand _initCommand;
+        /// <summary>
+        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand ShowPropertiesCommand
+        {
+            get
+            { if (_showPropertiesCommand == null) { _showPropertiesCommand = new RelayCommand(param => this.ShowProperties(param)); } return _showPropertiesCommand; }
+        }
         /// <summary>
         /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -187,6 +196,12 @@ namespace Macalifa.ViewModels
         #endregion
 
         #region Implementations
+        async void ShowProperties(object para)
+        {
+            BreadPlayer.Dialogs.TagDialog tag = new BreadPlayer.Dialogs.TagDialog(para as Mediafile);
+            await tag.ShowAsync();
+        }
+
         /// <summary>
         /// Refreshes the view with new sorting order and/or filtering. <seealso cref="RefreshViewCommand"/>
         /// </summary>
@@ -234,13 +249,11 @@ namespace Macalifa.ViewModels
             Mediafile mp3File = path as Mediafile;
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var mp3 = TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
-                if (mp3 != null) mp3.State = PlayerState.Stopped;
+                var mp3 = TracksCollection.Elements.Where(t => t.State == PlayerState.Playing);
+                if (mp3 != null) foreach(var a in mp3) a.State = PlayerState.Stopped;
                 StorageFile file = await StorageFile.GetFileFromPathAsync(mp3File.path);
                 ShellVM.Play(null, mp3File);
             });
-
-
             mp3File.State = PlayerState.Playing;
         }
         async void OpenSongLocation(object file)
@@ -486,8 +499,14 @@ namespace Macalifa.ViewModels
         }
         #endregion
 
-     
-      
+        double progress;
+        public double Progress
+        {
+            get { return progress; }
+            set {
+                Set(ref progress, value);
+            }
+        }
         public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 

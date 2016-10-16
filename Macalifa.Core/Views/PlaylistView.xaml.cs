@@ -51,13 +51,19 @@ namespace Macalifa
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {      
-            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);            
+            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);
+            PlaylistVM.CurrentDictionary = list;           
             PlaylistVM.Songs = new ThreadSafeObservableCollection<Mediafile>(list.First().Value);
             PlaylistVM.Playlist = list.First().Key;
             this.DataContext = PlaylistVM;
             playListBox.ItemsSource = PlaylistVM.Songs;
             playListBox.DataContext = PlaylistVM.Songs;
             base.OnNavigatedTo(e);
+        }
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            PlaylistVM.IsPageLoaded = false;
+            base.OnNavigatingFrom(e);
         }
 
     }
