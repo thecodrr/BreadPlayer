@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -18,20 +18,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Macalifa.Tags.ID3.ID3v2Frames;
+using BreadPlayer.Tags.ID3.ID3v2Frames;
 using System.Collections;
-using Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames;
-using Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames;
-using Macalifa.Tags.ID3.ID3v2Frames.OtherFrames;
-using Macalifa.Tags.ID3.ID3v2Frames.StreamFrames;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.ArrayFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.OtherFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.StreamFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using System.Reflection;
 /*
  * This file only contain 2 classes that use for storing each frame information
  * ex. if you find TIT2 FrameID in tag with FrameList you can understand is it a
  * TextFrame or not. or even is it a valid FrameID ? and something like this
  */
-namespace Macalifa.Tags.ID3.ID3v2Frames
+namespace BreadPlayer.Tags.ID3.ID3v2Frames
 {
     /// <summary>
     /// Static class that represent informaion about ID3v2 frames

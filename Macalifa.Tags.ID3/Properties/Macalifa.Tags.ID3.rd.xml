@@ -30,7 +30,7 @@ Sample license text.
     http://go.microsoft.com/fwlink/?LinkID=391919
 -->
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
-  <Library Name="Macalifa.Tags.ID3">
+  <Library Name="BreadPlayer.Tags.ID3">
 
   	    <Assembly Name="System.Collections.NonGeneric">
       <Type Name="System.Collections.ArrayList" Dynamic="Required All"/>

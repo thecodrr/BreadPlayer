@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ using System.IO;
 /*
  * This namespace contain frames that their base information is text(string)
  */
-namespace Macalifa.Tags.ID3.ID3v2Frames.TextFrames
+namespace BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames
 {
     /// <summary>
     /// A class for frame that only include Text member
@@ -40,9 +40,9 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.TextFrames
         /// <param name="FrameID">4 Characters tag identifier</param>
         /// <param name="Flags">Flags of current frame</param>
         protected TextOnlyFrame(string FrameID, FrameFlags Flags, Stream FS)
-            : base(FrameID, Flags, FS) { TStream = new Macalifa.Tags.TagStreamUWP(FS); }
+            : base(FrameID, Flags, FS) { TStream = new BreadPlayer.Tags.TagStreamUWP(FS); }
 
-        public Macalifa.Tags.TagStreamUWP TStream;
+        public BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Get or Set current TextOnlyFrame text
         /// </summary>
@@ -1128,7 +1128,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.TextFrames
         public TextWithLanguageFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             TextEncoding = (TextEncodings)TStream.FS.ReadByte();
             Length--;
             if (!IsValidEnumValue(TextEncoding, ExceptionLevels.Error, FrameID))

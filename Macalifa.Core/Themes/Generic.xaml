@@ -1,8 +1,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:Macalifa.ViewModels" xmlns:Services="using:Macalifa.Services"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"  xmlns:Behaviours="using:Macalifa.Behaviours" 
-    xmlns:local="using:SplitViewMenu" xmlns:Converters="using:Macalifa.Converters">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:BreadPlayer.ViewModels" xmlns:Services="using:BreadPlayer.Services"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"  xmlns:Behaviours="using:BreadPlayer.Behaviours" 
+    xmlns:local="using:SplitViewMenu" xmlns:Converters="using:BreadPlayer.Converters">
 
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
     <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>
@@ -167,7 +167,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/fontello.ttf#fontello"/>
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
                     
@@ -193,7 +193,7 @@
                     </Grid.ColumnDefinitions>
 
                     <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/fontello.ttf#fontello"/>
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />-->
                 </Grid>
@@ -285,8 +285,8 @@
                             <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                 <MenuFlyoutItem Text="Play"/>
                                 <!--<MenuFlyoutItem Text="Add to"/>-->
-                                <MenuFlyoutItem Text="Delete"/>
-                                <MenuFlyoutItem Text="Rename" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                <MenuFlyoutItem Text="Delete Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
+                                <MenuFlyoutItem Text="Rename Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                             </MenuFlyout>
                         </Grid.Resources>
                         <Interactivity:Interaction.Behaviors>
@@ -307,7 +307,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/fontello.ttf#fontello"/>
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="White" Margin="5,0,0,0"/>
            
         </Grid>
@@ -321,7 +321,7 @@
             <!--<FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>-->
             <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/fontello.ttf#fontello"/>
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="{ThemeResource ThemeForeground}"/>
             
         </Grid>
@@ -399,8 +399,6 @@
                                         <Setter Target="PlaylistsMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="NavBottomMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <!--<Setter Target="TogglePaneButton.Foreground" Value="Black"/>-->
-                                        <Setter Target="Pane.BorderThickness" Value="10,0,0,0"/>
-                                        <Setter Target="TogglePaneButton.Margin" Value="10,0,0,0"/>
                                         <Setter Target="TopSeperator.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
@@ -452,9 +450,9 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Vertical" Grid.Row="0" >
-                                        <local:NavMenuListView x:Name="NavTopMenuList"
+                                        <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="0"
+                                                       TabIndex="3" SelectedIndex="1"
                                                        Margin="0,48,0,0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
@@ -488,7 +486,7 @@
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">
                                     <MenuFlyoutSeparator Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
-                                    <local:NavMenuListView x:Name="NavBottomMenuList"
+                                        <local:NavMenuListView x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
                                                        TabIndex="3"
                                                        Margin="0"

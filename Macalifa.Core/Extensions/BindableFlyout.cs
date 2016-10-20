@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using Macalifa.ViewModels;
+using BreadPlayer.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,9 +29,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Runtime.CompilerServices;
 using System.ServiceModel.Channels;
-using Macalifa.Models;
+using BreadPlayer.Models;
 
-namespace Macalifa.Extensions
+namespace BreadPlayer.Extensions
 {
     public class BindableFlyout : MenuFlyout
     {
@@ -82,6 +82,8 @@ namespace Macalifa.Extensions
                 };
                  item.CommandParameter =  menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
                 item.Tag = menuFlyout.DataContext as Mediafile;
+                if (item.Tag == null)
+                    item.Tag = menuFlyout.DataContext as IEnumerable<Mediafile>;
                 if(menuFlyout.Items.Count == 1)
                 {
                     menuFlyout.Items.Add(new MenuFlyoutSeparator());

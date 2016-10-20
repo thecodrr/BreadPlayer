@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -26,13 +26,13 @@ using Windows.UI.Xaml.Controls.Primitives;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Macalifa.Extensions;
-using Macalifa.Models;
+using BreadPlayer.Extensions;
+using BreadPlayer.Models;
 using System.Reflection;
 using Windows.Foundation;
 using SplitViewMenu;
 
-namespace Macalifa.Behaviours
+namespace BreadPlayer.Behaviours
 {
     public class OpenMenuFlyoutAction : DependencyObject, IAction
     {
@@ -53,15 +53,17 @@ namespace Macalifa.Behaviours
             ListBoxItem item = senderElement.GetFirstAncestorOfType<ListBoxItem>();
             var ListBox = item.GetFirstAncestorOfType<ListBox>();
             // if (item != null) item.IsSelected = true;
-
+            ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
+            if(listItem != null) listItem.IsSelected = true;
             //var items = //((Parameter as Binding).Path as ListViewItem);
             if (Parameter.ToString() == "BindableFlyout")
             {
-                if (ListBox.SelectedItems.Count == 1) { ListBox.SelectedIndex = -1; }
+                if (ListBox?.SelectedItems.Count == 1) { ListBox.SelectedIndex = -1; }
                 if (item != null) item.IsSelected = true;
                 var flyout = (senderElement as Button).GetAncestorsOfType<Grid>().Where(t => t.Name == "LayoutRoot").ToList()[0].Resources["PlaylistsFlyout"] as BindableFlyout;
                 flyout.ShowAt(senderElement);
             }
+
             else if (Parameter.ToString() == "Playlist")
             {
                 if(navList != null)
@@ -78,7 +80,6 @@ namespace Macalifa.Behaviours
                 flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
             }
            
-            //GC.Collect();
             return null;
         }
 

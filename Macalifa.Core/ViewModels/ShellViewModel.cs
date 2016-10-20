@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -26,20 +26,20 @@ using System.IO;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Macalifa.Core;
+using BreadPlayer.Core;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using SplitViewMenu;
-using Macalifa.Services;
-using Macalifa.Models;
+using BreadPlayer.Services;
+using BreadPlayer.Models;
 using System.Windows.Input;
-using Macalifa.Extensions;
+using BreadPlayer.Extensions;
 using System.Collections.Generic;
-using Macalifa.MomentoPattern;
+using BreadPlayer.MomentoPattern;
 using Windows.Media;
 using System.Diagnostics;
 
-namespace Macalifa.ViewModels
+namespace BreadPlayer.ViewModels
 {
    public class ShellViewModel : ViewModelBase
     {
@@ -93,7 +93,7 @@ namespace Macalifa.ViewModels
         {
             if (Player.CurrentlyPlayingFile != null)
                 history.Do(Player.CurrentlyPlayingFile);
-            int IndexOfCurrentlyPlayingFile = LibVM.FileListBox.Items.IndexOf(LibVM.FileListBox.Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
+            int IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
             Mediafile toPlayFile = null;
             if (Shuffle)
             {
@@ -101,9 +101,20 @@ namespace Macalifa.ViewModels
             }
             else
             {
-                toPlayFile = IndexOfCurrentlyPlayingFile <= LibVM.FileListBox.Items.Count - 2 ? LibVM.FileListBox.Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : LibVM.FileListBox.Items.ElementAt(0) as Mediafile;
+                toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 ? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : GetListBox().Items.ElementAt(0) as Mediafile;
             }
             PlayFile(toPlayFile);
+        }
+        ListBox GetListBox()
+        {
+            if (PlaylistVM.IsPageLoaded)
+            {
+                return PlaylistVM.PlaylistSongsListBox;
+            }
+            else
+            {
+                return LibVM.FileListBox;
+            }
         }
         void PlayPrevious()
         {
@@ -124,14 +135,24 @@ namespace Macalifa.ViewModels
             openPicker.ViewMode = PickerViewMode.Thumbnail;
             openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             openPicker.FileTypeFilter.Add(".mp3");
-            StorageFile file = await openPicker.PickSingleFileAsync();            
-            var mp3file = await CoreMethods.CreateMediafile(file);
-            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
-                Load(mp3file);
-            else
+            openPicker.FileTypeFilter.Add(".wav");
+            openPicker.FileTypeFilter.Add(".ogg");
+            openPicker.FileTypeFilter.Add(".flac");
+            openPicker.FileTypeFilter.Add(".m4a");
+            openPicker.FileTypeFilter.Add(".aif");
+            openPicker.FileTypeFilter.Add(".wma");
+            StorageFile file = await openPicker.PickSingleFileAsync();  
+            if(file != null)
             {
-                Load(mp3file, true);
-            }
+                var mp3file = await CoreMethods.CreateMediafile(file);
+                if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+                    Load(mp3file);
+                else
+                {
+                    Load(mp3file, true);
+                }
+            }    
+            
         }
         #endregion
 

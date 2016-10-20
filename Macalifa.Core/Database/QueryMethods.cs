@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -23,16 +23,17 @@ using System.Threading.Tasks;
 using LiteDB;
 using LiteDB.Platform;
 using Windows.Storage;
-using Macalifa.Models;
+using BreadPlayer.Models;
 using System.Diagnostics;
 
-namespace Macalifa.Database
+namespace BreadPlayer.Database
 {
     public class QueryMethods : IDisposable
     {
         LiteDatabase db;
         LiteCollection<Mediafile> tracks;
         public LiteCollection<Playlist> playlists;
+        public LiteCollection<Mediafile> recent;
         public QueryMethods()
         {
             LitePlatform.Initialize(new LitePlatformWindowsStore());
@@ -41,9 +42,10 @@ namespace Macalifa.Database
 
         public void CreateDB()
         {
-            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\library.db;journal=false;");            
+            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;journal=false;");            
             tracks = db.GetCollection<Mediafile>("tracks");
             playlists = db.GetCollection<Playlist>("playlists");
+            recent = db.GetCollection<Mediafile>("recent");
             tracks.EnsureIndex(t => t.Title);
             tracks.EnsureIndex(t => t.LeadArtist);
         }
@@ -68,15 +70,10 @@ namespace Macalifa.Database
             });
             return collection;
         }
-        public IEnumerable<Mediafile> PlaylistSort(string PlaylistName)
-        {
-            var found =tracks.Find(t => t.Playlists != null);           
-            var newFound = found.Where(a => a.Playlists.All(t => t.Name == PlaylistName) && a.Playlists.Count == 1);
-            return newFound ;
-        }
         public void Update(Mediafile file)
         {
-            tracks.Update(file);
+            if (file != null)
+                tracks.Update(file);
         }
         public IEnumerable<Mediafile> Query(string term)
         {

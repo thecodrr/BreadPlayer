@@ -1,13 +1,13 @@
 ﻿<Page
-    x:Class="Macalifa.Shell"
+    x:Class="BreadPlayer.Shell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Macalifa"
+    xmlns:local="using:BreadPlayer"
     xmlns:controls="using:SplitViewMenu"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
-    xmlns:Behaviours="using:Macalifa.Behaviours"
-    xmlns:Converters="using:Macalifa.Converters"
+    xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Converters="using:BreadPlayer.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" Loaded="Page_Loaded" >
@@ -51,8 +51,9 @@
         </VisualStateManager.VisualStateGroups>
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Songs"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Label="Albums"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Arguments="Recent"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Label="My Albums"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings"></controls:SimpleNavMenuItem>

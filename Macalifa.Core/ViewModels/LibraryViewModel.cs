@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,15 @@ using Windows.UI.Core;
 using System.IO;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Macalifa.Tags;
-using Macalifa.Tags.ID3;
-using Macalifa.Tags.ID3.ID3v2Frames;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
+using BreadPlayer.Tags;
+using BreadPlayer.Tags.ID3;
+using BreadPlayer.Tags.ID3.ID3v2Frames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using Windows.UI.Xaml.Media;
-using Macalifa.Models;
+using BreadPlayer.Models;
 using System.Collections.ObjectModel;
-using Macalifa.Core;
-using Macalifa.Services;
+using BreadPlayer.Core;
+using BreadPlayer.Services;
 using System.Windows.Input;
 using System.Reflection;
 using Windows.Data.Json;
@@ -41,20 +41,20 @@ using Windows.UI.Xaml;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Macalifa.Database;
+using BreadPlayer.Database;
 using Windows.UI.Xaml.Controls;
-using Macalifa.Extensions;
+using BreadPlayer.Extensions;
 using Windows.UI.Xaml.Data;
 using System.Diagnostics;
 using Windows.System;
-using Macalifa.Events;
-using Macalifa.Dialogs;
+using BreadPlayer.Events;
+using BreadPlayer.Dialogs;
 using System.Security.Cryptography;
 using SplitViewMenu;
 using Windows.Storage.AccessCache;
-using Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
 
-namespace Macalifa.ViewModels
+namespace BreadPlayer.ViewModels
 {
     public class LibraryViewModel : ViewModelBase
     {
@@ -78,14 +78,48 @@ namespace Macalifa.ViewModels
             GenericService<LibraryViewModel>.vm = this;
             GenericService<LibraryViewModel> service = GenericService<LibraryViewModel>.Instance;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+            RecentlyPlayedCollection.Elements.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
+            //SplitViewMenu.SplitViewMenu.NavService.Frame.Navigated += Frame_Navigated;
+        }
+
+        private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            await Task.Delay(1000);
+           if(RecentlyPlayedCollection.Elements.Count <= 100)
+            {              
+                RecentlyPlayedCollection.Elements.RemoveAt(RecentlyPlayedCollection.Count + 1);
+            }
+        }
+
+        private void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(LibraryView))
+            {
+                if (e.Parameter is string && e.Parameter.ToString() == "Recent")
+                {
+                    ViewSource.Source = RecentlyPlayedCollection.Elements;
+                    //headerText.Text = "Recently Played";
+                }
+                else
+                {
+                    ViewSource.Source = TracksCollection.Elements;
+                }
+            }
+
         }
         #endregion
 
         #region Properties  
         public ThreadSafeObservableCollection<ContextMenuCommand> Options { get; set; } = new ThreadSafeObservableCollection<ContextMenuCommand>();
- 
-        public string _genre;
+
+        CollectionViewSource viewSource;
+        public CollectionViewSource ViewSource
+        {
+            get { if (viewSource == null) viewSource = new CollectionViewSource(); return viewSource; }
+            set { Set(ref viewSource, value); }
+        }
+        string _genre;
         public string Genre
         {
             get { return _genre; }
@@ -97,6 +131,15 @@ namespace Macalifa.ViewModels
         public ObservableRangeCollection<String> GenreCollection
         {
             get { return _GenreCollection; }
+        }
+        GroupedObservableCollection<string, Mediafile> _RecentlyPlayedCollection;
+        /// <summary>
+        /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
+        /// </summary>
+        public GroupedObservableCollection<string, Mediafile> RecentlyPlayedCollection
+        {
+            get { if (_RecentlyPlayedCollection == null) _RecentlyPlayedCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title); return _RecentlyPlayedCollection; }
+            set { Set(ref _RecentlyPlayedCollection, value); }
         }
         GroupedObservableCollection<string, Mediafile> _TracksCollection;
         /// <summary>
@@ -118,7 +161,7 @@ namespace Macalifa.ViewModels
         }
         Mediafile _mediaFile;
         /// <summary>
-        /// Gets or Sets <see cref="Macalifa.Models.Mediafile"/> for this ViewModel
+        /// Gets or Sets <see cref="BreadPlayer.Models.Mediafile"/> for this ViewModel
         /// </summary>
         public Mediafile Mediafile
         {
@@ -222,7 +265,7 @@ namespace Macalifa.ViewModels
         /// <summary>
         /// Deletes a song from the FileCollection. <seealso cref="DeleteCommand"/>
         /// </summary>
-        /// <param name="path"><see cref="Macalifa.Models.Mediafile"/> to delete.</param>
+        /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to delete.</param>
         public void Delete(object path)
         {
             if (path is ListBox)
@@ -243,13 +286,21 @@ namespace Macalifa.ViewModels
         /// <summary>
         /// Plays the selected file. <seealso cref="PlayCommand"/>
         /// </summary>
-        /// <param name="path"><see cref="Macalifa.Models.Mediafile"/> to play.</param>
+        /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
         public async void Play(object path)
         {
             Mediafile mp3File = path as Mediafile;
+            if (RecentlyPlayedCollection.Elements.Any(t => t.Path == mp3File.Path))
+            {
+                RecentlyPlayedCollection.Elements.Remove(RecentlyPlayedCollection.Elements.First(t => t.Path == mp3File.Path));
+                db.recent.Delete(t => t.Path == mp3File.Path);
+            }
+            RecentlyPlayedCollection.AddItem(mp3File);
+            db.recent.Insert(mp3File);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var mp3 = TracksCollection.Elements.Where(t => t.State == PlayerState.Playing);
+                if (PlaylistVM.IsPageLoaded) mp3 = PlaylistVM.Songs.Where(t => t.State == PlayerState.Playing);
                 if (mp3 != null) foreach(var a in mp3) a.State = PlayerState.Stopped;
                 StorageFile file = await StorageFile.GetFileFromPathAsync(mp3File.path);
                 ShellVM.Play(null, mp3File);
@@ -264,9 +315,10 @@ namespace Macalifa.ViewModels
         }
         void Init(object para)
         {
-            var childern = para as UIElementCollection;
-            var fileBox = childern.OfType<ListBox>().ToList()[0];
-            FileListBox = fileBox;
+            NavigationService.Instance.Frame.Navigated += Frame_Navigated;
+            //var childern = (para as Grid).Children;
+            //var fileBox = childern.OfType<ListBox>().ToList()[0];
+            //FileListBox = fileBox;
         }
         #endregion
 
@@ -383,11 +435,14 @@ namespace Macalifa.ViewModels
         /// </summary>
         async  void LoadLibrary()
         {
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\library.db"))
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
                 //OldItems = db.GetTracks();
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title, await db.GetTracks(), t => t.Title);
+                RecentlyPlayedCollection.AddRange(db.recent.FindAll());
                 if(TracksCollection.Elements.Count > 0) MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); //no use raising an event when library isn't ready.
+               ViewSource.Source = TracksCollection.Elements;
+                ViewSource.IsSourceGrouped = false;
             }
         }
         private void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
@@ -398,29 +453,36 @@ namespace Macalifa.ViewModels
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
-        public async void SaveImages(ID3v2 Data, Mediafile file)
+        public async void SaveImages(Windows.Storage.FileProperties.StorageItemThumbnail thumb, Mediafile file)
         {
             var albumartFolder = ApplicationData.Current.LocalFolder;
             var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
+           
             if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
             {
+                IBuffer buf;
+                Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
                 var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
                 using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    try
-                    {
-                        var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
-                        var stream = data.Data.AsRandomAccessStream();
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    while ((buf = (await thumb.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None))).Length > 0)
+                        await albumstream.WriteAsync(buf);
 
-                        var x = await decoder.GetSoftwareBitmapAsync();
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
-                        encoder.SetSoftwareBitmap(x);
-                        await encoder.FlushAsync();
-                        stream.Dispose();
-                    }
-                    catch(Exception ex) { Debug.Write(ex.Message + "||" + file.Path); }
+                    //try
+                    //{
+                    //    var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
+                    //    var stream = data.Data.AsRandomAccessStream();
+                    //    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+
+                    //    var x = await decoder.GetSoftwareBitmapAsync();
+                    //    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
+                    //    encoder.SetSoftwareBitmap(x);
+                    //    await encoder.FlushAsync();
+                    //    stream.Dispose();
+                    //}
+                    //catch(Exception ex) { Debug.Write(ex.Message + "||" + file.Path); }
                 }
+                thumb.Dispose();
             }
         }
         #endregion
@@ -430,23 +492,32 @@ namespace Macalifa.ViewModels
         {
             Options.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             PlaylistCollection.AddRange(TracksCollection.Elements.SelectMany(t => t.Playlists));
+            PlaylistCollection.AddRange(db.playlists.FindAll());
             foreach (var list in PlaylistCollection.DistinctBy(t => t.Name))
             {
-                AddPlaylist(new Dictionary<Playlist, IEnumerable<Mediafile>>(), list.Name, list.Description);
+                if (list.Songs.Count <= 0)
+                    AddPlaylist(new Dictionary<Playlist, IEnumerable<Mediafile>>(), list.Name, list.Description);
+                else
+                {
+                    var dict = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                    dict.Add(list, list.Songs);
+                    AddPlaylist(dict, list.Name, list.Description);
+                }
             }
         }
         async void AddToPlaylist(object file)
         {
-
             if (file != null)
             {
+                //songList is a variable to initiate both (if available) sources of songs. First is AlbumSongs and the second is the direct library songs.
+                var songList = (file as MenuFlyoutItem).DataContext is Album ? ((file as MenuFlyoutItem).DataContext as Album).AlbumSongs : FileListBox.SelectedItems.AsEnumerable();
                 var menu = file as MenuFlyoutItem;
                 var dictPlaylist = new Dictionary<Playlist, IEnumerable<Mediafile>>();
                 if (menu.Text == "New Playlist")
                 {
                     dictPlaylist = await ShowAddPlaylistDialog();
                 }
-                foreach (Mediafile s in FileListBox.SelectedItems)
+                foreach (Mediafile s in songList)
                 {
                     var playlistName = dictPlaylist.Count > 0 ? dictPlaylist.First().Key.Name : menu.Text;
                     if (!s.Playlists.Any(t => t.Name == playlistName))
@@ -475,18 +546,17 @@ namespace Macalifa.ViewModels
                 {
                     AddPlaylist(Playlists, dialog.Text, dialog.Description);
                 }
-
-
                 return Playlists;
             }
             return Playlists;
         }
-        void AddPlaylist(Dictionary<Playlist, IEnumerable<Mediafile>> Playlists, string label, string description)
+        public void AddPlaylist(Dictionary<Playlist, IEnumerable<Mediafile>> Playlists, string label, string description)
         {
             var pl = new Playlist() { Name = label, Description = description };
-            Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
+            Playlists.Add(pl, TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
             var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
             Options.Add(cmd);
+            pl.Songs.AddRange(Playlists.Values.First());
             db.playlists.Insert(pl);
             ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {

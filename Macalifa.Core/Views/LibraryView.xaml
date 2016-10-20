@@ -1,18 +1,18 @@
 ﻿<Page x:Name="LibView"
-    x:Class="Macalifa.LibraryView"
+    x:Class="BreadPlayer.LibraryView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Macalifa"
+    xmlns:local="using:BreadPlayer"
     xmlns:controls="using:SplitViewMenu"
-    xmlns:mf="using:Macalifa.Models"
-    xmlns:Converter="using:Macalifa.Converters"
-    xmlns:VM="using:Macalifa.ViewModels"
-    xmlns:Common="using:Macalifa.Common"
-    xmlns:Player="using:Macalifa.Core"
-    xmlns:triggers="using:Macalifa.Common"      
+    xmlns:mf="using:BreadPlayer.Models"
+    xmlns:Converter="using:BreadPlayer.Converters"
+    xmlns:VM="using:BreadPlayer.ViewModels"
+    xmlns:Common="using:BreadPlayer.Common"
+    xmlns:Player="using:BreadPlayer.Core"
+    xmlns:triggers="using:BreadPlayer.Common"      
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}">
@@ -75,10 +75,10 @@
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-
+        <ProgressBar VerticalAlignment="Center" HorizontalAlignment="Center" Width="400" Value="{Binding Progress, UpdateSourceTrigger=Explicit}" Grid.ColumnSpan="2" Foreground="#FF00FF15" ></ProgressBar>
         <Border Grid.RowSpan="2" Background="{ThemeResource ThemeBackground}" Grid.ColumnSpan="2"/>
-        <TextBlock x:Name="headerText" Text="Library" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <ListBox SelectionMode="Extended" x:Name="fileBox" Background="{ThemeResource ThemeBackground}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2">
+        <TextBlock x:Name="headerText" Text="Music Library" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
+        <ListBox SelectionMode="Extended" x:Name="fileBox" Background="{ThemeResource ThemeBackground}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Path=ViewSource.Source, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate >
                     <VirtualizingStackPanel Orientation="Vertical">

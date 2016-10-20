@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Macalifa.Core;
+using BreadPlayer.Core;
 using Windows.UI.Xaml.Media;
-using Macalifa.Tags.ID3;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
-namespace Macalifa.Models
+using BreadPlayer.Tags.ID3;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
+namespace BreadPlayer.Models
 {
     public class Mediafile : ViewModelBase
     {
@@ -154,7 +154,7 @@ namespace Macalifa.Models
         public string Album { get { return album; } set { album = string.IsNullOrEmpty(value) ? album = "Unknown Album" : value; } }
         public string BeatsPerMinutes { get { return beatsperminutes; } set { beatsperminutes = string.IsNullOrEmpty(value) ? beatsperminutes = NaN : value; } }
         public string Composer { get { return composer; } set { composer = string.IsNullOrEmpty(value) ? composer = NaN : value; } }
-        public string Genre { get { return genre; } set { genre = string.IsNullOrEmpty(value) ? genre = NaN : value; } }
+        public string Genre { get { return genre; } set { genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; } }
         public string CopyrightMessage { get { return copyright_message; } set { copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; } }
         public string Date { get { return date; } set { date = string.IsNullOrEmpty(value) ? date = NaN : value; } }
         public string EncodingTime { get { return encoding_time; } set { encoding_time = string.IsNullOrEmpty(value) ? encoding_time = NaN : value; } }
@@ -201,7 +201,7 @@ namespace Macalifa.Models
         public string ISRC { get { return isrc; } set { isrc = string.IsNullOrEmpty(value) ? isrc = NaN : value; } }
         public string SoftwareHardwareAndSettingUsedForEncoding { get { return software_or_hardware_and_setting_used_for_encoding; } set { software_or_hardware_and_setting_used_for_encoding = string.IsNullOrEmpty(value) ? software_or_hardware_and_setting_used_for_encoding = NaN : value; } }
         public string SetSubtitle { get { return set_subtitle; } set { set_subtitle = string.IsNullOrEmpty(value) ? set_subtitle = NaN : value; } }
-        public string Year { get { return year; } set { year = string.IsNullOrEmpty(value) ? year = NaN : value; } }
+        public string Year { get { return year; } set { year = string.IsNullOrEmpty(value) ? year = "" : value; } }
         public string UniqueFileIdentifier { get { return unique_file_identifier; } set { unique_file_identifier = string.IsNullOrEmpty(value) ? unique_file_identifier = NaN : value; } }
         public string TermOfUse { get { return term_of_use; } set { term_of_use = string.IsNullOrEmpty(value) ? term_of_use = NaN : value; } }
         public string UnsynchronizedLyric { get { return unsynchronized_lyric; } set { unsynchronized_lyric = string.IsNullOrEmpty(value) ? unsynchronized_lyric = NaN : value; } }

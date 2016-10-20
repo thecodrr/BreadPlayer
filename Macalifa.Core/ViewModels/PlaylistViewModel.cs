@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,18 +20,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Macalifa.Models;
+using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
-using Macalifa.Services;
+using BreadPlayer.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
-using Macalifa.Dialogs;
-using Macalifa.Extensions;
+using BreadPlayer.Dialogs;
+using BreadPlayer.Extensions;
+using Windows.UI.Popups;
+using System.Globalization;
 
-namespace Macalifa.ViewModels
+namespace BreadPlayer.ViewModels
 {
     public class PlaylistViewModel : ViewModelBase
     {
@@ -58,7 +60,7 @@ namespace Macalifa.ViewModels
         {
             get
             {
-                totalMinutes = Songs.Sum(t => TimeSpan.FromSeconds(Convert.ToDouble(t.Length)).Minutes) + " Minutes";
+                totalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10)  + " Minutes";
                 return totalMinutes;
             }
             set
@@ -67,7 +69,12 @@ namespace Macalifa.ViewModels
                 Set(ref totalMinutes, value);
             }
         }
-
+        bool isMenuVisible = true;
+       public bool IsMenuVisible
+        {
+            get { return isMenuVisible; }
+            set { Set(ref isMenuVisible, value); }
+        }
         ImageSource playlistArt;
         public ImageSource PlaylistArt
         {
@@ -133,13 +140,40 @@ namespace Macalifa.ViewModels
         }
         async void DeletePlaylist(object playlist)
         {
-
+            var stop = System.Diagnostics.Stopwatch.StartNew();
+            var dictPl = playlist != null ? (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First() : CurrentDictionary.First(); //get the dictionary containing playlist and songs.
+            var selectedPlaylist = dictPl.Key; //get selected playlist
+            var songs = dictPl.Value; //get songs of the playlist
+            Windows.UI.Popups.MessageDialog dia = new Windows.UI.Popups.MessageDialog("Do you want to delete this playlist?", "Confirmation");
+            dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
+            dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
+            dia.DefaultCommandIndex = 0;
+            dia.CancelCommandIndex = 1;
+            var result = await dia.ShowAsync();
+            if (result.Label == "Yes")
+            {
+                if (songs.Count() > 0) //check to see if there are any songs. If not then the playlist is empty.
+                {
+                    foreach (var file in songs)
+                    {
+                        file.Playlists.Remove(file.Playlists.First(t => t.Name == selectedPlaylist.Name)); //remove playlist from the song.
+                        LibVM.db.Update(file);//update database and save all changes.
+                    }
+                }
+                ShellVM.PlaylistsItems.Remove(ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                LibVM.Options.Remove(LibVM.Options.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                LibVM.db.playlists.Delete(t => t.Name == selectedPlaylist.Name); //delete from database.
+            }
+            stop.Stop();
+            System.Diagnostics.Debug.WriteLine("It took: " + stop.ElapsedMilliseconds.ToString());
         }
+
         async void RenamePlaylist(object playlist)
         {
             var stop = System.Diagnostics.Stopwatch.StartNew();
-            var selectedPlaylist = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Key;
-            var songs = (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First().Value;
+            var dictPl = playlist != null ? (playlist as Dictionary<Playlist, IEnumerable<Mediafile>>).First() : CurrentDictionary.First(); //get the dictionary containing playlist and songs.
+            var selectedPlaylist = dictPl.Key; //get selected playlist
+            var songs = dictPl.Value; //get songs of the playlist
             var dialog = new InputDialog()
             {
                 Title = "Rename this playlist",
@@ -157,15 +191,16 @@ namespace Macalifa.ViewModels
                     {
                         file.Playlists.First(t => t.Name == selectedPlaylist.Name).Name = pl.Name;
                         file.Playlists.First(t => t.Name == pl.Name).Description = pl.Description;
-                        LibVM.db.Update(file);
+                        LibVM.db.Update(file); //update database saving all songs and changes.
                     }
+                   
                 }
-                ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name;
-                LibVM.Options.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name;
-                LibVM.db.playlists.FindOne(t => t.Name == selectedPlaylist.Name);
-                Playlists.Add(pl, Core.CoreMethods.LibVM.TracksCollection.Elements.Where(a => a.Playlists.All(t => t.Name == pl.Name) && a.Playlists.Count == 1));
-                ShellVM.PlaylistsItems.First(t => t.Label == pl.Name).Arguments = Playlists;
-                Playlist = pl;
+                ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                LibVM.Options.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                LibVM.db.playlists.FindOne(t => t.Name == selectedPlaylist.Name); //change playlist name in the 'playlist' collection in the database.
+                dictPl.Key.Name = pl.Name;
+                Playlist = pl; //set this.Playlist to pl (local variable);
+                
             }
             stop.Stop();
             System.Diagnostics.Debug.WriteLine("It took: " + stop.ElapsedMilliseconds.ToString());
@@ -173,7 +208,25 @@ namespace Macalifa.ViewModels
         public PlaylistViewModel()
         {
         }
-        
-     
+        public Dictionary<Playlist, IEnumerable<Mediafile>> CurrentDictionary { get; set; }
+        RelayCommand _initCommand;
+        /// <summary>
+        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand InitCommand
+        {
+            get
+            { if (_initCommand == null) { _initCommand = new RelayCommand(param => this.Init(param)); } return _initCommand; }
+        }
+        public ListBox PlaylistSongsListBox;
+        bool _isPageLoaded;
+        public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
+        void Init(object para)
+        {
+            IsPageLoaded = true;
+            var childern = para as UIElementCollection;
+            var fileBox = childern.OfType<ListBox>().ToList()[0];
+            PlaylistSongsListBox = fileBox;
+        }
     }
 }

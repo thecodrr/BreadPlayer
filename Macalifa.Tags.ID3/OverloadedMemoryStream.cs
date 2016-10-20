@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Macalifa.Tags.ID3
+namespace BreadPlayer.Tags.ID3
 {
     /// <summary>
     /// A memory backed stream that stores byte data in blocks, this gives improved performance over System.IO.MemoryStream

@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,8 +20,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
-using Macalifa.Tags.ID3;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
+using BreadPlayer.Tags.ID3;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media;
 using Windows.Storage.FileProperties;
@@ -30,7 +30,7 @@ using Windows.Storage.FileProperties;
  * like: pictures, files and etc
  * for storing Binary information in all classes i have used MemoryStream
  */
-namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
+namespace BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames
 {
     /// <summary>
     /// A class for frame that only include Data(binary)
@@ -41,7 +41,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// Contains data of current frame
         /// </summary>
         protected MemoryStream _Data;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// New BinaryFrame
         /// </summary>
@@ -52,7 +52,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public BinaryFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _Data = TStream.ReadData(Length);
         }
 
@@ -150,7 +150,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         /// Contains Owner name
         /// </summary>
         protected string _Owner;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// New PrivateFrame
         /// </summary>
@@ -161,7 +161,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public PrivateFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _Owner = TStream.ReadText(Length, TextEncodings.Ascii, ref Length, true);
 
             _Data = TStream.ReadData(Length); // Read Data
@@ -279,7 +279,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
     public class DataWithSymbolFrame : PrivateFrame
     {
         private byte _Symbol;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// New DataWithSymbolFrame
         /// </summary>
@@ -290,7 +290,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public DataWithSymbolFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _Owner = TStream.ReadText(Length, TextEncodings.Ascii, ref Length, true);
 
             _Symbol = TStream.ReadByte(FS);
@@ -391,7 +391,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
     {
         private int _PreviewStart;
         private int _PreviewLength;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new AudioEncryptionFrame
         /// </summary>
@@ -402,7 +402,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public AudioEncryptionFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _Owner = TStream.ReadText(Length, TextEncodings.Ascii, ref Length, true);
 
             _PreviewStart = Convert.ToInt32(TStream.ReadUInt(2));
@@ -620,7 +620,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
     public class GeneralFileFrame : BaseFileFrame
     {
         private string _FileName;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new GeneralFileFrame
         /// </summary>
@@ -631,7 +631,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public GeneralFileFrame(string FrameID, FrameFlags Flags, int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _TextEncoding = (TextEncodings)TStream.ReadByte(FS);
             Length--;
             if (!IsValidEnumValue(_TextEncoding, ExceptionLevels.Error, FrameID))
@@ -864,7 +864,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
             /// </summary>
             PublisherLogo
         }
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new AttachedPictureFrame
         /// </summary>
@@ -875,7 +875,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.BinaryFrames
         public AttachedPictureFrame(string FrameID, FrameFlags Flags,  int Length, Stream FS)
             : base(FrameID, Flags, FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _TextEncoding = (TextEncodings)TStream.ReadByte(FS);
             Length--;
             if (!IsValidEnumValue(_TextEncoding, ExceptionLevels.Error, FrameID))

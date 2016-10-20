@@ -1,46 +1,19 @@
 ﻿<Page
-    x:Class="Macalifa.AlbumArtistView"
+    x:Class="BreadPlayer.AlbumArtistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Macalifa"
-    xmlns:Converters="using:Macalifa.Converters"
+    xmlns:local="using:BreadPlayer"
+    xmlns:Converters="using:BreadPlayer.Converters"    
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" RequestedTheme="Light">
+    mc:Ignorable="d">
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
-        <ListView ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid MaxWidth="150" Height="210">
-                        <StackPanel>
-                            <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
-                                <Ellipse.Fill>
-                                    <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
-                                    <!--<ImageBrush Stretch="Uniform" ImageSource="ms-appx:///Assets/albumart.png"/>-->
-                                </Ellipse.Fill>
-                            </Ellipse>
-                            <TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                            <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                        <!--<Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,58" Background="#FF9E9E9E" Height="46">
-                            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Padding="0,0,0,0" HorizontalAlignment="Center" BorderThickness="0" RequestedTheme="Dark" Width="46" Height="46" Background="#FF9E9E9E">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
-                                    </StackPanel>
-                                </Button>
-                                <Button Padding="0,0,0,0" HorizontalAlignment="Center" BorderThickness="0" RequestedTheme="Dark" Width="46" Height="46" Background="#FF9E9E9E">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#59152;"></TextBlock>
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
-                        </Border>-->
-                    </Grid>
-                </DataTemplate> 
-            </ListView.ItemTemplate>
-            <ListView.ItemsPanel>
+        <ListView x:Name="albumListView" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
+                    <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid Orientation="Horizontal">
                         <ItemsWrapGrid.ChildrenTransitions>
@@ -55,6 +28,11 @@
                     </ItemsWrapGrid>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+            <!--<Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="SelectionChanged" SourceObject="{Binding ElementName=albumListView}">
+                    <Core:InvokeCommandAction Command="{Binding NavigateToAlbumPageCommand}" CommandParameter="{Binding ElementName=albumListView, Path=SelectedItem}"/>
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>-->
         </ListView>
         
        

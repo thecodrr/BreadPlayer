@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace Macalifa.Tags.ID3
+namespace BreadPlayer.Tags.ID3
 {
     /// <summary>
     /// Provide ID3 Information for a file

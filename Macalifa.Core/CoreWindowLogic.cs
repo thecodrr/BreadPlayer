@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.UI.Xaml;
-using Macalifa.Services;
+using BreadPlayer.Services;
 using Windows.Storage;
 using System.IO;
-using Macalifa.Core;
-using Macalifa.ViewModels;
+using BreadPlayer.Core;
+using BreadPlayer.ViewModels;
 using Windows.Media;
 
-namespace Macalifa
+namespace BreadPlayer
 {
     public class CoreWindowLogic : CoreMethods
     {
@@ -37,7 +37,9 @@ namespace Macalifa
         private const string pathKey = "path";
         private const string posKey = "position";
         private const string volKey = "volume";
-        SystemMediaTransportControls _smtc;
+        private const string shuffleKey = "shuffle";
+        private const string repeatKey = "repeat";
+        static SystemMediaTransportControls _smtc;
         #endregion
 
         #region Load/Save Logic
@@ -51,8 +53,10 @@ namespace Macalifa
                 if (!string.IsNullOrEmpty(text))
                 {
                     JsonObject jsonObject = JsonObject.Parse(text);
+                    ShellVM.Repeat = jsonObject.GetNamedBoolean(repeatKey, false);
+                    ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
                     var volume = jsonObject.GetNamedNumber(volKey, 50);
-                    if (jsonObject.Count == 1 || onlyVol)
+                    if (jsonObject.Count == 3 || onlyVol)
                     {
                         Player.Volume = volume;
                     }
@@ -61,14 +65,15 @@ namespace Macalifa
                         path = jsonObject.GetNamedString(pathKey, "");
                         double position = jsonObject.GetNamedNumber(posKey);
                         Player.PlayerState = PlayerState.Paused;
-                        if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
-                        {
-                            var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                            foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
-                        }
+                       
                         ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                     }
                 }
+            }
+            if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+            {
+                var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
             }
             if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
                 LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
@@ -81,10 +86,12 @@ namespace Macalifa
             {
                 jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile.Path);
                 jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);
+                
             }
+            jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
+            jsonObject[repeatKey] = JsonValue.CreateBooleanValue(ShellVM.Repeat);
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
             StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
-
             using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
             {
                 using (var outputStream = stream.GetOutputStreamAt(0))
@@ -101,33 +108,56 @@ namespace Macalifa
         #endregion
 
         #region SystemMediaTransportControls Methods/Events
-        void InitSmtc()
+        static void InitSmtc()
         {
             _smtc = SystemMediaTransportControls.GetForCurrentView();
-            _smtc.IsEnabled = true;
+            _smtc.IsEnabled = false;
+            _smtc.ButtonPressed += _smtc_ButtonPressed;
+           
             _smtc.IsPlayEnabled = true;
             _smtc.IsPauseEnabled = true;
-            _smtc.ButtonPressed += _smtc_ButtonPressed;
+            _smtc.IsStopEnabled = true;
+            _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
+            _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
             Player.MediaStateChanged += Player_MediaStateChanged;
         }
-        private async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+       public static void UpdateSmtc()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            _smtc.IsEnabled = true;
+            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+            var musicProps = _smtc.DisplayUpdater.MusicProperties;
+            if (Player.CurrentlyPlayingFile != null)
+            {
+                //await _smtc.DisplayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path));
+                musicProps.Title = Player.CurrentlyPlayingFile.Title;
+                musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
+                musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
+            }
+            _smtc.DisplayUpdater.ClearAll();
+            _smtc.DisplayUpdater.Update();
+        }
+        private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 switch (args.Button)
                 {
                     case SystemMediaTransportControlsButton.Play:
-                        await Player.Play();
-                        break;
                     case SystemMediaTransportControlsButton.Pause:
-                        await Player.Pause();
+                        ShellVM.PlayPauseCommand.Execute(null);
+                        break;
+                    case SystemMediaTransportControlsButton.Next:
+                        ShellVM.PlayNextCommand.Execute(null);
+                        break;
+                    case SystemMediaTransportControlsButton.Previous:
+                        ShellVM.PlayPreviousCommand.Execute(null);
                         break;
                     default:
                         break;
                 }
             });
         }
-        private void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
+        private static void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
         {
             if (_smtc != null)
                 switch (e.NewState)
@@ -147,9 +177,14 @@ namespace Macalifa
         }
         #endregion
 
-        #region CoreWindow Titlebar Methods/Events
-
+        #region CoreWindow Dispose Methods
+        public static void DisposeObjects()
+        {
+            Player.Dispose();
+            LibVM.db.Dispose();
+        }
         #endregion
+
         #region Ctor
         public CoreWindowLogic()
         {

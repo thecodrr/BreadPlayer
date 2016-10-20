@@ -1,13 +1,13 @@
 ﻿<Page
-    x:Class="Macalifa.SettingsView"
+    x:Class="BreadPlayer.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Macalifa"
+    xmlns:local="using:BreadPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:VM="using:Macalifa.ViewModels"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Converters="using:Macalifa.Converters"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:Macalifa.Behaviours"
+    xmlns:VM="using:BreadPlayer.ViewModels"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Converters="using:BreadPlayer.Converters"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours"
     mc:Ignorable="d">
     <Page.Resources>
         <!--<Canvas x:Name="appbar_chevron_down" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
@@ -89,6 +89,7 @@
                 <TextBlock Text="Accent:"/>
                 <ComboBox Margin="15,0,0,0" Width="120"></ComboBox>
             </StackPanel>-->
+            <Button Content="Import playlists" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
 
         </StackPanel>
     </Grid>

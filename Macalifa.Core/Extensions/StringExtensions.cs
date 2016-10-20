@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Macalifa.Extensions
+namespace BreadPlayer.Extensions
 {
     public static class StringExtensions
     {

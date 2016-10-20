@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,14 +20,14 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Text;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 //using Tags.ID3.ID3v2Frames.BinaryFrames;
 using System.ComponentModel;
 
 /*
  * This namespace contain frames that have array of information
  */
-namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
+namespace BreadPlayer.Tags.ID3.ID3v2Frames.ArrayFrames
 {
     /// <summary>
     /// A Class for frames that includes TextEncoding, Language, TimeStampFormat, ContentType and ContentDescriptor
@@ -38,7 +38,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
         private FrameCollection<Syllable> _Syllables;
         private ContentTypes _ContentType;
         private TimeStamps _TimeStamp;
-        new Macalifa.Tags.TagStreamUWP TStream;
+        new BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Indicates diffrent types of Synchronized text
         /// </summary>
@@ -85,7 +85,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
             : base(FrameID, Flags, FS)
         {
             _Syllables = new FrameCollection<Syllable>("Syllables");
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             TextEncoding = (TextEncodings)TStream.ReadByte(FS);
             if (!IsValidEnumValue(TextEncoding, ExceptionLevels.Error, FrameID))
                 return;
@@ -406,7 +406,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
     {
         private FrameCollection<TempoCode> _TempoCodes;
         private TimeStamps _TimeStamp;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new STempoCodes
         /// </summary>
@@ -418,7 +418,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
             : base(FrameID, Flags, FS)
         {
             _TempoCodes = new FrameCollection<TempoCode>("Temnpo Codes");
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _TimeStamp = (TimeStamps)TStream.ReadByte(FS);
             if (IsValidEnumValue(_TimeStamp, ExceptionLevels.Error, FrameID))
                 return;
@@ -664,7 +664,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
     {
         private byte _AdjustmentBits;
         private FrameCollection<FrequencyAdjustmentFrame> _Frequensies;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new Equalisation frame
         /// </summary>
@@ -676,7 +676,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
             : base(FrameID, Flags, FS)
         {
             _Frequensies = new FrameCollection<FrequencyAdjustmentFrame>("Frequency Adjustment");
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _AdjustmentBits = TStream.ReadByte(FS);
             Length--;
 
@@ -907,7 +907,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
     {
         private TimeStamps _TimeStamp;
         private FrameCollection<EventCode> _Events;
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         /// <summary>
         /// Create new EventTimingCodeFrame
         /// </summary>
@@ -919,7 +919,7 @@ namespace Macalifa.Tags.ID3.ID3v2Frames.ArrayFrames
             : base(FrameID, Flags, FS)
         {
             _Events = new FrameCollection<EventCode>("EventCode");
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             _TimeStamp = (TimeStamps)TStream.ReadByte(FS);
             if (!IsValidEnumValue(_TimeStamp, ExceptionLevels.Error, FrameID))
                 return;

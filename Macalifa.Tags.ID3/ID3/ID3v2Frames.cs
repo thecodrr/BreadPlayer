@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using Macalifa.Tags.ID3.ID3v2Frames.TextFrames;
+using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using System.Collections;
 
-namespace Macalifa.Tags.ID3.ID3v2Frames
+namespace BreadPlayer.Tags.ID3.ID3v2Frames
 {
     /// <summary>
     /// Provide a interface for Lenghtable Frames
@@ -356,10 +356,10 @@ namespace Macalifa.Tags.ID3.ID3v2Frames
         /// Create new language from specific Sream
         /// </summary>
         /// <param name="Data">Stream to read language from</param>
-        Macalifa.Tags.TagStreamUWP TStream;
+        BreadPlayer.Tags.TagStreamUWP TStream;
         public Language(Stream FS)
         {
-            TStream = new Macalifa.Tags.TagStreamUWP(FS);
+            TStream = new BreadPlayer.Tags.TagStreamUWP(FS);
             Read();
         }
 

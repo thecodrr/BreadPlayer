@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -15,9 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using Macalifa;
-using Macalifa.Extensions;
-using Macalifa.Models;
+using BreadPlayer;
+using BreadPlayer.Extensions;
+using BreadPlayer.Models;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace SplitViewMenu
 {
     public sealed class SplitViewMenu : Control
     {
+        public static NavigationService NavService { get; protected set; }
         internal static readonly DependencyProperty MenuItemDataTemplateSelectorProperty =
             DependencyProperty.Register("MenuItemDataTemplateSelector", typeof (DataTemplateSelector),
                 typeof (SplitViewMenu), new PropertyMetadata(null));
@@ -142,6 +144,7 @@ namespace SplitViewMenu
         protected override void OnApplyTemplate()
         {
             _pageFrame = GetTemplateChild("PageFrame") as Frame;
+            NavService = new NavigationService(ref _pageFrame);
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
@@ -216,7 +219,7 @@ namespace SplitViewMenu
             if (!_pageFrame.CanGoBack || handled)
                 return;
             handled = true;
-            _pageFrame.GoBack();
+            NavService.NavigateBack();
         }
 
         private static void OnContainerContextChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -304,7 +307,7 @@ namespace SplitViewMenu
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
         {
             var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
-            if(((NavMenuListView)sender).Name != "PlaylistsMenuList")
+            if(((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&
               item.DestinationPage != _pageFrame.CurrentSourcePageType)

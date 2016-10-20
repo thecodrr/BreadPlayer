@@ -107,7 +107,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\albumart_black.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <Content Include="Assets\fontello.ttf" />
+    <Content Include="Assets\breadplayer.ttf" />
     <None Include="Assets\Untitled-2.svg" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
+    <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
@@ -129,6 +130,9 @@
     <Compile Include="Database\QueryMethods.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TagDialog.xaml.cs">
+      <DependentUpon>TagDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
@@ -146,7 +150,11 @@
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Mp3Frame.cs" />
+    <Compile Include="PlaylistBus\IPlaylist.cs" />
+    <Compile Include="PlaylistBus\M3U.cs" />
+    <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\GenericService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
@@ -197,6 +205,7 @@
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\albumart.png" />
     <Content Include="Assets\Macalifa_Splash.png" />
+    <Content Include="Assets\noun_104859_cc.svg" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -271,6 +280,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Dialogs\InputDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TagDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

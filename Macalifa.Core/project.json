@@ -1,9 +1,8 @@
 ﻿{
   "dependencies": {
     "LiteDB.Core": "2.0.2",
-    "ManagedBass": "0.23.0",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "TagLib.Portable": "1.0.4"
+    "ManagedBass": "0.24.0",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2"
   },
   "frameworks": {
     "uap10.0": {}

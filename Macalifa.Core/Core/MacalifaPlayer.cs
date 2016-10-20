@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -30,11 +30,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using ManagedBass;
 using System.Runtime.InteropServices;
-using Macalifa.Events;
+using BreadPlayer.Events;
 using System.Diagnostics;
-using Macalifa.Models;
+using BreadPlayer.Models;
 
-namespace Macalifa.Core
+namespace BreadPlayer.Core
 {
     public class MacalifaPlayer : ViewModelBase, IDisposable
     {
@@ -89,12 +89,10 @@ namespace Macalifa.Core
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mp3file)
-        {
-            StorageFile file = await StorageFile.GetFileFromPathAsync(mp3file.Path);
-            if (file != null)
+        {         
+            if (mp3file != null)
             {
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-                string sPath = @mp3file.Path;
+                string sPath = mp3file.Path;
                 await Stop();
                 await Task.Run(() =>
                 {
@@ -104,8 +102,10 @@ namespace Macalifa.Core
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                     CurrentlyPlayingFile = mp3file;
+                    CoreWindowLogic.UpdateSmtc();
                     CoreWindowLogic.Stringify();
                 });
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Remove(CoreMethods.CurrentFileToken);
                 return true;
             }
             else

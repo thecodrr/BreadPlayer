@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,12 @@ using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Core;
-using Macalifa.Common;
-using Macalifa;
+using BreadPlayer.Common;
+using BreadPlayer;
 using Microsoft.Xaml.Interactions.Core;
 using Windows.UI.Xaml.Controls;
 
-namespace Macalifa.Behaviours
+namespace BreadPlayer.Behaviours
 {
     class InvokeCommandByKeyDown : DependencyObject, IAction
     {
@@ -87,7 +87,7 @@ namespace Macalifa.Behaviours
                         if(ctrl == CoreVirtualKeyStates.Down)
                             if (keyPrarm.Key == PressedKey)
                             {
-                                var p = CommandParameter as Macalifa.Models.Mediafile;
+                                var p = CommandParameter as BreadPlayer.Models.Mediafile;
                                 Command.Execute(p);
                                 keyPrarm.Handled = true;
                             }

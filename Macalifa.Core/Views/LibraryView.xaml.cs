@@ -1,5 +1,5 @@
 ﻿/* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -29,12 +29,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Macalifa.ViewModels;
+using BreadPlayer.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace Macalifa
+namespace BreadPlayer
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -83,7 +83,6 @@ namespace Macalifa
             e.DragUIOverride.IsContentVisible = true;
             e.DragUIOverride.IsGlyphVisible = true;
         }
-
 
         private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
         {

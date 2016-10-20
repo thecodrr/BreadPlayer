@@ -1,5 +1,5 @@
 /* 
-	Macalifa. A music player made for Windows 10 store.
+	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
     This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Collections;
-using Macalifa.Tags.ID3.ID3v2Frames;
+using BreadPlayer.Tags.ID3.ID3v2Frames;
 using System.Text.RegularExpressions;
 
-namespace Macalifa.Tags.ID3
+namespace BreadPlayer.Tags.ID3
 {
     /// <summary>
     /// The main class for any type of frame to inherit
@@ -35,7 +35,7 @@ namespace Macalifa.Tags.ID3
         // After reading frame if must drop value were true it means frame is not readable
         private bool _IsLinked; // indicate is current frame a linked frame or not
         private ID3Exception _Exception;
-        Macalifa.Tags.TagStreamUWP Tag;
+        BreadPlayer.Tags.TagStreamUWP Tag;
         /// <summary>
         /// Create a new Frame class
         /// </summary>
@@ -48,7 +48,7 @@ namespace Macalifa.Tags.ID3
 
             if (!ValidatingFrameID(FrameID, ExceptionLevels.Error))
                 return;
-            Tag = new Macalifa.Tags.TagStreamUWP(FS);
+            Tag = new BreadPlayer.Tags.TagStreamUWP(FS);
             _FrameFlags = Flags;
             _FrameID = FrameID;
             _IsLinked = false;

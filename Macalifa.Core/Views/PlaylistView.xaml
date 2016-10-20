@@ -1,12 +1,12 @@
 ﻿<Page
-    x:Class="Macalifa.PlaylistView"
+    x:Class="BreadPlayer.PlaylistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Macalifa"
+    xmlns:local="using:BreadPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Services="using:Macalifa.Services"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Extensions="using:Macalifa.Extensions" xmlns:Behaviours="using:Macalifa.Behaviours" 
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Services="using:BreadPlayer.Services"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Extensions="using:BreadPlayer.Extensions" xmlns:Behaviours="using:BreadPlayer.Behaviours" 
     mc:Ignorable="d">
     <Page.Resources>
       
@@ -177,8 +177,11 @@
                                         </AppBarButton>
                                         <TextBlock x:Name="Temp" Visibility="Collapsed" FontSize="22" Text="{Binding Path=State, UpdateSourceTrigger=Explicit}"/>
                                     </Grid>
-                                    <TextBlock x:Name="artistTxt" Visibility="Visible" Text="{Binding LeadArtist}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="albumTxt" Visibility="Visible" Text="{Binding Album}" Margin="100,0,0,0" Width="150" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="artistTxt" Visibility="Visible" FontSize="13" Text="{Binding LeadArtist}" Margin="100,0,0,0" Width="100" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="albumTxt" Visibility="Visible" FontSize="13" Text="{Binding Album}" Margin="100,0,0,0" Width="100" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="yearTxt" Visibility="Visible" FontSize="13" Text="{Binding Year}" Margin="100,0,0,0" Width="50" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="genreTxt" Visibility="Visible" FontSize="13" Text="{Binding Genre}" Margin="50,0,0,0" Width="100" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="durationTxt" Visibility="Visible" FontSize="13" Text="{Binding Length}" Margin="50,0,0,0" Width="50" VerticalAlignment="Center"/>
                                     <!--<ListBox Width="100" ItemsSource="{Binding Path=Playlists}" DisplayMemberPath="Name"/>-->
                                 </StackPanel>
 
@@ -239,7 +242,7 @@
                             <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
                         </StackPanel>
                     </Button>                
-                    <Button Style="{StaticResource HyperlinkBtn}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                    <Button Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibilty}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
                 </StackPanel>
             </Grid>
         </Grid>
