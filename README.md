@@ -14,7 +14,7 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 ###Alpha Feature-List:
 This is the list of all the features that are added and/or yet to be added before first **Alpha** release.
 - [x] Improve shuffle
-- [ ] Implement History/Recent View
+- [x] Implement History/Recent View
 - [x] Playlist creation, import, export and adding songs to playlists. 
 - [x] Album View for Library.
 - [x] Play song directly when passed as an argument (From Windows Explorer etc.).
