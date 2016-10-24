@@ -6,34 +6,25 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
-1. Flawlessly plays mp3 audio. (Further format support to be added in due time.)
-2. Import Library (10,000 songs/2m) & Playlists. (other playlist formats e.g. .m3u, .pls etc. will be made available before final release.) 
-3. Other basic music player capabilities such as repeat, suffle etc.
-4. ID3 Tag Reader
+1. Flawlessly plays all major formats (mp3, wav, flac, ogg, aiff etc.)! 
+2. Full functional music library with sorting, filtering, search etc.
+3. Amazing performance i.e. ability to load 12000 songs in 120s with complete tags and album arts.
+4. Playlist import (.m3u, .pls etc). (Export coming very soon.)
+5. Other basic music player capabilities such as repeat, shuffle etc.
+6. Pickup where you left off.
+7. Loading songs from Windows Explorer
+8. Drag/Drop songs directly into library.
 
-###Alpha Feature-List:
-This is the list of all the features that are added and/or yet to be added before first **Alpha** release.
-- [x] Improve shuffle
-- [x] Implement History/Recent View
-- [x] Playlist creation, import, export and adding songs to playlists. 
-- [x] Album View for Library.
-- [x] Play song directly when passed as an argument (From Windows Explorer etc.).
-- [x] Drag & Drop support.
-- [x] Sorting, filtering, search etc.
-- [x] Full library support and features. 
-- [x] Implement SettingsView for main features.
-- [x] Show song's properties (ID3 Info).
-- [x] Implement basic player functions.
-- [ ] Notification when new song starts playing.
-- [x] Save `CurrentlyPlayingSong` and info before `ApplicationExit`.
-- [x] Support for Windows 10 Mobile
+##Current Status:
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? Please grab the .appxbundle from here and start away!
 
 ##About the project:
 This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
 ###Why the name change?
 Basically, the main reason behind the name change is that the previous one didn't make any sense but aside from that it wasn't SEO friendly. Who would _ever_ search for the word _Macalifa_? :D The second reason that is why we chose **Bread Player**, is because it is catchy and it invokes curiousity; furthermore, it has a nice ring to it and it is metaphoric...you know breads and burgers :D
-###Main Focus:
-Currently the focus is on the **BreadPlayer.Core**, more specifically on the core features such as library/playlist support, bug hunting, basic player capabilites etc. The core focus will be on **performance**, the experience should be as smooth as possible.
+
+###What Happens Next?
+We will probably start the development of **Beta Version** after _Alpha_ is released. **Beta-Feature List will be published soon.** 
 ###Technologies used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
