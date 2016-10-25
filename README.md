@@ -5,7 +5,7 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 
 ##Current Status:
 ###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases)
-
+###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com).
 ###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
