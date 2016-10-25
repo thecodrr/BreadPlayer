@@ -219,7 +219,7 @@ namespace SplitViewMenu
             if (!_pageFrame.CanGoBack || handled)
                 return;
             handled = true;
-            NavService.NavigateBack();
+            _pageFrame.GoBack();
         }
 
         private static void OnContainerContextChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -251,18 +251,16 @@ namespace SplitViewMenu
         }
         INavigationMenuItem GetItemFromList(Type sourcePagetype)
         {
-            if(sourcePagetype == typeof(LibraryView))
-            {
-                return TopNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
-            }
-            else if(sourcePagetype == typeof(PlaylistView))
+            if (sourcePagetype == typeof(LibraryView) || sourcePagetype == typeof(PlaylistView))
             {
                 return null;
             }
-            else
+            else if (sourcePagetype == typeof(SettingsView))
             {
                 return BottomNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
             }
+            else
+                return null;
         }
         NavMenuListView GetParentListViewFromItem(SimpleNavMenuItem item)
         {
@@ -288,26 +286,38 @@ namespace SplitViewMenu
             {
                 foreach (var entry in _pageFrame.BackStack.Reverse())
                 {
-                    var para = entry.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>; //get previous entry's parameter
-                    item = PlaylistsItems.SingleOrDefault(p => p.Label == para.First().Key.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                    if(entry.SourcePageType == typeof(PlaylistView))
+                    {
+                        var para = entry.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>; //get previous entry's parameter
+                        item = PlaylistsItems.SingleOrDefault(p => p.Label == para.First().Key.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                    }
+                    else if(entry.SourcePageType == typeof(LibraryView))
+                    {
+                        var para = entry.Parameter;
+                         if(para != null)
+                            item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
+                    }
                     if (item != null) 
                         break;  //if item is successfully got break the loop. We got what we needed.
                 }
             }
-
-            var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
-            if (container != null)
-                container.IsTabStop = false;
-            GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
-            container.IsSelected = true;
-            if (container != null)
-                container.IsTabStop = true;
+            if(item != null)
+            {
+                var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
+                if (container != null)
+                    container.IsTabStop = false;
+                GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
+                container.IsSelected = true;
+                if (container != null)
+                    container.IsTabStop = true;
+            }
         }
 
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
         {
             var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
-            if(((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
+         
+            if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&
               item.DestinationPage != _pageFrame.CurrentSourcePageType)
@@ -321,9 +331,10 @@ namespace SplitViewMenu
               item.Label != LastItem.Label)
                 {
                     _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-                    LastItem = item;
+                   
                 }
             }
+            LastItem = item;
         }
 
        

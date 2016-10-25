@@ -62,11 +62,11 @@ namespace BreadPlayer.Database
             tracks.Insert(file);
         }
         public async Task<IEnumerable<Mediafile>> GetTracks()
-        {
+        {          
             IEnumerable<Mediafile> collection = null;
             await Core.CoreMethods.Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.High, () => 
             {
-                collection = tracks.FindAll();
+                collection = tracks.Find(LiteDB.Query.All());
             });
             return collection;
         }
@@ -77,7 +77,7 @@ namespace BreadPlayer.Database
         }
         public IEnumerable<Mediafile> Query(string term)
         {
-            return tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+            return tracks.Find(LiteDB.Query.Contains("Title", term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
         }
         public void Dispose()
         {

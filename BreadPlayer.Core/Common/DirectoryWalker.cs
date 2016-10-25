@@ -24,17 +24,25 @@ using Windows.Storage;
 using System.IO;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
+using Windows.Storage.Search;
+using Windows.Storage.FileProperties;
+
 namespace BreadPlayer.Common
 {
     class DirectoryWalker
     {
-        public static async Task<IEnumerable<string>> GetFiles(string dirPath)
+        public static async Task<IReadOnlyList<StorageFile>> GetFiles(string dirPath)
         {
-            string[] files = { };
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                files = Directory.GetFiles(dirPath, "*.mp3", SearchOption.AllDirectories);
-            });
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(dirPath);
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3", ".wav", ".ogg", ".aiff", ".flac" });
+            options.FolderDepth = FolderDepth.Deep;
+            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
+            // Change to DoNotUseIndexer for trial 3
+            options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;      
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Title", "System.Music.Genre", "System.Music.Year" });
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+            uint index = 0, stepSize = 20;
+            IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index,stepSize);           
             return files;
         }
     }

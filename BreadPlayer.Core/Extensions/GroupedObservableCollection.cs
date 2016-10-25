@@ -45,14 +45,14 @@ namespace BreadPlayer.Extensions
             this.readKey = readKey;
         }
 
-        public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items, Func<TElement, TKey> orderFunc)
+        public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
             : this(readKey)
         {
             Elements = new ThreadSafeObservableCollection<TElement>();
-           // var ordered = items.OrderBy(orderFunc);
-            Elements.AddRange(items);          
+            Elements.AddRange(items);
+            foreach (var item in items)
+                this.AddItem(item);
         }
-         
         public bool Contains(TElement item)
         {
             return this.Contains(item, (a, b) => a.Equals(b));
@@ -74,17 +74,16 @@ namespace BreadPlayer.Extensions
             return this.SelectMany(g => g);
         }
     
-        public void AddItem(TElement item)
+        public void AddItem(TElement item, bool addToElement = false)
         {
             var key = this.readKey(item);
-            var s = item;
-            Elements.Add(item);
+            if (addToElement) Elements.Add(item);
             this.FindOrCreateGroup(key).Add(item);
         }      
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
         /// </summary> 
-        public void AddRange(IEnumerable<TElement> range)
+        public void AddRange(IEnumerable<TElement> range, bool addkey = false)
         {
             // get out if no new items
             if (range == null || !range.Any()) return;
@@ -98,7 +97,7 @@ namespace BreadPlayer.Extensions
             _isObserving = false;
             foreach (var item in range)
             {
-                AddItem(item);
+                AddItem(item, addkey);
             }
             _isObserving = true;
 
@@ -265,30 +264,30 @@ namespace BreadPlayer.Extensions
                 return this.lastEffectedGroup;
             }
 
-            Grouping<TKey, TElement> result = null;
-         
-    
-                    var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
-                    if (match == null)
-                    {
-                        // Group doesn't exist and the new group needs to go at the end
-                        result = new Grouping<TKey, TElement>(key);
-                        this.Add(result);
-                    }
-                    else if (!match.group.Key.Equals(key))
-                    {
-                        // Group doesn't exist, but needs to be inserted before an existing one
-                        result = new Grouping<TKey, TElement>(key);
-                        this.Insert(match.index, result);
-                    }
-                    else
-                    {
-                        result = match.group;
-                    }
+            var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
+            Grouping<TKey, TElement> result;
+            if (match == null)
+            {
+                // Group doesn't exist and the new group needs to go at the end
+                result = new Grouping<TKey, TElement>(key);
+                this.Add(result);
+            }
+            else if (!match.group.Key.Equals(key))
+            {
+                // Group doesn't exist, but needs to be inserted before an existing one
+                result = new Grouping<TKey, TElement>(key);
+                this.Insert(match.index, result);
+            }
+            else
+            {
+                result = match.group;
+            }
 
-                    this.lastEffectedGroup = result;
+            this.lastEffectedGroup = result;
+
             return result;
         }
+    }
     }
 
     public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>, IGrouping<TKey, TElement>
@@ -312,4 +311,3 @@ namespace BreadPlayer.Extensions
     }
 
 
-}

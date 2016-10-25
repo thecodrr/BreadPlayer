@@ -90,26 +90,30 @@ namespace BreadPlayer.Core
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mp3file)
         {         
-            if (mp3file != null)
+            if (mp3file != null && mp3file.Length != "00:00")
             {
-                string sPath = mp3file.Path;
+                string sPath = mp3file.Path;               
                 await Stop();
                 await Task.Run(() =>
                 {
                     handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
-                    PlayerState = PlayerState.Stopped;
-                    Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
-                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                    Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                    CurrentlyPlayingFile = mp3file;
-                    CoreWindowLogic.UpdateSmtc();
-                    CoreWindowLogic.Stringify();
+                    
+                        PlayerState = PlayerState.Stopped;
+                        Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                        MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                        Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        CurrentlyPlayingFile = mp3file;
+                        CoreWindowLogic.UpdateSmtc();
+                        CoreWindowLogic.Stringify();
+                                     
                 });
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Remove(CoreMethods.CurrentFileToken);
                 return true;
             }
             else
+            {
+                CoreWindowLogic.ShowMessage("The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.", "File corrupt");
                 return false;
+            }
         }
         /// <summary>
         /// Pauses the audio playback.
@@ -166,7 +170,7 @@ namespace BreadPlayer.Core
         {
             get { return _volume; }
             set {
-                Set(ref _volume, value);
+                Set(ref _volume, value);             
                     Bass.Volume = _volume / 100;
             }
         }

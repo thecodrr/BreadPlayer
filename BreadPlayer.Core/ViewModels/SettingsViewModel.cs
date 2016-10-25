@@ -36,6 +36,9 @@ using ManagedBass;
 using ManagedBass.Tags;
 using System.Diagnostics;
 using BreadPlayer.PlaylistBus;
+using Windows.Storage.FileProperties;
+using BreadPlayer.Extensions;
+using Windows.Storage.Search;
 
 namespace BreadPlayer.ViewModels
 {
@@ -76,7 +79,12 @@ namespace BreadPlayer.ViewModels
         {
             get
             {
-               if(ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null) _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; return _isThemeDark; //ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; 
+                if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
+                    _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
+                else
+                    _isThemeDark = true;
+                return _isThemeDark;
+                //ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; 
             }
             set
             {
@@ -85,10 +93,15 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection ;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
-            get { if (_LibraryFoldersCollection == null) { _LibraryFoldersCollection = new ThreadSafeObservableCollection<StorageFolder>(); } return _LibraryFoldersCollection; }
+            get {
+                if (_LibraryFoldersCollection == null)
+                {
+                    _LibraryFoldersCollection = new ThreadSafeObservableCollection<StorageFolder>();
+                }
+                return _LibraryFoldersCollection; }
             set { Set(ref _LibraryFoldersCollection, value); }
         }
         /// <summary>
@@ -96,55 +109,55 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public async void Load()
         {
+            var stop = System.Diagnostics.Stopwatch.StartNew();
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
             CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
-            StorageFolder folder = await picker.PickSingleFolderAsync();
-            LibraryFoldersCollection.Add(folder);
+            StorageFolder folder = await picker.PickSingleFolderAsync();            
             if (folder != null)
             {
-                if (StorageApplicationPermissions.FutureAccessList.Entries.Count <= 999)
-                    StorageApplicationPermissions.FutureAccessList.Clear();
+                LibraryFoldersCollection.Add(folder);
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
-                var filelist = await BreadPlayer.Common.DirectoryWalker.GetFiles(folder.Path); //folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName); //
+                QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3", ".wav", ".ogg", ".aiff", ".flac" });
+                options.FolderDepth = FolderDepth.Deep;
+                options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
+                options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+                options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                uint index = 0, stepSize = 20;
+                IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
+                index +=20;
                 var tempList = new List<Mediafile>();
-                DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(2);
-                timer.Start();
-                var stop = System.Diagnostics.Stopwatch.StartNew();
                 double i = 0;
-                var count = filelist.Count();
-                foreach (var x in filelist)
+                var count = await queryResult.GetItemCountAsync();
+                while (files.Count != 0)
                 {
-                    i++;
-                    double percent = (i / count) * 100;
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { LibVM.Progress = percent; });
+                    var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();        
                     Mediafile mp3file = null;
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(x);
-                    string path = file.Path;
-
-                    if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
+                    foreach (StorageFile file in files)
                     {
-                        try
+                        i++;
+                        LibVM.SongCount++;
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ShellVM.Status = i.ToString() + "\\" + count.ToString() + " Song(s) Loaded"; });
+                        string path = file.Path;
+                        if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
                         {
-
-                            mp3file = await CoreMethods.CreateMediafile(file);
-                            tempList.Add(mp3file);
-                        }
-                        catch { }
-                      
-                            timer.Tick += (sender, e) =>
+                            try
                             {
-                                LibVM.TracksCollection.AddRange(tempList);
-                                LibVM.db.Insert(tempList);
-                                tempList.Clear();
-                            };
-                        
+                                mp3file = await CoreMethods.CreateMediafile(file, false);
+                                tempList.Add(mp3file);
+                            }
+                            catch { }
+                        }
                     }
+                    LibVM.TracksCollection.AddRange(tempList, true);
+                    LibVM.db.Insert(tempList);
+                    tempList.Clear();
+                    files = await fileTask;
+                    index += 20;
                 }
-                AlbumArtistVM.AddAlbums();
                 stop.Stop();
-                ShowMessage(stop.ElapsedMilliseconds.ToString() + "    " + LibVM.TracksCollection.Elements.Count.ToString());
+                ShellVM.Status = i.ToString() + " Song(s) loaded in " + stop.Elapsed.TotalSeconds.ToString() + " seconds";
             }
         }
         public async void ShowMessage(string msg)

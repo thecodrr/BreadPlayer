@@ -13,9 +13,9 @@
         <!--<Canvas x:Name="appbar_chevron_down" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
             <Path Width="28.5" Height="25.3333" Canvas.Left="23.6016" Canvas.Top="24.9375" Stretch="Fill" Fill="#FF000000" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
         </Canvas>-->
-        <VM:SettingsViewModel x:Key="SettingsVM"/>
+       
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource SettingsVM}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core},Path=SettingsVM}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -44,7 +44,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="headerText.Margin" Value="40,0,0,10"/>
-                        <Setter Target="headerText.FontSize" Value="36"/>
+                        <Setter Target="headerText.FontSize" Value="22"/>
                         <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
                     </VisualState.Setters>
@@ -55,7 +55,7 @@
             <TextBlock x:Name="headerText" VerticalAlignment="Center" Margin="5,0,10,0" Text="Settings" FontSize="44" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
             <Grid x:Name="libraryGrid" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="19*"/>
+                    <ColumnDefinition Width="21*"/>
                     <ColumnDefinition Width="16*"/>
                 </Grid.ColumnDefinitions>
                 <Button Content="Add directories to library" Grid.Column="0" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
@@ -72,7 +72,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding DisplayName}" MaxWidth="200" TextTrimming="CharacterEllipsis"/>
-                            <TextBlock Text="{Binding Path}" Margin="20,0,0,0"/>
+                            <TextBlock Text="{Binding Path}" Margin="20,0,0,0" TextWrapping="NoWrap" TextTrimming="None"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

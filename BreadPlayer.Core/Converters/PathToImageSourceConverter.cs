@@ -15,14 +15,14 @@ namespace BreadPlayer.Converters
             BitmapImage image = new BitmapImage();
             image.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             string def = App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
-            
+            if (parameter == null)
+            {
+                image.DecodePixelHeight = 150;
+                image.DecodePixelWidth = 150;
+            }
             if (value is string && value != null)
             {
-                if (parameter == null)
-                {
-                    image.DecodePixelHeight = 150;
-                    image.DecodePixelWidth = 150;
-                }         
+                       
                 image.UriSource = new Uri(value.ToString() ?? def, UriKind.RelativeOrAbsolute);
                 
             }

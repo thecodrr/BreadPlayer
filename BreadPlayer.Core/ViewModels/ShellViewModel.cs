@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
 using Windows.Media;
 using System.Diagnostics;
+using Windows.UI.Xaml.Input;
 
 namespace BreadPlayer.ViewModels
 {
@@ -91,19 +92,23 @@ namespace BreadPlayer.ViewModels
         }
         void PlayNext()
         {
-            if (Player.CurrentlyPlayingFile != null)
-                history.Do(Player.CurrentlyPlayingFile);
-            int IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
-            Mediafile toPlayFile = null;
-            if (Shuffle)
+            if(LibVM.TracksCollection.Elements.Any() && LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
-                toPlayFile = ShuffledList.ElementAt(IndexOfCurrentlyPlayingFile + 1);
+                if (Player.CurrentlyPlayingFile != null)
+                    history.Do(Player.CurrentlyPlayingFile);
+                int IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
+                Mediafile toPlayFile = null;
+                if (Shuffle)
+                {
+                    toPlayFile = ShuffledList.ElementAt(IndexOfCurrentlyPlayingFile + 1);
+                }
+                else
+                {
+                    toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 ? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : GetListBox().Items.ElementAt(0) as Mediafile;
+                }
+                PlayFile(toPlayFile);
+
             }
-            else
-            {
-                toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 ? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : GetListBox().Items.ElementAt(0) as Mediafile;
-            }
-            PlayFile(toPlayFile);
         }
         ListBox GetListBox()
         {
@@ -144,7 +149,7 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();  
             if(file != null)
             {
-                var mp3file = await CoreMethods.CreateMediafile(file);
+                var mp3file = await CreateMediafile(file, false);
                 if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
                     Load(mp3file);
                 else
@@ -223,6 +228,12 @@ namespace BreadPlayer.ViewModels
                 Set(ref _playPauseIcon, value);
             }
         }
+        string status = "Nothing Baking";
+        public string Status
+        {
+            get { return status; }
+            set { Set(ref status, value); }
+        }
         #endregion
 
         #region Methods
@@ -248,10 +259,14 @@ namespace BreadPlayer.ViewModels
             if (mp3file != null)
             {
                 if (await Player.Load(mp3file))
-                {
+                {                   
                     PlayPauseCommand.IsEnabled = true;
                     if (play)
                     {
+                        var mp3 = LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
+                        if (PlaylistVM.IsPageLoaded) mp3 = PlaylistVM.Songs.SingleOrDefault(t => t.State == PlayerState.Playing);
+                        if (mp3 != null) mp3.State = PlayerState.Stopped;
+                        mp3file.State = PlayerState.Playing;
                         PlayPauseCommand.Execute(null);
                     }
                     else
@@ -265,9 +280,13 @@ namespace BreadPlayer.ViewModels
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
         {
-            if(para != null)
+            if (para != null)
             {
-                mp3File = await CreateMediafile(para);               
+                mp3File = await CreateMediafile(para, true);
+            }
+            else if (para == null && mp3File == null)
+            {
+                return;
             }
             Load(mp3File, play, currentPos, vol);
         }
@@ -287,21 +306,49 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
            
         }
-        RelayCommand searchCommand;
-        public RelayCommand SearchCommand
+        string queryWord = "";
+        public string QueryWord
         {
-            get { if (searchCommand == null) searchCommand = new RelayCommand(param => Search(param)); return searchCommand; }
+            get { return queryWord; }
+            set { Set(ref queryWord, value); }
         }
-        public async void Search(object para)
+        //RelayCommand searchCommand;
+        //public RelayCommand SearchCommand
+        //{
+        //    get { if (searchCommand == null) searchCommand = new RelayCommand(param => Search(param)); return searchCommand; }
+        //}
+        ThreadSafeObservableCollection<Mediafile> cache;
+        public async void Search(object para, KeyRoutedEventArgs e)
         {
-            await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            if (QueryWord.Length == 0 && LibVM.TracksCollection.Elements.Count < LibVM.SongCount)
             {
-                if (para.ToString().Length > 0)
+                if (cache == null)
                 {
-                    LibVM.TracksCollection.Clear();
-                    LibVM.TracksCollection.AddRange(LibVM.db.Query(para.ToString()));
-                }               
-            });
+                    cache = new ThreadSafeObservableCollection<Mediafile>(await LibVM.db.GetTracks());
+                }
+                LibVM.TracksCollection.Clear();
+                LibVM.TracksCollection.AddRange(cache, true);
+            }
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Search();
+            }
+        }
+        public async void Search(object para, AutoSuggestBoxQuerySubmittedEventArgs e)
+        {
+            Search();
+        }
+       
+        async void Search()
+        {
+                await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    if (QueryWord.Length > 0)
+                    {
+                        LibVM.TracksCollection.Clear();
+                        LibVM.TracksCollection.AddRange(LibVM.db.Query(QueryWord), true);
+                    }
+                });
         }
         #endregion
         public async void ShowMessage(string msg)

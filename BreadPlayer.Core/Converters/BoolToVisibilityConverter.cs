@@ -40,6 +40,20 @@ namespace BreadPlayer.Converters
                 bool? nullable = (bool?)value;
                 flag = nullable.HasValue ? nullable.Value : false;
             }
+            else if(value is int)
+            {
+                if (System.Convert.ToInt16(value) <= 0)
+                    flag = true;
+                else
+                    flag = false;
+            }
+            else if(value is double)
+            {
+                if (System.Convert.ToInt16(value) <= 0)
+                    flag = false;
+                else
+                    flag = true;
+            }
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
         public object ConvertBack(object value, Type targetType,

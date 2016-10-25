@@ -149,8 +149,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style x:Key="NavigationBackButtonStyle" TargetType="Button"
+    <Style x:Key="SearchButtonStyle" TargetType="Button"
            BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -166,9 +165,34 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
+                    <FontIcon FontSize="18" Grid.Column="0" Glyph="&#xe721;" Margin="10,0,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>
+                    <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
+                               VerticalAlignment="Center" />
+
+                </Grid>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NavigationBackButtonStyle" TargetType="Button"
+           BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Width" Value="NaN" />
+        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="AutomationProperties.Name" Value="Back" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
-                    <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
+                    <TextBlock Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
                     
                 </Grid>
@@ -414,14 +438,17 @@
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
                                         <Setter Target="playlistBtn.Width" Value="300"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="60"/>                                        
+                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
+                                        <Setter Target="searchBtn.Width" Value="300"/>
+                                        <Setter Target="searchBtn.Visibility" Value="Visible"/>
+                                        <Setter Target="searchBox.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="TogglePaneButton.Background" Value="Purple"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
                                     <VisualState.StateTriggers>
                                         <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
-                                        <AdaptiveTrigger MinWindowWidth="1920" />
+                                        <AdaptiveTrigger MinWindowWidth="1920"/>
                                         <!--<StateTrigger IsActive="{Binding ElementName=TogglePaneButton, Path=IsChecked}"/>-->
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
@@ -450,10 +477,28 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Vertical" Grid.Row="0" >
+                                        <Button x:Name="searchBtn" Visibility="Collapsed" RequestedTheme="Dark"
+                                                TabIndex="2" Width="300" Foreground="White" Margin="0,48,0,0" FontSize="22"
+                                                Style="{StaticResource SearchButtonStyle}"/>
+                                        <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,48,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                            <AutoSuggestBox.QueryIcon>
+                                                <FontIcon Glyph="&#xe721;"/>
+                                            </AutoSuggestBox.QueryIcon>
+                                            <Interactivity:Interaction.Behaviors>
+                                                <Core:EventTriggerBehavior EventName="KeyUp">
+                                                    <!--<Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=searchBox}"/>-->
+                                                    <Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>
+                                                </Core:EventTriggerBehavior>
+                                                <Core:EventTriggerBehavior EventName="QuerySubmitted">
+                                                    <!--<Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=searchBox}"/>-->
+                                                    <Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>
+                                                </Core:EventTriggerBehavior>
+                                            </Interactivity:Interaction.Behaviors>
+                                        </AutoSuggestBox>
                                         <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
                                                        TabIndex="3" SelectedIndex="1"
-                                                       Margin="0,48,0,0"
+                                                       Margin="0,0,0,0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{TemplateBinding NavMenuItemTemplate}">
@@ -470,7 +515,7 @@
                                         <MenuFlyoutSeparator x:Name="TopSeperator" Visibility="Collapsed"/>
                                         <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="300">
                                             <Button x:Name="playlistBtn" 
-                                                TabIndex="2" Width="240"
+                                                TabIndex="2" Width="240" 
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
                                             <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"

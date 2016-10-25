@@ -23,6 +23,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using System.Globalization;
+using Windows.Foundation.Metadata;
+
 namespace BreadPlayer.Converters
 {
     public class DoubleToTimeConverter : IValueConverter
@@ -36,6 +38,26 @@ namespace BreadPlayer.Converters
                 FormattedTime = TimeSpan.FromSeconds(time).ToString(@"mm\:ss");                
             }
             return FormattedTime;
+        }
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class WidthToHalfConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            double width = (double)value;
+            if (value is double)
+            {
+                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                    return width;
+                else
+                    return (width / 2) - 15;
+            }
+            return width;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

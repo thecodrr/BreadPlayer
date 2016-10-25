@@ -49,8 +49,8 @@ namespace BreadPlayer.Services
 
         //Hooking up the events for BackRequest both for Big Windows and for Phone.
 
-        SystemNavigationManager.GetForCurrentView().BackRequested +=
-                        NavigationService_BackRequested;
+        //SystemNavigationManager.GetForCurrentView().BackRequested +=
+        //                NavigationService_BackRequested;
 
         if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
         {
@@ -105,7 +105,8 @@ namespace BreadPlayer.Services
     private void NavigationService_BackRequested
     (object sender, BackRequestedEventArgs e)
     {
-        this.NavigateBack();
+            if(Frame.CanGoBack)
+            Frame.GoBack();
     }
 
     //private void HardwareButtons_BackPressed

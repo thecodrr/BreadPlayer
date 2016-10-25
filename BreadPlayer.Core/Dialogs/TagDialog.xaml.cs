@@ -27,14 +27,21 @@ namespace BreadPlayer.Dialogs
             get { return (Mediafile)GetValue(MediafileProperty); }
             set { SetValue(MediafileProperty, value); }
         }
+        public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(
+            "ItemWidth", typeof(double), typeof(TagDialog), new PropertyMetadata(null));
+        public double ItemWidth
+        {
+            get { return (double)GetValue(ItemWidthProperty); }
+            set { SetValue(ItemWidthProperty, value); }
+        }
         public TagDialog()
         {
             this.InitializeComponent();
         }
-        public TagDialog(Mediafile file) : this()
+        public TagDialog(Mediafile file)
         {
+            InitializeComponent();
             Mediafile = file;
-            this.DataContext = file;
         }
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {

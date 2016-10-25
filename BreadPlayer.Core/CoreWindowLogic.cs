@@ -28,6 +28,8 @@ using System.IO;
 using BreadPlayer.Core;
 using BreadPlayer.ViewModels;
 using Windows.Media;
+using Windows.UI.Notifications;
+using Windows.Storage.AccessCache;
 
 namespace BreadPlayer
 {
@@ -39,6 +41,7 @@ namespace BreadPlayer
         private const string volKey = "volume";
         private const string shuffleKey = "shuffle";
         private const string repeatKey = "repeat";
+        private const string foldersKey = "folders";
         static SystemMediaTransportControls _smtc;
         #endregion
 
@@ -62,11 +65,25 @@ namespace BreadPlayer
                     }
                     else
                     {
+                        if(jsonObject.ContainsKey(foldersKey))
+                        {
+                            var folderPaths = jsonObject[foldersKey].GetArray().ToList();
+                            if (folderPaths != null)
+                            {
+                                foreach (var folder in folderPaths)
+                                {
+                                    var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
+                                    SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                                }
+                            }
+                        }                       
                         path = jsonObject.GetNamedString(pathKey, "");
                         double position = jsonObject.GetNamedNumber(posKey);
                         Player.PlayerState = PlayerState.Paused;
-                       
+                     try {   
                         ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                        }
+                        catch (UnauthorizedAccessException ex) { }
                     }
                 }
             }
@@ -87,6 +104,13 @@ namespace BreadPlayer
                 jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile.Path);
                 jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);
                 
+            }
+            if(Core.CoreMethods.SettingsVM.LibraryFoldersCollection.Any())
+            {
+                JsonArray array = new JsonArray();
+                foreach (var folder in SettingsVM.LibraryFoldersCollection)
+                    array.Add(JsonValue.CreateStringValue(folder.Path));
+                jsonObject[foldersKey] = array;
             }
             jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
             jsonObject[repeatKey] = JsonValue.CreateBooleanValue(ShellVM.Repeat);
@@ -185,9 +209,33 @@ namespace BreadPlayer
         }
         #endregion
 
+        /// <summary>
+        /// Sends a toast notification
+        /// </summary>
+        /// <param name="msg">Message to send</param>
+        /// <param name="subMsg">Sub message</param>
+        public void ShowToast(string msg, string subMsg = null)
+        {
+            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
+
+            var toastImageElements = toastXml.GetElementsByTagName("image");
+            var toastTextElements = toastXml.GetElementsByTagName("text");
+            toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
+            toastTextElements[1].AppendChild(toastXml.CreateTextNode(subMsg));
+
+            var toast = new ToastNotification(toastXml);
+            ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
+        public static async void ShowMessage(string msg, string title)
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);           
+            await dialog.ShowAsync();
+        }
         #region Ctor
         public CoreWindowLogic()
         {
+            if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
+                StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
         }
         #endregion

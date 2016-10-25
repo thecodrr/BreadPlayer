@@ -32,6 +32,7 @@ using Windows.UI.Xaml.Navigation;
 using BreadPlayer.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using BreadPlayer.Models;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -41,6 +42,7 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class LibraryView
     {
+        LibraryViewModel LibVM = Core.CoreMethods.LibVM;
         public LibraryView()
         {
             this.InitializeComponent();
@@ -57,19 +59,25 @@ namespace BreadPlayer
                 {
                     foreach(var file in files)
                     {
-                        var vm = Grid.DataContext as LibraryViewModel;
-                        LibraryViewModel.Path = file.Path;
-                        using (var stream = await Dispatcher.RunTaskAsync(LibraryViewModel.GetFileAsStream))
+                        Mediafile mp3file = null;
+                        string path = file.Path;
+                        var tempList = new List<Mediafile>();
+                        if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
                         {
-                            if (stream != null)
+                            try
                             {
-                                if (vm.TracksCollection.Elements.All(t => t.Path != LibraryViewModel.Path))
-                                {
-                                    //var m = await Methods.CreateMediafile(stream, file as StorageFile);
-                                   // vm.TracksCollection.AddItem(m);
-                                    //vm.db.Insert(m);
-                                }
+
+                                mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
+
                             }
+                            catch { }
+                            tempList.Add(mp3file);
+                          
+                                LibVM.TracksCollection.AddRange(tempList);
+                                LibVM.db.Insert(tempList);
+                                tempList.Clear();
+                           
+
                         }
                     }
                 }
@@ -84,24 +92,6 @@ namespace BreadPlayer
             e.DragUIOverride.IsGlyphVisible = true;
         }
 
-        private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
-        {
-            var menu = sender as MenuFlyoutItem;
-            var col = Resources["Source"] as CollectionViewSource;
-            var vm = DataContext as LibraryViewModel;
-            vm.RefreshViewCommand.Execute(menu);
-            if (menu.Tag.ToString() != "Unsorted")
-            {
-                col.Source = vm.TracksCollection;
-                col.IsSourceGrouped = true;
-            }
-            else
-            {
-                col.Source = vm.TracksCollection.Elements;
-                col.IsSourceGrouped = false;
-            }
-
-        }
-        
+       
     }
 }

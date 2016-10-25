@@ -22,8 +22,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BreadPlayer.Core;
 using Windows.UI.Xaml.Media;
-using BreadPlayer.Tags.ID3;
-using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 namespace BreadPlayer.Models
 {
     public class Mediafile : ViewModelBase

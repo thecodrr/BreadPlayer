@@ -55,6 +55,10 @@ namespace BreadPlayer
                 this.RequestedTheme = (ApplicationTheme)theme;
                 Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
             }
+            else
+            {
+                this.RequestedTheme = ApplicationTheme.Light;
+            }
             //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(10, 10));
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
@@ -84,6 +88,7 @@ namespace BreadPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;                
             }
 #endif
+            
             LoadFrame(e, e.Arguments);           
         }
 

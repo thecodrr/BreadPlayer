@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
-        <ListView x:Name="albumListView" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
+        <ListView x:Name="albumListView" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
                     <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsWrapGrid Orientation="Horizontal">
