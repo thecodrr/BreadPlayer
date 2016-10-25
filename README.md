@@ -2,6 +2,10 @@
 A music player with breads and burgers made for the Windows 10 store to replace history.
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
+
+##Current Status:
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases/download/v0.1.1-alpha/)
+
 ###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
@@ -14,9 +18,6 @@ A music player with breads and burgers made for the Windows 10 store to replace 
 6. Pickup where you left off.
 7. Loading songs from Windows Explorer
 8. Drag/Drop songs directly into library.
-
-##Current Status:
-###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases/download/v0.1.1-alpha/)
 
 ##About the project:
 This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
