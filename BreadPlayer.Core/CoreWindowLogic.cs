@@ -59,24 +59,24 @@ namespace BreadPlayer
                     ShellVM.Repeat = jsonObject.GetNamedBoolean(repeatKey, false);
                     ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
                     var volume = jsonObject.GetNamedNumber(volKey, 50);
-                    if (jsonObject.Count == 3 || onlyVol)
+                    if (jsonObject.ContainsKey(foldersKey))
                     {
-                        Player.Volume = volume;
+                        var folderPaths = jsonObject[foldersKey].GetArray().ToList();
+                        if (folderPaths != null)
+                        {
+                            foreach (var folder in folderPaths)
+                            {
+                                var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
+                                SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                            }
+                        }
+                    }
+                    if (jsonObject.Count <= 4 || onlyVol)
+                    {
+                        Player.Volume = volume;                       
                     }
                     else
-                    {
-                        if(jsonObject.ContainsKey(foldersKey))
-                        {
-                            var folderPaths = jsonObject[foldersKey].GetArray().ToList();
-                            if (folderPaths != null)
-                            {
-                                foreach (var folder in folderPaths)
-                                {
-                                    var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
-                                    SettingsVM.LibraryFoldersCollection.Add(storageFolder);
-                                }
-                            }
-                        }                       
+                    {               
                         path = jsonObject.GetNamedString(pathKey, "");
                         double position = jsonObject.GetNamedNumber(posKey);
                         Player.PlayerState = PlayerState.Paused;
@@ -115,19 +115,23 @@ namespace BreadPlayer
             jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
             jsonObject[repeatKey] = JsonValue.CreateBooleanValue(ShellVM.Repeat);
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
-            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
-            using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
+            try
             {
-                using (var outputStream = stream.GetOutputStreamAt(0))
+                StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
+                using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
                 {
-                    using (var dataWriter = new Windows.Storage.Streams.DataWriter(outputStream))
+                    using (var outputStream = stream.GetOutputStreamAt(0))
                     {
-                        dataWriter.WriteString(jsonObject.Stringify());
-                        await dataWriter.StoreAsync();
-                        await outputStream.FlushAsync();
+                        using (var dataWriter = new Windows.Storage.Streams.DataWriter(outputStream))
+                        {
+                            dataWriter.WriteString(jsonObject.Stringify());
+                            await dataWriter.StoreAsync();
+                            await outputStream.FlushAsync();
+                        }
                     }
                 }
             }
+            catch(UnauthorizedAccessException ex) { ShellVM.Status = ex.Message; }
         }
         #endregion
 

@@ -373,6 +373,9 @@
                                         <Setter Target="playlistBtn.Width" Value="300"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="60"/>
+                                        <Setter Target="searchBtn.Width" Value="300"/>
+                                        <Setter Target="searchBtn.Visibility" Value="Visible"/>
+                                        <Setter Target="searchBox.Visibility" Value="Collapsed"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -392,6 +395,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                                        
                                         <!--<Setter Target="header.Margin" Value="55,10,0,7.5"/>-->
                                         <!--<Setter Target="TogglePaneButton.Foreground" Value="Black"/>-->
                                     </VisualState.Setters>

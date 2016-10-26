@@ -34,8 +34,8 @@ namespace BreadPlayer.Core
         }
         public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = true)
         {
-            if(cache == true)
-                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+           // if(cache == true)
+          //      Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
 
             var Mediafile = new Mediafile();
 

@@ -67,7 +67,7 @@ namespace BreadPlayer.Behaviours
         {
 
             var ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-            ListBox fileBox = sender as ListBox;
+            ListView fileBox = sender as ListView;
             if (fileBox.SelectedItems.Count > 0)
             {
                 KeyRoutedEventArgs keyPrarm = parameter as KeyRoutedEventArgs;

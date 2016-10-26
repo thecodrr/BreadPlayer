@@ -44,7 +44,6 @@ namespace BreadPlayer.Extensions
             Elements = new ThreadSafeObservableCollection<TElement>();
             this.readKey = readKey;
         }
-
         public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
             : this(readKey)
         {
@@ -74,11 +73,14 @@ namespace BreadPlayer.Extensions
             return this.SelectMany(g => g);
         }
     
-        public void AddItem(TElement item, bool addToElement = false)
+        public async void AddItem(TElement item, bool addToElement = false)
         {
-            var key = this.readKey(item);
-            if (addToElement) Elements.Add(item);
-            this.FindOrCreateGroup(key).Add(item);
+         
+                var key = this.readKey(item);
+                if (addToElement) Elements.Add(item);
+                this.FindOrCreateGroup(key).Add(item);
+          
+          
         }      
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 

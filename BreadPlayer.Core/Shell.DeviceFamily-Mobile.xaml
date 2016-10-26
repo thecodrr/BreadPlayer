@@ -64,15 +64,21 @@
                     <TranslateTransform Y="205"/>
                 </StackPanel.RenderTransform>
                 <AppBarButton x:Name="infoBar" Width="Auto" Visibility="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="1" Height="80">
-                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Margin="0,-14.5,0,-50">
-                        <Image x:Name="albumArt" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"/>
+                    <Grid Margin="0,-14.5,0,-50">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
+                        </Grid.Background>
+                        <StackPanel Orientation="Horizontal" Background="#99262626" VerticalAlignment="Stretch">
+                        
+                        <!--<Image x:Name="albumArt" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"/>-->
                         <!--<Image x:Name="albumArt" Width="75" Source="Assets/albumart.png" Stretch="UniformToFill" Margin="10,0,0,0.2"/>-->
-                        <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="6,5,0,5">
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="24" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" Foreground="White"/>
+                        <StackPanel x:Name="tagsPanel" Orientation="Vertical" VerticalAlignment="Center" Margin="5,0,0,0">
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
                         </StackPanel>
                     </StackPanel>
+                    </Grid>
                 </AppBarButton>
                 <Grid  Visibility="{Binding ElementName=volBtn, Path=IsChecked}" >
                     <Grid.ColumnDefinitions>

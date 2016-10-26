@@ -644,7 +644,9 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
             </Style>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibilty"/>
             <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
-            <Style TargetType="ListBoxItem" x:Key="CustomListItemStyle">
+            
+            
+            <Style TargetType="ListViewItem" x:Key="CustomListItemStyle">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="TabNavigation" Value="Local" />
                 <Setter Property="Padding" Value="0" />
@@ -652,7 +654,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                 <Setter Property="UseSystemFocusVisuals" Value="True" />
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="ListBoxItem">
+                        <ControlTemplate TargetType="ListViewItem">
                             <Grid DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"
           x:Name="LayoutRoot"
           Background="{TemplateBinding Background}"
@@ -670,7 +672,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
 
                                     </MenuFlyout>
 
-                                    <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>
+                                    <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=LibVM.Options}" Placement="Right"></Extensions:BindableFlyout>
                                     <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
                                         <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
@@ -751,7 +753,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                                                 </Storyboard>
                                             </VisualState.Storyboard>
                                         </VisualState>
-                                        <VisualState x:Name="SelectedPointerOver">
+                                        <VisualState x:Name="PointerOverSelected">
                                             <VisualState.Setters>
                                                 <Setter Target="DataStack.Foreground" Value="{ThemeResource PointerOverBrush}"/>                                                
                                                 <Setter Target="titleTxt.MaxWidth" Value="190"/>
@@ -830,7 +832,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
                                             <AppBarButton Grid.Column="1" Icon="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
-                                            <AppBarButton Grid.Column="2" x:Name="button2" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
+                                            <AppBarButton Grid.Column="2" x:Name="button2" IsDoubleTapEnabled="False" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
                                                         <Behaviours:OpenMenuFlyoutAction Parameter="BindableFlyout"/>

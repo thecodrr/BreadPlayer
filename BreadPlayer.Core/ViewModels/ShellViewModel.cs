@@ -65,7 +65,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_openSongCommand == null) { _openSongCommand = new RelayCommand(param => this.Open(param)); } return _openSongCommand; }
         }
-        public DelegateCommand PlayPauseCommand { get { if (_playPauseCommand == null) { _playPauseCommand = new DelegateCommand(PlayPause); _playPauseCommand.IsEnabled = false; } return _playPauseCommand; }}
+        public DelegateCommand PlayPauseCommand { get { if (_playPauseCommand == null) { _playPauseCommand = new DelegateCommand(PlayPause); _playPauseCommand.IsEnabled = LibVM.TracksCollection.Count > 0 ? true : false; } return _playPauseCommand; }}
         public DelegateCommand PlayNextCommand { get { if (_playNextCommand == null) _playNextCommand = new DelegateCommand(PlayNext); return _playNextCommand; } }
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) _playPreviousCommand = new DelegateCommand(PlayPrevious); return _playPreviousCommand; } }
         #endregion
@@ -73,21 +73,26 @@ namespace BreadPlayer.ViewModels
         #region Implementation
         private async void PlayPause()
         {
-            switch (Player.PlayerState)
+            if (Player.CurrentlyPlayingFile == null && LibVM.TracksCollection.Elements.Count > 0)
+                Play(null, LibVM.TracksCollection.Elements.First());
+            else
             {
-                case PlayerState.Playing:
-                    await Player.Pause();
-                    timer.Stop();
-                    PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                    break;
-                case PlayerState.Paused:
-                case PlayerState.Ended:
-                case PlayerState.Stopped:
-                    await Player.Play();
-                    timer.Start();
-                    PlayPauseIcon = new SymbolIcon(Symbol.Pause);
-                    DontUpdatePosition = false;
-                    break;
+                switch (Player.PlayerState)
+                {
+                    case PlayerState.Playing:
+                        await Player.Pause();
+                        timer.Stop();
+                        PlayPauseIcon = new SymbolIcon(Symbol.Play);
+                        break;
+                    case PlayerState.Paused:
+                    case PlayerState.Ended:
+                    case PlayerState.Stopped:
+                        await Player.Play();
+                        timer.Start();
+                        PlayPauseIcon = new SymbolIcon(Symbol.Pause);
+                        DontUpdatePosition = false;
+                        break;
+                }
             }
         }
         void PlayNext()
@@ -118,7 +123,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                return LibVM.FileListBox;
+                return null; //LibVM.FileListBox;
             }
         }
         void PlayPrevious()

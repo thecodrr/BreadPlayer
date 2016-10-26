@@ -124,9 +124,9 @@ namespace BreadPlayer.ViewModels
                 options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
                 options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-                uint index = 0, stepSize = 20;
+                uint index = 0, stepSize = 50;
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
-                index +=20;
+                index +=50;
                 var tempList = new List<Mediafile>();
                 double i = 0;
                 var count = await queryResult.GetItemCountAsync();
@@ -149,15 +149,17 @@ namespace BreadPlayer.ViewModels
                             }
                             catch { }
                         }
+                        ShellVM.PlayPauseCommand.IsEnabled = true;
                     }
                     LibVM.TracksCollection.AddRange(tempList, true);
                     LibVM.db.Insert(tempList);
                     tempList.Clear();
                     files = await fileTask;
-                    index += 20;
+                    index += 50;
                 }
+                AlbumArtistVM.AddAlbums();
                 stop.Stop();
-                ShellVM.Status = i.ToString() + " Song(s) loaded in " + stop.Elapsed.TotalSeconds.ToString() + " seconds";
+                ShellVM.Status = i.ToString() + " Song(s) loaded in " + Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString() + " seconds";
             }
         }
         public async void ShowMessage(string msg)
