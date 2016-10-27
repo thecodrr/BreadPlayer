@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <Page.Resources>
       
-        <Style TargetType="ListBoxItem" x:Key="CustomPlaylistItemStyle">
+        <Style TargetType="ListViewItem" x:Key="CustomPlaylistItemStyle">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="TabNavigation" Value="Local" />
             <Setter Property="Padding" Value="0" />
@@ -19,7 +19,7 @@
 
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
+                    <ControlTemplate TargetType="ListViewItem">
                         <Grid DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"
           x:Name="LayoutRoot"
           Background="{TemplateBinding Background}"
@@ -99,6 +99,14 @@
                                         <VisualState.Setters>
                                             <Setter Target="PressedBackground.Fill" Value="{ThemeResource HoverBrush}"/>
                                         </VisualState.Setters>
+                                        <VisualState.Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DataStack"
+                                               Storyboard.TargetProperty="CanDrag">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState.Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="SelectedUnfocused">
                                         <VisualState.Setters>
@@ -115,7 +123,7 @@
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                     </VisualState>
-                                    <VisualState x:Name="SelectedPointerOver">
+                                    <VisualState x:Name="PointerOverSelected">
                                         <VisualState.Setters>
                                             <Setter Target="DataStack.Foreground" Value="{ThemeResource PointerOverBrush}"/>
                                             <Setter Target="titleTxt.MaxWidth" Value="190"/>
@@ -144,6 +152,32 @@
                                                 </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="artistTxt.Visibility" Value="Collapsed"/>
+                                            <Setter Target="albumTxt.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters></VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="500"/>
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="artistTxt.Visibility" Value="Visible"/>
+                                            <Setter Target="albumTxt.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
@@ -246,7 +280,7 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <ListBox x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListBox>
+        <ListView x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListView>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid, Path=Children}"/>

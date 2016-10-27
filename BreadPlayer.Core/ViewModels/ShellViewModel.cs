@@ -115,7 +115,7 @@ namespace BreadPlayer.ViewModels
 
             }
         }
-        ListBox GetListBox()
+        ListView GetListBox()
         {
             if (PlaylistVM.IsPageLoaded)
             {
@@ -123,7 +123,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                return null; //LibVM.FileListBox;
+                return LibVM.FileListBox;
             }
         }
         void PlayPrevious()

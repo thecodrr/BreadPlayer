@@ -218,14 +218,14 @@ namespace BreadPlayer.ViewModels
             get
             { if (_initCommand == null) { _initCommand = new RelayCommand(param => this.Init(param)); } return _initCommand; }
         }
-        public ListBox PlaylistSongsListBox;
+        public ListView PlaylistSongsListBox;
         bool _isPageLoaded;
         public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
         void Init(object para)
         {
             IsPageLoaded = true;
             var childern = para as UIElementCollection;
-            var fileBox = childern.OfType<ListBox>().ToList()[0];
+            var fileBox = childern.OfType<ListView>().ToList()[0];
             PlaylistSongsListBox = fileBox;
         }
     }
