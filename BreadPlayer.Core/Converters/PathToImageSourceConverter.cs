@@ -27,7 +27,9 @@ namespace BreadPlayer.Converters
                 
             }
             else
-                image.UriSource = new Uri(def, UriKind.RelativeOrAbsolute);
+            {
+                image.UriSource = parameter == null ? new Uri(def, UriKind.RelativeOrAbsolute) : null;
+            }
            
             return image;
         }

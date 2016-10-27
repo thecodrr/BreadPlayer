@@ -50,8 +50,8 @@ namespace BreadPlayer.Behaviours
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
-            ListBoxItem item = senderElement.GetFirstAncestorOfType<ListBoxItem>();
-            var ListBox = item.GetFirstAncestorOfType<ListBox>();
+            ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>();
+            var ListBox = item.GetFirstAncestorOfType<ListView>();
             // if (item != null) item.IsSelected = true;
             ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
             if(listItem != null) listItem.IsSelected = true;

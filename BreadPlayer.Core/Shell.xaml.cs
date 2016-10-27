@@ -89,7 +89,8 @@ namespace BreadPlayer
                 vm.DontUpdatePosition = false;
             }
         }
-
+        bool isPressed;
+        bool isValueChanged;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Thumb volSliderThumb = FrameworkElementExtensions.FindChildOfType<Thumb>(positionSlider);
@@ -98,19 +99,35 @@ namespace BreadPlayer
                 volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
                 volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
             }
+            Window.Current.CoreWindow.PointerPressed += (ea, a) => 
+            {
+                if( positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position))
+                     isPressed = true;
+            };
+
+            Window.Current.CoreWindow.PointerReleased += (ea, a) => 
+            {
+                if (isPressed) { UpdatePosition(true); isPressed = false; }
+            };
         }
         
         private  void positionSlider_Tapped(object sender, TappedRoutedEventArgs e)
-        {           
+        {
+            UpdatePosition();
+        }
+        async void UpdatePosition(bool wait = false)
+        {
             ShellVM.DontUpdatePosition = true;
             if (ShellVM != null)
             {
-               // var se = volSliderThumb.GetPointerPosition().X;
+                // var se = volSliderThumb.GetPointerPosition().X;
                 ShellVM.CurrentPosition = positionSlider.Value;
             }
+            if (wait) await Task.Delay(500);
             ShellVM.DontUpdatePosition = false;
-
         }
+       
+
         private void positionSlider_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var s = positionSlider.Value;

@@ -108,8 +108,9 @@ namespace BreadPlayer.ViewModels
                 else
                 {
                     recentscrolloffset = s.VerticalOffset;
-                    Header = "Music Library";                   
-                    ViewSource.Source = TracksCollection.Elements;
+                    Header = "Music Library";   
+                    if(ViewSource.Source != TracksCollection.Elements)                
+                         ViewSource.Source = TracksCollection.Elements;
                     s.ChangeView(0, libraryscrolloffset, 1.0f,false);
                 }
             }

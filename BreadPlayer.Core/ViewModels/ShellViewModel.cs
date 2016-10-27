@@ -305,7 +305,7 @@ namespace BreadPlayer.ViewModels
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
             this.timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(10);
+            timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
             Player.MediaEnded += Player_MediaEnded;

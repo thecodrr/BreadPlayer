@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using System.Globalization;
+using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Converters
 {
@@ -30,11 +31,26 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if(value is Windows.UI.Xaml.Controls.SplitViewDisplayMode)
+            { 
             Windows.UI.Xaml.Controls.SplitViewDisplayMode mode = (Windows.UI.Xaml.Controls.SplitViewDisplayMode)value;
-            if (mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactInline)
+            if (mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.Overlay || mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay)
                 return true;
             else
-                return false;         
+                return false;
+            }
+            else if(value is bool)
+            {
+                if (parameter == null)
+                {
+                    if ((bool)value == true)
+                        return false;
+                    else
+                        return true;
+                }
+            }
+           
+            return false;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

@@ -58,7 +58,7 @@ namespace BreadPlayer.Core
             /// <returns></returns>
         private void Init()
         {
-            Bass.UpdatePeriod = 10;
+            Bass.UpdatePeriod = 500;
             Bass.Start();
             Bass.Init();
         }
