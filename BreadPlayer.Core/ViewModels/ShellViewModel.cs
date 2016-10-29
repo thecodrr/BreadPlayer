@@ -311,6 +311,19 @@ namespace BreadPlayer.ViewModels
             shuffled.Shuffle();
             return shuffled;
         }
+        void ChangePlayingSongState(PlayerState compareValue, PlayerState state)
+        {
+            List<Mediafile> mp3 = new List<Mediafile>();
+            mp3.Add(PlaylistVM?.Songs?.SingleOrDefault(t => t.State == compareValue));
+            mp3.Add(LibVM?.TracksCollection?.Elements?.SingleOrDefault(t => t.State == compareValue));
+            mp3.Add(LibVM?.RecentlyPlayedCollection?.Elements?.SingleOrDefault(t => t.State == compareValue));
+            if (mp3 != null)
+                foreach (Mediafile song in mp3)
+                {
+                    if(song != null)
+                        song.State = state;
+                }
+        }
         private async void Load(Mediafile mp3file,  bool play = false, double currentPos = 0, double vol = 50)
         {
             if (mp3file != null)
@@ -320,10 +333,7 @@ namespace BreadPlayer.ViewModels
                     PlayPauseCommand.IsEnabled = true;
                     if (play)
                     {
-                        Mediafile mp3 = null;
-                        if (PlaylistVM.IsPageLoaded) mp3 = PlaylistVM.Songs.SingleOrDefault(t => t.State == PlayerState.Playing);
-                        mp3 = LibVM.TracksCollection.Elements.SingleOrDefault(t => t.State == PlayerState.Playing);
-                        if (mp3 != null) mp3.State = PlayerState.Stopped;
+                        ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
                         mp3file.State = PlayerState.Playing;
                         PlayPauseCommand.Execute(null);
                     }

@@ -93,7 +93,7 @@ namespace BreadPlayer.ViewModels
 
         double recentscrolloffset = 0;
         double libraryscrolloffset = 0;
-        private void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             var s = FileListBox.GetFirstDescendantOfType<Border>().GetFirstDescendantOfType<ScrollViewer>();
             if (e.SourcePageType == typeof(LibraryView))
@@ -108,6 +108,8 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
+                    var mp3 = TracksCollection?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path);
+                    mp3.State = PlayerState.Playing;
                     recentscrolloffset = s.VerticalOffset;
                     Header = "Music Library";
                     if (ViewSource.Source != TracksCollection.Elements)

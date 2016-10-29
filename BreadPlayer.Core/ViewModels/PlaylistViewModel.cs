@@ -32,6 +32,7 @@ using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
 using Windows.UI.Popups;
 using System.Globalization;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.ViewModels
 {
@@ -230,6 +231,8 @@ namespace BreadPlayer.ViewModels
             var childern = para as UIElementCollection;
             var fileBox = childern.OfType<ListView>().ToList()[0];
             PlaylistSongsListBox = fileBox;
+            var mp3 = PlaylistVM?.Songs?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path);
+            mp3.State = PlayerState.Playing;
         }
     }
 }

@@ -280,7 +280,13 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <ListView x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListView>
+        <ListView x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid, Path=Children}"/>
