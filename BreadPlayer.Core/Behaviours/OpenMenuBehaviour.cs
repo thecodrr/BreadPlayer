@@ -50,15 +50,17 @@ namespace BreadPlayer.Behaviours
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
-            ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>();
-            var ListView = item.GetFirstAncestorOfType<ListView>();
+            ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>() != null ? senderElement.GetFirstAncestorOfType<ListViewItem>() : null;
+            ListView listView = null;
+            if (item != null)
+                 listView = item.GetFirstAncestorOfType<ListView>();
             // if (item != null) item.IsSelected = true;
             ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
             if(listItem != null) listItem.IsSelected = true;
             //var items = //((Parameter as Binding).Path as ListViewItem);
             if (Parameter.ToString() == "BindableFlyout")
             {
-                if (ListView?.SelectedItems.Count == 1) { ListView.SelectedIndex = -1; }
+                if (listView?.SelectedItems.Count == 1) { listView.SelectedIndex = -1; }
                 if (item != null) item.IsSelected = true;
                 var flyout = (senderElement as Button).GetAncestorsOfType<Grid>().Where(t => t.Name == "LayoutRoot").ToList()[0].Resources["PlaylistsFlyout"] as BindableFlyout;
                 flyout.ShowAt(senderElement);
@@ -74,7 +76,7 @@ namespace BreadPlayer.Behaviours
             }
             else
             {
-                ListView.SelectedIndex = -1;
+                if(listView != null) listView.SelectedIndex = -1;
                 if (item != null) item.IsSelected = true;
                 var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
                 flyout.ShowAt(senderElement, senderElement.GetPointerPosition());

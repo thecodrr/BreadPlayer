@@ -15,11 +15,12 @@ using Windows.UI.Core;
 using ManagedBass;
 using ManagedBass.Tags;
 using Windows.Storage.FileProperties;
-
+using BreadPlayer.BreadNotificationManager;
 namespace BreadPlayer.Core
 {
     public class CoreMethods
     {
+        public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
         public static LibraryViewModel LibVM => GenericService<LibraryViewModel>.Instance.GenericClass;
         public static ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static MacalifaPlayer Player => GenericService<MacalifaPlayer>.Instance.GenericClass;
@@ -43,7 +44,7 @@ namespace BreadPlayer.Core
             Mediafile.Path = file.Path;
             Mediafile.OrginalFilename = file.DisplayName;
             Mediafile.State = PlayerState.Stopped;
-            var properties = await file.Properties.GetMusicPropertiesAsync();
+            var properties = await file.Properties.GetMusicPropertiesAsync().AsTask().ConfigureAwait(false);
             Mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
             Mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
             Mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
@@ -56,10 +57,10 @@ namespace BreadPlayer.Core
 
             if (!File.Exists(albumartLocation))
             {
-                StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300);
+                StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300).AsTask().ConfigureAwait(false);
                 if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
                 {
-                    LibVM.SaveImages(thumbnail, Mediafile);
+                    await LibVM.SaveImages(thumbnail, Mediafile).ConfigureAwait(false);
                     Mediafile.AttachedPicture = albumartLocation;
                 }
             }

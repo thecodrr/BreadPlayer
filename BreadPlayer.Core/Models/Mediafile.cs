@@ -30,7 +30,7 @@ namespace BreadPlayer.Models
         private PlayerState state;
         public string path;
         private string encrypted_meta_file;
-        private LiteDB.ObjectId audio_encryption;
+        private LiteDB.ObjectId id;
         private string attached_picture;
         private string audio_seek_point_index;
         private string comment;
@@ -124,7 +124,7 @@ namespace BreadPlayer.Models
         public string Path { get { return path; } set { Set(ref path, value); } }
         public PlayerState State { get { return state; } set { Set(ref state, value); } }
         public string EncryptedMetaFile { get { return encrypted_meta_file; } set { encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; } }
-        public LiteDB.ObjectId _id { get { return audio_encryption; } set { Set(ref audio_encryption, value); } }
+        public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
         public string AttachedPicture { get { return attached_picture; } set { attached_picture = value; } }
         public string AudioSeekPointIndex { get { return audio_seek_point_index; } set { audio_seek_point_index = string.IsNullOrEmpty(value) ? audio_seek_point_index = NaN : value; } }
         public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }

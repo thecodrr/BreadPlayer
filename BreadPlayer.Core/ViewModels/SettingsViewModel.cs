@@ -92,7 +92,6 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = _isThemeDark == true ? "Light" : "Dark";
             }
         }
-
         public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection ;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
@@ -132,13 +131,16 @@ namespace BreadPlayer.ViewModels
                 var count = await queryResult.GetItemCountAsync();
                 while (files.Count != 0)
                 {
-                    var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();        
+                    var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();                   
                     Mediafile mp3file = null;
                     foreach (StorageFile file in files)
                     {
                         i++;
                         LibVM.SongCount++;
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ShellVM.Status = i.ToString() + "\\" + count.ToString() + " Song(s) Loaded"; });
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => 
+                        {
+                                await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
+                         });
                         string path = file.Path;
                         if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
                         {
@@ -151,15 +153,15 @@ namespace BreadPlayer.ViewModels
                         }
                         ShellVM.PlayPauseCommand.IsEnabled = true;
                     }
-                    LibVM.TracksCollection.AddRange(tempList, true);
+                    LibVM.TracksCollection.Elements.AddRange(tempList);
                     LibVM.db.Insert(tempList);
                     tempList.Clear();
-                    files = await fileTask;
+                    files = await fileTask.ConfigureAwait(false);
                     index += 50;
                 }
-                AlbumArtistVM.AddAlbums();
+                await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
                 stop.Stop();
-                ShellVM.Status = i.ToString() + " Song(s) loaded in " + Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString() + " seconds";
+                await NotificationManager.ShowAsync(i.ToString() + " Song(s) loaded in " + Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString() + " seconds", "Library loaded!");
             }
         }
         public async void ShowMessage(string msg)

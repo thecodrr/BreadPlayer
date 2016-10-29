@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
+    <Grid DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -32,35 +32,38 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        </VisualStateManager.VisualStateGroups>        
+        <Grid.Background>
+            <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="47"/>
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
+        <Border Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="headerText" Text="My Albums" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <ListView x:Name="albumListView" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ThemeBackground}" ItemContainerStyle="{StaticResource ListViewItemExpanded}">
-                    <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal">
-                        <ItemsWrapGrid.ChildrenTransitions>
-                            <TransitionCollection>
-                                <EntranceThemeTransition
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ItemTemplate="{StaticResource NormalTemplate}" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ImageFadeBrush}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="10" >
+            <GridView.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition
                             FromHorizontalOffset="200" IsStaggeringEnabled="True" />
-                                <AddDeleteThemeTransition>
-                                </AddDeleteThemeTransition>
-                                <ReorderThemeTransition/>
-                            </TransitionCollection>
-                        </ItemsWrapGrid.ChildrenTransitions>
-                    </ItemsWrapGrid>
+                    <AddDeleteThemeTransition>
+                    </AddDeleteThemeTransition>
+                    <ReorderThemeTransition/>
+                </TransitionCollection>
+            </GridView.Transitions>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" Margin="15,0" HorizontalAlignment="Center"/>
                 </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+            </GridView.ItemsPanel>
             <!--<Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="SelectionChanged" SourceObject="{Binding ElementName=albumListView}">
                     <Core:InvokeCommandAction Command="{Binding NavigateToAlbumPageCommand}" CommandParameter="{Binding ElementName=albumListView, Path=SelectedItem}"/>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>-->
-        </ListView>
+        </GridView>
         
        
     </Grid>

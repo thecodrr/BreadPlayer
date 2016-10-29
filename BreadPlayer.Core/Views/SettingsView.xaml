@@ -59,7 +59,7 @@
                     <ColumnDefinition Width="16*"/>
                 </Grid.ColumnDefinitions>
                 <Button Content="Add directories to library" Grid.Column="0" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-                <ToggleButton x:Name="showhideListBtn" HorizontalContentAlignment="Right" Grid.Column="1" Padding="0" Background="{x:Null}" IsChecked="True" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="0,4" Height="20" Width="155">
+                <ToggleButton x:Name="showhideListBtn" HorizontalContentAlignment="Right" Grid.Column="1" Padding="0" Background="{x:Null}" IsChecked="False" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="0,4" Height="20" Width="155">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock x:Name="showSymbol" Text="&#xE011;  " FontSize="12" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
                         <TextBlock x:Name="showLabel" Text="Show more" VerticalAlignment="Center"/>

@@ -45,20 +45,37 @@ namespace BreadPlayer
         static SystemMediaTransportControls _smtc;
         #endregion
 
+        static string path = "";
         #region Load/Save Logic
         public static async void Replay(bool onlyVol = false)
         {
-            string path = "";
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + "\\lastplaying.mc");
                 string text = await FileIO.ReadTextAsync(file);
+                
                 if (!string.IsNullOrEmpty(text))
                 {
                     JsonObject jsonObject = JsonObject.Parse(text);
-                    ShellVM.Repeat = jsonObject.GetNamedBoolean(repeatKey, false);
+                    ShellVM.Repeat = jsonObject.GetNamedString(repeatKey, "No Repeat");
                     ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
                     var volume = jsonObject.GetNamedNumber(volKey, 50);
+                    if (jsonObject.Count <= 4 || onlyVol)
+                    {
+                        Player.Volume = volume;
+                    }
+                    else
+                    {
+                        path = jsonObject.GetNamedString(pathKey, "");
+                        double position = jsonObject.GetNamedNumber(posKey);
+                        Player.PlayerState = PlayerState.Paused;
+                        try
+                        {
+                            ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                        }
+                        catch (UnauthorizedAccessException ex) { }
+                    }
+                 
                     if (jsonObject.ContainsKey(foldersKey))
                     {
                         var folderPaths = jsonObject[foldersKey].GetArray().ToList();
@@ -71,20 +88,7 @@ namespace BreadPlayer
                             }
                         }
                     }
-                    if (jsonObject.Count <= 4 || onlyVol)
-                    {
-                        Player.Volume = volume;                       
-                    }
-                    else
-                    {               
-                        path = jsonObject.GetNamedString(pathKey, "");
-                        double position = jsonObject.GetNamedNumber(posKey);
-                        Player.PlayerState = PlayerState.Paused;
-                     try {   
-                        ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
-                        }
-                        catch (UnauthorizedAccessException ex) { }
-                    }
+                   
                 }
             }
             if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
@@ -92,10 +96,17 @@ namespace BreadPlayer
                 var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                 foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
             }
-            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
-                LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
+            LibVM.MusicLibraryLoaded += LibVM_MusicLibraryLoaded;
+            
 
         }
+
+        private static void LibVM_MusicLibraryLoaded(object sender, RoutedEventArgs e)
+        {
+            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
+                LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
+        }
+
         public static async void Stringify()
         {
             JsonObject jsonObject = new JsonObject();
@@ -113,7 +124,7 @@ namespace BreadPlayer
                 jsonObject[foldersKey] = array;
             }
             jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
-            jsonObject[repeatKey] = JsonValue.CreateBooleanValue(ShellVM.Repeat);
+            jsonObject[repeatKey] = JsonValue.CreateStringValue(ShellVM.Repeat);
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
             try
             {
@@ -131,7 +142,7 @@ namespace BreadPlayer
                     }
                 }
             }
-            catch(UnauthorizedAccessException ex) { ShellVM.Status = ex.Message; }
+            catch(UnauthorizedAccessException ex) { NotificationManager.ShowAsync(ex.Message); }
         }
         #endregion
 

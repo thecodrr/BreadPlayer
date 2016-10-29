@@ -7,6 +7,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Converters="using:BreadPlayer.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -51,7 +52,8 @@
 
 
         </VisualStateManager.VisualStateGroups>
-        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
+
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -61,46 +63,87 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
-        <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <StackPanel VerticalAlignment="Bottom">
+            <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Grid x:Name="infoBar" Padding="0" Grid.Column="0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0" Grid.ColumnSpan="1">
-                <Grid.Background>
-                    <ImageBrush ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
-                </Grid.Background>
-                <StackPanel Orientation="Horizontal" Background="#99262626" VerticalAlignment="Stretch" Height="Auto">
-                    <!--<StackPanel Orientation="Horizontal"  Height="70">
+                <Grid x:Name="infoBar" Padding="0" Grid.Column="0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0" Grid.ColumnSpan="1">
+                    <Grid.Resources>
+                        <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=LibVM.OptionItems}" x:Name="contextMenu" x:Key="Flyout">
+                        </MenuFlyout>
+                    </Grid.Resources>
+                    <Grid.Background>
+                        <ImageBrush x:Name="albumart" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
+                    </Grid.Background>
+                    <StackPanel Orientation="Horizontal" Background="#99262626" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
+                        <!--<StackPanel Orientation="Horizontal"  Height="70">
                     <Image x:Name="albumArt" Width="66" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill" Margin="10,0,0,0"/>-->
-                    <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="6,2,0,0">
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
-                        <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                        <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="6,2,0,0">
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                        </StackPanel>
                     </StackPanel>
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="RightTapped">
+                            <Behaviours:OpenMenuFlyoutAction Parameter="SimpleContextMenu"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Grid>
+
+                <Grid Grid.Column="1" Margin="10,0,0,0" x:Name="sliderGrid">
+                    <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
+                    <Slider x:Name="positionSlider" ThumbToolTipValueConverter="{StaticResource DoubleToTime}"  VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
+                    <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime} , UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <AppBarButton ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
+                    <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                    <AppBarButton ToolTipService.ToolTip="Next Song" Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
+                    <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
+                    <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
+                    <AppBarToggleButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding RepeatIcon, Mode=TwoWay}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" IsThreeState="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                    <AppBarButton ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+
+                </StackPanel>
+
+            </Grid>
+        </StackPanel>
+        <Border x:Name="notification" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}" Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" Height="90" VerticalAlignment="Top" Margin="0,24,0,0" HorizontalAlignment="Right" Width="304" BorderThickness="3" BorderBrush="#D8FFFFFF">
+            <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
+            <Grid>
+                <StackPanel>
+                    <TextBlock Margin="10,10,0,0" FontSize="18" FontWeight="SemiBold" Text="{Binding Path=Heading, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
+                    <TextBlock Margin="10,0,0,0" FontSize="14" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Column="1" Margin="10,0,0,0" x:Name="sliderGrid">
-                <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
-                <Slider x:Name="positionSlider" ThumbToolTipValueConverter="{StaticResource DoubleToTime}"  VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
-                <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime} , UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
-            </Grid>
-
-            <StackPanel Orientation="Horizontal" Grid.Column="2">
-                <AppBarButton ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
-                <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
-                <AppBarButton ToolTipService.ToolTip="Next Song" Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
-                <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
-                <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
-                <AppBarToggleButton ToolTipService.ToolTip="Repeat" x:Name="repeatBtn" Icon="Sync" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
-                <AppBarButton ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
-
-            </StackPanel>
-        </Grid>
-
-        <Grid Margin="0,69,0,0" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
+            <Interactivity:Interaction.Behaviors>
+                <Core:DataTriggerBehavior Binding="{Binding Show}" Value="True" ComparisonCondition="Equal">
+                    <Media:ControlStoryboardAction>
+                        <Media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation From="0" To="1" AutoReverse="False" Duration="0:0:1" FillBehavior="HoldEnd"  Storyboard.TargetName="notification" Storyboard.TargetProperty="Opacity"></DoubleAnimation>
+                            </Storyboard>
+                        </Media:ControlStoryboardAction.Storyboard>
+                    </Media:ControlStoryboardAction>
+                </Core:DataTriggerBehavior>
+                <Core:DataTriggerBehavior Binding="{Binding Show}" Value="False" ComparisonCondition="Equal">
+                    <Media:ControlStoryboardAction>
+                        <Media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation From="1" To="0" AutoReverse="False" Duration="0:0:1" FillBehavior="HoldEnd"  Storyboard.TargetName="notification" Storyboard.TargetProperty="Opacity"></DoubleAnimation>
+                            </Storyboard>
+                        </Media:ControlStoryboardAction.Storyboard>
+                    </Media:ControlStoryboardAction>
+                </Core:DataTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </Border>
+        <Grid Margin="0,0,0,69" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="311">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>
@@ -108,21 +151,5 @@
             <Slider x:Name="volumeSlider" Value="{Binding Source={StaticResource Core}, Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Source={StaticResource Core}, Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
-
-        <Border Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="25" VerticalAlignment="Bottom">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="0" Margin="6,0,0,0">
-                    <TextBlock VerticalAlignment="Center" FontSize="12" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" Margin="0,0,5,0">
-
-                </StackPanel>
-            </Grid>
-        </Border>
     </Grid>
 </Page>

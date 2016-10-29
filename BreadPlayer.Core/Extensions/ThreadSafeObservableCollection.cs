@@ -33,7 +33,7 @@ using Windows.UI.Core;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
+public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotifyCollectionChanged
 {
     protected volatile bool _isObserving = true;
     public bool IsObserving { get { return _isObserving; } set { _isObserving = value; } }
@@ -63,7 +63,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
         if (_dispatcher.HasThreadAccess)
             DoAdd(item);
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
+           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item)).AsTask().ConfigureAwait(false);
     }
 
     private void DoAdd(T item)
@@ -81,15 +81,15 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
     }
 
-    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        if (_isObserving) base.OnCollectionChanged(e);
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnCollectionChanged(e); });
     }
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if (_isObserving) base.OnPropertyChanged(e);
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });  
     }
-
+   
     /// <summary> 
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
     /// </summary> 
@@ -110,7 +110,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
             Add(item);
         }
         _isObserving = true;
-
+        
         // fire the events
         OnPropertyChanged(new PropertyChangedEventArgs("Count"));
         OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));

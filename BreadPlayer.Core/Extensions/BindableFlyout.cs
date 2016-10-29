@@ -30,6 +30,8 @@ using Windows.UI.Xaml.Controls;
 using System.Runtime.CompilerServices;
 using System.ServiceModel.Channels;
 using BreadPlayer.Models;
+using System.Diagnostics;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.Extensions
 {
@@ -128,29 +130,130 @@ namespace BreadPlayer.Extensions
             get; private set;
         }
     }
-
-    public static class MenuExtension 
+    public class CustomFlyout : MenuFlyout
     {
-        public static List<MenuFlyoutItemBase> GetMyItems(DependencyObject obj)
+        public object Tag
         {
-            return (List<MenuFlyoutItemBase>)obj.GetValue(MyItemsProperty);
+            get { return GetValue(TagProperty); }
+            set { SetValue(TagProperty, value); }
         }
-        public static void SetMyItems(DependencyObject obj, List<MenuFlyoutItemBase> value)
+
+        public static readonly DependencyProperty TagProperty =
+            DependencyProperty.Register("Tag", typeof(object), typeof(CustomFlyout), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+            {
+                var obj = o as CustomFlyout;
+                obj.Tag = args.NewValue;
+            }
+        ));
+    }
+    public static class FlyoutMenuExtension
+    {
+        public static ThreadSafeObservableCollection<ContextMenuCommand> GetMyItems(DependencyObject obj)
+        {
+            return (ThreadSafeObservableCollection<ContextMenuCommand>)obj.GetValue(MyItemsProperty);
+        }
+        public static void SetMyItems(DependencyObject obj, ThreadSafeObservableCollection<ContextMenuCommand> value)
         {
             obj.SetValue(MyItemsProperty, value);
         }
+
+        private async static void Setup(MenuFlyout menuFlyout)
+        {
+            if (menuFlyout != null)
+            {
+
+                await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    Core.CoreMethods.LibVM.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                menuFlyout.Items.Clear();
+                    MenuFlyoutSubItem addTo = new MenuFlyoutSubItem() { Text = "Add to" };
+                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = CoreMethods.LibVM.ShowPropertiesCommand, CommandParameter = null };
+                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = CoreMethods.LibVM.OpenSongLocationCommand, CommandParameter = null };
+                    menuFlyout.Items.Add(addTo);
+                    menuFlyout.Items.Add(openLoc);
+                    menuFlyout.Items.Add(properties);
+                    foreach (var menuItem in Core.CoreMethods.LibVM.OptionItems)
+                    {
+                        var item = new MenuFlyoutItem()
+                        {
+                            Text = menuItem.Text,
+                            Command = menuItem.Command
+                        };
+                        item.CommandParameter = menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
+                        if (menuFlyout.GetType() != typeof(CustomFlyout)) item.Tag = "Current";
+                        if (addTo.Items.Count == 1)
+                        {
+                            addTo.Items.Add(new MenuFlyoutSeparator());
+                        }
+                        addTo.Items.Add(item);
+                    }
+                });
+               
+                Core.CoreMethods.Player.PropertyChanged += Player_PropertyChanged;
+            }
+
+        }
+
+        private static void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CurrentlyPlayingFile")
+            {
+                Refresh();
+            }
+        }
+
+        static void Refresh()
+        {
+            MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
+            if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
+            {
+                if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
+                    Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
+
+                if (CoreMethods.LibVM.db.tracks.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
+                {
+                    var file = CoreMethods.LibVM.db.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
+                    if(file.Playlists.Count > 0)
+                        Menu.Items.Add(removeFrom);
+                    foreach (var list in file.Playlists)
+                    {
+                        var item = new MenuFlyoutItem() { Text = list.Name, Command = CoreMethods.PlaylistVM.DeleteCommand };
+                        item.CommandParameter = item;
+                        item.Click += Item_Click;
+                        removeFrom.Items.Add(item);
+                    }
+
+                }
+            }
+
+        }
+        private static void Item_Click(object sender, RoutedEventArgs e)
+        {
+            //var item = sender as MenuFlyoutItem;
+            //var parent = Menu.Items[1] as MenuFlyoutSubItem;
+            //parent.Items.Remove(parent.Items.First(t => (t as MenuFlyoutItem).Text == item.Text));
+        }
+
+        static MenuFlyout Menu;
+        static List<MenuFlyout> fly = new List<MenuFlyout>();
         public static readonly DependencyProperty MyItemsProperty =
             DependencyProperty.Register("MyItems",
                 typeof(List<MenuFlyoutItemBase>),
-                typeof(MenuExtension),
-                new PropertyMetadata(new List<MenuFlyoutItemBase>(), (sender, e) => {
-                    var menu = sender as MenuFlyout;
-                    menu.Items.Clear();
-                    foreach (var item in e.NewValue as List<MenuFlyoutItemBase>)
-                    {
-                        menu.Items.Add(item);
-                    }
-                }));
+                typeof(FlyoutMenuExtension),
+                new PropertyMetadata(new ThreadSafeObservableCollection<ContextMenuCommand>(), (sender, e) => {
+                  
+                    var menuFlyout = sender as MenuFlyout;
+                    Menu = menuFlyout;
+                   Setup(menuFlyout);
+                    
+                }));      
+
+        private static void OptionItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Setup(Menu);
+        }
 
     }
+
+
 }

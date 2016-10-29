@@ -47,10 +47,16 @@ namespace BreadPlayer.Extensions
         public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
             : this(readKey)
         {
+            //this.readKey = readKey;
             Elements = new ThreadSafeObservableCollection<TElement>();
             Elements.AddRange(items);
+            // this.AddRange(items, false);
             foreach (var item in items)
                 this.AddItem(item);
+            //foreach (var item in items)
+            //{
+            //    this.AddItem(item, false);
+            //}
         }
         public bool Contains(TElement item)
         {
@@ -72,16 +78,15 @@ namespace BreadPlayer.Extensions
         {
             return this.SelectMany(g => g);
         }
-    
-        public async void AddItem(TElement item, bool addToElement = false)
+        public void AddItem(TElement item, bool addToElement = false)
         {
-         
-                var key = this.readKey(item);
+            var key = this.readKey(item);
+           
                 if (addToElement) Elements.Add(item);
                 this.FindOrCreateGroup(key).Add(item);
-          
-          
-        }      
+            
+
+        }     
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
         /// </summary> 
@@ -229,7 +234,10 @@ namespace BreadPlayer.Extensions
                 }
             }
         }
-
+        public void RemoveGroup(TKey key)
+        {
+            this.RemoveAt(this.IndexOf(this.First(t => t.Key.ToString() == key.ToString())));
+        }
         public bool Remove(TElement item)
         {
             var key = this.readKey(item);
@@ -265,7 +273,6 @@ namespace BreadPlayer.Extensions
             {
                 return this.lastEffectedGroup;
             }
-
             var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
             Grouping<TKey, TElement> result;
             if (match == null)
@@ -284,7 +291,7 @@ namespace BreadPlayer.Extensions
             {
                 result = match.group;
             }
-
+            
             this.lastEffectedGroup = result;
 
             return result;

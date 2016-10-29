@@ -31,7 +31,7 @@ namespace BreadPlayer.Database
     public class QueryMethods : IDisposable
     {
         LiteDatabase db;
-        LiteCollection<Mediafile> tracks;
+        public LiteCollection<Mediafile> tracks;
         public LiteCollection<Playlist> playlists;
         public LiteCollection<Mediafile> recent;
         public QueryMethods()
@@ -62,22 +62,38 @@ namespace BreadPlayer.Database
             tracks.Insert(file);
         }
         public async Task<IEnumerable<Mediafile>> GetTracks()
-        {          
+        {     
             IEnumerable<Mediafile> collection = null;
-            await Core.CoreMethods.Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.High, () => 
+            await Core.CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                Core.CoreMethods.LibVM.SongCount = 1;
                 collection = tracks.Find(LiteDB.Query.All());
             });
             return collection;
         }
-        public void Update(Mediafile file)
+        public void Update(Mediafile file, bool updateWithMatch = false)
         {
-            if (file != null)
-                tracks.Update(file);
+            if (file != null && tracks.Exists(t => t.Path == file.Path))
+            {
+                if (updateWithMatch == false)
+                    tracks.Update(file);
+                else
+                {
+                    Mediafile mp3 = tracks.FindOne(t => t.Path == file.Path);
+                    mp3.Playlists.Clear();
+                    mp3.Playlists.AddRange(file.Playlists);
+                    tracks.Update(mp3);
+                }
+            }
         }
-        public IEnumerable<Mediafile> Query(string term)
+        public async Task<IEnumerable<Mediafile>> Query(string term)
         {
-            return tracks.Find(LiteDB.Query.Contains("Title", term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+            IEnumerable<Mediafile> collection = null;
+            await Core.CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                collection = tracks.Find(LiteDB.Query.Contains("Title", term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+            });
+            return collection;
         }
         public void Dispose()
         {

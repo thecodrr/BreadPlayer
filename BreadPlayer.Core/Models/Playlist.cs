@@ -25,6 +25,9 @@ namespace BreadPlayer.Models
 {
    public class Playlist : ViewModelBase
     {
+        private LiteDB.ObjectId id;
+        public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
+
         string name;
         public string Name { get { return name; }set { Set(ref name, value); } }
         string description;

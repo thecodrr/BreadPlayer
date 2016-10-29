@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using System.Globalization;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Converters
 {
@@ -50,6 +51,13 @@ namespace BreadPlayer.Converters
             else if(value is double)
             {
                 if (System.Convert.ToInt16(value) <= 0)
+                    flag = false;
+                else
+                    flag = true;
+            }
+            else if(value is ImageSource)
+            {
+                if (((ImageSource)value)== null)
                     flag = false;
                 else
                     flag = true;

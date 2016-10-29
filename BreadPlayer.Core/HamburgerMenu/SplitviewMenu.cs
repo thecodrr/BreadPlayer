@@ -65,10 +65,10 @@ namespace SplitViewMenu
 
 
         private Button _backButton;
-        private NavMenuListView _navTopMenuListView;
-        private NavMenuListView _navBottomMenuListView;
-        private NavMenuListView _playlistsMenuListView;
-        private Frame _pageFrame;
+        private static NavMenuListView _navTopMenuListView;
+        private static NavMenuListView _navBottomMenuListView;
+        private static NavMenuListView _playlistsMenuListView;
+        private static Frame _pageFrame;
 
         public SplitViewMenu()
         {
@@ -126,20 +126,20 @@ namespace SplitViewMenu
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu) d;
-            if (menu._navTopMenuListView != null)
-                menu._navTopMenuListView.ItemsSource = e.NewValue;
+            if (SplitViewMenu._navTopMenuListView != null)
+                SplitViewMenu._navTopMenuListView.ItemsSource = e.NewValue;
         }
         private static void OnBottomNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu)d;
-            if (menu._navBottomMenuListView != null)
-                menu._navBottomMenuListView.ItemsSource = e.NewValue;
+            if (SplitViewMenu._navBottomMenuListView != null)
+                SplitViewMenu._navBottomMenuListView.ItemsSource = e.NewValue;
         }
         private static void OnPlaylistsItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu)d;
-            if (menu._playlistsMenuListView != null)
-                menu._playlistsMenuListView.ItemsSource = e.NewValue;
+            if (SplitViewMenu._playlistsMenuListView != null)
+                SplitViewMenu._playlistsMenuListView.ItemsSource = e.NewValue;
         }
         protected override void OnApplyTemplate()
         {
@@ -179,7 +179,7 @@ namespace SplitViewMenu
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
         }
-        INavigationMenuItem LastItem = new SimpleNavMenuItem();
+        static INavigationMenuItem LastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_navTopMenuListView.SelectedIndex > -1 || _navBottomMenuListView.SelectedIndex > -1)
@@ -242,8 +242,15 @@ namespace SplitViewMenu
                 var control = page;
                 control.Loaded += PageLoaded;
             }
+          
         }
-
+        public static void UnSelectAll()
+        {
+            LastItem = null;
+            _navBottomMenuListView.SelectedIndex = -1;
+            _navTopMenuListView.SelectedIndex = -1;
+            _playlistsMenuListView.SelectedIndex = -1;
+        }
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             ((Page) sender).Focus(FocusState.Programmatic);
@@ -328,7 +335,7 @@ namespace SplitViewMenu
             else
             {
                 if (item?.DestinationPage != null &&
-              item.Label != LastItem.Label)
+              item.Label != LastItem?.Label)
                 {
                     _pageFrame.Navigate(item.DestinationPage, item.Arguments);
                    

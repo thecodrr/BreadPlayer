@@ -19,28 +19,49 @@ using System;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
-public static class DispatcherTaskExtensions
+namespace Extensions
 {
-    public static async Task<T> RunTaskAsync<T>(this CoreDispatcher dispatcher,
-        Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+    public static class DispatcherTaskExtensions
     {
-        var taskCompletionSource = new TaskCompletionSource<T>();
-        await dispatcher.RunAsync(priority, async () =>
+        public static async Task<T> RunTaskAsync<T>(this CoreDispatcher dispatcher,
+            Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+        {
+            var taskCompletionSource = new TaskCompletionSource<T>();
+            await dispatcher.RunAsync(priority, async () =>
+            {
+                try
+                {
+                    taskCompletionSource.SetResult(await func());
+                }
+                catch (Exception ex)
+                {
+                    taskCompletionSource.SetException(ex);
+                }
+            });
+            return await taskCompletionSource.Task;
+        }
+
+        // There is no TaskCompletionSource<void> so we use a bool that we throw away.
+        public static async Task RunTaskAsync(this CoreDispatcher dispatcher,
+            Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal) =>
+            await RunTaskAsync(dispatcher, async () => { await func(); return false; }, priority);
+
+
+    }
+    public static class BreadTaskExtensions
+    {
+        public static T RunAsyncTaskAndWait<T>(Task<T> task)
         {
             try
             {
-                taskCompletionSource.SetResult(await func());
+                Task.Run(async () => await task.ConfigureAwait(false)).Wait();
+                return task.Result;
             }
-            catch (Exception ex)
+            catch (AggregateException ae)
             {
-                taskCompletionSource.SetException(ex);
+                // Any exception thrown as a result of running task will cause AggregateException to be thrown with actual exception as inner.
+                throw ae.InnerExceptions[0];
             }
-        });
-        return await taskCompletionSource.Task;
+        }
     }
-
-    // There is no TaskCompletionSource<void> so we use a bool that we throw away.
-    public static async Task RunTaskAsync(this CoreDispatcher dispatcher,
-        Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal) =>
-        await RunTaskAsync(dispatcher, async () => { await func(); return false; }, priority);
 }
