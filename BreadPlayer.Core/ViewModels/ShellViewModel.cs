@@ -119,17 +119,13 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        void PlayNext()
+       public Mediafile GetUpcomingSong()
         {
             if (LibVM.TracksCollection.Elements.Any())
             {
-                if (Player.CurrentlyPlayingFile != null)
-                    history.Do(Player.CurrentlyPlayingFile);
-
                 int IndexOfCurrentlyPlayingFile = -1;
-                if(GetListBox().Items.Any(t => (t as Mediafile).State == PlayerState.Playing))
-                    IndexOfCurrentlyPlayingFile= GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
-               
+                if (GetListBox().Items.Any(t => (t as Mediafile).State == PlayerState.Playing))
+                    IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
                 Mediafile toPlayFile = null;
                 if (Shuffle)
                 {
@@ -137,14 +133,26 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 && IndexOfCurrentlyPlayingFile != -1? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : Repeat == "Repeat List" ? GetListBox().Items.ElementAt(0) as Mediafile : null;
-                }
+                    toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : Repeat == "Repeat List" ? GetListBox().Items.ElementAt(0) as Mediafile : null;
+               }
+                return toPlayFile;
+            }
+            return null;
+        }
+        void PlayNext()
+        {
+            if (LibVM.TracksCollection.Elements.Any())
+            {
+                if (Player.CurrentlyPlayingFile != null)
+                    history.Do(Player.CurrentlyPlayingFile);
+
+                Mediafile toPlayFile = GetUpcomingSong();
                 if (toPlayFile == null)
                 {
                     PlayPause();
                 }
                 else
-                    PlayFile(toPlayFile);
+                   PlayFile(toPlayFile);
 
             }
         }
@@ -290,18 +298,19 @@ namespace BreadPlayer.ViewModels
                 Set(ref _repeatIcon, value);
             }
         }
+        Mediafile upcomingsong = new Mediafile(); //we init beforehand so no null exception occurs
+        public Mediafile UpcomingSong
+        {
+            get { return upcomingsong; }
+            set { Set(ref upcomingsong, value);}
+        }
         #endregion
 
         #region Methods
-       
+
         void PlayFile(Mediafile toPlayFile)
         {
-            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
-                Load(toPlayFile);
-            else
-            {
-                LibVM.PlayCommand.Execute(toPlayFile);
-            }
+            LibVM.PlayCommand.Execute(toPlayFile);
         }
 
         ThreadSafeObservableCollection<Mediafile> ShuffledList;
@@ -314,9 +323,9 @@ namespace BreadPlayer.ViewModels
         void ChangePlayingSongState(PlayerState compareValue, PlayerState state)
         {
             List<Mediafile> mp3 = new List<Mediafile>();
-            mp3.Add(PlaylistVM?.Songs?.SingleOrDefault(t => t.State == compareValue));
-            mp3.Add(LibVM?.TracksCollection?.Elements?.SingleOrDefault(t => t.State == compareValue));
-            mp3.Add(LibVM?.RecentlyPlayedCollection?.Elements?.SingleOrDefault(t => t.State == compareValue));
+            mp3.AddRange(PlaylistVM?.Songs?.Where(t => t.State == compareValue));
+            mp3.AddRange(LibVM?.TracksCollection?.Elements?.Where(t => t.State == compareValue));
+            mp3.AddRange(LibVM?.RecentlyPlayedCollection?.Elements?.Where(t => t.State == compareValue));
             if (mp3 != null)
                 foreach (Mediafile song in mp3)
                 {
@@ -343,6 +352,7 @@ namespace BreadPlayer.ViewModels
                         DontUpdatePosition = true;
                         CurrentPosition = currentPos;
                     }
+                   UpcomingSong = GetUpcomingSong();
                 }
             }
         }
@@ -428,6 +438,11 @@ namespace BreadPlayer.ViewModels
             return null;
         }
         #endregion
+
+        /// <summary>
+        /// This is for ease of testing only.
+        /// </summary>
+        /// <param name="msg">The message to display.</param>
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);

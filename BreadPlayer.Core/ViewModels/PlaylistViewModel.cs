@@ -232,7 +232,7 @@ namespace BreadPlayer.ViewModels
             var fileBox = childern.OfType<ListView>().ToList()[0];
             PlaylistSongsListBox = fileBox;
             var mp3 = PlaylistVM?.Songs?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path);
-            mp3.State = PlayerState.Playing;
+            if(mp3 != null)mp3.State = PlayerState.Playing;
         }
     }
 }

@@ -15,7 +15,11 @@
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-
+        <ToolTip x:Key="SongTooltip">
+            <Grid>
+                <TextBlock Text="HELLLLLLLO!"/>
+            </Grid>
+        </ToolTip>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -104,7 +108,18 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <AppBarButton ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
                     <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
-                    <AppBarButton ToolTipService.ToolTip="Next Song" Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
+                    <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
+                        <ToolTipService.ToolTip>
+                            <StackPanel Width="200" DataContext="{Binding UpcomingSong}">
+                                <Image Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="Fill"/>
+                                <StackPanel Margin="0,0,0,0">
+                                    <TextBlock Text="{Binding Path=Title}" FontSize="19" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
+                                    <TextBlock Text="{Binding Path=LeadArtist}" FontSize="14" FontWeight="SemiLight"/>
+                                    <TextBlock Text="{Binding Path=Album}" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </ToolTipService.ToolTip>
+                    </AppBarButton>
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
                     <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
                     <AppBarToggleButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding RepeatIcon, Mode=TwoWay}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" IsThreeState="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
@@ -151,5 +166,20 @@
             <Slider x:Name="volumeSlider" Value="{Binding Source={StaticResource Core}, Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Source={StaticResource Core}, Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
+     
+        <!--<Grid Width="200" Height="140" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0" Grid.ColumnSpan="1">
+           <Grid.Background>
+                <ImageBrush Stretch="UniformToFill" ImageSource="Assets/albumart.png"/>
+            </Grid.Background>
+            <StackPanel Orientation="Horizontal" Background="#99262626" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
+                --><!--<StackPanel Orientation="Horizontal"  Height="70">
+                    <Image x:Name="albumArt" Width="66" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill" Margin="10,0,0,0"/>--><!--
+                <StackPanel Orientation="Vertical" Margin="6,2,0,0">
+                    <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
+                    <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
+                    <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>-->
     </Grid>
 </Page>

@@ -93,7 +93,7 @@ namespace BreadPlayer.ViewModels
 
         double recentscrolloffset = 0;
         double libraryscrolloffset = 0;
-        private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        private void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             var s = FileListBox.GetFirstDescendantOfType<Border>().GetFirstDescendantOfType<ScrollViewer>();
             if (e.SourcePageType == typeof(LibraryView))
@@ -566,6 +566,7 @@ namespace BreadPlayer.ViewModels
             await CreateGenreMenu().ConfigureAwait(false);
             OldItems = TracksCollection.Elements;
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
+            ShellVM.UpcomingSong = ShellVM.GetUpcomingSong();
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
