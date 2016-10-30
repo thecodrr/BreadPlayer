@@ -119,7 +119,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-       public Mediafile GetUpcomingSong()
+       public async Task<Mediafile> GetUpcomingSong()
         {
             if (LibVM.TracksCollection.Elements.Any())
             {
@@ -129,24 +129,29 @@ namespace BreadPlayer.ViewModels
                 Mediafile toPlayFile = null;
                 if (Shuffle)
                 {
-                    toPlayFile = ShuffledList.ElementAt(IndexOfCurrentlyPlayingFile + 1);
+                    if (!ShuffledList.Any())
+                    {
+                        ShuffledList = await ShuffledCollection().ConfigureAwait(false);
+                        IndexOfCurrentlyPlayingFile = 0;
+                    }
+                    toPlayFile = ShuffledList?.ElementAt(IndexOfCurrentlyPlayingFile + 1);
                 }
                 else
                 {
                     toPlayFile = IndexOfCurrentlyPlayingFile <= GetListBox().Items.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? GetListBox().Items.ElementAt(IndexOfCurrentlyPlayingFile + 1) as Mediafile : Repeat == "Repeat List" ? GetListBox().Items.ElementAt(0) as Mediafile : null;
-               }
+                }
                 return toPlayFile;
             }
             return null;
         }
-        void PlayNext()
+        async void PlayNext()
         {
             if (LibVM.TracksCollection.Elements.Any())
             {
                 if (Player.CurrentlyPlayingFile != null)
                     history.Do(Player.CurrentlyPlayingFile);
 
-                Mediafile toPlayFile = GetUpcomingSong();
+                Mediafile toPlayFile = await GetUpcomingSong();
                 if (toPlayFile == null)
                 {
                     PlayPause();
@@ -202,15 +207,26 @@ namespace BreadPlayer.ViewModels
                 {
                     Load(mp3file, true);
                 }
-            }    
-            
+            }
+
         }
         #endregion
 
         #endregion
 
-        #region Events
-        private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
+        #region Events    
+        private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Shuffle")
+            {
+                if (Shuffle == true)
+                {
+                    ShuffledList = await ShuffledCollection().ConfigureAwait(false);
+                    UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
+                }
+            }
+        }
+    private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
 
             if (Repeat == "Repeat List")
@@ -257,7 +273,7 @@ namespace BreadPlayer.ViewModels
         public bool Shuffle
         {
             get { return _shuffle; }
-            set { Set(ref _shuffle, value); if(_shuffle == true)ShuffledList = ShuffledCollection(); }
+            set { Set(ref _shuffle, value); }
         }
         public ObservableCollection<SimpleNavMenuItem> PlaylistsItems { get; }
         public bool DontUpdatePosition { get; set; }
@@ -308,16 +324,28 @@ namespace BreadPlayer.ViewModels
 
         #region Methods
 
-        void PlayFile(Mediafile toPlayFile)
+        void PlayFile(Mediafile toPlayFile, bool play = false)
         {
-            LibVM.PlayCommand.Execute(toPlayFile);
+            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+            {
+                Load(toPlayFile);
+            }
+            else
+            {
+                LibVM.PlayCommand.Execute(toPlayFile);
+
+            }
         }
 
         ThreadSafeObservableCollection<Mediafile> ShuffledList;
-        public ThreadSafeObservableCollection<Mediafile> ShuffledCollection()
+        public async Task<ThreadSafeObservableCollection<Mediafile>> ShuffledCollection()
         {
-            var shuffled = new ThreadSafeObservableCollection<Mediafile>(LibVM.TracksCollection.Elements);
-            shuffled.Shuffle();
+            var shuffled = new ThreadSafeObservableCollection<Mediafile>();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                shuffled.AddRange(LibVM.TracksCollection.Elements.ToList());
+                shuffled.Shuffle();
+            });         
             return shuffled;
         }
         void ChangePlayingSongState(PlayerState compareValue, PlayerState state)
@@ -340,10 +368,10 @@ namespace BreadPlayer.ViewModels
                 if (await Player.Load(mp3file))
                 {                   
                     PlayPauseCommand.IsEnabled = true;
+                    ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
+                    mp3file.State = PlayerState.Playing;
                     if (play)
-                    {
-                        ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
-                        mp3file.State = PlayerState.Playing;
+                    {                       
                         PlayPauseCommand.Execute(null);
                     }
                     else
@@ -352,7 +380,7 @@ namespace BreadPlayer.ViewModels
                         DontUpdatePosition = true;
                         CurrentPosition = currentPos;
                     }
-                   UpcomingSong = GetUpcomingSong();
+                   UpcomingSong = await GetUpcomingSong();
                 }
             }
         }
@@ -382,8 +410,11 @@ namespace BreadPlayer.ViewModels
             timer.Tick += Timer_Tick;
             this.timer.Stop();
             Player.MediaEnded += Player_MediaEnded;
-           
+            this.PropertyChanged += ShellViewModel_PropertyChanged;
         }
+
+    
+
         string queryWord = "";
         public string QueryWord
         {

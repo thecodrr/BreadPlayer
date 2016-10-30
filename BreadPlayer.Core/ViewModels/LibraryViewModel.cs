@@ -550,7 +550,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        LoadPlaylists();
+                        await LoadPlaylists().ConfigureAwait(false);
                     }
                 SongCount = TracksCollection.Elements.Count;
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
@@ -566,7 +566,7 @@ namespace BreadPlayer.ViewModels
             await CreateGenreMenu().ConfigureAwait(false);
             OldItems = TracksCollection.Elements;
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
-            ShellVM.UpcomingSong = ShellVM.GetUpcomingSong();
+            ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 

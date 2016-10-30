@@ -48,6 +48,37 @@ namespace BreadPlayer.ViewModels
         {
 
         }
+        DelegateCommand _resetCommand;
+        /// <summary>
+        /// Gets load library command. This calls the <see cref="Load"/> method.
+        /// </summary>
+        public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
+
+        async void Reset()
+        {
+            LibVM.TracksCollection.Clear();
+            LibVM.RecentlyPlayedCollection.Clear();
+            Player.Dispose();
+            Player.CurrentlyPlayingFile = null;
+            Player.PlayerState = PlayerState.Stopped;
+            ShellVM.UpcomingSong = null;
+            LibraryFoldersCollection.Clear();           
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
+            {
+                var libFile = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db");
+                await libFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
+            {
+                var saveFile = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc");
+                await saveFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+            if(Directory.Exists(ApplicationData.Current.LocalFolder.Path + @"\Albumarts"))
+            {
+                var saveFile = await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\Albumarts");
+                await saveFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+        }
         DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
