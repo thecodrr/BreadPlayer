@@ -34,7 +34,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f2f2f2"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#e5e5e5" Opacity="0.95"/>
                     <SolidColorBrush x:Key="ImageFadeBrush" Color="#e5e5e5" Opacity="0.9"/>
-                    <SolidColorBrush x:Key="PointerOverBrush" Color="#b2b2b2"/>
+                    <SolidColorBrush x:Key="PointerOverBrush" Color="WhiteSmoke"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>-->

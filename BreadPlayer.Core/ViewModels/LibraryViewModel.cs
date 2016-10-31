@@ -55,7 +55,7 @@ using Extensions;
 
 namespace BreadPlayer.ViewModels
 {
-    public class LibraryViewModel : ViewModelBase
+    public class LibraryViewModel : ViewModelBase, IDisposable
     {
         #region Fields
         public QueryMethods db = new QueryMethods();
@@ -108,8 +108,8 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    var mp3 = TracksCollection?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path);
-                    mp3.State = PlayerState.Playing;
+                    var mp3 = TracksCollection?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                    if(mp3 != null)mp3.State = PlayerState.Playing;
                     recentscrolloffset = s.VerticalOffset;
                     Header = "Music Library";
                     if (ViewSource.Source != TracksCollection.Elements)
@@ -294,7 +294,7 @@ namespace BreadPlayer.ViewModels
         /// Refreshes the view with new sorting order and/or filtering. <seealso cref="RefreshViewCommand"/>
         /// </summary>
         /// <param name="para"><see cref="MenuFlyoutItem"/> to get sorting/filtering base from.</param>
-       async void RefreshView(object para)
+        void RefreshView(object para)
         {
             MenuFlyoutItem selectedItem = para as MenuFlyoutItem;
             if (selectedItem.Tag.ToString() == "genre")
@@ -519,6 +519,18 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
+        #region IDisposable
+        public void Dispose()
+        {
+            db.Dispose();
+            TracksCollection.Clear();
+            RecentlyPlayedCollection.Clear();
+            OldItems = null;
+            PlaylistCollection.Clear();
+            OptionItems.Clear();
+            GenreCollection.Clear();
+        }
+        #endregion
         private List<string> _alphabetList;
         public List<string> AlphabetList
         {

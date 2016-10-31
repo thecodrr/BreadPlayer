@@ -176,7 +176,7 @@
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Core\Effects.cs" />
     <Compile Include="Common\Enums.cs" />
-    <Compile Include="Core\MacalifaPlayer.cs" />
+    <Compile Include="Core\CoreBreadPlayer.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="HamburgerMenu\INavigationMenuItem.cs" />

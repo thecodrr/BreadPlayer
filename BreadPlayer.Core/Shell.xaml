@@ -111,11 +111,11 @@
                     <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
                         <ToolTipService.ToolTip>
                             <StackPanel Width="200" DataContext="{Binding UpcomingSong}">
-                                <Image Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="Fill"/>
+                                <Image Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="UniformToFill"/>
                                 <StackPanel Margin="0,0,0,0">
-                                    <TextBlock Text="{Binding Path=Title}" FontSize="19" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
-                                    <TextBlock Text="{Binding Path=LeadArtist}" FontSize="14" FontWeight="SemiLight"/>
-                                    <TextBlock Text="{Binding Path=Album}" FontSize="12"/>
+                                    <TextBlock Text="{Binding Path=Title, FallbackValue='No upcoming song', TargetNullValue='No upcoming song'}" FontSize="19" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
+                                    <TextBlock Text="{Binding Path=LeadArtist}" Visibility="{Binding Path=LeadArtist, Converter={StaticResource BoolToVisibility}}" FontSize="14" FontWeight="SemiLight"/>
+                                    <TextBlock Text="{Binding Path=Album}" Visibility="{Binding Path=Album, Converter={StaticResource BoolToVisibility}}" FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>
                         </ToolTipService.ToolTip>

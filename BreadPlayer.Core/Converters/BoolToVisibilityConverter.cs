@@ -62,6 +62,13 @@ namespace BreadPlayer.Converters
                 else
                     flag = true;
             }
+            else if(value is string)
+            {
+                if (((string)value).Length <= 0)
+                    flag = false;
+                else
+                    flag = true;
+            }
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
         public object ConvertBack(object value, Type targetType,

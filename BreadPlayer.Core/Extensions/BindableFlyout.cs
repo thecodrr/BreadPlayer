@@ -209,7 +209,7 @@ namespace BreadPlayer.Extensions
             {
                 if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
                     Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
-                if(CoreMethods.Player.CurrentlyPlayingFile !=null)
+                if(CoreMethods.Player.CurrentlyPlayingFile !=null && CoreMethods.LibVM.db != null)
                 if ((bool)CoreMethods.LibVM?.db?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
                 {
                     var file = CoreMethods.LibVM.db.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);

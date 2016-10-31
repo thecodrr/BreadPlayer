@@ -56,17 +56,17 @@ namespace BreadPlayer.ViewModels
 
         async void Reset()
         {
-            LibVM.TracksCollection.Clear();
-            LibVM.RecentlyPlayedCollection.Clear();
+            LibVM.Dispose();
             Player.Dispose();
-            Player.CurrentlyPlayingFile = null;
-            Player.PlayerState = PlayerState.Stopped;
-            ShellVM.UpcomingSong = null;
-            LibraryFoldersCollection.Clear();           
+            await Player.Init();
+            ShellVM.Dispose();
+            AlbumArtistVM.Dispose();
+            LibraryFoldersCollection.Clear();
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
                 var libFile = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db");
                 await libFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                LibVM.db = new Database.QueryMethods();
             }
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
             {

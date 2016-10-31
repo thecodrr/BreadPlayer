@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace BreadPlayer.ViewModels
 {
-    public class AlbumArtistViewModel : ViewModelBase
+    public class AlbumArtistViewModel : ViewModelBase, IDisposable
     {
         /// <summary>
         /// The Constructor.
@@ -79,6 +79,11 @@ namespace BreadPlayer.ViewModels
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
                 SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), albumDict);
             }
+        }
+
+        public void Dispose()
+        {
+            AlbumCollection.Clear();
         }
     }
 }

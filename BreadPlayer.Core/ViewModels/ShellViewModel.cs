@@ -43,7 +43,7 @@ using Extensions;
 
 namespace BreadPlayer.ViewModels
 {
-   public class ShellViewModel : ViewModelBase
+   public class ShellViewModel : ViewModelBase, IDisposable
     {
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
@@ -324,6 +324,17 @@ namespace BreadPlayer.ViewModels
 
         #region Methods
 
+        #region IDisposable
+        public void Dispose()
+        {
+            DontUpdatePosition = true;
+            CurrentPosition = 0;
+            UpcomingSong = null;
+            timer.Stop();
+            ShuffledList?.Clear();
+            PlayPauseIcon = new SymbolIcon(Symbol.Play);
+        }
+        #endregion
         void PlayFile(Mediafile toPlayFile, bool play = false)
         {
             if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)

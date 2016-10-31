@@ -36,31 +36,43 @@ using BreadPlayer.Models;
 
 namespace BreadPlayer.Core
 {
-    public class MacalifaPlayer : ViewModelBase, IDisposable
+    public class CoreBreadPlayer : ViewModelBase, IDisposable
     {
         #region Fields
         public int handle = 0;
         private SyncProcedure _sync;
+        private bool _init = false;
         #endregion
 
         #region Constructor
-        public MacalifaPlayer()
+        public CoreBreadPlayer()
         {
             Init();
             _sync = new SyncProcedure(EndSync);
+            PropertyChanged += CoreBreadPlayer_PropertyChanged;
+        }
+
+        private async void CoreBreadPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!_init)
+                await Init();
         }
         #endregion
-       
+
         #region Initialize Methods
-            /// <summary>
-            /// Initializes the player to start playing audio
-            /// </summary>
-            /// <returns></returns>
-        private void Init()
+        /// <summary>
+        /// Initializes the player to start playing audio
+        /// </summary>
+        /// <returns></returns>
+        public async Task Init()
         {
-            Bass.UpdatePeriod = 500;
-            Bass.Start();
-            Bass.Init();
+           await Task.Run(() => 
+            {
+                Bass.UpdatePeriod = 500;
+                Bass.Start();
+                Bass.Init();
+                _init = true;
+            });                   
         }
         private void InitializeExtensions(Mediafile file)
         {
@@ -77,10 +89,16 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
+                Length = 0;
+                Position = 0;
+                Volume = 50;
                 Bass.ChannelStop(handle); // Stop Playback.
                 Bass.MusicFree(handle); // Free the Stream.
-                Bass.Free(); // Frees everything (will have to call init again to play audio)
+                Bass.Free(); // Frees everything (will have to call init again to play audio)              
                 handle = 0;
+                CurrentlyPlayingFile = null;
+                PlayerState = PlayerState.Stopped;
+                _init = false;
             });
         }
         /// <summary>
@@ -89,15 +107,16 @@ namespace BreadPlayer.Core
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mp3file)
-        {         
+        {
+            if (!_init)
+                await Init();
             if (mp3file != null && mp3file.Length != "00:00")
             {
                 string sPath = mp3file.Path;               
                 await Stop();
                 await Task.Run(() =>
                 {
-                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
-                    
+                        handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                         PlayerState = PlayerState.Stopped;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
@@ -105,7 +124,7 @@ namespace BreadPlayer.Core
                         CurrentlyPlayingFile = mp3file;
                         CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.Stringify();
-                                     
+                    
                 });
                 return true;
             }
@@ -156,6 +175,7 @@ namespace BreadPlayer.Core
                 {
                     Bass.ChannelStop(handle); // Stop Playback.
                     Bass.MusicFree(handle);
+                    CurrentlyPlayingFile = null;
                     PlayerState = PlayerState.Stopped;
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                 }
@@ -170,8 +190,8 @@ namespace BreadPlayer.Core
         {
             get { return _volume; }
             set {
-                Set(ref _volume, value);             
-                    Bass.Volume = _volume / 100;
+                Set(ref _volume, value);
+                Bass.Volume =  _volume / 100;
             }
         }
         public Effects Effect
