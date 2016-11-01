@@ -18,7 +18,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <!--<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />-->
         <Setter Property="Content" Value="&#xE700;" />
         <Setter Property="AutomationProperties.Name" Value="Menu" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
@@ -375,8 +375,8 @@
                                         <AdaptiveTrigger MinWindowWidth="0" />
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <!-- -->
-                                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
+                                        <Setter Target="RootSplitView.DisplayMode" Value="Inline" />
+                                        <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -409,6 +409,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Background" Value="{x:Null}"/>
+                                        <Setter Target="TogglePaneButton.Background" Value="{x:Null}"/>
                                         <Setter Target="NavTopMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="PlaylistsMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="NavBottomMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
@@ -480,9 +481,9 @@
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Vertical" Grid.Row="0" >
                                         <Button x:Name="searchBtn" Visibility="Collapsed" RequestedTheme="Dark"
-                                                TabIndex="2" Width="300" Foreground="White" Margin="0,48,0,0" FontSize="22"
+                                                TabIndex="2" Width="300" Foreground="White" Margin="0,58,0,0" FontSize="22"
                                                 Style="{StaticResource SearchButtonStyle}"/>
-                                        <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,48,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                        <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
                                             <AutoSuggestBox.QueryIcon>
                                                 <FontIcon Glyph="&#xe721;"/>
                                             </AutoSuggestBox.QueryIcon>

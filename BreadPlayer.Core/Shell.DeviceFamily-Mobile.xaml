@@ -108,7 +108,7 @@
                     <AppBarButton x:Name="openFileBtn" Visibility="Collapsed" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                 </StackPanel>
             </StackPanel>
-            <ToggleButton Grid.Row="1" x:Name="posToggleBtn" HorizontalAlignment="Stretch" IsChecked="False" FontFamily="Segoe MDL2 Assets" Background="Transparent" Content="&#xE010;" Height="27">
+            <ToggleButton Grid.Row="1" Foreground="White" x:Name="posToggleBtn" HorizontalAlignment="Stretch" IsChecked="False" FontFamily="Segoe MDL2 Assets" Background="Transparent" Content="&#xE010;" Height="27">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Unchecked" SourceObject="{Binding ElementName=posToggleBtn}">
                         <Media:ControlStoryboardAction>

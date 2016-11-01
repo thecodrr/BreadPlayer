@@ -553,7 +553,6 @@ namespace BreadPlayer.ViewModels
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
              
                 TracksCollection.AddRange(await db.GetTracks().ConfigureAwait(false), true);
-                SongCount = 1;
                 RecentlyPlayedCollection.AddRange(db.recent.FindAll(), true);
                     if (TracksCollection.Elements.Count > 0)
                     {
@@ -564,7 +563,6 @@ namespace BreadPlayer.ViewModels
                     {
                         await LoadPlaylists().ConfigureAwait(false);
                     }
-                SongCount = TracksCollection.Elements.Count;
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
 
 
@@ -579,6 +577,7 @@ namespace BreadPlayer.ViewModels
             OldItems = TracksCollection.Elements;
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
             ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
+            SongCount = TracksCollection.Elements.Count;
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 

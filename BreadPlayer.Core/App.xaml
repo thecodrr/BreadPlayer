@@ -13,7 +13,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                     <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>
                     <Color x:Key="SystemAccentColor">#4c4c4c</Color>-->
                     <!--Your accent color-->
-
+                    <SolidColorBrush x:Key="PhoneAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="SystemControlForegroundAccentBrush" Color="{ThemeResource SystemAccentColor}" />

@@ -66,10 +66,12 @@
                     <VisualState.Setters>
                         <Setter Target="sortTextBlock.Visibility" Value="Collapsed" />
                         <Setter Target="sortLabel.Visibility" Value="Visible" />
-                        <Setter Target="headerText.FontSize" Value="22" />
+                        <Setter Target="headerText.FontSize" Value="20" />
                         <Setter Target="headerText.Margin" Value="60,10,0,0" />
                         <Setter Target="headerText.(Grid.RowSpan)" Value="1" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
+                        <!--<Setter Target="searchBox.Visibility" Value="Visible"/>-->
+                        <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -89,8 +91,23 @@
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-        <Border Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
-        <TextBlock x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
+        <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="headerText" RequestedTheme="Dark" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,0,0.4" Grid.RowSpan="2"/>
+        <AutoSuggestBox x:Name="searchBox" Margin="5,4" Visibility="Collapsed" Grid.Row="0" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}" Width="Auto" PlaceholderText="Search" IsSuggestionListOpen="False" Height="32" Grid.RowSpan="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+            <AutoSuggestBox.QueryIcon>
+                <FontIcon Glyph="&#xe721;"/>
+            </AutoSuggestBox.QueryIcon>
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="KeyUp">
+                    <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
+                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                </Core:EventTriggerBehavior>
+                <Core:EventTriggerBehavior EventName="QuerySubmitted">
+                    <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
+                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </AutoSuggestBox>
         <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
                 <ListView AllowDrop="True" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" Drop="fileBox_Drop" DragOver="fileBox_DragOver">
@@ -147,7 +164,7 @@
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-       
+
         <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibilty}}">
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>
@@ -156,14 +173,14 @@
             <TextBlock x:Name="sortTextBlock" Text="Sort By:" Visibility="Visible" VerticalAlignment="Center"></TextBlock>
             <Button Background="{x:Null}" BorderBrush="{x:Null}" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
                 <StackPanel>
-                    <TextBlock x:Name="sortLabel" Text="Sort by:" FontSize="9" TextAlignment="Center" Visibility="Collapsed"/>
-                    <TextBlock x:Name="sortSelect" Text="{Binding Sort, FallbackValue=Unsorted}" FontSize="12" />
+                    <TextBlock x:Name="sortLabel" RequestedTheme="Dark" Text="Sort by:" FontSize="9" TextAlignment="Center" Visibility="Collapsed"/>
+                    <TextBlock x:Name="sortSelect" RequestedTheme="Dark" Text="{Binding Sort, FallbackValue=Unsorted}" FontSize="12" />
                 </StackPanel>
             </Button>
             <!--<TextBlock Text="Filter:" Visibility="{Binding ElementName=sortTextBlock, Path=Visibility}" VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
             <Button Content="All"  Background="{x:Null}" BorderBrush="{x:Null}" Margin="3,0,0,0" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Height="72"/>-->
-            <TextBlock Text="Genre:" Visibility="{Binding ElementName=sortTextBlock, Path=Visibility}"  VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
-            <Button x:Name="genres" Background="{x:Null}" Margin="3,0,0,0" BorderBrush="{x:Null}" Flyout="{Binding GenreFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
+            <TextBlock Text="Genre:" RequestedTheme="Dark" Visibility="{Binding ElementName=sortTextBlock, Path=Visibility}"  VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
+            <Button x:Name="genres" RequestedTheme="Dark" Background="{x:Null}" Margin="3,0,0,0" BorderBrush="{x:Null}" Flyout="{Binding GenreFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
                 <StackPanel>
                     <TextBlock x:Name="genreLabel" Visibility="{Binding ElementName=sortLabel, Path=Visibility}" Text="Genre:" FontSize="9" TextAlignment="Center"/>
                     <TextBlock Text="All genres" FontSize="{Binding ElementName=sortSelect, Path=FontSize}"/>

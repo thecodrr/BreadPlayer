@@ -109,7 +109,7 @@ namespace BreadPlayer
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private async void OnSuspending(object sender, SuspendingEventArgs e)
+        private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             CoreWindowLogic.Stringify();
@@ -155,9 +155,16 @@ namespace BreadPlayer
             if (RequestedTheme == ApplicationTheme.Dark)
             {
                 view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
-                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
+                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);                
             }
-
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {              
+                //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                var statusBar = StatusBar.GetForCurrentView();
+                statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
+                statusBar.BackgroundOpacity = 1;
+                statusBar.ForegroundColor = Colors.White;
+            }
             Window.Current.Activate();
             
             if (args.Kind != ActivationKind.File)

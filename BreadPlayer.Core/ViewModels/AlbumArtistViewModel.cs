@@ -18,6 +18,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public AlbumArtistViewModel()
         {
+        
         }
       
 
@@ -37,10 +38,8 @@ namespace BreadPlayer.ViewModels
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() =>
             {
                 List<Album> albums = new List<Album>();
-                int index = 0;
                 foreach (var song in await LibVM.db.GetTracks().ConfigureAwait(false))
                 {
-                    index++;
                     Album alb = null;
                     if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
                     {
@@ -51,14 +50,8 @@ namespace BreadPlayer.ViewModels
                         albums.Add(alb);
                     }
                     if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
-                    if(index == 50)
-                    {
-                        index = 0;
-                        AlbumCollection.AddRange(albums);
-                        albums.Clear();
-                    }
-                }
-
+                 }
+                AlbumCollection.AddRange(albums);
             }).AsTask().ConfigureAwait(false);
            
         }

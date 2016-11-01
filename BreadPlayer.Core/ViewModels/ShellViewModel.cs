@@ -461,8 +461,9 @@ namespace BreadPlayer.ViewModels
             if (cache == null)
             {
                 LibVM.TracksCollection.Clear();
-                LibVM.TracksCollection.AddRange(await LibVM.db.GetTracks().ConfigureAwait(false), true);
+                LibVM.TracksCollection.AddRange(await LibVM.db.GetTracks().ConfigureAwait(false), true);               
                 cache = new ThreadSafeObservableCollection<Mediafile>(LibVM.TracksCollection.Elements);
+                LibVM.SongCount = LibVM.TracksCollection.Elements.Count;
             }
             else
             {
