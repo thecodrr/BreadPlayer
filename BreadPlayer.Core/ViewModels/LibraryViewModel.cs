@@ -350,7 +350,7 @@ namespace BreadPlayer.ViewModels
                 db.recent.Insert(mp3File);
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    ShellVM.Play(null, mp3File);
+                    ShellVM.Load(mp3File, true);
                 });
             }
             //mp3File.State = PlayerState.Playing;

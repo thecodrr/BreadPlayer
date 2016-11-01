@@ -46,6 +46,7 @@
                         <Setter Target="headerText.FontSize" Value="22" />
                         <Setter Target="headerText.Margin" Value="60,10,0,0" />
                         <Setter Target="headerText.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="headerText.RequestedTheme" Value="Dark" />
                         <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
@@ -58,8 +59,8 @@
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-        <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
-        <TextBlock x:Name="headerText" RequestedTheme="Dark" Text="Settings" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
+        <Border x:Name="backgroundBorder" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="headerText" Text="Settings" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
 
         <StackPanel x:Name="settingsPanel" Margin="10,10,10,10" Grid.Row="2">           
                 <Grid x:Name="libraryGrid" HorizontalAlignment="Left">

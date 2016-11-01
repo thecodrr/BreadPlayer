@@ -105,10 +105,10 @@ namespace BreadPlayer.Core
             {
                 string sPath = mp3file.Path;
 
-                await Task.Run(async() =>
+                await Stop();
+                await Task.Run(() =>
                 {
-                    await Stop();
-                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.Default);
                     PlayerState = PlayerState.Stopped;
                     Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
@@ -147,6 +147,7 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
+                Bass.Start();
                 ManagedBass.Bass.ChannelPlay(handle);
                 PlayerState = PlayerState.Playing;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
@@ -162,8 +163,10 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
+                Bass.Stop();
                 Bass.ChannelStop(handle); // Stop Playback.
-                Bass.MusicFree(handle);
+                Bass.MusicFree(handle);                
+                handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));

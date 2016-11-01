@@ -372,7 +372,7 @@ namespace BreadPlayer.ViewModels
                         song.State = state;
                 }
         }
-        private async void Load(Mediafile mp3file,  bool play = false, double currentPos = 0, double vol = 50)
+        public async void Load(Mediafile mp3file,  bool play = false, double currentPos = 0, double vol = 50)
         {
             if (mp3file != null)
             {

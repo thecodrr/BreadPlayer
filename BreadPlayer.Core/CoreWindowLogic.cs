@@ -142,7 +142,12 @@ namespace BreadPlayer
                     }
                 }
             }
-            catch(UnauthorizedAccessException ex) { NotificationManager.ShowAsync(ex.Message); }
+            catch(UnauthorizedAccessException ex)
+            {
+                await NotificationManager.ShowAsync("Error while saving player state!");
+                await Task.Delay(5000);
+                await NotificationManager.ShowAsync("Nothing Baking!");
+            }
         }
         #endregion
 
