@@ -49,14 +49,7 @@ namespace BreadPlayer.Core
         {
             Init();
             _sync = new SyncProcedure(EndSync);
-            PropertyChanged += CoreBreadPlayer_PropertyChanged;
-        }
-
-        private async void CoreBreadPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (!_init)
-                await Init();
-        }
+        }        
         #endregion
 
         #region Initialize Methods
@@ -108,23 +101,21 @@ namespace BreadPlayer.Core
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mp3file)
         {
-            if (!_init)
-                await Init();
             if (mp3file != null && mp3file.Length != "00:00")
             {
-                string sPath = mp3file.Path;               
-                await Stop();
-                await Task.Run(() =>
+                string sPath = mp3file.Path;
+
+                await Task.Run(async() =>
                 {
-                        handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
-                        PlayerState = PlayerState.Stopped;
-                        Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
-                        MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                        Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                        CurrentlyPlayingFile = mp3file;
-                        CoreWindowLogic.UpdateSmtc();
-                        CoreWindowLogic.Stringify();
-                    
+                    await Stop();
+                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                    PlayerState = PlayerState.Stopped;
+                    Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                    Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                    CurrentlyPlayingFile = mp3file;
+                    CoreWindowLogic.UpdateSmtc();
+                    CoreWindowLogic.Stringify();
                 });
                 return true;
             }
@@ -171,14 +162,11 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                if (handle != 0)
-                {
-                    Bass.ChannelStop(handle); // Stop Playback.
-                    Bass.MusicFree(handle);
-                    CurrentlyPlayingFile = null;
-                    PlayerState = PlayerState.Stopped;
-                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                }
+                Bass.ChannelStop(handle); // Stop Playback.
+                Bass.MusicFree(handle);
+                CurrentlyPlayingFile = null;
+                PlayerState = PlayerState.Stopped;
+                MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
             });
 
         }

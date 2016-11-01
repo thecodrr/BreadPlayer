@@ -57,7 +57,7 @@
 
         </VisualStateManager.VisualStateGroups>
 
-        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -67,7 +67,7 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
-        <StackPanel VerticalAlignment="Bottom">
+        <StackPanel VerticalAlignment="Top">
             <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -80,12 +80,12 @@
                         <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=LibVM.OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                         </MenuFlyout>
                     </Grid.Resources>
-                    <Grid.Background>
+                    <!--<Grid.Background>
                         <ImageBrush x:Name="albumart" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
-                    </Grid.Background>
-                    <StackPanel Orientation="Horizontal" Background="#99262626" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
-                        <!--<StackPanel Orientation="Horizontal"  Height="70">
-                    <Image x:Name="albumArt" Width="66" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill" Margin="10,0,0,0"/>-->
+                    </Grid.Background>-->
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
+                        <!--<StackPanel Orientation="Horizontal"  Height="70">-->
+                    <Image x:Name="albumArt" Width="70" Height="60" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
                         <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="6,2,0,0">
                             <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
                             <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
@@ -129,15 +129,15 @@
 
             </Grid>
         </StackPanel>
-        <Border x:Name="notification" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}" Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" Height="90" VerticalAlignment="Top" Margin="0,24,0,0" HorizontalAlignment="Right" Width="304" BorderThickness="3" BorderBrush="#D8FFFFFF">
+        <Border x:Name="notification" Background="{ThemeResource SystemControlBackgroundAccentBrush}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
             <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
             <Grid>
-                <StackPanel>
-                    <TextBlock Margin="10,10,0,0" FontSize="18" FontWeight="SemiBold" Text="{Binding Path=Heading, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
-                    <TextBlock Margin="10,0,0,0" FontSize="14" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <!--<TextBlock Margin="10,0,0,0" FontSize="14" FontWeight="SemiBold" Text="{Binding Path=Heading, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>-->
+                    <TextBlock Margin="7,1,0,0" FontSize="14" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" Foreground="White"></TextBlock>
                 </StackPanel>
             </Grid>
-            <Interactivity:Interaction.Behaviors>
+            <!--<Interactivity:Interaction.Behaviors>
                 <Core:DataTriggerBehavior Binding="{Binding Show}" Value="True" ComparisonCondition="Equal">
                     <Media:ControlStoryboardAction>
                         <Media:ControlStoryboardAction.Storyboard>
@@ -156,9 +156,9 @@
                         </Media:ControlStoryboardAction.Storyboard>
                     </Media:ControlStoryboardAction>
                 </Core:DataTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
+            </Interactivity:Interaction.Behaviors>-->
         </Border>
-        <Grid Margin="0,0,0,69" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="311">
+        <Grid Margin="0,69,0,0" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>

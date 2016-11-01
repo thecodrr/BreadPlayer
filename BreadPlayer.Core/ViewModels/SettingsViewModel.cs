@@ -98,12 +98,15 @@ namespace BreadPlayer.ViewModels
             openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             openPicker.FileTypeFilter.Add(".m3u");
             openPicker.FileTypeFilter.Add(".pls");
-            StorageFile file = await openPicker.PickSingleFileAsync();
-            IPlaylist playlist = null;
-            if(Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
-            else playlist = new PLS();
-            var dict = await playlist.LoadPlaylist(file);
-            LibVM.AddPlaylist(dict, file.DisplayName, "");
+            StorageFile file = await openPicker.PickSingleFileAsync();          
+            if(file != null)
+            {
+                IPlaylist playlist = null;
+                if (Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
+                else playlist = new PLS();
+                var dict = await playlist.LoadPlaylist(file);
+                LibVM.AddPlaylist(dict, file.DisplayName, "");
+            }
         }
         bool _isThemeDark;
         public bool IsThemeDark
@@ -143,12 +146,24 @@ namespace BreadPlayer.ViewModels
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
             CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
+            picker.FileTypeFilter.Add(".wav");
+            picker.FileTypeFilter.Add(".ogg");
+            picker.FileTypeFilter.Add(".flac");
+            picker.FileTypeFilter.Add(".m4a");
+            picker.FileTypeFilter.Add(".aif");
+            picker.FileTypeFilter.Add(".wma");
             StorageFolder folder = await picker.PickSingleFolderAsync();            
             if (folder != null)
             {
                 LibraryFoldersCollection.Add(folder);
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
-                QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3", ".wav", ".ogg", ".aiff", ".flac" });
+                QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3" });
+                options.FileTypeFilter.Add(".wav");
+                options.FileTypeFilter.Add(".ogg");
+                options.FileTypeFilter.Add(".flac");
+                options.FileTypeFilter.Add(".m4a");
+                options.FileTypeFilter.Add(".aif");
+                options.FileTypeFilter.Add(".wma");
                 options.FolderDepth = FolderDepth.Deep;
                 options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
                 options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
