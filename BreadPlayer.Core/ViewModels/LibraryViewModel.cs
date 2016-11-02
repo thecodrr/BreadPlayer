@@ -575,8 +575,8 @@ namespace BreadPlayer.ViewModels
              await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
             await CreateGenreMenu().ConfigureAwait(false);
             OldItems = TracksCollection.Elements;
-            await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
-            ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
+            await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");           
+           
             SongCount = TracksCollection.Elements.Count;
         }
         /// <summary>

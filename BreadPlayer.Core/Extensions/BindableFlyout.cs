@@ -204,28 +204,27 @@ namespace BreadPlayer.Extensions
 
         static void Refresh()
         {
-            //MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
-            //if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
-            //{
-            //    if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
-            //        Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
-            //    if(CoreMethods.Player.CurrentlyPlayingFile !=null && CoreMethods.LibVM.db != null)
-            //    if ((bool)CoreMethods.LibVM?.db?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
-            //    {
-            //        var file = CoreMethods.LibVM.db.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
-            //        if(file.Playlists.Count > 0)
-            //            Menu.Items.Add(removeFrom);
-            //        foreach (var list in file.Playlists)
-            //        {
-            //            var item = new MenuFlyoutItem() { Text = list.Name, Command = CoreMethods.PlaylistVM.DeleteCommand };
-            //            item.CommandParameter = item;
-            //            item.Click += Item_Click;
-            //            removeFrom.Items.Add(item);
-            //        }
+            MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
+            if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
+            {
+                if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
+                    Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
+                if (CoreMethods.Player.CurrentlyPlayingFile != null && CoreMethods.LibVM.db != null)
+                    if ((bool)CoreMethods.LibVM?.db?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
+                    {
+                        var file = CoreMethods.LibVM.db.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
+                        if (file.Playlists.Count > 0)
+                            Menu.Items.Add(removeFrom);
+                        foreach (var list in file.Playlists)
+                        {
+                            var item = new MenuFlyoutItem() { Text = list.Name, Command = CoreMethods.PlaylistVM.DeleteCommand };
+                            item.CommandParameter = item;
+                            item.Click += Item_Click;
+                            removeFrom.Items.Add(item);
+                        }
 
-            //    }
-            //}
-
+                    }
+            }
         }
         private static void Item_Click(object sender, RoutedEventArgs e)
         {

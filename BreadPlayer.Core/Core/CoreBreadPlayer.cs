@@ -81,11 +81,9 @@ namespace BreadPlayer.Core
         public async void Dispose()
         {
             await Task.Run(() =>
-            {
-                Length = 0;
-                Position = 0;
-                Volume = 50;
+            {                
                 Bass.ChannelStop(handle); // Stop Playback.
+                Bass.Stop();
                 Bass.MusicFree(handle); // Free the Stream.
                 Bass.Free(); // Frees everything (will have to call init again to play audio)              
                 handle = 0;
@@ -104,10 +102,13 @@ namespace BreadPlayer.Core
             if (mp3file != null && mp3file.Length != "00:00")
             {
                 string sPath = mp3file.Path;
-
+             
                 await Stop();
                 await Task.Run(() =>
                 {
+                    Bass.Stop();
+                    Bass.Start();
+
                     handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.Default);
                     PlayerState = PlayerState.Stopped;
                     Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
@@ -147,7 +148,7 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                Bass.Start();
+                //Bass.Start();
                 ManagedBass.Bass.ChannelPlay(handle);
                 PlayerState = PlayerState.Playing;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
@@ -163,7 +164,9 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                Bass.Stop();
+                Length = 0;
+                Position = 0;
+                Bass.StreamFree(handle);
                 Bass.ChannelStop(handle); // Stop Playback.
                 Bass.MusicFree(handle);                
                 handle = 0;

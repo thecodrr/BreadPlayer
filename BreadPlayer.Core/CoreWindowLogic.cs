@@ -101,10 +101,11 @@ namespace BreadPlayer
 
         }
 
-        private static void LibVM_MusicLibraryLoaded(object sender, RoutedEventArgs e)
+        private async static void LibVM_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
-            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path))
-                LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
+            ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
+            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path) && LibVM.TracksCollection.Elements.All(t => t.State != PlayerState.Playing))
+                LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;           
         }
 
         public static async void Stringify()

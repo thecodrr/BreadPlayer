@@ -102,29 +102,12 @@ namespace BreadPlayer
             }
             // get the selected group
             var selectedGroup = e.SourceItem.Item as string;
-            Grouping<string, Mediafile> myGroup = null;
-            ////// identify the selected group in the zoomed in data source (here I do it by its name, YMMV)
-            //if (selectedGroup != "#" && selectedGroup != "&")
-            //{
-                myGroup = LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
-            //}
-            //else if (selectedGroup == "&")
-            //{
-            //    myGroup = LibVM.TracksCollection.First(g => Regex.Match(g.Key, "\\W").Success);
-            //}
-            //else
-            //{
-            //    myGroup = LibVM.TracksCollection.First(g => Regex.Match(g.Key, "\\d").Success);
-            //}
+            Grouping<string, Mediafile> myGroup = LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));         
 
-            ////// workaround: need to reset the scroll position first, otherwise ScrollIntoView won't work
             SemanticZoomLocation zoomloc = new SemanticZoomLocation();
             zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);
             zoomloc.Item = myGroup;
-            //fileBox.MakeVisible(zoomloc);
             e.DestinationItem = zoomloc;
-            ////// now we can scroll to the selected group in the zoomed in view
-            ////fileBox.ScrollIntoView(myGroup, ScrollIntoViewAlignment.Leading);
         }
     }
 }

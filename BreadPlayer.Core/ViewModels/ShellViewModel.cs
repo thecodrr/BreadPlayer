@@ -125,7 +125,7 @@ namespace BreadPlayer.ViewModels
             {
                 int IndexOfCurrentlyPlayingFile = -1;
                 if (GetListBox().Items.Any(t => (t as Mediafile).State == PlayerState.Playing))
-                    IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.Single(t => (t as Mediafile).State == PlayerState.Playing));
+                    IndexOfCurrentlyPlayingFile = GetListBox().Items.IndexOf(GetListBox().Items.SingleOrDefault(t => (t as Mediafile).State == PlayerState.Playing));
                 Mediafile toPlayFile = null;
                 if (Shuffle)
                 {
