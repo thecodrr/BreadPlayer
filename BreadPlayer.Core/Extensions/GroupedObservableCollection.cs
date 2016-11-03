@@ -41,7 +41,6 @@ namespace BreadPlayer.Extensions
         private Grouping<TKey, TElement> lastEffectedGroup;
         public GroupedObservableCollection(Func<TElement, TKey> readKey)
         {
-            Elements = new ThreadSafeObservableCollection<TElement>();
             this.readKey = readKey;
         }
         public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
@@ -81,11 +80,9 @@ namespace BreadPlayer.Extensions
         public void AddItem(TElement item, bool addToElement = false)
         {
             var key = this.readKey(item);
-           
-                if (addToElement) Elements.Add(item);
-                this.FindOrCreateGroup(key).Add(item);
-            
-
+            if (addToElement) Elements.Add(item);
+            var s = this.FindOrCreateGroup(key);
+            s.Add(item);
         }     
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
@@ -130,7 +127,7 @@ namespace BreadPlayer.Extensions
             Elements.Remove(item);           
         }
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
-        public ThreadSafeObservableCollection<TElement> Elements { get; set; }
+        public ThreadSafeObservableCollection<TElement> Elements { get; set; } = new ThreadSafeObservableCollection<TElement>();
         public GroupedObservableCollection<TKey, TElement> ReplaceWith(GroupedObservableCollection<TKey, TElement> replacementCollection, IEqualityComparer<TElement> itemComparer)
         {
             // First make sure that the top level group containers match
@@ -309,11 +306,12 @@ namespace BreadPlayer.Extensions
         public Grouping(TKey key, IEnumerable<TElement> items)
             : this(key)
         {
- 
-            foreach (var item in items)
-            {
-                this.Add(item);
-            }
+
+            AddRange(items);
+            //foreach (var item in items)
+            //{
+            //    this.Add(item);
+            //}
         }
 
         public TKey Key { get; }

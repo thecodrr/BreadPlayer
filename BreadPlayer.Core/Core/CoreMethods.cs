@@ -51,23 +51,8 @@ namespace BreadPlayer.Core
             Mediafile.Genre = string.Join(",", properties.Genre);
             Mediafile.Year = properties.Year.ToString();
             Mediafile.TrackNumber = properties.TrackNumber.ToString();
-            Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-            var albumartFolder = ApplicationData.Current.LocalFolder;
-            var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
-
-            if (!File.Exists(albumartLocation))
-            {
-                StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300).AsTask().ConfigureAwait(false);
-                if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
-                {
-                    await LibVM.SaveImages(thumbnail, Mediafile).ConfigureAwait(false);
-                    Mediafile.AttachedPicture = albumartLocation;
-                }
-            }
-            else
-            {
-                Mediafile.AttachedPicture = albumartLocation;
-            }
+            //Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+          
             return Mediafile;
         }
     }

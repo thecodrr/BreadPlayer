@@ -15,11 +15,7 @@
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-        <ToolTip x:Key="SongTooltip">
-            <Grid>
-                <TextBlock Text="HELLLLLLLO!"/>
-            </Grid>
-        </ToolTip>
+        <Converters:StringToIconConverter x:Key="StringToIcon"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
@@ -122,7 +118,7 @@
                     </AppBarButton>
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
                     <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
-                    <AppBarToggleButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding RepeatIcon, Mode=TwoWay}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" IsThreeState="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                    <AppBarButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="50" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0" />
                     <AppBarButton ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
 
                 </StackPanel>

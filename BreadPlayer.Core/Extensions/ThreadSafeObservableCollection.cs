@@ -63,7 +63,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         if (_dispatcher.HasThreadAccess)
             DoAdd(item);
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item)).AsTask().ConfigureAwait(false);
+           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
     }
 
     private void DoAdd(T item)

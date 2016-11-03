@@ -62,14 +62,21 @@ namespace BreadPlayer
             //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(10, 10));
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
-            
+            this.LeavingBackground += App_LeavingBackground;
         }
 
-        
+        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+            var deferral = e.GetDeferral();
+            CoreWindowLogic.DisableSmtc();
+            deferral.Complete();
+        }
+
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
             CoreWindowLogic.Stringify();
+            CoreWindowLogic.UpdateSmtc();
             deferral.Complete();
             
         }
@@ -88,7 +95,7 @@ namespace BreadPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;                
             }
 #endif
-            
+          
             LoadFrame(e, e.Arguments);           
         }
 
@@ -139,6 +146,10 @@ namespace BreadPlayer
                 // Create a Frame to act as the navigation context
                 rootFrame = new Frame();
 
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+                    //TODO: Load state from previously suspended application
+                }
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -151,6 +162,7 @@ namespace BreadPlayer
                 rootFrame.Navigate(typeof(Shell), arguments);
             }
 
+           // CoreWindowLogic logic = new CoreWindowLogic();
             var view = ApplicationView.GetForCurrentView();
             if (RequestedTheme == ApplicationTheme.Dark)
             {
@@ -176,5 +188,6 @@ namespace BreadPlayer
                 CoreWindowLogic.Replay(true);
             }
         }
+        
     }
 }

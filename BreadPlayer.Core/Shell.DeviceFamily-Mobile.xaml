@@ -12,6 +12,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
+        <Converters:StringToIconConverter x:Key="StringToIcon"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <SymbolIcon Symbol="Play" x:Key="PlayIcon"/>
     </Page.Resources>
@@ -46,12 +47,12 @@
         </Grid.RowDefinitions>
         <controls:SplitViewMenu x:Name="hamburgerMenu" Grid.Row="0" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Grid.RowSpan="2">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Arguments="Recent"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Songs"  Arguments="Library"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Label="Albums"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Symbol="Accept" Arguments="Recent"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library" Symbol="Accept" Arguments="Library"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Symbol="Accept" Label="My Albums"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
         <Grid x:Name="grid" Grid.Row="2" Margin="0,0,0,0" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
@@ -103,12 +104,12 @@
                     <AppBarButton Icon="{Binding PlayPauseIcon, UpdateSourceTrigger=Explicit, TargetNullValue={StaticResource PlayIcon}, FallbackValue={StaticResource PlayIcon}}" VerticalAlignment="Stretch" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                     <AppBarButton Icon="Next" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50"/>
                     <AppBarToggleButton x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
-                    <AppBarToggleButton x:Name="repeatBtn" Icon="Sync" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" IsChecked="{Binding Path=Repeat, Mode=TwoWay}"  Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="0" />
+                    <AppBarButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="50" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0" />
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
                     <AppBarButton x:Name="openFileBtn" Visibility="Collapsed" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                 </StackPanel>
             </StackPanel>
-            <ToggleButton Grid.Row="1" Foreground="White" x:Name="posToggleBtn" HorizontalAlignment="Stretch" IsChecked="True" FontFamily="Segoe MDL2 Assets" Background="Transparent" Content="&#xE010;" Height="27">
+            <ToggleButton Grid.Row="1" Foreground="White" x:Name="posToggleBtn" HorizontalAlignment="Stretch" IsChecked="{Binding IsPlayBarVisible, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Background="Transparent" Content="&#xE010;" Height="27">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="Unchecked" SourceObject="{Binding ElementName=posToggleBtn}">
                         <Media:ControlStoryboardAction>

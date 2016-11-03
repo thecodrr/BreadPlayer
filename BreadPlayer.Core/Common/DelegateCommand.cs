@@ -67,15 +67,43 @@ namespace BreadPlayer
     public class RelayCommand : ICommand
     {
         #region Fields 
-        readonly Action<object> _execute; readonly Predicate<object> _canExecute;
+        private bool enabled;
+        readonly Action<object> _execute;
+        readonly Predicate<object> _canExecute;
         #endregion
-        // Fields 
+
+        public bool IsEnabled
+        {
+            get { return enabled; }
+            set
+            {
+                if (enabled != value)
+                {
+                    enabled = value;
+                    RaiseCanExecuteChanged();
+                }
+            }
+        }
         #region Constructors 
-        public RelayCommand(Action<object> execute) : this(execute, null) { } public RelayCommand(Action<object> execute, Predicate<object> canExecute) { if (execute == null) throw new ArgumentNullException("execute"); _execute = execute; _canExecute = canExecute; }
+        public RelayCommand(Action<object> execute) : this(execute, null)
+        {
+            enabled = true;
+        }
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+        {
+            enabled = true;
+            if (execute == null)
+                throw new ArgumentNullException("execute");
+            _execute = execute;
+            _canExecute = canExecute;
+        }
         #endregion // Constructors 
         #region ICommand Members 
         [DebuggerStepThrough]
-        public bool CanExecute(object parameter) { return _canExecute == null ? true : _canExecute(parameter); }
+        public bool CanExecute(object parameter)
+        {
+            return enabled; //_canExecute == null ? true : _canExecute(parameter);
+        }
         public event EventHandler CanExecuteChanged;
         public void RaiseCanExecuteChanged()
         {

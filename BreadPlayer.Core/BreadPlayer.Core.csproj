@@ -20,7 +20,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PackageCertificateThumbprint>80C789B9B1EACF1AD727BB7524B6127C081B2AB8</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -127,6 +127,7 @@
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\MediafileToPropertyStringConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
+    <Compile Include="Converters\StringToIconConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\CoreMethods.cs" />

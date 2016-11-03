@@ -59,15 +59,18 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            CoreWindowLogic win = new CoreWindowLogic();
+            CoreWindowLogic.InitSmtc();
             this.DataContext = ShellVM;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
             {
                 var ignored = false;
                 hamburgerMenu.BackRequested(ref ignored);
+                a.Handled = true;
             };
+            
         }
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ShellVM.Play(e.Parameter as StorageFile);

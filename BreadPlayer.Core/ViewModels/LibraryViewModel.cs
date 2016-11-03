@@ -81,7 +81,6 @@ namespace BreadPlayer.ViewModels
             RecentlyPlayedCollection.Elements.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
         }
-
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
@@ -304,7 +303,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                    RefreshView(null, selectedItem.Tag.ToString());
+                RefreshView(null, selectedItem.Tag.ToString());
             }
         }
         /// <summary>
@@ -348,9 +347,12 @@ namespace BreadPlayer.ViewModels
                 }
                 RecentlyPlayedCollection.AddItem(mp3File, true);
                 db.recent.Insert(mp3File);
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
                 {
                     ShellVM.Load(mp3File, true);
+                    (PlayCommand as RelayCommand).IsEnabled = false;
+                    await Task.Delay(100);
+                    (PlayCommand as RelayCommand).IsEnabled = true;
                 });
             }
             //mp3File.State = PlayerState.Playing;
@@ -412,10 +414,13 @@ namespace BreadPlayer.ViewModels
                             TracksCollection.AddRange(files, true);
                             ViewSource.Source = TracksCollection;
                             ViewSource.IsSourceGrouped = true;
+                         
                         }).AsTask().ConfigureAwait(false);
+                       
                     }).ConfigureAwait(false);
-                    TracksCollection.RemoveAt(0); //there seems to be an addition of extra group at the top always. So we have to remove that until a workaround is found.
-                }
+                    await Task.Delay(500);
+                    TracksCollection.RemoveAt(0);
+              }
                 else
                 {
                     ViewSource.Source = TracksCollection.Elements;
@@ -436,6 +441,8 @@ namespace BreadPlayer.ViewModels
                 });
             }
         }
+        
+
         bool StartsWithLetter(string input)
         {
             return Regex.Match(input.Remove(1), "[a-zA-Z]").Success;
@@ -531,6 +538,7 @@ namespace BreadPlayer.ViewModels
             GenreCollection.Clear();
         }
         #endregion
+
         private List<string> _alphabetList;
         public List<string> AlphabetList
         {

@@ -100,14 +100,18 @@ namespace BreadPlayer
             {
                 return;
             }
-            // get the selected group
-            var selectedGroup = e.SourceItem.Item as string;
-            Grouping<string, Mediafile> myGroup = LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));         
+            try
+            {  // get the selected group
+                var selectedGroup = e.SourceItem.Item as string;
+                Grouping<string, Mediafile> myGroup = null;
+                myGroup = LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
 
-            SemanticZoomLocation zoomloc = new SemanticZoomLocation();
-            zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);
-            zoomloc.Item = myGroup;
-            e.DestinationItem = zoomloc;
+                SemanticZoomLocation zoomloc = new SemanticZoomLocation();
+                zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);
+                zoomloc.Item = myGroup;
+                e.DestinationItem = zoomloc;
+            }
+            catch { }
         }
     }
 }

@@ -80,17 +80,14 @@ namespace BreadPlayer.ViewModels
         {
             if(Repeat == "No Repeat")
             {
-                RepeatIcon = new SymbolIcon(Symbol.RepeatOne);
                 Repeat = "Repeat Song";
             }
                 else if(Repeat == "Repeat Song")
             {
-                RepeatIcon = new SymbolIcon(Symbol.RepeatAll);
                 Repeat = "Repeat List";
             }
                 else if(Repeat == "Repeat List")
             {
-                RepeatIcon = new SymbolIcon(Symbol.Sync);
                 Repeat = "No Repeat";
             }
         }
@@ -267,8 +264,19 @@ namespace BreadPlayer.ViewModels
         public string Repeat
         {
             get { return _repeat; }
-            set { Set(ref _repeat, value); }
+            set
+            {
+                Set(ref _repeat, value);
+
+            }
         }
+        bool _isplaybarvisible = true;
+        public bool IsPlayBarVisible
+        {
+            get { return _isplaybarvisible; }
+            set { Set(ref _isplaybarvisible, value); }
+        }
+        
         bool _shuffle = false;
         public bool Shuffle
         {
@@ -301,19 +309,7 @@ namespace BreadPlayer.ViewModels
                 Set(ref _playPauseIcon, value);
             }
         }
-        public SymbolIcon RepeatIcon
-        {
-            get
-            {
-                return _repeatIcon;
-            }
-            set
-            {
-                if (_repeatIcon == null)
-                    _repeatIcon = new SymbolIcon(Symbol.Sync);
-                Set(ref _repeatIcon, value);
-            }
-        }
+    
         Mediafile upcomingsong = new Mediafile(); //we init beforehand so no null exception occurs
         public Mediafile UpcomingSong
         {

@@ -109,7 +109,7 @@ namespace BreadPlayer.Core
                     Bass.Stop();
                     Bass.Start();
 
-                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.Default);
+                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);
                     PlayerState = PlayerState.Stopped;
                     Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                     MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
