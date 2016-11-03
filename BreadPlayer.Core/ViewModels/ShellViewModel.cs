@@ -318,8 +318,6 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Methods
-
         #region IDisposable
         public void Dispose()
         {
@@ -331,6 +329,9 @@ namespace BreadPlayer.ViewModels
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
         }
         #endregion
+
+        #region Methods
+
         void PlayFile(Mediafile toPlayFile, bool play = false)
         {
             if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
@@ -340,7 +341,6 @@ namespace BreadPlayer.ViewModels
             else
             {
                 LibVM.PlayCommand.Execute(toPlayFile);
-
             }
         }
 
@@ -372,10 +372,12 @@ namespace BreadPlayer.ViewModels
         {
             if (mp3file != null)
             {
+                if (play == true)
+                    Player.IgnoreErrors = true;
+                ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
                 if (await Player.Load(mp3file))
                 {                   
                     PlayPauseCommand.IsEnabled = true;
-                    ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
                     mp3file.State = PlayerState.Playing;
                     if (play)
                     {                       
@@ -388,6 +390,14 @@ namespace BreadPlayer.ViewModels
                         CurrentPosition = currentPos;
                     }
                    UpcomingSong = await GetUpcomingSong();
+                }
+                else
+                {
+                    mp3file.State = PlayerState.Playing;
+                    int indexoferrorfile = GetListBox().Items.IndexOf(GetListBox().Items.FirstOrDefault(t => (t as Mediafile).Path == mp3file.Path));
+                    Load(await GetUpcomingSong(), true);
+                    Player.IgnoreErrors = false;
+                   // PlayNextCommand.Execute(null);
                 }
             }
         }

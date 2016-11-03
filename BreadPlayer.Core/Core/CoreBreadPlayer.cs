@@ -41,7 +41,6 @@ namespace BreadPlayer.Core
         #region Fields
         public int handle = 0;
         private SyncProcedure _sync;
-        private bool _init = false;
         #endregion
 
         #region Constructor
@@ -64,7 +63,6 @@ namespace BreadPlayer.Core
                 Bass.UpdatePeriod = 500;
                 Bass.Start();
                 Bass.Init();
-                _init = true;
             });                   
         }
         private void InitializeExtensions(Mediafile file)
@@ -89,7 +87,6 @@ namespace BreadPlayer.Core
                 handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
-                _init = false;
             });
         }
         /// <summary>
@@ -102,7 +99,7 @@ namespace BreadPlayer.Core
             if (mp3file != null && mp3file.Length != "00:00")
             {
                 string sPath = mp3file.Path;
-             
+
                 await Stop();
                 await Task.Run(() =>
                 {
@@ -122,9 +119,13 @@ namespace BreadPlayer.Core
             }
             else
             {
-                CoreWindowLogic.ShowMessage("The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.", "File corrupt");
-                return false;
+                ErrorOccured = true;
+                if (IgnoreErrors == false)
+                {
+                    CoreWindowLogic.ShowMessage("The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.", "File corrupt");
+                }               
             }
+            return false;
         }
         /// <summary>
         /// Pauses the audio playback.
@@ -227,6 +228,18 @@ namespace BreadPlayer.Core
         {
             get { return _currentPlayingFile; }
             set { Set(ref _currentPlayingFile, value); }
+        }
+        bool _ignoreErrors = false;
+        public bool IgnoreErrors
+        {
+            get { return _ignoreErrors; }
+            set { Set(ref _ignoreErrors, value); }
+        }
+        bool _errorOcurred = false;
+        public bool ErrorOccured
+        {
+            get { return _errorOcurred; }
+            set { Set(ref _errorOcurred, value); }
         }
         #endregion
 

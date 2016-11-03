@@ -194,7 +194,7 @@ namespace BreadPlayer
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             if (Player.CurrentlyPlayingFile != null)
             {
-                if (player != null && ApiInformation.IsApiContractPresent("Windows.Phone.UI.Input", 0,0))
+                if (player != null && ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
                     player.SetStreamSource(await (await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path)).OpenAsync(FileAccessMode.Read));
                     player.CommandManager.IsEnabled = false;
