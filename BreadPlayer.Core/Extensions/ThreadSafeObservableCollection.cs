@@ -105,7 +105,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
         // add the items, making sure no events are fired
         _isObserving = false;
-        foreach (var item in range)
+        foreach (var item in range.ToArray())
         {
             Add(item);
         }

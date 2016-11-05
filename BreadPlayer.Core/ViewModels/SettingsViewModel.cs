@@ -44,10 +44,30 @@ namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
+        string timeClosed;
+        public string TimeClosed
+        {
+            get { return timeClosed; }
+            set { Set(ref timeClosed, value); }
+        }
+        string timeOpened;
+        public string TimeOpened
+        {
+            get { return timeOpened; }
+            set { Set(ref timeOpened, value); }
+        }
+        List<StorageFile> modifiedFiles = new List<StorageFile>();
+        public List<StorageFile> ModifiedFiles
+        {
+            get { return modifiedFiles; }
+            set { Set(ref modifiedFiles, value); }
+        }
         public SettingsViewModel()
         {
-
+            TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
+      
+    
         DelegateCommand _resetCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -65,7 +85,7 @@ namespace BreadPlayer.ViewModels
             {
                 var libFile = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db");
                 await libFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                LibVM.db = new Database.QueryMethods();
+                LibVM.Database = new Database.DatabaseQueryMethods();
             }
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
             {
@@ -153,16 +173,17 @@ namespace BreadPlayer.ViewModels
             picker.FileTypeFilter.Add(".m4a");
             picker.FileTypeFilter.Add(".aif");
             picker.FileTypeFilter.Add(".wma");
-            StorageFolder folder = await picker.PickSingleFolderAsync();            
+            StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null)
             {
                 LibraryFoldersCollection.Add(folder);
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
 
                 //Get query options with which we search for files in the specified folder
-                var options = await BreadPlayer.Common.DirectoryWalker.GetQueryOptions(folder);
+                var options = Common.DirectoryWalker.GetQueryOptions();
                 //this is the query result which we recieve after querying in the folder
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 100;
                 //a list containing the files we recieved after querying using the two uints we created above.
@@ -202,7 +223,7 @@ namespace BreadPlayer.ViewModels
 
                                 //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                                 await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
-                                await Task.Run(async() => 
+                                await Task.Run(async () =>
                                 {
                                     //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
                                     mp3file = await CoreMethods.CreateMediafile(file, false); //the core of the whole method.
@@ -224,14 +245,14 @@ namespace BreadPlayer.ViewModels
                     //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                     LibVM.TracksCollection.Elements.AddRange(tempList);
                     //now we load 100 songs into database.
-                    LibVM.db.Insert(tempList);
+                    LibVM.Database.Insert(tempList);
                     //then we clear the 'tempList' so it can come with only 100 songs again.
                     tempList.Clear();
                     //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
                     files = await fileTask.ConfigureAwait(false);
                     //consequently we have to increase the index by 100 so that songs are not repeated.
                     index += 100;
-                }               
+                }
                 await SaveImagesAsync(queryResult).ConfigureAwait(false);
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
                 await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
@@ -242,7 +263,40 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        public async Task SaveImagesAsync(StorageFileQueryResult queryResult)
+        public async static Task AddStorageFilesToLibrary(StorageFileQueryResult queryResult)
+        {
+            foreach (var file in await queryResult.GetFilesAsync())
+            {
+                Mediafile mp3file = null;
+                int index = 0;
+                if (file != null)
+                {
+                    if (LibVM.TracksCollection.Elements.Any(t => t.Path == file.Path))
+                    {
+                        index = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.First(t => t.Path == file.Path));
+                        RemoveMediafile(LibVM.TracksCollection.Elements.First(t => t.Path == file.Path));
+                    }
+                    //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
+                    await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
+                    await Task.Run(async () =>
+                    {
+                        //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
+                        mp3file = await CoreMethods.CreateMediafile(file, false); //the core of the whole method.
+                    });
+                    AddMediafile(mp3file, index);
+                }
+            }
+            await SaveImagesAsync(queryResult);
+        
+        }
+        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
+        {
+            StorageFileQueryResult modifiedqueryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + TimeOpened));
+            var files = await modifiedqueryResult.GetFilesAsync();
+            await AddStorageFilesToLibrary(modifiedqueryResult);
+        }
+     
+        public static async Task SaveImagesAsync(StorageFileQueryResult queryResult)
         {
             uint index = 0, stepSize = 100;
             //a list containing the files we recieved after querying using the two uints we created above.
@@ -267,10 +321,8 @@ namespace BreadPlayer.ViewModels
                     {
                         i++; //Notice here that we are increasing the 'i' variable by one for each file.
 
-                        var properties = await file.Properties.GetMusicPropertiesAsync().AsTask().ConfigureAwait(false);
                         Mediafile Mediafile = LibVM.TracksCollection.Elements.First(t => t.Path == file.Path);
-                        Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-
+                      
                         var albumartFolder = ApplicationData.Current.LocalFolder;
                         var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
@@ -301,7 +353,7 @@ namespace BreadPlayer.ViewModels
                 //consequently we have to increase the index by 50 so that songs are not repeated.
                 index += 100;
             }
-            LibVM.db.tracks.Update(LibVM.TracksCollection.Elements);
+            LibVM.Database.tracks.Update(LibVM.TracksCollection.Elements);
         }
         public async void ShowMessage(string msg)
         {

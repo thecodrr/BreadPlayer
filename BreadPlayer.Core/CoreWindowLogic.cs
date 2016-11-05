@@ -46,6 +46,7 @@ namespace BreadPlayer
         private const string foldersKey = "folders";
         private const string isplaybarKey = "isplaybarvisible";
         private const string sortKey = "sortby";
+        private const string timeclosedKey = "timeclosed";
         static SystemMediaTransportControls _smtc;
         #endregion
 
@@ -65,8 +66,9 @@ namespace BreadPlayer
                     ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
                     ShellVM.IsPlayBarVisible = jsonObject.GetNamedBoolean(isplaybarKey, true);
                     LibVM.Sort = jsonObject.GetNamedString(sortKey, "Unsorted");
+                    SettingsVM.TimeClosed = jsonObject.GetNamedString(timeclosedKey, "0");
                     var volume = jsonObject.GetNamedNumber(volKey, 50);
-                    if (jsonObject.Count <= 5 || onlyVol)
+                    if (jsonObject.Count <= 7 || onlyVol)
                     {
                         Player.Volume = volume;
                     }
@@ -90,6 +92,7 @@ namespace BreadPlayer
                             foreach (var folder in folderPaths)
                             {
                                 var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
+                              
                                 SettingsVM.LibraryFoldersCollection.Add(storageFolder);
                             }
                         }
@@ -114,6 +117,9 @@ namespace BreadPlayer
                 LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
            if(LibVM.Sort != "Unsorted")
                 LibVM.RefreshView(null, LibVM.Sort);
+            SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
+            await Task.Delay(2000);
+            Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
 
         public static async void Stringify()
@@ -137,6 +143,7 @@ namespace BreadPlayer
             jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
             jsonObject[isplaybarKey] = JsonValue.CreateBooleanValue(ShellVM.IsPlayBarVisible);
             jsonObject[sortKey] = JsonValue.CreateStringValue(LibVM.Sort);
+            jsonObject[timeclosedKey] = JsonValue.CreateStringValue(DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             try
             {
                 StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
@@ -253,7 +260,7 @@ namespace BreadPlayer
         public static void DisposeObjects()
         {
             Player.Dispose();
-            LibVM.db.Dispose();
+            LibVM.Database.Dispose();
         }
         #endregion
 

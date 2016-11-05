@@ -38,7 +38,7 @@ namespace BreadPlayer.ViewModels
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() =>
             {
                 List<Album> albums = new List<Album>();
-                foreach (var song in await LibVM.db.GetTracks().ConfigureAwait(false))
+                foreach (var song in await LibVM.Database.GetTracks().ConfigureAwait(false))
                 {
                     Album alb = null;
                     if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))

@@ -131,7 +131,7 @@
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\CoreMethods.cs" />
-    <Compile Include="Database\QueryMethods.cs" />
+    <Compile Include="Database\DatabaseQueryMethods.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>

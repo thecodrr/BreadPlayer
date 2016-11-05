@@ -112,7 +112,7 @@ namespace BreadPlayer.ViewModels
             var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
             mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
             Songs.Remove(mediafile);
-            LibVM.db.Update(mediafile);
+            LibVM.Database.Update(mediafile);
             Refresh();
         }
         void Refresh()
@@ -160,12 +160,12 @@ namespace BreadPlayer.ViewModels
                     foreach (var file in songs)
                     {
                         file.Playlists.Remove(file.Playlists.First(t => t.Name == selectedPlaylist.Name)); //remove playlist from the song.
-                        LibVM.db.Update(file);//update database and save all changes.
+                        LibVM.Database.Update(file);//update database and save all changes.
                     }
                 }
                 ShellVM.PlaylistsItems.Remove(ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                 LibVM.OptionItems.Remove(LibVM.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                LibVM.db.playlists.Delete(t => t.Name == selectedPlaylist.Name); //delete from database.
+                LibVM.Database.playlists.Delete(t => t.Name == selectedPlaylist.Name); //delete from database.
                 
             }
             stop.Stop();
@@ -195,13 +195,13 @@ namespace BreadPlayer.ViewModels
                     {
                         file.Playlists.First(t => t.Name == selectedPlaylist.Name).Name = pl.Name;
                         file.Playlists.First(t => t.Name == pl.Name).Description = pl.Description;
-                        LibVM.db.Update(file); //update database saving all songs and changes.
+                        LibVM.Database.Update(file); //update database saving all songs and changes.
                     }
                    
                 }
                 ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
                 LibVM.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                LibVM.db.playlists.FindOne(t => t.Name == selectedPlaylist.Name); //change playlist name in the 'playlist' collection in the database.
+                LibVM.Database.playlists.FindOne(t => t.Name == selectedPlaylist.Name); //change playlist name in the 'playlist' collection in the database.
                 dictPl.Key.Name = pl.Name;
                 Playlist = pl; //set this.Playlist to pl (local variable);
                 

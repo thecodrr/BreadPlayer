@@ -26,25 +26,49 @@ using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Search;
 using Windows.Storage.FileProperties;
+using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Common
 {
     class DirectoryWalker
     {
-        public static async Task<QueryOptions> GetQueryOptions(StorageFolder folder)
+        public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3" });
-            options.FileTypeFilter.Add(".wav");
-            options.FileTypeFilter.Add(".ogg");
-            options.FileTypeFilter.Add(".flac");
-            options.FileTypeFilter.Add(".m4a");
-            options.FileTypeFilter.Add(".aif");
-            options.FileTypeFilter.Add(".wma");
+            QueryOptions options = new QueryOptions();
+            options.ApplicationSearchFilter += "kind:music " + aqsQuery;
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
+
             return options;
+        }
+        public static async Task<List<StorageFile>> GetModifiedFiles(IEnumerable<StorageFolder> folderCollection, string TimeModified)
+        {
+            List<StorageFile> modifiedFiles = new List<StorageFile>();        
+            foreach (var folder in folderCollection)
+            {
+                StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(GetQueryOptions("datemodified:> " + TimeModified));
+                if (await modifiedqueryResult.GetItemCountAsync() > 0)
+                    modifiedFiles.AddRange(await modifiedqueryResult.GetFilesAsync());
+            }
+            return modifiedFiles;
+        }
+        public async static void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
+        {
+            foreach (var folder in folderCollection)
+            {
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(GetQueryOptions());
+                var files = await queryResult.GetItemCountAsync();
+                queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
+            }
+        }
+
+        private async static void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
+        {
+            StorageFileQueryResult modifiedqueryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + Core.CoreMethods.SettingsVM.TimeOpened));
+            var files = await modifiedqueryResult.GetFilesAsync();
+            await SettingsViewModel.AddStorageFilesToLibrary(modifiedqueryResult);
         }
     }
 }

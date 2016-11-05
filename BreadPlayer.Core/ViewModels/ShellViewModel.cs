@@ -395,9 +395,8 @@ namespace BreadPlayer.ViewModels
                 {
                     mp3file.State = PlayerState.Playing;
                     int indexoferrorfile = GetListBox().Items.IndexOf(GetListBox().Items.FirstOrDefault(t => (t as Mediafile).Path == mp3file.Path));
-                    Load(await GetUpcomingSong(), true);
                     Player.IgnoreErrors = false;
-                   // PlayNextCommand.Execute(null);
+                    Load(await GetUpcomingSong(), true);                    
                 }
             }
         }
@@ -467,7 +466,7 @@ namespace BreadPlayer.ViewModels
             if (cache == null)
             {
                 LibVM.TracksCollection.Clear();
-                LibVM.TracksCollection.AddRange(await LibVM.db.GetTracks().ConfigureAwait(false), true);               
+                LibVM.TracksCollection.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true);               
                 cache = new ThreadSafeObservableCollection<Mediafile>(LibVM.TracksCollection.Elements);
                 LibVM.SongCount = LibVM.TracksCollection.Elements.Count;
             }
@@ -482,7 +481,7 @@ namespace BreadPlayer.ViewModels
             if (QueryWord.Length > 0)
             {
                 LibVM.TracksCollection.Clear();
-                LibVM.TracksCollection.AddRange(await LibVM.db.Query(QueryWord).ConfigureAwait(false), true);
+                LibVM.TracksCollection.AddRange(await LibVM.Database.Query(QueryWord).ConfigureAwait(false), true);
             }
             return null;
         }

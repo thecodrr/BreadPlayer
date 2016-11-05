@@ -28,13 +28,13 @@ using System.Diagnostics;
 
 namespace BreadPlayer.Database
 {
-    public class QueryMethods : IDisposable
+    public class DatabaseQueryMethods : IDisposable
     {
         LiteDatabase db;
         public LiteCollection<Mediafile> tracks;
         public LiteCollection<Playlist> playlists;
         public LiteCollection<Mediafile> recent;
-        public QueryMethods()
+        public DatabaseQueryMethods()
         {
             LitePlatform.Initialize(new LitePlatformWindowsStore());
             CreateDB();
@@ -56,6 +56,10 @@ namespace BreadPlayer.Database
                 tracks.Insert(fileCol);
             }  
             catch(Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
+        }
+        public void Remove(Mediafile file)
+        {
+            tracks.Delete(file._id);
         }
         public void Insert(Mediafile file)
         {            

@@ -75,7 +75,7 @@ namespace BreadPlayer
                             tempList.Add(mp3file);
                           
                                 LibVM.TracksCollection.AddRange(tempList);
-                                LibVM.db.Insert(tempList);
+                                LibVM.Database.Insert(tempList);
                                 tempList.Clear();
                            
 

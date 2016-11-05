@@ -57,9 +57,7 @@ namespace BreadPlayer.ViewModels
 {
     public class LibraryViewModel : ViewModelBase, IDisposable
     {
-        #region Fields
-        public QueryMethods db = new QueryMethods();
-        public CoreDispatcher Dispatcher;
+        #region Fields        
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
         ObservableRangeCollection<String> _GenreCollection = new ObservableRangeCollection<string>();
         public IEnumerable<Mediafile> OldItems;
@@ -120,7 +118,14 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Properties  
+        #region Properties 
+
+        DatabaseQueryMethods database;
+        public DatabaseQueryMethods Database
+        {
+            get { if (database == null) database = new DatabaseQueryMethods(); return database; }
+            set { Set(ref database, value); }
+        }
         ThreadSafeObservableCollection<ContextMenuCommand> items = new ThreadSafeObservableCollection<ContextMenuCommand>();
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems { get { return items; } set { Set(ref items, value); } }
         CollectionViewSource viewSource;
@@ -279,7 +284,6 @@ namespace BreadPlayer.ViewModels
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
                 tag.MinWidth = 0;
-              
             }
             else
             {
@@ -341,12 +345,12 @@ namespace BreadPlayer.ViewModels
                 {
                     RecentlyPlayedCollection.Elements.Remove(RecentlyPlayedCollection.Elements.First(t => t.Path == mp3File.Path));
                 }
-                if (db.recent.Exists(t => t._id == mp3File._id))
+                if (Database.recent.Exists(t => t._id == mp3File._id))
                 {
-                    db.recent.Delete(t => t._id == mp3File._id);
+                    Database.recent.Delete(t => t._id == mp3File._id);
                 }
                 RecentlyPlayedCollection.AddItem(mp3File, true);
-                db.recent.Insert(mp3File);
+                Database.recent.Insert(mp3File);
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
                 {
                     ShellVM.Load(mp3File, true);
@@ -435,7 +439,7 @@ namespace BreadPlayer.ViewModels
                 {
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
                     if (genre != "All genres")
-                        TracksCollection.AddRange(db.tracks.Find(t => t.Genre == genre), true);
+                        TracksCollection.AddRange(Database.tracks.Find(t => t.Genre == genre), true);
                     else
                         TracksCollection.AddRange(OldItems, true);
                 });
@@ -529,7 +533,7 @@ namespace BreadPlayer.ViewModels
         #region IDisposable
         public void Dispose()
         {
-            db.Dispose();
+            Database.Dispose();
             TracksCollection.Clear();
             RecentlyPlayedCollection.Clear();
             OldItems = null;
@@ -560,8 +564,8 @@ namespace BreadPlayer.ViewModels
                 
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
              
-                TracksCollection.AddRange(await db.GetTracks().ConfigureAwait(false), true);
-                RecentlyPlayedCollection.AddRange(db.recent.FindAll(), true);
+                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true);
+                RecentlyPlayedCollection.AddRange(Database.recent.FindAll(), true);
                     if (TracksCollection.Elements.Count > 0)
                     {
                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {  MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
@@ -624,8 +628,8 @@ namespace BreadPlayer.ViewModels
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                PlaylistCollection.AddRange(db.tracks.Find(t => t.Playlists.Count > 0).SelectMany(t => t.Playlists));
-                PlaylistCollection.AddRange(db.playlists.FindAll());
+                PlaylistCollection.AddRange(Database.tracks.Find(t => t.Playlists.Count > 0).SelectMany(t => t.Playlists));
+                PlaylistCollection.AddRange(Database.playlists.FindAll());
                 foreach (var list in PlaylistCollection.DistinctBy(t => t.Name))
                 {
                     if (list.Songs.Count <= 0)
@@ -668,8 +672,8 @@ namespace BreadPlayer.ViewModels
                             if (!s.Playlists.Any(t => t.Name == playlistName)) //dupe check
                             {
                                 s.Playlists.Add(new Playlist() { Name = playlistName, Description = ""});
-                                if ((file as MenuFlyoutItem).Tag == null) db.Update(s);
-                                else db.Update(s, true);                              
+                                if ((file as MenuFlyoutItem).Tag == null) Database.Update(s);
+                                else Database.Update(s, true);                              
                             }
                         }
                         
@@ -708,7 +712,7 @@ namespace BreadPlayer.ViewModels
             var cmd = new ContextMenuCommand(AddToPlaylistCommand, pl.Name);
             OptionItems.Add(cmd);
             pl.Songs.AddRange(Playlists.Values.First());
-            db.playlists.Insert(pl);
+            Database.playlists.Insert(pl);
             ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Arguments = Playlists,

@@ -33,6 +33,28 @@ namespace BreadPlayer.Core
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
+        public static bool AddMediafile(Mediafile file, int index = -1)
+        {
+            if (file != null)
+            {
+                LibVM.TracksCollection.Elements.Insert(index == -1 ? LibVM.TracksCollection.Elements.Count + 1 : index, file);
+                LibVM.Database.Insert(file);
+                LibVM.SongCount++;
+                return true;
+            }
+            return false;
+        }
+        public static bool RemoveMediafile(Mediafile file)
+        {
+            if (file != null)
+            {
+                LibVM.TracksCollection.Elements.Remove(file);
+                LibVM.Database.Remove(file);
+                LibVM.SongCount--;
+                return true;
+            }
+            return false;
+        }
         public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = true)
         {
            // if(cache == true)
@@ -51,9 +73,16 @@ namespace BreadPlayer.Core
             Mediafile.Genre = string.Join(",", properties.Genre);
             Mediafile.Year = properties.Year.ToString();
             Mediafile.TrackNumber = properties.TrackNumber.ToString();
-            //Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-          
-            return Mediafile;
+            Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+
+            var albumartFolder = ApplicationData.Current.LocalFolder;
+            var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+
+            if (File.Exists(albumartLocation))
+            {
+                Mediafile.AttachedPicture = albumartLocation;
+            }
+                return Mediafile;
         }
     }
 

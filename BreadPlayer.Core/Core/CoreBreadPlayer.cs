@@ -118,12 +118,16 @@ namespace BreadPlayer.Core
                 return true;
             }
             else
-            {
-                ErrorOccured = true;
+            { 
+                string error = "The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors == false)
                 {
-                    CoreWindowLogic.ShowMessage("The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.", "File corrupt");
-                }               
+                    CoreWindowLogic.ShowMessage(error, "File corrupt");
+                }
+                else
+                {
+                    await NotificationManager.ShowAsync(error);
+                }          
             }
             return false;
         }
@@ -234,12 +238,6 @@ namespace BreadPlayer.Core
         {
             get { return _ignoreErrors; }
             set { Set(ref _ignoreErrors, value); }
-        }
-        bool _errorOcurred = false;
-        public bool ErrorOccured
-        {
-            get { return _errorOcurred; }
-            set { Set(ref _errorOcurred, value); }
         }
         #endregion
 

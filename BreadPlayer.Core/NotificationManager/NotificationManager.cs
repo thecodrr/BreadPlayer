@@ -10,7 +10,7 @@ namespace BreadPlayer.BreadNotificationManager
 {
     public class NotificationManager : ViewModelBase
     {
-       // DispatcherTimer hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
+        DispatcherTimer hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
         string status = "Nothing Baking";
         public string Status
         {
@@ -38,16 +38,17 @@ namespace BreadPlayer.BreadNotificationManager
                 //if (!Show)
                 //{
                 //    Show = true;
-                //    hideTimer.Start();
-                //    hideTimer.Tick += HideTimer_Tick;
+                    hideTimer.Start();
+                    hideTimer.Tick += HideTimer_Tick;
                 //}
             });          
         }
         
         private void HideTimer_Tick(object sender, object e)
         {
+            Status = "Nothing Baking!";
             //Show = false;
-            //hideTimer.Stop();
+            hideTimer.Stop();
         }
         
     }
