@@ -65,6 +65,12 @@ namespace BreadPlayer.Database
         {            
             tracks.Insert(file);
         }
+        public void RemoveFolder(string folderPath)
+        {
+            tracks.Delete(LiteDB.Query.EQ("FolderPath", folderPath));
+
+            Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
+        }
         public async Task<IEnumerable<Mediafile>> GetTracks()
         {     
             IEnumerable<Mediafile> collection = null;

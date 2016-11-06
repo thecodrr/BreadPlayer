@@ -118,7 +118,7 @@ namespace BreadPlayer
            if(LibVM.Sort != "Unsorted")
                 LibVM.RefreshView(null, LibVM.Sort);
             SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
-            await Task.Delay(2000);
+            await Task.Delay(5000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
 

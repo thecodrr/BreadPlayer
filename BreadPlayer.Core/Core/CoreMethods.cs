@@ -37,7 +37,7 @@ namespace BreadPlayer.Core
         {
             if (file != null)
             {
-                LibVM.TracksCollection.Elements.Insert(index == -1 ? LibVM.TracksCollection.Elements.Count + 1 : index, file);
+                LibVM.TracksCollection.Elements.Insert(index == -1 ? LibVM.TracksCollection.Elements.Count: index, file);
                 LibVM.Database.Insert(file);
                 LibVM.SongCount++;
                 return true;

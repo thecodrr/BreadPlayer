@@ -35,7 +35,7 @@ namespace BreadPlayer.Models
         private string audio_seek_point_index;
         private string comment;
         private string encryption_method_registration;
-        private string equalisation_2;
+        private string folderPath;
         private string equalisation;
         private string event_timing_code;
         private string general_encapsulated_object;
@@ -129,7 +129,7 @@ namespace BreadPlayer.Models
         public string AudioSeekPointIndex { get { return audio_seek_point_index; } set { audio_seek_point_index = string.IsNullOrEmpty(value) ? audio_seek_point_index = NaN : value; } }
         public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }
         public string EncryptionMethodRegistration { get { return encryption_method_registration; } set { encryption_method_registration = string.IsNullOrEmpty(value) ? encryption_method_registration = NaN : value; } }
-        public string Equalisation2 { get { return equalisation_2; } set { equalisation_2 = string.IsNullOrEmpty(value) ? equalisation_2 = NaN : value; } }
+        public string FolderPath { get { return folderPath; } set { folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; } }
         public string Equalisation { get { return equalisation; } set { equalisation = string.IsNullOrEmpty(value) ? equalisation = NaN : value; } }
         public string EventTimingCode { get { return event_timing_code; } set { event_timing_code = string.IsNullOrEmpty(value) ? event_timing_code = NaN : value; } }
         public string GeneralEncapsulatedObject { get { return general_encapsulated_object; } set { general_encapsulated_object = string.IsNullOrEmpty(value) ? general_encapsulated_object = NaN : value; } }
@@ -213,6 +213,7 @@ namespace BreadPlayer.Models
         public string Publisherweb { get { return publisher_web; } set { publisher_web = string.IsNullOrEmpty(value) ? publisher_web = NaN : value; } }
         #endregion
 
+     
         public Mediafile()
         {
            // GetText(Data);
