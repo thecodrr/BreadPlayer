@@ -125,11 +125,24 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// </summary> 
     public void RemoveRange(IEnumerable<T> collection)
     {
-        if (collection == null) throw new ArgumentNullException("collection");
-        sync.EnterWriteLock();
-        foreach (var i in collection)
-            this.Remove(i);
-        sync.ExitWriteLock();
+        // get out if no new items
+        if (collection == null || !collection.Any()) return;
+
+        // add the items, making sure no events are fired
+        _isObserving = false;
+        foreach (var item in collection.ToArray())
+        {
+            Remove(item);
+        }
+        _isObserving = true;
+
+        // fire the events
+        OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+        OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+        // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+        // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+        //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove));
     }
 
     /// <summary> 

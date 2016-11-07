@@ -157,7 +157,7 @@ namespace BreadPlayer.Core
                 ManagedBass.Bass.ChannelPlay(handle);
                 PlayerState = PlayerState.Playing;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
-             
+              
             });
 
         }

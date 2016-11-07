@@ -66,21 +66,7 @@ namespace BreadPlayer.Common
 
         private async static void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
-            StorageFileQueryResult modifiedqueryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + Core.CoreMethods.SettingsVM.TimeOpened));
-            var files = await modifiedqueryResult.GetFilesAsync();
-            if (await modifiedqueryResult.GetItemCountAsync() > 0)
-            {
-                await SettingsViewModel.AddStorageFilesToLibrary(modifiedqueryResult);
-            }
-            //since there were no modifed files returned yet the event was raised, this means that some file was renamed or deleted. To acknowledge that change we need to reload everything in the modified folder
-            else
-            {
-                //LibVM.Database.RemoveFolder(sender.Folder.Path);
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
-                files = await queryResult.GetFilesAsync();
-                SettingsViewModel.RenameOrDeleteFiles(files);
-            }
+            await SettingsViewModel.PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
         }
     }
 }

@@ -83,6 +83,12 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding DisplayName}" MaxWidth="200" TextTrimming="CharacterEllipsis"/>
                             <TextBlock Text="{Binding Path}" Margin="20,0,0,0" TextWrapping="NoWrap" TextTrimming="None"/>
+                        
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Delete"/>
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -102,7 +108,7 @@
             <Button Content="Import playlists" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
             <Button Content="Reset Everything" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
             <TextBlock Margin="10,10,10,0" Text="Version:" FontWeight="Bold"/>
-            <TextBlock Margin="10,10,10,0" Text="v0.1.4-alpha"/>
+            <TextBlock Margin="10,10,10,0" Text="v0.1.5-alpha"/>
             <TextBlock Margin="10,10,10,0" Text="Developed by:" FontWeight="Bold"/>
             <TextBlock Margin="10,10,10,0" Text="theweavr"/>
         </StackPanel>

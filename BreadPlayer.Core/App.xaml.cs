@@ -68,7 +68,7 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            CoreWindowLogic.DisableSmtc();
+            CoreWindowLogic.EnableDisableSmtc();
             deferral.Complete();
         }
 
@@ -76,9 +76,9 @@ namespace BreadPlayer
         {
             var deferral = e.GetDeferral();
             CoreWindowLogic.Stringify();
+            CoreWindowLogic.EnableDisableSmtc();
             CoreWindowLogic.UpdateSmtc();
             deferral.Complete();
-            
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace BreadPlayer
                 this.DebugSettings.EnableFrameRateCounter = true;                
             }
 #endif
-          
+          if(e.PreviousExecutionState != ApplicationExecutionState.Running)
             LoadFrame(e, e.Arguments);           
         }
 

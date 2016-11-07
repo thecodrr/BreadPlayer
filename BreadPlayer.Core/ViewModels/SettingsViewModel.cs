@@ -180,6 +180,9 @@ namespace BreadPlayer.ViewModels
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
                 //Get query options with which we search for files in the specified folder
                 var options = Common.DirectoryWalker.GetQueryOptions();
+                //var folderOptions = new QueryOptions();
+               // StorageFolderQueryResult folderResult = folder.CreateFolderQuery(CommonFolderQuery.DefaultQuery);
+               // LibraryFoldersCollection.AddRange(await folderResult.GetFoldersAsync());
                 //this is the query result which we recieve after querying in the folder
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
                 //the event for files changed
@@ -209,7 +212,9 @@ namespace BreadPlayer.ViewModels
 
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
                 while (files.Count != 0)
-                {
+                { 
+                    //we clear the 'tempList' so it can come with only 100 songs again.
+                    tempList.Clear();
                     //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
                     //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
                     var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
@@ -255,15 +260,13 @@ namespace BreadPlayer.ViewModels
                     //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                     LibVM.TracksCollection.Elements.AddRange(tempList);
                     //now we load 100 songs into database.
-                    LibVM.Database.Insert(tempList);
-                    //then we clear the 'tempList' so it can come with only 100 songs again.
-                    tempList.Clear();
+                    LibVM.Database.Insert(tempList);                   
                     //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
                     files = await fileTask.ConfigureAwait(false);
                     //consequently we have to increase the index by 100 so that songs are not repeated.
                     index += 100;
                 }
-                await SaveImagesAsync(queryResult).ConfigureAwait(false);
+                await SaveAllFolderAlbumArtsAsync(queryResult).ConfigureAwait(false);
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
                 await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
                 //we stop the stopwatch.
@@ -272,31 +275,30 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowAsync(i.ToString() + " Song(s) loaded in " + Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString() + " seconds", "Library loaded!");
            }
         }
-        public static async void RenameOrDeleteFiles(IEnumerable<StorageFile> files)
-        {
-            
+        public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
+        {            
             string folder = "";
             foreach (var file in files)
             {
                 var props = await file.Properties.GetMusicPropertiesAsync();
                 folder = Path.GetDirectoryName(file.Path);
-                //FOR RENAMING
+                //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
                 if (LibVM.TracksCollection.Elements.Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
                 {
                     var mp3File = LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
                     mp3File.Path = file.Path;
                 }
-                //FOR ADDITION
+                //FOR ADDITION (we check all the files to see if we already have the file or not)
                 if(LibVM.TracksCollection.Elements.All(t => t.Path != file.Path))
                 {
                     AddMediafile(await CreateMediafile(file, false));
-                    await SaveSingleAlbumArt(file);
+                    await SaveSingleFileAlbumArtAsync(file);
                 }
             }
+            //FOR DELETE (we only want to iterate through songs which are in the changed folder)
             var deletedFiles = new List<Mediafile>();
             foreach (var file in LibVM.TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
             {
-                //FOR DELETE (we only want to iterate through songs which are in the changed folder)
                 if (!File.Exists(file.Path))
                 {
                     deletedFiles.Add(LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
@@ -306,24 +308,12 @@ namespace BreadPlayer.ViewModels
             foreach (var deletedFile in deletedFiles)
                 LibVM.TracksCollection.Elements.Remove(deletedFile);
         }
-        public static bool IsMediafileDuplicate(Mediafile file, Mediafile filetocompare)
-        {
-            //if (file.Path == filetocompare.Path && file.Title == filetocompare.Title && file.LeadArtist == filetocompare.LeadArtist && file.Album == filetocompare.Album)
-            //    return true;
-            //else 
-            if (file.Path != filetocompare.Path && file.Title == filetocompare.Title && file.LeadArtist == filetocompare.LeadArtist && file.Album == filetocompare.Album)
-                return true;
-            //else if (file.Length == filetocompare.Length)
-            //    return true;
-            else
-                return false;
-        }
         public async static Task AddStorageFilesToLibrary(StorageFileQueryResult queryResult)
         {
             foreach (var file in await queryResult.GetFilesAsync())
             {
                 Mediafile mp3file = null;
-                int index = 0;
+                int index = -1;
                 if (file != null)
                 {
                     if (LibVM.TracksCollection.Elements.Any(t => t.Path == file.Path))
@@ -341,12 +331,12 @@ namespace BreadPlayer.ViewModels
                     AddMediafile(mp3file, index);
                 }
             }
-            await SaveImagesAsync(queryResult);
+            await SaveAllFolderAlbumArtsAsync(queryResult).ConfigureAwait(false);
         
         }
-        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
+        public async static Task PerformWatcherWorkAsync(StorageFolder folder)
         {
-            StorageFileQueryResult modifiedqueryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + TimeOpened));
+            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SettingsVM.TimeOpened));
             var files = await modifiedqueryResult.GetFilesAsync();
             if (await modifiedqueryResult.GetItemCountAsync() > 0)
             {
@@ -355,40 +345,42 @@ namespace BreadPlayer.ViewModels
             //since there were no modifed files returned yet the event was raised, this means that some file was renamed or deleted. To acknowledge that change we need to reload everything in the modified folder
             else
             {
-                //LibVM.Database.RemoveFolder(sender.Folder.Path);
                 //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = sender.Folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
-                await AddFolderToLibraryAsync(queryResult);
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
+                files = await queryResult.GetFilesAsync();
+                RenameAddOrDeleteFiles(files);
             }
         }
-        static async Task SaveSingleAlbumArt(StorageFile file)
+        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
-            Mediafile Mediafile = LibVM.TracksCollection.Elements.First(t => t.Path == file.Path);
-
-            var albumartFolder = ApplicationData.Current.LocalFolder;
-            var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
-
-            if (!File.Exists(albumartLocation))
+            await PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
+        }
+        static async Task SaveSingleFileAlbumArtAsync(StorageFile file)
+        {
+            Mediafile Mediafile = LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path);
+            if (Mediafile != null)
             {
-                StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300).AsTask().ConfigureAwait(false);
-                if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
+                var albumartFolder = ApplicationData.Current.LocalFolder;
+                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+
+                if (!File.Exists(albumartLocation))
                 {
-                    await LibVM.SaveImages(thumbnail, Mediafile).ConfigureAwait(false);
-                    Mediafile.AttachedPicture = albumartLocation;
+                    StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300).AsTask().ConfigureAwait(false);
+                    if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
+                    {
+                        await LibVM.SaveImages(thumbnail, Mediafile).ConfigureAwait(false);                      
+                    }
                 }
-            }
-            else
-            {
                 Mediafile.AttachedPicture = albumartLocation;
             }
         }
-        public static async Task SaveImagesAsync(StorageFileQueryResult queryResult)
+        public static async Task SaveAllFolderAlbumArtsAsync(StorageFileQueryResult queryResult)
         {
             uint index = 0, stepSize = 100;
             //a list containing the files we recieved after querying using the two uints we created above.
             IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
 
-            //we move forward the index 50 steps because first 50 files are loaded when we called the above method.
+            //we move forward the index 100 steps because first 100 files are loaded when we called the above method.
             index += 100;
             double i = 0;
             //'count' is for total files got after querying.
@@ -396,8 +388,8 @@ namespace BreadPlayer.ViewModels
             //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
             while (files.Count != 0)
             {
-                //Since the no. of files in 'files' list is 50, only 50 files will be loaded after which we will step out of while loop.
-                //To avoid this, we create a task that loads the next 50 files. Stepping forward 50 steps without increasing the index.
+                //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
+                //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
                 var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
                
                 //A foreach loop to process each StorageFile
@@ -406,8 +398,7 @@ namespace BreadPlayer.ViewModels
                     try
                     {
                         i++; //Notice here that we are increasing the 'i' variable by one for each file.
-
-                        await SaveSingleAlbumArt(file);
+                        await SaveSingleFileAlbumArtAsync(file);
                         //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                         await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Album art(s) Saved", "Loading...");
                     }
@@ -419,7 +410,7 @@ namespace BreadPlayer.ViewModels
                 }
                 //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
                 files = await fileTask.ConfigureAwait(false);
-                //consequently we have to increase the index by 50 so that songs are not repeated.
+                //consequently we have to increase the index by 100 so that songs are not repeated.
                 index += 100;
             }
             LibVM.Database.tracks.Update(LibVM.TracksCollection.Elements);

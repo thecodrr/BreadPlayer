@@ -131,6 +131,13 @@ namespace BreadPlayer
                 jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);
 
             }
+
+            jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
+            jsonObject[repeatKey] = JsonValue.CreateStringValue(ShellVM.Repeat);
+            jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
+            jsonObject[isplaybarKey] = JsonValue.CreateBooleanValue(ShellVM.IsPlayBarVisible);
+            jsonObject[sortKey] = JsonValue.CreateStringValue(LibVM.Sort);
+            jsonObject[timeclosedKey] = JsonValue.CreateStringValue(DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             if (SettingsVM.LibraryFoldersCollection.Any())
             {
                 JsonArray array = new JsonArray();
@@ -138,12 +145,6 @@ namespace BreadPlayer
                     array.Add(JsonValue.CreateStringValue(folder.Path));
                 jsonObject[foldersKey] = array;
             }
-            jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
-            jsonObject[repeatKey] = JsonValue.CreateStringValue(ShellVM.Repeat);
-            jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
-            jsonObject[isplaybarKey] = JsonValue.CreateBooleanValue(ShellVM.IsPlayBarVisible);
-            jsonObject[sortKey] = JsonValue.CreateStringValue(LibVM.Sort);
-            jsonObject[timeclosedKey] = JsonValue.CreateStringValue(DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             try
             {
                 StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
@@ -168,8 +169,10 @@ namespace BreadPlayer
             }
         }
         #endregion
-         static MediaPlayer player;
+
         #region SystemMediaTransportControls Methods/Events
+
+        static MediaPlayer player;
         public async static void InitSmtc()
         {
             player = new MediaPlayer();
@@ -186,27 +189,27 @@ namespace BreadPlayer
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
             Player.MediaStateChanged += Player_MediaStateChanged;
-           
-           
         }
-        public static void DisableSmtc()
+        public static void EnableDisableSmtc()
         {
-            _smtc.IsEnabled = false;
-            player = null;
+            if (_smtc.IsEnabled == true)
+                _smtc.IsEnabled = false;
+            else if (_smtc.IsEnabled == false)
+                _smtc.IsEnabled = true;
         }
        public async static void UpdateSmtc()
         {
-            _smtc.IsEnabled = true;
+           // _smtc.IsEnabled = true;
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             if (Player.CurrentlyPlayingFile != null)
             {
-                if (player != null && ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
                     player.SetStreamSource(await (await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path)).OpenAsync(FileAccessMode.Read));
                     player.CommandManager.IsEnabled = false;
-                    player.Play();
                     player.Pause();
+                    player.Play();
                     player.Volume = 0;
                 }
                 musicProps.Title = Player.CurrentlyPlayingFile.Title;
