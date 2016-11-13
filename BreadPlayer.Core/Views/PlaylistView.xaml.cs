@@ -63,8 +63,9 @@ namespace BreadPlayer
             }
             else
             {
+                PlaylistVM.Playlist = new Playlist() { Name = (e.Parameter as Album).AlbumName };
                 LoadAlbumSongs(e.Parameter as Album);
-                PlaylistVM.Playlist = new Playlist() { Name = (e.Parameter as Album).AlbumName };              
+                PlaylistVM.Refresh();
             }
                 
             this.DataContext = PlaylistVM;
@@ -75,16 +76,21 @@ namespace BreadPlayer
             LibVM.Database.CreatePlaylistDB(PlaylistVM.Playlist.Name);
 
             if (LibVM.Database.IsValid)
+            {
                 await Task.Run(async () => PlaylistVM.Songs.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true)).ConfigureAwait(false);
+                PlaylistVM.Refresh();
+            }
         }
         void LoadAlbumSongs(Album album)
         {
-           PlaylistVM.Songs.AddRange(album.AlbumSongs, true);
+            PlaylistVM.Songs.AddRange(album.AlbumSongs, true, false);
+           
+            //PlaylistVM.Songs.Elements.AddRange(album.AlbumSongs);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             LibVM.Database.CreateDB();
-           
+            GC.Collect();
             base.OnNavigatingFrom(e);
         }
 

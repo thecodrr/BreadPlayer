@@ -113,12 +113,17 @@ namespace BreadPlayer.ViewModels
            // LibVM.Database.Update(mediafile);
             Refresh();
         }
-        void Refresh()
+       public void Refresh()
         {
-            //refreshes the values by getting and setting the same properties.
-           
-           // TotalSongs = TotalSongs;
-           // TotalMinutes = TotalMinutes;
+            TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Elements.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+            TotalSongs = Songs.Elements.Count.ToString() + " Songs";
+            if (Songs.Elements.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
+            {
+                BitmapImage image = new BitmapImage(new Uri(Songs.Elements.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
+                PlaylistArt = image;
+            }
+            var mp3 = PlaylistVM?.Songs?.Elements?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+            if (mp3 != null) mp3.State = PlayerState.Playing;
         }
         RelayCommand _renamePlaylistCommand;
         /// <summary>
@@ -190,18 +195,7 @@ namespace BreadPlayer.ViewModels
 
         private void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (Songs.Elements.Count > 0)
-            {
-                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Elements.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                TotalSongs = Songs.Elements.Count.ToString() + " Songs";
-                if (Songs.Elements.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
-                {
-                    BitmapImage image = new BitmapImage(new Uri(Songs.Elements.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
-                    PlaylistArt = image;                   
-                }
-                var mp3 = PlaylistVM?.Songs?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
-                if (mp3 != null) mp3.State = PlayerState.Playing;
-            }
+        
         }
         
         RelayCommand _initCommand;

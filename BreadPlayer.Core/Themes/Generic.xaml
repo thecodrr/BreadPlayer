@@ -377,6 +377,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="Inline" />
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
+                                       
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -426,6 +427,8 @@
                                         <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
                                         <Setter Target="playlistBtn.Width" Value="300"/>
+
+                                        <Setter Target="UpperGrid.Margin" Value="0"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="60"/>
                                         <Setter Target="searchBtn.Width" Value="300"/>
@@ -444,6 +447,7 @@
                                         <Setter Target="playlistBtn.Width" Value="300"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="60"/>
+                                        <Setter Target="UpperGrid.Margin" Value="0"/>
                                         <Setter Target="searchBtn.Width" Value="300"/>
                                         <Setter Target="searchBtn.Visibility" Value="Visible"/>
                                         <Setter Target="searchBox.Visibility" Value="Collapsed"/>
@@ -473,34 +477,37 @@
                                    CompactPaneLength="58"
                                    IsTabStop="False" 
                                   PaneBackground="{ThemeResource ThemeBackground}">
-                            <SplitView.Pane>
+                            <SplitView.Pane>                                
                                 <Grid x:Name="Pane" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
+                                    <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                        <AutoSuggestBox.QueryIcon>
+                                            <FontIcon Glyph="&#xe721;"/>
+                                        </AutoSuggestBox.QueryIcon>
+                                        <Interactivity:Interaction.Behaviors>
+                                            <Core:EventTriggerBehavior EventName="KeyUp">
+                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
+                                                <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                                            </Core:EventTriggerBehavior>
+                                            <Core:EventTriggerBehavior EventName="QuerySubmitted">
+                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
+                                                <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                                            </Core:EventTriggerBehavior>
+                                        </Interactivity:Interaction.Behaviors>
+                                    </AutoSuggestBox>
+                                    <Grid x:Name="UpperGrid" Margin="0,100,0,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel Orientation="Vertical" Grid.Row="0" >
+                                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto">
+
+                                     <StackPanel Orientation="Vertical" Grid.Row="0" >
                                         <Button x:Name="searchBtn" Visibility="Collapsed" RequestedTheme="Dark"
                                                 TabIndex="2" Width="300" Foreground="White" Margin="0,58,0,0" FontSize="22"
-                                                Style="{StaticResource SearchButtonStyle}"/>
-                                        <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
-                                            <AutoSuggestBox.QueryIcon>
-                                                <FontIcon Glyph="&#xe721;"/>
-                                            </AutoSuggestBox.QueryIcon>
-                                            <Interactivity:Interaction.Behaviors>
-                                                <Core:EventTriggerBehavior EventName="KeyUp">
-                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
-                                                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
-                                                </Core:EventTriggerBehavior>
-                                                <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
-                                                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
-                                                </Core:EventTriggerBehavior>
-                                            </Interactivity:Interaction.Behaviors>
-                                        </AutoSuggestBox>
+                                                Style="{StaticResource SearchButtonStyle}"/>                                        
                                         <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="1"
+                                                       TabIndex="3" SelectedIndex="1" 
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
@@ -525,13 +532,17 @@
                                         </StackPanel>
                                         <local:NavMenuListView x:Name="PlaylistsMenuList"
                                                        ItemsSource="{TemplateBinding PlaylistsItems}"
-                                                       TabIndex="3"
+                                                       TabIndex="3" 
+                                                       
+                                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                       ScrollViewer.VerticalScrollMode="Enabled"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
                                         </local:NavMenuListView>
                                         
-                                    </StackPanel>
+                                    </StackPanel>                                       
+                                    </ScrollViewer>
                                     <StackPanel Grid.Row="1">
                                         <MenuFlyoutSeparator Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
                                         <local:NavMenuListView x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
@@ -552,6 +563,7 @@
                                         </local:NavMenuListView>
                                     </StackPanel>
                                 </Grid>
+                    </Grid>
                             </SplitView.Pane>
                             <Grid>
                                 <Frame x:Name="PageFrame" Grid.Row="1"

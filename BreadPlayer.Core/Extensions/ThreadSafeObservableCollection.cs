@@ -83,7 +83,14 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnCollectionChanged(e); });
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+        {
+            try
+            {
+                if (_isObserving) base.OnCollectionChanged(e);
+            }
+            catch { }
+        });
     }
     protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

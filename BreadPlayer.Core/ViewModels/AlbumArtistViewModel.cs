@@ -22,10 +22,25 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public AlbumArtistViewModel()
         {
-            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\albums.db;journal=false;");
-            albumCollection = db.GetCollection<Album>("albums");
-            albumCollection.EnsureIndex(t => t.AlbumName);
-            albumCollection.EnsureIndex(t => t.Artist);
+            InitDB();
+        }
+       public async void InitDB()
+        {
+            try
+            {
+                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\albums.db;journal=false;");
+
+                albumCollection = db.GetCollection<Album>("albums");
+                albumCollection.EnsureIndex(t => t.AlbumName);
+                albumCollection.EnsureIndex(t => t.Artist);
+
+
+            }
+            catch
+            {
+                await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\albums.db")).DeleteAsync();
+                InitDB();
+            }
         }
         public async Task LoadAlbums()
         {
@@ -45,7 +60,6 @@ namespace BreadPlayer.ViewModels
         /// </remarks>
         public async Task AddAlbums()
         {
-
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 List<Album> albums = new List<Album>();

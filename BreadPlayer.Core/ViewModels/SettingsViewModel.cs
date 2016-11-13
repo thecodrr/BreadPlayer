@@ -82,8 +82,8 @@ namespace BreadPlayer.ViewModels
             AlbumArtistVM.Dispose();
             LibraryFoldersCollection.Clear();
             await ApplicationData.Current.ClearAsync();
-
             LibVM.Database = new Database.DatabaseQueryMethods();
+            AlbumArtistVM.InitDB();
             GC.Collect();
             LibVM.SongCount = 0;
         }
@@ -154,7 +154,6 @@ namespace BreadPlayer.ViewModels
         {
             //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
             FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
-            CoreMethods Methods = new CoreMethods();
             picker.FileTypeFilter.Add(".mp3");
             picker.FileTypeFilter.Add(".wav");
             picker.FileTypeFilter.Add(".ogg");
@@ -266,19 +265,20 @@ namespace BreadPlayer.ViewModels
         }
         public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
         {
+            try { 
             string folder = "";
             foreach (var file in files)
             {
                 var props = await file.Properties.GetMusicPropertiesAsync();
                 folder = Path.GetDirectoryName(file.Path);
                 //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
-                if (LibVM.TracksCollection.Elements.Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
+                if (LibVM.TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
                 {
                     var mp3File = LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
                     mp3File.Path = file.Path;
                 }
                 //FOR ADDITION (we check all the files to see if we already have the file or not)
-                if (LibVM.TracksCollection.Elements.All(t => t.Path != file.Path))
+                if (LibVM.TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
                 {
                     var mediafile = await CreateMediafile(file, false);
                     AddMediafile(mediafile);
@@ -297,6 +297,8 @@ namespace BreadPlayer.ViewModels
             if (deletedFiles.Any())
                 foreach (var deletedFile in deletedFiles)
                     LibVM.TracksCollection.Elements.Remove(deletedFile);
+            }
+            catch { }
         }
         public async static Task AddStorageFilesToLibrary(StorageFileQueryResult queryResult)
         {

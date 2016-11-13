@@ -296,7 +296,7 @@ namespace BreadPlayer.Extensions
             try
             {
 
-                var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
+                var match = this.ToArray().Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
 
                 if (match == null)
                 {

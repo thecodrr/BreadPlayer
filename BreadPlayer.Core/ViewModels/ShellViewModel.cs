@@ -117,14 +117,15 @@ namespace BreadPlayer.ViewModels
             }
         }
         public async Task<Mediafile> GetUpcomingSong()
-        {
-            if (LibVM.TracksCollection.Elements.Any())
+        {            
+            var playingCollection = GetPlayingCollection();            
+            if (playingCollection != null && playingCollection.Any() )
             {
                 try
                 {
                     int IndexOfCurrentlyPlayingFile = -1;
-                    if (GetPlayingCollection().Any(t => t.State == PlayerState.Playing))
-                        IndexOfCurrentlyPlayingFile = GetPlayingCollection().IndexOf(GetPlayingCollection().SingleOrDefault(t => t.State == PlayerState.Playing));
+                    if (playingCollection.Any(t => t.State == PlayerState.Playing))
+                        IndexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.SingleOrDefault(t => t.State == PlayerState.Playing));
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
@@ -137,7 +138,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        toPlayFile = IndexOfCurrentlyPlayingFile <= GetPlayingCollection().Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? GetPlayingCollection().ElementAt(IndexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" ? GetPlayingCollection().ElementAt(0) : null;
+                        toPlayFile = IndexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? playingCollection.ElementAt(IndexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" ? playingCollection.ElementAt(0) : null;
                     }
                     return toPlayFile;
                 }
@@ -151,20 +152,16 @@ namespace BreadPlayer.ViewModels
         }
         async void PlayNext()
         {
-            if (LibVM.TracksCollection.Elements.Any())
-            {
-                if (Player.CurrentlyPlayingFile != null)
+            if (Player.CurrentlyPlayingFile != null)
                     history.Do(Player.CurrentlyPlayingFile);
 
                 Mediafile toPlayFile = await GetUpcomingSong();
-                if (toPlayFile == null)
-                {
-                    PlayPause();
-                }
-                else
-                   PlayFile(toPlayFile);
-
+            if (toPlayFile == null)
+            {
+                PlayPause();
             }
+            else
+                PlayFile(toPlayFile);
         }
         ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
@@ -172,9 +169,13 @@ namespace BreadPlayer.ViewModels
             {
                 return PlaylistVM.Songs.Elements;
             }
-            else
+            else if(LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
                 return LibVM.TracksCollection.Elements;
+            }
+            else
+            {
+                return null;
             }
         }
         void PlayPrevious()
@@ -391,11 +392,14 @@ namespace BreadPlayer.ViewModels
                     Player.IgnoreErrors = true;
                 ChangePlayingSongState(PlayerState.Playing, PlayerState.Stopped);
                 if (await Player.Load(mp3file))
-                {                   
+                {                                       
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
-                    var mp3 = LibVM.TracksCollection?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
-                    if (mp3 != null) mp3.State = PlayerState.Playing;
+                    if(LibVM.TracksCollection.Elements.Count(t => t.Path == Player.CurrentlyPlayingFile?.Path) < 2)
+                    {
+                        var mp3 = LibVM.TracksCollection?.Elements?.SingleOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                        if (mp3 != null) mp3.State = PlayerState.Playing;
+                    }
                     if (play)
                     {                       
                         PlayPauseCommand.Execute(null);
