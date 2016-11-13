@@ -43,16 +43,13 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class LibraryView
     {
-        LibraryViewModel LibVM = Core.CoreMethods.LibVM;
         public LibraryView()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
         }
-
+        
         private async void fileBox_Drop(object sender, DragEventArgs e)
         {
-            Core.CoreMethods Methods = new Core.CoreMethods();
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
             {
                 var files = await e.DataView.GetStorageItemsAsync();
@@ -63,7 +60,7 @@ namespace BreadPlayer
                         Mediafile mp3file = null;
                         string path = file.Path;
                         var tempList = new List<Mediafile>();
-                        if (LibVM.TracksCollection.Elements.All(t => t.Path != path))
+                        if (Core.CoreMethods.LibVM.TracksCollection.Elements.All(t => t.Path != path))
                         {
                             try
                             {
@@ -73,9 +70,9 @@ namespace BreadPlayer
                             }
                             catch { }
                             tempList.Add(mp3file);
-                          
-                                LibVM.TracksCollection.AddRange(tempList);
-                                LibVM.Database.Insert(tempList);
+
+                            Core.CoreMethods.LibVM.TracksCollection.AddRange(tempList);
+                            Core.CoreMethods.LibVM.Database.Insert(tempList);
                                 tempList.Clear();
                            
 
@@ -104,7 +101,7 @@ namespace BreadPlayer
             {  // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = null;
-                myGroup = LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                myGroup = Core.CoreMethods.LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
 
                 SemanticZoomLocation zoomloc = new SemanticZoomLocation();
                 zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);

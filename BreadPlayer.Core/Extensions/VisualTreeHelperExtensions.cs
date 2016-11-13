@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Foundation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -493,13 +494,13 @@ namespace BreadPlayer.Extensions
         /// <returns>The position of mouse pointer relative to specified element.</returns>
         public static Point GetPointerPosition(this UIElement dob)
         {
-            Window currentWindow = Window.Current;
+            CoreWindow currentWindow = CoreWindow.GetForCurrentThread();
 
             Point point;
 
             try
             {
-                point = currentWindow.CoreWindow.PointerPosition;
+                point = currentWindow.PointerPosition;
             }
             catch (UnauthorizedAccessException)
             {
@@ -508,7 +509,7 @@ namespace BreadPlayer.Extensions
 
             Rect bounds = dob.GetBoundingRect();
             Rect winBounds = currentWindow.Bounds;
-            return new Point(point.X - bounds.X, point.Y - bounds.Y - winBounds.Y);
+            return new Point(point.X - bounds.X - winBounds.X, point.Y - bounds.Y - winBounds.Y);
         }
     }
 }

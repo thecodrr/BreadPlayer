@@ -8,19 +8,29 @@ using BreadPlayer.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
+using LiteDB;
+using Windows.Storage;
 
 namespace BreadPlayer.ViewModels
 {
     public class AlbumArtistViewModel : ViewModelBase, IDisposable
     {
+        LiteDatabase db;
+        public LiteCollection<Album> albumCollection;
         /// <summary>
         /// The Constructor.
         /// </summary>
         public AlbumArtistViewModel()
         {
-        
+            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\albums.db;journal=false;");
+            albumCollection = db.GetCollection<Album>("albums");
+            albumCollection.EnsureIndex(t => t.AlbumName);
+            albumCollection.EnsureIndex(t => t.Artist);
         }
-      
+        public async Task LoadAlbums()
+        {
+            await Task.Run(() => AlbumCollection.AddRange(albumCollection.FindAll()));
+        }
 
         /// <summary>
         /// Collection containing all albums.
@@ -35,25 +45,27 @@ namespace BreadPlayer.ViewModels
         /// </remarks>
         public async Task AddAlbums()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() =>
+
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 List<Album> albums = new List<Album>();
                 foreach (var song in await LibVM.Database.GetTracks().ConfigureAwait(false))
-                {
+                {                   
                     Album alb = null;
                     if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
                     {
                         alb = new Album();
                         alb.AlbumName = song.Album;
                         alb.Artist = song.LeadArtist;
-                        alb.AlbumArt = song.AttachedPicture;
+                        alb.AlbumArt = string.IsNullOrEmpty(song.AttachedPicture) ? null : song.AttachedPicture;
                         albums.Add(alb);
                     }
                     if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
-                 }
+                }
+                albumCollection.Insert(albums);
                 AlbumCollection.AddRange(albums);
             }).AsTask().ConfigureAwait(false);
-           
+
         }
         RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand
@@ -66,11 +78,11 @@ namespace BreadPlayer.ViewModels
             if(para is Album)
             {
                 Album album = para as Album;
-                Dictionary<Playlist, IEnumerable<Mediafile>> albumDict = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                albumDict.Add(new Playlist() { Name = album.AlbumName, Description=album.Artist }, album.AlbumSongs);
+               // Dictionary<Playlist, IEnumerable<Mediafile>> albumDict = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                //albumDict.Add(new Playlist() { Name = album.AlbumName, Description=album.Artist }, album.AlbumSongs);
                 PlaylistVM.IsMenuVisible = false;
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
-                SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), albumDict);
+                SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), album);
             }
         }
 

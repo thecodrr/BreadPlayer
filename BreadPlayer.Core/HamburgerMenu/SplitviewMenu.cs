@@ -25,6 +25,7 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
 
 namespace SplitViewMenu
@@ -69,7 +70,8 @@ namespace SplitViewMenu
         private static NavMenuListView _navBottomMenuListView;
         private static NavMenuListView _playlistsMenuListView;
         private static Frame _pageFrame;
-
+        private static SplitView _splitView;
+        private static ToggleButton TogglePaneButton;
         public SplitViewMenu()
         {
             DefaultStyleKey = typeof (SplitViewMenu);
@@ -126,30 +128,31 @@ namespace SplitViewMenu
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu) d;
-            if (SplitViewMenu._navTopMenuListView != null)
-                SplitViewMenu._navTopMenuListView.ItemsSource = e.NewValue;
+            if (_navTopMenuListView != null)
+                _navTopMenuListView.ItemsSource = e.NewValue;
         }
         private static void OnBottomNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu)d;
-            if (SplitViewMenu._navBottomMenuListView != null)
-                SplitViewMenu._navBottomMenuListView.ItemsSource = e.NewValue;
+            if (_navBottomMenuListView != null)
+                _navBottomMenuListView.ItemsSource = e.NewValue;
         }
         private static void OnPlaylistsItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu)d;
-            if (SplitViewMenu._playlistsMenuListView != null)
-                SplitViewMenu._playlistsMenuListView.ItemsSource = e.NewValue;
+            if (_playlistsMenuListView != null)
+                _playlistsMenuListView.ItemsSource = e.NewValue;
         }
         protected override void OnApplyTemplate()
         {
+            _splitView = GetTemplateChild("RootSplitView") as SplitView;
             _pageFrame = GetTemplateChild("PageFrame") as Frame;
             NavService = new NavigationService(ref _pageFrame);
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
             _backButton = GetTemplateChild("BackButton") as Button;
-
+            TogglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemInvoked += OnNavMenuItemInvoked;
@@ -322,7 +325,7 @@ namespace SplitViewMenu
         }
 
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
-        {
+        {         
             var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
          
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
@@ -343,6 +346,10 @@ namespace SplitViewMenu
                 }
             }
             LastItem = item;
+        if(_splitView.DisplayMode == SplitViewDisplayMode.Inline)
+            {
+                TogglePaneButton.IsChecked = false;
+            }
         }
 
        

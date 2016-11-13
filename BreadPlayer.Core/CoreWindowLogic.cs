@@ -56,49 +56,53 @@ namespace BreadPlayer
         {
             if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + "\\lastplaying.mc");
-                string text = await FileIO.ReadTextAsync(file);
-                
-                if (!string.IsNullOrEmpty(text))
+                try
                 {
-                    JsonObject jsonObject = JsonObject.Parse(text);
-                    ShellVM.Repeat = jsonObject.GetNamedString(repeatKey, "No Repeat");
-                    ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
-                    ShellVM.IsPlayBarVisible = jsonObject.GetNamedBoolean(isplaybarKey, true);
-                    LibVM.Sort = jsonObject.GetNamedString(sortKey, "Unsorted");
-                    SettingsVM.TimeClosed = jsonObject.GetNamedString(timeclosedKey, "0");
-                    var volume = jsonObject.GetNamedNumber(volKey, 50);
-                    if (jsonObject.Count <= 7 || onlyVol)
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + "\\lastplaying.mc");
+                    string text = await FileIO.ReadTextAsync(file);
+
+                    if (!string.IsNullOrEmpty(text))
                     {
-                        Player.Volume = volume;
-                    }
-                    else
-                    {
-                        path = jsonObject.GetNamedString(pathKey, "");
-                        double position = jsonObject.GetNamedNumber(posKey);
-                        Player.PlayerState = PlayerState.Paused;
-                        try
+                        JsonObject jsonObject = JsonObject.Parse(text);
+                        ShellVM.Repeat = jsonObject.GetNamedString(repeatKey, "No Repeat");
+                        ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
+                        ShellVM.IsPlayBarVisible = jsonObject.GetNamedBoolean(isplaybarKey, true);
+                        LibVM.Sort = jsonObject.GetNamedString(sortKey, "Unsorted");
+                        SettingsVM.TimeClosed = jsonObject.GetNamedString(timeclosedKey, "0");
+                        var volume = jsonObject.GetNamedNumber(volKey, 50);
+                        if (jsonObject.Count <= 7 || onlyVol)
                         {
-                            ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                            Player.Volume = volume;
                         }
-                        catch (UnauthorizedAccessException ex) { }
-                    }
-                 
-                    if (jsonObject.ContainsKey(foldersKey))
-                    {
-                        var folderPaths = jsonObject[foldersKey].GetArray().ToList();
-                        if (folderPaths != null)
+                        else
                         {
-                            foreach (var folder in folderPaths)
+                            path = jsonObject.GetNamedString(pathKey, "");
+                            double position = jsonObject.GetNamedNumber(posKey);
+                            Player.PlayerState = PlayerState.Paused;
+                            try
                             {
-                                var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
-                              
-                                SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                                ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                            }
+                            catch (UnauthorizedAccessException ex) { }
+                        }
+
+                        if (jsonObject.ContainsKey(foldersKey))
+                        {
+                            var folderPaths = jsonObject[foldersKey].GetArray().ToList();
+                            if (folderPaths != null)
+                            {
+                                foreach (var folder in folderPaths)
+                                {
+                                    var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
+
+                                    SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                                }
                             }
                         }
+
                     }
-                   
                 }
+                catch { }
             }
             if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
@@ -106,7 +110,7 @@ namespace BreadPlayer
                 foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
             }
             LibVM.MusicLibraryLoaded += LibVM_MusicLibraryLoaded;
-            
+
 
         }
 
@@ -115,11 +119,8 @@ namespace BreadPlayer
             ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
             if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path) && LibVM.TracksCollection.Elements.All(t => t.State != PlayerState.Playing))
                 LibVM.TracksCollection.Elements.Single(t => t.Path == path).State = PlayerState.Playing;
-           if(LibVM.Sort != "Unsorted")
-                LibVM.RefreshView(null, LibVM.Sort);
+        
             SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
-            await Task.Delay(5000);
-            Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
 
         public static async void Stringify()
@@ -260,7 +261,7 @@ namespace BreadPlayer
         #endregion
 
         #region CoreWindow Dispose Methods
-        public static void DisposeObjects()
+        public void DisposeObjects()
         {
             Player.Dispose();
             LibVM.Database.Dispose();

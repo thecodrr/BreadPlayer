@@ -25,7 +25,6 @@ namespace BreadPlayer
         public SettingsView()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
         }
         
     }

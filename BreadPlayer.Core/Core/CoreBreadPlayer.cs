@@ -95,27 +95,35 @@ namespace BreadPlayer.Core
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mp3file)
-        {
+        {            
             if (mp3file != null && mp3file.Length != "00:00")
             {
-                string sPath = mp3file.Path;
-
-                await Stop();
-                await Task.Run(() =>
+                try
                 {
-                    Bass.Stop();
-                    Bass.Start();
+                    string sPath = mp3file.Path;
 
-                    handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);
-                    PlayerState = PlayerState.Stopped;
-                    Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
-                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                    Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                    CurrentlyPlayingFile = mp3file;
-                    CoreWindowLogic.UpdateSmtc();
-                    CoreWindowLogic.Stringify();
-                });
-                return true;
+                    await Stop();
+                    await Task.Run(() =>
+                    {
+                        Bass.Stop();
+                        Bass.Start();
+
+                        handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);
+                        PlayerState = PlayerState.Stopped;
+                        Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                        MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                        Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        CurrentlyPlayingFile = mp3file;
+                        CoreWindowLogic.UpdateSmtc();
+                        CoreWindowLogic.Stringify();
+                    });
+                    return true;
+
+                }
+                catch(Exception ex)
+                {
+                    await NotificationManager.ShowAsync(ex.Message + "||" + mp3file.OrginalFilename);
+                }
             }
             else
             { 

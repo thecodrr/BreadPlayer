@@ -76,9 +76,12 @@ namespace BreadPlayer.Behaviours
             }
             else
             {
-                if(listView != null) listView.SelectedIndex = -1;
-                if (item != null) item.IsSelected = true;
-                var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                if (listView != null && listView.SelectedItems.Count < 2)
+                {
+                    listView.SelectedIndex = -1;
+                    if (item != null) item.IsSelected = true;
+                }
+                    var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
                 flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
             }
            

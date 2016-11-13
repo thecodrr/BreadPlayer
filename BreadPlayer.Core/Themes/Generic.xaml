@@ -489,11 +489,11 @@
                                             </AutoSuggestBox.QueryIcon>
                                             <Interactivity:Interaction.Behaviors>
                                                 <Core:EventTriggerBehavior EventName="KeyUp">
-                                                    <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
+                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
                                                     <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
                                                 </Core:EventTriggerBehavior>
                                                 <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                                                    <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
+                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
                                                     <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
                                                 </Core:EventTriggerBehavior>
                                             </Interactivity:Interaction.Behaviors>

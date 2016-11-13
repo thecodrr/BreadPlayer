@@ -35,6 +35,7 @@ using Windows.UI.Xaml.Navigation;
 using BreadPlayer.ViewModels;
 using System.Diagnostics;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Threading.Tasks;
 
 namespace BreadPlayer
 {
@@ -45,24 +46,46 @@ namespace BreadPlayer
     {
         
         PlaylistViewModel PlaylistVM => Core.CoreMethods.PlaylistVM;
+        LibraryViewModel LibVM = Core.CoreMethods.LibVM;
         public PlaylistView()
         {
             this.InitializeComponent();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        {      
-            var list = (e.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>);
-            PlaylistVM.CurrentDictionary = list;           
-            PlaylistVM.Songs = new ThreadSafeObservableCollection<Mediafile>(list.First().Value);
-            PlaylistVM.Playlist = list.First().Key;
+        {
+            PlaylistVM.Dispose();
+            PlaylistVM.Songs = null;
+            if (e.Parameter is Playlist)
+            {
+                var playlist = (e.Parameter as Playlist);
+                PlaylistVM.Playlist = playlist;
+                LoadDB();
+            }
+            else
+            {
+                LoadAlbumSongs(e.Parameter as Album);
+                PlaylistVM.Playlist = new Playlist() { Name = (e.Parameter as Album).AlbumName };              
+            }
+                
             this.DataContext = PlaylistVM;
-            playListBox.ItemsSource = PlaylistVM.Songs;
-            playListBox.DataContext = PlaylistVM.Songs;
             base.OnNavigatedTo(e);
+        }
+        async void LoadDB()
+        {
+            LibVM.Database.CreatePlaylistDB(PlaylistVM.Playlist.Name);
+            await Task.Run(async() =>
+            {
+                PlaylistVM.Songs.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true);
+            }).ConfigureAwait(false);
+        }
+        void LoadAlbumSongs(Album album)
+        {
+           PlaylistVM.Songs.AddRange(album.AlbumSongs, true);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            PlaylistVM.IsPageLoaded = false;
+            LibVM.Database.CreateDB();
+           
             base.OnNavigatingFrom(e);
         }
 

@@ -10,7 +10,7 @@ namespace BreadPlayer.PlaylistBus
 {
     interface IPlaylist
     {
-        Task<Dictionary<Playlist, IEnumerable<Mediafile>>> LoadPlaylist(StorageFile file);
+        Task LoadPlaylist(StorageFile file);
         Task<bool> SavePlaylist(IEnumerable<Mediafile> songs);
     }
 }

@@ -34,7 +34,7 @@
                                     <MenuFlyoutItem Text="Properties" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding ShowPropertiesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
 
                                 </MenuFlyout>
-                                <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>
+                                <!--<Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ItemsSource="{Binding Options}" Placement="Right"></Extensions:BindableFlyout>-->
                                 <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
                                     <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
                                     <Setter Property="FontWeight" Value="SemiBold" />
@@ -54,14 +54,19 @@
                                     <VisualState>
                                         <VisualState.StateTriggers>
                                             <StateTrigger IsActive="{Binding Text, ElementName=Temp, Converter={StaticResource EnumToVisibility}}"/>
+
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
                                             <Setter Target="PlayingIndicator.Visibility" Value="Visible"/>
+                                            <Setter Target="PlayingIndicator1.Visibility" Value="Visible"/>
+                                            <Setter Target="titleTxt_MOBILE.Margin" Value="5,0,0,0"/>
                                             <Setter Target="titleTxt.Width" Value="135"/>
                                             <Setter Target="TitleGrid.Width" Value="245"/>
+                                            <Setter Target="DataStack.Foreground" Value="White"/>
                                         </VisualState.Setters>
                                         <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
                                             <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:6"/>
+                                            <ColorAnimation Storyboard.TargetName="Buttons_Stack" Storyboard.TargetProperty="(StackPanel.Background).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:6"/>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -79,6 +84,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="titleTxt.MaxWidth" Value="190"/>
                                             <Setter Target="PressedBackground.Fill" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                            <Setter Target="Buttons_Stack.Background" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
 
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
@@ -98,6 +104,7 @@
                                     <VisualState x:Name="Selected">
                                         <VisualState.Setters>
                                             <Setter Target="PressedBackground.Fill" Value="{ThemeResource HoverBrush}"/>
+                                            <Setter Target="DataStack.Foreground" Value="White"/>
                                         </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
@@ -160,8 +167,8 @@
                                             <AdaptiveTrigger MinWindowWidth="0"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="artistTxt.Visibility" Value="Collapsed"/>
-                                            <Setter Target="albumTxt.Visibility" Value="Collapsed"/>
+                                            <Setter Target="DataStack_MOBILE.Visibility" Value="Visible"/>
+                                            <Setter Target="DataStack.Visibility" Value="Collapsed"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState>
@@ -170,15 +177,15 @@
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters></VisualState.Setters>
                                     </VisualState>
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <AdaptiveTrigger MinWindowWidth="500"/>
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="artistTxt.Visibility" Value="Visible"/>
-                                            <Setter Target="albumTxt.Visibility" Value="Collapsed"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
+                                    <!--<VisualState>
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="500"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="artistTxt.Visibility" Value="Visible"/>
+                                                <Setter Target="albumTxt.Visibility" Value="Collapsed"/>
+                                            </VisualState.Setters>
+                                        </VisualState>-->
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle
@@ -189,9 +196,56 @@
             x:Name="Animie"
             Fill="Transparent"
             Control.IsTemplateFocusTarget="True"/>
-                            <ContentControl Margin="15,0,0,0" x:Name="DataStack">
+                            <!--<ContentControl Margin="15,0,0,0" x:Name="DataStack_MOBILE" Visibility="Collapsed">-->
 
-                                <StackPanel x:Name="Data" Orientation="Horizontal" Background="Transparent" Opacity="100" Height="50" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                            <!--<StackPanel x:Name="Data_MOBILE" Orientation="Horizontal" Opacity="100" Height="60" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">-->
+                            <!--<PathIcon x:Name="PlayingIndicator" Visibility="Collapsed" Data="F1 M 1.04036,13.8251C 1.61489,13.8251 2.08068,14.3045 2.08068,14.8962L 2.08068,18.4375C 2.08068,19.029 1.61489,19.5085 1.04036,19.5085C 0.465784,19.5085 -7.8934e-007,19.029 -7.8934e-007,18.4375L -7.87067e-007,14.8962C -7.87067e-007,14.3047 0.465784,13.8251 1.04036,13.8251 Z M 5.09366,13.8251C 5.66835,13.8251 6.13398,14.3045 6.13398,14.8962L 6.13398,18.4375C 6.13398,19.029 5.6682,19.5085 5.09366,19.5085C 4.51908,19.5085 4.05331,19.029 4.05331,18.4375L 4.05331,14.8962C 4.05331,14.3047 4.51908,13.8251 5.09366,13.8251 Z M 9.14698,12.3268C 9.72151,12.3268 10.1873,12.8063 10.1873,13.3978L 10.1873,19.9358C 10.1873,20.5273 9.72151,21.0067 9.14697,21.0067C 8.5724,21.0067 8.10661,20.5273 8.10661,19.9358L 8.10661,13.3978C 8.10661,12.8063 8.5724,12.3268 9.14698,12.3268 Z M 13.2001,10.5562C 13.7748,10.5562 14.2404,11.0356 14.2404,11.6272L 14.2404,21.7064C 14.2404,22.298 13.7747,22.7775 13.2001,22.7775C 12.6256,22.7775 12.1598,22.298 12.1598,21.7064L 12.1598,11.6272C 12.1598,11.0358 12.6256,10.5562 13.2001,10.5562 Z M 17.2536,7.4234C 17.8282,7.42346 18.2939,7.90295 18.2939,8.49445L 18.2939,24.8391C 18.2939,25.4307 17.8282,25.9102 17.2536,25.9102C 16.679,25.9102 16.2132,25.4307 16.2132,24.8391L 16.2132,8.49445C 16.2132,7.90295 16.679,7.4234 17.2536,7.4234 Z M 21.3067,0C 21.8813,0 22.3471,0.479553 22.3471,1.07111L 22.3471,32.2623C 22.3471,32.8538 21.8813,33.3334 21.3067,33.3334C 20.7322,33.3334 20.2664,32.8538 20.2664,32.2623L 20.2664,1.07111C 20.2664,0.479553 20.7322,0 21.3067,0 Z M 25.3601,2.65607C 25.9346,2.65607 26.4004,3.13544 26.4004,3.72711L 26.4004,29.6064C 26.4004,30.1979 25.9346,30.6774 25.3601,30.6774C 24.7855,30.6774 24.3197,30.1979 24.3197,29.6064L 24.3197,3.72711C 24.3197,3.13562 24.7855,2.65607 25.3601,2.65607 Z M 29.4132,7.96814C 29.9878,7.96814 30.4536,8.44763 30.4536,9.03918L 30.4536,24.2943C 30.4536,24.8858 29.9878,25.3652 29.4132,25.3652C 28.8386,25.3652 28.3729,24.8858 28.3729,24.2943L 28.3729,9.03918C 28.3729,8.44763 28.8386,7.96814 29.4132,7.96814 Z M 33.4667,11.1688C 34.0413,11.1688 34.507,11.6483 34.507,12.2399L 34.507,21.0934C 34.507,21.6849 34.0413,22.1644 33.4667,22.1644C 32.8921,22.1644 32.4263,21.6849 32.4263,21.0934L 32.4263,12.2399C 32.4263,11.6483 32.8921,11.1688 33.4667,11.1688 Z M 37.52,12.5312C 38.0946,12.5312 38.5603,13.0107 38.5603,13.6022L 38.5603,19.7314C 38.5603,20.323 38.0946,20.8025 37.52,20.8025C 36.9454,20.8025 36.4796,20.323 36.4796,19.7314L 36.4796,13.6022C 36.4796,13.0107 36.9454,12.5312 37.52,12.5312 Z M 41.5731,13.8251C 42.1477,13.8251 42.6135,14.3045 42.6135,14.8962L 42.6135,18.4375C 42.6135,19.029 42.1477,19.5085 41.5731,19.5085C 40.9986,19.5085 40.5328,19.029 40.5328,18.4375L 40.5328,14.8962C 40.5328,14.3047 40.9986,13.8251 41.5731,13.8251 Z M 45.6263,13.8251C 46.2009,13.8251 46.6667,14.3045 46.6667,14.8962L 46.6667,18.4375C 46.6667,19.029 46.2009,19.5085 45.6263,19.5085C 45.0517,19.5085 44.586,19.029 44.586,18.4375L 44.586,14.8962C 44.586,14.3047 45.0517,13.8251 45.6263,13.8251 Z " Width="55" Height="35"/>-->
+                            <Grid  Margin="15,0,15,0" x:Name="DataStack_MOBILE" Opacity="100"  Visibility="Collapsed" Height="60" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="270"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical">
+                                    <Grid x:Name="TitleGrid_MOBILE" Width="300" VerticalAlignment="Top" MaxWidth="300" Margin="2,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <PathIcon Foreground="{Binding ElementName=DataStack, Path=Foreground}" x:Name="PlayingIndicator1" Width="25" Height="15" Visibility="Collapsed" Data="F1 M 1.04036,13.8251C 1.61489,13.8251 2.08068,14.3045 2.08068,14.8962L 2.08068,18.4375C 2.08068,19.029 1.61489,19.5085 1.04036,19.5085C 0.465784,19.5085 -7.8934e-007,19.029 -7.8934e-007,18.4375L -7.87067e-007,14.8962C -7.87067e-007,14.3047 0.465784,13.8251 1.04036,13.8251 Z M 5.09366,13.8251C 5.66835,13.8251 6.13398,14.3045 6.13398,14.8962L 6.13398,18.4375C 6.13398,19.029 5.6682,19.5085 5.09366,19.5085C 4.51908,19.5085 4.05331,19.029 4.05331,18.4375L 4.05331,14.8962C 4.05331,14.3047 4.51908,13.8251 5.09366,13.8251 Z M 9.14698,12.3268C 9.72151,12.3268 10.1873,12.8063 10.1873,13.3978L 10.1873,19.9358C 10.1873,20.5273 9.72151,21.0067 9.14697,21.0067C 8.5724,21.0067 8.10661,20.5273 8.10661,19.9358L 8.10661,13.3978C 8.10661,12.8063 8.5724,12.3268 9.14698,12.3268 Z M 13.2001,10.5562C 13.7748,10.5562 14.2404,11.0356 14.2404,11.6272L 14.2404,21.7064C 14.2404,22.298 13.7747,22.7775 13.2001,22.7775C 12.6256,22.7775 12.1598,22.298 12.1598,21.7064L 12.1598,11.6272C 12.1598,11.0358 12.6256,10.5562 13.2001,10.5562 Z M 17.2536,7.4234C 17.8282,7.42346 18.2939,7.90295 18.2939,8.49445L 18.2939,24.8391C 18.2939,25.4307 17.8282,25.9102 17.2536,25.9102C 16.679,25.9102 16.2132,25.4307 16.2132,24.8391L 16.2132,8.49445C 16.2132,7.90295 16.679,7.4234 17.2536,7.4234 Z M 21.3067,0C 21.8813,0 22.3471,0.479553 22.3471,1.07111L 22.3471,32.2623C 22.3471,32.8538 21.8813,33.3334 21.3067,33.3334C 20.7322,33.3334 20.2664,32.8538 20.2664,32.2623L 20.2664,1.07111C 20.2664,0.479553 20.7322,0 21.3067,0 Z M 25.3601,2.65607C 25.9346,2.65607 26.4004,3.13544 26.4004,3.72711L 26.4004,29.6064C 26.4004,30.1979 25.9346,30.6774 25.3601,30.6774C 24.7855,30.6774 24.3197,30.1979 24.3197,29.6064L 24.3197,3.72711C 24.3197,3.13562 24.7855,2.65607 25.3601,2.65607 Z M 29.4132,7.96814C 29.9878,7.96814 30.4536,8.44763 30.4536,9.03918L 30.4536,24.2943C 30.4536,24.8858 29.9878,25.3652 29.4132,25.3652C 28.8386,25.3652 28.3729,24.8858 28.3729,24.2943L 28.3729,9.03918C 28.3729,8.44763 28.8386,7.96814 29.4132,7.96814 Z M 33.4667,11.1688C 34.0413,11.1688 34.507,11.6483 34.507,12.2399L 34.507,21.0934C 34.507,21.6849 34.0413,22.1644 33.4667,22.1644C 32.8921,22.1644 32.4263,21.6849 32.4263,21.0934L 32.4263,12.2399C 32.4263,11.6483 32.8921,11.1688 33.4667,11.1688 Z M 37.52,12.5312C 38.0946,12.5312 38.5603,13.0107 38.5603,13.6022L 38.5603,19.7314C 38.5603,20.323 38.0946,20.8025 37.52,20.8025C 36.9454,20.8025 36.4796,20.323 36.4796,19.7314L 36.4796,13.6022C 36.4796,13.0107 36.9454,12.5312 37.52,12.5312 Z M 41.5731,13.8251C 42.1477,13.8251 42.6135,14.3045 42.6135,14.8962L 42.6135,18.4375C 42.6135,19.029 42.1477,19.5085 41.5731,19.5085C 40.9986,19.5085 40.5328,19.029 40.5328,18.4375L 40.5328,14.8962C 40.5328,14.3047 40.9986,13.8251 41.5731,13.8251 Z M 45.6263,13.8251C 46.2009,13.8251 46.6667,14.3045 46.6667,14.8962L 46.6667,18.4375C 46.6667,19.029 46.2009,19.5085 45.6263,19.5085C 45.0517,19.5085 44.586,19.029 44.586,18.4375L 44.586,14.8962C 44.586,14.3047 45.0517,13.8251 45.6263,13.8251 Z " >
+                                            <PathIcon.RenderTransform>
+                                                <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                            </PathIcon.RenderTransform>
+                                        </PathIcon>
+                                        <TextBlock Grid.Column="1" x:Name="titleTxt_MOBILE" Foreground="{Binding ElementName=DataStack, Path=Foreground}" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="2,5,0,0" MaxWidth="300">
+                                        <TextBlock x:Name="artistTxt_MOBILE" Visibility="Visible" Foreground="{Binding ElementName=DataStack, Path=Foreground}" FontSize="11" Text="{Binding LeadArtist}" />
+                                        <TextBlock Text="&#x2022;" FontSize="11" Margin="5,0,0,0" Foreground="{Binding ElementName=DataStack, Path=Foreground}"/>
+                                        <TextBlock x:Name="albumTxt_MOBILE" Visibility="Visible" Foreground="{Binding ElementName=DataStack, Path=Foreground}" FontSize="11" Text="{Binding Album}" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="0" x:Name="Buttons_Stack" Orientation="Horizontal" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
+                                                        HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="0,0,-110,0" VerticalAlignment="Center">
+                                    <AppBarButton Icon="Play" BorderBrush="White" HorizontalAlignment="Stretch"
+                                                          DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="60" 
+                                                          Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
+                                                           VerticalAlignment="Stretch" Height="60" IsDoubleTapEnabled="False" Style="{StaticResource CustomAppBarButtonStyle}"
+                                                          CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
+                                                          Command="{Binding PlayCommand}"/>
+                                    <AppBarButton x:Name="button2_MOBILE" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" BorderBrush="White" Background="Black"
+                                                              IsDoubleTapEnabled="False" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
+                                                              Height="60"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                              Width="60" Style="{StaticResource CustomAppBarButtonStyle}"/>
+                                </StackPanel>
+                                <TextBlock x:Name="durationTxt_MOBILE" Grid.Column="2" Foreground="{Binding ElementName=DataStack, Path=Foreground}" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" FontSize="11" Text="{Binding Length}" Margin="0,0,10,0"/>
+                            </Grid>
+
+
+                            <!--</ContentControl>-->
+                            <ContentControl Margin="15,0,0,0" x:Name="DataStack" >
+
+                                <StackPanel x:Name="Data" Orientation="Horizontal" Opacity="100" Height="50" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
                                     <PathIcon x:Name="PlayingIndicator" Visibility="Collapsed" Data="F1 M 1.04036,13.8251C 1.61489,13.8251 2.08068,14.3045 2.08068,14.8962L 2.08068,18.4375C 2.08068,19.029 1.61489,19.5085 1.04036,19.5085C 0.465784,19.5085 -7.8934e-007,19.029 -7.8934e-007,18.4375L -7.87067e-007,14.8962C -7.87067e-007,14.3047 0.465784,13.8251 1.04036,13.8251 Z M 5.09366,13.8251C 5.66835,13.8251 6.13398,14.3045 6.13398,14.8962L 6.13398,18.4375C 6.13398,19.029 5.6682,19.5085 5.09366,19.5085C 4.51908,19.5085 4.05331,19.029 4.05331,18.4375L 4.05331,14.8962C 4.05331,14.3047 4.51908,13.8251 5.09366,13.8251 Z M 9.14698,12.3268C 9.72151,12.3268 10.1873,12.8063 10.1873,13.3978L 10.1873,19.9358C 10.1873,20.5273 9.72151,21.0067 9.14697,21.0067C 8.5724,21.0067 8.10661,20.5273 8.10661,19.9358L 8.10661,13.3978C 8.10661,12.8063 8.5724,12.3268 9.14698,12.3268 Z M 13.2001,10.5562C 13.7748,10.5562 14.2404,11.0356 14.2404,11.6272L 14.2404,21.7064C 14.2404,22.298 13.7747,22.7775 13.2001,22.7775C 12.6256,22.7775 12.1598,22.298 12.1598,21.7064L 12.1598,11.6272C 12.1598,11.0358 12.6256,10.5562 13.2001,10.5562 Z M 17.2536,7.4234C 17.8282,7.42346 18.2939,7.90295 18.2939,8.49445L 18.2939,24.8391C 18.2939,25.4307 17.8282,25.9102 17.2536,25.9102C 16.679,25.9102 16.2132,25.4307 16.2132,24.8391L 16.2132,8.49445C 16.2132,7.90295 16.679,7.4234 17.2536,7.4234 Z M 21.3067,0C 21.8813,0 22.3471,0.479553 22.3471,1.07111L 22.3471,32.2623C 22.3471,32.8538 21.8813,33.3334 21.3067,33.3334C 20.7322,33.3334 20.2664,32.8538 20.2664,32.2623L 20.2664,1.07111C 20.2664,0.479553 20.7322,0 21.3067,0 Z M 25.3601,2.65607C 25.9346,2.65607 26.4004,3.13544 26.4004,3.72711L 26.4004,29.6064C 26.4004,30.1979 25.9346,30.6774 25.3601,30.6774C 24.7855,30.6774 24.3197,30.1979 24.3197,29.6064L 24.3197,3.72711C 24.3197,3.13562 24.7855,2.65607 25.3601,2.65607 Z M 29.4132,7.96814C 29.9878,7.96814 30.4536,8.44763 30.4536,9.03918L 30.4536,24.2943C 30.4536,24.8858 29.9878,25.3652 29.4132,25.3652C 28.8386,25.3652 28.3729,24.8858 28.3729,24.2943L 28.3729,9.03918C 28.3729,8.44763 28.8386,7.96814 29.4132,7.96814 Z M 33.4667,11.1688C 34.0413,11.1688 34.507,11.6483 34.507,12.2399L 34.507,21.0934C 34.507,21.6849 34.0413,22.1644 33.4667,22.1644C 32.8921,22.1644 32.4263,21.6849 32.4263,21.0934L 32.4263,12.2399C 32.4263,11.6483 32.8921,11.1688 33.4667,11.1688 Z M 37.52,12.5312C 38.0946,12.5312 38.5603,13.0107 38.5603,13.6022L 38.5603,19.7314C 38.5603,20.323 38.0946,20.8025 37.52,20.8025C 36.9454,20.8025 36.4796,20.323 36.4796,19.7314L 36.4796,13.6022C 36.4796,13.0107 36.9454,12.5312 37.52,12.5312 Z M 41.5731,13.8251C 42.1477,13.8251 42.6135,14.3045 42.6135,14.8962L 42.6135,18.4375C 42.6135,19.029 42.1477,19.5085 41.5731,19.5085C 40.9986,19.5085 40.5328,19.029 40.5328,18.4375L 40.5328,14.8962C 40.5328,14.3047 40.9986,13.8251 41.5731,13.8251 Z M 45.6263,13.8251C 46.2009,13.8251 46.6667,14.3045 46.6667,14.8962L 46.6667,18.4375C 46.6667,19.029 46.2009,19.5085 45.6263,19.5085C 45.0517,19.5085 44.586,19.029 44.586,18.4375L 44.586,14.8962C 44.586,14.3047 45.0517,13.8251 45.6263,13.8251 Z " Width="55" Height="35"/>
 
                                     <Grid x:Name="TitleGrid" Width="300" MaxWidth="300" Margin="5,0,0,0">
@@ -202,13 +256,12 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
                                         <AppBarButton Grid.Column="1" Icon="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
-                                        <AppBarButton Grid.Column="2" x:Name="button2" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  Icon="Add" Height="50"  VerticalAlignment="Stretch"  Width="50" Tag="{StaticResource PlaylistsFlyout}">
-                                            <Interactivity:Interaction.Behaviors>
-                                                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
-                                                    <Behaviours:OpenMenuFlyoutAction Parameter="BindableFlyout"/>
-                                                </Core:EventTriggerBehavior>
-                                            </Interactivity:Interaction.Behaviors>
-                                        </AppBarButton>
+                                   
+                                        <AppBarButton Grid.Column="2" x:Name="button2" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" 
+                                        Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" 
+                                        IsDoubleTapEnabled="False" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
+                                                      Foreground="{Binding ElementName=DataStack, Path=Foreground}" Height="50"  
+                                                      VerticalAlignment="Stretch"  Width="50"></AppBarButton>
                                         <TextBlock x:Name="Temp" Visibility="Collapsed" FontSize="22" Text="{Binding Path=State, UpdateSourceTrigger=Explicit}"/>
                                     </Grid>
                                     <TextBlock x:Name="artistTxt" Visibility="Visible" FontSize="13" Text="{Binding LeadArtist}" Margin="100,0,0,0" Width="100" VerticalAlignment="Center"/>
@@ -216,6 +269,7 @@
                                     <TextBlock x:Name="yearTxt" Visibility="Visible" FontSize="13" Text="{Binding Year}" Margin="100,0,0,0" Width="50" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="genreTxt" Visibility="Visible" FontSize="13" Text="{Binding Genre}" Margin="50,0,0,0" Width="100" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="durationTxt" Visibility="Visible" FontSize="13" Text="{Binding Length}" Margin="50,0,0,0" Width="50" VerticalAlignment="Center"/>
+
                                     <!--<ListBox Width="100" ItemsSource="{Binding Path=Playlists}" DisplayMemberPath="Name"/>-->
                                 </StackPanel>
 
@@ -237,8 +291,38 @@
             <MenuFlyoutItem Text="Delete This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeletePlaylistCommand}" />
             <MenuFlyoutItem Text="Rename This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}"/>
         </MenuFlyout>
+        <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs.Elements}"/>
     </Page.Resources>
-    <Grid x:Name="Grid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                      
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="headerText.TextAlignment" Value="Center" />
+                        <Setter Target="headerDesc.TextAlignment" Value="Center" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -250,13 +334,16 @@
             </Border.Background>
         </Border>
         <Grid Grid.Row="0" RequestedTheme="Dark" MinHeight="300" Background="#99000000">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel Margin="15,15,0,0" Grid.Row="0" >
-                <TextBlock Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
-                <TextBlock Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" TextWrapping="WrapWholeWords" FontSize="18" FontFamily="Segoe UI Light"/>
+            <!--<Border x:Name="backgroundBorder" Background="{ThemeResource SystemControlBackgroundAccentBrush}"/>-->
+            <!--<TextBlock x:Name="headerText" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" RequestedTheme="Dark" FontSize="20" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="60,10,0,0"/>--> 
+            <StackPanel x:Name="headerStack" Margin="15,15,0,0" Grid.Row="0" >
+                <TextBlock x:Name="headerText" TextWrapping="WrapWholeWords" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontFamily="Segoe UI Light" FontWeight="ExtraLight"/>
+                <TextBlock x:Name="headerDesc" TextWrapping="WrapWholeWords" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="18" FontFamily="Segoe UI Light"/>
             </StackPanel>
             <Grid VerticalAlignment="Bottom" Grid.Row="1" Margin="15,0,15,10"  >
                 <Grid.ColumnDefinitions>
@@ -280,16 +367,10 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <ListView x:Name="playListBox" Grid.Row="1" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
+        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" DisplayMemberPath="Title" Grid.Row="2" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListView>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
-                <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid, Path=Children}"/>
+                <Core:InvokeCommandAction Command="{Binding InitCommand}"/>
             </Core:EventTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
     </Grid>

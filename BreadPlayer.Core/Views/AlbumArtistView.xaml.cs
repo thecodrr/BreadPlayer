@@ -25,7 +25,16 @@ namespace BreadPlayer
         public AlbumArtistView()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
+       }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            (grid.Resources["Source"] as CollectionViewSource).Source = Core.CoreMethods.AlbumArtistVM.AlbumCollection;
+            base.OnNavigatedTo(e);
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            (grid.Resources["Source"] as CollectionViewSource).Source = null;
+            base.OnNavigatedFrom(e);
         }
     }
 }

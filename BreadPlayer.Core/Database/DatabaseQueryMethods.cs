@@ -45,7 +45,15 @@ namespace BreadPlayer.Database
             db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;journal=false;");            
             tracks = db.GetCollection<Mediafile>("tracks");
             playlists = db.GetCollection<Playlist>("playlists");
-            recent = db.GetCollection<Mediafile>("recent");
+            recent = db.GetCollection<Mediafile>("recent");         
+            tracks.EnsureIndex(t => t.Title);
+            tracks.EnsureIndex(t => t.LeadArtist);
+        }
+        public void CreatePlaylistDB(string name)
+        {
+            System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
+            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\playlists\" + name + ".db;journal=false;");
+            tracks = db.GetCollection<Mediafile>("songs");
             tracks.EnsureIndex(t => t.Title);
             tracks.EnsureIndex(t => t.LeadArtist);
         }
@@ -68,7 +76,6 @@ namespace BreadPlayer.Database
         public void RemoveFolder(string folderPath)
         {
             tracks.Delete(LiteDB.Query.EQ("FolderPath", folderPath));
-
             Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
         }
         public async Task<IEnumerable<Mediafile>> GetTracks()
@@ -76,9 +83,10 @@ namespace BreadPlayer.Database
             IEnumerable<Mediafile> collection = null;
             await Core.CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Core.CoreMethods.LibVM.SongCount = 1;
+                Core.CoreMethods.LibVM.SongCount = tracks.Count();
                 collection = tracks.Find(LiteDB.Query.All());
             });
+
             return collection;
         }
         public void Update(Mediafile file, bool updateWithMatch = false)

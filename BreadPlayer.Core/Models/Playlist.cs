@@ -32,9 +32,7 @@ namespace BreadPlayer.Models
         public string Name { get { return name; }set { Set(ref name, value); } }
         string description;
         public string Description { get { return description; } set { Set(ref description, value); } }
-        ThreadSafeObservableCollection<Mediafile> songs;
-        public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
-
+      
         public Playlist()
         {
 

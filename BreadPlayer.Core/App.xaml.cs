@@ -116,11 +116,11 @@ namespace BreadPlayer
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             CoreWindowLogic.Stringify();
-            CoreWindowLogic.DisposeObjects();
+            await Task.Delay(500);
             deferral.Complete();
         }
 
@@ -139,7 +139,14 @@ namespace BreadPlayer
         void LoadFrame(IActivatedEventArgs args, object arguments)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-           
+            if (args.Kind != ActivationKind.File)
+            {
+                CoreWindowLogic.Replay();
+            }
+            else
+            {
+                CoreWindowLogic.Replay(true);
+            }
             // Do not repeat app initialization when the Window already has content
             if (rootFrame == null)
             {
@@ -161,8 +168,8 @@ namespace BreadPlayer
                 // parameter
                 rootFrame.Navigate(typeof(Shell), arguments);
             }
-
-           // CoreWindowLogic logic = new CoreWindowLogic();
+            
+            // CoreWindowLogic logic = new CoreWindowLogic();
             var view = ApplicationView.GetForCurrentView();
             if (RequestedTheme == ApplicationTheme.Dark)
             {
@@ -177,16 +184,10 @@ namespace BreadPlayer
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
             }
+           
             Window.Current.Activate();
             
-            if (args.Kind != ActivationKind.File)
-            {
-               CoreWindowLogic.Replay();
-            }
-            else
-            {
-                CoreWindowLogic.Replay(true);
-            }
+          
         }
         
     }

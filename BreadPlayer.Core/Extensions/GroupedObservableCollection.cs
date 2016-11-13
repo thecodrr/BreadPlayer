@@ -79,39 +79,61 @@ namespace BreadPlayer.Extensions
         }
         public void AddItem(TElement item, bool addToElement = false)
         {
-            var key = this.readKey(item);
-            if (addToElement) Elements.Add(item);
-            var s = this.FindOrCreateGroup(key);
-            s.Add(item);
-        }     
+            try
+            {
+                var key = this.readKey(item);
+                if (addToElement) Elements.Add(item);
+                var s = FindOrCreateGroup(key);
+                s.Add(item);
+            }
+            catch { }
+        }
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
         /// </summary> 
-        public void AddRange(IEnumerable<TElement> range, bool addkey = false)
+        public async void AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
         {
-            // get out if no new items
-            if (range == null || !range.Any()) return;
-
-            // prepare data for firing the events
-            int newStartingIndex = Count;
-            var newItems = new List<TElement>();
-            newItems.AddRange(range);
-
-            // add the items, making sure no events are fired
-            _isObserving = false;
-            foreach (var item in range)
+            try
             {
-                AddItem(item, addkey);
-            }
-            _isObserving = true;
+                // get out if no new items
+                if (range == null || !range.Any()) return;
 
-            // fire the events
-            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-            // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-            // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
+                // prepare data for firing the events
+                int newStartingIndex = Elements.Count;
+                var newItems = new List<TElement>();
+                newItems.AddRange(range);
+
+                // add the items, making sure no events are fired
+                _isObserving = false;
+
+                if (async)
+                {
+                    foreach (var item in range)
+                    {
+                        await Task.Run(() =>
+                        {
+                            AddItem(item, addkey);
+                        }).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    foreach (var item in range)
+                    {
+                        AddItem(item, addkey);
+                    }
+                }
+                _isObserving = true;
+
+                // fire the events
+                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
+            }
+            catch { }
         }
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -119,12 +141,12 @@ namespace BreadPlayer.Extensions
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-           if (_isObserving) base.OnPropertyChanged(e);
+            if (_isObserving) base.OnPropertyChanged(e);
         }
         public void RemoveItem(TElement item)
         {
             this.Remove(item);
-            Elements.Remove(item);           
+            Elements.Remove(item);
         }
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
         public ThreadSafeObservableCollection<TElement> Elements { get; set; } = new ThreadSafeObservableCollection<TElement>();
@@ -136,7 +158,7 @@ namespace BreadPlayer.Extensions
             this.RemoveGroups(currentKeys.Except(replacementKeys));
             this.EnsureGroupsExist(replacementKeys);
 
-           // Debug.Assert(this.Keys.SequenceEqual(replacementCollection.Keys), "Expected this collection to have exactly the same keys in the same order at this point");
+            // Debug.Assert(this.Keys.SequenceEqual(replacementCollection.Keys), "Expected this collection to have exactly the same keys in the same order at this point");
 
             for (var i = 0; i < replacementCollection.Count; i++)
             {
@@ -190,7 +212,7 @@ namespace BreadPlayer.Extensions
                             }
                         }
 
-                       // Debug.Assert(moved, "Expected that the element should have been moved");
+                        // Debug.Assert(moved, "Expected that the element should have been moved");
                     }
                     else
                     {
@@ -203,7 +225,7 @@ namespace BreadPlayer.Extensions
 
         private void EnsureGroupsExist(IList<TKey> requiredKeys)
         {
-          //  Debug.Assert(new HashSet<TKey>(this.Keys).IsSubsetOf(requiredKeys), "Expected this collection to contain no additional keys than the new collection at this point");
+            //  Debug.Assert(new HashSet<TKey>(this.Keys).IsSubsetOf(requiredKeys), "Expected this collection to contain no additional keys than the new collection at this point");
 
             if (this.Count == requiredKeys.Count)
             {
@@ -266,35 +288,45 @@ namespace BreadPlayer.Extensions
 
         private Grouping<TKey, TElement> FindOrCreateGroup(TKey key)
         {
+            Grouping<TKey, TElement> result = null;
             if (this.lastEffectedGroup != null && this.lastEffectedGroup.Key.Equals(key))
             {
                 return this.lastEffectedGroup;
             }
-            var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
-            Grouping<TKey, TElement> result;
-            if (match == null)
+            try
             {
-                // Group doesn't exist and the new group needs to go at the end
-                result = new Grouping<TKey, TElement>(key);
-                this.Add(result);
-            }
-            else if (!match.group.Key.Equals(key))
-            {
-                // Group doesn't exist, but needs to be inserted before an existing one
-                result = new Grouping<TKey, TElement>(key);
-                this.Insert(match.index, result);
-            }
-            else
-            {
-                result = match.group;
-            }
-            
-            this.lastEffectedGroup = result;
 
+                var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
+
+                if (match == null)
+                {
+                    _isObserving = true;
+                    // Group doesn't exist and the new group needs to go at the end
+                    result = new Grouping<TKey, TElement>(key);
+                    this.Add(result);
+
+                }
+                else if (!match.group.Key.Equals(key))
+                {
+                    _isObserving = true;
+                    // Group doesn't exist, but needs to be inserted before an existing one
+                    result = new Grouping<TKey, TElement>(key);
+                    this.Insert(match.index, result);
+                  
+                }
+                else
+                {
+                    result = match.group;
+                }
+
+                this.lastEffectedGroup = result;
+
+            }
+            catch { }
             return result;
         }
     }
-    }
+}
 
     public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>, IGrouping<TKey, TElement>
     {

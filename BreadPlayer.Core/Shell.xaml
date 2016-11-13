@@ -81,11 +81,11 @@
                     </Grid.Background>-->
                     <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
                         <!--<StackPanel Orientation="Horizontal"  Height="70">-->
-                    <Image x:Name="albumArt" Width="70" Height="60" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
-                        <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="6,2,0,0">
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                    <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
+                        <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="4,7,0,0">
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="ExtraLight" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="SemiLight" Foreground="White"/>
+                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="SemiLight" Foreground="White"/>
                         </StackPanel>
                     </StackPanel>
                     <Interactivity:Interaction.Behaviors>
@@ -102,9 +102,9 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <AppBarButton ToolTipService.ToolTip="Previous Song" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
-                    <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
-                    <AppBarButton Icon="Next" VerticalAlignment="Stretch" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
+                    <AppBarButton ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
+                    <AppBarButton Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                    <AppBarButton Icon="Next" VerticalAlignment="Stretch"  IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
                         <ToolTipService.ToolTip>
                             <StackPanel Width="200" DataContext="{Binding UpcomingSong}">
                                 <Image Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="UniformToFill"/>
@@ -118,8 +118,8 @@
                     </AppBarButton>
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
                     <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
-                    <AppBarButton Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="50" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0" />
-                    <AppBarButton  Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
+                    <AppBarButton ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Stretch" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="50" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0" />
+                    <AppBarButton  ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
 
                 </StackPanel>
 

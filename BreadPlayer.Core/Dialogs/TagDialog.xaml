@@ -9,7 +9,7 @@
     Title="Properties"
                xmlns:Converters="using:BreadPlayer.Converters"
     SecondaryButtonText="Close"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" MinWidth="660">
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" >
     <ContentDialog.Resources>
         <Converters:WidthToHalfConverter x:Key="ToHalf"/>
     </ContentDialog.Resources>

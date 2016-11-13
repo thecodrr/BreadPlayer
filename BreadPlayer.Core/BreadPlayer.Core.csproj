@@ -119,6 +119,7 @@
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
+    <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />

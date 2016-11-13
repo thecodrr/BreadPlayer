@@ -84,8 +84,6 @@ namespace BreadPlayer.Extensions
                 };
                  item.CommandParameter =  menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
                 item.Tag = menuFlyout.DataContext as Mediafile;
-                if (item.Tag == null)
-                    item.Tag = menuFlyout.DataContext as IEnumerable<Mediafile>;
                 if(menuFlyout.Items.Count == 1)
                 {
                     menuFlyout.Items.Add(new MenuFlyoutSeparator());
@@ -161,14 +159,13 @@ namespace BreadPlayer.Extensions
         {
             if (menuFlyout != null)
             {
-
                 await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     Core.CoreMethods.LibVM.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                 menuFlyout.Items.Clear();
                     MenuFlyoutSubItem addTo = new MenuFlyoutSubItem() { Text = "Add to" };
-                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = CoreMethods.LibVM.ShowPropertiesCommand, CommandParameter = null };
-                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = CoreMethods.LibVM.OpenSongLocationCommand, CommandParameter = null };
+                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = Core.CoreMethods.LibVM.ShowPropertiesCommand, CommandParameter = null };
+                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = Core.CoreMethods.LibVM.OpenSongLocationCommand, CommandParameter = null };
                     menuFlyout.Items.Add(addTo);
                     menuFlyout.Items.Add(openLoc);
                     menuFlyout.Items.Add(properties);
@@ -204,20 +201,21 @@ namespace BreadPlayer.Extensions
 
         static void Refresh()
         {
+            var core = new Core.CoreMethods();
             MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
             if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
             {
                 if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
                     Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
-                if (CoreMethods.Player.CurrentlyPlayingFile != null && CoreMethods.LibVM.Database != null)
-                    if ((bool)CoreMethods.LibVM?.Database?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
+                if (CoreMethods.Player.CurrentlyPlayingFile != null && Core.CoreMethods.LibVM.Database != null)
+                    if ((bool)Core.CoreMethods.LibVM?.Database?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
                     {
-                        var file = CoreMethods.LibVM.Database.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
+                        var file = Core.CoreMethods.LibVM.Database.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
                         if (file.Playlists.Count > 0)
                             Menu.Items.Add(removeFrom);
                         foreach (var list in file.Playlists)
                         {
-                            var item = new MenuFlyoutItem() { Text = list.Name, Command = CoreMethods.PlaylistVM.DeleteCommand };
+                            var item = new MenuFlyoutItem() { Text = list.Name };//, Command = CoreMethods.PlaylistVM.DeleteCommand };
                             item.CommandParameter = item;
                             item.Click += Item_Click;
                             removeFrom.Items.Add(item);

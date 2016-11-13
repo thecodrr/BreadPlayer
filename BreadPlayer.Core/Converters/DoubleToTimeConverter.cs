@@ -55,7 +55,16 @@ namespace BreadPlayer.Converters
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                     return width;
                 else
-                    return (width / 2) - 15;
+                {
+                    if (Windows.UI.Core.CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                    {
+                        // tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
+                        //tag.ItemWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                        return width;
+                    }
+                    return (width / 2) - 20;
+                }
+                    
             }
             return width;
         }

@@ -94,24 +94,24 @@
         </Grid.RowDefinitions>
         <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,0,0.4" Grid.RowSpan="2"/>
-        <AutoSuggestBox x:Name="searchBox" Margin="5,4" Visibility="Collapsed" Grid.Row="0" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}" Width="Auto" PlaceholderText="Search" IsSuggestionListOpen="False" Height="32" Grid.RowSpan="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+        <!--<AutoSuggestBox x:Name="searchBox" Margin="5,4" Visibility="Collapsed" Grid.Row="0" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}" Width="Auto" PlaceholderText="Search" IsSuggestionListOpen="False" Height="32" Grid.RowSpan="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
             <AutoSuggestBox.QueryIcon>
                 <FontIcon Glyph="&#xe721;"/>
             </AutoSuggestBox.QueryIcon>
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="KeyUp">
                     <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
-                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                    --><!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>--><!--
                 </Core:EventTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="QuerySubmitted">
                     <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
-                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+                    --><!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>--><!--
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
-        </AutoSuggestBox>
+        </AutoSuggestBox>-->
         <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
-                <ListView AllowDrop="True" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" Drop="fileBox_Drop" DragOver="fileBox_DragOver">
+                <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" Drop="fileBox_Drop" DragOver="fileBox_DragOver">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">
@@ -128,6 +128,9 @@
                         <Core:EventTriggerBehavior EventName="KeyDown" SourceObject="{Binding ElementName=fileBox}">
                             <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox}" Command="{Binding DeleteCommand}" PressedKey="Delete" DoubleKeyCommand="False"/>
                             <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding PlayCommand}" PressedKey="P" DoubleKeyCommand="True"/>
+                        </Core:EventTriggerBehavior>
+                        <Core:EventTriggerBehavior EventName="SelectionChanged">
+                            <Core:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=fileBox, Path=SelectedItems}"/>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
                     <ListView.GroupStyle>

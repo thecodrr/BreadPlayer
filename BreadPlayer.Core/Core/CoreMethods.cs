@@ -55,34 +55,38 @@ namespace BreadPlayer.Core
             }
             return false;
         }
-        public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = true)
+        public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
         {
-           // if(cache == true)
-          //      Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-
+           
             var Mediafile = new Mediafile();
-
-            Mediafile._id = LiteDB.ObjectId.NewObjectId();
-            Mediafile.Path = file.Path;
-            Mediafile.OrginalFilename = file.DisplayName;
-            Mediafile.State = PlayerState.Stopped;
-            var properties = await file.Properties.GetMusicPropertiesAsync().AsTask().ConfigureAwait(false);
-            Mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
-            Mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
-            Mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
-            Mediafile.Genre = string.Join(",", properties.Genre);
-            Mediafile.Year = properties.Year.ToString();
-            Mediafile.TrackNumber = properties.TrackNumber.ToString();
-            Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-
-            var albumartFolder = ApplicationData.Current.LocalFolder;
-            var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
-
-            if (File.Exists(albumartLocation))
+            try
             {
-                Mediafile.AttachedPicture = albumartLocation;
+                if (cache == true)
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+
+                Mediafile._id = LiteDB.ObjectId.NewObjectId();
+                Mediafile.Path = file.Path;
+                Mediafile.OrginalFilename = file.DisplayName;
+                Mediafile.State = PlayerState.Stopped;
+                var properties = await file.Properties.GetMusicPropertiesAsync().AsTask().ConfigureAwait(false);
+                Mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
+                Mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
+                Mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
+                Mediafile.Genre = string.Join(",", properties.Genre);
+                Mediafile.Year = properties.Year.ToString();
+                Mediafile.TrackNumber = properties.TrackNumber.ToString();
+                Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+
+                var albumartFolder = ApplicationData.Current.LocalFolder;
+                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+
+                if (File.Exists(albumartLocation))
+                {
+                    Mediafile.AttachedPicture = albumartLocation;
+                }
             }
-                return Mediafile;
+            catch(Exception ex) { await NotificationManager.ShowAsync(ex.Message + "||" + file.Path); }
+            return Mediafile;
         }
     }
 

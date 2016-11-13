@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Models;
+using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,22 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 
 namespace BreadPlayer.PlaylistBus
 {
     class PLS : IPlaylist
     {
-        public async Task<Dictionary<Playlist, IEnumerable<Mediafile>>> LoadPlaylist(StorageFile file)
+        public async Task LoadPlaylist(StorageFile file)
         {
-            Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
-            Playlist Playlist = new Playlist() { Name = file.DisplayName };
+            Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
+            //Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
+            //Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 bool hdr = false; //[playlist] header
                 string version = ""; //pls version at the end
                 int noe = 0; //numberofentries at the end.
                 int nr = 0;
+                int failedFiles = 0;
+                int count = 0;
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
                 List<Mediafile> PlaylistSongs = new List<Mediafile>();
@@ -32,7 +37,7 @@ namespace BreadPlayer.PlaylistBus
                     if (line == "[playlist]")
                         hdr = true;
                     else if (!hdr)
-                        return null;
+                        return;
                     else if (line.ToLower().StartsWith("numberofentries="))
                         noe = Convert.ToInt32(line.Split('=')[1]);
                     else if (line.ToLower().StartsWith("version="))
@@ -65,13 +70,41 @@ namespace BreadPlayer.PlaylistBus
                 }
                 for (int i = 0; i < noe; i++)
                 {
-                    string trackPath = tracks[i, 0];
-                    Mediafile mp3file = await Core.CoreMethods.CreateMediafile(await StorageFile.GetFileFromPathAsync(trackPath));
-                    PlaylistSongs.Add(mp3file);
+                    await Task.Run(async () =>
+                    {
+                        try
+                        {
+                            count++;
+                            string trackPath = tracks[i, 0];
+                            FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
+                            string path = trackPath;
+                            if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
+                            {
+                                path = info.DirectoryName + line; //add directory path to song path.
+                            }
+                            var accessFile = await StorageFile.GetFileFromPathAsync(path);
+                            var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
+
+                            Mediafile mp3File = await Core.CoreMethods.CreateMediafile(accessFile); //prepare Mediafile
+                            await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File);
+
+                            await Core.CoreMethods.NotificationManager.ShowAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
+
+                            if (!Core.CoreMethods.LibVM.Database.tracks.Exists(t => t._id == mp3File._id))
+                                Core.CoreMethods.LibVM.Database.Insert(mp3File);
+
+                            StorageApplicationPermissions.FutureAccessList.Remove(token);
+                        }
+                        catch
+                        {
+                            failedFiles++;
+                        }
+                    });
                 }
-                PlaylistDict.Add(Playlist, PlaylistSongs);
-                return PlaylistDict;
-            }
+                string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
+                await Core.CoreMethods.NotificationManager.ShowAsync(message);
+            }          
+            Core.CoreMethods.LibVM.Database.CreateDB();
         }
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)
         {

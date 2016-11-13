@@ -11,7 +11,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     
-    <Grid DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
+    <Grid x:Name="grid" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
+        <Grid.Resources>
+            <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
+        </Grid.Resources>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -35,9 +38,9 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>        
-        <Grid.Background>
+        <!--<Grid.Background>
             <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
-        </Grid.Background>
+        </Grid.Background>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="47"/>
             <RowDefinition Height="13" MinHeight="13"/>
@@ -45,26 +48,14 @@
         </Grid.RowDefinitions>
         <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="headerText" Text="My Albums" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ItemTemplate="{StaticResource NormalTemplate}" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ImageFadeBrush}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="10" >
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ItemTemplate="{StaticResource NormalTemplate}" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ImageFadeBrush}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="50" >
             <GridView.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition
                             FromHorizontalOffset="200" IsStaggeringEnabled="True" />
-                    <AddDeleteThemeTransition>
-                    </AddDeleteThemeTransition>
-                    <ReorderThemeTransition/>
+                    <AddDeleteThemeTransition></AddDeleteThemeTransition>
                 </TransitionCollection>
-            </GridView.Transitions>
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <!--<Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="SelectionChanged" SourceObject="{Binding ElementName=albumListView}">
-                    <Core:InvokeCommandAction Command="{Binding NavigateToAlbumPageCommand}" CommandParameter="{Binding ElementName=albumListView, Path=SelectedItem}"/>
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>-->
+            </GridView.Transitions>          
         </GridView>
         
        
