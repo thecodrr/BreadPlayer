@@ -73,10 +73,9 @@ namespace BreadPlayer
         async void LoadDB()
         {
             LibVM.Database.CreatePlaylistDB(PlaylistVM.Playlist.Name);
-            await Task.Run(async() =>
-            {
-                PlaylistVM.Songs.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true);
-            }).ConfigureAwait(false);
+
+            if (LibVM.Database.IsValid)
+                await Task.Run(async () => PlaylistVM.Songs.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true)).ConfigureAwait(false);
         }
         void LoadAlbumSongs(Album album)
         {

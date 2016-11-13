@@ -144,7 +144,7 @@ namespace BreadPlayer.Extensions
             }
         ));
     }
-    public static class FlyoutMenuExtension
+    public static class FlyoutMenuExtension 
     {
         public static ThreadSafeObservableCollection<ContextMenuCommand> GetMyItems(DependencyObject obj)
         {
@@ -184,8 +184,7 @@ namespace BreadPlayer.Extensions
                         }
                         addTo.Items.Add(item);
                     }
-                });
-               
+                });               
                 Core.CoreMethods.Player.PropertyChanged += Player_PropertyChanged;
             }
 

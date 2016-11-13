@@ -51,7 +51,7 @@ namespace BreadPlayer
         private async void fileBox_Drop(object sender, DragEventArgs e)
         {
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
-            {
+            {            
                 var files = await e.DataView.GetStorageItemsAsync();
                 if (files.Any())
                 {
@@ -66,20 +66,20 @@ namespace BreadPlayer
                             {
 
                                 mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
-
+                                Core.CoreMethods.LibVM.SongCount++;
                             }
                             catch { }
                             tempList.Add(mp3file);
 
-                            Core.CoreMethods.LibVM.TracksCollection.AddRange(tempList);
+                            Core.CoreMethods.LibVM.TracksCollection.Elements.AddRange(tempList);
                             Core.CoreMethods.LibVM.Database.Insert(tempList);
                                 tempList.Clear();
-                           
-
                         }
                     }
+                    await Core.CoreMethods.AlbumArtistVM.AddAlbums();
                 }
             }
+           
         }
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {

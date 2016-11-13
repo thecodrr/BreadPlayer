@@ -597,7 +597,7 @@ namespace BreadPlayer.ViewModels
         async void LoadLibrary()
         {
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db") && Database.IsValid)
             {
                 RecentlyPlayedCollection.AddRange(Database.recent.FindAll());
                 LoadPlaylists();

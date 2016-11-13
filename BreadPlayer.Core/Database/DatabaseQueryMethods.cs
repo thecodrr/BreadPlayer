@@ -39,23 +39,49 @@ namespace BreadPlayer.Database
             LitePlatform.Initialize(new LitePlatformWindowsStore());
             CreateDB();
         }
-
-        public void CreateDB()
+        bool isValid;
+        public bool IsValid { get { return isValid; } set { isValid = value; } }
+        public async void CreateDB()
         {
-            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;journal=false;");            
-            tracks = db.GetCollection<Mediafile>("tracks");
-            playlists = db.GetCollection<Playlist>("playlists");
-            recent = db.GetCollection<Mediafile>("recent");         
-            tracks.EnsureIndex(t => t.Title);
-            tracks.EnsureIndex(t => t.LeadArtist);
+            try
+            {
+                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;journal=false;");
+                IsValid = db.DbVersion.ToString() != "";
+                if (IsValid)
+                {
+                    tracks = db.GetCollection<Mediafile>("tracks");
+                    playlists = db.GetCollection<Playlist>("playlists");
+                    recent = db.GetCollection<Mediafile>("recent");
+                    tracks.EnsureIndex(t => t.Title);
+                    tracks.EnsureIndex(t => t.LeadArtist);
+                }
+                else
+                {
+                    await ApplicationData.Current.ClearAsync();
+                    CreateDB();
+                }
+            }
+            catch
+            {
+              
+            }
         }
-        public void CreatePlaylistDB(string name)
+        public async void CreatePlaylistDB(string name)
         {
             System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
             db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\playlists\" + name + ".db;journal=false;");
-            tracks = db.GetCollection<Mediafile>("songs");
-            tracks.EnsureIndex(t => t.Title);
-            tracks.EnsureIndex(t => t.LeadArtist);
+            IsValid = db.DbVersion.ToString() != "";
+            if (IsValid)
+            {
+                tracks = db.GetCollection<Mediafile>("songs");
+                tracks.EnsureIndex(t => t.Title);
+                tracks.EnsureIndex(t => t.LeadArtist);
+            }
+            else
+            {
+                await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + name + ".db")).DeleteAsync(StorageDeleteOption.PermanentDelete);
+                CreatePlaylistDB(name);
+            }
         }
         public void Insert(IEnumerable<Mediafile> fileCol)
         {

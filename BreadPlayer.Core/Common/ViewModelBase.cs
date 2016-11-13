@@ -19,21 +19,20 @@ using BreadPlayer.Core;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
+using Windows.UI.Core;
+
 namespace BreadPlayer
 {
-  public class ViewModelBase : CoreMethods, INotifyPropertyChanged
+   public class ViewModelBase : CoreMethods, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected async virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-          await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-() =>
-{
-    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-}
-);
-           
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            });
         }
         public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {
