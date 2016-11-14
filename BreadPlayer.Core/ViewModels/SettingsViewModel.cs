@@ -167,21 +167,24 @@ namespace BreadPlayer.ViewModels
                 LibraryFoldersCollection.Add(folder);
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
                 //Get query options with which we search for files in the specified folder
-                var options = Common.DirectoryWalker.GetQueryOptions();
+                //var options = Common.DirectoryWalker.GetQueryOptions();
                 //var folderOptions = new QueryOptions();
                // StorageFolderQueryResult folderResult = folder.CreateFolderQuery(CommonFolderQuery.DefaultQuery);
                // LibraryFoldersCollection.AddRange(await folderResult.GetFoldersAsync());
                 //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                //StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
                 //the event for files changed
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                await AddFolderToLibraryAsync(queryResult);
+               
+                await AddFolderToLibraryAsync(folder);
             }
         }
-        public async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
+        public async Task AddFolderToLibraryAsync(StorageFolder folder)
         {
-            if (queryResult != null)
+            if (folder != null)
             {
+                var options = Common.DirectoryWalker.GetQueryOptions();
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;
                 var stop = System.Diagnostics.Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 100;
@@ -197,70 +200,84 @@ namespace BreadPlayer.ViewModels
                 double i = 0;
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync();
-
+                if(count == 0)
+                {
+                    string error = "No songs found!";
+                    await NotificationManager.ShowAsync(error);
+                }
+                int failedCount = 0;
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
                 while (files.Count != 0)
                 {
-                    //we clear the 'tempList' so it can come with only 100 songs again.
-                    tempList.Clear();
-                    //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
-                    //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
-                    var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
+                    try
+                    {                        
+                        //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
+                        //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
+                        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
 
-                    //A null Mediafile which we will use afterwards.
-                    Mediafile mp3file = null;
+                        //A null Mediafile which we will use afterwards.
+                        Mediafile mp3file = null;
 
-                    //A foreach loop to process each StorageFile
-                    foreach (StorageFile file in files)
-                    {
-                        try
+                        //A foreach loop to process each StorageFile
+                        foreach (StorageFile file in files)
                         {
-
-                            //we use 'if' conditional so that we don't add any duplicates
-                            if (LibVM.TracksCollection.Elements.All(t => t.Path != file.Path))
+                            try
                             {
 
-                                i++; //Notice here that we are increasing the 'i' variable by one for each file.
-                                LibVM.SongCount++; //we also increase the total no. of songs by one.
-                                await Task.Run(async () =>
+                                //we use 'if' conditional so that we don't add any duplicates
+                                if (LibVM.TracksCollection.Elements.All(t => t.Path != file.Path))
                                 {
+
+                                    i++; //Notice here that we are increasing the 'i' variable by one for each file.
+                                    LibVM.SongCount++; //we also increase the total no. of songs by one.
+                                    await Task.Run(async () =>
+                                    {
                                     //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
                                     mp3file = await CoreMethods.CreateMediafile(file, false); //the core of the whole method.
                                     mp3file.FolderPath = Path.GetDirectoryName(file.Path);
-                                });
-                                //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                                await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
+                                    });
+                                    //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
+                                    await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
 
-                                //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
-                                tempList.Add(mp3file);
+                                    //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
+                                    tempList.Add(mp3file);
 
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                //we catch and report any exception without distrubing the 'foreach flow'.
+                                await NotificationManager.ShowAsync(ex.Message + " || Occured on: " + file.Path);
+                                failedCount++;
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            //we catch and report any exception without distrubing the 'foreach flow'.
-                            await NotificationManager.ShowAsync(ex.Message + " || Occured on: " + file.Path);
-                            continue;
-                        }
+                        //after the first 100 files have been added we enable the play button.
+                        ShellVM.PlayPauseCommand.IsEnabled = true;
+                        //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
+                        LibVM.TracksCollection.Elements.AddRange(tempList);
+                        //now we load 100 songs into database.
+                        LibVM.Database.Insert(tempList);
+                        //we clear the 'tempList' so it can come with only 100 songs again.
+                        tempList.Clear();
+                        //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
+                        files = await fileTask.ConfigureAwait(false);
+                        //consequently we have to increase the index by 100 so that songs are not repeated.
+                        index += 100;
                     }
-                    //after the first 100 files have been added we enable the play button.
-                    ShellVM.PlayPauseCommand.IsEnabled = true;
-                    //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                    LibVM.TracksCollection.Elements.AddRange(tempList);
-                    //now we load 100 songs into database.
-                    LibVM.Database.Insert(tempList);
-                    //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
-                    files = await fileTask.ConfigureAwait(false);
-                    //consequently we have to increase the index by 100 so that songs are not repeated.
-                    index += 100;
+                    catch(Exception ex)
+                    {
+                        string message1 = ex.Message + "||" + ex.InnerException;
+                        await NotificationManager.ShowAsync(message1);
+                    }
                 }
                 await SaveAllFolderAlbumArtsAsync(queryResult).ConfigureAwait(false);
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
                 await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
                 //we stop the stopwatch.
                 stop.Stop();
-                //and report the user how long it took. 
-                await NotificationManager.ShowAsync(i.ToString() + " Song(s) loaded in " + Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString() + " seconds", "Library loaded!");
+                //and report the user how long it took.
+                string message = string.Format("Library successfully loaded! Total Songs: {0} Failed: {1} Loaded: {2} Total Time Taken: {3} seconds", count, failedCount, i, Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString()); 
+                await NotificationManager.ShowAsync(message);
             }
         }
         public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)

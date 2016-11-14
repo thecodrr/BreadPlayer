@@ -38,7 +38,7 @@ namespace BreadPlayer.BreadNotificationManager
                 //if (!Show)
                 //{
                 //    Show = true;
-               if(hideTimer == null) hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
+               if(hideTimer == null) hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(10) };
                 hideTimer.Start();
                     hideTimer.Tick += HideTimer_Tick;
                 //}

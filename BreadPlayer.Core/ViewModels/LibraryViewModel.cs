@@ -693,8 +693,10 @@ namespace BreadPlayer.ViewModels
                     await AddPlaylist(dictPlaylist, true, songList);
             }
             else
-            {               
-               await AddPlaylist(await ShowAddPlaylistDialog(), false);
+            {
+                var pList = await ShowAddPlaylistDialog();
+                if(pList != null)
+                    await AddPlaylist(pList, false);
             }
         }
 
@@ -705,10 +707,10 @@ namespace BreadPlayer.ViewModels
                 Title = title,
                 Text = playlistName,
                 Description = desc
-            };
-            var Playlist = new Playlist();
+            };          
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
+                var Playlist = new Playlist();
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
                 if (Database.playlists.Exists(t => t.Name == Playlist.Name))

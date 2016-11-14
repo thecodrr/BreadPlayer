@@ -53,28 +53,32 @@ namespace BreadPlayer
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
             {            
                 var files = await e.DataView.GetStorageItemsAsync();
-                if (files.Any())
+                if (files.Any() && files.All(t => t.IsOfType(StorageItemTypes.File)))
                 {
                     foreach(var file in files)
                     {
-                        Mediafile mp3file = null;
-                        string path = file.Path;
-                        var tempList = new List<Mediafile>();
-                        if (Core.CoreMethods.LibVM.TracksCollection.Elements.All(t => t.Path != path))
+                        if(Path.GetExtension(file.Path) == ".mp3")
                         {
-                            try
+                            Mediafile mp3file = null;
+                            string path = file.Path;
+                            var tempList = new List<Mediafile>();
+                            if (Core.CoreMethods.LibVM.TracksCollection.Elements.All(t => t.Path != path))
                             {
+                                try
+                                {
 
-                                mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
-                                Core.CoreMethods.LibVM.SongCount++;
-                            }
-                            catch { }
-                            tempList.Add(mp3file);
+                                    mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
+                                    Core.CoreMethods.LibVM.SongCount++;
+                                }
+                                catch { }
+                                tempList.Add(mp3file);
 
-                            Core.CoreMethods.LibVM.TracksCollection.Elements.AddRange(tempList);
-                            Core.CoreMethods.LibVM.Database.Insert(tempList);
+                                Core.CoreMethods.LibVM.TracksCollection.Elements.AddRange(tempList);
+                                Core.CoreMethods.LibVM.Database.Insert(tempList);
                                 tempList.Clear();
+                            }
                         }
+                       
                     }
                     await Core.CoreMethods.AlbumArtistVM.AddAlbums();
                 }
