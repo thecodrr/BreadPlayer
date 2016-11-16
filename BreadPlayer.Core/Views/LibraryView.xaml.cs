@@ -46,6 +46,7 @@ namespace BreadPlayer
         public LibraryView()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Required;
         }
         
         private async void fileBox_Drop(object sender, DragEventArgs e)
@@ -66,16 +67,14 @@ namespace BreadPlayer
                             {
                                 try
                                 {
-
                                     mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
                                     Core.CoreMethods.LibVM.SongCount++;
+                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file);
+
+                                    Core.CoreMethods.LibVM.TracksCollection.Elements.Add(mp3file);
+                                    Core.CoreMethods.LibVM.Database.Insert(mp3file);
                                 }
                                 catch { }
-                                tempList.Add(mp3file);
-
-                                Core.CoreMethods.LibVM.TracksCollection.Elements.AddRange(tempList);
-                                Core.CoreMethods.LibVM.Database.Insert(tempList);
-                                tempList.Clear();
                             }
                         }
                        

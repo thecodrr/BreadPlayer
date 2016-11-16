@@ -102,20 +102,23 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
+                    AlbumArtistVM.AlbumCollection = null;
                     SongCount = Database.tracks.Count();
                     Header = "Music Library";
                     ViewSource = null;
-                    source = TracksCollection.Elements;
+                    if(source == null)
+                        source = TracksCollection.Elements;
                 }
             }
             else
             {
-                if(ViewSource.Source != null)
+                if (ViewSource.Source != null)
                 {
                     source = ViewSource.Source;
                     grouped = ViewSource.IsSourceGrouped;
                     ViewSource.Source = null;
-                }               
+                    GC.Collect();
+                }
             }
 
         }
@@ -194,7 +197,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public GroupedObservableCollection<string, Mediafile> TracksCollection
         {
-            get { if (_TracksCollection == null) _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title); return _TracksCollection; }
+            get { if (_TracksCollection == null) _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1)); return _TracksCollection; }
             set { Set(ref _TracksCollection, value); }
         }
         public MenuFlyout genreFlyout;
@@ -396,15 +399,15 @@ namespace BreadPlayer.ViewModels
        async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;
-           
-           if(ViewSource == null)
-                ViewSource = (para as Grid).Resources["Source"] as CollectionViewSource;           
+            if (ViewSource == null)
+                ViewSource = (para as Grid).Resources["Source"] as CollectionViewSource;
             if (source != null)
             {
                 if (grouped && source == TracksCollection.Elements)
                     ViewSource.Source = TracksCollection;
                 else
                     ViewSource.Source = source;
+                    
                 ViewSource.IsSourceGrouped = grouped;
             }
             if (source == null && Sort != "Unsorted")
@@ -415,7 +418,15 @@ namespace BreadPlayer.ViewModels
                 ViewSource.IsSourceGrouped = true;
                 TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true, false);
                 grouped = true;
-                TracksCollection.RemoveAt(0);
+
+            }
+            else if (source == null && Sort == "Unsorted")
+            {
+                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
+                ViewSource.Source = TracksCollection.Elements;
+                ViewSource.IsSourceGrouped = false;
+                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true);
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
             }
         }
         #endregion
@@ -441,11 +452,13 @@ namespace BreadPlayer.ViewModels
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
                     TracksCollection.AddRange(files, true, false);
                     TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
+                    grouped = true;
                 }
                 else
                 {
                     ViewSource.Source = TracksCollection.Elements;
                     ViewSource.IsSourceGrouped = false;
+                    grouped = false;
                 }
             }
             else
@@ -599,20 +612,18 @@ namespace BreadPlayer.ViewModels
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db") && Database.IsValid)
             {
+
+
                 RecentlyPlayedCollection.AddRange(Database.recent.FindAll());
                 LoadPlaylists();
-                if (Sort == "Unsorted")
-                {
-                    TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
-                    TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true);
-                }
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+               
+                //TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
                 //OldItems = db.GetTracks();
             }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
+        {  
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
@@ -624,13 +635,14 @@ namespace BreadPlayer.ViewModels
 
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
-            await AlbumArtistVM.LoadAlbums().ConfigureAwait(false);
+
             await CreateGenreMenu().ConfigureAwait(false);
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
 
             await Task.Delay(10000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
 
+            TracksCollection.RemoveAt(0);
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 

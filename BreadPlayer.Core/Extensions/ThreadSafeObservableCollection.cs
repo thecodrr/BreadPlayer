@@ -87,7 +87,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         {
             try
             {
-                if (_isObserving) base.OnCollectionChanged(e);
+                if (_isObserving)
+                    base.OnCollectionChanged(e);
             }
             catch { }
         });
@@ -113,13 +114,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             newItems.AddRange(range);
 
             // add the items, making sure no events are fired
+          
             _isObserving = false;
-            foreach (var item in range.ToArray())
+            foreach (var item in range)
             {
-                await Task.Run(() =>
-                {
-                    Add(item);
-                }).ConfigureAwait(false);
+                await Task.Run(() => Add(item)).ConfigureAwait(false);
             }
             _isObserving = true;
 

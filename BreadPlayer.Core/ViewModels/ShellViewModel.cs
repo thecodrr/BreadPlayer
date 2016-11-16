@@ -246,7 +246,7 @@ namespace BreadPlayer.ViewModels
                     DontUpdatePosition = true;
                     CurrentPosition = 0;
                     Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
-                    if (Repeat == "No Repeat" && GetPlayingCollection().Any())
+                    if (Repeat == "No Repeat" && GetPlayingCollection() != null && GetPlayingCollection().Any())
                         PlayNext();
                     else
                         PlayPause();

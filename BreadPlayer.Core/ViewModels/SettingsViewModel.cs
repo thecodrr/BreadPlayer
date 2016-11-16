@@ -65,9 +65,7 @@ namespace BreadPlayer.ViewModels
         public SettingsViewModel()
         {
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }
-      
-    
+        }     
         DelegateCommand _resetCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -84,8 +82,11 @@ namespace BreadPlayer.ViewModels
             await ApplicationData.Current.ClearAsync();
             LibVM.Database = new Database.DatabaseQueryMethods();
             AlbumArtistVM.InitDB();
-            GC.Collect();
+           // GC.Collect();
             LibVM.SongCount = 0;
+            ResetCommand.IsEnabled = false;
+            await Task.Delay(200);
+            ResetCommand.IsEnabled = true;
         }
         DelegateCommand _loadCommand;
         /// <summary>
@@ -254,7 +255,7 @@ namespace BreadPlayer.ViewModels
                         //after the first 100 files have been added we enable the play button.
                         ShellVM.PlayPauseCommand.IsEnabled = true;
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        LibVM.TracksCollection.Elements.AddRange(tempList);
+                        LibVM.TracksCollection.AddRange(tempList, false, true);
                         //now we load 100 songs into database.
                         LibVM.Database.Insert(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
@@ -372,9 +373,11 @@ namespace BreadPlayer.ViewModels
                 {
                     var albumartFolder = ApplicationData.Current.LocalFolder;
                     var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
-                    var file = await StorageFile.GetFileFromPathAsync(Mediafile.Path);
+
                     if (!File.Exists(albumartLocation))
                     {
+                        var file = await StorageFile.GetFileFromPathAsync(Mediafile.Path);
+                        
                         StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300).AsTask().ConfigureAwait(false);
                         if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
                         {
@@ -383,7 +386,7 @@ namespace BreadPlayer.ViewModels
                         }
                         else
                         {
-                            Mediafile.AttachedPicture = "";
+                            Mediafile.AttachedPicture = null;
                         }
                     }
                     else

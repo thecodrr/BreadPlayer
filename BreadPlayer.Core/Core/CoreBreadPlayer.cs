@@ -33,6 +33,9 @@ using System.Runtime.InteropServices;
 using BreadPlayer.Events;
 using System.Diagnostics;
 using BreadPlayer.Models;
+using Windows.UI.Xaml.Media;
+using Extensions;
+using System.IO;
 
 namespace BreadPlayer.Core
 {
@@ -65,8 +68,9 @@ namespace BreadPlayer.Core
                 Bass.Init();
             });                   
         }
-        private void InitializeExtensions(Mediafile file)
+        private void InitializeExtensions(string path)
         {
+            Tags = new CoreTags(path);
             //Effect = new Effects(handle);
         }
         #endregion
@@ -101,22 +105,25 @@ namespace BreadPlayer.Core
                 try
                 {
                     string sPath = mp3file.Path;
-
                     await Stop();
                     await Task.Run(() =>
                     {
                         Bass.Stop();
                         Bass.Start();
 
-                        handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);
+                        handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);                        
                         PlayerState = PlayerState.Stopped;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                        InitializeExtensions(sPath);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         CurrentlyPlayingFile = mp3file;
                         CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.Stringify();
+
+                       // 
                     });
+
                     return true;
 
                 }
@@ -139,6 +146,8 @@ namespace BreadPlayer.Core
             }
             return false;
         }
+
+        
         /// <summary>
         /// Pauses the audio playback.
         /// </summary>
@@ -192,6 +201,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
+      
         double _volume = 50;
         public double Volume
         {
@@ -239,13 +249,26 @@ namespace BreadPlayer.Core
         public Mediafile CurrentlyPlayingFile
         {
             get { return _currentPlayingFile; }
-            set { Set(ref _currentPlayingFile, value); }
+            set
+            {
+                Set(ref _currentPlayingFile, value);
+            }
         }
         bool _ignoreErrors = false;
         public bool IgnoreErrors
         {
             get { return _ignoreErrors; }
             set { Set(ref _ignoreErrors, value); }
+        }
+        CoreTags tags;
+        public CoreTags Tags
+        {
+            get
+            {
+                return tags;
+            }
+            set
+            { Set(ref tags, value); }
         }
         #endregion
 
@@ -259,4 +282,41 @@ namespace BreadPlayer.Core
 
     public delegate void OnMediaStateChanged(object sender, MediaStateChangedEventArgs e);
     public delegate void OnMediaEnded(object sender, MediaEndedEventArgs e);
+
+    public class CoreTags : ViewModelBase
+    {
+        public CoreTags(string path)
+        {
+        }
+
+        ImageSource albumArt;
+        public ImageSource Albumart
+        {
+            get
+            {
+                return albumArt;
+            }
+            set
+            { Set(ref albumArt, value); }
+        }
+        async void UpdateAlbumart(string path)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                if (path != null)
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+                    if (System.IO.Path.GetExtension(file.Path) == ".mp3")
+                    {
+                        var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                        BreadPlayer.Tags.ID3.ID3v2 id3 = new Tags.ID3.ID3v2(true, stream.AsStream());
+                        if (id3.AttachedPictureFrames["APIC"] != null)
+                            albumArt = (id3.AttachedPictureFrames["APIC"] as Tags.ID3.ID3v2Frames.BinaryFrames.AttachedPictureFrame).Picture;
+                    }
+                    // var stream = await Dispatcher.RunTaskAsync(ViewModels.LibraryViewModel.GetFileAsStream);
+                }
+            });
+        }
+
+    }
 }

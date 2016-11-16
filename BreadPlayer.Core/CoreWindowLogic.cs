@@ -32,6 +32,8 @@ using Windows.UI.Notifications;
 using Windows.Storage.AccessCache;
 using Windows.Media.Playback;
 using Windows.Foundation.Metadata;
+using Windows.Media.Core;
+using Windows.System;
 
 namespace BreadPlayer
 {
@@ -178,6 +180,7 @@ namespace BreadPlayer
         {
             player = new MediaPlayer();
             player.CommandManager.IsEnabled = false;
+            player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.IsEnabled = true;
             _smtc.ButtonPressed += _smtc_ButtonPressed;
@@ -191,27 +194,56 @@ namespace BreadPlayer
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
             Player.MediaStateChanged += Player_MediaStateChanged;
         }
+
+        private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground ==true)
+                {
+                    if (Player.PlayerState == PlayerState.Playing)
+                        ShellVM.PlayPauseCommand.Execute(null);                   
+                }
+            });
+        }
+        public static bool isBackground =false;
         public static void EnableDisableSmtc()
         {
-            if (_smtc.IsEnabled == true)
-                _smtc.IsEnabled = false;
-            else if (_smtc.IsEnabled == false)
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                if (_smtc.IsEnabled == true)
+                {
+                    _smtc.IsEnabled = false;
+                }
+                else if (_smtc.IsEnabled == false)
+                {
+                    _smtc.IsEnabled = true;
+                }
+            }
+            else
+            {
                 _smtc.IsEnabled = true;
+            }
         }
        public async static void UpdateSmtc()
         {
-           // _smtc.IsEnabled = true;
+            System.Diagnostics.Debug.Write(MemoryManager.AppMemoryUsage / 1024 + " | " + MemoryManager.AppMemoryUsageLimit + " | " + isBackground);
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
+            //_smtc.DisplayUpdater.ClearAll();
             if (Player.CurrentlyPlayingFile != null)
             {
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
-                    player.SetStreamSource(await (await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path)).OpenAsync(FileAccessMode.Read));
-                    player.CommandManager.IsEnabled = false;
-                    player.Pause();
-                    player.Play();
-                    player.Volume = 0;
+                    var file = await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path);
+                    if(player.Source != MediaSource.CreateFromStorageFile(file))
+                    {
+                        player.Source = MediaSource.CreateFromStorageFile(file);
+                        player.CommandManager.IsEnabled = false;
+                        //if(player.PlaybackSession.PlaybackState != MediaPlaybackState.Playing)
+                        player.Play();
+                        player.Volume = 0;
+                    }
                 }
                 musicProps.Title = Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
@@ -241,12 +273,14 @@ namespace BreadPlayer
             });
         }
         private static void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
-        {
+        {           
             if (_smtc != null)
                 switch (e.NewState)
                 {
                     case PlayerState.Playing:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                         _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        if (_smtc.IsEnabled == false)
+                            UpdateSmtc();
                         break;
                     case PlayerState.Paused:
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;

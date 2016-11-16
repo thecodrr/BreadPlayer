@@ -27,7 +27,7 @@ namespace BreadPlayer.BreadNotificationManager
         public bool Show
         {
             get { return _show; }
-            set { Set(ref _show, value); if (_show == true); }
+            set { Set(ref _show, value); }
         }
         public async Task ShowAsync(string status, string heading = "Oops! Burnt!")
         {

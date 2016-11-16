@@ -44,13 +44,31 @@ namespace BreadPlayer.ViewModels
         }
         public async Task LoadAlbums()
         {
-            await Task.Run(() => AlbumCollection.AddRange(albumCollection.FindAll()));
+          //  AlbumCollection.IsObserving = true;
+             //AlbumCollection.AddRange();
+            foreach(var album in await GetAlbums().ConfigureAwait(false))
+            {
+                AlbumCollection.Add(album);
+            }
         }
-
+        public async Task<IEnumerable<Album>> GetAlbums()
+        {
+            IEnumerable<Album> collection = null;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                collection = albumCollection.Find(LiteDB.Query.All());
+            });
+            return collection;
+        }
+        ThreadSafeObservableCollection<Album> albumcollection;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
-        public ThreadSafeObservableCollection<Album> AlbumCollection { get; set; } = new ThreadSafeObservableCollection<Album>();
+        public ThreadSafeObservableCollection<Album> AlbumCollection
+        {
+            get {if(albumcollection ==null) albumcollection = new ThreadSafeObservableCollection<Album>(); return albumcollection; }
+            set { Set(ref albumcollection, value); }
+        }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
@@ -60,9 +78,9 @@ namespace BreadPlayer.ViewModels
         /// </remarks>
         public async Task AddAlbums()
         {
-            List<Album> albums = new List<Album>();
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
+                List<Album> albums = new List<Album>();
                 foreach (var song in await LibVM.Database.GetTracks().ConfigureAwait(false))
                 {                   
                     Album alb = null;
@@ -76,10 +94,11 @@ namespace BreadPlayer.ViewModels
                     }
                     if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
                 }
+                albumCollection.Insert(albums);
+                AlbumCollection.AddRange(albums);
             }).AsTask().ConfigureAwait(false);
 
-            albumCollection.Insert(albums);
-            AlbumCollection.AddRange(albums);
+           
         }
         RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand

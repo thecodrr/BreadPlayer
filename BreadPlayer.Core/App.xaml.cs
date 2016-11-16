@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -40,7 +41,8 @@ namespace BreadPlayer
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
-    {        
+    {
+        bool isInBackgroundMode;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -63,21 +65,26 @@ namespace BreadPlayer
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
+           
+            
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
             CoreWindowLogic.EnableDisableSmtc();
+            CoreWindowLogic.isBackground = false;
             deferral.Complete();
         }
 
-        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
             CoreWindowLogic.Stringify();
-            CoreWindowLogic.EnableDisableSmtc();
             CoreWindowLogic.UpdateSmtc();
+            CoreWindowLogic.EnableDisableSmtc();
+            await Task.Delay(200);
+            CoreWindowLogic.isBackground = true;
             deferral.Complete();
         }
 
@@ -189,6 +196,32 @@ namespace BreadPlayer
             
           
         }
-        
+
+        public void ReduceMemoryUsage(ulong limit)
+        {
+            // If the app has caches or other memory it can free, it should do so now.
+            // << App can release memory here >>
+
+            // Additionally, if the application is currently
+            // in background mode and still has a view with content
+            // then the view can be released to save memory and
+            // can be recreated again later when leaving the background.
+            if (isInBackgroundMode && Window.Current.Content != null)
+            {
+                // Some apps may wish to use this helper to explicitly disconnect
+                // child references.
+                 VisualTreeHelper.DisconnectChildrenRecursive(Window.Current.Content);
+
+                // Clear the view content. Note that views should rely on
+                // events like Page.Unloaded to further release resources.
+                // Release event handlers in views since references can
+                // prevent objects from being collected.
+                Window.Current.Content = null;
+            }
+
+            // Run the GC to collect released resources.
+            GC.Collect();
+        }
+
     }
 }

@@ -81,7 +81,9 @@
                     </Grid.Background>-->
                     <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
                         <!--<StackPanel Orientation="Horizontal"  Height="70">-->
-                    <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
+                    <!--<Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>-->
+                        <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.Albumart}" Stretch="Uniform" Margin="0,5,0,5"/>
+
                         <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="4,7,0,0">
                             <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="ExtraLight" Foreground="White"/>
                             <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="SemiLight" Foreground="White"/>

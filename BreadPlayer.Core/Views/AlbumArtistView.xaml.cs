@@ -26,9 +26,13 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
        }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            (grid.Resources["Source"] as CollectionViewSource).Source = Core.CoreMethods.AlbumArtistVM.AlbumCollection;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => 
+            {
+                (grid.Resources["Source"] as CollectionViewSource).Source = Core.CoreMethods.AlbumArtistVM.AlbumCollection;
+                await Core.CoreMethods.AlbumArtistVM.LoadAlbums().ConfigureAwait(false);
+            });
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -26,10 +26,11 @@ using BreadPlayer.Models;
 using Windows.UI.Core;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace BreadPlayer.Extensions
 {
-    public class GroupedObservableCollection<TKey, TElement> : ThreadSafeObservableCollection<Grouping<TKey, TElement>>
+    public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
         where TKey : IComparable<TKey>
     {
         private readonly Func<TElement, TKey> readKey;
@@ -39,6 +40,8 @@ namespace BreadPlayer.Extensions
         /// that when an item is added, then next one will be in the same grouping.
         /// </summary>
         private Grouping<TKey, TElement> lastEffectedGroup;
+        private bool _isObserving;
+
         public GroupedObservableCollection(Func<TElement, TKey> readKey)
         {
             this.readKey = readKey;
@@ -85,8 +88,8 @@ namespace BreadPlayer.Extensions
                 if (addToElement) Elements.Add(item);
                 var s = FindOrCreateGroup(key);
                 s.Add(item);
-            }
-            catch { }
+            } catch { }
+         
         }
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
@@ -94,10 +97,12 @@ namespace BreadPlayer.Extensions
         public async void AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
         {
             try
-            {
+            { 
                 // get out if no new items
                 if (range == null || !range.Any()) return;
 
+                if (!addkey)
+                    Elements.AddRange(range);
                 // prepare data for firing the events
                 int newStartingIndex = Elements.Count;
                 var newItems = new List<TElement>();
@@ -134,10 +139,25 @@ namespace BreadPlayer.Extensions
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
             }
             catch { }
+                    
         }
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (_isObserving) base.OnCollectionChanged(e);
+            await Core.CoreMethods.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+            {
+                try {
+                   
+                    if (_isObserving == true && e != null && e.NewItems?.Count > 0)
+                        base.OnCollectionChanged(e);
+                }
+                catch (COMException ex)
+                {
+                    System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+                }
+                
+                
+            });  
+                   
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -293,10 +313,10 @@ namespace BreadPlayer.Extensions
             {
                 return this.lastEffectedGroup;
             }
+
             try
             {
-
-                var match = this.ToArray().Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
+                var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
 
                 if (match == null)
                 {
@@ -312,7 +332,7 @@ namespace BreadPlayer.Extensions
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
                     this.Insert(match.index, result);
-                  
+
                 }
                 else
                 {
@@ -320,9 +340,9 @@ namespace BreadPlayer.Extensions
                 }
 
                 this.lastEffectedGroup = result;
-
             }
             catch { }
+
             return result;
         }
     }

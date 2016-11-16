@@ -34,13 +34,20 @@ namespace BreadPlayer.Common
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions();
-            options.ApplicationSearchFilter += "kind:music " + aqsQuery;
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3" });
+            options.FileTypeFilter.Add(".wav");
+            options.FileTypeFilter.Add(".ogg");
+            options.FileTypeFilter.Add(".flac");
+            options.FileTypeFilter.Add(".m4a");
+            options.FileTypeFilter.Add(".aif");
+            options.FileTypeFilter.Add(".wma");
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
-
+            if(aqsQuery != null)
+                options.ApplicationSearchFilter += "kind:music " + aqsQuery;
+           
             return options;
         }
         public static async Task<List<StorageFile>> GetModifiedFiles(IEnumerable<StorageFolder> folderCollection, string TimeModified)
