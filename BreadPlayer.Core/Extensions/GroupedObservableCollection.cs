@@ -159,9 +159,21 @@ namespace BreadPlayer.Extensions
             });  
                    
         }
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            if (_isObserving) base.OnPropertyChanged(e);
+            await Core.CoreMethods.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    if (_isObserving) base.OnPropertyChanged(e);
+                }
+                catch (COMException ex)
+                {
+                    System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+                }
+
+
+            });
         }
         public void RemoveItem(TElement item)
         {

@@ -418,7 +418,15 @@ namespace BreadPlayer.ViewModels
                 ViewSource.IsSourceGrouped = true;
                 TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true, false);
                 grouped = true;
-
+                //the only work around to delete the first group which is a duplicate really.
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    ViewSource.IsSourceGrouped = false;
+                    ViewSource.IsSourceGrouped = true;
+                });
+                //await Task.Delay(1000);
+                //
+                //TracksCollection.RemoveAt(0);
             }
             else if (source == null && Sort == "Unsorted")
             {
@@ -607,19 +615,14 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Loads library from the database file.
         /// </summary>
-        async void LoadLibrary()
+        void LoadLibrary()
         {
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db") && Database.IsValid)
             {
-
-
                 RecentlyPlayedCollection.AddRange(Database.recent.FindAll());
-                LoadPlaylists();
-               
-                //TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                LoadPlaylists();               
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
-                //OldItems = db.GetTracks();
             }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -634,15 +637,12 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
-        {
-
+        {            
             await CreateGenreMenu().ConfigureAwait(false);
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
-
             await Task.Delay(10000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
 
-            TracksCollection.RemoveAt(0);
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
