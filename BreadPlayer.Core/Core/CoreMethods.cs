@@ -55,6 +55,16 @@ namespace BreadPlayer.Core
             }
             return false;
         }
+        public static bool VerifyFileExists(string path, int timeout)
+        {
+            var task = new Task<bool>(() =>
+            {
+                var fi = new FileInfo(path);
+                return fi.Exists;
+            });
+            task.Start();
+            return task.Wait(timeout) && task.Result;
+        }
         public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
         {
            

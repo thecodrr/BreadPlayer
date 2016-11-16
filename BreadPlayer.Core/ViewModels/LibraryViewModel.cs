@@ -416,17 +416,9 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 ViewSource.Source = TracksCollection;
                 ViewSource.IsSourceGrouped = true;
-                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true, false);
+                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true, true);
                 grouped = true;
-                //the only work around to delete the first group which is a duplicate really.
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    ViewSource.IsSourceGrouped = false;
-                    ViewSource.IsSourceGrouped = true;
-                });
-                //await Task.Delay(1000);
-                //
-                //TracksCollection.RemoveAt(0);
+                
             }
             else if (source == null && Sort == "Unsorted")
             {
@@ -458,6 +450,8 @@ namespace BreadPlayer.ViewModels
                     if (files == null)
                         files = TracksCollection.Elements;
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
+                    ViewSource.Source = TracksCollection;
+                    ViewSource.IsSourceGrouped = true;
                     TracksCollection.AddRange(files, true, false);
                     TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
                     grouped = true;
@@ -484,10 +478,21 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            ViewSource.Source = TracksCollection;
-            ViewSource.IsSourceGrouped = true;
+           await RemoveDuplicateGroups().ConfigureAwait(false);
+        }
+        async Task RemoveDuplicateGroups()
+        {
+            //the only workaround to remove the first group which is an 'false' duplicate really.
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (ViewSource.IsSourceGrouped)
+                {
+                    ViewSource.IsSourceGrouped = false;
+                    ViewSource.IsSourceGrouped = true;
+                }
+            });
         }
         Func<Mediafile, string> GetSortFunction(string propName)
         {
@@ -591,7 +596,6 @@ namespace BreadPlayer.ViewModels
         {
             Database.Dispose();
             TracksCollection.Clear();
-            TracksCollection = null;
             RecentlyPlayedCollection.Clear();
             ShellVM.PlaylistsItems.Clear();
             OldItems = null;
@@ -637,7 +641,8 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
-        {            
+        {
+            await RemoveDuplicateGroups().ConfigureAwait(false);
             await CreateGenreMenu().ConfigureAwait(false);
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
             await Task.Delay(10000);
