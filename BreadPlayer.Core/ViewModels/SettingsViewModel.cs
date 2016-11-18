@@ -168,24 +168,18 @@ namespace BreadPlayer.ViewModels
                 LibraryFoldersCollection.Add(folder);
                 StorageApplicationPermissions.FutureAccessList.Add(folder);
                 //Get query options with which we search for files in the specified folder
-                //var options = Common.DirectoryWalker.GetQueryOptions();
-                //var folderOptions = new QueryOptions();
-               // StorageFolderQueryResult folderResult = folder.CreateFolderQuery(CommonFolderQuery.DefaultQuery);
-               // LibraryFoldersCollection.AddRange(await folderResult.GetFoldersAsync());
+                var options = Common.DirectoryWalker.GetQueryOptions();
                 //this is the query result which we recieve after querying in the folder
-                //StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
                 //the event for files changed
-               
-                await AddFolderToLibraryAsync(folder);
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;               
+                await AddFolderToLibraryAsync(queryResult);
             }
         }
-        public async Task AddFolderToLibraryAsync(StorageFolder folder)
+        public async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
         {
-            if (folder != null)
+            if (queryResult != null)
             {
-                var options = Common.DirectoryWalker.GetQueryOptions();
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
                 var stop = System.Diagnostics.Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 100;
@@ -392,52 +386,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-
-        //
-        //We used this to increase library load time. Instead it decreased it and added more code to the player.
-        //
-        //public static async Task SaveAllFolderAlbumArtsAsync(StorageFileQueryResult queryResult)
-        //{
-        //    uint index = 0, stepSize = 100;
-        //    //a list containing the files we recieved after querying using the two uints we created above.
-        //    IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
-
-        //    //we move forward the index 100 steps because first 100 files are loaded when we called the above method.
-        //    index += 100;
-        //    double i = 0;
-        //    //'count' is for total files got after querying.
-        //    var count = await queryResult.GetItemCountAsync();
-        //    //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
-        //    while (files.Count != 0)
-        //    {
-        //        //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
-        //        //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
-        //        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
-               
-        //        //A foreach loop to process each StorageFile
-        //        foreach (StorageFile file in files)
-        //        {
-        //            try
-        //            {
-        //                Mediafile Mediafile = LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path && t.AttachedPicture == null);
-        //                i++; //Notice here that we are increasing the 'i' variable by one for each file.
-        //                await SaveSingleFileAlbumArtAsync(Mediafile, file);
-        //                //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-        //                await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Album art(s) Saved", "Loading...");
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                await NotificationManager.ShowAsync(ex.Message, "Loading...");
-        //                continue;
-        //            }
-        //        }
-        //        //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
-        //        files = await fileTask.ConfigureAwait(false);
-        //        //consequently we have to increase the index by 100 so that songs are not repeated.
-        //        index += 100;
-        //    }
-        //    LibVM.Database.tracks.Update(LibVM.TracksCollection.Elements);
-        //}
+       
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);

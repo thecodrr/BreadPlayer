@@ -60,6 +60,7 @@ namespace BreadPlayer.ViewModels
         #region Fields        
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
         ObservableRangeCollection<String> _GenreCollection = new ObservableRangeCollection<string>();
+        IEnumerable<Mediafile> files = null;
         public IEnumerable<Mediafile> OldItems;
         public ListView FileListBox;
         public static string Path = "";
@@ -89,29 +90,22 @@ namespace BreadPlayer.ViewModels
         }
 
         bool grouped = false;
+        bool libgrouped = false;
         object source;
-        private void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+      
+        private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             if (e.SourcePageType == typeof(LibraryView))
-            {
-                if (e.Parameter is string && e.Parameter.ToString() == "Recent")
-                {
-                    ViewSource = null;
-                    source = RecentlyPlayedCollection;
-                    Header = "Recently Played";
-                }
+            {                
+                if (e.Parameter.ToString() == "Recent")              
+                   ChangeView("Recently Played", false, RecentlyPlayedCollection);                
                 else
-                {
-                    AlbumArtistVM.AlbumCollection = null;
-                    SongCount = Database.tracks.Count();
-                    Header = "Music Library";
-                    ViewSource = null;
-                    if(source == null)
-                        source = TracksCollection.Elements;
-                }
+                    ChangeView("Music Library", libgrouped, TracksCollection.Elements);
+                await RefreshSourceAsync().ConfigureAwait(false);
             }
             else
             {
+                AlbumArtistVM.AlbumCollection = null;
                 if (ViewSource.Source != null)
                 {
                     source = ViewSource.Source;
@@ -124,7 +118,18 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Properties        
+        #region Properties 
+        private List<string> _alphabetList;
+        public List<string> AlphabetList
+        {
+            get { return _alphabetList; }
+            set
+            {
+                _alphabetList = value;
+                OnPropertyChanged();
+            }
+        }
+
         DatabaseQueryMethods database;
         public DatabaseQueryMethods Database
         {
@@ -390,43 +395,31 @@ namespace BreadPlayer.ViewModels
             var mp3File = file as Mediafile;
             if (mp3File == null)
                 mp3File = Player.CurrentlyPlayingFile;
-            StorageFolder folder = await (await StorageFile.GetFileFromPathAsync(mp3File.Path)).GetParentAsync();
-            StorageFile storageFile = await StorageFile.GetFileFromPathAsync(mp3File.Path);
-            var folderOptions = new FolderLauncherOptions();
-            folderOptions.ItemsToSelect.Add(storageFile);
-            await Launcher.LaunchFolderAsync(folder, folderOptions);
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(mp3File.Path));
+            if(folder != null)
+            {
+                StorageFile storageFile = await StorageFile.GetFileFromPathAsync(mp3File.Path);
+                var folderOptions = new FolderLauncherOptions();
+                folderOptions.ItemsToSelect.Add(storageFile);
+                await Launcher.LaunchFolderAsync(folder, folderOptions);
+            }
         }
+       
        async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;
             if (ViewSource == null)
                 ViewSource = (para as Grid).Resources["Source"] as CollectionViewSource;
-            if (source != null)
-            {
-                if (grouped && source == TracksCollection.Elements)
-                    ViewSource.Source = TracksCollection;
-                else
-                    ViewSource.Source = source;
-                    
-                ViewSource.IsSourceGrouped = grouped;
-            }
+
+            await RefreshSourceAsync().ConfigureAwait(false);
+
             if (source == null && Sort != "Unsorted")
             {
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(LibVM.Sort));
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                ViewSource.Source = TracksCollection;
-                ViewSource.IsSourceGrouped = true;
-                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true, true);
-                grouped = true;
-                
+                await LoadCollectionAsync(GetSortFunction(LibVM.Sort), true).ConfigureAwait(false);    
             }
             else if (source == null && Sort == "Unsorted")
             {
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
-                ViewSource.Source = TracksCollection.Elements;
-                ViewSource.IsSourceGrouped = false;
-                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true);
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                await LoadCollectionAsync(t => t.Title, false).ConfigureAwait(false);
             }
         }
         #endregion
@@ -435,7 +428,50 @@ namespace BreadPlayer.ViewModels
 
         #region Methods
        
-       IEnumerable<Mediafile> files = null;
+        async Task RefreshSourceAsync()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (SongCount <= 0)
+                    SongCount = Database.tracks.Count();
+                if (source != null)
+                {
+                    if (grouped && source == TracksCollection.Elements)
+                        ViewSource.Source = TracksCollection;
+                    else
+                        ViewSource.Source = source;
+
+                    ViewSource.IsSourceGrouped = grouped;
+                }
+            });
+        }
+        void ChangeView(string header, bool group, object src)
+        {
+            ViewSource.Source = null;
+            Header = header;
+            grouped = group;
+            source = src;
+            libgrouped = ViewSource.IsSourceGrouped;
+        }
+        async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+
+                if (group)
+                    ViewSource.Source = TracksCollection;
+                else
+                    ViewSource.Source = TracksCollection.Elements;
+
+                ViewSource.IsSourceGrouped = group;
+
+                TracksCollection.AddRange(await Database.GetTracks().ConfigureAwait(false), true);
+                grouped = group;
+            });
+        }
+
         /// <summary>
         /// Refresh the view, based on filters and sorting mechanisms.
         /// </summary>
@@ -604,17 +640,7 @@ namespace BreadPlayer.ViewModels
             GenreCollection.Clear();
         }
         #endregion
-
-        private List<string> _alphabetList;
-        public List<string> AlphabetList
-        {
-            get { return _alphabetList; }
-            set
-            {
-                _alphabetList = value;
-                OnPropertyChanged();
-            }
-        }
+      
         #region Library Methods
         /// <summary>
         /// Loads library from the database file.

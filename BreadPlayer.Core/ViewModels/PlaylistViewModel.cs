@@ -122,6 +122,7 @@ namespace BreadPlayer.ViewModels
                 if (Songs.Elements.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
                 {
                     BitmapImage image = new BitmapImage(new Uri(Songs.Elements.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
+                   
                     PlaylistArt = image;
                 }
                 var mp3 = PlaylistVM?.Songs?.Elements?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);

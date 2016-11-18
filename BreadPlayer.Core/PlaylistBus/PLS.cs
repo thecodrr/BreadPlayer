@@ -86,7 +86,7 @@ namespace BreadPlayer.PlaylistBus
                             var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
 
                             Mediafile mp3File = await Core.CoreMethods.CreateMediafile(accessFile); //prepare Mediafile
-                            await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File);
+                            await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
                             await Core.CoreMethods.NotificationManager.ShowAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
 
