@@ -83,8 +83,8 @@ namespace BreadPlayer.ViewModels
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
-           if(RecentlyPlayedCollection.Count <= 100)
-            {              
+            if (RecentlyPlayedCollection.Count <= 100)
+            {
                 RecentlyPlayedCollection.RemoveAt(RecentlyPlayedCollection.Count + 1);
             }
         }
@@ -92,16 +92,22 @@ namespace BreadPlayer.ViewModels
         bool grouped = false;
         bool libgrouped = false;
         object source;
-      
+
         private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
+
+
             if (e.SourcePageType == typeof(LibraryView))
-            {                
-                if (e.Parameter.ToString() == "Recent")              
-                   ChangeView("Recently Played", false, RecentlyPlayedCollection);                
-                else
-                    ChangeView("Music Library", libgrouped, TracksCollection.Elements);
-                await RefreshSourceAsync().ConfigureAwait(false);
+            {
+                
+                if (e.Parameter != null)
+                {
+                    if (e.Parameter.ToString() == "Recent")
+                        ChangeView("Recently Played", false, RecentlyPlayedCollection);
+                    else
+                        ChangeView("Music Library", libgrouped, TracksCollection.Elements);
+                    await RefreshSourceAsync().ConfigureAwait(false);
+                }
             }
             else
             {
@@ -113,6 +119,7 @@ namespace BreadPlayer.ViewModels
                     ViewSource.Source = null;
                     GC.Collect();
                 }
+
             }
 
         }
@@ -306,12 +313,12 @@ namespace BreadPlayer.ViewModels
         void SelectionChanged(object para)
         {
             var selectionEvent = (para as SelectionChangedEventArgs);
-            if(selectionEvent.RemovedItems.Count > 0)
-                foreach(var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
+            if (selectionEvent.RemovedItems.Count > 0)
+                foreach (var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
                 {
                     SelectedItems.Remove(toRemove);
                 }
-            if(selectionEvent.AddedItems.Count > 0)
+            if (selectionEvent.AddedItems.Count > 0)
                 SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
         }
         async void ShowProperties(object para)
@@ -359,7 +366,7 @@ namespace BreadPlayer.ViewModels
                 SongCount--;
             }
             await Task.Delay(100);
-            SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);    
+            SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
         }
         /// <summary>
         /// Plays the selected file. <seealso cref="PlayCommand"/>
@@ -367,7 +374,7 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
         public async void Play(object path)
         {
-            if(path is Mediafile)
+            if (path is Mediafile)
             {
                 Mediafile mp3File = path as Mediafile;
                 if (RecentlyPlayedCollection.Any(t => t.Path == mp3File.Path))
@@ -380,7 +387,7 @@ namespace BreadPlayer.ViewModels
                 }
                 RecentlyPlayedCollection.Add(mp3File);
                 Database.recent.Insert(mp3File);
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     ShellVM.Load(mp3File, true);
                     (PlayCommand as RelayCommand).IsEnabled = false;
@@ -396,7 +403,7 @@ namespace BreadPlayer.ViewModels
             if (mp3File == null)
                 mp3File = Player.CurrentlyPlayingFile;
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(mp3File.Path));
-            if(folder != null)
+            if (folder != null)
             {
                 StorageFile storageFile = await StorageFile.GetFileFromPathAsync(mp3File.Path);
                 var folderOptions = new FolderLauncherOptions();
@@ -404,8 +411,8 @@ namespace BreadPlayer.ViewModels
                 await Launcher.LaunchFolderAsync(folder, folderOptions);
             }
         }
-       
-       async void Init(object para)
+
+        async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;
             if (ViewSource == null)
@@ -415,7 +422,7 @@ namespace BreadPlayer.ViewModels
 
             if (source == null && Sort != "Unsorted")
             {
-                await LoadCollectionAsync(GetSortFunction(LibVM.Sort), true).ConfigureAwait(false);    
+                await LoadCollectionAsync(GetSortFunction(LibVM.Sort), true).ConfigureAwait(false);
             }
             else if (source == null && Sort == "Unsorted")
             {
@@ -427,7 +434,7 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-       
+
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -516,7 +523,7 @@ namespace BreadPlayer.ViewModels
 
         private async void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-           await RemoveDuplicateGroups().ConfigureAwait(false);
+            await RemoveDuplicateGroups().ConfigureAwait(false);
         }
         async Task RemoveDuplicateGroups()
         {
@@ -640,7 +647,7 @@ namespace BreadPlayer.ViewModels
             GenreCollection.Clear();
         }
         #endregion
-      
+
         #region Library Methods
         /// <summary>
         /// Loads library from the database file.
@@ -651,12 +658,12 @@ namespace BreadPlayer.ViewModels
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db") && Database.IsValid)
             {
                 RecentlyPlayedCollection.AddRange(Database.recent.FindAll());
-                LoadPlaylists();               
+                LoadPlaylists();
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
             }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {  
+        {
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
@@ -683,7 +690,7 @@ namespace BreadPlayer.ViewModels
         {
             var albumartFolder = ApplicationData.Current.LocalFolder;
             var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-           
+
             if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
             {
                 IBuffer buf;
@@ -698,7 +705,7 @@ namespace BreadPlayer.ViewModels
 
                     }
                     catch (Exception ex) { NotificationManager.ShowAsync(ex.Message + "||" + file.Path); }
-                   
+
                 }
                 thumb.Dispose();
             }
@@ -738,7 +745,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var pList = await ShowAddPlaylistDialog();
-                if(pList != null)
+                if (pList != null)
                     await AddPlaylist(pList, false);
             }
         }
@@ -750,7 +757,7 @@ namespace BreadPlayer.ViewModels
                 Title = title,
                 Text = playlistName,
                 Description = desc
-            };          
+            };
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
                 var Playlist = new Playlist();
@@ -760,10 +767,10 @@ namespace BreadPlayer.ViewModels
                 {
                     Playlist = await ShowAddPlaylistDialog("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
-               return Playlist;
+                return Playlist;
             }
             else
-               return null;
+                return null;
         }
         public async void AddSongsToPlaylist(Playlist list, List<Mediafile> songsToadd)
         {
@@ -782,16 +789,16 @@ namespace BreadPlayer.ViewModels
                         {
                             Database.Insert(item);
                         }).ConfigureAwait(false);
-                   }
+                    }
                 }
                 Database.CreateDB();
             }
         }
-      
+
         public void AddPlaylist(Playlist Playlist)
         {
             var cmd = new ContextMenuCommand(AddToPlaylistCommand, Playlist.Name);
-            OptionItems.Add(cmd);          
+            OptionItems.Add(cmd);
             ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Arguments = Playlist,
@@ -812,9 +819,9 @@ namespace BreadPlayer.ViewModels
                 AddSongsToPlaylist(plist, songs);
         }
         #endregion
-        
+
         public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 
-    public delegate void OnMusicLibraryLoaded(object sender, RoutedEventArgs e);    
+    public delegate void OnMusicLibraryLoaded(object sender, RoutedEventArgs e);
 }
