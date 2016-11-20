@@ -6,6 +6,7 @@ A music player with breads and burgers made for the Windows 10 store to replace 
  
 [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
+ 
 [![alpha](https://img.shields.io/badge/alpha-v0.1.6.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.6.1-alpha)
 
 ##Current Status:
