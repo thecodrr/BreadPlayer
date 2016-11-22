@@ -12,6 +12,7 @@
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
  
 [![alpha](https://img.shields.io/badge/alpha-v0.1.6.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.6.1-alpha)
+![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
 
 ##Current Status:
 ###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases)
