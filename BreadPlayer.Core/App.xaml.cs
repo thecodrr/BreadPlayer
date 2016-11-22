@@ -65,10 +65,12 @@ namespace BreadPlayer
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
-           
-            
-        }
+           // RegisterTask();
 
+
+
+        }
+       
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
@@ -81,7 +83,7 @@ namespace BreadPlayer
         {
             var deferral = e.GetDeferral();
             CoreWindowLogic.Stringify();
-            CoreWindowLogic.UpdateSmtc();
+            CoreWindowLogic.UpdateSmtc(true);
             CoreWindowLogic.EnableDisableSmtc();
             await Task.Delay(200);
             CoreWindowLogic.isBackground = true;
@@ -206,7 +208,7 @@ namespace BreadPlayer
             // in background mode and still has a view with content
             // then the view can be released to save memory and
             // can be recreated again later when leaving the background.
-            if (isInBackgroundMode && Window.Current.Content != null)
+            if (Window.Current.Content != null)
             {
                 // Some apps may wish to use this helper to explicitly disconnect
                 // child references.

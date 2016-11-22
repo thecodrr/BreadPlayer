@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
 using LiteDB;
 using Windows.Storage;
+using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
@@ -33,8 +34,6 @@ namespace BreadPlayer.ViewModels
                 albumCollection = db.GetCollection<Album>("albums");
                 albumCollection.EnsureIndex(t => t.AlbumName);
                 albumCollection.EnsureIndex(t => t.Artist);
-
-
             }
             catch
             {
@@ -80,22 +79,25 @@ namespace BreadPlayer.ViewModels
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                List<Album> albums = new List<Album>();
-                foreach (var song in await LibVM.Database.GetTracks().ConfigureAwait(false))
-                {                   
-                    Album alb = null;
-                    if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
+                using(LibraryService service = new LibraryService(new DatabaseService()))
+                {
+                    List<Album> albums = new List<Album>();
+                    foreach (var song in await service.GetAllMediafiles().ConfigureAwait(false))
                     {
-                        alb = new Album();
-                        alb.AlbumName = song.Album;
-                        alb.Artist = song.LeadArtist;
-                        alb.AlbumArt = string.IsNullOrEmpty(song.AttachedPicture) ? null : song.AttachedPicture;
-                        albums.Add(alb);
+                        Album alb = null;
+                        if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
+                        {
+                            alb = new Album();
+                            alb.AlbumName = song.Album;
+                            alb.Artist = song.LeadArtist;
+                            alb.AlbumArt = string.IsNullOrEmpty(song.AttachedPicture) ? null : song.AttachedPicture;
+                            albums.Add(alb);
+                        }
+                        if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
                     }
-                    if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
-                }
-                albumCollection.Insert(albums);
-                AlbumCollection.AddRange(albums);
+                    albumCollection.Insert(albums);
+                    AlbumCollection.AddRange(albums);
+                }                
             }).AsTask().ConfigureAwait(false);
 
            

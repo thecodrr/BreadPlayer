@@ -26,22 +26,22 @@ using Windows.Storage;
 using BreadPlayer.Models;
 using System.Diagnostics;
 
-namespace BreadPlayer.Database
+namespace BreadPlayer.Service
 {
-    public class DatabaseQueryMethods : IDisposable
+    public class DatabaseService : IDatabaseService
     {
         LiteDatabase db;
         public LiteCollection<Mediafile> tracks;
         public LiteCollection<Playlist> playlists;
         public LiteCollection<Mediafile> recent;
-        public DatabaseQueryMethods()
+        public DatabaseService()
         {
             LitePlatform.Initialize(new LitePlatformWindowsStore());
             CreateDB();
         }
         bool isValid;
         public bool IsValid { get { return isValid; } set { isValid = value; } }
-        public async void CreateDB()
+        public virtual async void CreateDB()
         {
             try
             {
@@ -66,22 +66,9 @@ namespace BreadPlayer.Database
               
             }
         }
-        public async void CreatePlaylistDB(string name)
+        public LiteCollection<T> GetCollection<T>(string colName) where T : new()
         {
-            System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
-            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\playlists\" + name + ".db;journal=false;");
-            IsValid = db.DbVersion.ToString() != "";
-            if (IsValid)
-            {
-                tracks = db.GetCollection<Mediafile>("songs");
-                tracks.EnsureIndex(t => t.Title);
-                tracks.EnsureIndex(t => t.LeadArtist);
-            }
-            else
-            {
-                await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + name + ".db")).DeleteAsync(StorageDeleteOption.PermanentDelete);
-                CreatePlaylistDB(name);
-            }
+            return db.GetCollection<T>(colName);
         }
         public void Insert(IEnumerable<Mediafile> fileCol)
         {
@@ -91,6 +78,10 @@ namespace BreadPlayer.Database
             }  
             catch(Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
         }
+        public int GetTrackCount()
+        {
+            return tracks.Count();
+        }
         public void Remove(Mediafile file)
         {
             tracks.Delete(file._id);
@@ -99,49 +90,39 @@ namespace BreadPlayer.Database
         {            
             tracks.Insert(file);
         }
-        public void RemoveFolder(string folderPath)
+        public void RemoveTracks(Query query)
         {
-            tracks.Delete(LiteDB.Query.EQ("FolderPath", folderPath));
-            Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
+            tracks.Delete(query);
         }
         public async Task<IEnumerable<Mediafile>> GetTracks()
         {     
             IEnumerable<Mediafile> collection = null;
-            await Core.CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                Core.CoreMethods.LibVM.SongCount = tracks.Count();
                 collection = tracks.Find(LiteDB.Query.All());
             });
 
             return collection;
         }
-        public void Update(Mediafile file, bool updateWithMatch = false)
+        public void UpdateTrack(Mediafile file)
         {
             if (file != null && tracks.Exists(t => t.Path == file.Path))
             {
-                if (updateWithMatch == false)
-                    tracks.Update(file);
-                else
-                {
-                    Mediafile mp3 = tracks.FindOne(t => t.Path == file.Path);
-                    mp3.Playlists.Clear();
-                    mp3.Playlists.AddRange(file.Playlists);
-                    tracks.Update(mp3);
-                }
+                tracks.Update(file);                
             }
         }
-        public async Task<IEnumerable<Mediafile>> Query(string term)
+        public async Task<IEnumerable<Mediafile>> Query(string field, string term)
         {
             IEnumerable<Mediafile> collection = null;
-            await Core.CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                collection = tracks.Find(LiteDB.Query.Contains("Title", term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+                collection = tracks.Find(LiteDB.Query.Contains(field, term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
             });
             return collection;
         }
         public void Dispose()
         {
-            db.Dispose();
+            db?.Dispose();
         }
     }
 }

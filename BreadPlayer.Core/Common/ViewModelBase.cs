@@ -23,7 +23,7 @@ using Windows.UI.Core;
 
 namespace BreadPlayer
 {
-   public class ViewModelBase : CoreMethods, INotifyPropertyChanged
+   public class ViewModelBase : SharedLogic, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

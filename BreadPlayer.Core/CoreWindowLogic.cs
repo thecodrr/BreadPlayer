@@ -34,10 +34,11 @@ using Windows.Media.Playback;
 using Windows.Foundation.Metadata;
 using Windows.Media.Core;
 using Windows.System;
+using BreadPlayer.Common;
 
 namespace BreadPlayer
 {
-    public class CoreWindowLogic : CoreMethods
+    public class CoreWindowLogic : SharedLogic
     {
         #region Fields
         private const string pathKey = "path";
@@ -56,127 +57,71 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void Replay(bool onlyVol = false)
         {
-            if (File.Exists(ApplicationData.Current.TemporaryFolder.Path + @"\lastplaying.mc"))
-            {
-                try
-                {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(ApplicationData.Current.TemporaryFolder.Path + "\\lastplaying.mc");
-                    string text = await FileIO.ReadTextAsync(file);
 
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        JsonObject jsonObject = JsonObject.Parse(text);
-                        ShellVM.Repeat = jsonObject.GetNamedString(repeatKey, "No Repeat");
-                        ShellVM.Shuffle = jsonObject.GetNamedBoolean(shuffleKey, false);
-                        ShellVM.IsPlayBarVisible = jsonObject.GetNamedBoolean(isplaybarKey, true);
-                        LibVM.Sort = jsonObject.GetNamedString(sortKey, "Unsorted");
-                        SettingsVM.TimeClosed = jsonObject.GetNamedString(timeclosedKey, "0");
-                        var volume = jsonObject.GetNamedNumber(volKey, 50);
-                        if (jsonObject.Count <= 7 || onlyVol)
-                        {
-                            Player.Volume = volume;
-                        }
-                        else
-                        {
-                            path = jsonObject.GetNamedString(pathKey, "");
-                            double position = jsonObject.GetNamedNumber(posKey);
-                            Player.PlayerState = PlayerState.Paused;
-                            try
-                            {
-                                ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
-                            }
-                            catch (UnauthorizedAccessException ex) { }
-                        }
-
-                        if (jsonObject.ContainsKey(foldersKey))
-                        {
-                            var folderPaths = jsonObject[foldersKey].GetArray().ToList();
-                            if (folderPaths != null)
-                            {
-                                foreach (var folder in folderPaths)
-                                {
-                                    var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder.GetString());
-
-                                    SettingsVM.LibraryFoldersCollection.Add(storageFolder);
-                                }
-                            }
-                        }
-
-                    }
-                }
-                catch { }
-            }
-            if (LibVM.TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
-            {
-                var sa = LibVM.TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
-            }
-            LibVM.MusicLibraryLoaded += LibVM_MusicLibraryLoaded;
-
-
-        }
-
-        private async static void LibVM_MusicLibraryLoaded(object sender, RoutedEventArgs e)
-        {
-            ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
-            if (path != "" && LibVM.TracksCollection != null && LibVM.TracksCollection.Elements.Any(t => t.Path == path) && LibVM.TracksCollection.Elements.All(t => t.State != PlayerState.Playing))
-                LibVM.TracksCollection.Elements.First(t => t.Path == path).State = PlayerState.Playing;
-        
-            SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
-        }
-
-        public static async void Stringify()
-        {
-            JsonObject jsonObject = new JsonObject();
-            if (Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.Path))
-            {
-                jsonObject[pathKey] = JsonValue.CreateStringValue(Player.CurrentlyPlayingFile.Path);
-                jsonObject[posKey] = JsonValue.CreateNumberValue(Player.Position);
-
-            }
-
-            jsonObject[shuffleKey] = JsonValue.CreateBooleanValue(ShellVM.Shuffle);
-            jsonObject[repeatKey] = JsonValue.CreateStringValue(ShellVM.Repeat);
-            jsonObject[volKey] = JsonValue.CreateNumberValue(Player.Volume);
-            jsonObject[isplaybarKey] = JsonValue.CreateBooleanValue(ShellVM.IsPlayBarVisible);
-            jsonObject[sortKey] = JsonValue.CreateStringValue(LibVM.Sort);
-            jsonObject[timeclosedKey] = JsonValue.CreateStringValue(DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            if (SettingsVM.LibraryFoldersCollection.Any())
-            {
-                JsonArray array = new JsonArray();
-                foreach (var folder in SettingsVM.LibraryFoldersCollection)
-                    array.Add(JsonValue.CreateStringValue(folder.Path));
-                jsonObject[foldersKey] = array;
-            }
             try
             {
-                StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lastplaying.mc", CreationCollisionOption.ReplaceExisting);
-                using (var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
+                SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
+                var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
+                if (onlyVol)
                 {
-                    using (var outputStream = stream.GetOutputStreamAt(0))
-                    {
-                        using (var dataWriter = new Windows.Storage.Streams.DataWriter(outputStream))
-                        {
-                            dataWriter.WriteString(jsonObject.Stringify());
-                            await dataWriter.StoreAsync();
-                            await outputStream.FlushAsync();
-                        }
-                    }
+                    Player.Volume = volume;
                 }
+                else
+                {
+                    path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
+                    if(path != "")
+                    {
+                        double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
+                        Player.PlayerState = PlayerState.Paused;
+                        try
+                        {
+                            ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                        }
+                        catch (UnauthorizedAccessException ex) { }
+                    }
+                    
+                }
+
+                //var folderPaths = RoamingSettingsHelper.GetSetting<ThreadSafeObservableCollection<StorageFolder>>(foldersKey, null);
+                //if (folderPaths != null)
+                //{
+                //    SettingsVM.LibraryFoldersCollection = folderPaths;
+                //}
+
+                
             }
-            catch (UnauthorizedAccessException ex)
+            catch { }
+
+            
+        }
+
+        //
+        //we will replace this later
+        private static void LibVM_MusicLibraryLoaded()
+        {
+           // SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
+          //  ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
+        }
+
+        public static void Stringify()
+        {
+            if (Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.Path))
             {
-                await NotificationManager.ShowAsync("Error while saving player state!");
-                await Task.Delay(5000);
-                await NotificationManager.ShowAsync("Nothing Baking!");
+                ApplicationData.Current.RoamingSettings.Values[pathKey] = Player.CurrentlyPlayingFile.Path;
+                ApplicationData.Current.RoamingSettings.Values[posKey] = Player.Position;
             }
+            ApplicationData.Current.RoamingSettings.Values[volKey] = Player.Volume;
+            ApplicationData.Current.RoamingSettings.Values[timeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string folderPaths = "";
+            SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
+            ApplicationData.Current.RoamingSettings.Values[foldersKey] = folderPaths;
         }
         #endregion
 
         #region SystemMediaTransportControls Methods/Events
 
         static MediaPlayer player;
-        public async static void InitSmtc()
+        public static void InitSmtc()
         {
             player = new MediaPlayer();
             player.CommandManager.IsEnabled = false;
@@ -199,10 +144,14 @@ namespace BreadPlayer
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground ==true)
+                if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground == true)
                 {
-                    if (Player.PlayerState == PlayerState.Playing)
-                        ShellVM.PlayPauseCommand.Execute(null);                   
+                    if (Player.PlayerState == PlayerState.Playing && !isforwardbackword)
+                        ShellVM.PlayPauseCommand.Execute(null);
+                    else if (isforwardbackword)
+                    {
+                        isforwardbackword = false;
+                    }
                 }
             });
         }
@@ -214,18 +163,23 @@ namespace BreadPlayer
                 if (_smtc.IsEnabled == true)
                 {
                     _smtc.IsEnabled = false;
+                    update = true;
                 }
                 else if (_smtc.IsEnabled == false)
                 {
+                    update = false;
                     _smtc.IsEnabled = true;
                 }
             }
             else
             {
-                _smtc.IsEnabled = true;
+                _smtc.IsEnabled = true;                
             }
         }
-       public async static void UpdateSmtc()
+       static bool isPlaying = true;
+        static bool update = true;
+        static bool isforwardbackword = false;
+        public async static void UpdateSmtc(bool play = false)
         {
             System.Diagnostics.Debug.Write(MemoryManager.AppMemoryUsage / 1024 + " | " + MemoryManager.AppMemoryUsageLimit + " | " + isBackground);
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
@@ -236,12 +190,18 @@ namespace BreadPlayer
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
                     var file = await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path);
-                    if(player.Source != MediaSource.CreateFromStorageFile(file))
+                    if (player.Source != MediaSource.CreateFromStorageFile(file))
                     {
                         player.Source = MediaSource.CreateFromStorageFile(file);
                         player.CommandManager.IsEnabled = false;
                         //if(player.PlaybackSession.PlaybackState != MediaPlaybackState.Playing)
-                        player.Play();
+                        if (isPlaying || play)
+                        {
+                            player.Play();
+                            isPlaying = false;
+                        }
+                        else
+                          player.Pause();                        
                         player.Volume = 0;
                     }
                 }
@@ -262,10 +222,12 @@ namespace BreadPlayer
                         ShellVM.PlayPauseCommand.Execute(null);
                         break;
                     case SystemMediaTransportControlsButton.Next:
-                        ShellVM.PlayNextCommand.Execute(null);
+                        isforwardbackword = true;
+                        ShellVM.PlayNextCommand.Execute(null);                       
                         break;
                     case SystemMediaTransportControlsButton.Previous:
-                        ShellVM.PlayPreviousCommand.Execute(null);
+                        isforwardbackword = true;
+                        ShellVM.PlayPreviousCommand.Execute(null);                       
                         break;
                     default:
                         break;
@@ -273,20 +235,27 @@ namespace BreadPlayer
             });
         }
         private static void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
-        {           
+        {
             if (_smtc != null)
                 switch (e.NewState)
                 {
                     case PlayerState.Playing:
                          _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                         if (_smtc.IsEnabled == false)
-                            UpdateSmtc();
+                        {
+                            if (update)
+                            {
+                                UpdateSmtc(true);
+                                update = false;
+                                player.Pause();
+                            }
+                        }
                         break;
                     case PlayerState.Paused:
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                         break;
                     case PlayerState.Stopped:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;                      
                         break;
                     default:
                         break;
@@ -297,8 +266,7 @@ namespace BreadPlayer
         #region CoreWindow Dispose Methods
         public void DisposeObjects()
         {
-            Player.Dispose();
-            LibVM.Database.Dispose();
+            Player.Dispose();           
         }
         #endregion
 

@@ -143,7 +143,7 @@ namespace BreadPlayer.Extensions
         }
         protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            await Core.CoreMethods.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+            await Core.SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
                 try {
                    
@@ -161,7 +161,7 @@ namespace BreadPlayer.Extensions
         }
         protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            await Core.CoreMethods.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Core.SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 try
                 {

@@ -45,8 +45,7 @@ namespace BreadPlayer
     public sealed partial class PlaylistView
     {
         
-        PlaylistViewModel PlaylistVM => Core.CoreMethods.PlaylistVM;
-        LibraryViewModel LibVM = Core.CoreMethods.LibVM;
+        PlaylistViewModel PlaylistVM => Core.SharedLogic.PlaylistVM;
         public PlaylistView()
         {
             this.InitializeComponent();
@@ -73,23 +72,22 @@ namespace BreadPlayer
         }
         async void LoadDB()
         {
-            LibVM.Database.CreatePlaylistDB(PlaylistVM.Playlist.Name);
-
-            if (LibVM.Database.IsValid)
+            using (Service.PlaylistService service = new Service.PlaylistService(PlaylistVM.Playlist.Name))
             {
-                await Task.Run(async () => PlaylistVM.Songs.AddRange(await LibVM.Database.GetTracks().ConfigureAwait(false), true)).ConfigureAwait(false);
-                PlaylistVM.Refresh();
+                if (service.IsValid)
+                {
+                    var ss = service.GetTrackCount();
+                    PlaylistVM.Songs.AddRange(await service.GetTracks().ConfigureAwait(false), true, false);
+                    PlaylistVM.Refresh();
+                }
             }
         }
         void LoadAlbumSongs(Album album)
         {
             PlaylistVM.Songs.AddRange(album.AlbumSongs, true, false);
-           
-            //PlaylistVM.Songs.Elements.AddRange(album.AlbumSongs);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            LibVM.Database.CreateDB();
             GC.Collect();
             base.OnNavigatingFrom(e);
         }

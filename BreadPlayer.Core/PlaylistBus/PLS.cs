@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Models;
+using BreadPlayer.Service;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace BreadPlayer.PlaylistBus
     {
         public async Task LoadPlaylist(StorageFile file)
         {
-            Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
+            //Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
             //Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
             //Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
@@ -68,43 +69,45 @@ namespace BreadPlayer.PlaylistBus
                         continue;
                     }
                 }
-                for (int i = 0; i < noe; i++)
+                using (PlaylistService service = new PlaylistService(file.DisplayName))
                 {
-                    await Task.Run(async () =>
+                    for (int i = 0; i < noe; i++)
                     {
-                        try
+                        await Task.Run(async () =>
                         {
-                            count++;
-                            string trackPath = tracks[i, 0];
-                            FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
-                            string path = trackPath;
-                            if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
+                            try
                             {
-                                path = info.DirectoryName + line; //add directory path to song path.
+                                count++;
+                                string trackPath = tracks[i, 0];
+                                FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
+                                string path = trackPath;
+                                if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
+                                {
+                                    path = info.DirectoryName + line; //add directory path to song path.
+                                }
+                                var accessFile = await StorageFile.GetFileFromPathAsync(path);
+                                var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
+
+                                Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
+
+                                await Core.SharedLogic.NotificationManager.ShowAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
+
+                                if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
+                                    service.Insert(mp3File);
+
+                                StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
-                            var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                            var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
-
-                            Mediafile mp3File = await Core.CoreMethods.CreateMediafile(accessFile); //prepare Mediafile
-                            await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
-
-                            await Core.CoreMethods.NotificationManager.ShowAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
-
-                            if (!Core.CoreMethods.LibVM.Database.tracks.Exists(t => t._id == mp3File._id))
-                                Core.CoreMethods.LibVM.Database.Insert(mp3File);
-
-                            StorageApplicationPermissions.FutureAccessList.Remove(token);
-                        }
-                        catch
-                        {
-                            failedFiles++;
-                        }
-                    });
-                }
+                            catch
+                            {
+                                failedFiles++;
+                            }
+                        });
+                    }
+                }   
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
-                await Core.CoreMethods.NotificationManager.ShowAsync(message);
+                await Core.SharedLogic.NotificationManager.ShowAsync(message);
             }          
-            Core.CoreMethods.LibVM.Database.CreateDB();
         }
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)
         {

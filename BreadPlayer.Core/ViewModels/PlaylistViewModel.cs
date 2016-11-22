@@ -35,6 +35,7 @@ using System.Globalization;
 using BreadPlayer.Core;
 using System.IO;
 using Windows.Storage;
+using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
@@ -104,14 +105,18 @@ namespace BreadPlayer.ViewModels
             PlaylistArt = null;
             var mediafile = para as Mediafile;
             if (mediafile == null)
-                mediafile = LibVM.TracksCollection.Elements.First(t => t.Path == Player.CurrentlyPlayingFile.Path);
+                mediafile = Player.CurrentlyPlayingFile;
             var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-            LibVM.Database.Remove(mediafile);
-            Songs.Elements.Remove(mediafile);
-           // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
-           // Songs.Remove(mediafile);
-           // LibVM.Database.Update(mediafile);
-            Refresh();
+            using (PlaylistService service = new PlaylistService(Playlist.Name))
+            {
+                service.Remove(mediafile);
+                Songs.Elements.Remove(mediafile);
+                // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
+                // Songs.Remove(mediafile);
+                // LibVM.Database.Update(mediafile);
+                Refresh();
+            }
+            
         }
        public async void Refresh()
         {
@@ -125,7 +130,7 @@ namespace BreadPlayer.ViewModels
                    
                     PlaylistArt = image;
                 }
-                var mp3 = PlaylistVM?.Songs?.Elements?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                var mp3 = Songs?.Elements?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
                 if (mp3 != null) mp3.State = PlayerState.Playing;
             });
             
@@ -163,9 +168,12 @@ namespace BreadPlayer.ViewModels
                 string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
                 if (File.Exists(path)) File.Delete(path);
                 ShellVM.PlaylistsItems.Remove(ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
-                LibVM.OptionItems.Remove(LibVM.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                LibVM.Database.playlists.Delete(t => t.Name == selectedPlaylist.Name); //delete from database.
-            }
+                OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                using (LibraryService service = new LibraryService(new DatabaseService()))
+                {
+                    service.RemovePlaylist(selectedPlaylist);//delete from database.
+                }
+             }
         }
 
         async void RenamePlaylist(object playlist)
@@ -186,11 +194,13 @@ namespace BreadPlayer.ViewModels
                     File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
                 ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
                 ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
-                LibVM.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                var pListDB = LibVM.Database.playlists.Delete(t => t.Name == selectedPlaylist.Name); //change playlist name in the 'playlist' collection in the database.
-                LibVM.Database.playlists.Insert(pl);
-                Playlist = pl; //set this.Playlist to pl (local variable);
-
+                OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                using (LibraryService service = new LibraryService(new DatabaseService()))
+                {
+                    service.RemovePlaylist(selectedPlaylist);//delete from database.
+                    service.AddPlaylist(pl); //add new playlist in the database.
+                    Playlist = pl; //set this.Playlist to pl (local variable);
+                }
             }
         }
         public PlaylistViewModel()

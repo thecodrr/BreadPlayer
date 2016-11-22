@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Models
 {
-   public class Playlist : ViewModelBase
+   public class Playlist : ObservableObject
     {
         private LiteDB.ObjectId id;
         public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }

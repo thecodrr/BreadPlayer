@@ -48,7 +48,7 @@ namespace BreadPlayer
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
-        
+        //MOVE THIS ALL TO VIEWMODEL!!!!!
         private async void fileBox_Drop(object sender, DragEventArgs e)
         {
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -63,23 +63,20 @@ namespace BreadPlayer
                             Mediafile mp3file = null;
                             string path = file.Path;
                             var tempList = new List<Mediafile>();
-                            if (Core.CoreMethods.LibVM.TracksCollection.Elements.All(t => t.Path != path))
+                            if (Core.SharedLogic.LibVM.TracksCollection.Elements.All(t => t.Path != path))
                             {
                                 try
                                 {
-                                    mp3file = await Core.CoreMethods.CreateMediafile(file as StorageFile);
-                                    Core.CoreMethods.LibVM.SongCount++;
-                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file);
-
-                                    Core.CoreMethods.LibVM.TracksCollection.Elements.Add(mp3file);
-                                    Core.CoreMethods.LibVM.Database.Insert(mp3file);
+                                    mp3file = await Core.SharedLogic.CreateMediafile(file as StorageFile);
+                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
+                                    Core.SharedLogic.AddMediafile(mp3file);
                                 }
                                 catch { }
                             }
                         }
                        
                     }
-                    await Core.CoreMethods.AlbumArtistVM.AddAlbums();
+                    await Core.SharedLogic.AlbumArtistVM.AddAlbums();
                 }
             }
            
@@ -104,7 +101,7 @@ namespace BreadPlayer
             {  // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = null;
-                myGroup = Core.CoreMethods.LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                myGroup = Core.SharedLogic.LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
 
                 SemanticZoomLocation zoomloc = new SemanticZoomLocation();
                 zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);

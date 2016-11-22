@@ -24,7 +24,7 @@ using BreadPlayer.Core;
 using Windows.UI.Xaml.Media;
 namespace BreadPlayer.Models
 {
-    public class Mediafile : ViewModelBase
+    public class Mediafile : ObservableObject
     {
         #region Fields
         private PlayerState state;

@@ -39,6 +39,8 @@ using BreadPlayer.PlaylistBus;
 using Windows.Storage.FileProperties;
 using BreadPlayer.Extensions;
 using Windows.Storage.Search;
+using BreadPlayer.Messengers;
+using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
@@ -65,7 +67,18 @@ namespace BreadPlayer.ViewModels
         public SettingsViewModel()
         {
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }     
+            Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleMessage));
+        }
+        public static GroupedObservableCollection<string, Mediafile> TracksCollection
+        { get; set; }
+        private void HandleMessage(Message message)
+        {
+            TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+            if (TracksCollection != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledContinue;
+            }
+        }
         DelegateCommand _resetCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -74,16 +87,13 @@ namespace BreadPlayer.ViewModels
 
         async void Reset()
         {
-            LibVM.Dispose();
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
             await Player.Stop();
             ShellVM.Dispose();
             AlbumArtistVM.Dispose();
             LibraryFoldersCollection.Clear();
             await ApplicationData.Current.ClearAsync();
-            LibVM.Database = new Database.DatabaseQueryMethods();
             AlbumArtistVM.InitDB();
-           // GC.Collect();
-            LibVM.SongCount = 0;
             ResetCommand.IsEnabled = false;
             await Task.Delay(200);
             ResetCommand.IsEnabled = true;
@@ -111,8 +121,9 @@ namespace BreadPlayer.ViewModels
             if(file != null)
             {
                 var plist = new Playlist() { Name = file.DisplayName };
-                LibVM.AddPlaylist(plist);
-                LibVM.Database.playlists.Insert(plist);
+               // LibVM.AddPlaylist(plist);
+                LibVM.AddPlaylistAsync(plist, false);
+               // LibVM.Database.playlists.Insert(plist);
                 IPlaylist playlist = null;
                 if (Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
                 else playlist = new PLS();
@@ -201,6 +212,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowAsync(error);
                 }
                 int failedCount = 0;
+                LibraryService service = new LibraryService(new DatabaseService());
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
                 while (files.Count != 0)
                 {
@@ -219,11 +231,11 @@ namespace BreadPlayer.ViewModels
                             try
                             {
                                 //we use 'if' conditional so that we don't add any duplicates
-                                if (LibVM.TracksCollection.Elements.All(t => t.Path != file.Path))
+                                if (TracksCollection.Elements.All(t => t.Path != file.Path))
                                 {
 
                                     i++; //Notice here that we are increasing the 'i' variable by one for each file.
-                                    LibVM.SongCount++; //we also increase the total no. of songs by one.
+                                    LibVM.SongCount++;
                                     await Task.Run(async () =>
                                     {
                                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
@@ -248,9 +260,9 @@ namespace BreadPlayer.ViewModels
                         //after the first 100 files have been added we enable the play button.
                         ShellVM.PlayPauseCommand.IsEnabled = true;
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        LibVM.TracksCollection.AddRange(tempList, false, true);
+                        TracksCollection.AddRange(tempList, false, true);                        
                         //now we load 100 songs into database.
-                        LibVM.Database.Insert(tempList);
+                        service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
                         tempList.Clear();
                         //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
@@ -271,6 +283,7 @@ namespace BreadPlayer.ViewModels
                 //and report the user how long it took.
                 string message = string.Format("Library successfully loaded! Total Songs: {0} Failed: {1} Loaded: {2} Total Time Taken: {3} seconds", count, failedCount, i, Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString()); 
                 await NotificationManager.ShowAsync(message);
+                service.Dispose();
             }
         }
 
@@ -287,13 +300,13 @@ namespace BreadPlayer.ViewModels
                 var props = await file.Properties.GetMusicPropertiesAsync();
                 folder = Path.GetDirectoryName(file.Path);
                 //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
-                if (LibVM.TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
+                if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
                 {
-                    var mp3File = LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
+                    var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
                     mp3File.Path = file.Path;
                 }
                 //FOR ADDITION (we check all the files to see if we already have the file or not)
-                if (LibVM.TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
+                if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
                 {
                     var mediafile = await CreateMediafile(file, false);
                     AddMediafile(mediafile);
@@ -302,16 +315,16 @@ namespace BreadPlayer.ViewModels
             }
             //FOR DELETE (we only want to iterate through songs which are in the changed folder)
             var deletedFiles = new List<Mediafile>();
-            foreach (var file in LibVM.TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
+            foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
             {
                 if (!File.Exists(file.Path))
                 {
-                    deletedFiles.Add(LibVM.TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
+                    deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
                 }
             }
             if (deletedFiles.Any())
                 foreach (var deletedFile in deletedFiles)
-                    LibVM.TracksCollection.Elements.Remove(deletedFile);
+                    TracksCollection.Elements.Remove(deletedFile);
             }
             catch { }
         }
@@ -323,17 +336,17 @@ namespace BreadPlayer.ViewModels
                 int index = -1;
                 if (file != null)
                 {
-                    if (LibVM.TracksCollection.Elements.Any(t => t.Path == file.Path))
+                    if (TracksCollection.Elements.Any(t => t.Path == file.Path))
                     {
-                        index = LibVM.TracksCollection.Elements.IndexOf(LibVM.TracksCollection.Elements.First(t => t.Path == file.Path));
-                        RemoveMediafile(LibVM.TracksCollection.Elements.First(t => t.Path == file.Path));
+                        index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
+                        RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                     await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                        mp3file = await CoreMethods.CreateMediafile(file, false); //the core of the whole method.
+                        mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
                         await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
                     });
                     AddMediafile(mp3file, index);
@@ -376,7 +389,7 @@ namespace BreadPlayer.ViewModels
                     StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView).AsTask().ConfigureAwait(false);
                     if (!VerifyFileExists(albumartLocation, 300) && thumbnail != null && thumbnail.Type == ThumbnailType.Image)
                     {
-                        await LibVM.SaveImages(thumbnail, mp3file).ConfigureAwait(false);
+                        await SaveImagesAsync(thumbnail, mp3file).ConfigureAwait(false);
                         mp3file.AttachedPicture = albumartLocation;
                     }
                 }

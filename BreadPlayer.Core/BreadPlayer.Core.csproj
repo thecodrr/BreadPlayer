@@ -19,7 +19,7 @@
     <PackageCertificateKeyFile>BreadPlayer.Core_StoreKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PackageCertificateThumbprint>80C789B9B1EACF1AD727BB7524B6127C081B2AB8</PackageCertificateThumbprint>
   </PropertyGroup>
@@ -123,9 +123,11 @@
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
+    <Compile Include="Common\Collections.cs" />
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\FrameworkElementExtensions.cs" />
+    <Compile Include="Common\RoamingSettingsHelper.cs" />
     <Compile Include="Common\StringCompressor.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\MediafileToPropertyStringConverter.cs" />
@@ -133,8 +135,8 @@
     <Compile Include="Converters\StringToIconConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
-    <Compile Include="Core\CoreMethods.cs" />
-    <Compile Include="Database\DatabaseQueryMethods.cs" />
+    <Compile Include="Core\SharedLogic.cs" />
+    <Compile Include="Service\DatabaseService.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -161,12 +163,17 @@
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
-    <Compile Include="Services\GenericService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Service\GenericService.cs" />
+    <Compile Include="Service\IDatabaseService.cs" />
+    <Compile Include="Service\ILibraryService.cs" />
+    <Compile Include="Service\LibraryService.cs" />
+    <Compile Include="Service\NavigationService.cs" />
+    <Compile Include="Service\PlaylistService.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ViewData\LibraryViewData.cs" />
     <Compile Include="Views\AlbumArtistView.xaml.cs">
       <DependentUpon>AlbumArtistView.xaml</DependentUpon>
     </Compile>
@@ -333,11 +340,16 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
+      <Project>{a3a57b68-d86b-4536-8443-cfbe91e9d803}</Project>
+      <Name>BreadPlayer.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Macalifa.Tags.ID3\BreadPlayer.Tags.ID3.csproj">
       <Project>{7a1f5216-daad-477f-a56c-e7c4cd3c6fec}</Project>
       <Name>BreadPlayer.Tags.ID3</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

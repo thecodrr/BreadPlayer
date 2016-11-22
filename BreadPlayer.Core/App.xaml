@@ -65,7 +65,9 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                     <!--<SolidColorBrush x:Key="SelectionBrush" Color="DarkGray" />-->
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <MacalifaCore:CoreMethods x:Key="Core"/>
+            
+            <MacalifaCore:SharedLogic x:Key="Core"/>
+            
             <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
                 <Setter Property="Foreground" Value="White"/>

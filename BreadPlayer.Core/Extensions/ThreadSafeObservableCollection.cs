@@ -118,7 +118,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             _isObserving = false;
             foreach (var item in range)
             {
-                await Task.Run(() => Add(item)).ConfigureAwait(false);
+                 Add(item);
             }
             _isObserving = true;
 

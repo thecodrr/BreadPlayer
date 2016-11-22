@@ -50,7 +50,7 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class Shell : Page
     {
-        static ShellViewModel ShellVM => Core.CoreMethods.ShellVM;
+        static ShellViewModel ShellVM => Core.SharedLogic.ShellVM;
 
         List<Mediafile> OldFiles = new List<Mediafile>();
         SystemMediaTransportControls _smtc;

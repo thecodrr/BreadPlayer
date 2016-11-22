@@ -32,6 +32,7 @@ using System.ServiceModel.Channels;
 using BreadPlayer.Models;
 using System.Diagnostics;
 using BreadPlayer.Core;
+using BreadPlayer.Service;
 
 namespace BreadPlayer.Extensions
 {
@@ -154,22 +155,22 @@ namespace BreadPlayer.Extensions
         {
             obj.SetValue(MyItemsProperty, value);
         }
-
+        static SharedLogic core = new Core.SharedLogic();
         private async static void Setup(MenuFlyout menuFlyout)
         {
             if (menuFlyout != null)
             {
-                await CoreMethods.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    Core.CoreMethods.LibVM.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
-                menuFlyout.Items.Clear();
+                    core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                    menuFlyout.Items.Clear();
                     MenuFlyoutSubItem addTo = new MenuFlyoutSubItem() { Text = "Add to" };
-                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = Core.CoreMethods.LibVM.ShowPropertiesCommand, CommandParameter = null };
-                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = Core.CoreMethods.LibVM.OpenSongLocationCommand, CommandParameter = null };
+                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = core.ShowPropertiesCommand, CommandParameter = null };
+                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = core.OpenSongLocationCommand, CommandParameter = null };
                     menuFlyout.Items.Add(addTo);
                     menuFlyout.Items.Add(openLoc);
                     menuFlyout.Items.Add(properties);
-                    foreach (var menuItem in Core.CoreMethods.LibVM.OptionItems)
+                    foreach (var menuItem in core.OptionItems)
                     {
                         var item = new MenuFlyoutItem()
                         {
@@ -185,7 +186,7 @@ namespace BreadPlayer.Extensions
                         addTo.Items.Add(item);
                     }
                 });               
-                Core.CoreMethods.Player.PropertyChanged += Player_PropertyChanged;
+                SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
             }
 
         }
@@ -197,31 +198,36 @@ namespace BreadPlayer.Extensions
                 Refresh();
             }
         }
-
+        /// <summary>
+        /// Fix this later. Not very essential right now.
+        /// </summary>
         static void Refresh()
         {
-            var core = new Core.CoreMethods();
-            MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
-            if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
-            {
-                if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
-                    Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
-                if (CoreMethods.Player.CurrentlyPlayingFile != null && Core.CoreMethods.LibVM.Database != null)
-                    if ((bool)Core.CoreMethods.LibVM?.Database?.tracks?.Exists(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path))
-                    {
-                        var file = Core.CoreMethods.LibVM.Database.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
-                        if (file.Playlists.Count > 0)
-                            Menu.Items.Add(removeFrom);
-                        foreach (var list in file.Playlists)
-                        {
-                            var item = new MenuFlyoutItem() { Text = list.Name };//, Command = CoreMethods.PlaylistVM.DeleteCommand };
-                            item.CommandParameter = item;
-                            item.Click += Item_Click;
-                            removeFrom.Items.Add(item);
-                        }
-
-                    }
-            }
+            //MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
+            //if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
+            //{
+            //    if (Menu.Items.Any(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text))
+            //        Menu.Items.RemoveAt(Menu.Items.IndexOf(Menu.Items.First(t => (t as MenuFlyoutSubItem)?.Text == removeFrom.Text)));
+            //    if (CoreMethods.Player.CurrentlyPlayingFile != null)
+            //        using(LibraryService service = new LibraryService(new DatabaseService()))
+            //        {
+            //            if (service.CheckExists<Mediafile>(LiteDB.Query.EQ("Path", CoreMethods.Player.CurrentlyPlayingFile.Path), new Common.TracksCollection()))
+            //            {
+            //                var file = Core.CoreMethods.LibVM.Database.tracks.FindOne(t => t.Path == CoreMethods.Player.CurrentlyPlayingFile.Path);
+            //                if (file.Playlists.Count > 0)
+            //                {
+            //                    Menu.Items.Add(removeFrom);
+            //                    foreach (var list in file.Playlists)
+            //                    {
+            //                        var item = new MenuFlyoutItem() { Text = list.Name };//, Command = CoreMethods.PlaylistVM.DeleteCommand };
+            //                        item.CommandParameter = item;
+            //                        item.Click += Item_Click;
+            //                        removeFrom.Items.Add(item);
+            //                    }
+            //                }
+            //            }
+            //        }                    
+            //}
         }
         private static void Item_Click(object sender, RoutedEventArgs e)
         {
