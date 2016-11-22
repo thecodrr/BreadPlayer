@@ -20,7 +20,13 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
-   <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
+    <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
+</PropertyGroup>
+<PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
+    <PackageCertificateThumbprint>80C789B9B1EACF1AD727BB7524B6127C081B2AB8</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>BreadPlayer.Core_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
