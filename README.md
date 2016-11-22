@@ -1,9 +1,16 @@
-#Bread Player aka _Macalifa_
-A music player with breads and burgers made for the Windows 10 store to replace history.
+<dl>
+  <a href="http://imgur.com/pLEUASs"><img src="http://i.imgur.com/pLEUASst.png" title="source: imgur.com" /></a>
+  <h1>Bread Player aka <em>Macalifa</em></h1>
+  <p>A music player with breads and burgers made for the Windows 10 store to replace history.</p>
+</dl> 
 
+
+[![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/)
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000)](https://gitter.im/macalifa/Lobby)
+ 
 [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
+ 
 [![alpha](https://img.shields.io/badge/alpha-v0.1.6.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.6.1-alpha)
 
 ##Current Status:
