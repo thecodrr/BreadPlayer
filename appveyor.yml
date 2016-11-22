@@ -5,6 +5,8 @@ os: Visual Studio 2015
 configuration: Release
 platform:
 - ARM
+- x86
+- x64
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
