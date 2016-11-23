@@ -12,11 +12,12 @@
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
  
 [![alpha](https://img.shields.io/badge/alpha-v0.1.6.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.6.1-alpha)
+![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
 
 ##Current Status:
 ###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases)
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com).
-###[Screenshots](https://github.com/theweavrs/Macalifa/wiki/Screenshots):
+###[Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
@@ -30,7 +31,7 @@
 8. Drag/Drop songs directly into library.
 
 ##About the project:
-This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/Macalifa/wiki/Road-to-the-first-release)
+This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/BreadPlayer/wiki/Road-to-the-first-release)
 ###Why the name change?
 Basically, the main reason behind the name change is that the previous one didn't make any sense but aside from that it wasn't SEO friendly. Who would _ever_ search for the word _Macalifa_? :D The second reason that is why we chose **Bread Player**, is because it is catchy and it invokes curiousity; furthermore, it has a nice ring to it and it is metaphoric...you know breads and burgers :D
 
@@ -46,7 +47,7 @@ We will probably start the development of **Beta Version** after _Alpha_ is rele
 _I am not an expert developer and as a result the code-base isn't as professional as it could be. Hence, I will highly appreciate any contribution in any field regarding this project. All suggestions and issue reporting are welcome._
 ##Build Notes:
 1. Make sure you have the necessary tools for building [Windows Universal Apps](https://dev.windows.com/en-us/develop/building-universal-Windows-apps).
-2. Clone this repo:  `git clone https://github.com/theweavrs/Macalifa/`
+2. Clone this repo:  `git clone https://github.com/theweavrs/BreadPlayer/`
 3. The current version uses the latest Aniversary Edition of UWP (Universal Windows Platform) build 14393 but it is not restricted to that, a lower build version can be used without any problems.
 
 ###NOTE:
