@@ -54,6 +54,7 @@ using Extensions;
 using BreadPlayer.Service;
 using BreadPlayer.Common;
 using BreadPlayer.Messengers;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace BreadPlayer.ViewModels
 {
@@ -67,28 +68,41 @@ namespace BreadPlayer.ViewModels
         ObservableRangeCollection<string> _GenreCollection = new ObservableRangeCollection<string>();
         IEnumerable<Mediafile> files = null;
         public IEnumerable<Mediafile> OldItems;
-        public static string Path = ""; //not needed but...
         bool grouped = false;
         bool libgrouped = false;
         object source;
         SharedLogic core = new SharedLogic();
         #endregion
+
         #region MessageHandling
         void HandleDisposeMessage()
         {
             Dispose();
         }
+        async void HandleAddPlaylistMessage(Message message)
+        {
+            var plist = message.Payload as Playlist;
+            if (plist != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await AddPlaylistAsync(plist, false);                
+            }
+        }
         void HandlePlaySongMessage(Message message)
         {
-            var song = message.Payload as Mediafile;
-            if (message != null)
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-            if (song != null)
+            if (message.Payload is Mediafile)
             {
-                PlayCommand.Execute(song);
+                var song = message.Payload as Mediafile;
+                if (message != null)
+                    message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                if (song != null)
+                {
+                    PlayCommand.Execute(song);
+                }
             }
         }
         #endregion
+
         #region Contructor
         /// <summary>
         /// Creates a new instance of LibraryViewModel
@@ -97,13 +111,13 @@ namespace BreadPlayer.ViewModels
         {
             Header = "Music Library";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
-            GenericService<LibraryViewModel>.vm = this;
-            GenericService<LibraryViewModel> service = GenericService<LibraryViewModel>.Instance;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
+
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_ADDPLAYLIST, new Action<Message>(HandleAddPlaylistMessage));
         }
 
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -154,7 +168,9 @@ namespace BreadPlayer.ViewModels
         ILibraryService libraryservice;
         public ILibraryService LibraryService
         {
-            get { if (libraryservice == null) libraryservice = new LibraryService(new DatabaseService()); return libraryservice; }
+            get { if (libraryservice == null)
+                    libraryservice = new LibraryService(new DatabaseService());
+                return libraryservice; }
             set { Set(ref libraryservice, value); }
         }
         CollectionViewSource viewSource;
@@ -345,7 +361,7 @@ namespace BreadPlayer.ViewModels
                 index = TracksCollection.Elements.IndexOf(item);
                 TracksCollection.RemoveItem(item);               
                 LibraryService.RemoveMediafile(item);
-                SongCount--;
+               // SongCount--;
             }
             await Task.Delay(100);
             SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);    
@@ -371,7 +387,7 @@ namespace BreadPlayer.ViewModels
                 LibraryService.GetCollection<Mediafile>(new RecentCollection()).Insert(mp3File);
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
                 {
-                    ShellVM.Load(mp3File, true);
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mp3File, true});
                     (PlayCommand as RelayCommand).IsEnabled = false;
                     await Task.Delay(100);
                     (PlayCommand as RelayCommand).IsEnabled = true;
@@ -406,8 +422,8 @@ namespace BreadPlayer.ViewModels
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (SongCount <= 0)
-                    SongCount = LibraryService.SongCount;
+               // if (SongCount <= 0)
+                    //SongCount = LibraryService.SongCount;
                 if (source != null)
                 {
                     if (grouped && source == TracksCollection.Elements)
@@ -571,6 +587,42 @@ namespace BreadPlayer.ViewModels
         {
             Sort = RoamingSettingsHelper.GetSetting<string>("Sort", "Unsorted");
         }
+
+        public async void DropFiles(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await e.DataView.GetStorageItemsAsync();
+                if (items.Any())
+                {                  
+                    foreach (var item in items)
+                    {
+                        if (item.IsOfType(StorageItemTypes.File) && Path.GetExtension(item.Path) == ".mp3")
+                        {
+                            Mediafile mp3file = null;
+                            string path = item.Path;
+                            var tempList = new List<Mediafile>();
+                            if (TracksCollection.Elements.All(t => t.Path != path))
+                            {
+                                try
+                                {
+                                    mp3file = await CreateMediafile(item as StorageFile);
+                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
+                                    AddMediafile(mp3file);
+                                }
+                                catch { }
+                            }
+                        }
+                        else if (item.IsOfType(StorageItemTypes.Folder))
+                        {
+                           await SettingsViewModel.AddFolderToLibraryAsync((item as StorageFolder).CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions()));
+                        }
+
+                    }
+                    await Core.SharedLogic.AlbumArtistVM.AddAlbums();
+                }
+            }
+        }
         #endregion
 
         #region Helper Methods
@@ -584,27 +636,7 @@ namespace BreadPlayer.ViewModels
         public static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetTypeInfo().GetDeclaredProperty(propName).GetValue(src, null);
-        }
-
-        /// <summary>
-        /// Gets a <see cref="StorageFile"/> as a <see cref="Stream"/>.
-        /// </summary>
-        /// <returns><see cref="Stream"/></returns>
-        public static async Task<Stream> GetFileAsStream()
-        {
-            try
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(Path);
-                if (System.IO.Path.GetExtension(file.Path) == ".mp3")
-                {
-                    var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                    return stream.AsStream();
-                }
-            }
-            catch { }
-
-            return null;
-        }
+        }       
 
         #endregion
 
@@ -612,14 +644,16 @@ namespace BreadPlayer.ViewModels
         public void Dispose()
         {
             LibraryService.Dispose();
+            LibraryService = null;
             TracksCollection.Clear();
             RecentlyPlayedCollection.Clear();
-            ShellVM.PlaylistsItems.Clear();
+            GenreFlyout?.Items.Clear();
+            PlaylistsItems?.Clear();
             OldItems = null;
             PlaylistCollection.Clear();
             core.OptionItems.Clear();
             GenreCollection.Clear();
-            SongCount = 0;
+            SongCount = -1;
         }
         #endregion
       
@@ -639,12 +673,12 @@ namespace BreadPlayer.ViewModels
             }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {  
+        {
+            SongCount = LibraryService.SongCount;
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
-                ShellVM.PlayPauseCommand.IsEnabled = true;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
             }
         }
@@ -757,7 +791,7 @@ namespace BreadPlayer.ViewModels
         {
             var cmd = new ContextMenuCommand(AddToPlaylistCommand, Playlist.Name);
             core.OptionItems.Add(cmd);          
-            ShellVM.PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
+            PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Arguments = Playlist,
                 Label = Playlist.Name,

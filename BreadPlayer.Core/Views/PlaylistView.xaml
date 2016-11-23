@@ -20,16 +20,16 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
-                        <Grid DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"
+                        <Grid DataContext="{Binding Source={StaticResource LibVM}}"
           x:Name="LayoutRoot"
           Background="{TemplateBinding Background}"
           BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid.Resources>
                                 <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                    <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                    <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                     <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
-                                    <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                    <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                     <MenuFlyoutItem Text="Delete from playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"></MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Properties" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding ShowPropertiesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
 
@@ -366,7 +366,7 @@
                     <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
-                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource Core}, Path=LibVM.PlayCommand}" CommandParameter="{Binding Path=Songs.Elements[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding Path=Songs.Elements[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
                             <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>

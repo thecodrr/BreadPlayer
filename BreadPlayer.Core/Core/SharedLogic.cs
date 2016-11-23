@@ -19,15 +19,17 @@ using BreadPlayer.BreadNotificationManager;
 using BreadPlayer.Service;
 using System.Windows.Input;
 using Windows.System;
+using SplitViewMenu;
 
 namespace BreadPlayer.Core
 {
     public class SharedLogic : ObservableObject
     {
+        public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems { get; set; }
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
-        public static LibraryViewModel LibVM => GenericService<LibraryViewModel>.Instance.GenericClass;
-        public static ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
+        //public static LibraryViewModel LibVM => GenericService<LibraryViewModel>.Instance.GenericClass;
+        // public ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static PlaylistViewModel PlaylistVM => GenericService<PlaylistViewModel>.Instance.GenericClass;
         public static AlbumArtistViewModel AlbumArtistVM => GenericService<AlbumArtistViewModel>.Instance.GenericClass;
@@ -122,13 +124,15 @@ namespace BreadPlayer.Core
             }
         }
 
-       // static LibraryService service = new LibraryService(new DatabaseService());
+        static LibraryService service = new LibraryService(new DatabaseService());
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file != null)
             {
+                if (service == null)
+                    service = new LibraryService(new DatabaseService());
                 SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count: index, file);
-              //  service.AddMediafile(file);
+                service.AddMediafile(file);
                 return true;
             }
             return false;
@@ -137,8 +141,10 @@ namespace BreadPlayer.Core
         {
             if (file != null)
             {
+                if (service == null)
+                    service = new LibraryService(new DatabaseService());
                 SettingsViewModel.TracksCollection.Elements.Remove(file);
-               // service.RemoveMediafile(file);
+                service.RemoveMediafile(file);
                 return true;
             }
             return false;

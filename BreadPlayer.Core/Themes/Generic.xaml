@@ -479,17 +479,17 @@
                                   PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Pane>                                
                                 <Grid x:Name="Pane" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
-                                    <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
                                         <AutoSuggestBox.QueryIcon>
                                             <FontIcon Glyph="&#xe721;"/>
                                         </AutoSuggestBox.QueryIcon>
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="KeyUp">
-                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
+                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}" CommandParameter="{Binding .}"/>
                                                 <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
                                             </Core:EventTriggerBehavior>
                                             <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource Core}, Path=ShellVM.SearchCommand}" CommandParameter="{Binding .}"/>
+                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}" CommandParameter="{Binding .}"/>
                                                 <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
                                             </Core:EventTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
@@ -526,7 +526,7 @@
                                             <Button x:Name="playlistBtn" 
                                                 TabIndex="2" Width="240" 
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
-                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding AddToPlaylistCommand}"
+                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
                                         </StackPanel>

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
         xmlns:Converter="using:BreadPlayer.Converters"
 xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="using:BreadPlayer.Core" xmlns:Services="using:BreadPlayer.Services"
-    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours" xmlns:Converters="using:BreadPlayer.Converters"  xmlns:Extensions="using:BreadPlayer.Extensions"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:VM="using:BreadPlayer.ViewModels"  xmlns:Behaviours="using:BreadPlayer.Behaviours" xmlns:Converters="using:BreadPlayer.Converters"  xmlns:Extensions="using:BreadPlayer.Extensions"
     xmlns:local="using:BreadPlayer">
     <Application.Resources>
         <ResourceDictionary>
@@ -67,6 +67,8 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
             </ResourceDictionary.ThemeDictionaries>
             
             <MacalifaCore:SharedLogic x:Key="Core"/>
+            <VM:ShellViewModel x:Key="ShellVM"/>
+            <VM:LibraryViewModel x:Key="LibVM"/>
             
             <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
@@ -637,7 +639,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
             IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
             ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}"
             AutomationProperties.AccessibilityView="Raw">
-                                    <ItemsPresenter Margin="0,8,0,8"  DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"/>
+                                    <ItemsPresenter Margin="0,8,0,8"  DataContext="{Binding Source={StaticResource LibVM}}"/>
                                 </ScrollViewer>
                                 <Border x:Name="MenuFlyoutPresenterBorder"
             BorderBrush="{TemplateBinding BorderBrush}"
@@ -660,13 +662,13 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListViewItem">
-                            <Grid DataContext="{Binding Source={StaticResource Core}, Path=LibVM}"
+                            <Grid DataContext="{Binding Source={StaticResource LibVM}}"
           x:Name="LayoutRoot"
           Background="{TemplateBinding Background}" 
           BorderThickness="{TemplateBinding BorderThickness}">
                                 <Grid.Resources>
                                     <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                        <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource Core}, Path=LibVM}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
+                                        <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
                                         <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
                                         <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
@@ -678,7 +680,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                                     </MenuFlyout>
 
 
-                                    <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=LibVM.OptionItems}" Placement="Right"></Extensions:BindableFlyout>
+                                    <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                                     <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
                                         <Setter Property="FontFamily" Value="XamlAutoFontFamily" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
@@ -1318,7 +1320,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
             <DataTemplate x:Key="SelectedTemplate" >
                 <Grid x:Name="LayoutRoot" MaxWidth="150" Height="210" >
                     <Grid.Resources>
-                        <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource Core}, Path=LibVM.OptionItems}" Placement="Right"></Extensions:BindableFlyout>
+                        <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                     </Grid.Resources>
                     <StackPanel>
                         <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
@@ -1337,7 +1339,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
                                     <EntranceThemeTransition/>
                                 </TransitionCollection>
                             </StackPanel.Transitions>
-                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource Core}, Path=LibVM.PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs[0]}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs[0]}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;" RequestedTheme="Dark"></TextBlock>
                                 </StackPanel>

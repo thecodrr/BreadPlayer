@@ -113,6 +113,7 @@ namespace BreadPlayer.Core
 
                         handle = ManagedBass.Bass.CreateStream(sPath, 0, 0, BassFlags.AutoFree);                        
                         PlayerState = PlayerState.Stopped;
+                        Length = 0;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                         InitializeExtensions(sPath);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
@@ -187,7 +188,7 @@ namespace BreadPlayer.Core
             await Task.Run(() =>
             {
                 Length = 0;
-                Position = 0;
+                Position = -1;
                 Bass.StreamFree(handle);
                 Bass.ChannelStop(handle); // Stop Playback.
                 Bass.MusicFree(handle);                
@@ -233,6 +234,8 @@ namespace BreadPlayer.Core
         public double Length
         {
             get {
+                if (_length <= 0)
+                    _length = 1;
                 return _length;
             }
             set

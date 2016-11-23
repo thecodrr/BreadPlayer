@@ -48,43 +48,11 @@ namespace BreadPlayer
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
-        //MOVE THIS ALL TO VIEWMODEL!!!!!
-        private async void fileBox_Drop(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems))
-            {            
-                var files = await e.DataView.GetStorageItemsAsync();
-                if (files.Any() && files.All(t => t.IsOfType(StorageItemTypes.File)))
-                {
-                    foreach(var file in files)
-                    {
-                        if(Path.GetExtension(file.Path) == ".mp3")
-                        {
-                            Mediafile mp3file = null;
-                            string path = file.Path;
-                            var tempList = new List<Mediafile>();
-                            if (Core.SharedLogic.LibVM.TracksCollection.Elements.All(t => t.Path != path))
-                            {
-                                try
-                                {
-                                    mp3file = await Core.SharedLogic.CreateMediafile(file as StorageFile);
-                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
-                                    Core.SharedLogic.AddMediafile(mp3file);
-                                }
-                                catch { }
-                            }
-                        }
-                       
-                    }
-                    await Core.SharedLogic.AlbumArtistVM.AddAlbums();
-                }
-            }
-           
-        }
+       
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
-            e.DragUIOverride.Caption = "Add files to library";
+            e.DragUIOverride.Caption = "Add file/folder(s) to library";
             e.DragUIOverride.IsCaptionVisible = true;
             e.DragUIOverride.IsContentVisible = true;
             e.DragUIOverride.IsGlyphVisible = true;
@@ -101,7 +69,7 @@ namespace BreadPlayer
             {  // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = null;
-                myGroup = Core.SharedLogic.LibVM.TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
 
                 SemanticZoomLocation zoomloc = new SemanticZoomLocation();
                 zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);

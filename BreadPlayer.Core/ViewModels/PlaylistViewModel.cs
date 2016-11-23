@@ -167,7 +167,7 @@ namespace BreadPlayer.ViewModels
             {
                 string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
                 if (File.Exists(path)) File.Delete(path);
-                ShellVM.PlaylistsItems.Remove(ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                 OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                 using (LibraryService service = new LibraryService(new DatabaseService()))
                 {
@@ -192,8 +192,8 @@ namespace BreadPlayer.ViewModels
                 string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
                 if (File.Exists(path + selectedPlaylist.Name + ".db"))
                     File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
-                ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                ShellVM.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
                 OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
                 using (LibraryService service = new LibraryService(new DatabaseService()))
                 {

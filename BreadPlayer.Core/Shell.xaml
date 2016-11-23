@@ -11,7 +11,7 @@
     xmlns:Converters="using:BreadPlayer.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Loaded="Page_Loaded" >
+    mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
@@ -73,7 +73,7 @@
 
                 <Grid x:Name="infoBar" Padding="0" Grid.Column="0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0" Grid.ColumnSpan="1">
                     <Grid.Resources>
-                        <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=LibVM.OptionItems}" x:Name="contextMenu" x:Key="Flyout">
+                        <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource LibVM}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                         </MenuFlyout>
                     </Grid.Resources>
                     <!--<Grid.Background>
@@ -81,8 +81,8 @@
                     </Grid.Background>-->
                     <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
                         <!--<StackPanel Orientation="Horizontal"  Height="70">-->
-                    <!--<Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>-->
-                        <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.Albumart}" Stretch="Uniform" Margin="0,5,0,5"/>
+                    <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
+                        <!--<Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.Albumart}" Stretch="Uniform" Margin="0,5,0,5"/>-->
 
                         <StackPanel x:Name="tagsPanel" Orientation="Vertical" Margin="4,7,0,0">
                             <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="ExtraLight" Foreground="White"/>
@@ -99,7 +99,7 @@
 
                 <Grid Grid.Column="1" Margin="10,0,0,0" x:Name="sliderGrid">
                     <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="5,0,0,0" FontSize="12"/>
-                    <Slider x:Name="positionSlider" ThumbToolTipValueConverter="{StaticResource DoubleToTime}"  VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8" Tapped="positionSlider_Tapped" PointerPressed="positionSlider_PointerPressed"/>
+                    <Slider x:Name="positionSlider" ThumbToolTipValueConverter="{StaticResource DoubleToTime}"  VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Height="54" Margin="44,8,45,8"/>
                     <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime} , UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="34,0,6,0" FontSize="12"/>
                 </Grid>
 

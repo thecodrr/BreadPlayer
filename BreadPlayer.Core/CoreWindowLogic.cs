@@ -51,9 +51,9 @@ namespace BreadPlayer
         private const string sortKey = "sortby";
         private const string timeclosedKey = "timeclosed";
         static SystemMediaTransportControls _smtc;
+        static string path = "";
         #endregion
 
-        static string path = "";
         #region Load/Save Logic
         public static async void Replay(bool onlyVol = false)
         {
@@ -75,7 +75,9 @@ namespace BreadPlayer
                         Player.PlayerState = PlayerState.Paused;
                         try
                         {
-                            ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
+                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, false, volume });
+
+                            //ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                         }
                         catch (UnauthorizedAccessException ex) { }
                     }
@@ -119,10 +121,9 @@ namespace BreadPlayer
         #endregion
 
         #region SystemMediaTransportControls Methods/Events
-
         static MediaPlayer player;
         public static void InitSmtc()
-        {
+        {           
             player = new MediaPlayer();
             player.CommandManager.IsEnabled = false;
             player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
@@ -147,7 +148,7 @@ namespace BreadPlayer
                 if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground == true)
                 {
                     if (Player.PlayerState == PlayerState.Playing && !isforwardbackword)
-                        ShellVM.PlayPauseCommand.Execute(null);
+                       Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
                     else if (isforwardbackword)
                     {
                         isforwardbackword = false;
@@ -219,15 +220,15 @@ namespace BreadPlayer
                 {
                     case SystemMediaTransportControlsButton.Play:
                     case SystemMediaTransportControlsButton.Pause:
-                        ShellVM.PlayPauseCommand.Execute(null);
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
                         break;
                     case SystemMediaTransportControlsButton.Next:
                         isforwardbackword = true;
-                        ShellVM.PlayNextCommand.Execute(null);                       
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayNext");
                         break;
                     case SystemMediaTransportControlsButton.Previous:
                         isforwardbackword = true;
-                        ShellVM.PlayPreviousCommand.Execute(null);                       
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPrevious");
                         break;
                     default:
                         break;

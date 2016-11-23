@@ -60,10 +60,12 @@ namespace BreadPlayer.Service
                     await ApplicationData.Current.ClearAsync();
                     CreateDB();
                 }
+                GetTrackCount();
             }
-            catch
+            catch(Exception)
             {
-              
+                await ApplicationData.Current.ClearAsync();
+                CreateDB();
             }
         }
         public LiteCollection<T> GetCollection<T>(string colName) where T : new()

@@ -43,6 +43,7 @@ using Extensions;
 using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
+using System.Reflection;
 
 namespace BreadPlayer.ViewModels
 {
@@ -53,6 +54,40 @@ namespace BreadPlayer.ViewModels
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
+        #endregion
+
+        #region HandleMessages
+        void HandlePlaySongMessage(Message message)
+        {
+            var obj = message.Payload as List<object>;
+            if(obj != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                var file = obj[0] as Mediafile;
+                var play = (bool)obj[1];
+                Load(file, play);
+            }
+        }
+        void HandleExecuteCmdMessage(Message message)
+        {
+            if (message.Payload != null)
+            {
+                if(message.Payload is List<object>)
+                {
+                    var list = message.Payload as List<object>;
+                    Play(list[0] as StorageFile, null, (double)list[1], (bool)list[2], (double)list[3]);
+                }
+                else
+                    this.GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
+
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+            }
+        }
+        async void HandleDisposeMessage()
+        {
+            Dispose();
+            await Player.Stop();
+        }
         #endregion
 
         #region Commands
@@ -292,12 +327,7 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["IsPlayBarVisible"] = IsPlayBarVisible;
             }
         }
-        private void GetSettings()
-        {
-            Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
-            IsPlayBarVisible = RoamingSettingsHelper.GetSetting<bool>("IsPlayBarVisible", true);
-            Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
-        }
+      
         
 
         bool _shuffle = false;
@@ -310,7 +340,7 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["Shuffle"] = Shuffle;
             }
         }
-        public ObservableCollection<SimpleNavMenuItem> PlaylistsItems { get; }
+
         public bool DontUpdatePosition { get; set; }
         double _currentPosition;
         public double CurrentPosition
@@ -358,7 +388,12 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-
+        private void GetSettings()
+        {
+            Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
+            IsPlayBarVisible = RoamingSettingsHelper.GetSetting<bool>("IsPlayBarVisible", true);
+            Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
+        }
         void PlayFile(Mediafile toPlayFile, bool play = false)
         {
             if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
@@ -452,7 +487,10 @@ namespace BreadPlayer.ViewModels
         public ShellViewModel()
         {
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleMessage));
-            
+            Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
+
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
@@ -463,8 +501,13 @@ namespace BreadPlayer.ViewModels
             this.timer.Stop();
             Player.MediaEnded += Player_MediaEnded;
             this.PropertyChanged += ShellViewModel_PropertyChanged;
-
         }
+
+        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+           PlayPauseCommand.IsEnabled = true;
+        }
+
         public GroupedObservableCollection<string,Mediafile> TracksCollection
         {get;set;}
         private void HandleMessage(Message message)
@@ -473,7 +516,7 @@ namespace BreadPlayer.ViewModels
             if (TracksCollection != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 GetSettings();
             }
         }

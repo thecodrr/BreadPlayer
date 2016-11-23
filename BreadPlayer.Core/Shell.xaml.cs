@@ -50,15 +50,14 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class Shell : Page
     {
-        static ShellViewModel ShellVM => Core.SharedLogic.ShellVM;
-
+        ShellViewModel ShellVM;
         List<Mediafile> OldFiles = new List<Mediafile>();
         SystemMediaTransportControls _smtc;
         public Shell()
         {
             this.InitializeComponent();
             CoreWindowLogic.InitSmtc();
-            this.DataContext = ShellVM;
+            ShellVM = DataContext as ShellViewModel;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
             {
@@ -71,27 +70,26 @@ namespace BreadPlayer
         
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ShellVM.Play(e.Parameter as StorageFile);
+            if(e.Parameter is StorageFile)
+             Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
+            
             base.OnNavigatedTo(e);
         }
       
         private void VolSliderThumb_DragStarted(object sender, DragStartedEventArgs e)
         {
-            var vm = this.DataContext as ShellViewModel;
-            vm.DontUpdatePosition = true;
+            ShellVM.DontUpdatePosition = true;
         }
 
         private void VolSliderThumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            var vm = this.DataContext as ShellViewModel;
-            if (vm != null)
+            if (ShellVM != null)
             {
-                vm.CurrentPosition = positionSlider.Value;
-                vm.DontUpdatePosition = false;
+                ShellVM.CurrentPosition = positionSlider.Value;
+                ShellVM.DontUpdatePosition = false;
             }
         }
         bool isPressed;
-        bool isValueChanged;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Thumb volSliderThumb = FrameworkElementExtensions.FindChildOfType<Thumb>(positionSlider);
@@ -100,10 +98,13 @@ namespace BreadPlayer
                 volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
                 volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
             }
-            Window.Current.CoreWindow.PointerPressed += (ea, a) => 
+            Window.Current.CoreWindow.PointerPressed += (ea, a) =>
             {
-                if( positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position))
-                     isPressed = true;
+                if (positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position))
+                {
+                    isPressed = true;
+                    ShellVM.DontUpdatePosition = true;
+                }
             };
 
             Window.Current.CoreWindow.PointerReleased += (ea, a) => 
@@ -112,28 +113,16 @@ namespace BreadPlayer
             };
         }
         
-        private  void positionSlider_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            UpdatePosition();
-        }
         async void UpdatePosition(bool wait = false)
         {
-            ShellVM.DontUpdatePosition = true;
             if (ShellVM != null)
             {
-                // var se = volSliderThumb.GetPointerPosition().X;
-                ShellVM.CurrentPosition = positionSlider.Value;
+                ShellVM.CurrentPosition = positionSlider.Value < positionSlider.Maximum ? positionSlider.Value : positionSlider.Value - 1;
             }
             if (wait) await Task.Delay(500);
             ShellVM.DontUpdatePosition = false;
         }
        
-
-        private void positionSlider_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var s = positionSlider.Value;
-            var vm = this.DataContext as ShellViewModel;
-        }
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);

@@ -96,7 +96,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="10,0,0,0" FontSize="12"/>
-                    <Slider Grid.Column="1" x:Name="positionSlider" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=1000}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Tapped="positionSlider_Tapped" Margin="15,0,0,0"/>
+                    <Slider Grid.Column="1" x:Name="positionSlider" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=1000}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="15,0,0,0"/>
                     <TextBlock Grid.Column="2" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="15,0,10,0" FontSize="12"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top">

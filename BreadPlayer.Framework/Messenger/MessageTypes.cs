@@ -8,7 +8,9 @@
     {
         MSG_LIBRARY_LOADED,	// Sent when a Customer is selected for editing
         MSG_PLAY_SONG,
-        MSG_DISPOSE
+        MSG_DISPOSE,
+        MSG_EXECUTE_CMD,
+        MSG_ADDPLAYLIST
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
     };
 }

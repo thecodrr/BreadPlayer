@@ -87,13 +87,9 @@ namespace BreadPlayer.ViewModels
 
         async void Reset()
         {
-            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
-            await Player.Stop();
-            ShellVM.Dispose();
-            AlbumArtistVM.Dispose();
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);         
             LibraryFoldersCollection.Clear();
-            await ApplicationData.Current.ClearAsync();
-            AlbumArtistVM.InitDB();
+            await ApplicationData.Current.ClearAsync();          
             ResetCommand.IsEnabled = false;
             await Task.Delay(200);
             ResetCommand.IsEnabled = true;
@@ -120,13 +116,11 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();          
             if(file != null)
             {
-                var plist = new Playlist() { Name = file.DisplayName };
-               // LibVM.AddPlaylist(plist);
-                LibVM.AddPlaylistAsync(plist, false);
-               // LibVM.Database.playlists.Insert(plist);
                 IPlaylist playlist = null;
                 if (Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
                 else playlist = new PLS();
+                var plist = new Playlist() { Name = file.DisplayName };
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDPLAYLIST, plist);
                 await playlist.LoadPlaylist(file).ConfigureAwait(false);
             }
         }
@@ -187,7 +181,7 @@ namespace BreadPlayer.ViewModels
                 await AddFolderToLibraryAsync(queryResult);
             }
         }
-        public async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
+        public static async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
         {
             if (queryResult != null)
             {
@@ -235,7 +229,6 @@ namespace BreadPlayer.ViewModels
                                 {
 
                                     i++; //Notice here that we are increasing the 'i' variable by one for each file.
-                                    LibVM.SongCount++;
                                     await Task.Run(async () =>
                                     {
                                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
@@ -258,7 +251,7 @@ namespace BreadPlayer.ViewModels
                             }
                         }
                         //after the first 100 files have been added we enable the play button.
-                        ShellVM.PlayPauseCommand.IsEnabled = true;
+                        //ShellVM.PlayPauseCommand.IsEnabled = true;
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                         TracksCollection.AddRange(tempList, false, true);                        
                         //now we load 100 songs into database.
