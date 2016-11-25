@@ -9,7 +9,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Converters="using:BreadPlayer.Converters" Loaded="Page_Loaded"
-    mc:Ignorable="d">
+    mc:Ignorable="d" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:StringToIconConverter x:Key="StringToIcon"/>
@@ -64,19 +64,19 @@
                 <StackPanel.RenderTransform>
                     <TranslateTransform Y="0"/>
                 </StackPanel.RenderTransform>
-                <AppBarButton x:Name="infoBar" Width="Auto" Visibility="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="1" Height="80">
+                <AppBarButton x:Name="infoBar" Width="Auto" Visibility="{Binding Path=Player.Length, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="1" Height="80">
                     <Grid Margin="0,-14.5,0,-50">
                         <Grid.Background>
-                            <ImageBrush ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
+                            <ImageBrush ImageSource="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
                         </Grid.Background>
                         <StackPanel Orientation="Horizontal" Background="#99262626" VerticalAlignment="Stretch">
                         
                         <!--<Image x:Name="albumArt" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"/>-->
                         <!--<Image x:Name="albumArt" Width="75" Source="Assets/albumart.png" Stretch="UniformToFill" Margin="10,0,0,0.2"/>-->
                         <StackPanel x:Name="tagsPanel" Orientation="Vertical" VerticalAlignment="Center" Margin="5,0,0,0">
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
-                            <TextBlock Text="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
+                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="20" FontFamily="Segoe UI Light" FontWeight="SemiLight" Foreground="White"/>
+                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="17" FontFamily="Segoe UI Light" Foreground="White"/>
+                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="15" FontFamily="Segoe UI Light" Foreground="White"/>
                         </StackPanel>
                     </StackPanel>
                     </Grid>
@@ -86,8 +86,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="volumeSlider" Value="{Binding Source={StaticResource Core}, Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" MinWidth="300" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="15,0,0,0" />
-                    <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Source={StaticResource Core}, Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" FontSize="20" Height="30" Foreground="#FFE0E0E0" Margin="10,0,10,0"/>
+                    <Slider x:Name="volumeSlider" Value="{Binding Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" MinWidth="300" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="15,0,0,0" />
+                    <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" FontSize="20" Height="30" Foreground="#FFE0E0E0" Margin="10,0,10,0"/>
                 </Grid>
                 <Grid HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
@@ -96,8 +96,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFC5C5C5" Margin="10,0,0,0" FontSize="12"/>
-                    <Slider Grid.Column="1" x:Name="positionSlider" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=1000}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="15,0,0,0"/>
-                    <TextBlock Grid.Column="2" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="15,0,10,0" FontSize="12"/>
+                    <Slider Grid.Column="1" x:Name="positionSlider" Style="{StaticResource CircleSlider}" Maximum="{Binding Path=Player.Length, FallbackValue=1000}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="15,0,0,0"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Path=Player.Length, Converter={StaticResource DoubleToTime}, FallbackValue='00:00'}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFC5C5C5" Margin="15,0,10,0" FontSize="12"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top">
                     <AppBarButton BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>

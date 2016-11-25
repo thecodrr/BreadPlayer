@@ -207,22 +207,25 @@ namespace BreadPlayer.ViewModels
         public PlaylistViewModel()
         {
         }
-        public PlaylistViewModel(object data) : this()
+        public PlaylistViewModel(object data)
         {
             if (data is Playlist)
             {
                 Playlist = data as Playlist;
                 LoadDB();
+
             }
             else
             {
                 Playlist = new Playlist() { Name = (data as Album).AlbumName, Description = (data as Album).Artist};
                 LoadAlbumSongs(data as Album);
-            }               
+                Refresh();
+            }
+            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
         }
         void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(album.AlbumSongs, true, false);
+            Songs.AddRange(album.AlbumSongs, true, true);          
         }
         async void LoadDB()
         {

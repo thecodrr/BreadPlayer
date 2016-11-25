@@ -33,7 +33,7 @@ namespace BreadPlayer.ViewModels
         public AlbumArtistViewModel()
         {
             InitDB();
-            Messenger.Instance.Register(MessageTypes.MSG_ADDALBUMS, new Action<Message>(HandleAddAlbumMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_ADD_ALBUMS, new Action<Message>(HandleAddAlbumMessage));
         }
        public async void InitDB()
         {

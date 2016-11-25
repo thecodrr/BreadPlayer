@@ -115,6 +115,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\5minsilence.mp3" />
     <Content Include="Assets\albumart_black.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\breadplayer.ttf" />

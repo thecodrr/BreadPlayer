@@ -185,26 +185,24 @@ namespace BreadPlayer
             System.Diagnostics.Debug.Write(MemoryManager.AppMemoryUsage / 1024 + " | " + MemoryManager.AppMemoryUsageLimit + " | " + isBackground);
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
-            //_smtc.DisplayUpdater.ClearAll();
+            _smtc.DisplayUpdater.ClearAll();
             if (Player.CurrentlyPlayingFile != null)
             {
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.Path);
-                    if (player.Source != MediaSource.CreateFromStorageFile(file))
+                    var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                    player.IsLoopingEnabled = true;
+                    player.Source = MediaSource.CreateFromStorageFile(file);
+                    player.CommandManager.IsEnabled = false;
+                    if (isPlaying || play)
                     {
-                        player.Source = MediaSource.CreateFromStorageFile(file);
-                        player.CommandManager.IsEnabled = false;
-                        //if(player.PlaybackSession.PlaybackState != MediaPlaybackState.Playing)
-                        if (isPlaying || play)
-                        {
-                            player.Play();
-                            isPlaying = false;
-                        }
-                        else
-                          player.Pause();                        
-                        player.Volume = 0;
+                        player.Play();
+                        isPlaying = false;
                     }
+                    else
+                        player.Pause();
+                    player.Volume = 0;
+
                 }
                 musicProps.Title = Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;

@@ -203,12 +203,11 @@ namespace BreadPlayer.ViewModels
         }
         ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
-            //if (PlaylistVM.Songs.Elements.Any(t => t.State == PlayerState.Playing))
-            //{
-            //    return PlaylistVM.Songs.Elements;
-            //}
-            //else
-            if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+            if (PlaylistSongCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
+            {
+                return PlaylistSongCollection.Elements;
+            }
+            else if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
             {
                 return TracksCollection.Elements;
             }
@@ -419,23 +418,7 @@ namespace BreadPlayer.ViewModels
             });
             return shuffled;
         }
-
-        async void ChangePlayingSongState(PlayerState compareValue, PlayerState state)
-        {
-            try
-            {
-                List<Mediafile> mp3 = new List<Mediafile>();
-
-                //mp3.AddRange(PlaylistVM?.Songs?.Elements.Where(t => t.State == compareValue));
-                //mp3.AddRange(LibVM?.TracksCollection?.Elements?.Where(t => t.State == compareValue));
-                //mp3.AddRange(LibVM?.RecentlyPlayedCollection?.Where(t => t.State == compareValue));
-
-            }
-            catch (Exception ex)
-            {
-                await NotificationManager.ShowAsync(ex.Message);
-            }
-        }
+        
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
             if (mp3file != null)
@@ -443,7 +426,7 @@ namespace BreadPlayer.ViewModels
                 if (play == true)
                     Player.IgnoreErrors = true;
                 TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-
+                PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                 if (await Player.Load(mp3file))
                 {
                     PlayPauseCommand.IsEnabled = true;
@@ -458,7 +441,7 @@ namespace BreadPlayer.ViewModels
                         DontUpdatePosition = true;
                         CurrentPosition = currentPos;
                     }
-                    if(TracksCollection != null)
+                    if(GetPlayingCollection() != null)
                         UpcomingSong = await GetUpcomingSong();
                 }
                 else
@@ -487,6 +470,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleMessage));
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleMessage));
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
@@ -511,15 +495,24 @@ namespace BreadPlayer.ViewModels
 
         public GroupedObservableCollection<string,Mediafile> TracksCollection
         {get;set;}
+        public GroupedObservableCollection<string, Mediafile> PlaylistSongCollection
+        { get; set; }
         private void HandleMessage(Message message)
         {
-            TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-            if (TracksCollection != null)
+            if (message.Payload as GroupedObservableCollection<string, Mediafile> != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                GetSettings();
-            }
+                if (message.MessageType == MessageTypes.MSG_LIBRARY_LOADED)
+                {
+                    TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                    GetSettings();
+                }
+                else
+                {
+                    PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+                }
+            }            
         }
         string queryWord = "";
         public string QueryWord

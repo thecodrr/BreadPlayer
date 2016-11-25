@@ -79,6 +79,12 @@ namespace BreadPlayer.ViewModels
         {
             Dispose();
         }
+        void HandleUpdateSongCountMessage(Message message)
+        {
+            var count = (double)message.Payload;
+            message.HandledStatus = MessageHandledStatus.HandledCompleted;
+            SongCount = Convert.ToInt32(count);
+        }
         async void HandleAddPlaylistMessage(Message message)
         {
             var plist = message.Payload as Playlist;
@@ -117,7 +123,8 @@ namespace BreadPlayer.ViewModels
 
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
-            Messenger.Instance.Register(MessageTypes.MSG_ADDPLAYLIST, new Action<Message>(HandleAddPlaylistMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_ADD_PLAYLIST, new Action<Message>(HandleAddPlaylistMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleUpdateSongCountMessage));
         }
 
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -405,6 +412,7 @@ namespace BreadPlayer.ViewModels
                     (PlayCommand as RelayCommand).IsEnabled = false;
                     await Task.Delay(100);
                     (PlayCommand as RelayCommand).IsEnabled = true;
+                    TracksCollection.Elements.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
                 });
             }
         }
@@ -456,6 +464,7 @@ namespace BreadPlayer.ViewModels
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;
+            (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
@@ -633,7 +642,7 @@ namespace BreadPlayer.ViewModels
                         }
 
                     }
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDALBUMS);
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, "");
                 }
             }
         }
@@ -688,7 +697,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SongCount = LibraryService.SongCount;
+            SongCount = TracksCollection.Elements.Count;
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             

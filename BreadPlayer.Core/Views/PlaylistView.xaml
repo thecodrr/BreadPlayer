@@ -281,7 +281,7 @@
                             </ContentControl>
                             <Interactivity:Interaction.Behaviors>
                                 <Core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource Core},Path=LibVM.PlayCommand}"></Core:InvokeCommandAction>
+                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
                                 </Core:EventTriggerBehavior>
                                 <Core:EventTriggerBehavior EventName="RightTapped">
                                     <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>

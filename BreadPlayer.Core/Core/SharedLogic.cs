@@ -86,7 +86,6 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
-
         public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;

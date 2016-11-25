@@ -120,7 +120,7 @@ namespace BreadPlayer.ViewModels
                 if (Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
                 else playlist = new PLS();
                 var plist = new Playlist() { Name = file.DisplayName };
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDPLAYLIST, plist);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_PLAYLIST, plist);
                 await playlist.LoadPlaylist(file).ConfigureAwait(false);
             }
         }
@@ -227,8 +227,8 @@ namespace BreadPlayer.ViewModels
                                 //we use 'if' conditional so that we don't add any duplicates
                                 if (TracksCollection.Elements.All(t => t.Path != file.Path))
                                 {
-
                                     i++; //Notice here that we are increasing the 'i' variable by one for each file.
+                                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
                                     await Task.Run(async () =>
                                     {
                                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
@@ -269,8 +269,9 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
+                AlbumArtistViewModel model = new AlbumArtistViewModel();
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDALBUMS);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, "as");
                 //we stop the stopwatch.
                 stop.Stop();
                 //and report the user how long it took.
@@ -379,7 +380,7 @@ namespace BreadPlayer.ViewModels
                     var albumartFolder = ApplicationData.Current.LocalFolder;
                     var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3file.Album + mp3file.LeadArtist).ToLower().ToSha1() + ".jpg";
 
-                    StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView).AsTask().ConfigureAwait(false);
+                    StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale).AsTask().ConfigureAwait(false);
                     if (!VerifyFileExists(albumartLocation, 300) && thumbnail != null && thumbnail.Type == ThumbnailType.Image)
                     {
                         await SaveImagesAsync(thumbnail, mp3file).ConfigureAwait(false);

@@ -15,7 +15,7 @@
         </Canvas>-->
        
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core},Path=SettingsVM}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
       <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
