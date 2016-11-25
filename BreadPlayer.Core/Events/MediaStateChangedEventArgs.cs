@@ -16,15 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BreadPlayer.Core;
+
 namespace BreadPlayer.Events
 {
-   
-    public class MediaStateChangedEventArgs : EventArgs
+
+	public class MediaStateChangedEventArgs : EventArgs
     {
         private BreadPlayer.Core.PlayerState newState;
         public MediaStateChangedEventArgs(PlayerState NewState)

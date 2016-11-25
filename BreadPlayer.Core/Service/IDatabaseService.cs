@@ -2,13 +2,11 @@
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Service
 {
-    public interface IDatabaseService : IDisposable
+	public interface IDatabaseService : IDisposable
     {
         void CreateDB();
         Task<IEnumerable<Mediafile>> GetTracks();

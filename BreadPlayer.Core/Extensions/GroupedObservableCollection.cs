@@ -19,10 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using BreadPlayer.Models;
 using Windows.UI.Core;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -30,7 +27,7 @@ using System.Runtime.InteropServices;
 
 namespace BreadPlayer.Extensions
 {
-    public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
+	public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
         where TKey : IComparable<TKey>
     {
         private readonly Func<TElement, TKey> readKey;

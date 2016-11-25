@@ -15,13 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer;
 using System;
-using System.Windows.Input;
 
 namespace SplitViewMenu
 {
-    public interface INavigationMenuItem
+	public interface INavigationMenuItem
     {
         Type DestinationPage { get; }
         object Arguments { get; }

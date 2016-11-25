@@ -4,8 +4,6 @@ using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -13,7 +11,7 @@ using Windows.Storage.Pickers;
 
 namespace BreadPlayer.PlaylistBus
 {
-    class PLS : IPlaylist
+	class PLS : IPlaylist
     {
         public async Task LoadPlaylist(StorageFile file)
         {

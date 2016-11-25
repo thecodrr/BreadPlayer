@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using LiteDB;
 using LiteDB.Platform;
@@ -28,7 +27,7 @@ using System.Diagnostics;
 
 namespace BreadPlayer.Service
 {
-    public class DatabaseService : IDatabaseService
+	public class DatabaseService : IDatabaseService
     {
         LiteDatabase db;
         public LiteCollection<Mediafile> tracks;

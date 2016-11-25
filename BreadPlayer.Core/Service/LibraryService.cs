@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using BreadPlayer.Models;
 using System.Threading.Tasks;
-using System;
 using BreadPlayer.Common;
 
 namespace BreadPlayer.Service
 {
-    /// <summary>
-    /// Provide services for retrieving and storing Customer information
-    /// </summary>
-    public class LibraryService : ILibraryService
+	/// <summary>
+	/// Provide services for retrieving and storing Customer information
+	/// </summary>
+	public class LibraryService : ILibraryService
     {
         private IDatabaseService Database
         {

@@ -16,16 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Static class contain error occured
-    /// </summary>
-    public class ExceptionCollection : CollectionBase
+	/// <summary>
+	/// Static class contain error occured
+	/// </summary>
+	public class ExceptionCollection : CollectionBase
     {
         /// <summary>
         /// Create new Exception collection class

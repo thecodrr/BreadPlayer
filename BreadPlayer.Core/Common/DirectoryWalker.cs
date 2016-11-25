@@ -17,13 +17,8 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using System.IO;
-using Windows.UI.Core;
-using Windows.ApplicationModel.Core;
 using Windows.Storage.Search;
 using Windows.Storage.FileProperties;
 using BreadPlayer.ViewModels;

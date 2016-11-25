@@ -15,16 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Provide an interface for Tag streams
-    /// </summary>
-    public interface ITagInfo
+	/// <summary>
+	/// Provide an interface for Tag streams
+	/// </summary>
+	public interface ITagInfo
     {
         /// <summary>
         /// Gets file path for reading and writing data

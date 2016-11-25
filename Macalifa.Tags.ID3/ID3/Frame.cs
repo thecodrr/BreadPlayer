@@ -16,19 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using System.Collections;
 using BreadPlayer.Tags.ID3.ID3v2Frames;
-using System.Text.RegularExpressions;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// The main class for any type of frame to inherit
-    /// </summary>
-    public abstract class Frame : ILengthable
+	/// <summary>
+	/// The main class for any type of frame to inherit
+	/// </summary>
+	public abstract class Frame : ILengthable
     {
         private string _FrameID; // Contain FrameID of current Frame
         private FrameFlags _FrameFlags; // Contain Flags of current frame

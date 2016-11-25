@@ -16,18 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
-using System.Globalization;
-using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Converters
 {
-   public class TrueToFalseConverter : IValueConverter
+	public class TrueToFalseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

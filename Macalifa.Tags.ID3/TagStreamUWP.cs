@@ -16,15 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using BreadPlayer.Tags.ID3;
+
 namespace BreadPlayer.Tags
 {
-    public class TagStreamUWP
+	public class TagStreamUWP
     {
         private BinaryReader _BReader;
         private BinaryWriter _BWriter;

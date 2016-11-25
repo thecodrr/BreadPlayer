@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Services
 {
-    public class NavigationService
+	public class NavigationService
     {
         /// &lt;summary>
         /// This holds the instance to the Only NavigationService in this app.

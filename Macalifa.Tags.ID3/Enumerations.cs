@@ -16,15 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Indicates diffrent types of text encoding use for texts
-    /// </summary>
-    public enum TextEncodings
+	/// <summary>
+	/// Indicates diffrent types of text encoding use for texts
+	/// </summary>
+	public enum TextEncodings
     {
         /// <summary>
         /// Use Asccii as text encoding

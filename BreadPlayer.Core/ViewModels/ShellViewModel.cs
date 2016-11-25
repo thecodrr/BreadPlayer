@@ -18,28 +18,19 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
-using System.IO;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using BreadPlayer.Core;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using SplitViewMenu;
-using BreadPlayer.Services;
 using BreadPlayer.Models;
 using System.Windows.Input;
 using BreadPlayer.Extensions;
 using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
-using Windows.Media;
-using System.Diagnostics;
 using Windows.UI.Xaml.Input;
-using Extensions;
 using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
@@ -47,7 +38,7 @@ using System.Reflection;
 
 namespace BreadPlayer.ViewModels
 {
-    public class ShellViewModel : ViewModelBase, IDisposable
+	public class ShellViewModel : ViewModelBase, IDisposable
     {
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);

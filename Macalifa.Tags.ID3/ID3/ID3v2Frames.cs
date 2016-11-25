@@ -19,15 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using System.Collections;
 
 namespace BreadPlayer.Tags.ID3.ID3v2Frames
 {
-    /// <summary>
-    /// Provide a interface for Lenghtable Frames
-    /// </summary>
-    public interface ILengthable
+	/// <summary>
+	/// Provide a interface for Lenghtable Frames
+	/// </summary>
+	public interface ILengthable
     {
         /// <summary>
         /// Length of current object

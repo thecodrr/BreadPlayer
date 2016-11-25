@@ -16,9 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using BreadPlayer.Tags.ID3.ID3v2Frames;
 using System.IO;
 
 /*
@@ -27,10 +24,10 @@ using System.IO;
  */
 namespace BreadPlayer.Tags.ID3.ID3v2Frames.StreamFrames
 {
-    /// <summary>
-    /// A class for PositionSynchronised frame
-    /// </summary>
-    public class PositionSynchronisedFrame : Frame
+	/// <summary>
+	/// A class for PositionSynchronised frame
+	/// </summary>
+	public class PositionSynchronisedFrame : Frame
     {
         private TimeStamps _TimeStamp;
         private long _Position;

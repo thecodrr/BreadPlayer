@@ -16,30 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
-using Windows.Media.Audio;
-using Windows.Media.Capture;
-using Windows.Media.Devices;
-using Windows.Media.MediaProperties;
-using Windows.Media.Render;
 using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using ManagedBass;
-using System.Runtime.InteropServices;
 using BreadPlayer.Events;
-using System.Diagnostics;
 using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
-using Extensions;
 using System.IO;
 
 namespace BreadPlayer.Core
 {
-    public class CoreBreadPlayer : ViewModelBase, IDisposable
+	public class CoreBreadPlayer : ViewModelBase, IDisposable
     {
         #region Fields
         public int handle = 0;

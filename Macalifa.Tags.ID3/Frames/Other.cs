@@ -16,17 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace BreadPlayer.Tags.ID3.ID3v2Frames.OtherFrames
 {
-    /// <summary>
-    /// Provide a class for Reverb frame
-    /// </summary>
-    public class ReverbFrame : Frame
+	/// <summary>
+	/// Provide a class for Reverb frame
+	/// </summary>
+	public class ReverbFrame : Frame
     {
         private int _ReverbLeft;
         private int _ReverbRight;
