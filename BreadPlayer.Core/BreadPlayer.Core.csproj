@@ -20,11 +20,12 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <HockeyAppResourceId>6085c48bdbf64fa78cb867f1dca0ca4f</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
     <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
-</PropertyGroup>
-<PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
     <PackageCertificateThumbprint>80C789B9B1EACF1AD727BB7524B6127C081B2AB8</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>BreadPlayer.Core_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
@@ -121,6 +122,7 @@
     <None Include="BreadPlayer.Core_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <None Include="Service References\HockeyApp\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundApp.cs" />
@@ -353,7 +355,9 @@
       <Name>BreadPlayer.Tags.ID3</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "HockeySDK.UWP": "4.1.3",
     "LiteDB.Core": "2.0.2",
     "ManagedBass": "0.24.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2"

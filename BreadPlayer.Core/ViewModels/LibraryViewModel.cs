@@ -363,8 +363,11 @@ namespace BreadPlayer.ViewModels
                 LibraryService.RemoveMediafile(item);
                // SongCount--;
             }
-            await Task.Delay(100);
-            SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);    
+            if(TracksCollection.Elements.Count > 0)
+            {
+                await Task.Delay(100);
+                SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
+            }
         }
         /// <summary>
         /// Plays the selected file. <seealso cref="PlayCommand"/>
