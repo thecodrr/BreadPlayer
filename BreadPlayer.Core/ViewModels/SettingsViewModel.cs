@@ -270,7 +270,7 @@ namespace BreadPlayer.ViewModels
                     }
                 }
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
-                await AlbumArtistVM.AddAlbums().ConfigureAwait(false);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDALBUMS);
                 //we stop the stopwatch.
                 stop.Stop();
                 //and report the user how long it took.

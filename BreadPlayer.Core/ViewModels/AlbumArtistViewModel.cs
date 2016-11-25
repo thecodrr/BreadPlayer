@@ -11,11 +11,20 @@ using System.Windows.Input;
 using LiteDB;
 using Windows.Storage;
 using BreadPlayer.Service;
+using BreadPlayer.Messengers;
 
 namespace BreadPlayer.ViewModels
 {
     public class AlbumArtistViewModel : ViewModelBase, IDisposable
     {
+        async void HandleAddAlbumMessage(Message message)
+        {
+            if (message != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await AddAlbums().ConfigureAwait(false);
+            }
+        }
         LiteDatabase db;
         public LiteCollection<Album> albumCollection;
         /// <summary>
@@ -24,6 +33,7 @@ namespace BreadPlayer.ViewModels
         public AlbumArtistViewModel()
         {
             InitDB();
+            Messenger.Instance.Register(MessageTypes.MSG_ADDALBUMS, new Action<Message>(HandleAddAlbumMessage));
         }
        public async void InitDB()
         {

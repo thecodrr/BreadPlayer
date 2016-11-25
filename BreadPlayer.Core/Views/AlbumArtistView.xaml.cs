@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,20 +26,21 @@ namespace BreadPlayer
         public AlbumArtistView()
         {
             this.InitializeComponent();
+            grid.DataContext = new AlbumArtistViewModel();
        }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () => 
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
             {
-                (grid.Resources["Source"] as CollectionViewSource).Source = Core.SharedLogic.AlbumArtistVM.AlbumCollection;
-                await Core.SharedLogic.AlbumArtistVM.LoadAlbums().ConfigureAwait(false);
+                (grid.Resources["Source"] as CollectionViewSource).Source = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
+                (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
             });
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             (grid.Resources["Source"] as CollectionViewSource).Source = null;
-            Core.SharedLogic.AlbumArtistVM.AlbumCollection = null;
+            (grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
             base.OnNavigatedFrom(e);
         }
     }

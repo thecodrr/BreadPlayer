@@ -15,7 +15,7 @@
             <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
         </ItemsPanelTemplate>
     </Page.Resources>
-    <Grid x:Name="grid" DataContext="{Binding Source={StaticResource Core}, Path=AlbumArtistVM}" >
+    <Grid x:Name="grid" >
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
          

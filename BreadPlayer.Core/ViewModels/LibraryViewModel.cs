@@ -633,7 +633,7 @@ namespace BreadPlayer.ViewModels
                         }
 
                     }
-                    await Core.SharedLogic.AlbumArtistVM.AddAlbums();
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADDALBUMS);
                 }
             }
         }
