@@ -30,7 +30,7 @@
                                     <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
                                     <MenuFlyoutItem Text="Open Song Location" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding OpenSongLocationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
-                                    <MenuFlyoutItem Text="Delete from playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"></MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="Delete from playlist" Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"></MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Properties" DataContext="{Binding ElementName=playMenuItem, Path=DataContext}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Command="{Binding ShowPropertiesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"/>
 
                                 </MenuFlyout>
@@ -238,7 +238,7 @@
                                                            VerticalAlignment="Stretch" Height="60" IsDoubleTapEnabled="False" Style="{StaticResource CustomAppBarButtonStyle}"
                                                           CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
                                                           Command="{Binding PlayCommand}"/>
-                                    <AppBarButton x:Name="button2_MOBILE" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" BorderBrush="White" Background="Black"
+                                    <AppBarButton x:Name="button2_MOBILE" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" BorderBrush="White" Background="Black"
                                                               IsDoubleTapEnabled="False" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                               Height="60"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                                               Width="60" Style="{StaticResource CustomAppBarButtonStyle}"/>
@@ -261,8 +261,8 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" x:Name="titleTxt" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}" VerticalAlignment="Center"/>
                                         <AppBarButton Grid.Column="1" Icon="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="50" Margin="10,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" Foreground="{Binding ElementName=DataStack, Path=Foreground}"  VerticalAlignment="Stretch" Height="50" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding PlayCommand}"></AppBarButton>
-                                   
-                                        <AppBarButton Grid.Column="2" x:Name="button2" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" 
+
+                                        <AppBarButton Grid.Column="2" x:Name="button2" DataContext="{Binding Source={StaticResource PlaylistVM}}" 
                                         Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" 
                                         IsDoubleTapEnabled="False" Margin="0,0,0,0" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                       Foreground="{Binding ElementName=DataStack, Path=Foreground}" Height="50"  
@@ -293,8 +293,8 @@
             </Setter>
         </Style>
         <MenuFlyout x:Key="ExtraMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
-            <MenuFlyoutItem Text="Delete This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding DeletePlaylistCommand}" />
-            <MenuFlyoutItem Text="Rename This Playlist" DataContext="{Binding Source={StaticResource Core}, Path=PlaylistVM}" Command="{Binding RenamePlaylistCommand}"/>
+            <MenuFlyoutItem Text="Delete This Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" />
+            <MenuFlyoutItem Text="Rename This Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}"/>
         </MenuFlyout>
         <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs.Elements}"/>
     </Page.Resources>

@@ -45,6 +45,7 @@ namespace BreadPlayer.ViewModels
         public GroupedObservableCollection<string, Mediafile> Songs { get { if (songs == null) { songs = new GroupedObservableCollection<string, Mediafile>(t => t.Title); } return songs; } set { Set(ref songs, value); } }
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
+       
         string totalSongs;
         public string TotalSongs
         {
@@ -205,9 +206,36 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
-           
         }
-
+        public PlaylistViewModel(object data) : this()
+        {
+            if (data is Playlist)
+            {
+                Playlist = data as Playlist;
+                LoadDB();
+            }
+            else
+            {
+                Playlist = new Playlist() { Name = (data as Album).AlbumName, Description = (data as Album).Artist};
+                LoadAlbumSongs(data as Album);
+            }               
+        }
+        void LoadAlbumSongs(Album album)
+        {
+            Songs.AddRange(album.AlbumSongs, true, false);
+        }
+        async void LoadDB()
+        {
+            using (Service.PlaylistService service = new Service.PlaylistService(Playlist.Name))
+            {
+                if (service.IsValid)
+                {
+                    var ss = service.GetTrackCount();
+                    Songs.AddRange(await service.GetTracks().ConfigureAwait(false), true, false);
+                    Refresh();
+                }
+            }
+        }
         private void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             Refresh();

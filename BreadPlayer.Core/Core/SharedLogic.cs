@@ -25,13 +25,10 @@ namespace BreadPlayer.Core
 {
     public class SharedLogic : ObservableObject
     {
-        public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems { get; set; }
+        public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
-        //public static LibraryViewModel LibVM => GenericService<LibraryViewModel>.Instance.GenericClass;
-        // public ShellViewModel ShellVM => GenericService<ShellViewModel>.Instance.GenericClass;
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
-        public static PlaylistViewModel PlaylistVM => GenericService<PlaylistViewModel>.Instance.GenericClass;
         public static AlbumArtistViewModel AlbumArtistVM => GenericService<AlbumArtistViewModel>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;

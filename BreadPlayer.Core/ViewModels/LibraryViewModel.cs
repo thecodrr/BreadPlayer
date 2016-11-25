@@ -355,18 +355,29 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to delete.</param>
         public async void Delete(object path)
         {
-            int index = 0;
-            foreach (var item in SelectedItems)
+            try
             {
-                index = TracksCollection.Elements.IndexOf(item);
-                TracksCollection.RemoveItem(item);               
-                LibraryService.RemoveMediafile(item);
-               // SongCount--;
+                int index = 0;
+                if(SelectedItems.Count > 0)
+                {
+                    foreach (var item in SelectedItems)
+                    {
+                        index = TracksCollection.Elements.IndexOf(item);
+                        TracksCollection.RemoveItem(item);
+                        LibraryService.RemoveMediafile(item);
+                        // SongCount--;
+                    }
+                }
+               
+                if (TracksCollection.Elements.Count > 0)
+                {
+                    await Task.Delay(100);
+                    SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
+                }
             }
-            if(TracksCollection.Elements.Count > 0)
+            catch
             {
-                await Task.Delay(100);
-                SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
+             
             }
         }
         /// <summary>

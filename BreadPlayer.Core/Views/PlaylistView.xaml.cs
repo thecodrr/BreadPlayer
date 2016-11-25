@@ -44,52 +44,16 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class PlaylistView
     {        
-        PlaylistViewModel PlaylistVM => Core.SharedLogic.PlaylistVM;
+        PlaylistViewModel PlaylistVM;
         public PlaylistView()
         {
             this.InitializeComponent();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            PlaylistVM.Dispose();
-            PlaylistVM.Songs = null;
-            if (e.Parameter is Playlist)
-            {
-                var playlist = (e.Parameter as Playlist);
-                PlaylistVM.Playlist = playlist;
-                LoadDB();
-            }
-            else
-            {
-                PlaylistVM.Playlist = new Playlist() { Name = (e.Parameter as Album).AlbumName };
-                LoadAlbumSongs(e.Parameter as Album);
-                PlaylistVM.Refresh();
-            }
-                
+            PlaylistVM = new PlaylistViewModel(e.Parameter);
             this.DataContext = PlaylistVM;
             base.OnNavigatedTo(e);
         }
-        async void LoadDB()
-        {
-            using (Service.PlaylistService service = new Service.PlaylistService(PlaylistVM.Playlist.Name))
-            {
-                if (service.IsValid)
-                {
-                    var ss = service.GetTrackCount();
-                    PlaylistVM.Songs.AddRange(await service.GetTracks().ConfigureAwait(false), true, false);
-                    PlaylistVM.Refresh();
-                }
-            }
-        }
-        void LoadAlbumSongs(Album album)
-        {
-            PlaylistVM.Songs.AddRange(album.AlbumSongs, true, false);
-        }
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            GC.Collect();
-            base.OnNavigatingFrom(e);
-        }
-
     }
 }

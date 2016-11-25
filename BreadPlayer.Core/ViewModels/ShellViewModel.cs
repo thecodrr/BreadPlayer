@@ -203,11 +203,12 @@ namespace BreadPlayer.ViewModels
         }
         ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
-            if (PlaylistVM.Songs.Elements.Any(t => t.State == PlayerState.Playing))
-            {
-                return PlaylistVM.Songs.Elements;
-            }
-            else if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+            //if (PlaylistVM.Songs.Elements.Any(t => t.State == PlayerState.Playing))
+            //{
+            //    return PlaylistVM.Songs.Elements;
+            //}
+            //else
+            if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
                 return TracksCollection.Elements;
             }
@@ -492,7 +493,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
 
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
-            PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
+            //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
             this.timer = new DispatcherTimer();

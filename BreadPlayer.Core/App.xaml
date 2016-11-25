@@ -69,7 +69,7 @@ xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:MacalifaCore="us
             <MacalifaCore:SharedLogic x:Key="Core"/>
             <VM:ShellViewModel x:Key="ShellVM"/>
             <VM:LibraryViewModel x:Key="LibVM"/>
-            
+            <VM:PlaylistViewModel x:Key="PlaylistVM"/>
             <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
                 <Setter Property="Foreground" Value="White"/>

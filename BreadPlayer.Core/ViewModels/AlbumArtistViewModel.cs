@@ -113,9 +113,7 @@ namespace BreadPlayer.ViewModels
             if(para is Album)
             {
                 Album album = para as Album;
-               // Dictionary<Playlist, IEnumerable<Mediafile>> albumDict = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                //albumDict.Add(new Playlist() { Name = album.AlbumName, Description=album.Artist }, album.AlbumSongs);
-                PlaylistVM.IsMenuVisible = false;
+               //PlaylistVM.IsMenuVisible = false;
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
                 SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), album);
             }
