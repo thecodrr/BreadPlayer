@@ -11,7 +11,7 @@ namespace BreadPlayer.Services
         /// &lt;summary>
         /// This holds the instance to the Only NavigationService in this app.
         /// &lt;/summary>
-        public static NavigationService Instance { get; protected set; }
+        public static NavigationService Instance { get; set; }
 
         /// &lt;summary>
         /// This will hold the reference to the frame that is to be manipulated.

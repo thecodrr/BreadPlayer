@@ -130,7 +130,10 @@
                             <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding PlayCommand}" PressedKey="P" DoubleKeyCommand="True"/>
                         </Core:EventTriggerBehavior>
                         <Core:EventTriggerBehavior EventName="SelectionChanged">
-                            <Core:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=fileBox, Path=SelectedItems}"/>
+                            <Core:EventTriggerBehavior.Actions>
+                                <Core:CallMethodAction MethodName="SelectionChanged" TargetObject="{Binding Source={StaticResource LibVM}}"/>
+                                <!--<Core:InvokeCommandAction  CommandParameter="{Binding ElementName=fileBox}" Command="{Binding SelectionChangedCommand}"/>-->
+                            </Core:EventTriggerBehavior.Actions>
                         </Core:EventTriggerBehavior>
                         <Core:EventTriggerBehavior EventName="Drop">
                             <Core:CallMethodAction MethodName="DropFiles" TargetObject="{Binding Source={StaticResource LibVM}}"/>

@@ -369,6 +369,8 @@ namespace BreadPlayer.ViewModels
         #region IDisposable
         public void Dispose()
         {
+            PlaylistSongCollection?.Clear();
+            TracksCollection?.Clear();
             DontUpdatePosition = true;
             CurrentPosition = 0;
             UpcomingSong = null;

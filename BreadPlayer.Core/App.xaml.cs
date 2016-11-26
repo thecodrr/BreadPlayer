@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.Services;
+using BreadPlayer.ViewModels;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -74,6 +76,7 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
+            //ReInitialize();
             CoreWindowLogic.EnableDisableSmtc();
             CoreWindowLogic.isBackground = false;
             deferral.Complete();
@@ -82,6 +85,7 @@ namespace BreadPlayer
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
+            //ReduceMemoryUsage();
             CoreWindowLogic.Stringify();
             CoreWindowLogic.UpdateSmtc(true);
             CoreWindowLogic.EnableDisableSmtc();
@@ -128,6 +132,7 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            ReduceMemoryUsage();
             CoreWindowLogic.Stringify();
             await Task.Delay(500);
             deferral.Complete();
@@ -198,8 +203,16 @@ namespace BreadPlayer
             
           
         }
-
-        public void ReduceMemoryUsage(ulong limit)
+        void ReInitialize()
+        {
+            if (Window.Current.Content == null)
+            {
+                var frame = new Frame();
+                frame.Navigate(typeof(Shell));
+                Window.Current.Content = frame;
+            }
+        }
+        public void ReduceMemoryUsage()
         {
             // If the app has caches or other memory it can free, it should do so now.
             // << App can release memory here >>
@@ -212,8 +225,8 @@ namespace BreadPlayer
             {
                 // Some apps may wish to use this helper to explicitly disconnect
                 // child references.
-                 VisualTreeHelper.DisconnectChildrenRecursive(Window.Current.Content);
-
+                VisualTreeHelper.DisconnectChildrenRecursive(Window.Current.Content);
+                NavigationService.Instance = null;
                 // Clear the view content. Note that views should rely on
                 // events like Page.Unloaded to further release resources.
                 // Release event handlers in views since references can

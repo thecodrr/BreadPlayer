@@ -49,6 +49,7 @@ namespace BreadPlayer
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
        
+
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;

@@ -181,7 +181,8 @@ namespace SplitViewMenu
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
         }
-      
+        
+
         static INavigationMenuItem LastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

@@ -53,7 +53,7 @@
 
         </VisualStateManager.VisualStateGroups>
 
-        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>

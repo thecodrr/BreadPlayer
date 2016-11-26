@@ -127,7 +127,7 @@ namespace BreadPlayer
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);
             await dialog.ShowAsync();
-        }        
+        }
         
     }
 }

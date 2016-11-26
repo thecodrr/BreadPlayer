@@ -256,16 +256,7 @@ namespace BreadPlayer.ViewModels
         RelayCommand _addtoplaylistCommand;   
         RelayCommand _refreshViewCommand;
         RelayCommand _initCommand;
-        RelayCommand _selectionChangedCommand;
-        /// <summary>
-        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
-        public ICommand SelectionChangedCommand
-        {
-            get
-            { if (_selectionChangedCommand == null) { _selectionChangedCommand = new RelayCommand(param => this.SelectionChanged(param)); } return _selectionChangedCommand; }
-        }
-       
+      
         /// <summary>
         /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -309,18 +300,7 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Implementations
-        void SelectionChanged(object para)
-        {
-            var selectionEvent = (para as SelectionChangedEventArgs);
-            if(selectionEvent.RemovedItems.Count > 0)
-                foreach(var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
-                {
-                    SelectedItems.Remove(toRemove);
-                }
-            if(selectionEvent.AddedItems.Count > 0)
-                SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
-        }
+        #region Implementations    
         /// <summary>
         /// Refreshes the view with new sorting order and/or filtering. <seealso cref="RefreshViewCommand"/>
         /// </summary>
@@ -818,6 +798,16 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
+        public void SelectionChanged(object para, SelectionChangedEventArgs selectionEvent)
+        {
+            if (selectionEvent.RemovedItems.Count > 0)
+                foreach (var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
+                {
+                    SelectedItems.Remove(toRemove);
+                }
+            if (selectionEvent.AddedItems.Count > 0)
+                SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
+        }
         public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 
