@@ -374,7 +374,13 @@ namespace BreadPlayer.ViewModels
                     (PlayCommand as RelayCommand).IsEnabled = false;
                     await Task.Delay(100);
                     (PlayCommand as RelayCommand).IsEnabled = true;
-                    TracksCollection.Elements.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
+
+                    if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
+                        TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+                    if(TracksCollection.Elements.Where(t => t.State == PlayerState.Playing).Count() > 1)
+                    {
+                        TracksCollection.Elements.Where(t => t.State == PlayerState.Playing).ElementAt(1).State = PlayerState.Stopped;
+                    }
                 });
             }
         }

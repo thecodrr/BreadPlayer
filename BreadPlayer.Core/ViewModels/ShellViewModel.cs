@@ -145,7 +145,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        public async Task<Mediafile> GetUpcomingSong()
+        public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
         {
             var playingCollection = GetPlayingCollection();
             if (playingCollection != null && playingCollection.Any())
@@ -167,7 +167,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        toPlayFile = IndexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? playingCollection.ElementAt(IndexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" ? playingCollection.ElementAt(0) : null;
+                        toPlayFile = IndexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? playingCollection.ElementAt(IndexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" || isNext ? playingCollection.ElementAt(0) : null;
                     }
                     return toPlayFile;
                 }
@@ -184,7 +184,7 @@ namespace BreadPlayer.ViewModels
             if (Player.CurrentlyPlayingFile != null)
                 history.Do(Player.CurrentlyPlayingFile);
 
-            Mediafile toPlayFile = await GetUpcomingSong();
+            Mediafile toPlayFile = await GetUpcomingSong(true);
             if (toPlayFile == null)
             {
                 PlayPause();
