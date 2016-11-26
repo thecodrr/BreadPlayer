@@ -446,7 +446,8 @@ namespace BreadPlayer.ViewModels
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;
-            (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
+            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true)
+                (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
