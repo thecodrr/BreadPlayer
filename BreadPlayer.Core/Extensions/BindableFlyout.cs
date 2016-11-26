@@ -15,28 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.ViewModels;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Runtime.CompilerServices;
-using System.ServiceModel.Channels;
 using BreadPlayer.Models;
-using System.Diagnostics;
 using BreadPlayer.Core;
-using BreadPlayer.Service;
 
 namespace BreadPlayer.Extensions
 {
-    public class BindableFlyout : MenuFlyout
+	public class BindableFlyout : MenuFlyout
     {
         
         public ThreadSafeObservableCollection<ContextMenuCommand> ItemsSource

@@ -21,9 +21,6 @@ using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Core;
-using BreadPlayer.Common;
-using BreadPlayer;
-using Microsoft.Xaml.Interactions.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Behaviours

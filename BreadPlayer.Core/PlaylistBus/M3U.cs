@@ -3,10 +3,7 @@ using BreadPlayer.Service;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -14,7 +11,7 @@ using Windows.Storage.Pickers;
 
 namespace BreadPlayer.PlaylistBus
 {
-   public class M3U : IPlaylist
+	public class M3U : IPlaylist
     {
         public async Task LoadPlaylist(StorageFile file)
         {

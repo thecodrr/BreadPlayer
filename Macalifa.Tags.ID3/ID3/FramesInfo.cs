@@ -17,13 +17,8 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using BreadPlayer.Tags.ID3.ID3v2Frames;
 using System.Collections;
-using BreadPlayer.Tags.ID3.ID3v2Frames.ArrayFrames;
 using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
-using BreadPlayer.Tags.ID3.ID3v2Frames.OtherFrames;
-using BreadPlayer.Tags.ID3.ID3v2Frames.StreamFrames;
 using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using System.Reflection;
 /*
@@ -33,10 +28,10 @@ using System.Reflection;
  */
 namespace BreadPlayer.Tags.ID3.ID3v2Frames
 {
-    /// <summary>
-    /// Static class that represent informaion about ID3v2 frames
-    /// </summary>
-    public static class FramesInfo
+	/// <summary>
+	/// Static class that represent informaion about ID3v2 frames
+	/// </summary>
+	public static class FramesInfo
     {
         private static Dictionary<string, FrameInfo> _FramesDictionary; // a dictionary contain all Frames information
 

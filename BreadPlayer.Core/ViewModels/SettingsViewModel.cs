@@ -15,26 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using BreadPlayer.Core;
-using Windows.UI.Xaml;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
-using System.Windows.Input;
 using Windows.Storage.AccessCache;
-using Windows.UI.Core;
 using BreadPlayer.Models;
-using ManagedBass;
-using ManagedBass.Tags;
-using System.Diagnostics;
 using BreadPlayer.PlaylistBus;
 using Windows.Storage.FileProperties;
 using BreadPlayer.Extensions;
@@ -44,7 +34,7 @@ using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+	public class SettingsViewModel : ViewModelBase
     {
         string timeClosed;
         public string TimeClosed

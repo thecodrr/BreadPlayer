@@ -15,17 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Provide ID3 Information for a file
-    /// </summary>
-    public class ID3Info : ITagInfo
+	/// <summary>
+	/// Provide ID3 Information for a file
+	/// </summary>
+	public class ID3Info : ITagInfo
     {
         private ID3v1 _ID3v1;
         private ID3v2 _ID3v2;

@@ -15,17 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
 using System.Text;
-using BreadPlayer.Tags.ID3;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Static methods to use in application
-    /// </summary>
-    public static class StaticMethods
+	/// <summary>
+	/// Static methods to use in application
+	/// </summary>
+	public static class StaticMethods
     {
         /// <summary>
         /// Get System.Text.Encoding according to specified TextEncoding argument

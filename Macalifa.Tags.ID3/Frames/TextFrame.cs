@@ -16,9 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 using System.IO;
 //using Tags.ID3.ID3v2Frames.OtherFrames;
 
@@ -27,10 +24,10 @@ using System.IO;
  */
 namespace BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames
 {
-    /// <summary>
-    /// A class for frame that only include Text member
-    /// </summary> 
-    public abstract class TextOnlyFrame : Frame
+	/// <summary>
+	/// A class for frame that only include Text member
+	/// </summary> 
+	public abstract class TextOnlyFrame : Frame
     {
         private string _Text; // Contain text of current frame
 

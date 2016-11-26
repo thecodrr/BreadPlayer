@@ -16,17 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.ComponentModel;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Provide a class to read and write ID3v1
-    /// </summary>
-    public class ID3v1
+	/// <summary>
+	/// Provide a class to read and write ID3v1
+	/// </summary>
+	public class ID3v1
     {
         private string _FilePath;
         private string _Title;

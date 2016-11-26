@@ -2,15 +2,11 @@
 using LiteDB;
 using LiteDB.Platform;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace BreadPlayer.Service
 {
-    public class PlaylistService : DatabaseService, IDatabaseService
+	public class PlaylistService : DatabaseService, IDatabaseService
     {
         public string Name { get; set; }
         LiteDatabase db;

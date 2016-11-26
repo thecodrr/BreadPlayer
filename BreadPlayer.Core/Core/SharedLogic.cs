@@ -3,18 +3,10 @@ using BreadPlayer.Models;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using BreadPlayer;
 using Windows.UI.Core;
-using ManagedBass;
-using ManagedBass.Tags;
-using Windows.Storage.FileProperties;
 using BreadPlayer.BreadNotificationManager;
 using BreadPlayer.Service;
 using System.Windows.Input;
@@ -23,7 +15,7 @@ using SplitViewMenu;
 
 namespace BreadPlayer.Core
 {
-    public class SharedLogic : ObservableObject
+	public class SharedLogic : ObservableObject
     {
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }

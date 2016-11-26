@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 
-    public class ObservableObject : INotifyPropertyChanged
+public class ObservableObject : INotifyPropertyChanged
     {
         /// <summary>Occurs when a property value changes. </summary>
         public event PropertyChangedEventHandler PropertyChanged;

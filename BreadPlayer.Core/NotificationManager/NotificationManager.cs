@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using BreadPlayer.Core;
 using Windows.UI.Xaml;
 
 namespace BreadPlayer.BreadNotificationManager
 {
-    public class NotificationManager : ViewModelBase
+	public class NotificationManager : ViewModelBase
     {
         DispatcherTimer hideTimer;
         string status = "Nothing Baking";

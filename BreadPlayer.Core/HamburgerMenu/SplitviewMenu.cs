@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using BreadPlayer;
-using BreadPlayer.Extensions;
 using BreadPlayer.Models;
 using BreadPlayer.Services;
 using System;
@@ -30,7 +29,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SplitViewMenu
 {
-    public sealed class SplitViewMenu : Control
+	public sealed class SplitViewMenu : Control
     {
         public static NavigationService NavService { get; protected set; }
         internal static readonly DependencyProperty MenuItemDataTemplateSelectorProperty =

@@ -18,39 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using System.IO;
 using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.UI.Xaml.Media;
 using BreadPlayer.Models;
-using System.Collections.ObjectModel;
 using BreadPlayer.Core;
 using BreadPlayer.Services;
 using System.Windows.Input;
 using System.Reflection;
-using Windows.Data.Json;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml;
-using Windows.Graphics.Imaging;
-using Windows.Storage.Streams;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Extensions;
 using Windows.UI.Xaml.Data;
-using System.Diagnostics;
-using Windows.System;
-using BreadPlayer.Events;
 using BreadPlayer.Dialogs;
-using System.Security.Cryptography;
-using SplitViewMenu;
-using Windows.Storage.AccessCache;
-using Windows.Foundation.Metadata;
-using Windows.Foundation;
 using System.Text.RegularExpressions;
-using Extensions;
 using BreadPlayer.Service;
 using BreadPlayer.Common;
 using BreadPlayer.Messengers;
@@ -58,10 +40,10 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace BreadPlayer.ViewModels
 {
-    /// <summary>
-    /// ViewModel for Library View (Severe cleanup and documentation needed.)
-    /// </summary>
-    public class LibraryViewModel : ViewModelBase, IDisposable
+	/// <summary>
+	/// ViewModel for Library View (Severe cleanup and documentation needed.)
+	/// </summary>
+	public class LibraryViewModel : ViewModelBase, IDisposable
     {
         #region Fields        
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();

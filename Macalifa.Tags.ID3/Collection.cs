@@ -16,17 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
-using System.ComponentModel;
-using System.Linq;
+
 namespace BreadPlayer.Tags.ID3.ID3v2Frames
 {
-    /// <summary>
-    /// Provide collection for frames to use for filtering
-    /// </summary>
-    public class FilterCollection
+	/// <summary>
+	/// Provide collection for frames to use for filtering
+	/// </summary>
+	public class FilterCollection
     {
         private ArrayList _Frames;
 

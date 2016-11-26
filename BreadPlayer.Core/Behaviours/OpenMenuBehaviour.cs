@@ -15,21 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Microsoft.Xaml.Interactivity;
-using Windows.UI.Xaml.Controls.Primitives;
-using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using BreadPlayer.Extensions;
-using BreadPlayer.Models;
-using System.Reflection;
-using Windows.Foundation;
 using SplitViewMenu;
 
 namespace BreadPlayer.Behaviours

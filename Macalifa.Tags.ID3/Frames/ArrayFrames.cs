@@ -16,23 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
-using System.Collections;
 using System.IO;
-using System.Text;
 using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 //using Tags.ID3.ID3v2Frames.BinaryFrames;
-using System.ComponentModel;
 
 /*
  * This namespace contain frames that have array of information
  */
 namespace BreadPlayer.Tags.ID3.ID3v2Frames.ArrayFrames
 {
-    /// <summary>
-    /// A Class for frames that includes TextEncoding, Language, TimeStampFormat, ContentType and ContentDescriptor
-    /// </summary>
-    public class SynchronisedText : TermOfUseFrame
+	/// <summary>
+	/// A Class for frames that includes TextEncoding, Language, TimeStampFormat, ContentType and ContentDescriptor
+	/// </summary>
+	public class SynchronisedText : TermOfUseFrame
     {
         // Text is Content Descriptor in this class
         private FrameCollection<Syllable> _Syllables;

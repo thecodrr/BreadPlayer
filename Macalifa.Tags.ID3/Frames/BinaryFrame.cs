@@ -17,14 +17,7 @@
 */
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
-using BreadPlayer.Tags.ID3;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media;
-using Windows.Storage.FileProperties;
 /*
  * This namespace contain frames that have binary information
  * like: pictures, files and etc
@@ -32,10 +25,10 @@ using Windows.Storage.FileProperties;
  */
 namespace BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames
 {
-    /// <summary>
-    /// A class for frame that only include Data(binary)
-    /// </summary>
-    public class BinaryFrame : Frame
+	/// <summary>
+	/// A class for frame that only include Data(binary)
+	/// </summary>
+	public class BinaryFrame : Frame
     {
         /// <summary>
         /// Contains data of current frame

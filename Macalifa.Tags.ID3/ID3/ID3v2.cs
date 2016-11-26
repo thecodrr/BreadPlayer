@@ -16,24 +16,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 using System.IO;
 using BreadPlayer.Tags.ID3.ID3v2Frames;
 using BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames;
 using BreadPlayer.Tags.ID3.ID3v2Frames.ArrayFrames;
-using System.Diagnostics;
-using System.Reflection;
 using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
 using System.Linq;
 
 namespace BreadPlayer.Tags.ID3
 {
-    /// <summary>
-    /// Provide a class to read and write ID3v2 information of files
-    /// </summary>
-    public class ID3v2
+	/// <summary>
+	/// Provide a class to read and write ID3v2 information of files
+	/// </summary>
+	public class ID3v2
     {
         #region -> Variables <-
 

@@ -18,15 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
-using BreadPlayer.Services;
-using Windows.UI.Xaml;
 using Windows.UI.Core;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
@@ -39,7 +35,7 @@ using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
-    public class PlaylistViewModel : ViewModelBase, IDisposable
+	public class PlaylistViewModel : ViewModelBase, IDisposable
     {
         GroupedObservableCollection<string, Mediafile> songs;
         public GroupedObservableCollection<string, Mediafile> Songs { get { if (songs == null) { songs = new GroupedObservableCollection<string, Mediafile>(t => t.Title); } return songs; } set { Set(ref songs, value); } }
