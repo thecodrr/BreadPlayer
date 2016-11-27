@@ -485,13 +485,11 @@
                                         </AutoSuggestBox.QueryIcon>
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="KeyUp">
-                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}" CommandParameter="{Binding .}"/>
-                                                <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
-                                            </Core:EventTriggerBehavior>
-                                            <Core:EventTriggerBehavior EventName="QuerySubmitted">
-                                                <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}" CommandParameter="{Binding .}"/>
-                                                <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
-                                            </Core:EventTriggerBehavior>
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}"/>
+                                                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource ShellVM}}"/>-->
+                                                </Core:EventTriggerBehavior.Actions>
+                                            </Core:EventTriggerBehavior>                                           
                                         </Interactivity:Interaction.Behaviors>
                                     </AutoSuggestBox>
                                     <Grid x:Name="UpperGrid" Margin="0,100,0,0">

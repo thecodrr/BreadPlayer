@@ -521,22 +521,26 @@ namespace BreadPlayer.ViewModels
         ThreadSafeObservableCollection<Mediafile> cache;
         public void Search(object para)
         {
-            if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
+            try
             {
-                Reload().ConfigureAwait(false);
+                DispatcherTimer timer = new DispatcherTimer();
+                if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
+                {
+                    Reload().ConfigureAwait(false);
+                }
+                else
+                {                   
+                    timer.Interval = TimeSpan.FromMilliseconds(200);
+                    timer.Start();
+                    timer.Tick += (sender, args) =>
+                    {
+                        Search().ConfigureAwait(false);
+                        timer.Stop();
+                    };
+                }
             }
-            if (para is KeyRoutedEventArgs)
-            { 
-            if (((KeyRoutedEventArgs)para).Key == Windows.System.VirtualKey.Enter)
-            {
-                Search().ConfigureAwait(false);
-            }
-            }
-        }
-        public void Search(object para, AutoSuggestBoxQuerySubmittedEventArgs e)
-        {
-             Search().ConfigureAwait(false);
-        }
+            catch { }
+        }      
         async Task Reload()
         {
             if (cache == null)
@@ -544,12 +548,11 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.Clear();
                 TracksCollection.AddRange(await service.GetAllMediafiles().ConfigureAwait(false), true);               
                 cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
-               // SongCount = TracksCollection.Elements.Count;
             }
             else
             {
                 TracksCollection.Clear();
-                TracksCollection.AddRange(cache, true);
+                TracksCollection.AddRange(cache, false,true);
             }
         }
         LibraryService service = new LibraryService(new DatabaseService());
