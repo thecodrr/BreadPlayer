@@ -132,7 +132,7 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            ReduceMemoryUsage();
+            //ReduceMemoryUsage();
             CoreWindowLogic.Stringify();
             await Task.Delay(500);
             deferral.Complete();
