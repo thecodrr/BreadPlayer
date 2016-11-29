@@ -414,12 +414,13 @@ namespace BreadPlayer.ViewModels
         
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
+            TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+            PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+
             if (mp3file != null)
             {
                 if (play == true)
                     Player.IgnoreErrors = true;
-                TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                 if (await Player.Load(mp3file))
                 {
                     PlayPauseCommand.IsEnabled = true;
