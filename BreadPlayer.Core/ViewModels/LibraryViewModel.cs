@@ -153,9 +153,16 @@ namespace BreadPlayer.ViewModels
                 OnPropertyChanged();
             }
         }
-      
-        ILibraryService libraryservice;
-        public ILibraryService LibraryService
+        LiteDB.LiteCollection<Mediafile> recentCol;
+        LiteDB.LiteCollection<Mediafile> RecentCollection
+        {
+            get { if (recentCol == null)
+                    recentCol = LibraryService.GetRecentCollection();
+                return recentCol; }
+            set { Set(ref recentCol, value); }
+        }      
+        LibraryService libraryservice;
+        public LibraryService LibraryService
         {
             get { if (libraryservice == null)
                     libraryservice = new LibraryService(new DatabaseService());
@@ -357,30 +364,32 @@ namespace BreadPlayer.ViewModels
         {
             if(path is Mediafile)
             {
+                LibraryService = new LibraryService(new DatabaseService());
+                RecentCollection = LibraryService.GetRecentCollection();
                 Mediafile mp3File = path as Mediafile;
                 if (RecentlyPlayedCollection.Any(t => t.Path == mp3File.Path))
                 {
                     RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mp3File.Path));
                 }
-                if (LibraryService.GetCollection<Mediafile>(new RecentCollection()).Exists(t => t._id == mp3File._id))
+                if (RecentCollection.Exists(t => t.Path == mp3File.Path))
                 {
-                    LibraryService.GetCollection<Mediafile>(new RecentCollection()).Delete(t => t._id == mp3File._id);
+                    RecentCollection.Delete(t => t.Path == mp3File.Path);
                 }
                 RecentlyPlayedCollection.Add(mp3File);
-                LibraryService.GetCollection<Mediafile>(new RecentCollection()).Insert(mp3File);
+                RecentCollection.Insert(mp3File);
+
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
                 {
                     Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mp3File, true});
                     (PlayCommand as RelayCommand).IsEnabled = false;
                     await Task.Delay(100);
                     (PlayCommand as RelayCommand).IsEnabled = true;
-                    if (TracksCollection.Elements.Where(t => t.State == PlayerState.Playing).Count() > 1)
-                    {
-                        TracksCollection.Elements.Where(t => t.State == PlayerState.Playing).ElementAt(1).State = PlayerState.Stopped;
-                    }
+
                     if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
+                    {
                         TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
-                   
+                        LibraryService.UpdateMediafile(TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path));
+                    }
                 });
             }
         }
@@ -659,7 +668,7 @@ namespace BreadPlayer.ViewModels
             core.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
-                RecentlyPlayedCollection.AddRange(LibraryService.GetCollection<Mediafile>(new RecentCollection()).FindAll());
+                RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
                 LoadPlaylists();               
                 AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
             }
@@ -672,7 +681,8 @@ namespace BreadPlayer.ViewModels
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
-            }
+              
+            }           
         }
 
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
@@ -682,11 +692,6 @@ namespace BreadPlayer.ViewModels
                 var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                 foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
             }
-            //it would be better if we don't save the last playing song 
-            //but instead just set the playing song's state to playing in database before closing app.
-            var path = RoamingSettingsHelper.GetSetting<string>("path", null);
-           if (path != "" && TracksCollection != null && TracksCollection.Elements.Any(t => t.Path == path) && TracksCollection.Elements.All(t => t.State != PlayerState.Playing))
-                TracksCollection.Elements.First(t => t.Path == path).State = PlayerState.Playing;
 
             await RemoveDuplicateGroups().ConfigureAwait(false);
             await CreateGenreMenu().ConfigureAwait(false);

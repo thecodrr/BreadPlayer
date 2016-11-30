@@ -23,7 +23,7 @@ namespace BreadPlayer.Core
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-        
+      
         #region ICommands
 
         #region Definitions

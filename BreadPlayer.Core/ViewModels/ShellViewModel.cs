@@ -45,9 +45,50 @@ namespace BreadPlayer.ViewModels
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
+        LibraryService service = new LibraryService(new DatabaseService());
         #endregion
 
+        #region Constructor
+        public ShellViewModel()
+        {
+            Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
+            Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
+
+            PlayPauseIcon = new SymbolIcon(Symbol.Play);
+            //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
+            Player.PlayerState = PlayerState.Stopped;
+            DontUpdatePosition = false;
+            this.timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Tick += Timer_Tick;
+            this.timer.Stop();
+            Player.MediaEnded += Player_MediaEnded;
+            this.PropertyChanged += ShellViewModel_PropertyChanged;
+        }
+
+        #endregion        
+
         #region HandleMessages
+        private void HandleLibraryLoadedMessage(Message message)
+        {
+            if (message.Payload as GroupedObservableCollection<string, Mediafile> != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                if (message.MessageType == MessageTypes.MSG_LIBRARY_LOADED)
+                {
+                    TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                    GetSettings();
+                }
+                else
+                {
+                    PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+                }
+            }
+        }
         void HandlePlaySongMessage(Message message)
         {
             var obj = message.Payload as List<object>;
@@ -89,6 +130,11 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _playNextCommand;
         DelegateCommand _playPauseCommand;
         DelegateCommand _setRepeatCommand;
+        RelayCommand searchCommand;
+        public RelayCommand SearchCommand
+        {
+            get { if (searchCommand == null) searchCommand = new RelayCommand(param => Search(param)); return searchCommand; }
+        }
         /// <summary>
         /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -104,7 +150,30 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region Implementation
+        #region Implementation 
+        ThreadSafeObservableCollection<Mediafile> cache;
+        public void Search(object para)
+        {
+            try
+            {
+                DispatcherTimer timer = new DispatcherTimer();
+                if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
+                {
+                    Reload().ConfigureAwait(false);
+                }
+                else
+                {
+                    timer.Interval = TimeSpan.FromMilliseconds(200);
+                    timer.Start();
+                    timer.Tick += (sender, args) =>
+                    {
+                        Search().ConfigureAwait(false);
+                        timer.Stop();
+                    };
+                }
+            }
+            catch { }
+        }
         void SetRepeat()
         {
             if (Repeat == "No Repeat")
@@ -151,7 +220,7 @@ namespace BreadPlayer.ViewModels
             if (playingCollection != null && playingCollection.Any())
             {
                 try
-                {
+                {                    
                     int IndexOfCurrentlyPlayingFile = -1;
                     if (playingCollection.Any(t => t.State == PlayerState.Playing))
                         IndexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.SingleOrDefault(t => t.State == PlayerState.Playing));
@@ -173,7 +242,11 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    await NotificationManager.ShowAsync(ex.Message);
+                    await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
+                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                    PlayNext();
+
                     return null;
                 }
             }
@@ -249,7 +322,11 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region Events    
+        #region Events   
+        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            PlayPauseCommand.IsEnabled = true;
+        }
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Shuffle")
@@ -298,6 +375,17 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Properties
+        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        { get; set; }
+        public GroupedObservableCollection<string, Mediafile> PlaylistSongCollection
+        { get; set; }
+
+        string queryWord = "";
+        public string QueryWord
+        {
+            get { return queryWord; }
+            set { Set(ref queryWord, value); }
+        }
         string _repeat = "No Repeat";
         public string Repeat
         {
@@ -381,6 +469,29 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
+        async Task Reload()
+        {
+            if (cache == null || TracksCollection.Elements.Count < service.SongCount)
+            {
+                TracksCollection.Clear();
+                TracksCollection.AddRange(await service.GetAllMediafiles().ConfigureAwait(false), true);
+                cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
+            }
+            else
+            {
+                TracksCollection.Clear();
+                TracksCollection.AddRange(cache, false, true);
+            }
+        }
+        async Task<object> Search()
+        {
+            if (QueryWord.Length > 0)
+            {
+                TracksCollection.Clear();
+                TracksCollection.AddRange(await service.Query("Title", QueryWord).ConfigureAwait(false), true);
+            }
+            return null;
+        }
         private void GetSettings()
         {
             Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
@@ -413,16 +524,17 @@ namespace BreadPlayer.ViewModels
         }
         
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
-        {
-            TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-            PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-
+        {          
             if (mp3file != null)
-            {
+            {              
                 if (play == true)
                     Player.IgnoreErrors = true;
+               
                 if (await Player.Load(mp3file))
                 {
+                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
                     if (play)
@@ -440,6 +552,9 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
+                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+
                     mp3file.State = PlayerState.Playing;
                     int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));
                     Player.IgnoreErrors = false;
@@ -461,122 +576,6 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Constructor
-        public ShellViewModel()
-        {
-            Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleMessage));
-            Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleMessage));
-            Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
-            Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
-            Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
-
-            PlayPauseIcon = new SymbolIcon(Symbol.Play);
-            //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
-            Player.PlayerState = PlayerState.Stopped;
-            DontUpdatePosition = false;
-            this.timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
-            timer.Tick += Timer_Tick;
-            this.timer.Stop();
-            Player.MediaEnded += Player_MediaEnded;
-            this.PropertyChanged += ShellViewModel_PropertyChanged;
-        }
-
-        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-           PlayPauseCommand.IsEnabled = true;
-        }
-
-        public GroupedObservableCollection<string,Mediafile> TracksCollection
-        {get;set;}
-        public GroupedObservableCollection<string, Mediafile> PlaylistSongCollection
-        { get; set; }
-        private void HandleMessage(Message message)
-        {
-            if (message.Payload as GroupedObservableCollection<string, Mediafile> != null)
-            {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                if (message.MessageType == MessageTypes.MSG_LIBRARY_LOADED)
-                {
-                    TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                    GetSettings();
-                }
-                else
-                {
-                    PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-                }
-            }            
-        }
-        string queryWord = "";
-        public string QueryWord
-        {
-            get { return queryWord; }
-            set { Set(ref queryWord, value); }
-        }
-        RelayCommand searchCommand;
-        public RelayCommand SearchCommand
-        {
-            get { if (searchCommand == null) searchCommand = new RelayCommand(param => Search(param)); return searchCommand; }
-        }
-        ThreadSafeObservableCollection<Mediafile> cache;
-        public void Search(object para)
-        {
-            try
-            {
-                DispatcherTimer timer = new DispatcherTimer();
-                if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
-                {
-                    Reload().ConfigureAwait(false);
-                }
-                else
-                {                   
-                    timer.Interval = TimeSpan.FromMilliseconds(200);
-                    timer.Start();
-                    timer.Tick += (sender, args) =>
-                    {
-                        Search().ConfigureAwait(false);
-                        timer.Stop();
-                    };
-                }
-            }
-            catch { }
-        }      
-        async Task Reload()
-        {
-            if (cache == null)
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(await service.GetAllMediafiles().ConfigureAwait(false), true);               
-                cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
-            }
-            else
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(cache, false,true);
-            }
-        }
-        LibraryService service = new LibraryService(new DatabaseService());
-        async Task<object> Search()
-        {
-            if (QueryWord.Length > 0)
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(await service.Query("Title", QueryWord).ConfigureAwait(false), true);
-            }
-            return null;
-        }
-        #endregion
-
-        /// <summary>
-        /// This is for ease of testing only.
-        /// </summary>
-        /// <param name="msg">The message to display.</param>
-        public async void ShowMessage(string msg)
-        {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg);
-            await dialog.ShowAsync();
-        }
     }
 
 

@@ -22,7 +22,7 @@ namespace BreadPlayer.Service
         }
 
         #region ILibraryService 
-        public async Task<IEnumerable<Mediafile>> Query(string field, string term)
+        public async Task<IEnumerable<Mediafile>> Query(string field, object term)
         {
             return await Database.Query(field, term);
         }
@@ -51,18 +51,22 @@ namespace BreadPlayer.Service
         {
             Database.Remove(data);
         }
+        public void GetMediafile(string path)
+        {
+            Database.FindOne(path);
+        }
         public void AddPlaylist(Playlist pList)
         {
             Database.GetCollection<Playlist>("playlists").Insert(pList);
         }
+        public LiteDB.LiteCollection<Mediafile> GetRecentCollection()
+        {
+            return Database.GetCollection<Mediafile>("recents");
+        }
         public IEnumerable<Playlist> GetPlaylists()
         {
            return Database.GetCollection<Playlist>("playlists").FindAll();
-        }
-        public LiteDB.LiteCollection<T> GetCollection<T>(ICollection col) where T : new()
-        {
-           return Database.GetCollection<T>(col.Name);
-        }
+        }       
         public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T:new()
         {
            return Database.GetCollection<T>(collection.Name).Exists(query);

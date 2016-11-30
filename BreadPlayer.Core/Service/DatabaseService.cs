@@ -83,6 +83,10 @@ namespace BreadPlayer.Service
         {
             return tracks.Count();
         }
+        public void FindOne(string path)
+        {
+            tracks.FindOne(t => t.Path == path);
+        }
         public void Remove(Mediafile file)
         {
             tracks.Delete(file._id);
@@ -112,12 +116,12 @@ namespace BreadPlayer.Service
                 tracks.Update(file);                
             }
         }
-        public async Task<IEnumerable<Mediafile>> Query(string field, string term)
+        public async Task<IEnumerable<Mediafile>> Query(string field, object term)
         {
             IEnumerable<Mediafile> collection = null;
             await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                collection = tracks.Find(LiteDB.Query.Contains(field, term));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+                collection = tracks.Find(LiteDB.Query.Contains(field, term.ToString()));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
             });
             return collection;
         }
