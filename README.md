@@ -44,7 +44,14 @@ We will probably start the development of **Beta Version** after _Alpha_ is rele
 3. [LiteDB](https://github.com/mbdavid/LiteDB) (for library managment)
 
 ###Contributors:
-_I am not an expert developer and as a result the code-base isn't as professional as it could be. Hence, I will highly appreciate any contribution in any field regarding this project. All suggestions and issue reporting are welcome._
+Thanks to these awesome people Project Bread has come this far:
+
+1. Danny [@DannyTalent](https://github.com/DannyTalent)
+2. [@Bond-009](https://github.com/Bond)
+3. [@MightyK1337](https://github.com/MightyK1337)
+4. Kai Hildebrandt [@hildebrandt87](https://github.com/hildebrandt87)
+
+_Note: I am not an expert developer and as a result the code-base isn't as professional as it could be. Hence, I will highly appreciate any contribution in any field regarding this project. All suggestions and issue reporting are welcome._
 ##Build Notes:
 1. Make sure you have the necessary tools for building [Windows Universal Apps](https://dev.windows.com/en-us/develop/building-universal-Windows-apps).
 2. Clone this repo:  `git clone https://github.com/theweavrs/BreadPlayer/`
