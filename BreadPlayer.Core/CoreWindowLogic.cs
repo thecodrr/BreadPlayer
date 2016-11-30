@@ -72,7 +72,7 @@ namespace BreadPlayer
 
                             //ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                         }
-                        catch (UnauthorizedAccessException ex) { }
+                        catch (UnauthorizedAccessException) { }
                     }
                     
                 }

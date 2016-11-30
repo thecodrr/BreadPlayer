@@ -28,14 +28,15 @@ namespace BreadPlayer.Behaviours
     {
         public object Parameter
         {
-            get { return GetValue(ParameterProperty); }
-            set { SetValue(ParameterProperty, value); }
+            get { return this.GetValue(ParameterProperty); }
+            set { this.SetValue(ParameterProperty, value); }
         }
+
         public static readonly DependencyProperty ParameterProperty =
-           DependencyProperty.Register("Flyout", typeof(object), typeof(OpenMenuFlyoutAction), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-           {
-           }
-        ));
+           DependencyProperty.Register("Flyout", typeof(object),
+               typeof(OpenMenuFlyoutAction),
+               new PropertyMetadata(null));
+
         public object Execute(object sender, object parameter)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
@@ -43,7 +44,10 @@ namespace BreadPlayer.Behaviours
             ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>() != null ? senderElement.GetFirstAncestorOfType<ListViewItem>() : null;
             ListView listView = null;
             if (item != null)
-                 listView = item.GetFirstAncestorOfType<ListView>();
+            {
+                listView = item.GetFirstAncestorOfType<ListView>();
+            }
+
             // if (item != null) item.IsSelected = true;
             ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
             if(listItem != null) listItem.IsSelected = true;

@@ -56,6 +56,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleEnablePlayMessage));
 
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
@@ -69,9 +70,18 @@ namespace BreadPlayer.ViewModels
             this.PropertyChanged += ShellViewModel_PropertyChanged;
         }
 
-        #endregion        
+        #endregion
 
         #region HandleMessages
+        void HandleEnablePlayMessage(Message message)
+        {
+            var count = (double)message.Payload;
+            if(count > 0)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                PlayPauseCommand.IsEnabled = true;
+            }           
+        }
         private void HandleLibraryLoadedMessage(Message message)
         {
             if (message.Payload as GroupedObservableCollection<string, Mediafile> != null)
@@ -80,7 +90,7 @@ namespace BreadPlayer.ViewModels
                 if (message.MessageType == MessageTypes.MSG_LIBRARY_LOADED)
                 {
                     TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;                   
                     GetSettings();
                 }
                 else
@@ -89,6 +99,13 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
+
+        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TracksCollection.Elements.Count > 0)
+                PlayPauseCommand.IsEnabled = true;
+        }
+
         void HandlePlaySongMessage(Message message)
         {
             var obj = message.Payload as List<object>;
@@ -111,7 +128,6 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                     this.GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
-
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
             }
         }
@@ -143,7 +159,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_openSongCommand == null) { _openSongCommand = new RelayCommand(param => this.Open(param)); } return _openSongCommand; }
         }
-        public DelegateCommand PlayPauseCommand { get { if (_playPauseCommand == null) { _playPauseCommand = new DelegateCommand(PlayPause); } return _playPauseCommand; } }
+        public DelegateCommand PlayPauseCommand { get { if (_playPauseCommand == null) { _playPauseCommand = new DelegateCommand(PlayPause); _playPauseCommand.IsEnabled = false; } return _playPauseCommand; } }
         public DelegateCommand PlayNextCommand { get { if (_playNextCommand == null) _playNextCommand = new DelegateCommand(PlayNext); return _playNextCommand; } }
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) _playPreviousCommand = new DelegateCommand(PlayPrevious); return _playPreviousCommand; } }
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) _setRepeatCommand = new DelegateCommand(SetRepeat); return _setRepeatCommand; } }
@@ -240,7 +256,7 @@ namespace BreadPlayer.ViewModels
                     }
                     return toPlayFile;
                 }
-                catch (Exception ex)
+                catch
                 {
                     await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
@@ -322,11 +338,8 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region Events   
-        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            PlayPauseCommand.IsEnabled = true;
-        }
+        #region Events  
+        
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Shuffle")

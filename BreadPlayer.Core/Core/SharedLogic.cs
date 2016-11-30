@@ -15,7 +15,7 @@ using SplitViewMenu;
 
 namespace BreadPlayer.Core
 {
-	public class SharedLogic : ObservableObject
+	public class SharedLogic
     {
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
@@ -148,37 +148,40 @@ namespace BreadPlayer.Core
         }
         public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
         {
-           
-            var Mediafile = new Mediafile();
+
+            var mediafile = new Mediafile();
             try
             {
                 if (cache == true)
+                {
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
-
-                Mediafile._id = LiteDB.ObjectId.NewObjectId();
-                Mediafile.Path = file.Path;
-                Mediafile.OrginalFilename = file.DisplayName;
-                Mediafile.State = PlayerState.Stopped;
+                }
+                mediafile._id = LiteDB.ObjectId.NewObjectId();
+                mediafile.Path = file.Path;
+                mediafile.OrginalFilename = file.DisplayName;
+                mediafile.State = PlayerState.Stopped;
                 var properties = await file.Properties.GetMusicPropertiesAsync().AsTask().ConfigureAwait(false);
-                Mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
-                Mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
-                Mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
-                Mediafile.Genre = string.Join(",", properties.Genre);
-                Mediafile.Year = properties.Year.ToString();
-                Mediafile.TrackNumber = properties.TrackNumber.ToString();
-                Mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+                mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
+                mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
+                mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
+                mediafile.Genre = string.Join(",", properties.Genre);
+                mediafile.Year = properties.Year.ToString();
+                mediafile.TrackNumber = properties.TrackNumber.ToString();
+                mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
 
                 var albumartFolder = ApplicationData.Current.LocalFolder;
-                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (Mediafile.Album + Mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
                 if (File.Exists(albumartLocation))
                 {
-                    Mediafile.AttachedPicture = albumartLocation;
+                    mediafile.AttachedPicture = albumartLocation;
                 }
             }
-            catch(Exception ex) { await NotificationManager.ShowAsync(ex.Message + "||" + file.Path); }
-            return Mediafile;
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+            }
+            return mediafile;
         }
     }
-
 }

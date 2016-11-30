@@ -12,8 +12,9 @@ namespace BreadPlayer.Behaviours
         {
             //selectionChangedEventHandler = new SelectionChangedEventHandler(OnSelectionChanged);
             FocusBeforeSelectProperty =
-              DependencyProperty.RegisterAttached("FocusBeforeSelect", typeof(bool), typeof(ListViewService),
-                new PropertyMetadata(false, OnPropertyChanged));
+              DependencyProperty.RegisterAttached(
+                  "FocusBeforeSelect", typeof(bool), typeof(ListViewService),
+                   new PropertyMetadata(false, OnPropertyChanged));
         }
 
         public static bool GetFocusBeforeSelect(ListView listView)
@@ -34,6 +35,7 @@ namespace BreadPlayer.Behaviours
                 listView.SelectionChanged += OnSelectionChanged;
             }
         }
+
         private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListView listView = (ListView)sender;
@@ -46,4 +48,3 @@ namespace BreadPlayer.Behaviours
         }        
     }
 }
-

@@ -277,7 +277,6 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames.TextFrames
     {
         private long _Counter;
         private byte _Rating;
-        TagStreamUWP TStream;
         /// <summary>
         /// New PopularimeterFrame
         /// </summary>

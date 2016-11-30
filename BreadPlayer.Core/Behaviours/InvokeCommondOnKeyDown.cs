@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -14,47 +14,48 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-using Windows.UI.Xaml;
-using Microsoft.Xaml.Interactivity;
+*/  
 using System.Windows.Input;
+using Microsoft.Xaml.Interactivity;
 using Windows.System;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
+using Windows.UI.Xaml.Input;
 namespace BreadPlayer.Behaviours
 {
-    class InvokeCommandByKeyDown : DependencyObject, IAction
+  
+    public class InvokeCommandByKeyDown : DependencyObject, IAction
     {
         public ICommand Command
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get { return (ICommand)this.GetValue(CommandProperty); }
+            set { this.SetValue(CommandProperty, value); }
         }
 
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command", typeof(ICommand), typeof(InvokeCommandByKeyDown), new PropertyMetadata(null));
         public object CommandParameter
         {
-            get { return GetValue(CommandParameterProperty); }
-            set { SetValue(CommandParameterProperty, value); }
+            get { return this.GetValue(CommandParameterProperty); }
+            set { this.SetValue(CommandParameterProperty, value); }
         }
+
         public static readonly DependencyProperty CommandParameterProperty =
            DependencyProperty.Register("CommandParameter", typeof(object), typeof(InvokeCommandByKeyDown), new PropertyMetadata(null));
 
         public VirtualKey PressedKey
         {
-            get { return (VirtualKey)GetValue(PressedKeyProperty); }
-            set { SetValue(PressedKeyProperty, value); }
+            get { return (VirtualKey)this.GetValue(PressedKeyProperty); }
+            set { this.SetValue(PressedKeyProperty, value); }
         }
 
         public static readonly DependencyProperty PressedKeyProperty =
             DependencyProperty.Register("PressedKey", typeof(VirtualKey), typeof(InvokeCommandByKeyDown), new PropertyMetadata(VirtualKey.None));
         public bool DoubleKeyCommand
         {
-            get { return (bool)GetValue(DoubleKeyCommandProperty); }
-            set { SetValue(DoubleKeyCommandProperty, value); }
+            get { return (bool)this.GetValue(DoubleKeyCommandProperty); }
+            set { this.SetValue(DoubleKeyCommandProperty, value); }
         }
 
         public static readonly DependencyProperty DoubleKeyCommandProperty =
@@ -62,7 +63,6 @@ namespace BreadPlayer.Behaviours
 
         public object Execute(object sender, object parameter)
         {
-
             var ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
             ListView fileBox = sender as ListView;
             if (fileBox.SelectedItems.Count > 0)
@@ -70,27 +70,28 @@ namespace BreadPlayer.Behaviours
                 KeyRoutedEventArgs keyPrarm = parameter as KeyRoutedEventArgs;
                 if (keyPrarm != null)
                 {
-                    if (!DoubleKeyCommand)
+                    if (!this.DoubleKeyCommand)
                     {
-                        if (keyPrarm.Key == PressedKey)
+                        if (keyPrarm.Key == this.PressedKey)
                         {
-                            var p = CommandParameter;
-                            Command.Execute(p);
+                            var p = this.CommandParameter;
+                            this.Command.Execute(p);
                             keyPrarm.Handled = true;
                         }
                     }
                     else
                     {
-                        if(ctrl == CoreVirtualKeyStates.Down)
+                        if (ctrl == CoreVirtualKeyStates.Down)
+                        {
                             if (keyPrarm.Key == PressedKey)
                             {
-                                var p = CommandParameter as BreadPlayer.Models.Mediafile;
-                                Command.Execute(p);
+                                var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
+                                this.Command.Execute(p);
                                 keyPrarm.Handled = true;
                             }
+                        }
                     }
-                }
-               
+                }               
             }
             return null;
         }

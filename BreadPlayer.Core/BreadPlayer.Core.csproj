@@ -45,6 +45,7 @@
     <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
     <DocumentationFile>
     </DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -346,10 +347,6 @@
     <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
       <Project>{a3a57b68-d86b-4536-8443-cfbe91e9d803}</Project>
       <Name>BreadPlayer.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Macalifa.Tags.ID3\BreadPlayer.Tags.ID3.csproj">
-      <Project>{7a1f5216-daad-477f-a56c-e7c4cd3c6fec}</Project>
-      <Name>BreadPlayer.Tags.ID3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

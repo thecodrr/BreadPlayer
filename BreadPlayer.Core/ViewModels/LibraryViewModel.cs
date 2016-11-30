@@ -64,7 +64,7 @@ namespace BreadPlayer.ViewModels
         void HandleUpdateSongCountMessage(Message message)
         {
             var count = (double)message.Payload;
-            message.HandledStatus = MessageHandledStatus.HandledCompleted;
+            message.HandledStatus = MessageHandledStatus.HandledContinue;
             SongCount = Convert.ToInt32(count);
         }
         async void HandleAddPlaylistMessage(Message message)
@@ -441,8 +441,8 @@ namespace BreadPlayer.ViewModels
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;
-            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true)
-                (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path).State = PlayerState.Playing;
+            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true && Player.CurrentlyPlayingFile != null)
+                (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {

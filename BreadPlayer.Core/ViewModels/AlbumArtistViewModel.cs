@@ -18,7 +18,7 @@ namespace BreadPlayer.ViewModels
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbums().ConfigureAwait(false);
+                await AddAlbums(message.Payload as List<Mediafile>).ConfigureAwait(false);
             }
         }
         LiteDatabase db;
@@ -49,12 +49,10 @@ namespace BreadPlayer.ViewModels
         }
         public async Task LoadAlbums()
         {
-          //  AlbumCollection.IsObserving = true;
-             //AlbumCollection.AddRange();
-            foreach(var album in await GetAlbums().ConfigureAwait(false))
-            {
-                AlbumCollection.Add(album);
-            }
+            //foreach(var album in await GetAlbums().ConfigureAwait(false))
+            //{
+            AlbumCollection.AddRange(await GetAlbums().ConfigureAwait(false));//.Add(album);
+           // }
         }
         public async Task<IEnumerable<Album>> GetAlbums()
         {
@@ -81,14 +79,13 @@ namespace BreadPlayer.ViewModels
         /// For instance, for each loop needs to be removed.
         /// Maybe we can use direct database queries and fill the AlbumCollection with it?
         /// </remarks>
-        public async Task AddAlbums()
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+        public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
+        { 
+            var files = mediafiles.ToList();
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                using(LibraryService service = new LibraryService(new DatabaseService()))
-                {
                     List<Album> albums = new List<Album>();
-                    foreach (var song in await service.GetAllMediafiles().ConfigureAwait(false))
+                    foreach (var song in files)
                     {
                         Album alb = null;
                         if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
@@ -102,8 +99,7 @@ namespace BreadPlayer.ViewModels
                         if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
                     }
                     albumCollection.Insert(albums);
-                    AlbumCollection.AddRange(albums);
-                }                
+                    AlbumCollection.AddRange(albums);                               
             }).AsTask().ConfigureAwait(false);
 
            

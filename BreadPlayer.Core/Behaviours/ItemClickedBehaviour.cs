@@ -6,8 +6,7 @@ namespace BreadPlayer.Behaviours
 {
     class ItemClickCommand
     {
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached("Command", typeof(ICommand),
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand),
             typeof(ItemClickCommand), new PropertyMetadata(null, OnCommandPropertyChanged));
 
         public static void SetCommand(DependencyObject d, ICommand value)
@@ -20,12 +19,13 @@ namespace BreadPlayer.Behaviours
             return (ICommand)d.GetValue(CommandProperty);
         }
 
-        private static void OnCommandPropertyChanged(DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
+        private static void OnCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as GridView;
             if (control != null)
+            {
                 control.ItemClick += OnItemClick;
+            }
         }
 
         private static void OnItemClick(object sender, ItemClickEventArgs e)
@@ -36,7 +36,9 @@ namespace BreadPlayer.Behaviours
                 var command = GetCommand(control);
 
                 if (command != null && command.CanExecute(e.ClickedItem))
+                {
                     command.Execute(e.ClickedItem);
+                }
             }
         }
     }

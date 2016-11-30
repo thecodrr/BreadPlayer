@@ -149,7 +149,7 @@ namespace BreadPlayer.ViewModels
         public async void Load()
         {
             //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
-            FolderPicker picker = new FolderPicker() { SuggestedStartLocation = PickerLocationId.MusicLibrary };
+            FolderPicker picker = new FolderPicker();          
             picker.FileTypeFilter.Add(".mp3");
             picker.FileTypeFilter.Add(".wav");
             picker.FileTypeFilter.Add(".ogg");
@@ -157,6 +157,9 @@ namespace BreadPlayer.ViewModels
             picker.FileTypeFilter.Add(".m4a");
             picker.FileTypeFilter.Add(".aif");
             picker.FileTypeFilter.Add(".wma");
+            picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            picker.ViewMode = PickerViewMode.List;
+            picker.CommitButtonText = "Import";
             StorageFolder folder = await picker.PickSingleFolderAsync();
             if (folder != null)
             {
@@ -196,6 +199,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowAsync(error);
                 }
                 int failedCount = 0;
+                AlbumArtistViewModel model = new AlbumArtistViewModel();
                 LibraryService service = new LibraryService(new DatabaseService());
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
                 while (files.Count != 0)
@@ -240,6 +244,8 @@ namespace BreadPlayer.ViewModels
                                 failedCount++;
                             }
                         }
+                        //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //after the first 100 files have been added we enable the play button.
                         //ShellVM.PlayPauseCommand.IsEnabled = true;
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
@@ -259,9 +265,8 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
-                AlbumArtistViewModel model = new AlbumArtistViewModel();
                 //After all the songs are processed and loaded, we create albums of all those songs and load them using this method.
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, "as");
+               
                 //we stop the stopwatch.
                 stop.Stop();
                 //and report the user how long it took.

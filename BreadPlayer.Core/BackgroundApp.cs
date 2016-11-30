@@ -1,4 +1,4 @@
-﻿///* 
+﻿////
 //	BreadPlayer. A music player made for Windows 10 store.
 //    Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -14,7 +14,7 @@
 
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//*/
+////
 
 //using System;
 //using System.Diagnostics;
@@ -264,8 +264,6 @@
 //                subMsg = GetMemoryUsageText();
 
 //            Debug.WriteLine(msg + "\n" + subMsg);
-
-
 
 //            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
 

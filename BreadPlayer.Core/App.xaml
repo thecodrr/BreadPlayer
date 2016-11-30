@@ -1360,7 +1360,7 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="NormalTemplate">
-                <Grid MaxWidth="150" Height="210">
+                <Grid MaxWidth="150" Height="220">
                     <StackPanel>
                         <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
                             <Ellipse.Fill>
@@ -1369,7 +1369,7 @@
                             </Ellipse.Fill>
                         </Ellipse>
                         <TextBlock TextAlignment="Center" Margin="5,0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                        <TextBlock TextAlignment="Center" Margin="5,0" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                        <TextBlock TextAlignment="Center" Margin="5,0,5,0" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </DataTemplate>
