@@ -42,6 +42,10 @@ namespace BreadPlayer.Service
         {
             Database.UpdateTrack(data);
         }
+        public void UpdateMediafiles(IEnumerable<Mediafile> data)
+        {
+            Database.UpdateTracks(data);
+        }
         public void RemoveFolder(string folderPath)
         {
             Database.RemoveTracks(LiteDB.Query.EQ("FolderPath", folderPath));

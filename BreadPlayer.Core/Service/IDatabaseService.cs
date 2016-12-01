@@ -16,6 +16,7 @@ namespace BreadPlayer.Service
         void Insert(Mediafile file);
         void FindOne(string path);
         void Insert(IEnumerable<Mediafile> files);
+        void UpdateTracks(IEnumerable<Mediafile> files);
         LiteCollection<T> GetCollection<T>(string colName) where T : new();
         void Remove(Mediafile file);
         int GetTrackCount();

@@ -94,7 +94,7 @@ namespace BreadPlayer.Core
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
-        public static async Task SaveImagesAsync(StorageFile file, Mediafile mp3file)
+        public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mp3file)
         {
             var albumartFolder = ApplicationData.Current.LocalFolder;
             var md5Path = (mp3file.Album + mp3file.LeadArtist).ToLower().ToSha1();
@@ -103,55 +103,53 @@ namespace BreadPlayer.Core
                 TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file));
                 if (tagFile.Tag.Pictures.Length >= 1)
                 {
-                    var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
-                    using (var albumstream = await albumart.OpenStreamForWriteAsync())
+                    try
                     {
-                        try
+                        var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
+
+                        using (var albumstream = await albumart.OpenStreamForWriteAsync())
                         {
-                            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                            //var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
-                            //await data.Data.CopyToAsync(albumstream);
-                            //.AsRandomAccessStream();
-                            //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                           
-                            //var x = await decoder.GetSoftwareBitmapAsync();
-                            //BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
-                            //encoder.SetSoftwareBitmap(x);
-                            //await encoder.FlushAsync();
-                            //stream.Dispose();
+                            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length); 
                         }
-                        catch (Exception ex) { Debug.Write(ex.Message + "||" + file.Path); }
+                        return true;
                     }
+                    catch (Exception ex) { Debug.Write(ex.Message + "||" + file.Path); return false; }
                 }
             }
+            return false;
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
-        public static async Task SaveImagesAsync(Windows.Storage.FileProperties.StorageItemThumbnail thumb, Mediafile file)
+        public static async Task<bool> SaveImagesAsync(Windows.Storage.FileProperties.StorageItemThumbnail thumb, Mediafile file)
         {
             var albumartFolder = ApplicationData.Current.LocalFolder;
             var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
 
             if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
             {
-                Windows.Storage.Streams.IBuffer buf;
-                Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
-                var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
-                using (Windows.Storage.Streams.IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite).AsTask().ConfigureAwait(false))
+                try
                 {
-                    try
+                    Windows.Storage.Streams.IBuffer buf;
+                    Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
+                    var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
+                    using (Windows.Storage.Streams.IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite).AsTask().ConfigureAwait(false))
                     {
+
                         while ((buf = (await thumb.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None).AsTask().ConfigureAwait(false))).Length > 0)
                             await albumstream.WriteAsync(buf).AsTask().ConfigureAwait(false);
-
                     }
-                    catch (Exception ex) { await NotificationManager.ShowAsync(ex.Message + "||" + file.Path); }
-
+                    thumb.Dispose();
+                    return true;
                 }
-                thumb.Dispose();
+                catch (Exception ex)
+                {
+                    await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+                    return false;
+                }
             }
+            return false;
         }
 
         static LibraryService service = new LibraryService(new DatabaseService());
@@ -211,9 +209,7 @@ namespace BreadPlayer.Core
                 mediafile.Year = properties.Year.ToString();
                 mediafile.TrackNumber = properties.TrackNumber.ToString();
                 mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-
-                //await SettingsViewModel.SaveSingleFileAlbumArtAsync(mediafile, file).ConfigureAwait(false);
-
+                
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 

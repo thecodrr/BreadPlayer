@@ -19,6 +19,7 @@ namespace BreadPlayer.Service
         /// </summary>
         /// <param name="?"></param>
         void UpdateMediafile(Mediafile data);
+        void UpdateMediafiles(IEnumerable<Mediafile> data);
         void AddMediafile(Mediafile data);
         void AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);

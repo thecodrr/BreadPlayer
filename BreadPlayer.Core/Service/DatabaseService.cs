@@ -116,6 +116,13 @@ namespace BreadPlayer.Service
                 tracks.Update(file);                
             }
         }
+        public void UpdateTracks(IEnumerable<Mediafile> files)
+        {
+            if (files != null)
+            {
+                tracks.Update(files);
+            }
+        }
         public async Task<IEnumerable<Mediafile>> Query(string field, object term)
         {
             IEnumerable<Mediafile> collection = null;
