@@ -64,7 +64,7 @@ namespace BreadPlayer.ViewModels
         void HandleUpdateSongCountMessage(Message message)
         {
             var count = (double)message.Payload;
-            message.HandledStatus = MessageHandledStatus.HandledContinue;
+            message.HandledStatus = MessageHandledStatus.HandledCompleted;
             SongCount = Convert.ToInt32(count);
         }
         async void HandleAddPlaylistMessage(Message message)

@@ -12,6 +12,13 @@ using BreadPlayer.Service;
 using System.Windows.Input;
 using Windows.System;
 using SplitViewMenu;
+using BreadPlayer.Tags.ID3;
+using Windows.Graphics.Imaging;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
+using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
+using Windows.Storage.Streams;
+using System.Diagnostics;
 
 namespace BreadPlayer.Core
 {
@@ -81,6 +88,42 @@ namespace BreadPlayer.Core
         public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
+        }
+
+        /// <summary>
+        /// Asynchronously saves all the album arts in the library. 
+        /// </summary>
+        /// <param name="Data">ID3 tag of the song to get album art data from.</param>
+        public static async Task SaveImagesAsync(StorageFile file, Mediafile mp3file)
+        {
+            var albumartFolder = ApplicationData.Current.LocalFolder;
+            var md5Path = (mp3file.Album + mp3file.LeadArtist).ToLower().ToSha1();
+            if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
+            {
+                TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file));
+                if (tagFile.Tag.Pictures.Length >= 1)
+                {
+                    var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists);
+                    using (var albumstream = await albumart.OpenStreamForWriteAsync())
+                    {
+                        try
+                        {
+                            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                            //var data = Data.AttachedPictureFrames["APIC"] as AttachedPictureFrame;
+                            //await data.Data.CopyToAsync(albumstream);
+                            //.AsRandomAccessStream();
+                            //BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                           
+                            //var x = await decoder.GetSoftwareBitmapAsync();
+                            //BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, albumstream);
+                            //encoder.SetSoftwareBitmap(x);
+                            //await encoder.FlushAsync();
+                            //stream.Dispose();
+                        }
+                        catch (Exception ex) { Debug.Write(ex.Message + "||" + file.Path); }
+                    }
+                }
+            }
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
@@ -169,6 +212,8 @@ namespace BreadPlayer.Core
                 mediafile.TrackNumber = properties.TrackNumber.ToString();
                 mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
 
+                //await SettingsViewModel.SaveSingleFileAlbumArtAsync(mediafile, file).ConfigureAwait(false);
+
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
@@ -182,6 +227,35 @@ namespace BreadPlayer.Core
                 await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
             }
             return mediafile;
+        }
+    }
+    public class SimpleFileAbstraction : TagLib.File.IFileAbstraction
+    {
+        private StorageFile file;
+
+        public SimpleFileAbstraction(StorageFile file)
+        {
+            this.file = file;
+        }
+
+        public string Name
+        {
+            get { return file.Name; }
+        }
+
+        public System.IO.Stream ReadStream
+        {
+            get { return file.OpenStreamForReadAsync().Result; }
+        }
+
+        public System.IO.Stream WriteStream
+        {
+            get { return file.OpenStreamForWriteAsync().Result; }
+        }
+
+        public void CloseStream(System.IO.Stream stream)
+        {
+            stream.Position = 0;
         }
     }
 }

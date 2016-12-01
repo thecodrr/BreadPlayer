@@ -142,7 +142,19 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             ExcludedList.Add("PRIV");
             ExcludedList.Add("OWNE");
             ExcludedList.Add("POPM");
-            ExcludedList.Add("SYLT");            
+            ExcludedList.Add("SYLT");
+            ExcludedList.Add("TEXT");
+            ExcludedList.Add("TCON");
+            ExcludedList.Add("TCOM");
+            ExcludedList.Add("TALB");
+            ExcludedList.Add("COMM");
+            ExcludedList.Add("TPE1");
+            ExcludedList.Add("TPE2");
+            ExcludedList.Add("TIT3");
+            ExcludedList.Add("TIT2");
+            ExcludedList.Add("TPUB");
+            ExcludedList.Add("TYER");
+            ExcludedList.Add("TRCK");
         }
         /// <summary>
         /// Initialize All FrameID infos
@@ -158,8 +170,8 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
                 new bool[] { true, true, true }, false, typeof(AttachedPictureFrame)));
             //_FramesDictionary.Add("ASPI", new FrameInfo("ASPI", null, "Audio Seek Point Index",
             //    new bool[] { false, false, true }, true, null));
-            _FramesDictionary.Add("COMM", new FrameInfo("COMM", "COM", "Comment",
-                new bool[] { true, true, true }, false, typeof(TextWithLanguageFrame)));
+            //_FramesDictionary.Add("COMM", new FrameInfo("COMM", "COM", "Comment",
+            //    new bool[] { true, true, true }, false, typeof(TextWithLanguageFrame))); //
             //_FramesDictionary.Add("COMR", new FrameInfo("COMR", null, "Commercial Frame",
             //    new bool[] { false, true, true }, true, typeof(CommercialFrame)));
             //_FramesDictionary.Add("ENCR", new FrameInfo("ENCR", null, "Encryption Method Registration",
@@ -208,14 +220,14 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { true, true, true }, false, typeof(SynchronisedText))); 
             //_FramesDictionary.Add("SYTC", new FrameInfo("SYTC", "STC", "Synced Tempo Codes",
             //    new bool[] { true, true, true }, true, typeof(SynchronisedTempoFrame)));
-            _FramesDictionary.Add("TALB", new FrameInfo("TALB", "TAL", "Album",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TBPM", new FrameInfo("TBPM", "TBP", "BPM ( Beats Per Minutes)",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TCOM", new FrameInfo("TCOM", "TCM", "Composer",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TCON", new FrameInfo("TCON", "TCO", "Content Type",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TALB", new FrameInfo("TALB", "TAL", "Album", 
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TBPM", new FrameInfo("TBPM", "TBP", "BPM ( Beats Per Minutes)",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TCOM", new FrameInfo("TCOM", "TCM", "Composer",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TCON", new FrameInfo("TCON", "TCO", "Content Type",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TCOP", new FrameInfo("TCOP", "TCR", "Copyright Message",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TDAT", new FrameInfo("TDAT", "TDA", "Date",
@@ -234,8 +246,8 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { false, false, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TENC", new FrameInfo("TENC", "TEN", "Encoded By", 
             //    new bool[] { true, true, true }, true, typeof(TextFrame))); 
-            _FramesDictionary.Add("TEXT", new FrameInfo("TEXT", "TXT", "Lyric/Text Writer",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TEXT", new FrameInfo("TEXT", "TXT", "Lyric/Text Writer",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame))); 
             //_FramesDictionary.Add("TFLT", new FrameInfo("TFLT", "TFT", "File Type",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TIME", new FrameInfo("TIME", "TIM", "Time",
@@ -244,10 +256,10 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { false, false, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TIT1", new FrameInfo("TIT1", "TT1", "Content Group Description",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TIT2", new FrameInfo("TIT2", "TT2", "Title",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TIT3", new FrameInfo("TIT3", "TT3", "Subtitle/Desripction",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TIT2", new FrameInfo("TIT2", "TT2", "Title",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TIT3", new FrameInfo("TIT3", "TT3", "Subtitle/Desripction",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TKEY", new FrameInfo("TKEY", "TKE", "Initial Key",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TLAN", new FrameInfo("TLAN", "TLA", "Language",
@@ -258,8 +270,8 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { false, false, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TMED", new FrameInfo("TMED", "TMT", "Media Type",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TMOO", new FrameInfo("TMOO", null, "Mood",
-                new bool[] { false, false, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TMOO", new FrameInfo("TMOO", null, "Mood",
+            //    new bool[] { false, false, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TOAL", new FrameInfo("TOAL", "TOT", "Orginal Title",
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TOFN", new FrameInfo("TOFN", "TOF", "Orginal Filename",
@@ -272,10 +284,10 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { true, true, false }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TOWN", new FrameInfo("TOWN", null, "File Owner",
             //    new bool[] { false, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TPE1", new FrameInfo("TPE1", "TP1", "Lead Artist",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TPE2", new FrameInfo("TPE2", "TP2", "Band Artist",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TPE1", new FrameInfo("TPE1", "TP1", "Lead Artist",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TPE2", new FrameInfo("TPE2", "TP2", "Band Artist",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TPE3", new FrameInfo("TPE3", "TP3", "Conductor", 
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TPE4", new FrameInfo("TPE4", "TP4", "Interpreted",
@@ -284,10 +296,10 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TPRO", new FrameInfo("TPRO", null, "Produced Notice",
             //    new bool[] { false, false, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TPUB", new FrameInfo("TPUB", "TPB", "Publisher",
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TRCK", new FrameInfo("TRCK", "TRK", "Track Number", 
-                new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TPUB", new FrameInfo("TPUB", "TPB", "Publisher",
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TRCK", new FrameInfo("TRCK", "TRK", "Track Number", 
+            //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TRDA", new FrameInfo("TRDA", "TRD", "Recording Date", 
             //    new bool[] { true, true, false }, true, typeof(TextFrame)));//RBUF TSIZ RVA2 WCOM UFID TSRC TSST TSSE TSOA TSOP TSOT RVAD RVRB TRSN TRSO SEEK SYTC TDLY TDTG TPOS TPRO TFLT TIPL TIT1 TKEY TPE4 TLEN TOAL TOFN TOWN TORY TOPE TOLY
             //_FramesDictionary.Add("TRSN", new FrameInfo("TRSN", null, "Internet Radio Station Name",
@@ -308,8 +320,8 @@ namespace BreadPlayer.Tags.ID3.ID3v2Frames
             //    new bool[] { true, true, true }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("TSST", new FrameInfo("TSST", null, "Set Subtitle",
             //    new bool[] { false, false, true }, true, typeof(TextFrame)));
-            _FramesDictionary.Add("TYER", new FrameInfo("TYER", "TYE", "Year",
-                new bool[] { true, true, false }, true, typeof(TextFrame)));
+            //_FramesDictionary.Add("TYER", new FrameInfo("TYER", "TYE", "Year",
+            //    new bool[] { true, true, false }, true, typeof(TextFrame)));
             //_FramesDictionary.Add("UFID", new FrameInfo("UFID", "UFI", "Unique File Identifier",
             //    new bool[] { true, true, true }, false, typeof(PrivateFrame)));
             //_FramesDictionary.Add("USER", new FrameInfo("USER", null, "Term Of Use",

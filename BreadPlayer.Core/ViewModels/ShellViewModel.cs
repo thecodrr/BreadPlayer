@@ -78,7 +78,7 @@ namespace BreadPlayer.ViewModels
             var count = (double)message.Payload;
             if(count > 0)
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                message.HandledStatus = MessageHandledStatus.HandledContinue;
                 PlayPauseCommand.IsEnabled = true;
             }           
         }

@@ -3,7 +3,8 @@
     "LiteDB.Core": "2.0.4",
     "ManagedBass": "0.24.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0"
+    "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
+    "TagLib.Portable": "1.0.4"
   },
   "frameworks": {
     "uap10.0": {}
