@@ -29,7 +29,7 @@ namespace BreadPlayer.Core
 	public class CoreBreadPlayer : ViewModelBase, IDisposable
     {
         #region Fields
-        public int handle = 0;
+        int handle = 0;
         private SyncProcedure _sync;
         #endregion
 
@@ -50,7 +50,7 @@ namespace BreadPlayer.Core
         {
            await Task.Run(() => 
             {
-                Bass.UpdatePeriod = 500;
+                Bass.UpdatePeriod = 500;               
                 Bass.Start();
                 Bass.Init();
             });                   
@@ -95,10 +95,7 @@ namespace BreadPlayer.Core
                     await Stop();
                     await Task.Run(() =>
                     {
-                        Bass.Stop();
-                        Bass.Start();
-
-                        handle = ManagedBass.Bass.CreateStream(path, 0, 0, BassFlags.AutoFree);                        
+                        handle = ManagedBass.Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                         PlayerState = PlayerState.Stopped;
                         Length = 0;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
@@ -106,7 +103,7 @@ namespace BreadPlayer.Core
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         CurrentlyPlayingFile = mp3file;
-                        CoreWindowLogic.UpdateSmtc();
+                        //CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.Stringify();
                     });
 

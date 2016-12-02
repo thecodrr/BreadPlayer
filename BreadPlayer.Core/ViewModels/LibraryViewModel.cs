@@ -232,8 +232,17 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public GroupedObservableCollection<string, Mediafile> TracksCollection
         {
-            get { if (_TracksCollection == null) _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1)); return _TracksCollection; }
-            set { Set(ref _TracksCollection, value); }
+            get
+            {
+                if (_TracksCollection == null)
+                    _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1));
+                return _TracksCollection;
+            }
+            set
+            {
+                Set(ref _TracksCollection, value);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+            }
         }
         public MenuFlyout genreFlyout;
         /// <summary>
@@ -448,20 +457,20 @@ namespace BreadPlayer.ViewModels
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
+                grouped = group;
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, TracksCollection);
 
                 if (group)
+                {
                     ViewSource.Source = TracksCollection;
+                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
+                }
                 else
                     ViewSource.Source = TracksCollection.Elements;
 
                 ViewSource.IsSourceGrouped = group;
-
-                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false), true);
-                grouped = group;
-           
+                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false), true);              
             });
         }
 
@@ -470,7 +479,6 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public async void RefreshView(string genre = "All genres", string propName = "Title", bool doOrderFiles = true)
         {
-
             if (doOrderFiles)
             {
                 Sort = propName;
@@ -478,18 +486,20 @@ namespace BreadPlayer.ViewModels
                 {
                     if (files == null)
                         files = TracksCollection.Elements;
+                    grouped = true;
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
                     ViewSource.Source = TracksCollection;
                     ViewSource.IsSourceGrouped = true;
                     TracksCollection.AddRange(files, true, false);
                     TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
-                    grouped = true;
+                   
                 }
                 else
                 {
                     ViewSource.Source = TracksCollection.Elements;
                     ViewSource.IsSourceGrouped = false;
                     grouped = false;
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
                 }
             }
             else
@@ -513,9 +523,11 @@ namespace BreadPlayer.ViewModels
         }
         async Task RemoveDuplicateGroups()
         {
-            //the only workaround to remove the first group which is an 'false' duplicate really.
+            //the only workaround to remove the first group which is a 'false' duplicate really.
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+
                 if (ViewSource.IsSourceGrouped)
                 {
                     ViewSource.IsSourceGrouped = false;
@@ -529,6 +541,10 @@ namespace BreadPlayer.ViewModels
             if (propName == "Title")
             {
                 f = t => StartsWithLetter(GetPropValue(t, propName) as string) ? (GetPropValue(t, propName) as string).Remove(1).ToUpper() : StartsWithNumber(GetPropValue(t, propName) as string) ? "#" : StartsWithSymbol(GetPropValue(t, propName) as string) ? "&" : (GetPropValue(t, propName) as string); //determine whether the Title, by which groups are made, start with number, letter or symbol. On the basis of that we define the Key for each Group.
+            }
+            else if(propName == "Year")
+            {
+                f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Year" : GetPropValue(t, propName) as string;
             }
             else
             {
@@ -678,6 +694,9 @@ namespace BreadPlayer.ViewModels
             SongCount = TracksCollection.Elements.Count;
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
+                await RemoveDuplicateGroups();
+                await RemoveDuplicateGroups();
+
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
@@ -692,8 +711,6 @@ namespace BreadPlayer.ViewModels
                 var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                 foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
             }
-
-            await RemoveDuplicateGroups().ConfigureAwait(false);
             await CreateGenreMenu().ConfigureAwait(false);
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
             await Task.Delay(10000);

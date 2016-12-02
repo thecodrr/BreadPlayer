@@ -84,19 +84,18 @@ namespace BreadPlayer.ViewModels
         }
         private void HandleLibraryLoadedMessage(Message message)
         {
-            if (message.Payload as GroupedObservableCollection<string, Mediafile> != null)
+            if (message.Payload is GroupedObservableCollection<string, Mediafile>)
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                if (message.MessageType == MessageTypes.MSG_LIBRARY_LOADED)
-                {
-                    TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-                    TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;                   
-                    GetSettings();
-                }
-                else
-                {
-                    PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-                }
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;                
+                PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>; 
+            }
+            else
+            {
+                var listObject = message.Payload as List<object>;
+                TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
+                IsSourceGrouped = (bool)listObject[1];
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                GetSettings();
             }
         }
 
@@ -250,6 +249,10 @@ namespace BreadPlayer.ViewModels
                         }
                         toPlayFile = ShuffledList?.ElementAt(IndexOfCurrentlyPlayingFile + 1);
                     }
+                    else if(IsSourceGrouped)
+                    {
+                        toPlayFile = GetNextSongInGroup();
+                    }
                     else
                     {
                         toPlayFile = IndexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && IndexOfCurrentlyPlayingFile != -1 ? playingCollection.ElementAt(IndexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" || isNext ? playingCollection.ElementAt(0) : null;
@@ -268,6 +271,15 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
+        Mediafile GetNextSongInGroup()
+        {
+            var currentGroup = TracksCollection.FirstOrDefault(t => t.Any(c => c.Path == Player.CurrentlyPlayingFile.Path));
+            var currentSongIndex = currentGroup.IndexOf(currentGroup.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path));
+            var nextGroup = currentSongIndex + 1 == currentGroup.Count ? TracksCollection.ElementAt(TracksCollection.IndexOf(currentGroup) + 1) : currentGroup;
+            var toPlaySongIndex = nextGroup == currentGroup ? currentSongIndex + 1 : 0;
+            return nextGroup.ElementAt(toPlaySongIndex);
+        }
+
         async void PlayNext()
         {
             if (Player.CurrentlyPlayingFile != null)
@@ -388,6 +400,12 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Properties
+        bool isSourceGrouped;
+        public bool IsSourceGrouped
+        {
+            get { return isSourceGrouped; }
+            set { Set(ref isSourceGrouped, value); }
+        }
         public GroupedObservableCollection<string, Mediafile> TracksCollection
         { get; set; }
         public GroupedObservableCollection<string, Mediafile> PlaylistSongCollection

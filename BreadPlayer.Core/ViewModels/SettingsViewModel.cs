@@ -34,7 +34,7 @@ using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
-	public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase
     {
         string timeClosed;
         public string TimeClosed
@@ -77,9 +77,9 @@ namespace BreadPlayer.ViewModels
 
         async void Reset()
         {
-            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);         
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
             LibraryFoldersCollection.Clear();
-            await ApplicationData.Current.ClearAsync();          
+            await ApplicationData.Current.ClearAsync();
             ResetCommand.IsEnabled = false;
             await Task.Delay(200);
             ResetCommand.IsEnabled = true;
@@ -103,8 +103,8 @@ namespace BreadPlayer.ViewModels
             openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             openPicker.FileTypeFilter.Add(".m3u");
             openPicker.FileTypeFilter.Add(".pls");
-            StorageFile file = await openPicker.PickSingleFileAsync();          
-            if(file != null)
+            StorageFile file = await openPicker.PickSingleFileAsync();
+            if (file != null)
             {
                 IPlaylist playlist = null;
                 if (Path.GetExtension(file.Path) == ".m3u") playlist = new M3U();
@@ -132,7 +132,7 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = _isThemeDark == true ? "Light" : "Dark";
             }
         }
-        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection ;
+        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
             get {
@@ -149,7 +149,7 @@ namespace BreadPlayer.ViewModels
         public async void Load()
         {
             //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
-            FolderPicker picker = new FolderPicker();          
+            FolderPicker picker = new FolderPicker();
             picker.FileTypeFilter.Add(".mp3");
             picker.FileTypeFilter.Add(".wav");
             picker.FileTypeFilter.Add(".ogg");
@@ -170,7 +170,7 @@ namespace BreadPlayer.ViewModels
                 //this is the query result which we recieve after querying in the folder
                 StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
                 //the event for files changed
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;               
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;
                 await AddFolderToLibraryAsync(queryResult);
             }
         }
@@ -186,14 +186,14 @@ namespace BreadPlayer.ViewModels
 
                 //we move forward the index 100 steps because first 50 files are loaded when we called the above method.
                 index += 100;
-             
+
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
                 //'i' is a variable for the index of currently processing file
                 double i = 0;
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync();
-                if(count == 0)
+                if (count == 0)
                 {
                     string error = "No songs found!";
                     await NotificationManager.ShowAsync(error);
@@ -207,7 +207,7 @@ namespace BreadPlayer.ViewModels
                 while (files.Count != 0)
                 {
                     try
-                    {                        
+                    {
                         //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
                         //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
                         var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
@@ -251,7 +251,7 @@ namespace BreadPlayer.ViewModels
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        TracksCollection.AddRange(tempList, false, true);                        
+                        TracksCollection.AddRange(tempList, false, true);
                         //now we load 100 songs into database.
                         service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
@@ -261,59 +261,59 @@ namespace BreadPlayer.ViewModels
                         //consequently we have to increase the index by 100 so that songs are not repeated.
                         index += 100;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         string message1 = ex.Message + "||" + ex.InnerException;
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
-               //we stop the stopwatch.
+                //we stop the stopwatch.
                 stop.Stop();
                 //and report the user how long it took.
-                string message = string.Format("Library successfully loaded! Total Songs: {0} Failed: {1} Loaded: {2} Total Time Taken: {3} seconds", count, failedCount, i, Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString()); 
+                string message = string.Format("Library successfully loaded! Total Songs: {0} Failed: {1} Loaded: {2} Total Time Taken: {3} seconds", count, failedCount, i, Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString());
                 await NotificationManager.ShowAsync(message);
                 service.Dispose();
             }
         }
 
-       /// <summary>
-       /// This is still experimental. As you can see, there are more lines of code then necessary.
-       /// </summary>
-       /// <param name="files"></param>
+        /// <summary>
+        /// This is still experimental. As you can see, there are more lines of code then necessary.
+        /// </summary>
+        /// <param name="files"></param>
         public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
         {
-            try { 
-            string folder = "";
-            foreach (var file in files)
-            {
-                var props = await file.Properties.GetMusicPropertiesAsync();
-                folder = Path.GetDirectoryName(file.Path);
-                //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
-                if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
+            try {
+                string folder = "";
+                foreach (var file in files)
                 {
-                    var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
-                    mp3File.Path = file.Path;
+                    var props = await file.Properties.GetMusicPropertiesAsync();
+                    folder = Path.GetDirectoryName(file.Path);
+                    //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
+                    if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
+                    {
+                        var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
+                        mp3File.Path = file.Path;
+                    }
+                    //FOR ADDITION (we check all the files to see if we already have the file or not)
+                    if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
+                    {
+                        var mediafile = await CreateMediafile(file, false);
+                        AddMediafile(mediafile);
+                        await SaveSingleFileAlbumArtAsync(mediafile);
+                    }
                 }
-                //FOR ADDITION (we check all the files to see if we already have the file or not)
-                if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
+                //FOR DELETE (we only want to iterate through songs which are in the changed folder)
+                var deletedFiles = new List<Mediafile>();
+                foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
                 {
-                    var mediafile = await CreateMediafile(file, false);
-                    AddMediafile(mediafile);
-                    await SaveSingleFileAlbumArtAsync(mediafile);
+                    if (!File.Exists(file.Path))
+                    {
+                        deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
+                    }
                 }
-            }
-            //FOR DELETE (we only want to iterate through songs which are in the changed folder)
-            var deletedFiles = new List<Mediafile>();
-            foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
-            {
-                if (!File.Exists(file.Path))
-                {
-                    deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
-                }
-            }
-            if (deletedFiles.Any())
-                foreach (var deletedFile in deletedFiles)
-                    TracksCollection.Elements.Remove(deletedFile);
+                if (deletedFiles.Any())
+                    foreach (var deletedFile in deletedFiles)
+                        TracksCollection.Elements.Remove(deletedFile);
             }
             catch { }
         }
@@ -379,13 +379,19 @@ namespace BreadPlayer.ViewModels
                     {
                         bool albumSaved = false;
                         StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale).AsTask().ConfigureAwait(false);
-                        if (thumbnail.Type == ThumbnailType.Image)
-                            albumSaved = await SaveImagesAsync(thumbnail, mp3file).ConfigureAwait(false);
-                        else
-                            albumSaved = await SaveImagesAsync(file, mp3file).ConfigureAwait(false);
-
+                        switch (thumbnail.Type)
+                        {
+                            case ThumbnailType.Image:
+                                albumSaved = await SaveImagesAsync(thumbnail, mp3file).ConfigureAwait(false);
+                                break;
+                            case ThumbnailType.Icon:
+                            default:
+                                albumSaved = await SaveImagesAsync(file, mp3file).ConfigureAwait(false);
+                                break;
+                        }
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
                     }
+
                 }
                 catch
                 {
@@ -393,6 +399,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
+    
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);
