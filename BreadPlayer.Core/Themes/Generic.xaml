@@ -7,10 +7,10 @@
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
     <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>
     <Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
         <Setter Property="MinHeight" Value="48" />
-        <Setter Property="MinWidth" Value="58" />
+        <Setter Property="Width" Value="48" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -117,28 +117,6 @@
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
-                            <!--<VisualStateGroup>
-                                -->
-                            <!--<VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="720" />
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
-                                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
-                                    </VisualState.Setters>
-                                </VisualState>-->
-                            <!--
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="0" />
-                                        <StateTrigger IsActive="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsChecked}"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="ContentPresenter.Foreground" Value="Black"/>
-                                    </VisualState.Setters>
-                                </VisualState>                               
-                            </VisualStateGroup>-->
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="ContentPresenter"
                                           Content="{TemplateBinding Content}"
@@ -167,8 +145,8 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <FontIcon FontSize="18" Grid.Column="0" Glyph="&#xe721;" Margin="10,0,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" Foreground="{ThemeResource ThemeForeground}"/>
+                    <FontIcon FontSize="16" Grid.Column="0" Glyph="&#xe721;" Margin="0,0,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" Foreground="White"/>
                     <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
                                VerticalAlignment="Center" />
 
@@ -192,7 +170,7 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
+                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0049;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <TextBlock Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
@@ -218,7 +196,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <FontIcon FontSize="22" Grid.Column="0" Glyph="&#xe819;" Margin="10,0,0,0" VerticalAlignment="Center"
+                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0049;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />-->
@@ -290,7 +268,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
+                                                                    Value="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="border"
                                                                        Storyboard.TargetProperty="Opacity">
@@ -329,11 +307,11 @@
     <DataTemplate x:Key="NavMenuItemTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="38" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
+            <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center" Foreground="White" FontWeight="SemiLight" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="White" Margin="5,0,0,0"/>
 
         </Grid>
@@ -341,14 +319,14 @@
     <DataTemplate x:Key="NavMenuItemTemplateLight">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="38" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <!--<FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>-->
-            <FontIcon FontSize="22" Glyph="{Binding FontGlyph}" Margin="0,8,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center"  Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
-            <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="{ThemeResource ThemeForeground}"/>
+            <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
+                      HorizontalAlignment="Center"  FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center"/>
 
         </Grid>
     </DataTemplate>
@@ -389,19 +367,7 @@
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
                                     </VisualState.Setters>
                                 </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="1920" />
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
-                                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
-                                        <Setter Target="RootSplitView.OpenPaneLength" Value="600" />
-                                        <Setter Target="playlistBtn.Width" Value="540"/>
-                                        <Setter Target="playlistBtnPanel.Width" Value="600"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                    </VisualState.Setters>
-                                </VisualState>
+                             
                             </VisualStateGroup>
                             <VisualStateGroup>
                                 <VisualState>
@@ -426,12 +392,12 @@
                                         <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
                                         <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
-                                        <Setter Target="playlistBtn.Width" Value="300"/>
+                                        <Setter Target="playlistBtn.Width" Value="320"/>
 
                                         <Setter Target="UpperGrid.Margin" Value="0"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
-                                        <Setter Target="searchBtn.Width" Value="300"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
+                                        <Setter Target="searchBtn.Width" Value="320"/>
                                         <Setter Target="searchBtn.Visibility" Value="Visible"/>
                                         <Setter Target="searchBox.Visibility" Value="Collapsed"/>
                                     </VisualState.Setters>
@@ -444,42 +410,27 @@
                                         <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
                                         <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
-                                        <Setter Target="playlistBtn.Width" Value="300"/>
+                                        <Setter Target="playlistBtn.Width" Value="320"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
+                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="UpperGrid.Margin" Value="0"/>
-                                        <Setter Target="searchBtn.Width" Value="300"/>
+                                        <Setter Target="searchBtn.Width" Value="320"/>
                                         <Setter Target="searchBtn.Visibility" Value="Visible"/>
                                         <Setter Target="searchBox.Visibility" Value="Collapsed"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                     </VisualState.Setters>
-                                </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
-                                        <AdaptiveTrigger MinWindowWidth="1920"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="TogglePaneButton.Foreground" Value="White"/>
-                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
-                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
-                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
-                                        <Setter Target="playlistBtn.Width" Value="600"/>
-                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="60"/>
-                                    </VisualState.Setters>
-                                </VisualState>
+                                </VisualState>                            
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
-                                   OpenPaneLength="300"
-                                   CompactPaneLength="58"
+                                   OpenPaneLength="320"
+                                   CompactPaneLength="48"
                                    IsTabStop="False" 
                                   PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Pane>                                
                                 <Grid x:Name="Pane" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
-                                    <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="290" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    <AutoSuggestBox x:Name="searchBox"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
                                         <AutoSuggestBox.QueryIcon>
                                             <FontIcon Glyph="&#xe721;"/>
                                         </AutoSuggestBox.QueryIcon>
@@ -500,8 +451,8 @@
                                         <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto">
 
                                      <StackPanel Orientation="Vertical" Grid.Row="0" >
-                                        <Button x:Name="searchBtn" Visibility="Collapsed" RequestedTheme="Dark"
-                                                TabIndex="2" Width="300" Foreground="White" Margin="0,58,0,0" FontSize="22"
+                                        <Button x:Name="searchBtn" Visibility="Collapsed"
+                                                TabIndex="2" Width="320" Foreground="White" Margin="0,48,0,0" FontSize="22"
                                                 Style="{StaticResource SearchButtonStyle}"/>                                        
                                         <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
@@ -520,9 +471,9 @@
                                     </local:NavMenuListView.Header>-->
                                         </local:NavMenuListView>
                                         <MenuFlyoutSeparator x:Name="TopSeperator" Visibility="Collapsed"/>
-                                        <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="300">
+                                        <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="320">
                                             <Button x:Name="playlistBtn" 
-                                                TabIndex="2" Width="240" 
+                                                TabIndex="2" Width="270" 
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
                                             <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
@@ -585,7 +536,7 @@
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu"
-                                      ToolTipService.ToolTip="Menu" Width="50" Foreground="{ThemeResource ThemeForeground}"/>
+                                      ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
 
                     </Grid>
                 </ControlTemplate>

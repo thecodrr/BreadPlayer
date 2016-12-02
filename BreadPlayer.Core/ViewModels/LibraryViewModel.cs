@@ -101,7 +101,7 @@ namespace BreadPlayer.ViewModels
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
-            LoadLibrary();
+            //LoadLibrary();
 
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
@@ -811,7 +811,7 @@ namespace BreadPlayer.ViewModels
                 Label = Playlist.Name,
                 DestinationPage = typeof(PlaylistView),
                 Symbol = Symbol.List,
-                FontGlyph = "\ue823"
+                FontGlyph = "\u0047"
             });
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)

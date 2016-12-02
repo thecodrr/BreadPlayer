@@ -112,7 +112,7 @@ namespace BreadPlayer
                 if (isPressed) { UpdatePosition(true); isPressed = false; }
             };
         }
-        
+                
         async void UpdatePosition(bool wait = false)
         {
             if (ShellVM != null)
@@ -122,12 +122,11 @@ namespace BreadPlayer
             if (wait) await Task.Delay(500);
             ShellVM.DontUpdatePosition = false;
         }
-       
+            
         public async void ShowMessage(string msg)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);
             await dialog.ShowAsync();
-        }
-        
+        }        
     }
 }

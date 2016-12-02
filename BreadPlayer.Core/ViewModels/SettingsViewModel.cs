@@ -31,6 +31,8 @@ using BreadPlayer.Extensions;
 using Windows.Storage.Search;
 using BreadPlayer.Messengers;
 using BreadPlayer.Service;
+using BreadPlayer.Common;
+using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {
@@ -53,6 +55,48 @@ namespace BreadPlayer.ViewModels
         {
             get { return modifiedFiles; }
             set { Set(ref modifiedFiles, value); }
+        }
+        int filebatchsize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
+        public int FileBatchSize
+        {
+            get { return filebatchsize; }
+            set
+            {
+                Set(ref filebatchsize, value);
+                RoamingSettingsHelper.SaveSetting("FileBatchSize", FileBatchSize);
+            }
+        }
+        int playbarLocation = -1;
+        public int PlaybarLocation
+        {
+            get
+            {
+                if (playbarLocation == -1)
+                    playbarLocation = isPlaybarOnBottom ? 1 : 0;
+                    return playbarLocation;
+            }
+            set
+            {
+                Set(ref playbarLocation, value);
+                IsPlaybarOnBottom = playbarLocation == 0 ? false : true;
+                RoamingSettingsHelper.SaveSetting("IsPlaybarOnBottom", IsPlaybarOnBottom);
+            }
+        }
+        bool isPlaybarOnBottom = RoamingSettingsHelper.GetSetting<bool>("IsPlaybarOnBottom", false);
+        public bool IsPlaybarOnBottom
+        {
+            get { return isPlaybarOnBottom; }
+            set { Set(ref isPlaybarOnBottom, value); }
+        }
+        bool loadAlbumArtsSeperately = RoamingSettingsHelper.GetSetting<bool>("LoadAlbumArtsSeperately", false);
+        public bool LoadAlbumArtsSeperately
+        {
+            get { return loadAlbumArtsSeperately; }
+            set
+            {
+                Set(ref loadAlbumArtsSeperately, value);
+                RoamingSettingsHelper.SaveSetting("LoadAlbumArtsSeperately", LoadAlbumArtsSeperately);
+            }
         }
         public SettingsViewModel()
         {

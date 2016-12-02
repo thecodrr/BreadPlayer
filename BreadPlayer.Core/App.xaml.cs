@@ -148,6 +148,7 @@ namespace BreadPlayer
 
         void LoadFrame(IActivatedEventArgs args, object arguments)
         {
+            var stop = Stopwatch.StartNew();
             Frame rootFrame = Window.Current.Content as Frame;
             if (args.Kind != ActivationKind.File)
             {
@@ -196,7 +197,8 @@ namespace BreadPlayer
             }
            
             Window.Current.Activate();
-            
+            stop.Stop();
+            Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
           
         }
         void ReInitialize()

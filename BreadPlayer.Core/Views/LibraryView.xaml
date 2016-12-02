@@ -26,7 +26,18 @@
             <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
             <MenuFlyoutItem Text="Album" Tag="Album" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
         </MenuFlyout>
-
+        
+        <DataTemplate x:Key="MobileJumpListItemTemplate">
+            <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
+                        <Core:EventTriggerBehavior.Actions>
+                            <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                        </Core:EventTriggerBehavior.Actions>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Name="Grid" DataContext="{Binding Source={StaticResource LibVM}}">
@@ -72,6 +83,7 @@
                         <Setter Target="headerText.Margin" Value="60,10,0,0" />
                         <Setter Target="headerText.(Grid.RowSpan)" Value="1" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
+                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
                         <!--<Setter Target="searchBox.Visibility" Value="Visible"/>-->
                         <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                     </VisualState.Setters>
