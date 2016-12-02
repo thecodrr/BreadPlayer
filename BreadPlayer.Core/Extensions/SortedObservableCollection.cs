@@ -11,70 +11,19 @@ using Windows.UI.Core;
 namespace BreadPlayer.Extensions
 {
     public class SortedObservableCollection<T>
-        : ObservableCollection<T> where T : IComparable<T>
+        : ThreadSafeObservableCollection<T> where T : IComparable<T>
     {
         private CoreDispatcher _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-
-        protected volatile bool _isObserving = true;
-
-        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                try
-                {
-                    if (_isObserving)
-                        base.OnCollectionChanged(e);
-                }
-                catch { }
-            });
-           
-        }
-        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-          await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });
-        }
-
-        /// <summary> 
-        /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
-        /// </summary> 
-        public void AddRange(IEnumerable<T> range)
-        {
-            try
-            {
-                // get out if no new items
-                if (range == null || !range.Any()) return;
-
-                // prepare data for firing the events
-                int newStartingIndex = Count;
-                var newItems = new List<T>();
-                newItems.AddRange(range);
-
-                // add the items, making sure no events are fired
-
-                _isObserving = false;
-                foreach (var item in range)
-                {
-                    Add(item);
-                }
-                _isObserving = true;
-
-                // fire the events
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
-            }
-            catch { }
-        }
+        
         protected async override void InsertItem(int index, T item)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                if(base.sync.IsWriteLockHeld)
+                    base.sync.ExitWriteLock();
                 if (this.Count == 0)
                 {
+                    base.sync.EnterWriteLock();
                     base.InsertItem(0, item);
                     return;
                 }

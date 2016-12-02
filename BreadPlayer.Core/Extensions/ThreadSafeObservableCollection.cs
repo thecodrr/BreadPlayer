@@ -202,6 +202,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         get
         {
+            if (sync.IsWriteLockHeld)
+                sync.ExitWriteLock();
             sync.EnterReadLock();
             var result = base.Count;
             sync.ExitReadLock();
