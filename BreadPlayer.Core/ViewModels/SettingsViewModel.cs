@@ -63,11 +63,15 @@ namespace BreadPlayer.ViewModels
         { get; set; }
         private void HandleMessage(Message message)
         {
-            TracksCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
-            if (TracksCollection != null)
+            if(message.Payload is List<object>)
             {
-                message.HandledStatus = MessageHandledStatus.HandledContinue;
+                TracksCollection = (message.Payload as List<object>)[0] as GroupedObservableCollection<string, Mediafile>;
+                if (TracksCollection != null)
+                {
+                    message.HandledStatus = MessageHandledStatus.HandledContinue;
+                }
             }
+            
         }
         DelegateCommand _resetCommand;
         /// <summary>
