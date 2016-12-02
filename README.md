@@ -47,7 +47,7 @@ We will probably start the development of **Beta Version** after _Alpha_ is rele
 Thanks to these awesome people Project Bread has come this far:
 
 1. Danny [@DannyTalent](https://github.com/DannyTalent)
-2. [@Bond-009](https://github.com/Bond)
+2. [@Bond-009](https://github.com/Bond-009)
 3. [@MightyK1337](https://github.com/MightyK1337)
 4. Kai Hildebrandt [@hildebrandt87](https://github.com/hildebrandt87)
 
