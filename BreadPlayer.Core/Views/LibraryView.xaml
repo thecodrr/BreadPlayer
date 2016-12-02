@@ -26,7 +26,7 @@
             <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
             <MenuFlyoutItem Text="Album" Tag="Album" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
         </MenuFlyout>
-        
+
         <DataTemplate x:Key="MobileJumpListItemTemplate">
             <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
                 <Interactivity:Interaction.Behaviors>
@@ -114,15 +114,19 @@
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="KeyUp">
                     <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
-                    --><!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>--><!--
+                    -->
+        <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+        <!--
                 </Core:EventTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="QuerySubmitted">
                     <Core:InvokeCommandAction Command="{Binding SearchCommand}" CommandParameter="{Binding .}"/>
-                    --><!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>--><!--
+                    -->
+        <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource Core}, Path=ShellVM}"/>-->
+        <!--
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </AutoSuggestBox>-->
-        <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}"  ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled" IsZoomOutButtonEnabled="True">
+        <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}"  ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
                 <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
                     <ListView.ItemsPanel>
@@ -152,18 +156,20 @@
                         </Core:EventTriggerBehavior>
                         <Core:EventTriggerBehavior EventName="Drop">
                             <Core:CallMethodAction MethodName="DropFiles" TargetObject="{Binding Source={StaticResource LibVM}}"/>
-                        </Core:EventTriggerBehavior>                          
-                        </Interactivity:Interaction.Behaviors>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
                     <ListView.GroupStyle>
                         <GroupStyle HidesIfEmpty="True">
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
                                     <Button x:Name="groupBtn" Content="{Binding Key}" FontSize="26" FontFamily="Segoe UI Light" Background="Transparent" Margin="10,0,0,0" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
-                                        <!--<Interactivity:Interaction.Behaviors>
+                                        <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=groupBtn}">
-                                                <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="False" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Core:ChangePropertyAction PropertyName="Visibility" Value="Visible" TargetObject="{Binding ElementName=backBtn}"/>
+                                                </Core:EventTriggerBehavior.Actions>  
                                             </Core:EventTriggerBehavior>
-                                        </Interactivity:Interaction.Behaviors>-->
+                                        </Interactivity:Interaction.Behaviors>
                                     </Button>
 
                                     <!--<TextBlock Text='{Binding Key}' Foreground="Gray" FontSize="25" Margin="5" />-->
@@ -182,16 +188,27 @@
                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
                                         <Core:EventTriggerBehavior.Actions>
                                             <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                                            <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>
                                         </Core:EventTriggerBehavior.Actions>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                             </Button>
                         </DataTemplate>
-                    </GridView.ItemTemplate>
+                    </GridView.ItemTemplate>                  
                 </GridView>
             </SemanticZoom.ZoomedOutView>
-        </SemanticZoom>        
-        
+        </SemanticZoom>
+
+        <Button x:Name="backBtn" Background="{x:Null}" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right"  Style="{StaticResource HyperlinkBtn}">
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
+                    <Core:EventTriggerBehavior.Actions>
+                        <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                        <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>
+                    </Core:EventTriggerBehavior.Actions>
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </Button>
         <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibilty}}">
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>

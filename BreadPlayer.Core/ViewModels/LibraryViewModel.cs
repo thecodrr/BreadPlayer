@@ -101,7 +101,7 @@ namespace BreadPlayer.ViewModels
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
-            //LoadLibrary();
+            LoadLibrary();
 
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
@@ -410,7 +410,6 @@ namespace BreadPlayer.ViewModels
                 ViewSource = (para as Grid).Resources["Source"] as CollectionViewSource;
 
             await RefreshSourceAsync().ConfigureAwait(false);
-
             if (source == null && Sort != "Unsorted")
             {
                 await LoadCollectionAsync(GetSortFunction(Sort), true).ConfigureAwait(false);    
