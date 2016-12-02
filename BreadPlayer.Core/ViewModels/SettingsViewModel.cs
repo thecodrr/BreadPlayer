@@ -105,11 +105,13 @@ namespace BreadPlayer.ViewModels
         }
         public static GroupedObservableCollection<string, Mediafile> TracksCollection
         { get; set; }
-        private void HandleMessage(Message message)
+        private async void HandleMessage(Message message)
         {
             if(message.Payload is List<object>)
             {
                 TracksCollection = (message.Payload as List<object>)[0] as GroupedObservableCollection<string, Mediafile>;
+                if (TracksCollection.Count <= 0)
+                    await AutoLoadMusicLibrary().ConfigureAwait(false);
                 if (TracksCollection != null)
                 {
                     message.HandledStatus = MessageHandledStatus.HandledContinue;
@@ -189,6 +191,15 @@ namespace BreadPlayer.ViewModels
                 }
                 return _LibraryFoldersCollection; }
             set { Set(ref _LibraryFoldersCollection, value); }
+        }
+        async Task AutoLoadMusicLibrary()
+        {
+            var options = Common.DirectoryWalker.GetQueryOptions();
+            //this is the query result which we recieve after querying in the folder
+            StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
+            //the event for files changed
+            queryResult.ContentsChanged += QueryResult_ContentsChanged;
+            await AddFolderToLibraryAsync(queryResult);
         }
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>

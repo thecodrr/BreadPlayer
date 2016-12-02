@@ -37,6 +37,7 @@ using BreadPlayer.Service;
 using BreadPlayer.Common;
 using BreadPlayer.Messengers;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Search;
 
 namespace BreadPlayer.ViewModels
 {
@@ -424,7 +425,7 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-       
+     
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -449,7 +450,7 @@ namespace BreadPlayer.ViewModels
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;
-            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true && Player.CurrentlyPlayingFile != null)
+            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true && Player.CurrentlyPlayingFile != null && (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
                 (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
