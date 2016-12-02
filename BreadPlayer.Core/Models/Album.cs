@@ -1,6 +1,6 @@
 ﻿namespace BreadPlayer.Models
 {
-    public class Album : ViewModelBase
+    public class Album
     {
         public string AlbumName { get; set; }
         public string Artist { get; set; }

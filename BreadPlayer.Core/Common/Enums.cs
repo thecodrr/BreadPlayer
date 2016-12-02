@@ -18,11 +18,11 @@
 
 namespace BreadPlayer.Core
 {
-        public enum PlayerState
-        {
-            Playing,
-            Paused,
-            Stopped,
-            Ended
-        }    
+    public enum PlayerState
+    {
+        Playing,
+        Paused,
+        Stopped,
+        Ended
+    }
 }

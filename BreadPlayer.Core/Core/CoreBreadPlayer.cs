@@ -23,11 +23,20 @@ using BreadPlayer.Events;
 using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace BreadPlayer.Core
 {
 	public class CoreBreadPlayer : ViewModelBase, IDisposable
     {
+        #region DLLImports
+        [DllImport("bass.dll")]
+        static extern int BASS_GetConfig(int config);
+        [DllImport("bass.dll")]
+        static extern bool BASS_SetConfig(int config, int newValue);
+        const int BASS_CONFIG_DEV_BUFFER = 27;
+        int DeviceBufferLength => BASS_GetConfig(BASS_CONFIG_DEV_BUFFER);
+        #endregion
         #region Fields
         int handle = 0;
         private SyncProcedure _sync;
@@ -50,7 +59,9 @@ namespace BreadPlayer.Core
         {
            await Task.Run(() => 
             {
-                Bass.UpdatePeriod = 500;               
+                Bass.UpdatePeriod = 1000;
+                BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 200);
+                var bufferLength = DeviceBufferLength;
                 Bass.Start();
                 Bass.Init();
             });                   
