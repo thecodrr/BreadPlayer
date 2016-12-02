@@ -24,11 +24,13 @@ using Windows.UI.Core;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using BreadPlayer.Models;
 
 namespace BreadPlayer.Extensions
 {
 	public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
         where TKey : IComparable<TKey>
+        where TElement : IComparable<TElement>
     {
         private readonly Func<TElement, TKey> readKey;
 
@@ -47,7 +49,7 @@ namespace BreadPlayer.Extensions
             : this(readKey)
         {
             //this.readKey = readKey;
-            Elements = new ThreadSafeObservableCollection<TElement>();
+            Elements = new SortedObservableCollection<TElement>();
             Elements.AddRange(items);
             // this.AddRange(items, false);
             foreach (var item in items)
@@ -82,7 +84,7 @@ namespace BreadPlayer.Extensions
             try
             {
                 var key = this.readKey(item);
-                if (addToElement) Elements.Add(item);
+                if (addToElement) Elements.Insert(0,item);
                 var s = FindOrCreateGroup(key);
                 s.Add(item);
             } catch { }
@@ -104,7 +106,6 @@ namespace BreadPlayer.Extensions
                 int newStartingIndex = Elements.Count;
                 var newItems = new List<TElement>();
                 newItems.AddRange(range);
-
                 // add the items, making sure no events are fired
                 _isObserving = false;
 
@@ -114,7 +115,7 @@ namespace BreadPlayer.Extensions
                     {
                         await Task.Run(() =>
                         {
-                            AddItem(item, addkey);
+                            AddItem(item, addkey);                           
                         }).ConfigureAwait(false);
                     }
                 }
@@ -126,7 +127,6 @@ namespace BreadPlayer.Extensions
                     }
                 }
                 _isObserving = true;
-
                 // fire the events
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
@@ -178,7 +178,7 @@ namespace BreadPlayer.Extensions
             Elements.Remove(item);
         }
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
-        public ThreadSafeObservableCollection<TElement> Elements { get; set; } = new ThreadSafeObservableCollection<TElement>();
+        public SortedObservableCollection<TElement> Elements { get; set; } = new SortedObservableCollection<TElement>();
         public GroupedObservableCollection<TKey, TElement> ReplaceWith(GroupedObservableCollection<TKey, TElement> replacementCollection, IEqualityComparer<TElement> itemComparer)
         {
             // First make sure that the top level group containers match
@@ -368,7 +368,8 @@ namespace BreadPlayer.Extensions
             : this(key)
         {
 
-            AddRange(items);
+        AddRange(items);
+        
             //foreach (var item in items)
             //{
             //    this.Add(item);

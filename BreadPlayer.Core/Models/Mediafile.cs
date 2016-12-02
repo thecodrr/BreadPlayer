@@ -16,10 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using BreadPlayer.Core;
+using System;
 
 namespace BreadPlayer.Models
 {
-	public class Mediafile : ObservableObject
+	public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
         private PlayerState state;
@@ -93,7 +94,10 @@ namespace BreadPlayer.Models
 
         #endregion
 
-
+        public int CompareTo(Mediafile compareTo)
+        {
+           return this.Title.CompareTo(compareTo.Title);            
+        }
         public Mediafile()
         {
            // GetText(Data);

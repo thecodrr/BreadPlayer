@@ -293,7 +293,7 @@ namespace BreadPlayer.ViewModels
             else
                 PlayFile(toPlayFile);
         }
-        ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
+       SortedObservableCollection<Mediafile> GetPlayingCollection()
         {
             if (PlaylistSongCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
             {

@@ -130,7 +130,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         }
         catch { }
     }
-
     /// <summary> 
     /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T). 
     /// </summary> 

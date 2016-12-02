@@ -694,10 +694,7 @@ namespace BreadPlayer.ViewModels
             SongCount = TracksCollection.Elements.Count;
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
-                await RemoveDuplicateGroups();
-                await RemoveDuplicateGroups();
-
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
+                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
               
