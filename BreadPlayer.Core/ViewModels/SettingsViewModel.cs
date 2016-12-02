@@ -70,8 +70,7 @@ namespace BreadPlayer.ViewModels
                 {
                     message.HandledStatus = MessageHandledStatus.HandledContinue;
                 }
-            }
-            
+            }            
         }
         DelegateCommand _resetCommand;
         /// <summary>

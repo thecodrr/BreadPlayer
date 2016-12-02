@@ -2,7 +2,8 @@
     x:Class="BreadPlayer.AlbumArtistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer"
+    xmlns:local="using:BreadPlayer" 
+    xmlns:Models="using:BreadPlayer.Models"
     xmlns:Converters="using:BreadPlayer.Converters"    
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
@@ -11,6 +12,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
+        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
+
         <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
             <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
         </ItemsPanelTemplate>
@@ -18,7 +21,7 @@
     <Grid x:Name="grid" >
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
-         
+
         </Grid.Resources>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -40,10 +43,10 @@
                         <Setter Target="headerText.RequestedTheme" Value="Dark" />
                         <Setter Target="headerText.(Grid.RowSpan)" Value="1" />
                         <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-                     </VisualState.Setters>
+                    </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>        
+        </VisualStateManager.VisualStateGroups>
         <!--<Grid.Background>
             <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
         </Grid.Background>-->
@@ -54,7 +57,7 @@
         </Grid.RowDefinitions>
         <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="headerText" Text="My Albums" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ItemTemplate="{StaticResource NormalTemplate}" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ImageFadeBrush}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="50" >
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" Background="{ThemeResource ImageFadeBrush}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="50" >
             <GridView.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition
@@ -62,8 +65,19 @@
                     <AddDeleteThemeTransition></AddDeleteThemeTransition>
                 </TransitionCollection>
             </GridView.Transitions>
-        </GridView>
-        
-       
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="Models:Album">
+                    <Grid MaxWidth="150" Height="220">
+                        <StackPanel>
+                            <Image Width="150" x:Name="AlbumArt" Height="150" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
+
+                            </Image>
+                            <TextBlock TextAlignment="Center" Margin="5,0" x:Phase="0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                            <TextBlock TextAlignment="Center" Margin="5,0,5,0" x:Phase="1" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>       
     </Grid>
 </Page>

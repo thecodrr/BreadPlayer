@@ -110,7 +110,7 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </AutoSuggestBox>-->
-        <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
+        <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}"  ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled" IsZoomOutButtonEnabled="True">
             <SemanticZoom.ZoomedInView>
                 <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
                     <ListView.ItemsPanel>
@@ -162,13 +162,15 @@
                 </ListView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
-                <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460" ItemsSource="{Binding AlphabetList}" Margin="0">
+                <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Button x:Name="alphabet" Width="80" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
+                            <Button x:Name="alphabet" BorderBrush="{x:Null}" MinWidth="90" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
                                 <Interactivity:Interaction.Behaviors>
                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
-                                        <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                                        <Core:EventTriggerBehavior.Actions>
+                                            <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                                        </Core:EventTriggerBehavior.Actions>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                             </Button>

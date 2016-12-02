@@ -492,7 +492,10 @@ namespace BreadPlayer.ViewModels
                     ViewSource.IsSourceGrouped = true;
                     TracksCollection.AddRange(files, true, false);
                     TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
-                   
+                    if(propName == "Year")
+                        AlphabetList = TracksCollection.Keys.ToList();
+                    else
+                        AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
                 }
                 else
                 {
