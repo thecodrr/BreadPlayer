@@ -58,6 +58,9 @@
                         <Setter Target="playbarPanel.VerticalAlignment" Value="Bottom"/>
                         <Setter Target="hamburgerMenu.Margin" Value="0,0,0,70"/>
                         <Setter Target="notification.Visibility" Value="Collapsed"/>
+                        <Setter Target="volumeGrid.VerticalAlignment" Value="Bottom"/>
+                        <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>
+
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -149,7 +152,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Grid Margin="0,69,0,0" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
+        <Grid x:Name="volumeGrid" Margin="0,69,0,0" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>
