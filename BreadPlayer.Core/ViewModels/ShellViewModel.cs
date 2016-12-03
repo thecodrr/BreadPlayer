@@ -86,8 +86,8 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload is GroupedObservableCollection<string, Mediafile>)
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;                
-                PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>; 
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
             }
             else
             {

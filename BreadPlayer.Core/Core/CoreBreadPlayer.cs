@@ -61,7 +61,9 @@ namespace BreadPlayer.Core
                 Bass.UpdatePeriod = 1000;
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
-                    BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 200);
+                    //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
+                    //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
+                    BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 700); 
                 }
                 Bass.Start();
                 Bass.Init();

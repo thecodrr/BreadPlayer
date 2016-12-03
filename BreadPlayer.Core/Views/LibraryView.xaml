@@ -187,8 +187,8 @@
                                 <Interactivity:Interaction.Behaviors>
                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
                                         <Core:EventTriggerBehavior.Actions>
+                                            <!--<Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>-->
                                             <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
-                                            <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>
                                         </Core:EventTriggerBehavior.Actions>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>

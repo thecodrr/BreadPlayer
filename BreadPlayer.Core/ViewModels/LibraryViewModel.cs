@@ -403,17 +403,18 @@ namespace BreadPlayer.ViewModels
                 });
             }
         }
-      
-       async void Init(object para)
+
+        async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;
             if (ViewSource == null)
                 ViewSource = (para as Grid).Resources["Source"] as CollectionViewSource;
 
             await RefreshSourceAsync().ConfigureAwait(false);
+
             if (source == null && Sort != "Unsorted")
             {
-                await LoadCollectionAsync(GetSortFunction(Sort), true).ConfigureAwait(false);    
+                await LoadCollectionAsync(GetSortFunction(Sort), true).ConfigureAwait(false);
             }
             else if (source == null && Sort == "Unsorted")
             {
@@ -425,7 +426,7 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-     
+    
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -523,14 +524,14 @@ namespace BreadPlayer.ViewModels
         private async void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
            await RemoveDuplicateGroups().ConfigureAwait(false);
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+
         }
         async Task RemoveDuplicateGroups()
         {
             //the only workaround to remove the first group which is a 'false' duplicate really.
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-
+            { 
                 if (ViewSource.IsSourceGrouped)
                 {
                     ViewSource.IsSourceGrouped = false;
