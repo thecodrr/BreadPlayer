@@ -38,14 +38,14 @@ namespace BreadPlayer.Converters
             }
             else if(value is int)
             {
-                if (System.Convert.ToInt16(value) <= 0)
+                if (System.Convert.ToInt16(value) <= 1)
                     flag = true;
                 else
                     flag = false;
             }
             else if(value is double)
             {
-                if (System.Convert.ToInt16(value) <= 0)
+                if (System.Convert.ToInt16(value) <= 1)
                     flag = false;
                 else
                     flag = true;

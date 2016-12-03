@@ -48,7 +48,7 @@ namespace BreadPlayer
         #endregion
 
         #region Load/Save Logic
-        public static async void Replay(bool onlyVol = false)
+        public static async void Replay(bool onlyVol = false, bool play = false)
         {
 
             try
@@ -68,7 +68,7 @@ namespace BreadPlayer
                         Player.PlayerState = PlayerState.Paused;
                         try
                         {
-                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, false, volume });
+                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
 
                             //ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
                         }

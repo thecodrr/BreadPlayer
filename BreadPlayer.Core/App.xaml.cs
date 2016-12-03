@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -52,6 +53,7 @@ namespace BreadPlayer
         public App()
         {
             this.InitializeComponent();
+            CoreApplication.EnablePrelaunch(true);
             var value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
             if (value != null)
             {
@@ -63,12 +65,13 @@ namespace BreadPlayer
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
-           // RegisterTask();
+   
+            // RegisterTask();
 
 
 
         }
-       
+
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
@@ -152,11 +155,14 @@ namespace BreadPlayer
             Frame rootFrame = Window.Current.Content as Frame;
             if (args.Kind != ActivationKind.File)
             {
-                CoreWindowLogic.Replay();
+                if(args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
+                    CoreWindowLogic.Replay(false, true);
+                else
+                    CoreWindowLogic.Replay();
             }
             else
             {
-                CoreWindowLogic.Replay(true);
+                    CoreWindowLogic.Replay(true);
             }
             // Do not repeat app initialization when the Window already has content
             if (rootFrame == null)
@@ -164,8 +170,9 @@ namespace BreadPlayer
                 // Create a Frame to act as the navigation context
                 rootFrame = new Frame();
 
-                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState ==  ApplicationExecutionState.Terminated)
                 {
+                    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                     //TODO: Load state from previously suspended application
                 }
                 rootFrame.NavigationFailed += OnNavigationFailed;
@@ -199,8 +206,9 @@ namespace BreadPlayer
             Window.Current.Activate();
             stop.Stop();
             Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
-          
+
         }
+
         void ReInitialize()
         {
             if (Window.Current.Content == null)

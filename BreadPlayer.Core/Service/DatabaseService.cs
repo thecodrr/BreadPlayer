@@ -44,7 +44,7 @@ namespace BreadPlayer.Service
         {
             try
             {
-                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;journal=false;");
+                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;password=helloall;journal=true;");
                 IsValid = db.DbVersion.ToString() != "";
                 if (IsValid)
                 {

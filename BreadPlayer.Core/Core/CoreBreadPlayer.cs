@@ -63,7 +63,7 @@ namespace BreadPlayer.Core
                 {
                     //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
                     //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
-                    BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 700); 
+                    BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230); 
                 }
                 Bass.Start();
                 Bass.Init();
@@ -117,7 +117,7 @@ namespace BreadPlayer.Core
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         CurrentlyPlayingFile = mp3file;
-                        //CoreWindowLogic.UpdateSmtc();
+                        CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.Stringify();
                     });
 

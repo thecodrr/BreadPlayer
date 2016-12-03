@@ -47,12 +47,12 @@
         </Grid.RowDefinitions>
         <controls:SplitViewMenu x:Name="hamburgerMenu" Grid.Row="0" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Grid.RowSpan="2">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe806;" Label="Recently Played" Symbol="Accept" Arguments="Recent"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#xe81c;" Label="Music Library" Symbol="Accept" Arguments="Library"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#xe81f;" Symbol="Accept" Label="My Albums"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0044;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#xe814;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
         <Grid x:Name="grid" Grid.Row="2" Margin="0,0,0,0" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
@@ -64,7 +64,7 @@
                 <StackPanel.RenderTransform>
                     <TranslateTransform Y="0"/>
                 </StackPanel.RenderTransform>
-                <AppBarButton x:Name="infoBar" Width="Auto" Visibility="{Binding Path=Player.Length, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="1" Height="80">
+                <AppBarButton x:Name="infoBar" Width="Auto" Visibility="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="1" Height="80">
                     <Grid Margin="0,-14.5,0,-50" DataContext="{StaticResource Core}">
                         <Grid.Background>
                             <ImageBrush ImageSource="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="UniformToFill"></ImageBrush>
