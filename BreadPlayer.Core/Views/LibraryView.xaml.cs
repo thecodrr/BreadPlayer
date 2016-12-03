@@ -71,7 +71,7 @@ namespace BreadPlayer
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = null;
                 myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
-
+                backBtn.Visibility = Visibility.Collapsed;
                 SemanticZoomLocation zoomloc = new SemanticZoomLocation();
                 zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);
                 zoomloc.Item = myGroup;

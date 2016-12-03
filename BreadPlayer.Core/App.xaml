@@ -31,9 +31,9 @@
                     <SolidColorBrush x:Key="HoverBrush" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
                     <SolidColorBrush x:Key="AppBarToggleHover" Color="{ThemeResource SystemAccentColor}" Opacity="0.5"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="Black"/>
-                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f2f2f2"/>
-                    <SolidColorBrush x:Key="ThemeBackground" Color="#e5e5e5" Opacity="0.95"/>
-                    <SolidColorBrush x:Key="ImageFadeBrush" Color="#e5e5e5" Opacity="0.9"/>
+                    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f5f5f5"/>
+                    <SolidColorBrush x:Key="ThemeBackground" Color="#f5f5f5" Opacity="0.95"/>
+                    <SolidColorBrush x:Key="ImageFadeBrush" Color="#f5f5f5" Opacity="0.8"/>
                     <SolidColorBrush x:Key="PointerOverBrush" Color="WhiteSmoke"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
