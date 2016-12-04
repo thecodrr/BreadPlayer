@@ -462,6 +462,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
 
+                SongCount = LibraryService.SongCount;
                 if (group)
                 {
                     ViewSource.Source = TracksCollection;
@@ -523,9 +524,8 @@ namespace BreadPlayer.ViewModels
 
         private async void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-           await RemoveDuplicateGroups().ConfigureAwait(false);
+            await RemoveDuplicateGroups().ConfigureAwait(false);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-
         }
         async Task RemoveDuplicateGroups()
         {
@@ -695,7 +695,6 @@ namespace BreadPlayer.ViewModels
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SongCount = TracksCollection.Elements.Count;
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
                  await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             

@@ -154,10 +154,7 @@ namespace BreadPlayer
             var stop = Stopwatch.StartNew();
             Frame rootFrame = Window.Current.Content as Frame;
             if (args.Kind != ActivationKind.File)
-            {
-                if(args.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
-                    CoreWindowLogic.Replay(false, true);
-                else
+            { 
                     CoreWindowLogic.Replay();
             }
             else
