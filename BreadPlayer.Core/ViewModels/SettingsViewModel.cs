@@ -33,6 +33,8 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Service;
 using BreadPlayer.Common;
 using Windows.UI.Xaml.Controls;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.ViewModels
 {
@@ -450,8 +452,12 @@ namespace BreadPlayer.ViewModels
                                 break;
                         }
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
+                        //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                        //{
+                        //    var accentColor = (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush);
+                        //    mp3file.AlbumArtColor = albumSaved ? await GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartLocation)) : accentColor.Color;
+                        //});
                     }
-
                 }
                 catch
                 {

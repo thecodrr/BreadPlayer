@@ -19,6 +19,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using BreadPlayer.Tags.ID3.ID3v2Frames.BinaryFrames;
 using Windows.Storage.Streams;
 using System.Diagnostics;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Core
 {
@@ -90,6 +92,23 @@ namespace BreadPlayer.Core
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
 
+        public static async Task<Color> GetDominantColor(StorageFile file)
+        {
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                try
+                {
+                    //Create a decoder for the image
+                    var decoder = await BitmapDecoder.CreateAsync(stream);
+                    var colorThief = new ColorThiefDotNet.ColorThief();
+                    var qColor = await colorThief.GetColor(decoder);
+                 
+                    //read the color 
+                    return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
+                }
+                catch { return (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
+            }
+        }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 
         /// </summary>
@@ -140,6 +159,7 @@ namespace BreadPlayer.Core
                         while ((buf = (await thumb.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None).AsTask().ConfigureAwait(false))).Length > 0)
                             await albumstream.WriteAsync(buf).AsTask().ConfigureAwait(false);
                     }
+                    
                     thumb.Dispose();
                     return true;
                 }

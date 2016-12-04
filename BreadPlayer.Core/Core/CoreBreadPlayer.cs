@@ -197,7 +197,6 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
-      
         double _volume = 50;
         public double Volume
         {

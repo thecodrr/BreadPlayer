@@ -17,12 +17,15 @@
 */
 using BreadPlayer.Core;
 using System;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Models
 {
 	public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
+        private Color albumArtColor;
         private PlayerState state;
         private string path;
         private string encrypted_meta_file;
@@ -60,7 +63,7 @@ namespace BreadPlayer.Models
        
         #region Properties
         public ThreadSafeObservableCollection<Playlist> Playlists { get { return playlists; } set { Set(ref playlists, value); }}
-        
+        public Color AlbumArtColor { get { return albumArtColor; } set { Set(ref albumArtColor, value); } }
         public string Path { get { return path; } set { Set(ref path, value); } }
         public PlayerState State { get { return state; } set { Set(ref state, value); } }
         public string EncryptedMetaFile { get { return encrypted_meta_file; } set { encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; } }

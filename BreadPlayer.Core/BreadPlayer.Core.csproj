@@ -179,6 +179,7 @@
     <Compile Include="Service\LibraryService.cs" />
     <Compile Include="Service\NavigationService.cs" />
     <Compile Include="Service\PlaylistService.cs" />
+    <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />

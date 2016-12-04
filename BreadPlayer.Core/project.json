@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "ksemenenko.ColorThief": "1.1.0.2",
     "LiteDB.Core": "2.0.4",
     "ManagedBass": "0.24.0",
     "ManagedBass.PInvoke": "0.6.1",

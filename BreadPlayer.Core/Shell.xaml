@@ -16,6 +16,7 @@
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
         <Converters:StringToIconConverter x:Key="StringToIcon"/>
+        <Converters:ColorToBrushConverter x:Key="ColorToBrush"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource ShellVM}">
         <VisualStateManager.VisualStateGroups>
@@ -79,7 +80,7 @@
         </controls:SplitViewMenu>
        
         <StackPanel x:Name="playbarPanel" VerticalAlignment="Top">
-            <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
+            <Grid Height="70" Background="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AlbumArtColor, FallbackValue={ThemeResource SystemControlBackgroundAccentBrush}, Converter={StaticResource ColorToBrush}}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
