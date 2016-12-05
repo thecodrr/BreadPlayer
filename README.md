@@ -37,11 +37,12 @@ Basically, the main reason behind the name change is that the previous one didn'
 
 ###What Happens Next?
 We will probably start the development of **Beta Version** after _Alpha_ is released. **Beta-Feature List will be published soon.** 
-###Technologies used:
+###Libraries used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
 2. [BASS](http://www.un4seen.com/bass.html) & [ManagedBass](https://github.com/ManagedBass/ManagedBass) (for audio processing)
 3. [LiteDB](https://github.com/mbdavid/LiteDB) (for library managment)
+4. Taglib#
 
 ###Contributors:
 Thanks to these awesome people Project Bread has come this far:
