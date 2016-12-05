@@ -44,9 +44,7 @@ public class ObservableObject : INotifyPropertyChanged
     /// <param name="args">The arguments. </param>
     protected virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
-        var copy = PropertyChanged;
-        if (copy != null)
-            copy(this, args);
+        PropertyChanged?.Invoke(this, args);
     }
 
     /// <summary>Raises the property changed event for all properties (string.Empty). </summary>

@@ -42,6 +42,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Shapes;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
+using Windows.ApplicationModel.Core;
 
 namespace BreadPlayer
 {
@@ -56,6 +57,8 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
+
             CoreWindowLogic.InitSmtc();
             ShellVM = DataContext as ShellViewModel;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
@@ -67,7 +70,7 @@ namespace BreadPlayer
             };
             
         }
-        
+       
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter is StorageFile)
@@ -75,19 +78,17 @@ namespace BreadPlayer
             
             base.OnNavigatedTo(e);
         }
-      
+        bool isDragging = false;
         private void VolSliderThumb_DragStarted(object sender, DragStartedEventArgs e)
         {
+            isDragging = true;
             ShellVM.DontUpdatePosition = true;
         }
 
         private void VolSliderThumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            if (ShellVM != null)
-            {
-                ShellVM.CurrentPosition = positionSlider.Value;
-                ShellVM.DontUpdatePosition = false;
-            }
+            UpdatePosition();
+            isDragging = false;
         }
         bool isPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -100,7 +101,7 @@ namespace BreadPlayer
             }
             Window.Current.CoreWindow.PointerPressed += (ea, a) =>
             {
-                if (positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position))
+                if (positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position) && !isDragging)
                 {
                     isPressed = true;
                     ShellVM.DontUpdatePosition = true;
@@ -109,7 +110,7 @@ namespace BreadPlayer
 
             Window.Current.CoreWindow.PointerReleased += (ea, a) => 
             {
-                if (isPressed) { UpdatePosition(true); isPressed = false; }
+                if (isPressed && !isDragging) { UpdatePosition(true); isPressed = false; }
             };
         }
                 

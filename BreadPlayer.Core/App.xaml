@@ -10,8 +10,8 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>
-                    <Color x:Key="SystemAccentColor">#4c4c4c</Color>-->
+                    <SolidColorBrush x:Key="SystemAccentColor1" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
+                    <!--<Color x:Key="SystemAccentColor">#4c4c4c</Color>-->
                     <!--Your accent color-->
                     <SolidColorBrush x:Key="PhoneAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
@@ -712,8 +712,8 @@
                                                 <Setter Target="DataStack.Foreground" Value="White"/>
                                             </VisualState.Setters>
                                             <Storyboard x:Name="myStoryboard" AutoReverse="True"  RepeatBehavior="Forever">
-                                                <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:6"/>
-                                                <ColorAnimation Storyboard.TargetName="Buttons_Stack" Storyboard.TargetProperty="(StackPanel.Background).(SolidColorBrush.Color)" From="{ThemeResource SystemAccentColor}" To="DeepSkyBlue" Duration="0:0:6"/>
+                                                <ColorAnimation Storyboard.TargetName="Animie" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color }" To="DeepSkyBlue" Duration="0:0:6"/>
+                                                <ColorAnimation Storyboard.TargetName="Buttons_Stack" Storyboard.TargetProperty="(StackPanel.Background).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color}" To="DeepSkyBlue" Duration="0:0:6"/>
                                             </Storyboard>
                                         </VisualState>
                                     </VisualStateGroup>

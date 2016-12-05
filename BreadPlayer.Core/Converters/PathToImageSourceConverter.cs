@@ -45,12 +45,12 @@ namespace BreadPlayer.Converters
         {
             if (value is Color)
             {
-                if(value.ToString() == "#00000000")
-                {
-                    return Themes.ThemeManager.GetThemeColor();
-                }
+                //if(value.ToString() == "#00000000")
+                //{
+                //    return Themes.ThemeManager.GetThemeColor();
+                //}
                 SolidColorBrush color = new SolidColorBrush((Color)value);
-                Themes.ThemeManager.SetThemeColor(color.Color);
+                //Themes.ThemeManager.SetThemeColor(color.Color);
                 return color;
             }
             return value;

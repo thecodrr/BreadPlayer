@@ -67,7 +67,6 @@
             </VisualStateGroup>
 
         </VisualStateManager.VisualStateGroups>
-
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0044;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -78,9 +77,9 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
-       
+
         <StackPanel x:Name="playbarPanel" VerticalAlignment="Top">
-            <Grid Height="70" Background="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AlbumArtColor, FallbackValue={ThemeResource SystemControlBackgroundAccentBrush}, Converter={StaticResource ColorToBrush}}" >
+            <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -162,4 +161,5 @@
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
     </Grid>
+
 </Page>

@@ -35,6 +35,8 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace BreadPlayer.ViewModels
 {
@@ -563,9 +565,9 @@ namespace BreadPlayer.ViewModels
                
                 if (await Player.Load(mp3file))
                 {
+                    Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
                     PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
                     if (play)

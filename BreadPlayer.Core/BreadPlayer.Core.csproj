@@ -146,6 +146,9 @@
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\SharedLogic.cs" />
+    <Compile Include="Events\ThemeChangedEventArgs.cs" />
+    <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
+    <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\SortedObservableCollection.cs" />
     <Compile Include="Service\DatabaseService.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">

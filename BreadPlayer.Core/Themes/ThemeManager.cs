@@ -1,12 +1,18 @@
-﻿using System;
+﻿using BreadPlayer.Core;
+using BreadPlayer.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Shapes;
 
 namespace BreadPlayer.Themes
 {
@@ -18,7 +24,6 @@ namespace BreadPlayer.Themes
             "PhoneAccentBrush",
             // windows
                    
-                   "SystemControlBackgroundAccentBrush",
                    "SystemControlDisabledAccentBrush" ,
                    "SystemControlForegroundAccentBrush" ,
                    "SystemControlHighlightAccentBrush" ,
@@ -33,38 +38,54 @@ namespace BreadPlayer.Themes
                    "ContentDialogBorderThemeBrush" ,
                    "JumpListDefaultEnabledBackground" ,
                    "HoverBrush" ,
+                   "SystemAccentColor1",
                    "AppBarToggleHover",
 
         };
 
-
-        public static void SetThemeColor(Color color)
+        public async static void SetThemeColor(string albumartPath)
         {
-            App.Current.Resources["SystemAccentColor"] = color;
-            foreach (var brushKey in brushKeys)
+            try
             {
-                if (Application.Current.Resources.ContainsKey(brushKey))
+                if(App.Current.RequestedTheme == ApplicationTheme.Light)
                 {
-                    ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
-                }
+                    Color color;
+                    if (!string.IsNullOrEmpty(albumartPath))
+                        color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
+                    else
+                        color = Themes.ThemeManager.GetAccentColor();
+                    
+                    var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
+                    ChangeTitleBarColor(color);
+                    GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
+                    foreach (var brushKey in brushKeys)
+                    {
+                        if (Application.Current.Resources.ContainsKey(brushKey))
+                        {
+                            ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
+                        }
+                    }
+                    //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
+                }             
             }
-
-#if WINDOWS_PHONE_APP
-            var statusBar = StatusBar.GetForCurrentView();
-            statusBar.ForegroundColor = color;
-#else
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = color;
-            titleBar.ButtonBackgroundColor = color;           
-#endif
-
+            catch { }
         }
-
-        public static Color GetThemeColor()
+        private static void ChangeTitleBarColor(Color color)
         {
-            return ((SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]).Color;
+            ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = color;
+            ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
+           
+        }
+        public static Color GetAccentColor()
+        {
+            return ((Color)App.Current.Resources["SystemAccentColor"]);
+        }
+        private static T GetThemeResource<T>(string key)
+        {
+            return ((T)App.Current.Resources[key]);
         }
 
-
+       // public static event OnThemeChanged ThemeChanged;
     }
+   // public delegate void OnThemeChanged(object sender, Events.ThemeChangedEventArgs e);
 }
