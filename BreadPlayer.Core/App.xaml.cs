@@ -199,7 +199,6 @@ namespace BreadPlayer
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
             }
-           
             Window.Current.Activate();
             stop.Stop();
             Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");

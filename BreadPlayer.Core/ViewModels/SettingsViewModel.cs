@@ -90,6 +90,12 @@ namespace BreadPlayer.ViewModels
             get { return isPlaybarOnBottom; }
             set { Set(ref isPlaybarOnBottom, value); }
         }
+        bool changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+        public bool ChangeAccentByAlbumArt
+        {
+            get { return changeAccentByAlbumart; }
+            set { Set(ref changeAccentByAlbumart, value); }
+        }
         bool loadAlbumArtsSeperately = RoamingSettingsHelper.GetSetting<bool>("LoadAlbumArtsSeperately", false);
         public bool LoadAlbumArtsSeperately
         {

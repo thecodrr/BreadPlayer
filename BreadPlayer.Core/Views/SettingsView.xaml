@@ -123,6 +123,7 @@
                             <ComboBoxItem Content="Bottom"></ComboBoxItem>                          
                         </ComboBox>
                     </StackPanel>
+                    <CheckBox Margin="7,10,0,0" Content="Change Accent By Album Art" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
                 </StackPanel>
             </PivotItem>
             

@@ -47,7 +47,7 @@ namespace BreadPlayer.Themes
         {
             try
             {
-                if(App.Current.RequestedTheme == ApplicationTheme.Light)
+                if(App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
                 {
                     Color color;
                     if (!string.IsNullOrEmpty(albumartPath))
