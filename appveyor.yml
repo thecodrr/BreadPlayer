@@ -9,10 +9,8 @@ platform:
 - x64
 - ARM
 before_build:
-- cmd: nuget restore openhabUWP.sln
+- cmd: nuget restore BreadPlayer.sln
 build:
-  project: openhabUWP.sln
+  project: BreadPlayer.sln
   parallel: true
   verbosity: minimal
-artifacts:
-- path: '**/*.appx'
