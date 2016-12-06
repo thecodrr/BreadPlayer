@@ -15,4 +15,6 @@ build:
   parallel: true
   verbosity: minimal
 artifacts:
-- path: '**/*.appx'
+- path: '**/*.appxbundle'
+  name: AppxBundle for BreadPlayer
+  type: Auto
