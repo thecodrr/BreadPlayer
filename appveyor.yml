@@ -4,6 +4,7 @@ pull_requests:
 image: Visual Studio 2015
 build_script:
 - cmd: >-
+    nuget restore BreadPlayer.sln
     set DEVENV="%VS140COMNTOOLS%\..\IDE\devenv"
     %DEVENV% /build "Release|ARM" BreadPlayer.sln
     %DEVENV% /build "Release|x64" BreadPlayer.sln
