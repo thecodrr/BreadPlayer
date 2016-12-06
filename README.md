@@ -23,7 +23,7 @@
 ###Main Features:
 1. Flawlessly plays all major formats (mp3, wav, flac, ogg, aiff etc.)! 
 2. Full functional music library with sorting, filtering, search etc.
-3. Amazing performance i.e. ability to load 12000 songs in 120s with complete tags and album arts.
+3. Amazing performance i.e. ability to import 12000 songs in 120s with complete tags and album arts.
 4. Playlist import (.m3u, .pls etc). (Export coming very soon.)
 5. Other basic music player capabilities such as repeat, shuffle etc.
 6. Pickup where you left off.
