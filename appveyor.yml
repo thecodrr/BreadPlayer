@@ -1,18 +1,18 @@
 version: 1.7.{build}
 pull_requests:
   do_not_increment_build_number: true
+skip_non_tags: true
 os: Visual Studio 2015
 configuration: Release
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+platform:
+- x86
+- x64
+- ARM
 before_build:
- -cmd: pushd . && nuget restore && popd
+- cmd: nuget restore openhabUWP.sln
 build:
-  project: BreadPlayer.sln
+  project: openhabUWP.sln
   parallel: true
   verbosity: minimal
-deploy: off
+artifacts:
+- path: '**/*.appx'
