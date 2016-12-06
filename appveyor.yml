@@ -1,20 +1,11 @@
 version: 1.7.{build}
 pull_requests:
   do_not_increment_build_number: true
-os: Visual Studio 2015
-configuration: Release
-platform:
-- ARM
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-before_build:
-- cmd: pushd . && nuget restore && popd
-build:
-  project: BreadPlayer.sln
-  parallel: true
-  verbosity: minimal
-deploy: off
+image: Visual Studio 2015
+build_script:
+- cmd: >-
+    set DEVENV="%VS140COMNTOOLS%\..\IDE\devenv"
+    %DEVENV% /build "Release|ARM" BreadPlayer.sln
+    %DEVENV% /build "Release|x64" BreadPlayer.sln
+    %DEVENV% /build "Release|x86" BreadPlayer.sln
+
