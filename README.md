@@ -18,6 +18,8 @@
 ###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 ###[Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
+
+[![Join the chat at https://gitter.im/BreadPlayer/Lobby](https://badges.gitter.im/BreadPlayer/Lobby.svg)](https://gitter.im/BreadPlayer/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
