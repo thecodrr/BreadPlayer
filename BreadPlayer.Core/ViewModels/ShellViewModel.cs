@@ -574,7 +574,8 @@ namespace BreadPlayer.ViewModels
                     PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
-                    Player.Volume = vol;
+                    if(Player.Volume == 0.5)
+                        Player.Volume = vol;
                     if (play)
                     {
                         PlayPauseCommand.Execute(null);

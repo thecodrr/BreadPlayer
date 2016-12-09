@@ -48,26 +48,30 @@ namespace BreadPlayer.Themes
         {
             try
             {
-                if(App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
+                await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 {
-                    Color color;
-                    if (!string.IsNullOrEmpty(albumartPath))
-                        color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
-                    else
-                        color = Themes.ThemeManager.GetAccentColor();
-                    
-                    var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
-                    ChangeTitleBarColor(color);
-                    GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
-                    foreach (var brushKey in brushKeys)
+                    if (App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
                     {
-                        if (Application.Current.Resources.ContainsKey(brushKey))
+                        Color color;
+                        if (!string.IsNullOrEmpty(albumartPath))
+                            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
+                        else
+                            color = Themes.ThemeManager.GetAccentColor();
+
+                        var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
+                        ChangeTitleBarColor(color);
+                        GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
+                        foreach (var brushKey in brushKeys)
                         {
-                            ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
+                            if (Application.Current.Resources.ContainsKey(brushKey))
+                            {
+                                ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
+                            }
                         }
+                        //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                     }
-                    //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
-                }             
+                });
+                            
             }
             catch { }
         }
