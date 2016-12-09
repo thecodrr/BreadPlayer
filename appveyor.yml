@@ -1,20 +1,18 @@
 version: 1.7.{build}
 pull_requests:
   do_not_increment_build_number: true
+skip_non_tags: true
 os: Visual Studio 2015
 configuration: Release
 platform:
-- ARM
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+- x86
 before_build:
-- cmd: pushd . && nuget restore && popd
+- cmd: nuget restore BreadPlayer.sln
 build:
   project: BreadPlayer.sln
   parallel: true
   verbosity: minimal
-deploy: off
+artifacts:
+- path: '**/*.appxbundle'
+  name: AppxBundle for BreadPlayer
+  type: Auto

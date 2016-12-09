@@ -4,7 +4,6 @@
   <p>A music player with breads and burgers made for the Windows 10 store to replace history.</p>
 </dl> 
 
-
 [![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/)
 [![Join the chat at https://gitter.im/BreadPlayer/Lobby](https://badges.gitter.im/BreadPlayer/Lobby.svg)](https://gitter.im/BreadPlayer/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
  
@@ -13,17 +12,18 @@
  
 [![alpha](https://img.shields.io/badge/alpha-v0.1.7.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.7.1-alpha)
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
+[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
 
 ##Current Status:
-###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases)
-###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com).
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
+###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 ###[Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
 1. Flawlessly plays all major formats (mp3, wav, flac, ogg, aiff etc.)! 
 2. Full functional music library with sorting, filtering, search etc.
-3. Amazing performance i.e. ability to load 12000 songs in 120s with complete tags and album arts.
+3. Amazing performance i.e. ability to import 12000 songs in 120s with complete tags and album arts.
 4. Playlist import (.m3u, .pls etc). (Export coming very soon.)
 5. Other basic music player capabilities such as repeat, shuffle etc.
 6. Pickup where you left off.
@@ -37,11 +37,12 @@ Basically, the main reason behind the name change is that the previous one didn'
 
 ###What Happens Next?
 We will probably start the development of **Beta Version** after _Alpha_ is released. **Beta-Feature List will be published soon.** 
-###Technologies used:
+###Libraries used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
 2. [BASS](http://www.un4seen.com/bass.html) & [ManagedBass](https://github.com/ManagedBass/ManagedBass) (for audio processing)
 3. [LiteDB](https://github.com/mbdavid/LiteDB) (for library managment)
+4. Taglib#
 
 ###Contributors:
 Thanks to these awesome people Project Bread has come this far:
