@@ -353,7 +353,7 @@
                                         <AdaptiveTrigger MinWindowWidth="0" />
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="RootSplitView.DisplayMode" Value="Inline" />
+                                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                        
                                     </VisualState.Setters>

@@ -66,6 +66,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private void DoAdd(T item)
     {
+        if(!sync.IsWriteLockHeld)
         sync.EnterWriteLock();
         base.Add(item);
         sync.ExitWriteLock();

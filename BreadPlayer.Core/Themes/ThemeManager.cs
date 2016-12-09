@@ -27,7 +27,7 @@ namespace BreadPlayer.Themes
                    "SystemControlDisabledAccentBrush" ,
                    "SystemControlForegroundAccentBrush" ,
                    "SystemControlHighlightAccentBrush" ,
-                   "SystemControlHighlightAltAccentBrush" ,
+                   "SystemControlHighlightAltAccentBrush",
                    "SystemControlHighlightAltListAccentHighBrush" ,
                    "SystemControlHighlightAltListAccentLowBrush" ,
                    "SystemControlHighlightAltListAccentMediumBrush",
@@ -40,6 +40,7 @@ namespace BreadPlayer.Themes
                    "HoverBrush" ,
                    "SystemAccentColor1",
                    "AppBarToggleHover",
+                   "SystemControlBackgroundAccentBrush",
 
         };
 

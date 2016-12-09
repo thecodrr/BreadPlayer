@@ -400,10 +400,11 @@ namespace BreadPlayer.ViewModels
                         TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
                         LibraryService.UpdateMediafile(TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path));
                     }
+
                 });
             }
         }
-
+     
         async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;

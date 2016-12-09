@@ -314,8 +314,6 @@ namespace BreadPlayer.ViewModels
                                 failedCount++;
                             }
                         }
-                        //before all the songs are processed and loaded, we create albums of all those songs and load them using this method.
-                        //await SaveAllFolderAlbumArtsAsync(tempList).ConfigureAwait(false);
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
@@ -458,11 +456,6 @@ namespace BreadPlayer.ViewModels
                                 break;
                         }
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
-                        //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-                        //{
-                        //    var accentColor = (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush);
-                        //    mp3file.AlbumArtColor = albumSaved ? await GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartLocation)) : accentColor.Color;
-                        //});
                     }
                 }
                 catch

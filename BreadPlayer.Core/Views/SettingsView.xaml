@@ -16,7 +16,7 @@
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
-      <VisualStateManager.VisualStateGroups>
+        <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -105,7 +105,7 @@
 
                 </RelativePanel>
             </PivotItem>
-            
+
             <PivotItem Header="Personalization">
                 <StackPanel>
                     <ToggleSwitch x:Name="themeChange" Header="Theme:" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" Margin="5,10,10,0" HorizontalAlignment="Stretch">
@@ -120,19 +120,24 @@
                         <TextBlock Text="Playbar location:" Margin="7,0,0,0" VerticalAlignment="Center"/>
                         <ComboBox Margin="120,0,0,0" Width="103" SelectedIndex="{Binding PlaybarLocation, Mode=TwoWay}">
                             <ComboBoxItem Content="Top"></ComboBoxItem>
-                            <ComboBoxItem Content="Bottom"></ComboBoxItem>                          
+                            <ComboBoxItem Content="Bottom"></ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <CheckBox Margin="7,10,0,0" Content="Change Accent By Album Art" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
                 </StackPanel>
             </PivotItem>
-            
-            
+
+
             <PivotItem Header="About">
-                <StackPanel>
-                    <TextBlock Margin="10,10,10,0" Text="v0.1.7.1-alpha"/>
-                    <TextBlock Margin="10,10,10,0" Text="Copyright © 2016 Abdullah Atta"/>
-                    <TextBlock Margin="10,10,10,0" HorizontalAlignment="Left" Width="500" TextWrapping="Wrap">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400*"/>
+                        <ColumnDefinition Width="400*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.ColumnSpan="2" MaxWidth="700" HorizontalAlignment="Left">
+                        <TextBlock Margin="10,10,10,0" Text="v0.1.7.1-alpha"/>
+                        <TextBlock Margin="10,10,10,0" Text="Copyright © 2016 Abdullah Atta"/>
+                        <TextBlock Margin="10,10,10,0" HorizontalAlignment="Left" TextWrapping="Wrap">
                       <Run FontSize="12">
                               This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -146,8 +151,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
                       </Run>
-                    </TextBlock>
-                    <TextBlock Margin="10,10,10,0" HorizontalAlignment="Left" Width="500" TextWrapping="Wrap">
+                        </TextBlock>
+                        <TextBlock Margin="10,10,10,0" TextWrapping="Wrap">
                        <Run FontWeight="Medium" FontSize="14">
                            BreadPlayer emerges with the hard work of these great people, to whom we are are very grateful:
                    </Run> 
@@ -158,8 +163,9 @@
                         <Run FontWeight="Medium" FontSize="14">Our thanks to all these artists and TheNounProject for providing a wonderful library of icons:</Run>
                         <LineBreak/>
                        <Run FontStyle="Italic" FontSize="13">Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation</Run>
-                    </TextBlock>
-                </StackPanel>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
             </PivotItem>
         </Pivot>
 

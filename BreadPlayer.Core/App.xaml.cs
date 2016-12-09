@@ -18,6 +18,7 @@
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -141,7 +142,9 @@ namespace BreadPlayer
         {
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
-               // ShellVM.Play(args.Files[0]);
+                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { args.Files[0], 0.0, true, 50.0 });
+
+                // ShellVM.Play(args.Files[0]);
             }
             else
             {
@@ -186,6 +189,7 @@ namespace BreadPlayer
             
             // CoreWindowLogic logic = new CoreWindowLogic();
             var view = ApplicationView.GetForCurrentView();
+            view.SetPreferredMinSize(new Size(360, 100));
             if (RequestedTheme == ApplicationTheme.Dark)
             {
                 view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);

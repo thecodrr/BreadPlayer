@@ -125,7 +125,12 @@ namespace BreadPlayer.ViewModels
                 if(message.Payload is List<object>)
                 {
                     var list = message.Payload as List<object>;
-                    Play(list[0] as StorageFile, null, (double)list[1], (bool)list[2], (double)list[3]);
+                    double volume = 0;
+                    if ((double)list[3] == 50.0)
+                        volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
+                    else
+                        volume = (double)list[3];
+                    Play(list[0] as StorageFile, null, (double)list[1], (bool)list[2], volume);
                 }
                 else
                     this.GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
@@ -565,18 +570,17 @@ namespace BreadPlayer.ViewModels
                
                 if (await Player.Load(mp3file))
                 {
-                    Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
                     PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
+                    Player.Volume = vol;
                     if (play)
                     {
                         PlayPauseCommand.Execute(null);
                     }
                     else
                     {
-                        Player.Volume = vol;
                         DontUpdatePosition = true;
                         CurrentPosition = currentPos;
                     }
@@ -594,6 +598,8 @@ namespace BreadPlayer.ViewModels
                     Load(await GetUpcomingSong(), true);
                 }
             }
+            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
         {
