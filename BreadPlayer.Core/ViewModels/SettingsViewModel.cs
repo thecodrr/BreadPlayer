@@ -209,7 +209,8 @@ namespace BreadPlayer.ViewModels
             StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
             //the event for files changed
             queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            await AddFolderToLibraryAsync(queryResult);
+            if(await queryResult.GetItemCountAsync() > 0)
+                await AddFolderToLibraryAsync(queryResult);
         }
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
