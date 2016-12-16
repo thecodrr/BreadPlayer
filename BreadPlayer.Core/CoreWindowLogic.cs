@@ -55,11 +55,9 @@ namespace BreadPlayer
             {
                 SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
                 var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
-                if (onlyVol)
-                {
-                    Player.Volume = volume;
-                }
-                else
+                Player.Volume = volume;
+
+                if (!onlyVol)
                 {
                     path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
                     if(path != "")

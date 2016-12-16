@@ -574,7 +574,7 @@ namespace BreadPlayer.ViewModels
                     PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
-                    if(Player.Volume == 0.5)
+                    if(Player.Volume == 50)
                         Player.Volume = vol;
                     if (play)
                     {
@@ -599,7 +599,8 @@ namespace BreadPlayer.ViewModels
                     Load(await GetUpcomingSong(), true);
                 }
             }
-            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+            Themes.ThemeManager man = new Themes.ThemeManager();            
+            man.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
 
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)

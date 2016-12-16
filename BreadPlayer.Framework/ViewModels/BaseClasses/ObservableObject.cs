@@ -42,9 +42,12 @@ public class ObservableObject : INotifyPropertyChanged
 
     /// <summary>Raises the property changed event. </summary>
     /// <param name="args">The arguments. </param>
-    protected virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
+    protected async virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
-        PropertyChanged?.Invoke(this, args);
+        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+        {
+            PropertyChanged?.Invoke(this, args);
+        });
     }
 
     /// <summary>Raises the property changed event for all properties (string.Empty). </summary>

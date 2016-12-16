@@ -16,9 +16,9 @@ using Windows.UI.Xaml.Shapes;
 
 namespace BreadPlayer.Themes
 {
-    public static class ThemeManager
+    public class ThemeManager
     {
-        private static readonly string[] brushKeys = new[]
+        private readonly string[] brushKeys = new[]
         {
             //wp
             "PhoneAccentBrush",
@@ -44,7 +44,7 @@ namespace BreadPlayer.Themes
 
         };
 
-        public async static void SetThemeColor(string albumartPath)
+        public async void SetThemeColor(string albumartPath)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace BreadPlayer.Themes
                         if (!string.IsNullOrEmpty(albumartPath))
                             color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
                         else
-                            color = Themes.ThemeManager.GetAccentColor();
+                            color = GetAccentColor();
 
                         var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
                         ChangeTitleBarColor(color);
@@ -81,11 +81,11 @@ namespace BreadPlayer.Themes
             ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
            
         }
-        public static Color GetAccentColor()
+        public Color GetAccentColor()
         {
             return ((Color)App.Current.Resources["SystemAccentColor"]);
         }
-        private static T GetThemeResource<T>(string key)
+        private T GetThemeResource<T>(string key)
         {
             return ((T)App.Current.Resources[key]);
         }
