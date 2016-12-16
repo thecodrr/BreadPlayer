@@ -20,7 +20,7 @@
 
 ### Alpha Preview (Video):
 [![Introducing Bread Player - Alpha Preview](https://img.youtube.com/vi/xFeIf0GnvaM/0.jpg)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
-#### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
+### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
 ###Main Features:
