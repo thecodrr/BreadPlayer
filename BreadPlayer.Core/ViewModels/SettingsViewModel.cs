@@ -252,7 +252,8 @@ namespace BreadPlayer.ViewModels
                 uint index = 0, stepSize = 100;
                 //a list containing the files we recieved after querying using the two uints we created above.
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
-
+                //just for testing
+                var debugFiles = files.ToList();
                 //we move forward the index 100 steps because first 50 files are loaded when we called the above method.
                 index += 100;
 
