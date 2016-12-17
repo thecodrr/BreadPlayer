@@ -19,7 +19,7 @@
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
 ### Alpha Preview (Video):
-[![Introducing Bread Player - Alpha Preview](https://img.youtube.com/vi/xFeIf0GnvaM/0.jpg)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
+[![Introducing Bread Player - Alpha Preview](http://i.imgur.com/EEMByA7.png)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
 ### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
