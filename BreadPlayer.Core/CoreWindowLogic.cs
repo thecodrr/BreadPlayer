@@ -50,13 +50,11 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void Replay(bool onlyVol = false, bool play = false)
         {
-
             try
             {
                 SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
-                var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
-                Player.Volume = volume;
 
+                var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
                 if (!onlyVol)
                 {
                     path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
@@ -74,6 +72,7 @@ namespace BreadPlayer
                     }
                     
                 }
+                Player.Volume = volume;
 
                 //var folderPaths = RoamingSettingsHelper.GetSetting<ThreadSafeObservableCollection<StorageFolder>>(foldersKey, null);
                 //if (folderPaths != null)
@@ -81,7 +80,7 @@ namespace BreadPlayer
                 //    SettingsVM.LibraryFoldersCollection = folderPaths;
                 //}
 
-                
+
             }
             catch { }
 
