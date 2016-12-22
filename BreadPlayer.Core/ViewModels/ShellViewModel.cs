@@ -30,13 +30,10 @@ using System.Windows.Input;
 using BreadPlayer.Extensions;
 using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
-using Windows.UI.Xaml.Input;
 using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
-using Windows.UI.Xaml.Media;
-using Windows.UI;
 
 namespace BreadPlayer.ViewModels
 {
@@ -77,7 +74,7 @@ namespace BreadPlayer.ViewModels
         #region HandleMessages
         void HandleEnablePlayMessage(Message message)
         {
-            var count = (double)message.Payload;
+            var count = (Int16)message.Payload;
             if(count > 0)
             {
                 message.HandledStatus = MessageHandledStatus.HandledContinue;

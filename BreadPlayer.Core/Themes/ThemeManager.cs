@@ -39,6 +39,7 @@ namespace BreadPlayer.Themes
                    "JumpListDefaultEnabledBackground" ,
                    "HoverBrush" ,
                    "SystemAccentColor1",
+                   "HoverBrush2",
                    "AppBarToggleHover",
                    "SystemControlBackgroundAccentBrush",
 

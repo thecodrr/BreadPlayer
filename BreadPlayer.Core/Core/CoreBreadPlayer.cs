@@ -99,13 +99,13 @@ namespace BreadPlayer.Core
         /// </summary>
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
-        public async Task<bool> Load(Mediafile mp3file)
+        public async Task<bool> Load(Mediafile mediaFile)
         {            
-            if (mp3file != null && mp3file.Length != "00:00")
+            if (mediaFile != null && mediaFile.Length != "00:00")
             {
                 try
                 {
-                    string path = mp3file.Path;
+                    string path = mediaFile.Path;
                     await Stop();
                     await Task.Run(() =>
                     {
@@ -116,7 +116,7 @@ namespace BreadPlayer.Core
                         InitializeExtensions(path);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                        CurrentlyPlayingFile = mp3file;
+                        CurrentlyPlayingFile = mediaFile;
                         CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.Stringify();
                     });
@@ -125,12 +125,12 @@ namespace BreadPlayer.Core
                 }
                 catch(Exception ex)
                 {
-                    await NotificationManager.ShowAsync(ex.Message + "||" + mp3file.OrginalFilename);
+                    await NotificationManager.ShowAsync(ex.Message + "||" + mediaFile.OrginalFilename);
                 }
             }
             else
             { 
-                string error = "The file " + mp3file.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+                string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors == false)
                 {
                     CoreWindowLogic.ShowMessage(error, "File corrupt");

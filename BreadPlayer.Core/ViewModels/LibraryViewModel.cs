@@ -37,7 +37,6 @@ using BreadPlayer.Service;
 using BreadPlayer.Common;
 using BreadPlayer.Messengers;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage.Search;
 
 namespace BreadPlayer.ViewModels
 {
@@ -64,7 +63,7 @@ namespace BreadPlayer.ViewModels
         }
         void HandleUpdateSongCountMessage(Message message)
         {
-            var count = (double)message.Payload;
+            var count = (Int16)message.Payload;
             message.HandledStatus = MessageHandledStatus.HandledCompleted;
             SongCount = Convert.ToInt32(count);
         }
@@ -398,9 +397,7 @@ namespace BreadPlayer.ViewModels
                     if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
                     {
                         TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
-                        LibraryService.UpdateMediafile(TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path));
                     }
-
                 });
             }
         }
@@ -700,8 +697,7 @@ namespace BreadPlayer.ViewModels
             {
                  await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
-                TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
-              
+                TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
             }           
         }
 
@@ -711,6 +707,11 @@ namespace BreadPlayer.ViewModels
             {
                 var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                 foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
+            }
+            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
+            if (TracksCollection.Elements.Any(t => t.Path == path))
+            {
+                TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
             }
             await CreateGenreMenu().ConfigureAwait(false);
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");

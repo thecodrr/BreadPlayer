@@ -32,9 +32,6 @@ using Windows.Storage.Search;
 using BreadPlayer.Messengers;
 using BreadPlayer.Service;
 using BreadPlayer.Common;
-using Windows.UI.Xaml.Controls;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.ViewModels
 {
@@ -68,12 +65,12 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("FileBatchSize", FileBatchSize);
             }
         }
-        int playbarLocation = -1;
+
+        int playbarLocation = 0;
         public int PlaybarLocation
         {
             get
             {
-                if (playbarLocation == -1)
                     playbarLocation = isPlaybarOnBottom ? 1 : 0;
                     return playbarLocation;
             }
@@ -210,7 +207,9 @@ namespace BreadPlayer.ViewModels
             //the event for files changed
             queryResult.ContentsChanged += QueryResult_ContentsChanged;
             if(await queryResult.GetItemCountAsync() > 0)
+            { 
                 await AddFolderToLibraryAsync(queryResult);
+            }
         }
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
@@ -260,7 +259,7 @@ namespace BreadPlayer.ViewModels
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
                 //'i' is a variable for the index of currently processing file
-                double i = 0;
+                Int16 i = 0;
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync();
                 if (count == 0)

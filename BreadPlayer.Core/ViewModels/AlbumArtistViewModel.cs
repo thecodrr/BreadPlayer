@@ -6,7 +6,6 @@ using BreadPlayer.Models;
 using System.Windows.Input;
 using LiteDB;
 using Windows.Storage;
-using BreadPlayer.Service;
 using BreadPlayer.Messengers;
 
 namespace BreadPlayer.ViewModels
