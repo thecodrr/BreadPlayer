@@ -717,7 +717,6 @@ namespace BreadPlayer.ViewModels
             await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
             await Task.Delay(10000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
-
         }
        
         #endregion

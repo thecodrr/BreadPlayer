@@ -37,6 +37,39 @@ namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
+        #region Properties
+        bool _isThemeDark;
+        public bool IsThemeDark
+        {
+            get
+            {
+                if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
+                    _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
+                else
+                    _isThemeDark = true;
+                return _isThemeDark;
+            }
+            set
+            {
+                Set(ref _isThemeDark, value);
+                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = _isThemeDark == true ? "Light" : "Dark";
+            }
+        }
+        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+        public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
+        {
+            get
+            {
+                if (_LibraryFoldersCollection == null)
+                {
+                    _LibraryFoldersCollection = new ThreadSafeObservableCollection<StorageFolder>();
+                }
+                return _LibraryFoldersCollection;
+            }
+            set { Set(ref _LibraryFoldersCollection, value); }
+        }
+        public static GroupedObservableCollection<string, Mediafile> TracksCollection
+        { get; set; }
         string timeClosed;
         public string TimeClosed
         {
@@ -55,7 +88,7 @@ namespace BreadPlayer.ViewModels
             get { return modifiedFiles; }
             set { Set(ref modifiedFiles, value); }
         }
-        int filebatchsize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
+        int filebatchsize;
         public int FileBatchSize
         {
             get { return filebatchsize; }
@@ -71,8 +104,7 @@ namespace BreadPlayer.ViewModels
         {
             get
             {
-                    playbarLocation = isPlaybarOnBottom ? 1 : 0;
-                    return playbarLocation;
+                return isPlaybarOnBottom ? 1 : 0;
             }
             set
             {
@@ -81,65 +113,52 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("IsPlaybarOnBottom", IsPlaybarOnBottom);
             }
         }
-        bool isPlaybarOnBottom = RoamingSettingsHelper.GetSetting<bool>("IsPlaybarOnBottom", false);
+        bool isPlaybarOnBottom;
         public bool IsPlaybarOnBottom
         {
             get { return isPlaybarOnBottom; }
             set { Set(ref isPlaybarOnBottom, value); }
         }
-        bool changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+        bool changeAccentByAlbumart;
         public bool ChangeAccentByAlbumArt
         {
             get { return changeAccentByAlbumart; }
             set { Set(ref changeAccentByAlbumart, value); }
         }
-        bool loadAlbumArtsSeperately = RoamingSettingsHelper.GetSetting<bool>("LoadAlbumArtsSeperately", false);
-        public bool LoadAlbumArtsSeperately
+        #endregion
+
+        #region MessageHandling
+        private async void HandleLibraryLoadedMessage(Message message)
         {
-            get { return loadAlbumArtsSeperately; }
-            set
-            {
-                Set(ref loadAlbumArtsSeperately, value);
-                RoamingSettingsHelper.SaveSetting("LoadAlbumArtsSeperately", LoadAlbumArtsSeperately);
-            }
-        }
-        public SettingsViewModel()
-        {
-            TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleMessage));
-        }
-        public static GroupedObservableCollection<string, Mediafile> TracksCollection
-        { get; set; }
-        private async void HandleMessage(Message message)
-        {
-            if(message.Payload is List<object>)
+            if (message.Payload is List<object>)
             {
                 TracksCollection = (message.Payload as List<object>)[0] as GroupedObservableCollection<string, Mediafile>;
                 if (new LibraryService(new DatabaseService()).SongCount == 0)
                 {
-                    await AutoLoadMusicLibrary().ConfigureAwait(false);
+                    await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
                 if (TracksCollection != null)
                 {
                     message.HandledStatus = MessageHandledStatus.HandledContinue;
                 }
-            }            
+            }
         }
-        DelegateCommand _resetCommand;
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
+        #endregion
 
-        async void Reset()
+        #region Ctor  
+        public SettingsViewModel()
         {
-            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
-            LibraryFoldersCollection.Clear();
-            await ApplicationData.Current.ClearAsync();
-            ResetCommand.IsEnabled = false;
-            await Task.Delay(200);
-            ResetCommand.IsEnabled = true;
+            IsPlaybarOnBottom = RoamingSettingsHelper.GetSetting<bool>("IsPlaybarOnBottom", false);
+            ChangeAccentByAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+            FileBatchSize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
+            TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
+        #endregion
+
+        #region Commands
+
+        #region Definitions   
         DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -151,7 +170,26 @@ namespace BreadPlayer.ViewModels
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand ImportPlaylistCommand { get { if (_importPlaylistCommand == null) { _importPlaylistCommand = new DelegateCommand(ImportPlaylists); } return _importPlaylistCommand; } }
-        async void ImportPlaylists()
+
+        DelegateCommand _resetCommand;
+        /// <summary>
+        /// Gets load library command. This calls the <see cref="Load"/> method.
+        /// </summary>
+        public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
+
+        #endregion
+
+        #region Implementation
+        private async void Reset()
+        {
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
+            LibraryFoldersCollection.Clear();
+            await ApplicationData.Current.ClearAsync();
+            ResetCommand.IsEnabled = false;
+            await Task.Delay(200);
+            ResetCommand.IsEnabled = true;
+        }
+        private async void ImportPlaylists()
         {
             var picker = new FileOpenPicker();
             FileOpenPicker openPicker = new FileOpenPicker();
@@ -168,47 +206,6 @@ namespace BreadPlayer.ViewModels
                 var plist = new Playlist() { Name = file.DisplayName };
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_PLAYLIST, plist);
                 await playlist.LoadPlaylist(file).ConfigureAwait(false);
-            }
-        }
-        bool _isThemeDark;
-        public bool IsThemeDark
-        {
-            get
-            {
-                if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
-                    _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
-                else
-                    _isThemeDark = true;
-                return _isThemeDark;
-                //ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false; 
-            }
-            set
-            {
-                Set(ref _isThemeDark, value);
-                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = _isThemeDark == true ? "Light" : "Dark";
-            }
-        }
-        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
-        public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
-        {
-            get {
-                if (_LibraryFoldersCollection == null)
-                {
-                    _LibraryFoldersCollection = new ThreadSafeObservableCollection<StorageFolder>();
-                }
-                return _LibraryFoldersCollection; }
-            set { Set(ref _LibraryFoldersCollection, value); }
-        }
-        async Task AutoLoadMusicLibrary()
-        {
-            var options = Common.DirectoryWalker.GetQueryOptions();
-            //this is the query result which we recieve after querying in the folder
-            StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
-            //the event for files changed
-            queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            if(await queryResult.GetItemCountAsync() > 0)
-            { 
-                await AddFolderToLibraryAsync(queryResult);
             }
         }
         /// <summary>
@@ -242,24 +239,90 @@ namespace BreadPlayer.ViewModels
                 await AddFolderToLibraryAsync(queryResult);
             }
         }
+        #endregion
+
+        #endregion
+
+        #region Methods
+
+        #region Add Methods
+        /// <summary>
+        /// Adds modified files got from querying in the <see cref="LibraryFoldersCollection"/>. The query parameters include time range from <see cref="TimeClosed"/> to <seealso cref="TimeOpened"/>.
+        /// </summary>
+        private async Task AddModifiedFilesAsync()
+        {
+            TimeClosed = RoamingSettingsHelper.GetSetting<string>("timeclosed", "0");
+            ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(LibraryFoldersCollection, TimeClosed);
+            if (ModifiedFiles.Any())
+                RenameAddOrDeleteFiles(ModifiedFiles);
+        }
+        /// <summary>
+        /// Adds storage files into library.
+        /// </summary>
+        /// <param name="files">List containing StorageFile(s).</param>
+        /// <returns></returns>
+        public async static Task AddStorageFilesToLibraryAsync(IEnumerable<StorageFile> files)
+        {
+            foreach (var file in files)
+            {
+                Mediafile mp3file = null;
+                int index = -1;
+                if (file != null)
+                {
+                    if (TracksCollection.Elements.Any(t => t.Path == file.Path))
+                    {
+                        index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
+                        RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
+                    }
+                    //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
+                    await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
+                    await Task.Run(async () =>
+                    {
+                        //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
+                        mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
+                        await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
+                    });
+                    AddMediafile(mp3file, index);
+                }
+            }
+        }
+        #endregion
+
+        #region Load Methods
+        /// <summary>
+        /// Auto loads the User's Music Libary on first load.
+        /// </summary>
+        private async Task AutoLoadMusicLibraryAsync()
+        {
+            var options = Common.DirectoryWalker.GetQueryOptions();
+            //this is the query result which we recieve after querying in the folder
+            StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
+            //the event for files changed
+            queryResult.ContentsChanged += QueryResult_ContentsChanged;
+            if (await queryResult.GetItemCountAsync() > 0)
+            {
+                await AddFolderToLibraryAsync(queryResult);
+            }
+        }
+        /// <summary>
+        /// Add folder to Library asynchronously.
+        /// </summary>
+        /// <param name="queryResult">The query result after querying in a specific folder.</param>
+        /// <returns></returns>
         public static async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
         {
             if (queryResult != null)
             {
-                var stop = System.Diagnostics.Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 100;
                 //a list containing the files we recieved after querying using the two uints we created above.
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
-                //just for testing
-                var debugFiles = files.ToList();
-                //we move forward the index 100 steps because first 50 files are loaded when we called the above method.
+                //we move forward the index 100 steps because first 100 files are loaded when we called the above method.
                 index += 100;
 
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
-                //'i' is a variable for the index of currently processing file
-                Int16 i = 0;
+
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync();
                 if (count == 0)
@@ -268,23 +331,17 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowAsync(error);
                     return;
                 }
-                int failedCount = 0;
+
                 AlbumArtistViewModel model = new AlbumArtistViewModel();
                 LibraryService service = new LibraryService(new DatabaseService());
-
+                int failedCount = 0;
+                //'i' is a variable for the index of currently processing file
+                short i = 0;
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
                 while (files.Count != 0)
                 {
                     try
                     {
-                        //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
-                        //To avoid this, we create a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
-                        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
-
-                        //A null Mediafile which we will use afterwards.
-                        Mediafile mp3file = null;
-
-                        //A foreach loop to process each StorageFile
                         foreach (StorageFile file in files)
                         {
                             try
@@ -292,7 +349,10 @@ namespace BreadPlayer.ViewModels
                                 //we use 'if' conditional so that we don't add any duplicates
                                 if (TracksCollection.Elements.All(t => t.Path != file.Path))
                                 {
+                                    //A null Mediafile which we will use afterwards.
+                                    Mediafile mp3file = null;
                                     i++; //Notice here that we are increasing the 'i' variable by one for each file.
+                                    //we send a message to anyone listening relaying that song count has to be updated.
                                     Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
                                     await Task.Run(async () =>
                                     {
@@ -323,8 +383,9 @@ namespace BreadPlayer.ViewModels
                         service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
                         tempList.Clear();
-                        //here we reinitialize the 'files' variable (outside the while loop) so that it is never 0 and never contains the old files.
-                        files = await fileTask.ConfigureAwait(false);
+                        //Since the no. of files in 'files' list is 100, only 100 files will be loaded after which we will step out of while loop.
+                        //To avoid this, we create and run a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
+                        files = await queryResult.GetFilesAsync(index, stepSize).AsTask().ConfigureAwait(false);
                         //consequently we have to increase the index by 100 so that songs are not repeated.
                         index += 100;
                     }
@@ -334,102 +395,16 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
-                //we stop the stopwatch.
-                stop.Stop();
-                //and report the user how long it took.
-                string message = string.Format("Library successfully loaded! Total Songs: {0} Failed: {1} Loaded: {2} Total Time Taken: {3} seconds", count, failedCount, i, Convert.ToInt32(stop.Elapsed.TotalSeconds).ToString());
+                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2};", count, failedCount, i);
                 await NotificationManager.ShowAsync(message);
                 service.Dispose();
+                model = null;
             }
         }
 
-        /// <summary>
-        /// This is still experimental. As you can see, there are more lines of code then necessary.
-        /// </summary>
-        /// <param name="files"></param>
-        public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
-        {
-            try {
-                string folder = "";
-                foreach (var file in files)
-                {
-                    var props = await file.Properties.GetMusicPropertiesAsync();
-                    folder = Path.GetDirectoryName(file.Path);
-                    //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
-                    if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
-                    {
-                        var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
-                        mp3File.Path = file.Path;
-                    }
-                    //FOR ADDITION (we check all the files to see if we already have the file or not)
-                    if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
-                    {
-                        var mediafile = await CreateMediafile(file, false);
-                        AddMediafile(mediafile);
-                        await SaveSingleFileAlbumArtAsync(mediafile);
-                    }
-                }
-                //FOR DELETE (we only want to iterate through songs which are in the changed folder)
-                var deletedFiles = new List<Mediafile>();
-                foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
-                {
-                    if (!File.Exists(file.Path))
-                    {
-                        deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
-                    }
-                }
-                if (deletedFiles.Any())
-                    foreach (var deletedFile in deletedFiles)
-                        TracksCollection.Elements.Remove(deletedFile);
-            }
-            catch { }
-        }
-        public async static Task AddStorageFilesToLibrary(StorageFileQueryResult queryResult)
-        {
-            foreach (var file in await queryResult.GetFilesAsync())
-            {
-                Mediafile mp3file = null;
-                int index = -1;
-                if (file != null)
-                {
-                    if (TracksCollection.Elements.Any(t => t.Path == file.Path))
-                    {
-                        index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
-                        RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
-                    }
-                    //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                    await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
-                    await Task.Run(async () =>
-                    {
-                        //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                        mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
-                        await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
-                    });
-                    AddMediafile(mp3file, index);
-                }
-            }
-        }
-        public async static Task PerformWatcherWorkAsync(StorageFolder folder)
-        {
-            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SettingsVM.TimeOpened));
-            var files = await modifiedqueryResult.GetFilesAsync();
-            if (await modifiedqueryResult.GetItemCountAsync() > 0)
-            {
-                await AddStorageFilesToLibrary(modifiedqueryResult);
-            }
-            //since there were no modifed files returned yet the event was raised, this means that some file was renamed or deleted. To acknowledge that change we need to reload everything in the modified folder
-            else
-            {
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
-                files = await queryResult.GetFilesAsync();
-                RenameAddOrDeleteFiles(files);
-            }
-        }
-        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
-        {
-            await PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
-        }
+        #endregion
+
+        #region AlbumArt Methods
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3file, StorageFile file = null)
         {
             if (mp3file != null)
@@ -465,11 +440,85 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-    
-        public async void ShowMessage(string msg)
+        #endregion
+
+        #region Folder Watecher Methods
+        /// <summary>
+        /// This is still experimental. As you can see, there are more lines of code then necessary.
+        /// </summary>
+        /// <param name="files"></param>
+        public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
         {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg);
-            await dialog.ShowAsync();
+            try
+            {
+                string folder = "";
+                foreach (var file in files)
+                {
+                    var props = await file.Properties.GetMusicPropertiesAsync();
+                    folder = Path.GetDirectoryName(file.Path);
+                    //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
+                    if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
+                    {
+                        var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
+                        mp3File.Path = file.Path;
+                    }
+                    //FOR ADDITION (we check all the files to see if we already have the file or not)
+                    if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
+                    {
+                        var mediafile = await CreateMediafile(file, false);
+                        AddMediafile(mediafile);
+                        await SaveSingleFileAlbumArtAsync(mediafile);
+                    }
+                }
+                //FOR DELETE (we only want to iterate through songs which are in the changed folder)
+                var deletedFiles = new List<Mediafile>();
+                foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
+                {
+                    if (!File.Exists(file.Path))
+                    {
+                        deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
+                    }
+                }
+                if (deletedFiles.Any())
+                    foreach (var deletedFile in deletedFiles)
+                        TracksCollection.Elements.Remove(deletedFile);
+            }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowAsync(ex.Message);
+            }
         }
+
+        public async static Task PerformWatcherWorkAsync(StorageFolder folder)
+        {
+            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SettingsVM.TimeOpened));
+            var files = await modifiedqueryResult.GetFilesAsync();
+            if (await modifiedqueryResult.GetItemCountAsync() > 0)
+            {
+                await AddStorageFilesToLibraryAsync(await modifiedqueryResult.GetFilesAsync());
+            }
+            //since there were no modifed files returned yet the event was raised, this means that some file was renamed or deleted. To acknowledge that change we need to reload everything in the modified folder
+            else
+            {
+                //this is the query result which we recieve after querying in the folder
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
+                files = await queryResult.GetFilesAsync();
+                RenameAddOrDeleteFiles(files);
+            }
+        }
+
+
+
+        #endregion
+
+        #endregion
+
+        #region Events
+        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
+        {
+            await PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
+        }
+        #endregion
+        
     }
 }

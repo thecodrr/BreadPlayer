@@ -37,11 +37,7 @@ namespace BreadPlayer
         private const string pathKey = "path";
         private const string posKey = "position";
         private const string volKey = "volume";
-        private const string shuffleKey = "shuffle";
-        private const string repeatKey = "repeat";
         private const string foldersKey = "folders";
-        private const string isplaybarKey = "isplaybarvisible";
-        private const string sortKey = "sortby";
         private const string timeclosedKey = "timeclosed";
         static SystemMediaTransportControls _smtc;
         static string path = "";
@@ -50,8 +46,6 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
-
             var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
             if (!onlyVol)
             {
@@ -87,7 +81,7 @@ namespace BreadPlayer
         //we will replace this later
         private static void LibVM_MusicLibraryLoaded()
         {
-           // SettingsVM.ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(SettingsVM.LibraryFoldersCollection, SettingsVM.TimeClosed);
+           // 
           //  ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
         }
 
