@@ -62,21 +62,14 @@ namespace BreadPlayer
                 this.RequestedTheme = (ApplicationTheme)theme;
                 Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
             }
-            //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(10, 10));
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
-            this.LeavingBackground += App_LeavingBackground;
-   
-            // RegisterTask();
-
-
-
+            this.LeavingBackground += App_LeavingBackground;   
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            //ReInitialize();
             CoreWindowLogic.EnableDisableSmtc();
             CoreWindowLogic.isBackground = false;
             deferral.Complete();
@@ -85,8 +78,7 @@ namespace BreadPlayer
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            //ReduceMemoryUsage();
-            CoreWindowLogic.Stringify();
+            CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc(true);
             CoreWindowLogic.EnableDisableSmtc();
             await Task.Delay(200);
@@ -101,7 +93,6 @@ namespace BreadPlayer
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -132,8 +123,7 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //ReduceMemoryUsage();
-            CoreWindowLogic.Stringify();
+            CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();
         }
@@ -158,11 +148,11 @@ namespace BreadPlayer
             Frame rootFrame = Window.Current.Content as Frame;
             if (args.Kind != ActivationKind.File)
             { 
-                    CoreWindowLogic.Replay();
+                    CoreWindowLogic.LoadSettings();
             }
             else
             {
-                    CoreWindowLogic.Replay(true);
+                    CoreWindowLogic.LoadSettings(true);
             }
             // Do not repeat app initialization when the Window already has content
             if (rootFrame == null)

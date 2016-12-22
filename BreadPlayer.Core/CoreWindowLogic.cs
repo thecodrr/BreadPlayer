@@ -48,43 +48,39 @@ namespace BreadPlayer
         #endregion
 
         #region Load/Save Logic
-        public static async void Replay(bool onlyVol = false, bool play = false)
+        public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            try
+            SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
+
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
+            if (!onlyVol)
             {
-                SettingsVM.TimeClosed = RoamingSettingsHelper.GetSetting<string>(timeclosedKey, "0");
-
-                var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
-                if (!onlyVol)
+                path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
+                if (path != "")
                 {
-                    path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
-                    if(path != "")
+                    double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
+                    Player.PlayerState = PlayerState.Paused;
+                    try
                     {
-                        double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
-                        Player.PlayerState = PlayerState.Paused;
-                        try
-                        {
-                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
-
-                            //ShellVM.Play(await StorageFile.GetFileFromPathAsync(path), null, position, false, volume);
-                        }
-                        catch (UnauthorizedAccessException) { }
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
                     }
-                    
+                    catch (UnauthorizedAccessException) { }
                 }
-                Player.Volume = volume;
-
-                //var folderPaths = RoamingSettingsHelper.GetSetting<ThreadSafeObservableCollection<StorageFolder>>(foldersKey, null);
-                //if (folderPaths != null)
-                //{
-                //    SettingsVM.LibraryFoldersCollection = folderPaths;
-                //}
-
-
             }
-            catch { }
 
-            
+            var folderPaths = RoamingSettingsHelper.GetSetting<string>(foldersKey, null);
+            if (folderPaths != null)
+            {
+                foreach (var folder in folderPaths.Split('|'))
+                {
+                    if (!string.IsNullOrEmpty(folder))
+                    {
+                        var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
+                        SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                    }
+                }
+            }
+           
         }
 
         //
@@ -95,7 +91,7 @@ namespace BreadPlayer
           //  ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
         }
 
-        public static void Stringify()
+        public static void SaveSettings()
         {
             if (Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.Path))
             {
@@ -281,12 +277,15 @@ namespace BreadPlayer
             var dialog = new Windows.UI.Popups.MessageDialog(msg, title);           
             await dialog.ShowAsync();
         }
+
         #region Ctor
         public CoreWindowLogic()
         {
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
+            Player.Volume = volume;
         }
         #endregion
 

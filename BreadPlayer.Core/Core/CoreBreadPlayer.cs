@@ -118,7 +118,7 @@ namespace BreadPlayer.Core
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         CurrentlyPlayingFile = mediaFile;
                         CoreWindowLogic.UpdateSmtc();
-                        CoreWindowLogic.Stringify();
+                        CoreWindowLogic.SaveSettings();
                     });
 
                     return true;

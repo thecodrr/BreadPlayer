@@ -58,8 +58,8 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
-          
-            CoreWindowLogic.InitSmtc();
+
+            CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
