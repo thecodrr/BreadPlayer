@@ -51,8 +51,16 @@ namespace BreadPlayer.ViewModels
             //foreach(var album in await GetAlbums().ConfigureAwait(false))
             //{
             AlbumCollection.AddRange(await GetAlbums().ConfigureAwait(false));//.Add(album);
+            AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
            // }
         }
+
+        private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            //Albums are loaded, we can now hide the progress ring.
+
+        }
+
         public async Task<IEnumerable<Album>> GetAlbums()
         {
             IEnumerable<Album> collection = null;

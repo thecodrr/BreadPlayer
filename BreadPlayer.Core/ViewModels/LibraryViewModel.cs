@@ -371,37 +371,49 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
         public async void Play(object path)
         {
-            if(path is Mediafile)
+            Mediafile mediaFile = null;
+            if (path is Mediafile)
             {
-                LibraryService = new LibraryService(new DatabaseService());
-                RecentCollection = LibraryService.GetRecentCollection();
-                Mediafile mp3File = path as Mediafile;
-                if (RecentlyPlayedCollection.Any(t => t.Path == mp3File.Path))
-                {
-                    RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mp3File.Path));
-                }
-                if (RecentCollection.Exists(t => t.Path == mp3File.Path))
-                {
-                    RecentCollection.Delete(t => t.Path == mp3File.Path);
-                }
-                RecentlyPlayedCollection.Add(mp3File);
-                RecentCollection.Insert(mp3File);
-
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async() =>
-                {
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mp3File, true});
-                    (PlayCommand as RelayCommand).IsEnabled = false;
-                    await Task.Delay(100);
-                    (PlayCommand as RelayCommand).IsEnabled = true;
-
-                    if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
-                    {
-                        TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
-                    }
-                });
+                mediaFile = path as Mediafile;
+                isPlayingFromPlaylist = false;              
             }
+            else
+            {
+                mediaFile = (path as ThreadSafeObservableCollection<Mediafile>)[0];
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, path as ThreadSafeObservableCollection<Mediafile>);
+                isPlayingFromPlaylist = true;
+            }
+            AddToRecentCollection(mediaFile);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
+                (PlayCommand as RelayCommand).IsEnabled = false;
+                await Task.Delay(100);
+                (PlayCommand as RelayCommand).IsEnabled = true;
+
+                if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
+                {
+                    TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+                }
+            });
+
         }
-     
+        bool isPlayingFromPlaylist = false;
+        private void AddToRecentCollection(Mediafile mediaFile)
+        {
+            LibraryService = new LibraryService(new DatabaseService());
+            RecentCollection = LibraryService.GetRecentCollection();
+            if (RecentlyPlayedCollection.Any(t => t.Path == mediaFile.Path))
+            {
+                RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mediaFile.Path));
+            }
+            if (RecentCollection.Exists(t => t.Path == mediaFile.Path))
+            {
+                RecentCollection.Delete(t => t.Path == mediaFile.Path);
+            }
+            RecentlyPlayedCollection.Add(mediaFile);
+            RecentCollection.Insert(mediaFile);
+        }
         async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;

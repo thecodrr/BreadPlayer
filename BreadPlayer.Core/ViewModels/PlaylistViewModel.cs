@@ -37,8 +37,8 @@ namespace BreadPlayer.ViewModels
 {
 	public class PlaylistViewModel : ViewModelBase, IDisposable
     {
-        GroupedObservableCollection<string, Mediafile> songs;
-        public GroupedObservableCollection<string, Mediafile> Songs { get { if (songs == null) { songs = new GroupedObservableCollection<string, Mediafile>(t => t.Title); } return songs; } set { Set(ref songs, value); } }
+        ThreadSafeObservableCollection<Mediafile> songs;
+        public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
        
@@ -107,7 +107,7 @@ namespace BreadPlayer.ViewModels
             using (PlaylistService service = new PlaylistService(Playlist.Name))
             {
                 service.Remove(mediafile);
-                Songs.Elements.Remove(mediafile);
+                Songs.Remove(mediafile);
                 // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
                 // Songs.Remove(mediafile);
                 // LibVM.Database.Update(mediafile);
@@ -119,15 +119,16 @@ namespace BreadPlayer.ViewModels
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
-                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Elements.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                TotalSongs = Songs.Elements.Count.ToString() + " Songs";
-                if (Songs.Elements.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
+                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                TotalSongs = Songs.Count.ToString() + " Songs";
+                if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
                 {
-                    BitmapImage image = new BitmapImage(new Uri(Songs.Elements.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
+                    BitmapImage image = new BitmapImage(new Uri(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
                    
                     PlaylistArt = image;
+                    Themes.ThemeManager.SetThemeColor(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture);
                 }
-                var mp3 = Songs?.Elements?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                var mp3 = Songs?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
                 if (mp3 != null) mp3.State = PlayerState.Playing;
             });
             
@@ -221,7 +222,7 @@ namespace BreadPlayer.ViewModels
         }
         void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(album.AlbumSongs, true, true);          
+            Songs.AddRange(album.AlbumSongs);          
         }
         async void LoadDB()
         {
@@ -230,7 +231,7 @@ namespace BreadPlayer.ViewModels
                 if (service.IsValid)
                 {
                     var ss = service.GetTrackCount();
-                    Songs.AddRange(await service.GetTracks().ConfigureAwait(false), true, false);
+                    Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
                     Refresh();
                 }
             }
@@ -254,7 +255,7 @@ namespace BreadPlayer.ViewModels
         public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
         void Init(object para)
         {
-            Songs.Elements.CollectionChanged += Elements_CollectionChanged;           
+            Songs.CollectionChanged += Elements_CollectionChanged;           
         }
 
         public void Dispose()

@@ -100,7 +100,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// <summary> 
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
     /// </summary> 
-    public async void AddRange(IEnumerable<T> range)
+    public void AddRange(IEnumerable<T> range)
     {
         try
         {

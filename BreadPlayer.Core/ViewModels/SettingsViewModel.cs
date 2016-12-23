@@ -32,6 +32,7 @@ using Windows.Storage.Search;
 using BreadPlayer.Messengers;
 using BreadPlayer.Service;
 using BreadPlayer.Common;
+using System.Diagnostics;
 
 namespace BreadPlayer.ViewModels
 {
@@ -313,12 +314,13 @@ namespace BreadPlayer.ViewModels
         {
             if (queryResult != null)
             {
+                var stop = Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
-                uint index = 0, stepSize = 100;
+                uint index = 0, stepSize = 200;
                 //a list containing the files we recieved after querying using the two uints we created above.
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
                 //we move forward the index 100 steps because first 100 files are loaded when we called the above method.
-                index += 100;
+                index += 200;
 
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
@@ -375,10 +377,11 @@ namespace BreadPlayer.ViewModels
                                 failedCount++;
                             }
                         }
+                        //await SaveMultipleAlbumArtsAsync(tempList).ConfigureAwait(false);
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        TracksCollection.AddRange(tempList, false, true);
+                        TracksCollection.AddRange(tempList);
                         //now we load 100 songs into database.
                         service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
@@ -387,7 +390,7 @@ namespace BreadPlayer.ViewModels
                         //To avoid this, we create and run a task that loads the next 100 files. Stepping forward 100 steps without increasing the index.
                         files = await queryResult.GetFilesAsync(index, stepSize).AsTask().ConfigureAwait(false);
                         //consequently we have to increase the index by 100 so that songs are not repeated.
-                        index += 100;
+                        index += 200;
                     }
                     catch (Exception ex)
                     {
@@ -395,7 +398,8 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
-                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2};", count, failedCount, i);
+                stop.Stop();
+                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}; Time Taken: {3}", count, failedCount, i, stop.Elapsed.TotalSeconds);
                 await NotificationManager.ShowAsync(message);
                 service.Dispose();
                 model = null;
@@ -438,6 +442,14 @@ namespace BreadPlayer.ViewModels
                 {
                     await NotificationManager.ShowAsync("Failed to save album art of " + mp3file.OrginalFilename);
                 }
+            }
+        }
+
+        private static async Task SaveMultipleAlbumArtsAsync(IEnumerable<Mediafile> files)
+        {
+            foreach(var file in files)
+            {
+                await SaveSingleFileAlbumArtAsync(file);
             }
         }
         #endregion

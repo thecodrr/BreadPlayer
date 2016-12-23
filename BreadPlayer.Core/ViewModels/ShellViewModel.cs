@@ -83,10 +83,10 @@ namespace BreadPlayer.ViewModels
         }
         private void HandleLibraryLoadedMessage(Message message)
         {
-            if (message.Payload is GroupedObservableCollection<string, Mediafile>)
+            if (message.Payload is ThreadSafeObservableCollection<Mediafile>)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                PlaylistSongCollection = message.Payload as GroupedObservableCollection<string, Mediafile>;
+                PlaylistSongCollection = message.Payload as ThreadSafeObservableCollection<Mediafile>;
             }
             else
             {
@@ -112,6 +112,7 @@ namespace BreadPlayer.ViewModels
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 var file = obj[0] as Mediafile;
                 var play = (bool)obj[1];
+                IsPlayingFromPlaylist = (bool)obj[2];
                 Load(file, play);
             }
         }
@@ -267,7 +268,7 @@ namespace BreadPlayer.ViewModels
                 {
                     await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayNext();
 
                     return null;
@@ -297,11 +298,11 @@ namespace BreadPlayer.ViewModels
             else
                 PlayFile(toPlayFile);
         }
-        ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
+        private ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
-            if (PlaylistSongCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
+            if (PlaylistSongCollection?.Any(t => t.State == PlayerState.Playing) == true || IsPlayingFromPlaylist)
             {
-                return PlaylistSongCollection.Elements;
+                return PlaylistSongCollection;
             }
             else if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
             {
@@ -404,6 +405,12 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Properties
+        bool isPlayingFromPlaylist;
+        public bool IsPlayingFromPlaylist
+        {
+            get { return isPlayingFromPlaylist; }
+            set { Set(ref isPlayingFromPlaylist, value); }
+        }
         bool isSourceGrouped;
         public bool IsSourceGrouped
         {
@@ -412,7 +419,7 @@ namespace BreadPlayer.ViewModels
         }
         public GroupedObservableCollection<string, Mediafile> TracksCollection
         { get; set; }
-        public GroupedObservableCollection<string, Mediafile> PlaylistSongCollection
+        public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }
 
         string queryWord = "";
@@ -568,7 +575,7 @@ namespace BreadPlayer.ViewModels
                 if (await Player.Load(mp3file))
                 {
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
-                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;
                     mp3file.State = PlayerState.Playing;
                     if(Player.Volume == 50)
@@ -588,7 +595,7 @@ namespace BreadPlayer.ViewModels
                 else
                 {
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
-                    PlaylistSongCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
 
                     mp3file.State = PlayerState.Playing;
                     int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));
@@ -596,8 +603,7 @@ namespace BreadPlayer.ViewModels
                     Load(await GetUpcomingSong(), true);
                 }
             }
-            Themes.ThemeManager man = new Themes.ThemeManager();            
-            man.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
 
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)

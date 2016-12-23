@@ -46,7 +46,7 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
             if (!onlyVol)
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
@@ -56,7 +56,7 @@ namespace BreadPlayer
                     Player.PlayerState = PlayerState.Paused;
                     try
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume }); 
                     }
                     catch (UnauthorizedAccessException) { }
                 }
@@ -278,7 +278,7 @@ namespace BreadPlayer
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50);
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
             Player.Volume = volume;
         }
         #endregion

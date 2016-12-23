@@ -99,8 +99,7 @@
                         <ComboBoxItem Content="500"></ComboBoxItem>
                         <ComboBoxItem Content="1000"></ComboBoxItem>
                     </ComboBox>
-                    <CheckBox x:Name="loadalbumsCheckBox" IsChecked="{Binding LoadAlbumArtsSeperately, Mode=TwoWay}" RelativePanel.Below="batchSizeTxt" Margin="7,10,0,0" Content="Load album arts seperately"/>
-                    <MenuFlyoutSeparator RelativePanel.Below="loadalbumsCheckBox" Width="400" x:Name="seperator1"/>
+                    <MenuFlyoutSeparator RelativePanel.Below="batchComboBox" Width="400" x:Name="seperator1"/>
                     <Button RelativePanel.Below="seperator1" Content="Reset Everything" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
 
                 </RelativePanel>

@@ -37,6 +37,8 @@ namespace BreadPlayer
             });
             base.OnNavigatedTo(e);
         }
+        
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             (grid.Resources["Source"] as CollectionViewSource).Source = null;

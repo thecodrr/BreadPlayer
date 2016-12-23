@@ -1321,7 +1321,7 @@
             </Style>
 
             <DataTemplate x:Key="SelectedTemplate" >
-                <Grid x:Name="LayoutRoot" MaxWidth="150" Height="210" >
+                <Grid x:Name="LayoutRoot" MaxWidth="150" Height="220" >
                     <Grid.Resources>
                         <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                     </Grid.Resources>
@@ -1335,14 +1335,14 @@
                         <TextBlock TextAlignment="Center" Margin="5,0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                         <TextBlock TextAlignment="Center" Margin="5,0" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,58" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="46">
+                    <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,68" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="46">
                         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                             <StackPanel.Transitions>
                                 <TransitionCollection>
                                     <EntranceThemeTransition/>
                                 </TransitionCollection>
                             </StackPanel.Transitions>
-                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs[0]}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;" RequestedTheme="Dark"></TextBlock>
                                 </StackPanel>

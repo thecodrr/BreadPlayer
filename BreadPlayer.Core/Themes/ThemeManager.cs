@@ -18,7 +18,7 @@ namespace BreadPlayer.Themes
 {
     public class ThemeManager
     {
-        private readonly string[] brushKeys = new[]
+        private static readonly string[] brushKeys = new[]
         {
             //wp
             "PhoneAccentBrush",
@@ -45,7 +45,7 @@ namespace BreadPlayer.Themes
 
         };
 
-        public async void SetThemeColor(string albumartPath)
+        public static async void SetThemeColor(string albumartPath)
         {
             try
             {
@@ -82,11 +82,11 @@ namespace BreadPlayer.Themes
             ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
            
         }
-        public Color GetAccentColor()
+        private static Color GetAccentColor()
         {
             return ((Color)App.Current.Resources["SystemAccentColor"]);
         }
-        private T GetThemeResource<T>(string key)
+        private static T GetThemeResource<T>(string key)
         {
             return ((T)App.Current.Resources[key]);
         }

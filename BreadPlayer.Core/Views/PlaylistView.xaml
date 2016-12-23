@@ -296,7 +296,7 @@
             <MenuFlyoutItem Text="Delete This Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" />
             <MenuFlyoutItem Text="Rename This Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}"/>
         </MenuFlyout>
-        <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs.Elements}"/>
+        <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs}"/>
     </Page.Resources>
     <Grid  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>

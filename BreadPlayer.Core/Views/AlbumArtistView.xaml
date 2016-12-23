@@ -69,15 +69,20 @@
                 <DataTemplate x:DataType="Models:Album">
                     <Grid MaxWidth="150" Height="220">
                         <StackPanel>
-                            <Image Width="150" x:Name="AlbumArt" Height="150" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
-
-                            </Image>
+                            <Image Width="150" x:Name="AlbumArt" Height="150" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
                             <TextBlock TextAlignment="Center" Margin="5,0" x:Phase="0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                             <TextBlock TextAlignment="Center" Margin="5,0,5,0" x:Phase="1" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
-        </GridView>       
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+        </GridView>
+        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=AlbumCollection.Count, Converter={StaticResource BoolToVisibilty}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
+    
     </Grid>
 </Page>
