@@ -1,5 +1,5 @@
 <dl>
-  <a href="https://breadplayer.com/"><img src="https://github.com/theweavrs/BreadPlayer/blob/master/img/bp_logo.svg" title="breadplayer" /></a>
+  <a href="https://breadplayer.com/"><img height="150" src="http://i.imgur.com/PNMSGUr.png" title="breadplayer"/></a>
   <h1>Bread Player aka <em>Macalifa</em></h1>
   <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
