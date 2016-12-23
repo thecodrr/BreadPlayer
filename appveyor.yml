@@ -19,8 +19,6 @@ notifications:
 - provider: Email
   to:
   - enkaboot@gmail.com
-  subject: Build Status Changed | App Veyor
-  message: Build Status was changed for project BreadPlayer
   on_build_success: true
   on_build_failure: true
   on_build_status_changed: true
