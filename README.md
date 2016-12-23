@@ -1,7 +1,7 @@
 <dl>
   <a href="http://imgur.com/pLEUASs"><img src="http://i.imgur.com/pLEUASst.png" title="source: imgur.com" /></a>
   <h1>Bread Player aka <em>Macalifa</em></h1>
-  <p>A music player with breads and burgers made for the Windows 10 store to replace history.</p>
+  <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
 
 [![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/)
@@ -12,7 +12,7 @@
  
 [![alpha](https://img.shields.io/badge/alpha-v0.1.7.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.7.1-alpha)
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
-[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
+[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_1.1.0.0_Test%2FBreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
 
 ##Current Status:
 ###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
