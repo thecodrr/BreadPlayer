@@ -1,7 +1,6 @@
-version: 1.7.{build}
+version: 1.8.{build}
 pull_requests:
   do_not_increment_build_number: true
-skip_non_tags: true
 os: Visual Studio 2015
 configuration: Release
 platform:
@@ -16,3 +15,12 @@ artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
   type: Auto
+notifications:
+- provider: Email
+  to:
+  - enkaboot@gmail.com
+  subject: Build Status Changed | App Veyor
+  message: Build Status was changed for project BreadPlayer
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
