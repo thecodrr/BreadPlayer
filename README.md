@@ -1,7 +1,7 @@
 <dl>
   <a href="http://imgur.com/pLEUASs"><img src="http://i.imgur.com/pLEUASst.png" title="source: imgur.com" /></a>
   <h1>Bread Player aka <em>Macalifa</em></h1>
-  <p>A music player with breads and burgers made for the Windows 10 store to replace history.</p>
+  <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
 
 [![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/)
