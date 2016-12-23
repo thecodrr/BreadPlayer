@@ -15,10 +15,3 @@ artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
   type: Auto
-notifications:
-- provider: Email
-  to:
-  - enkaboot@gmail.com
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: true
