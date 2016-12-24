@@ -79,5 +79,13 @@ namespace BreadPlayer
             }
             catch { }
         }
+
+        private void fileBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                (this.DataContext as LibraryViewModel).Play(fileBox.SelectedItem);
+            }
+        }
     }
 }
