@@ -133,7 +133,7 @@
                         <ColumnDefinition Width="400*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.ColumnSpan="2" MaxWidth="700" HorizontalAlignment="Left">
-                        <TextBlock Margin="10,10,10,0" Text="v0.1.7.1-alpha"/>
+                        <TextBlock Margin="10,10,10,0" Text="v0.1.8-alpha (nightly)"/>
                         <TextBlock Margin="10,10,10,0" Text="Copyright © 2016 Abdullah Atta"/>
                         <TextBlock Margin="10,10,10,0" HorizontalAlignment="Left" TextWrapping="Wrap">
                       <Run FontSize="12">
