@@ -55,5 +55,13 @@ namespace BreadPlayer
             this.DataContext = PlaylistVM;
             base.OnNavigatedTo(e);
         }
+
+        private void fileBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                (App.Current.Resources["LibVM"] as LibraryViewModel).Play(fileBox.SelectedItem);
+            }
+        }
     }
 }

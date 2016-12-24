@@ -232,12 +232,12 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" x:Name="Buttons_Stack" Orientation="Horizontal" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                         HorizontalAlignment="Left" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,0,0"  VerticalAlignment="Center">
-                                    <AppBarButton Icon="Play" BorderBrush="White" HorizontalAlignment="Stretch"
+                                    <!--<AppBarButton Icon="Play" BorderBrush="White" HorizontalAlignment="Stretch"
                                                           DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="60" 
                                                           Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                            VerticalAlignment="Stretch" Height="60" IsDoubleTapEnabled="False" Style="{StaticResource CustomAppBarButtonStyle}"
                                                           CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
-                                                          Command="{Binding PlayCommand}"/>
+                                                          Command="{Binding PlayCommand}"/>-->
                                     <AppBarButton x:Name="button2_MOBILE" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Icon="Delete" BorderBrush="White" Background="Black"
                                                               IsDoubleTapEnabled="False" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                               Height="60"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -376,7 +376,7 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" DisplayMemberPath="Title" Grid.Row="2" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListView>
+        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" DisplayMemberPath="Title" Grid.Row="2" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}" SelectionChanged="fileBox_SelectionChanged"></ListView>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}"/>

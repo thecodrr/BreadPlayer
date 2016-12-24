@@ -375,14 +375,16 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile)
             {
                 mediaFile = path as Mediafile;
-                isPlayingFromPlaylist = false;              
+                isPlayingFromPlaylist = false;
             }
-            else
+            else if (path is ThreadSafeObservableCollection<Mediafile>)
             {
                 mediaFile = (path as ThreadSafeObservableCollection<Mediafile>)[0];
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, path as ThreadSafeObservableCollection<Mediafile>);
                 isPlayingFromPlaylist = true;
             }
+            else
+                return;
             AddToRecentCollection(mediaFile);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
