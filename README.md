@@ -15,7 +15,7 @@
 [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_1.1.0.0_Test%2FBreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
 
 ##Current Status:
-###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_0.1.7.0_Test%2FBreadPlayer.Core_0.1.7.0_x86_x64_arm.appxbundle)
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_1.1.0.0_Test%2FBreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
 ### Alpha Preview (Video):
