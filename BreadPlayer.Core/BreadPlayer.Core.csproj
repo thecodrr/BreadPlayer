@@ -224,18 +224,18 @@
     <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\libs\ARM\bass.dll" />
-    <Content Include="Assets\libs\ARM\bassmidi.dll" />
-    <Content Include="Assets\libs\ARM\bassmix.dll" />
-    <Content Include="Assets\libs\ARM\bass_fx.dll" />
-    <Content Include="Assets\libs\x64\bass.dll" />
-    <Content Include="Assets\libs\x64\bassmidi.dll" />
-    <Content Include="Assets\libs\x64\bassmix.dll" />
-    <Content Include="Assets\libs\x64\bass_fx.dll" />
-    <Content Include="Assets\libs\x86\bass.dll" />
-    <Content Include="Assets\libs\x86\bassmidi.dll" />
-    <Content Include="Assets\libs\x86\bassmix.dll" />
-    <Content Include="Assets\libs\x86\bass_fx.dll" />
+    <Content Include="Assets\lib\ARM\bass.dll" />
+    <Content Include="Assets\lib\ARM\bassmidi.dll" />
+    <Content Include="Assets\lib\ARM\bassmix.dll" />
+    <Content Include="Assets\lib\ARM\bass_fx.dll" />
+    <Content Include="Assets\lib\x64\bass.dll" />
+    <Content Include="Assets\lib\x64\bassmidi.dll" />
+    <Content Include="Assets\lib\x64\bassmix.dll" />
+    <Content Include="Assets\lib\x64\bass_fx.dll" />
+    <Content Include="Assets\lib\x86\bass.dll" />
+    <Content Include="Assets\lib\x86\bassmidi.dll" />
+    <Content Include="Assets\lib\x86\bassmix.dll" />
+    <Content Include="Assets\lib\x86\bass_fx.dll" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\albumart.png" />
     <Content Include="Assets\Macalifa_Splash.png" />
