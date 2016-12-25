@@ -152,7 +152,7 @@
                         </TextBlock>
                         <TextBlock Margin="10,10,10,0" TextWrapping="Wrap">
                        <Run FontWeight="Medium" FontSize="14">
-                           BreadPlayer emerges with the hard work of these great people, to whom we are are very grateful:
+                           BreadPlayer emerges with the hard work of these great people, to whom we are very grateful:
                    </Run> 
                            <LineBreak/>
                     <Run FontStyle="Italic" FontSize="13">DannyTalent, Bond-009, MightyK1337, Kai Hildebrandt, Ammar Ahmed</Run>
