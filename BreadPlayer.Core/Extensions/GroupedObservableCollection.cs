@@ -230,13 +230,12 @@ namespace BreadPlayer.Extensions
                         // Find out where it is in the current collection and move it from there
                         // NOTE this isn't very optimal if large sets are being reordered a lot, but the general use case for
                         // this sort of list is that there is some inherent order that won't be changing.
-                        var moved = false;
+
                         for (var j = i + 1; j < current.Count; j++)
                         {
                             if (itemComparer.Equals(current[j], findElement))
                             {
                                 current.Move(i, j);
-                                moved = true;
                                 break;
                             }
                         }

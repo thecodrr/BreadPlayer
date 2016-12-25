@@ -28,17 +28,12 @@ using Windows.Foundation.Metadata;
 
 namespace BreadPlayer.Core
 {
-	public class CoreBreadPlayer : ViewModelBase, IDisposable
+	public sealed class CoreBreadPlayer : ViewModelBase, IDisposable
     {
-        #region DllImports
-        [DllImport("bass.dll")]
-        static extern bool BASS_SetConfig(int config, int newValue);
-        const int BASS_CONFIG_DEV_BUFFER = 27;
-        #endregion
-
         #region Fields
         int handle = 0;
         private SyncProcedure _sync;
+        const int BASS_CONFIG_DEV_BUFFER = 27;
         #endregion
 
         #region Constructor
@@ -63,7 +58,7 @@ namespace BreadPlayer.Core
                 {
                     //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
                     //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
-                    BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230); 
+                    NativeMethods.BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230); 
                 }
                 Bass.Start();
                 Bass.Init();

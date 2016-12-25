@@ -21,13 +21,13 @@ namespace BreadPlayer.Services
 	class GenericService<T> where T : new()
     {
         static GenericService<T> instance;
-        public static T vm;
+       
         public static GenericService<T> Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new GenericService<T>(vm);
+                    instance = new GenericService<T>();
 
                 return instance;
             }
@@ -35,11 +35,10 @@ namespace BreadPlayer.Services
 
         public T GenericClass { get; private set; }
 
-        public GenericService(T View)
+        public GenericService()
         {
             // Create the generic class instance
-            if (View == null) GenericClass = new T();
-            else GenericClass = vm;
+            GenericClass = new T();
         }
     }
 }

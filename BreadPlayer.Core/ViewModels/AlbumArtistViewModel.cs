@@ -10,7 +10,7 @@ using BreadPlayer.Messengers;
 
 namespace BreadPlayer.ViewModels
 {
-	public class AlbumArtistViewModel : ViewModelBase, IDisposable
+	public class AlbumArtistViewModel : ViewModelBase
     {
         async void HandleAddAlbumMessage(Message message)
         {
@@ -127,10 +127,6 @@ namespace BreadPlayer.ViewModels
                 SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), album);
             }
         }
-
-        public void Dispose()
-        {
-            AlbumCollection.Clear();
-        }
+        
     }
 }

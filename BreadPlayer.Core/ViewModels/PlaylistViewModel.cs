@@ -35,7 +35,7 @@ using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
-	public class PlaylistViewModel : ViewModelBase, IDisposable
+	public class PlaylistViewModel : ViewModelBase
     {
         ThreadSafeObservableCollection<Mediafile> songs;
         public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
@@ -257,9 +257,10 @@ namespace BreadPlayer.ViewModels
         {
             Songs.CollectionChanged += Elements_CollectionChanged;           
         }
-
-        public void Dispose()
+        
+        public void Reset()
         {
+            
             PlaylistArt = null;
             TotalSongs = "0";
             TotalMinutes = "0";

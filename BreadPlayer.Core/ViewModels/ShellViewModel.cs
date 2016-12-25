@@ -37,7 +37,7 @@ using System.Reflection;
 
 namespace BreadPlayer.ViewModels
 {
-	public class ShellViewModel : ViewModelBase, IDisposable
+	public class ShellViewModel : ViewModelBase
     {
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
@@ -137,7 +137,7 @@ namespace BreadPlayer.ViewModels
         }
         async void HandleDisposeMessage()
         {
-            Dispose();
+            Reset();
             await Player.Stop();
         }
         #endregion
@@ -496,8 +496,8 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region IDisposable
-        public void Dispose()
+        #region Reset
+        public void Reset()
         {
             PlaylistSongCollection?.Clear();
             TracksCollection?.Clear();

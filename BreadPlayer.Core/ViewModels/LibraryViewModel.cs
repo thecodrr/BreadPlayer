@@ -43,7 +43,7 @@ namespace BreadPlayer.ViewModels
 	/// <summary>
 	/// ViewModel for Library View (Severe cleanup and documentation needed.)
 	/// </summary>
-	public class LibraryViewModel : ViewModelBase, IDisposable
+	public class LibraryViewModel : ViewModelBase
     {
         #region Fields        
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
@@ -59,7 +59,7 @@ namespace BreadPlayer.ViewModels
         #region MessageHandling
         void HandleDisposeMessage()
         {
-            Dispose();
+            Reset();
         }
         void HandleUpdateSongCountMessage(Message message)
         {
@@ -674,7 +674,7 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region IDisposable
-        public void Dispose()
+        public void Reset()
         {
             LibraryService.Dispose();
             LibraryService = null;

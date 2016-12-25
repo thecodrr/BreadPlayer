@@ -46,16 +46,12 @@ namespace BreadPlayer.Models
         private string title;
         private string subtitle;
         private string length;
-        private string mood;
         private string orginal_filename;
         private string lead_artist;
-        private string conductor;
         private string publisher;
         private string track_number;
         private string size;
         private string year;
-        private bool isSelected = false;
-        private string unsynchronized_lyric;
         private string NaN = "NaN";
         #endregion
 
@@ -71,7 +67,7 @@ namespace BreadPlayer.Models
         public string AttachedPicture { get { return attached_picture; } set { attached_picture = value; } }
        public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }
       public string FolderPath { get { return folderPath; } set { folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; } }
-    public string SynchronizedLyric
+       public string SynchronizedLyric
         {
             get { return synchronized_lyric; }
             set { synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value; }

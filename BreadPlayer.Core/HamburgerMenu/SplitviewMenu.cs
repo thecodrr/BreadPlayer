@@ -31,7 +31,7 @@ namespace SplitViewMenu
 {
 	public sealed class SplitViewMenu : Control
     {
-        public static NavigationService NavService { get; protected set; }
+        public static NavigationService NavService { get; set; }
         internal static readonly DependencyProperty MenuItemDataTemplateSelectorProperty =
             DependencyProperty.Register("MenuItemDataTemplateSelector", typeof (DataTemplateSelector),
                 typeof (SplitViewMenu), new PropertyMetadata(null));

@@ -53,7 +53,6 @@ namespace BreadPlayer
     {
         ShellViewModel ShellVM;
         List<Mediafile> OldFiles = new List<Mediafile>();
-        SystemMediaTransportControls _smtc;
         public Shell()
         {
             this.InitializeComponent();

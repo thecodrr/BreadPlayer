@@ -80,7 +80,7 @@ namespace BreadPlayer.Extensions
         /// Event data that is issued by any event that
         /// tracks changes to the effective value of this property.
         /// </param>
-        private static async void OnIsSelectedChanged(
+        private static void OnIsSelectedChanged(
             DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             bool oldIsSelected = (bool)e.OldValue;
