@@ -277,7 +277,7 @@ namespace BreadPlayer
             string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
             string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
             string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
-            string xml = "<tile> <visual displayName=\"Now Playing\">" +
+            string xml = "<tile> <visual displayName=\"Now Playing\" branding=\"nameAndLogo\">" +
                 "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" + 
                 "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
                 "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
@@ -301,7 +301,7 @@ namespace BreadPlayer
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);          
             Player.Volume = volume;
         }
         #endregion

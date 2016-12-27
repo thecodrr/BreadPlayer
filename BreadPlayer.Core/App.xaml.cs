@@ -145,14 +145,7 @@ namespace BreadPlayer
         {
             var stop = Stopwatch.StartNew();
             Frame rootFrame = Window.Current.Content as Frame;
-            if (args.Kind != ActivationKind.File)
-            { 
-                    CoreWindowLogic.LoadSettings();
-            }
-            else
-            {
-                    CoreWindowLogic.LoadSettings(true);
-            }
+           
             // Do not repeat app initialization when the Window already has content
             if (rootFrame == null)
             {
@@ -191,6 +184,14 @@ namespace BreadPlayer
                 statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
+            }
+            if (args.Kind != ActivationKind.File)
+            {
+                CoreWindowLogic.LoadSettings();
+            }
+            else
+            {
+                CoreWindowLogic.LoadSettings(true);
             }
             Window.Current.Activate();
             stop.Stop();
