@@ -28,6 +28,11 @@ using Windows.Foundation.Metadata;
 using Windows.Media.Core;
 using Windows.System;
 using BreadPlayer.Common;
+using Windows.Data.Xml.Dom;
+using Microsoft.Toolkit.Uwp.Notifications;
+using BreadPlayer.Models;
+using System.Text;
+using System.Xml;
 
 namespace BreadPlayer
 {
@@ -257,7 +262,7 @@ namespace BreadPlayer
         public void ShowToast(string msg, string subMsg = null)
         {
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
-
+          
             var toastImageElements = toastXml.GetElementsByTagName("image");
             var toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
@@ -266,6 +271,24 @@ namespace BreadPlayer
             var toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
+        public static void UpdateTile(Mediafile mediaFile)
+        {
+            string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
+            string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
+            string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
+            string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
+            string xml = "<tile> <visual displayName=\"Now Playing\">" +
+                "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" + 
+                "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
+                "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
+                "<binding template=\"TileLarge\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"80\"/> <group> <subgroup hint-weight=\"1\"/> <subgroup hint-weight=\"2\"> <image src=\"" + mediaFile.AttachedPicture + "\" hint-crop=\"circle\"/> </subgroup> <subgroup hint-weight=\"1\"/> </group> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text> </binding> </visual> </tile>";
+            var formattedXML = string.Format(xml, title, artist, album);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(formattedXML);
+            var notification = new TileNotification(doc);
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+        }
+       
         public static async void ShowMessage(string msg, string title)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg, title);           
@@ -283,5 +306,12 @@ namespace BreadPlayer
         }
         #endregion
 
+    }
+    public enum TileSize
+    {
+        Small = 1,
+        Medium = 2,
+        Wide = 3,
+        Large = 4,
     }
 }

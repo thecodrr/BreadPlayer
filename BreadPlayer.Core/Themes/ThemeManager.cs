@@ -80,9 +80,9 @@ namespace BreadPlayer.Themes
         {
             ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = color;
             ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
-            var statusBar = StatusBar.GetForCurrentView();
-            statusBar.BackgroundColor = color;
-            statusBar.BackgroundOpacity = 1;
+            //var statusBar = StatusBar.GetForCurrentView();
+            //statusBar.BackgroundColor = color;
+            //statusBar.BackgroundOpacity = 1;
         }
         private static Color GetAccentColor()
         {

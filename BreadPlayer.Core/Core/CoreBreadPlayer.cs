@@ -112,6 +112,7 @@ namespace BreadPlayer.Core
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         CurrentlyPlayingFile = mediaFile;
+                        CoreWindowLogic.UpdateTile(CurrentlyPlayingFile);
                         CoreWindowLogic.UpdateSmtc();
                         CoreWindowLogic.SaveSettings();
                     });

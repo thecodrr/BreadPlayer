@@ -591,6 +591,8 @@ namespace BreadPlayer.ViewModels
                     }
                     if(GetPlayingCollection() != null)
                         UpcomingSong = await GetUpcomingSong();
+
+                    Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
                 }
                 else
                 {
@@ -603,7 +605,6 @@ namespace BreadPlayer.ViewModels
                     Load(await GetUpcomingSong(), true);
                 }
             }
-            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
 
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
