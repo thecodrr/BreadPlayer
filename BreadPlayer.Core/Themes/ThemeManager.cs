@@ -77,12 +77,18 @@ namespace BreadPlayer.Themes
             catch { }
         }
         private static void ChangeTitleBarColor(Color color)
-        {
-            ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = color;
-            ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
-            //var statusBar = StatusBar.GetForCurrentView();
-            //statusBar.BackgroundColor = color;
-            //statusBar.BackgroundOpacity = 1;
+        {            
+            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                var statusBar = StatusBar.GetForCurrentView();
+                statusBar.BackgroundColor = color;
+                statusBar.BackgroundOpacity = 1;
+            }
+            else
+            {
+                ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = color;
+                ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
+            }
         }
         private static Color GetAccentColor()
         {
