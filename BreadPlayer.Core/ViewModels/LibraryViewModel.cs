@@ -119,9 +119,10 @@ namespace BreadPlayer.ViewModels
         }        
         private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
+            string param = (e.Parameter ?? String.Empty).ToString();    // e.Parameter can be null and throw exception
             if (e.SourcePageType == typeof(LibraryView))
             {                
-                if (e.Parameter.ToString() == "Recent")              
+                if (param == "Recent")              
                    ChangeView("Recently Played", false, RecentlyPlayedCollection);                
                 else
                     ChangeView("Music Library", libgrouped, TracksCollection.Elements);
