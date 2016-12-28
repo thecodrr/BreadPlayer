@@ -383,6 +383,19 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, path as ThreadSafeObservableCollection<Mediafile>);
                 isPlayingFromPlaylist = true;
             }
+            else if(path is Playlist)
+            {
+                using (Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name))
+                {
+                    if (service.IsValid)
+                    {
+                        var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
+                        mediaFile = songList[0];
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, songList);
+                        isPlayingFromPlaylist = true;
+                    }
+                }
+            }
             else
                 return;
             AddToRecentCollection(mediaFile);

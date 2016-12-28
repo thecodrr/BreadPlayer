@@ -210,7 +210,6 @@ namespace BreadPlayer.ViewModels
             {
                 Playlist = data as Playlist;
                 LoadDB();
-
             }
             else
             {
