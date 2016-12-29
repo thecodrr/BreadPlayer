@@ -29,10 +29,7 @@ using Windows.Media.Core;
 using Windows.System;
 using BreadPlayer.Common;
 using Windows.Data.Xml.Dom;
-using Microsoft.Toolkit.Uwp.Notifications;
 using BreadPlayer.Models;
-using System.Text;
-using System.Xml;
 
 namespace BreadPlayer
 {
