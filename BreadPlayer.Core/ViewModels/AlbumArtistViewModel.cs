@@ -122,7 +122,6 @@ namespace BreadPlayer.ViewModels
             if(para is Album)
             {
                 Album album = para as Album;
-               //PlaylistVM.IsMenuVisible = false;
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
                 SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), album);
             }

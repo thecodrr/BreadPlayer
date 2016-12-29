@@ -213,6 +213,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
+                IsMenuVisible = false;
                 Playlist = new Playlist() { Name = (data as Album).AlbumName, Description = (data as Album).Artist};
                 LoadAlbumSongs(data as Album);
                 Refresh();
