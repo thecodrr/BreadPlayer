@@ -18,7 +18,7 @@
 
 namespace BreadPlayer.Services
 {
-	class GenericService<T> where T : new()
+	public class GenericService<T> where T : new()
     {
         static GenericService<T> instance;
        
