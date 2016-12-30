@@ -18,11 +18,10 @@
 using BreadPlayer.Core;
 using System;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Models
 {
-	public class Mediafile : ObservableObject, IComparable<Mediafile>
+    public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
         private Color albumArtColor;
