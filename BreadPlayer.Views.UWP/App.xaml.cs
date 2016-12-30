@@ -185,6 +185,7 @@ namespace BreadPlayer
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
             }
+
             if (args.Kind != ActivationKind.File)
             {
                 CoreWindowLogic.LoadSettings();
@@ -193,7 +194,9 @@ namespace BreadPlayer
             {
                 CoreWindowLogic.LoadSettings(true);
             }
+
             Window.Current.Activate();
+
             stop.Stop();
             Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
 

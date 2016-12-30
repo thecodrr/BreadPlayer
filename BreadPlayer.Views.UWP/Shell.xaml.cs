@@ -56,8 +56,8 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
+            InitializeCore core = new InitializeCore(new Dispatcher.BreadDispatcher(CoreWindow.GetForCurrentThread().Dispatcher));
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
-
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;

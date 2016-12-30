@@ -44,10 +44,7 @@ public class ObservableObject : INotifyPropertyChanged
     /// <param name="args">The arguments. </param>
     protected async virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
-        await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-        {
-            PropertyChanged?.Invoke(this, args);
-        });
+        await InitializeFramework.Dispatcher.RunAsync(() => { PropertyChanged?.Invoke(this, args); }); 
     }
 
     /// <summary>Raises the property changed event for all properties (string.Empty). </summary>

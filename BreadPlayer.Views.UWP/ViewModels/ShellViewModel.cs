@@ -42,7 +42,7 @@ namespace BreadPlayer.ViewModels
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
-        DispatcherTimer timer;
+        Windows.UI.Xaml.DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
         LibraryService service = new LibraryService(new DatabaseService());
         #endregion
@@ -61,7 +61,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            this.timer = new DispatcherTimer();
+            this.timer = new Windows.UI.Xaml.DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
@@ -176,7 +176,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                DispatcherTimer timer = new DispatcherTimer();
+                Windows.UI.Xaml.DispatcherTimer timer = new Windows.UI.Xaml.DispatcherTimer();
                 if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
                 {
                     Reload().ConfigureAwait(false);

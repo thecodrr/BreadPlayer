@@ -142,17 +142,14 @@
     <Compile Include="Converters\StringToIconConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
-    <Compile Include="Core\CoreBreadPlayer.cs" />
     <Compile Include="Core\Effects.cs" />
-    <Compile Include="Core\NativeMethods.cs" />
     <Compile Include="Core\SharedLogic.cs" />
+    <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\SortedObservableCollection.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Models\Album.cs" />
-    <Compile Include="Models\Playlist.cs" />
     <Compile Include="Service\DatabaseService.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
@@ -165,11 +162,8 @@
     <Compile Include="Extensions\GroupedObservableCollection.cs" />
     <Compile Include="Extensions\ListBoxItemExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
-    <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
-    <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Common\UndoRedoStack.cs" />
-    <Compile Include="NotificationManager\NotificationManager.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />

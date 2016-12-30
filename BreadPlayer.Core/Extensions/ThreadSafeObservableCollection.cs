@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.Core;
+using BreadPlayer.Core.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +25,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
-using Windows.UI.Core;
 
 
 /// <summary>
@@ -39,29 +40,34 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     //public static readonly int MAX_CAPACITY = int.MaxValue - 1; // MS limit
     //private readonly int _capacity = MAX_CAPACITY;
     //public int Capacity { get { return _capacity; } }
-    private CoreDispatcher _dispatcher;
-    internal ReaderWriterLockSlim sync = new System.Threading.ReaderWriterLockSlim();
+    private IDispatcher _dispatcher;
+    public ReaderWriterLockSlim sync = new System.Threading.ReaderWriterLockSlim();
     public ThreadSafeObservableCollection()
     {
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        _dispatcher = InitializeCore.Dispatcher;
     }
-    public ThreadSafeObservableCollection(IEnumerable<T> collection = null)
+    public ThreadSafeObservableCollection(IEnumerable<T> collection = null) :this()
     {
         //copy the collection to ourself
         if (collection != null)
         {
             AddRange(collection);
         }
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
     }
 
     public async new void Add(T item)
     {
-        if(_dispatcher == null) _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-        if (_dispatcher.HasThreadAccess)
-            DoAdd(item);
+        if (_dispatcher != null)
+        {
+            if (_dispatcher.HasThreadAccess)
+                DoAdd(item);
+            else
+                await _dispatcher.RunAsync(() => DoAdd(item));
+        }
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
+        {
+            DoAdd(item);
+        }
     }
 
     private void DoAdd(T item)
@@ -77,12 +83,12 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         if (_dispatcher.HasThreadAccess)
             DoClear();
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
+           await _dispatcher.RunAsync(DoClear);
     }
 
     protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+        await _dispatcher.RunAsync(() => 
         {
             try
             {
@@ -94,7 +100,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     }
     protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });  
+        await _dispatcher.RunAsync(() => { if (_isObserving) base.OnPropertyChanged(e); });  
     }
 
     /// <summary> 
@@ -222,11 +228,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         else
         {
             bool? op = null;
-            var removeTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            var removeTask = _dispatcher.RunAsync(() =>
             {
                 op = DoRemove(item);
             });
-            removeTask.AsTask().Wait();
+            removeTask.Wait();
             if (op == null)
                 return false;
             return op.Value;
@@ -249,8 +255,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         var result = base.IndexOf(item);
         sync.ExitReadLock();
         return result;
-
-
     }
 
     public new async void Insert(int index, T item)
@@ -260,7 +264,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         else
         {
 
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoInsert(index, item));
+            await _dispatcher.RunAsync(() => DoInsert(index, item));
         }
     }
 
@@ -277,7 +281,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         if (_dispatcher.HasThreadAccess)
             DoRemoveAt(index);
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoRemoveAt(index));
+           await _dispatcher.RunAsync(() => DoRemoveAt(index));
     }
 
     private void DoRemoveAt(int index)
