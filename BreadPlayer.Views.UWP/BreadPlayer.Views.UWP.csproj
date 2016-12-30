@@ -389,7 +389,7 @@
       <Name>BreadPlayer.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
-      <Project>{a3a57b68-d86b-4536-8443-cfbe91e9d803}</Project>
+      <Project>{d13a4d87-f970-43db-94d4-cf3f71878448}</Project>
       <Name>BreadPlayer.Framework</Name>
     </ProjectReference>
   </ItemGroup>

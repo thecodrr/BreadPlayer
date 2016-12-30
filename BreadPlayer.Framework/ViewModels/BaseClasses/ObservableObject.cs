@@ -56,4 +56,3 @@ public class ObservableObject : INotifyPropertyChanged
         RaisePropertyChanged(new PropertyChangedEventArgs(string.Empty));
     }
 }
-
