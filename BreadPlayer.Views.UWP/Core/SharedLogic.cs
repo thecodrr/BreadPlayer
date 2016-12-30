@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
-using BreadPlayer.BreadNotificationManager;
 using BreadPlayer.Service;
 using System.Windows.Input;
 using Windows.System;
@@ -19,6 +18,7 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer.Core
 {
@@ -26,7 +26,7 @@ namespace BreadPlayer.Core
     {
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
+        public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;

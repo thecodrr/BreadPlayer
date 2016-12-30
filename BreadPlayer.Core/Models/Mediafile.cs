@@ -17,14 +17,12 @@
 */
 using BreadPlayer.Core;
 using System;
-using Windows.UI;
 
 namespace BreadPlayer.Models
 {
     public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
-        private Color albumArtColor;
         private PlayerState state;
         private string path;
         private string encrypted_meta_file;
@@ -54,19 +52,15 @@ namespace BreadPlayer.Models
         private string NaN = "NaN";
         #endregion
 
-        ThreadSafeObservableCollection<Playlist> playlists = new ThreadSafeObservableCollection<Playlist>();
-       
         #region Properties
-        public ThreadSafeObservableCollection<Playlist> Playlists { get { return playlists; } set { Set(ref playlists, value); }}
-        public Color AlbumArtColor { get { return albumArtColor; } set { Set(ref albumArtColor, value); } }
         public string Path { get { return path; } set { Set(ref path, value); } }
         public PlayerState State { get { return state; } set { Set(ref state, value); } }
         public string EncryptedMetaFile { get { return encrypted_meta_file; } set { encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; } }
         public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
         public string AttachedPicture { get { return attached_picture; } set { attached_picture = value; } }
-       public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }
-      public string FolderPath { get { return folderPath; } set { folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; } }
-       public string SynchronizedLyric
+        public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }
+        public string FolderPath { get { return folderPath; } set { folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; } }
+        public string SynchronizedLyric
         {
             get { return synchronized_lyric; }
             set { synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value; }
@@ -77,14 +71,14 @@ namespace BreadPlayer.Models
         public string Genre { get { return genre; } set { genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; } }
         public string CopyrightMessage { get { return copyright_message; } set { copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; } }
         public string Date { get { return date; } set { date = string.IsNullOrEmpty(value) ? date = NaN : value; } }
-    public string EncodedBy { get { return encoded_by; } set { encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; } }
+        public string EncodedBy { get { return encoded_by; } set { encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; } }
         public string Lyric { get { return lyric; } set { lyric = string.IsNullOrEmpty(value) ? lyric = NaN : value; } }
         public string ContentGroupDescription { get { return content_group_description; } set { content_group_description = string.IsNullOrEmpty(value) ? content_group_description = NaN : value; } }
         public string Title { get { return title; } set { title = string.IsNullOrEmpty(value) ? title = System.IO.Path.GetFileNameWithoutExtension(path) : value; } }
         public string Subtitle { get { return subtitle; } set { subtitle = string.IsNullOrEmpty(value) ? subtitle = NaN : value; } }
-    public string Publisher { get { return publisher; } set { publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; } }
+        public string Publisher { get { return publisher; } set { publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; } }
         public string TrackNumber { get { return track_number; } set { track_number = string.IsNullOrEmpty(value) ? track_number = NaN : value; } }
-    public string Size { get { return size; } set { size = string.IsNullOrEmpty(value) ? size = NaN : value; } }
+        public string Size { get { return size; } set { size = string.IsNullOrEmpty(value) ? size = NaN : value; } }
         public string Year { get { return year; } set { year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; } }
         public string LeadArtist { get { return lead_artist; } set { lead_artist = string.IsNullOrEmpty(value) ? lead_artist = NaN : value; } }
         public string OrginalFilename { get { return orginal_filename; } set { orginal_filename = string.IsNullOrEmpty(value) ? orginal_filename = NaN : value; } }
@@ -94,12 +88,11 @@ namespace BreadPlayer.Models
 
         public int CompareTo(Mediafile compareTo)
         {
-           return this.Title.CompareTo(compareTo.Title);            
+            return this.Title.CompareTo(compareTo.Title);
         }
         public Mediafile()
         {
-           // GetText(Data);
+            // GetText(Data);
         }
     }
-
 }

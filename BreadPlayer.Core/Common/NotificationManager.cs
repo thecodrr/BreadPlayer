@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BreadPlayer.Core;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 
-namespace BreadPlayer.BreadNotificationManager
+namespace BreadPlayer.NotificationManager
 {
-	public class NotificationManager : ViewModelBase
+	public class BreadNotificationManager : ObservableObject
     {
         DispatcherTimer hideTimer;
         string status = "Nothing Baking";
@@ -27,14 +28,14 @@ namespace BreadPlayer.BreadNotificationManager
         }
         public async Task ShowAsync(string status, string heading = "Oops! Burnt!")
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await InitializeCore.Dispatcher.RunAsync(() =>
             {
                 Status = status;
                 Heading = heading;
                 //if (!Show)
                 //{
                 //    Show = true;
-               if(hideTimer == null) hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(10) };
+               if(hideTimer == null) hideTimer = new DispatcherTimer(InitializeCore.Dispatcher) { Interval = TimeSpan.FromSeconds(10) };
                 hideTimer.Start();
                     hideTimer.Tick += HideTimer_Tick;
                 //}
