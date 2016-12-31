@@ -38,6 +38,7 @@
     <Compile Include="Common\Collections.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\INotificationManager.cs" />
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
     <Compile Include="Extensions\ObservableCollection.cs" />
@@ -46,7 +47,6 @@
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlist.cs" />
-    <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />
     <Compile Include="PlayerWrapper\NativeMethods.cs" />
     <Compile Include="PortableAPIs\DispatcherTimer.cs" />

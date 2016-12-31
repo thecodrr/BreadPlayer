@@ -26,7 +26,7 @@ namespace BreadPlayer.Core
     {
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;
+        public static BreadNotificationManager NotificationManager => (BreadNotificationManager)InitializeCore.NotificationManager;
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
@@ -85,7 +85,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
-        public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
+        public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
@@ -162,7 +162,7 @@ namespace BreadPlayer.Core
                 }
                 catch (Exception ex)
                 {
-                    await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+                    await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
                     return false;
                 }
             }
@@ -237,7 +237,7 @@ namespace BreadPlayer.Core
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
             return mediafile;
         }

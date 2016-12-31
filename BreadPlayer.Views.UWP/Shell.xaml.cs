@@ -43,6 +43,7 @@ using Windows.UI.Xaml.Shapes;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
+using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer
 {
@@ -56,7 +57,7 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            InitializeCore core = new InitializeCore(new Dispatcher.BreadDispatcher(CoreWindow.GetForCurrentThread().Dispatcher));
+            InitializeCore core = new InitializeCore(new Dispatcher.BreadDispatcher(CoreWindow.GetForCurrentThread().Dispatcher), new BreadNotificationManager());
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
