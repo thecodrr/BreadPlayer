@@ -48,6 +48,7 @@
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />
+    <Compile Include="PlayerWrapper\Effects.cs" />
     <Compile Include="PlayerWrapper\NativeMethods.cs" />
     <Compile Include="PortableAPIs\DispatcherTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

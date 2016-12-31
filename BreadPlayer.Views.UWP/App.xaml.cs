@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using System;
@@ -202,8 +203,7 @@ namespace BreadPlayer
                 CoreWindowLogic.LoadSettings(true);
             }
 
-            Window.Current.Activate();
-
+            Window.Current.Activate();           
             stop.Stop();
             Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
 

@@ -24,9 +24,21 @@ namespace BreadPlayer.Core
 {
 	public class SharedLogic
     {
+        public SharedLogic()
+        {
+            InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);        
+            NotificationManager = new BreadNotificationManager();
+            InitializeCore.NotificationManager = NotificationManager;
+        }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        public static BreadNotificationManager NotificationManager => (BreadNotificationManager)InitializeCore.NotificationManager;
+        static BreadNotificationManager notificationManager;
+        public static BreadNotificationManager NotificationManager
+        {
+            get { return notificationManager; }
+            set { notificationManager = value; }
+        }
+        
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
