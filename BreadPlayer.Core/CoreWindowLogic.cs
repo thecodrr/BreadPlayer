@@ -33,6 +33,7 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using BreadPlayer.Models;
 using System.Text;
 using System.Xml;
+using System.IO;
 
 namespace BreadPlayer
 {
@@ -55,7 +56,7 @@ namespace BreadPlayer
             if (!onlyVol)
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
-                if (path != "")
+                if (path != "" && File.Exists(path))
                 {
                     double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
                     Player.PlayerState = PlayerState.Paused;
