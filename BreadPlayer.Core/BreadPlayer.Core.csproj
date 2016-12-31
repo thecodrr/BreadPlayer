@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Auto</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
@@ -120,6 +120,7 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\breadplayer.ttf" />
     <None Include="Assets\Untitled-2.svg" />
+    <None Include="BreadPlayer.Core_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
     <None Include="Service References\HockeyApp\ConnectedService.json" />
