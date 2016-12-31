@@ -295,14 +295,21 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         private async Task AutoLoadMusicLibraryAsync()
         {
-            var options = Common.DirectoryWalker.GetQueryOptions();
-            //this is the query result which we recieve after querying in the folder
-            StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
-            //the event for files changed
-            queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            if (await queryResult.GetItemCountAsync() > 0)
+            try
             {
-                await AddFolderToLibraryAsync(queryResult);
+                var options = Common.DirectoryWalker.GetQueryOptions();
+                //this is the query result which we recieve after querying in the folder
+                StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
+                //the event for files changed
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;
+                if (await queryResult.GetItemCountAsync() > 0)
+                {
+                    await AddFolderToLibraryAsync(queryResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowAsync(ex.Message, "");
             }
         }
         /// <summary>

@@ -34,6 +34,8 @@ namespace BreadPlayer
             {
                 (grid.Resources["Source"] as CollectionViewSource).Source = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
                 (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
+                if (albumListView.Items.Count <= 0)
+                    loadingRing.Visibility = Visibility.Collapsed;
             });
             base.OnNavigatedTo(e);
         }
