@@ -143,7 +143,6 @@
     <Compile Include="Converters\StringToIconConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
-    <Compile Include="Core\Effects.cs" />
     <Compile Include="Core\SharedLogic.cs" />
     <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />

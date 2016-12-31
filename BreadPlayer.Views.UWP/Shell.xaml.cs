@@ -57,7 +57,6 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            InitializeCore core = new InitializeCore(new Dispatcher.BreadDispatcher(CoreWindow.GetForCurrentThread().Dispatcher), new BreadNotificationManager());
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
