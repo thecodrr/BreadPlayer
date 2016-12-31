@@ -27,6 +27,7 @@ using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
@@ -177,7 +178,7 @@ namespace BreadPlayer
                 view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
                 view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);                
             }
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {              
                 //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
                 var statusBar = StatusBar.GetForCurrentView();
@@ -185,7 +186,13 @@ namespace BreadPlayer
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
             }
-
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                const int BASS_CONFIG_DEV_BUFFER = 27;
+                //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
+                //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
+                BreadPlayer.Core.NativeMethods.BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230);
+            }
             if (args.Kind != ActivationKind.File)
             {
                 CoreWindowLogic.LoadSettings();

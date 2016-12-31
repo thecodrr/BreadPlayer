@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core.Interfaces;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Interfaces;
 using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using System;
@@ -10,8 +11,8 @@ using System.Threading.Tasks;
 
 public class InitializeCore
 {
-    static BreadNotificationManager notificationManager;
-    public static BreadNotificationManager NotificationManager
+    static INotificationManager notificationManager;
+    public static INotificationManager NotificationManager
     {
         get { return notificationManager; }
         set { notificationManager = value; }
@@ -23,9 +24,10 @@ public class InitializeCore
         get { return dispatcher; }
         set { dispatcher = value; }
     }
-    public InitializeCore(IDispatcher dispatcher)
+    public InitializeCore(IDispatcher dispatcher, INotificationManager notificationManager)
     {
         Dispatcher = dispatcher;
+        NotificationManager = notificationManager;
         InitializeFramework.Dispatcher = dispatcher;
     }
 }

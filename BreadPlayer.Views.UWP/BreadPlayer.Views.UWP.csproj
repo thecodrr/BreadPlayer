@@ -133,6 +133,7 @@
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\FrameworkElementExtensions.cs" />
+    <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
     <Compile Include="Common\StringCompressor.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />

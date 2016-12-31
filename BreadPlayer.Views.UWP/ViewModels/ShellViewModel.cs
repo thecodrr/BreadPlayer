@@ -266,7 +266,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch
                 {
-                    await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
+                    await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayNext();
@@ -574,6 +574,9 @@ namespace BreadPlayer.ViewModels
                
                 if (await Player.Load(mp3file))
                 {
+                    CoreWindowLogic.UpdateTile(mp3file);
+                    CoreWindowLogic.UpdateSmtc();
+                    CoreWindowLogic.SaveSettings();
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;

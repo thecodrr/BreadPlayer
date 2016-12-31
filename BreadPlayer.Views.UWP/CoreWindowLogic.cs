@@ -286,11 +286,7 @@ namespace BreadPlayer
             TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
         }
        
-        public static async void ShowMessage(string msg, string title)
-        {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);           
-            await dialog.ShowAsync();
-        }
+     
 
         #region Ctor
         public CoreWindowLogic()

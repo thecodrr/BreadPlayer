@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using ManagedBass;
 using BreadPlayer.Events;
 using BreadPlayer.Models;
-using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer.Core
 {
@@ -29,7 +28,6 @@ namespace BreadPlayer.Core
         #region Fields
         int handle = 0;
         private SyncProcedure _sync;
-        const int BASS_CONFIG_DEV_BUFFER = 27;
         #endregion
 
         #region Constructor
@@ -49,13 +47,7 @@ namespace BreadPlayer.Core
         {
            await Task.Run(() => 
             {
-                Bass.UpdatePeriod = 1000;
-                //if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                //{
-                //    //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
-                //    //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
-                //    NativeMethods.BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230); 
-                //}
+                Bass.UpdatePeriod = 1000;              
                 Bass.Start();
                 Bass.Init();
             });                   
@@ -107,17 +99,14 @@ namespace BreadPlayer.Core
                         InitializeExtensions(path);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                        CurrentlyPlayingFile = mediaFile;
-                        //CoreWindowLogic.UpdateTile(CurrentlyPlayingFile);
-                        //CoreWindowLogic.UpdateSmtc();
-                        //CoreWindowLogic.SaveSettings();
+                        CurrentlyPlayingFile = mediaFile;                       
                     });
 
                     return true;
                 }
                 catch(Exception ex)
                 {
-                    await InitializeCore.NotificationManager.ShowAsync(ex.Message + "||" + mediaFile.OrginalFilename);
+                    await InitializeCore.NotificationManager.ShowMessageAsync(ex.Message + "||" + mediaFile.OrginalFilename);
                 }
             }
             else
@@ -125,11 +114,11 @@ namespace BreadPlayer.Core
                 string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors == false)
                 {
-                    //CoreWindowLogic.ShowMessage(error, "File corrupt");
+                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
                 }
                 else
                 {
-                    await InitializeCore.NotificationManager.ShowAsync(error);
+                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
                 }          
             }
             return false;
