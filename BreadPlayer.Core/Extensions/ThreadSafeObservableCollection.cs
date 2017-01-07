@@ -266,8 +266,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private void DoInsert(int index, T item)
     {
+        if(!sync.IsWriteLockHeld)
         sync.EnterWriteLock();
-
         base.Insert(index, item);
         sync.ExitWriteLock();
     }

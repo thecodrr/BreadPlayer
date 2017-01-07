@@ -41,9 +41,9 @@ namespace BreadPlayer.Core
         {
             Init();
             _sync = new SyncProcedure(EndSync);
-        }        
+        }
         #endregion
-
+        bool init = false;
         #region Initialize Methods
         /// <summary>
         /// Initializes the player to start playing audio
@@ -51,6 +51,7 @@ namespace BreadPlayer.Core
         /// <returns></returns>
         public async Task Init()
         {
+            
            await Task.Run(() => 
             {
                 Bass.UpdatePeriod = 1000;
@@ -61,7 +62,10 @@ namespace BreadPlayer.Core
                     NativeMethods.BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230); 
                 }
                 Bass.Start();
-                Bass.Init();
+                if (Bass.Init())
+                    init = true;
+                else
+                    init = false;
             });                   
         }
         private void InitializeExtensions(string path)
@@ -199,7 +203,8 @@ namespace BreadPlayer.Core
             get { return _volume; }
             set {
                 Set(ref _volume, value);
-                Bass.Volume =  _volume / 100;
+                if(init)
+                   Bass.Volume =  _volume / 100;
             }
         }
         public Effects Effect

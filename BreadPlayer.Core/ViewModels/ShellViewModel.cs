@@ -175,7 +175,7 @@ namespace BreadPlayer.ViewModels
         public void Search(object para)
         {
             try
-            {
+            {               
                 DispatcherTimer timer = new DispatcherTimer();
                 if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
                 {

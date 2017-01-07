@@ -71,6 +71,7 @@ namespace SplitViewMenu
         private static Frame _pageFrame;
         private static SplitView _splitView;
         private static ToggleButton TogglePaneButton;
+        private static AutoSuggestBox _searchBox;
         public SplitViewMenu()
         {
             DefaultStyleKey = typeof (SplitViewMenu);
@@ -145,8 +146,10 @@ namespace SplitViewMenu
         protected override void OnApplyTemplate()
         {
             _splitView = GetTemplateChild("RootSplitView") as SplitView;
+
             _pageFrame = GetTemplateChild("PageFrame") as Frame;
             NavService = new NavigationService(ref _pageFrame);
+            _searchBox = GetTemplateChild("searchBox") as AutoSuggestBox;
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
@@ -174,14 +177,41 @@ namespace SplitViewMenu
             {
                 _backButton.Click += OnBackButtonClick;
             }
-
+            if(_searchBox != null)
+            {
+                _searchBox.KeyUp += _searchBox_KeyUp;
+            }
             if (_pageFrame != null)
             {
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
         }
-        
+
+        private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (_navTopMenuListView.SelectedIndex != 1)
+            {
+                _navTopMenuListView.SelectedIndex = 1;
+                _pageFrame.Navigated += _pageFrame_Navigated;
+                _pageFrame.Navigate(typeof(LibraryView));            
+            }
+        }
+
+        private void _pageFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            var page = e.Content as Page;
+            if (page != null && e.Content != null)
+            {
+                var control = page;
+                control.Loaded += Control_Loaded; ;
+            }
+        }
+
+        private void Control_Loaded(object sender, RoutedEventArgs e)
+        {
+            _searchBox.Focus(FocusState.Programmatic);
+        }
 
         static INavigationMenuItem LastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -245,8 +275,7 @@ namespace SplitViewMenu
             {
                 var control = page;
                 control.Loaded += PageLoaded;
-            }
-          
+            }          
         }
         public static void UnSelectAll()
         {

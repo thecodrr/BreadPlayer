@@ -56,7 +56,7 @@ namespace BreadPlayer
             if (!onlyVol)
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
-                if (path != "" && File.Exists(path))
+                if (path != "" && VerifyFileExists(path, 300))
                 {
                     double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
                     Player.PlayerState = PlayerState.Paused;
@@ -302,7 +302,7 @@ namespace BreadPlayer
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);          
+            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
             Player.Volume = volume;
         }
         #endregion

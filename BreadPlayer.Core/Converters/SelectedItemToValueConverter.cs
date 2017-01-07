@@ -27,7 +27,7 @@ namespace BreadPlayer.Converters
             {
                 return System.Convert.ToInt32((value as ComboBoxItem).Content.ToString());
             }
-            return null;
+            return 0;
         }
     }
 }
