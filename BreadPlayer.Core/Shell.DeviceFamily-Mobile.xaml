@@ -47,12 +47,12 @@
         </Grid.RowDefinitions>
         <controls:SplitViewMenu x:Name="hamburgerMenu" Grid.Row="0" PlaylistsItems="{Binding PlaylistsItems}" InitialPage="local:LibraryView" Grid.RowSpan="2">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0044;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0043;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
         <Grid x:Name="grid" Grid.Row="2" Margin="0,0,0,0" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
@@ -86,8 +86,9 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="volumeSlider" Value="{Binding Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" MinWidth="300" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="15,0,0,0" />
                     <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" FontSize="20" Height="30" Foreground="#FFE0E0E0" Margin="10,0,10,0"/>
+                    <Slider x:Name="volumeSlider" Value="{Binding Path=Player.Volume, Mode=TwoWay, FallbackValue=50}" Maximum="100" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="15,0,0,0" />
+
                 </Grid>
                 <Grid HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>

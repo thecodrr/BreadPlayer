@@ -114,9 +114,8 @@ namespace BreadPlayer
             player.CommandManager.IsEnabled = false;
             player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
-            _smtc.IsEnabled = true;
             _smtc.ButtonPressed += _smtc_ButtonPressed;
-           
+            _smtc.IsEnabled = false;
             _smtc.IsPlayEnabled = true;
             _smtc.IsPauseEnabled = true;
             _smtc.IsStopEnabled = true;
@@ -124,7 +123,7 @@ namespace BreadPlayer
             _smtc.IsPreviousEnabled = true;
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
-            Player.MediaStateChanged += Player_MediaStateChanged;
+            Player.MediaStateChanged += Player_MediaStateChanged;  
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -134,7 +133,9 @@ namespace BreadPlayer
                 if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground == true)
                 {
                     if (Player.PlayerState == PlayerState.Playing && !isforwardbackword)
-                       Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
+                    {
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
+                    }
                     else if (isforwardbackword)
                     {
                         isforwardbackword = false;
@@ -156,6 +157,11 @@ namespace BreadPlayer
                 {
                     update = false;
                     _smtc.IsEnabled = true;
+                    _smtc.IsPlayEnabled = true;
+                    _smtc.IsPauseEnabled = true;
+                    _smtc.IsStopEnabled = true;
+                    _smtc.IsNextEnabled = true;
+                    _smtc.IsPreviousEnabled = true;
                 }
             }
             else
@@ -186,8 +192,10 @@ namespace BreadPlayer
                         isPlaying = false;
                     }
                     else
+                    {
                         player.Pause();
-                    player.Volume = 0;
+                    }
+                        player.Volume = 0;
 
                 }
                 musicProps.Title = Player.CurrentlyPlayingFile.Title;

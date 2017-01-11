@@ -69,7 +69,12 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            CoreWindowLogic.EnableDisableSmtc();
+            if (!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();
+            }
+            else
+                firsttime = false;
             CoreWindowLogic.isBackground = false;
             deferral.Complete();
         }
@@ -79,12 +84,17 @@ namespace BreadPlayer
             var deferral = e.GetDeferral();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc(true);
-            CoreWindowLogic.EnableDisableSmtc();
+            if(!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();               
+            }
+            else
+                firsttime = false;
             await Task.Delay(200);
             CoreWindowLogic.isBackground = true;
             deferral.Complete();
         }
-
+        bool firsttime = true;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.

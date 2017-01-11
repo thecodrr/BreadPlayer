@@ -132,7 +132,8 @@
                         <ColumnDefinition Width="400*"/>
                         <ColumnDefinition Width="400*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.ColumnSpan="2" MaxWidth="700" HorizontalAlignment="Left">
+                    <ScrollViewer Grid.ColumnSpan="2" MaxWidth="700" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+                        <StackPanel >
                         <TextBlock Margin="10,10,10,0" Text="v1.1.0-alpha"/>
                         <TextBlock Margin="10,10,10,0" Text="Copyright © 2016 - 2017 Abdullah Atta"/>
                         <HyperlinkButton Content="BreadPlayer Website" Margin="10,0,10,0" NavigateUri="https://breadplayer.com/" Foreground="#FFCBCBCB"/>
@@ -165,6 +166,7 @@
                        <Run FontStyle="Italic" FontSize="13">Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation</Run>
                         </TextBlock>
                     </StackPanel>
+                    </ScrollViewer>
                 </Grid>
             </PivotItem>
         </Pivot>

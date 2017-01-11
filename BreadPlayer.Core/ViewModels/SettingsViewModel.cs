@@ -47,7 +47,7 @@ namespace BreadPlayer.ViewModels
                 if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
                     _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
                 else
-                    _isThemeDark = true;
+                    _isThemeDark = false;
                 return _isThemeDark;
             }
             set
@@ -350,12 +350,13 @@ namespace BreadPlayer.ViewModels
                 {
                     try
                     {
+                        var listoffiles = TracksCollection.Elements.ToList();
                         foreach (StorageFile file in files)
                         {
                             try
                             {
                                 //we use 'if' conditional so that we don't add any duplicates
-                                if (TracksCollection.Elements.All(t => t.Path != file.Path))
+                                if (listoffiles.All(t => t.Path != file.Path && t.Title != t.Title))
                                 {
                                     //A null Mediafile which we will use afterwards.
                                     Mediafile mp3file = null;
@@ -387,7 +388,7 @@ namespace BreadPlayer.ViewModels
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        TracksCollection.AddRange(tempList);
+                        TracksCollection.AddRange(tempList,false, false);
                         //now we load 100 songs into database.
                         service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.

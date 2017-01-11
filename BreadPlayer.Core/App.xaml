@@ -885,12 +885,12 @@
                                         </StackPanel>
                                             <StackPanel Grid.Column="1" x:Name="Buttons_Stack" Orientation="Horizontal" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                         HorizontalAlignment="Left" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,0,0" VerticalAlignment="Center">
-                                                <!--<AppBarButton Icon="Play" BorderBrush="White" HorizontalAlignment="Stretch"
+                                                <AppBarButton Icon="Play" BorderBrush="White" HorizontalAlignment="Stretch"
                                                           DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}" Width="60" 
                                                           Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                            VerticalAlignment="Stretch" Height="60" IsDoubleTapEnabled="False" Style="{StaticResource CustomAppBarButtonStyle}"
                                                           CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
-                                                          Command="{Binding PlayCommand}"/>-->
+                                                          Command="{Binding PlayCommand}"/>
                                                 <AppBarButton x:Name="button2_MOBILE" Icon="Add" BorderBrush="White" Background="Black"
                                                               IsDoubleTapEnabled="False" Visibility="{Binding ElementName=DataStack, Path=CanDrag, Converter={StaticResource BoolToVisibilty}}" 
                                                               Height="60"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -945,6 +945,9 @@
                                         <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
                                     </Core:EventTriggerBehavior>
                                     <Core:EventTriggerBehavior EventName="RightTapped">
+                                        <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>
+                                    </Core:EventTriggerBehavior>
+                                    <Core:EventTriggerBehavior EventName="Holding">
                                         <Behaviours:OpenMenuFlyoutAction Parameter="Flyout"/>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>

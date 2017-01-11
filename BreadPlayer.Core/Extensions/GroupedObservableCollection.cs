@@ -113,10 +113,9 @@ namespace BreadPlayer.Extensions
                 {
                     foreach (var item in range)
                     {
-                        await Task.Run(() =>
-                        {
+                       
                             AddItem(item, addkey);                           
-                        }).ConfigureAwait(false);
+                       
                     }
                 }
                 else
