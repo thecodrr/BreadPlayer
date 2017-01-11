@@ -334,8 +334,11 @@ namespace SplitViewMenu
                     else if(entry.SourcePageType == typeof(LibraryView))
                     {
                         var para = entry.Parameter;
-                         if(para != null)
+                        if(para != null)
                             item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
+                        else
+                            item = TopNavigationItems[1];
+
                     }
                     if (item != null) 
                         break;  //if item is successfully got break the loop. We got what we needed.

@@ -843,7 +843,7 @@ namespace BreadPlayer.ViewModels
                 Label = Playlist.Name,
                 DestinationPage = typeof(PlaylistView),
                 Symbol = Symbol.List,
-                FontGlyph = "\u0047"
+                FontGlyph = "\u0045"
             });
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)

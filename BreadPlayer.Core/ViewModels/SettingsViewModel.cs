@@ -321,7 +321,6 @@ namespace BreadPlayer.ViewModels
         {
             if (queryResult != null)
             {
-                var stop = Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 200;
                 //a list containing the files we recieved after querying using the two uints we created above.
@@ -405,8 +404,7 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowAsync(message1);
                     }
                 }
-                stop.Stop();
-                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}; Time Taken: {3}", count, failedCount, i, stop.Elapsed.TotalSeconds);
+                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
                 await NotificationManager.ShowAsync(message);
                 service.Dispose();
                 model = null;

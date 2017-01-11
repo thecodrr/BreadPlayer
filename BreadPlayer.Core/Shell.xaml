@@ -69,12 +69,12 @@
         </VisualStateManager.VisualStateGroups>
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0044;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0043;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
 
