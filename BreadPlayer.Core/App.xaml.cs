@@ -54,16 +54,25 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
+            InitializeTheme();
+            this.Suspending += OnSuspending;
+            this.EnteredBackground += App_EnteredBackground;
+            this.LeavingBackground += App_LeavingBackground;   
+        }
+
+        private void InitializeTheme()
+        {
             var value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
             if (value != null)
             {
                 var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
-                this.RequestedTheme = (ApplicationTheme)theme;
-                Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
+                this.RequestedTheme = (ApplicationTheme) theme;
+                Debug.Write("ApplicationTheme: " + RequestedTheme);
             }
-            this.Suspending += OnSuspending;
-            this.EnteredBackground += App_EnteredBackground;
-            this.LeavingBackground += App_LeavingBackground;   
+            else
+            {
+                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = RequestedTheme.ToString();
+            }
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
