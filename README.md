@@ -13,15 +13,15 @@
  
 [![alpha](https://img.shields.io/badge/alpha-v1.1.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.1-alpha)
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
-[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core\AppPackages\BreadPlayer.Core_1.1.0.0_Test\BreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
+[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/project/theweavrs/breadplayer/)
 
 ##Current Status:
-###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core\AppPackages\BreadPlayer.Core_1.1.0.0_Test\BreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/project/theweavrs/breadplayer/)
 
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
 ### Alpha Preview (Video):
-[![Introducing Bread Player - Alpha Preview](http://i.imgur.com/EEMByA7.png)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
+[![Introducing Bread Player - Alpha Preview](http://i.imgur.com/DOhQP0A.png)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
 ### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
