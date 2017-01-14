@@ -61,7 +61,7 @@ _Note: I am not an expert developer and as a result the code-base isn't as profe
 ##Build Notes:
 1. Make sure you have the necessary tools for building [Windows Universal Apps](https://dev.windows.com/en-us/develop/building-universal-Windows-apps).
 2. Clone this repo:  `git clone https://github.com/theweavrs/BreadPlayer/`
-3. The current version uses the latest Aniversary Edition of UWP (Universal Windows Platform) build 14393 but it is not restricted to that, a lower build version can be used without any problems.
+3. Run `msbuild.cmd` in `scripts` folder.
+4. Enjoy!
 
-###NOTE:
-_The current **alpha-of-the-alpha** version is under heavy development and will undergo thousands of changes before made available to the end-user._
+_If you encounter any error please follow [this guide in the wiki](https://github.com/theweavrs/BreadPlayer/wiki/How-To-Build-Bread-Player)._
