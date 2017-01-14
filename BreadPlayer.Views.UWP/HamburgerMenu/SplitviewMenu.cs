@@ -73,6 +73,7 @@ namespace SplitViewMenu
         private static ToggleButton TogglePaneButton;
         private static AutoSuggestBox _searchBox;
         private static TextBlock _headerText;
+        private static ItemsControl shortcuts;
         public SplitViewMenu()
         {
             DefaultStyleKey = typeof (SplitViewMenu);
@@ -157,6 +158,7 @@ namespace SplitViewMenu
             _backButton = GetTemplateChild("BackButton") as Button;
             _headerText = GetTemplateChild("headerText") as TextBlock;
             TogglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
+            shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemInvoked += OnNavMenuItemInvoked;
@@ -362,6 +364,8 @@ namespace SplitViewMenu
         {         
             var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
             _headerText.DataContext = item;
+            shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
+            shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&

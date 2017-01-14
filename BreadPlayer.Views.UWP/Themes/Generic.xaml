@@ -558,8 +558,19 @@
                                 <blur:BackDrop BlurAmount="30" TintColor="#CCE5E5E5" />
                                 <Grid VerticalAlignment="Top">
 
-                                    <StackPanel x:Name="Shortcuts" Orientation="Horizontal" Height="100" Margin="30,30,0,0">
-                                        <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Background="Transparent" Content="&#xE00E;" Style="{StaticResource HyperlinkBtn}"/>
+                                    <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                    <!--<StackPanel >
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE00F;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE110;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE11A;" Style="{StaticResource HyperlinkBtn}"/>
@@ -573,7 +584,7 @@
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE793;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE7EC;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE80F;" Style="{StaticResource HyperlinkBtn}"/>
-                                    </StackPanel>
+                                    </StackPanel>-->
                                 </Grid>
                                 <TextBlock x:Name="headerText" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Margin="35,135,0,0.4" />
 
