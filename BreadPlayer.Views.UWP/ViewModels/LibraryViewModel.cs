@@ -745,7 +745,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
             }
             await CreateGenreMenu().ConfigureAwait(false);
-            await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
+            await NotificationManager.ShowMessageAsync("Library successfully loaded!");
             await Task.Delay(10000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
@@ -823,7 +823,7 @@ namespace BreadPlayer.ViewModels
                     
                         index++;
                         item.State = PlayerState.Stopped;
-                        //NotificationManager.ShowAsync(index.ToString() + " of " + songsToadd.Count.ToString() + " added into playlist: " + list.Name);
+                        //NotificationManager.ShowMessageAsync(index.ToString() + " of " + songsToadd.Count.ToString() + " added into playlist: " + list.Name);
                         await Task.Run(() =>
                         {
                             service.Insert(item);

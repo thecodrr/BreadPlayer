@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
-using BreadPlayer.BreadNotificationManager;
 using BreadPlayer.Service;
 using System.Windows.Input;
 using Windows.System;
@@ -19,18 +18,31 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer.Core
 {
-	public class SharedLogic
+    public class SharedLogic
     {
+        public SharedLogic()
+        {
+            InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);
+            NotificationManager = new BreadNotificationManager();
+            InitializeCore.NotificationManager = NotificationManager;
+        }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
+        static BreadNotificationManager notificationManager;
+        public static BreadNotificationManager NotificationManager
+        {
+            get { return notificationManager; }
+            set { notificationManager = value; }
+        }
+
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-      
+
         #region ICommands
 
         #region Definitions
@@ -85,7 +97,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
-        public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
+        public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
@@ -100,7 +112,7 @@ namespace BreadPlayer.Core
                     var decoder = await BitmapDecoder.CreateAsync(stream);
                     var colorThief = new ColorThiefDotNet.ColorThief();
                     var qColor = await colorThief.GetColor(decoder);
-                 
+
                     //read the color 
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
                 }
@@ -126,7 +138,7 @@ namespace BreadPlayer.Core
 
                         using (var albumstream = await albumart.OpenStreamForWriteAsync())
                         {
-                            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length); 
+                            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
                         }
                         return true;
                     }
@@ -156,13 +168,13 @@ namespace BreadPlayer.Core
                         while ((buf = (await thumb.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None).AsTask().ConfigureAwait(false))).Length > 0)
                             await albumstream.WriteAsync(buf).AsTask().ConfigureAwait(false);
                     }
-                    
+
                     thumb.Dispose();
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+                    await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
                     return false;
                 }
             }
@@ -176,7 +188,7 @@ namespace BreadPlayer.Core
             {
                 if (service == null)
                     service = new LibraryService(new DatabaseService());
-                SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count: index, file);
+                SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
                 service.AddMediafile(file);
                 return true;
             }
@@ -226,7 +238,7 @@ namespace BreadPlayer.Core
                 mediafile.Year = properties.Year.ToString();
                 mediafile.TrackNumber = properties.TrackNumber.ToString();
                 mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-                
+
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
@@ -237,7 +249,7 @@ namespace BreadPlayer.Core
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
+                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
             return mediafile;
         }
