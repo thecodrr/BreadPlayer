@@ -43,6 +43,9 @@ using Windows.UI.Xaml.Shapes;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
+using SamplesCommon;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI;
 
 namespace BreadPlayer
 {
@@ -56,39 +59,21 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            //SetupVirtualizationManager();
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
-
+            SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
-            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
-            {
-                var ignored = false;
-                hamburgerMenu.BackRequested(ref ignored);
-                a.Handled = true;
-            };
+
+            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
+            //{
+            //    var ignored = false;
+            //    hamburgerMenu.BackRequested(ref ignored);
+            //    a.Handled = true;
+            //};
+            
         }
-       //private void SetupVirtualizationManager()
-       // {
-       //     if (!VirtualizationManager.IsInitialized)
-       //     {
-       //         //set the VirtualizationManager’s UIThreadExcecuteAction. In this case
-       //         //we’re using Dispatcher.Invoke to give the VirtualizationManager access
-       //         //to the dispatcher thread, and using a DispatcherTimer to run the background
-       //         //operations the VirtualizationManager needs to run to reclaim pages and manage memory.
-       //         VirtualizationManager.Instance.UIThreadExcecuteAction =  async(a) => await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => a.Invoke());
-       //         var timer = new DispatcherTimer()
-       //         {
-       //             Interval = TimeSpan.FromSeconds(1),
-       //         };
-       //         timer.Tick += (sender, e) =>
-       //         {
-       //             VirtualizationManager.Instance.ProcessActions();
-       //         };
-       //         timer.Start();
-       //     }
-       // }
+       
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter is StorageFile)
