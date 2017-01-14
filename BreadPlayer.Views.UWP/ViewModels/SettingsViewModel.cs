@@ -47,7 +47,7 @@ namespace BreadPlayer.ViewModels
                 if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
                     _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
                 else
-                    _isThemeDark = true;
+                    _isThemeDark = false;
                 return _isThemeDark;
             }
             set
@@ -276,7 +276,7 @@ namespace BreadPlayer.ViewModels
                         RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                    await NotificationManager.ShowMessageAsync(" Song(s) Loaded");
+                    await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
@@ -295,14 +295,21 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         private async Task AutoLoadMusicLibraryAsync()
         {
-            var options = Common.DirectoryWalker.GetQueryOptions();
-            //this is the query result which we recieve after querying in the folder
-            StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
-            //the event for files changed
-            queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            if (await queryResult.GetItemCountAsync() > 0)
+            try
             {
-                await AddFolderToLibraryAsync(queryResult);
+                var options = Common.DirectoryWalker.GetQueryOptions();
+                //this is the query result which we recieve after querying in the folder
+                StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
+                //the event for files changed
+                queryResult.ContentsChanged += QueryResult_ContentsChanged;
+                if (await queryResult.GetItemCountAsync() > 0)
+                {
+                    await AddFolderToLibraryAsync(queryResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowAsync(ex.Message, "");
             }
         }
         /// <summary>
@@ -314,7 +321,6 @@ namespace BreadPlayer.ViewModels
         {
             if (queryResult != null)
             {
-                var stop = Stopwatch.StartNew();
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 200;
                 //a list containing the files we recieved after querying using the two uints we created above.
@@ -330,7 +336,7 @@ namespace BreadPlayer.ViewModels
                 if (count == 0)
                 {
                     string error = "No songs found!";
-                    await NotificationManager.ShowMessageAsync(error);
+                    await NotificationManager.ShowAsync(error);
                     return;
                 }
 
@@ -344,12 +350,13 @@ namespace BreadPlayer.ViewModels
                 {
                     try
                     {
+                        var listoffiles = TracksCollection.Elements.ToList();
                         foreach (StorageFile file in files)
                         {
                             try
                             {
                                 //we use 'if' conditional so that we don't add any duplicates
-                                if (TracksCollection.Elements.All(t => t.Path != file.Path))
+                                if (listoffiles.All(t => t.Path != file.Path))
                                 {
                                     //A null Mediafile which we will use afterwards.
                                     Mediafile mp3file = null;
@@ -364,16 +371,18 @@ namespace BreadPlayer.ViewModels
                                         await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
                                     });
                                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                                    await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded");
-
-                                    //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
-                                    tempList.Add(mp3file);
+                                    await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
+                                    if (TracksCollection.Elements.All(t => t.Title != mp3file.Title))
+                                    {
+                                        //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
+                                        tempList.Add(mp3file);
+                                    }
                                 }
                             }
                             catch (Exception ex)
                             {
                                 //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                await NotificationManager.ShowAsync(ex.Message + " || Occured on: " + file.Path);
                                 failedCount++;
                             }
                         }
@@ -395,12 +404,11 @@ namespace BreadPlayer.ViewModels
                     catch (Exception ex)
                     {
                         string message1 = ex.Message + "||" + ex.InnerException;
-                        await NotificationManager.ShowMessageAsync(message1);
+                        await NotificationManager.ShowAsync(message1);
                     }
                 }
-                stop.Stop();
-                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}; Time Taken: {3}", count, failedCount, i, stop.Elapsed.TotalSeconds);
-                await NotificationManager.ShowMessageAsync(message);
+                string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
+                await NotificationManager.ShowAsync(message);
                 service.Dispose();
                 model = null;
             }
@@ -440,7 +448,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch
                 {
-                    await NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3file.OrginalFilename);
+                    await NotificationManager.ShowAsync("Failed to save album art of " + mp3file.OrginalFilename);
                 }
             }
         }
@@ -497,7 +505,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowMessageAsync(ex.Message);
+                await NotificationManager.ShowAsync(ex.Message);
             }
         }
 

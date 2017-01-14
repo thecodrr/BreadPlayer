@@ -15,7 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using System;
@@ -28,7 +27,6 @@ using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
@@ -71,7 +69,12 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            CoreWindowLogic.EnableDisableSmtc();
+            if (!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();
+            }
+            else
+                firsttime = false;
             CoreWindowLogic.isBackground = false;
             deferral.Complete();
         }
@@ -81,12 +84,17 @@ namespace BreadPlayer
             var deferral = e.GetDeferral();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc(true);
-            CoreWindowLogic.EnableDisableSmtc();
+            if(!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();               
+            }
+            else
+                firsttime = false;
             await Task.Delay(200);
             CoreWindowLogic.isBackground = true;
             deferral.Complete();
         }
-
+        bool firsttime = true;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -179,20 +187,13 @@ namespace BreadPlayer
                 view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
                 view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);                
             }
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {              
                 //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
                 var statusBar = StatusBar.GetForCurrentView();
                 statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
                 statusBar.BackgroundOpacity = 1;
                 statusBar.ForegroundColor = Colors.White;
-            }
-            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-            {
-                const int BASS_CONFIG_DEV_BUFFER = 27;
-                //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
-                //This produces latency issue. When pausing a song, it will take 700ms. But I am sure, we can find a way around this later. 
-                BreadPlayer.Core.NativeMethods.BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 230);
             }
             if (args.Kind != ActivationKind.File)
             {
@@ -202,8 +203,7 @@ namespace BreadPlayer
             {
                 CoreWindowLogic.LoadSettings(true);
             }
-
-            Window.Current.Activate();           
+            Window.Current.Activate();
             stop.Stop();
             Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
 

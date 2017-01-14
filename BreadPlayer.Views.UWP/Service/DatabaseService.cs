@@ -81,7 +81,17 @@ namespace BreadPlayer.Service
         }
         public int GetTrackCount()
         {
-            return tracks.Count();
+            try
+            {
+                if (db != null && this != null && tracks != null)
+                    return tracks.Count();
+                else
+                    return 0;
+            }
+            catch
+            {
+                return 0;
+            }
         }
         public void FindOne(string path)
         {

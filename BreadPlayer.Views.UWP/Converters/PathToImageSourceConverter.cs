@@ -1,6 +1,8 @@
 ﻿using System;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -56,7 +58,7 @@ namespace BreadPlayer.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            throw new NotImplementedException();
+            return ((SolidColorBrush)value).Color;
         }
     }
 }

@@ -10,26 +10,21 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Shapes;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Markup;
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace BreadPlayer
+namespace BreadPlayer.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsView : Page
+    public sealed partial class NowPlayingView : Page
     {
-        public SettingsView()
+        public NowPlayingView()
         {
             this.InitializeComponent();
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-            {
-                playbarLoc.Visibility = Visibility.Collapsed;
-                playbarLoc_ComboBox.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

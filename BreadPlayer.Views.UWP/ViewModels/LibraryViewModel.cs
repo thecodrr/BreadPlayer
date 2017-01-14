@@ -15,35 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Dialogs;
+using BreadPlayer.Extensions;
+using BreadPlayer.Messengers;
+using BreadPlayer.Models;
+using BreadPlayer.Service;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Core;
 using System.IO;
-using Windows.Storage;
-using BreadPlayer.Models;
-using BreadPlayer.Core;
-using BreadPlayer.Services;
-using System.Windows.Input;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BreadPlayer.Extensions;
 using Windows.UI.Xaml.Data;
-using BreadPlayer.Dialogs;
-using System.Text.RegularExpressions;
-using BreadPlayer.Service;
-using BreadPlayer.Common;
-using BreadPlayer.Messengers;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace BreadPlayer.ViewModels
 {
-	/// <summary>
-	/// ViewModel for Library View (Severe cleanup and documentation needed.)
-	/// </summary>
-	public class LibraryViewModel : ViewModelBase
+    /// <summary>
+    /// ViewModel for Library View (Severe cleanup and documentation needed.)
+    /// </summary>
+    public class LibraryViewModel : ViewModelBase
     {
         #region Fields        
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
@@ -366,6 +366,7 @@ namespace BreadPlayer.ViewModels
              
             }
         }
+
         /// <summary>
         /// Plays the selected file. <seealso cref="PlayCommand"/>
         /// </summary>
@@ -399,6 +400,7 @@ namespace BreadPlayer.ViewModels
             }
             else
                 return;
+
             AddToRecentCollection(mediaFile);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
@@ -414,6 +416,7 @@ namespace BreadPlayer.ViewModels
             });
 
         }
+
         bool isPlayingFromPlaylist = false;
         private void AddToRecentCollection(Mediafile mediaFile)
         {
@@ -742,7 +745,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
             }
             await CreateGenreMenu().ConfigureAwait(false);
-            await NotificationManager.ShowMessageAsync("Library successfully loaded!");
+            await NotificationManager.ShowAsync("Library successfully loaded!", "Loaded");
             await Task.Delay(10000);
             Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
@@ -840,7 +843,7 @@ namespace BreadPlayer.ViewModels
                 Label = Playlist.Name,
                 DestinationPage = typeof(PlaylistView),
                 Symbol = Symbol.List,
-                FontGlyph = "\u0047"
+                FontGlyph = "\u0045"
             });
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)

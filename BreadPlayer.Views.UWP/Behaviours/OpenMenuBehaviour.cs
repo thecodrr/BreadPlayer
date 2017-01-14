@@ -21,6 +21,8 @@ using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Extensions;
 using SplitViewMenu;
+using Windows.UI.Xaml.Input;
+using Windows.Foundation;
 
 namespace BreadPlayer.Behaviours
 {
@@ -39,6 +41,24 @@ namespace BreadPlayer.Behaviours
 
         public object Execute(object sender, object parameter)
         {
+            if (parameter is RightTappedRoutedEventArgs)
+            {
+                if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                {
+                    return null;
+                }
+                else                
+                    OpenMenu(sender, (parameter as RightTappedRoutedEventArgs).GetPosition(sender as FrameworkElement));
+            }
+            else
+            {
+                OpenMenu(sender, null);
+            }
+            
+            return null;
+        }
+        public void OpenMenu(object sender, Point? position)
+        {
             FrameworkElement senderElement = sender as FrameworkElement;
             var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
             ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>() != null ? senderElement.GetFirstAncestorOfType<ListViewItem>() : null;
@@ -50,7 +70,7 @@ namespace BreadPlayer.Behaviours
 
             // if (item != null) item.IsSelected = true;
             ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
-            if(listItem != null) listItem.IsSelected = true;
+            if (listItem != null) listItem.IsSelected = true;
             //var items = //((Parameter as Binding).Path as ListViewItem);
             if (Parameter.ToString() == "BindableFlyout")
             {
@@ -62,10 +82,10 @@ namespace BreadPlayer.Behaviours
 
             else if (Parameter.ToString() == "Playlist")
             {
-                if(navList != null)
+                if (navList != null)
                 {
                     var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                    flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
+                    flyout.ShowAt(senderElement, position.Value);
                 }
             }
             else
@@ -75,13 +95,14 @@ namespace BreadPlayer.Behaviours
                     listView.SelectedIndex = -1;
                     if (item != null) item.IsSelected = true;
                 }
-                    var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                flyout.ShowAt(senderElement, senderElement.GetPointerPosition());
+                var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                if (position.HasValue && position != null)
+                    flyout.ShowAt(senderElement, position.Value);
+                else
+                    flyout.ShowAt(senderElement);
             }
-           
-            return null;
+            
         }
-
         
     }
 }

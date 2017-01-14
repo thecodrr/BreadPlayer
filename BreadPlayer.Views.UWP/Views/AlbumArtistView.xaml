@@ -82,7 +82,7 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>
-        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=AlbumCollection.Count, Converter={StaticResource BoolToVisibilty}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
+        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=AlbumsLoaded, Converter={StaticResource BoolToVisibilty}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
     
     </Grid>
 </Page>

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
@@ -23,7 +27,7 @@ namespace BreadPlayer.Converters
             {
                 return System.Convert.ToInt32((value as ComboBoxItem).Content.ToString());
             }
-            return null;
+            return 0;
         }
     }
 }
