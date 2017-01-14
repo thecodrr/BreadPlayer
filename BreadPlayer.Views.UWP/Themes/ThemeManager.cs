@@ -74,7 +74,7 @@ namespace BreadPlayer.Themes
                     }
                     catch (Exception ex)
                     {
-                        await Core.SharedLogic.NotificationManager.ShowAsync(ex.Message);
+                        await Core.SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
                     }
                     //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
