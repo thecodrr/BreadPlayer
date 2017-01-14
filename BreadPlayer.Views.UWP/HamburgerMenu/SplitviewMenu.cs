@@ -143,7 +143,9 @@ namespace SplitViewMenu
         {
             var menu = (SplitViewMenu)d;
             if (_playlistsMenuListView != null)
+            {
                 _playlistsMenuListView.ItemsSource = e.NewValue;
+            }
         }
         protected override void OnApplyTemplate()
         {
