@@ -113,9 +113,8 @@ namespace BreadPlayer.Extensions
                 {
                     foreach (var item in range)
                     {
-                       
-                            AddItem(item, addkey);                           
-                       
+                        await Task.Run(() =>
+                             AddItem(item, addkey));
                     }
                 }
                 else
@@ -327,7 +326,7 @@ namespace BreadPlayer.Extensions
 
                 if (match == null)
                 {
-                    _isObserving = true;
+                    //_isObserving = true;
                     // Group doesn't exist and the new group needs to go at the end
                     result = new Grouping<TKey, TElement>(key);
                     this.Add(result);
@@ -335,7 +334,7 @@ namespace BreadPlayer.Extensions
                 }
                 else if (!match.group.Key.Equals(key))
                 {
-                    _isObserving = true;
+                    //_isObserving = true;
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
                     this.Insert(match.index, result);

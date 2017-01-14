@@ -356,7 +356,7 @@ namespace BreadPlayer.ViewModels
                             try
                             {
                                 //we use 'if' conditional so that we don't add any duplicates
-                                if (listoffiles.All(t => t.Path != file.Path && t.Title != t.Title))
+                                if (listoffiles.All(t => t.Path != file.Path))
                                 {
                                     //A null Mediafile which we will use afterwards.
                                     Mediafile mp3file = null;
@@ -372,9 +372,11 @@ namespace BreadPlayer.ViewModels
                                     });
                                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                                     await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
-
-                                    //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
-                                    tempList.Add(mp3file);
+                                    if (TracksCollection.Elements.All(t => t.Title != mp3file.Title))
+                                    {
+                                        //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
+                                        tempList.Add(mp3file);
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -388,7 +390,7 @@ namespace BreadPlayer.ViewModels
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                         //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                        TracksCollection.AddRange(tempList,false, false);
+                        TracksCollection.AddRange(tempList);
                         //now we load 100 songs into database.
                         service.AddMediafiles(tempList);
                         //we clear the 'tempList' so it can come with only 100 songs again.
