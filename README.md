@@ -1,5 +1,6 @@
 <dl>
   <a href="https://breadplayer.com/"><img height="150" src="http://i.imgur.com/PNMSGUr.png" title="breadplayer"/></a>
+  <a href="https://www.microsoft.com/en-gb/store/p/bread-player/9nblggh42srx/"><img height="80" src="https://assets.windowsphone.com/f2f77ec7-9ba9-4850-9ebe-77e366d08adc/English_Get_it_Win_10_InvariantCulture_Default.png" title="Get it from Windows Store!" alt="Get it from Windows Store!"/></a>
   <h1>Bread Player aka <em>Macalifa</em></h1>
   <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
@@ -10,12 +11,13 @@
 [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
  
-[![alpha](https://img.shields.io/badge/alpha-v0.1.7.1-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.7.1-alpha)
+[![alpha](https://img.shields.io/badge/alpha-v1.1.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.1-alpha)
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
-[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_1.1.0.0_Test%2FBreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
+[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core\AppPackages\BreadPlayer.Core_1.1.0.0_Test\BreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
 
 ##Current Status:
-###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core%2FAppPackages%2FBreadPlayer.Core_1.1.0.0_Test%2FBreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
+###All Alpha features have been implemented. Bug hunting is now underway. Want to help? [Please grab the stable .appxbundle from here and start away!](https://github.com/theweavrs/BreadPlayer/releases) or [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/breadplayer/artifacts/BreadPlayer.Core\AppPackages\BreadPlayer.Core_1.1.0.0_Test\BreadPlayer.Core_1.1.0.0_x86_x64_arm.appxbundle)
+
 ###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
 ### Alpha Preview (Video):
