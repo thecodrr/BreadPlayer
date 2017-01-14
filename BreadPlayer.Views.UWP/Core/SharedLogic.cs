@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
+using BreadPlayer.BreadNotificationManager;
 using BreadPlayer.Service;
 using System.Windows.Input;
 using Windows.System;
@@ -18,27 +19,14 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
-using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer.Core
 {
 	public class SharedLogic
     {
-        public SharedLogic()
-        {
-            InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);        
-            NotificationManager = new BreadNotificationManager();
-            InitializeCore.NotificationManager = NotificationManager;
-        }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        static BreadNotificationManager notificationManager;
-        public static BreadNotificationManager NotificationManager
-        {
-            get { return notificationManager; }
-            set { notificationManager = value; }
-        }
-        
+        public static NotificationManager NotificationManager => GenericService<NotificationManager>.Instance.GenericClass;
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
@@ -97,7 +85,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
-        public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
+        public static String GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
@@ -174,7 +162,7 @@ namespace BreadPlayer.Core
                 }
                 catch (Exception ex)
                 {
-                    await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                    await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
                     return false;
                 }
             }
@@ -249,7 +237,7 @@ namespace BreadPlayer.Core
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                await NotificationManager.ShowAsync(ex.Message + "||" + file.Path);
             }
             return mediafile;
         }

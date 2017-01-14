@@ -131,7 +131,7 @@
         </AutoSuggestBox>-->
         <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}"  ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
-                <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver" SelectionChanged="fileBox_SelectionChanged">
+                <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">

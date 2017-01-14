@@ -42,7 +42,7 @@ namespace BreadPlayer.ViewModels
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
-        Windows.UI.Xaml.DispatcherTimer timer;
+        DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
         LibraryService service = new LibraryService(new DatabaseService());
         #endregion
@@ -61,7 +61,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            this.timer = new Windows.UI.Xaml.DispatcherTimer();
+            this.timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
@@ -175,8 +175,8 @@ namespace BreadPlayer.ViewModels
         public void Search(object para)
         {
             try
-            {
-                Windows.UI.Xaml.DispatcherTimer timer = new Windows.UI.Xaml.DispatcherTimer();
+            {               
+                DispatcherTimer timer = new DispatcherTimer();
                 if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
                 {
                     Reload().ConfigureAwait(false);
@@ -266,7 +266,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch
                 {
-                    await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
+                    await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayNext();
@@ -574,9 +574,6 @@ namespace BreadPlayer.ViewModels
                
                 if (await Player.Load(mp3file))
                 {
-                    CoreWindowLogic.UpdateTile(mp3file);
-                    CoreWindowLogic.UpdateSmtc();
-                    CoreWindowLogic.SaveSettings();
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayPauseCommand.IsEnabled = true;

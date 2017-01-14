@@ -47,11 +47,12 @@ namespace BreadPlayer.Themes
 
         public static async void SetThemeColor(string albumartPath)
         {
-            try
+
+            await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                if (App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
                 {
-                    if (App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
+                    try
                     {
                         Color color;
                         if (!string.IsNullOrEmpty(albumartPath))
@@ -69,12 +70,15 @@ namespace BreadPlayer.Themes
                                 ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
                             }
                         }
-                        //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
+
                     }
-                });
-                            
-            }
-            catch { }
+                    catch (Exception ex)
+                    {
+                        await Core.SharedLogic.NotificationManager.ShowAsync(ex.Message);
+                    }
+                    //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
+                }
+            });
         }
         private static void ChangeTitleBarColor(Color color)
         {            

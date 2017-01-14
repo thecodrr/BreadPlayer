@@ -50,9 +50,11 @@ namespace BreadPlayer.Models
         private string size;
         private string year;
         private string NaN = "NaN";
+        private int playCount;
         #endregion
 
         #region Properties
+        public int PlayCount { get { return playCount; } set { Set(ref playCount, value); } }
         public string Path { get { return path; } set { Set(ref path, value); } }
         public PlayerState State { get { return state; } set { Set(ref state, value); } }
         public string EncryptedMetaFile { get { return encrypted_meta_file; } set { encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; } }

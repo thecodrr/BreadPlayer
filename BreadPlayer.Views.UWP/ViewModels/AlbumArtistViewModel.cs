@@ -29,8 +29,9 @@ namespace BreadPlayer.ViewModels
         {
             InitDB();
             Messenger.Instance.Register(MessageTypes.MSG_ADD_ALBUMS, new Action<Message>(HandleAddAlbumMessage));
-        }
-       public async void InitDB()
+        }       
+
+        public async void InitDB()
         {
             try
             {
@@ -58,7 +59,10 @@ namespace BreadPlayer.ViewModels
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             //Albums are loaded, we can now hide the progress ring.
-
+            if (AlbumCollection.Count > 0)
+                AlbumsLoaded = false;
+            else
+                AlbumsLoaded = true;
         }
 
         public async Task<IEnumerable<Album>> GetAlbums()
@@ -69,6 +73,15 @@ namespace BreadPlayer.ViewModels
                 collection = albumCollection.Find(LiteDB.Query.All());
             });
             return collection;
+        }
+        bool albumsLoaded = true;
+        /// <summary>
+        /// Collection containing all albums.
+        /// </summary>
+        public bool AlbumsLoaded
+        {
+            get { return albumsLoaded; }
+            set { Set(ref albumsLoaded, value); }
         }
         ThreadSafeObservableCollection<Album> albumcollection;
         /// <summary>

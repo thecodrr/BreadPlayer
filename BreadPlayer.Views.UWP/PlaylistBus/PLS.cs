@@ -89,7 +89,7 @@ namespace BreadPlayer.PlaylistBus
                                 Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
-                                await Core.SharedLogic.NotificationManager.ShowMessageAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
+                                await Core.SharedLogic.NotificationManager.ShowAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
 
                                 if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
                                     service.Insert(mp3File);
@@ -104,7 +104,7 @@ namespace BreadPlayer.PlaylistBus
                     }
                 }   
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
-                await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
+                await Core.SharedLogic.NotificationManager.ShowAsync(message);
             }          
         }
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)

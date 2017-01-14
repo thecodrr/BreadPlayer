@@ -25,13 +25,15 @@ namespace BreadPlayer.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string val = value.ToString();
-            if (val == "Playing") return true;
-            else return false;
+            if (val == "Playing")
+                return true;
+            else
+                return false;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            throw new NotImplementedException();
+            return (bool)value == true ? "Playing" : "Stopped";
         }
     }
 }

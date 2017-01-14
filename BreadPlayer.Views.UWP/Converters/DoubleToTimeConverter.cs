@@ -36,7 +36,7 @@ namespace BreadPlayer.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
     }
     public class WidthToHalfConverter : IValueConverter
@@ -65,7 +65,7 @@ namespace BreadPlayer.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            throw new NotImplementedException();
+            return 0;
         }
     }
 }
