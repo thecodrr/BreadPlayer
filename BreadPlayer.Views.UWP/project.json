@@ -6,7 +6,8 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Toolkit.Uwp.Notifications": "1.2.0",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
-    "TagLib.Portable": "1.0.4"
+    "TagLib.Portable": "1.0.4",
+    "Win2D.uwp": "1.20.0"
   },
   "frameworks": {
     "uap10.0": {}

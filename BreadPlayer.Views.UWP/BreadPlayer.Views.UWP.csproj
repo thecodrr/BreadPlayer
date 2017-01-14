@@ -123,11 +123,11 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
+    <Content Include="Assets\Noise.jpg" />
     <None Include="Assets\Untitled-2.svg" />
     <None Include="BreadPlayer.Core_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
-    <None Include="Service References\HockeyApp\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundApp.cs" />
@@ -135,12 +135,14 @@
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
+    <Compile Include="Common\BackDrop.cs" />
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\FrameworkElementExtensions.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
     <Compile Include="Common\StringCompressor.cs" />
+    <Compile Include="Common\SurfaceLoader.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\MediafileToPropertyStringConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />

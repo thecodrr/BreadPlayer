@@ -11,6 +11,7 @@
     xmlns:Converters="using:BreadPlayer.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:blur="using:BreadPlayer.Effects"
     mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
         <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
@@ -18,7 +19,7 @@
         <Converters:StringToIconConverter x:Key="StringToIcon"/>
         <Converters:ColorToBrushConverter x:Key="ColorToBrush"/>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource ShellVM}">
+    <Grid DataContext="{StaticResource ShellVM}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -56,36 +57,38 @@
                         <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.IsPlaybarOnBottom}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="playbarPanel.VerticalAlignment" Value="Bottom"/>
+                        <!--<Setter Target="playbarPanel.VerticalAlignment" Value="Bottom"/>
                         <Setter Target="hamburgerMenu.Margin" Value="0,0,0,70"/>
                         <Setter Target="notification.Visibility" Value="Collapsed"/>
                         <Setter Target="volumeGrid.VerticalAlignment" Value="Bottom"/>
-                        <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>
+                        <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>-->
 
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
 
         </VisualStateManager.VisualStateGroups>
-        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,70,0,25">
+       
+        <Image Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
+      
+        <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0044;" Label="Recently Played" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Music Library" Arguments="Library" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0043;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Albums" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
-
-        <StackPanel x:Name="playbarPanel" VerticalAlignment="Top">
-            <Grid Height="70" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
+     
+        <StackPanel x:Name="playbarPanel" VerticalAlignment="Bottom">
+            <Grid Height="70" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
                 <Grid x:Name="infoBar" DataContext="{StaticResource Core}" Padding="0" Grid.Column="0" Width="300" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0" Grid.ColumnSpan="1">
                     <Grid.Resources>
                         <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource LibVM}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
@@ -96,7 +99,7 @@
                     </Grid.Background>-->
                     <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
                         <!--<StackPanel Orientation="Horizontal"  Height="70">-->
-                        <Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="0,5,0,5"/>
+                        <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" Stretch="Uniform" Margin="5,5,5,5"/>
                         <!--<Image x:Name="albumArt" Width="70" Height="60" VerticalAlignment="Center" Source="{Binding Source={StaticResource Core}, Path=Player.Albumart}" Stretch="Uniform" Margin="0,5,0,5"/>-->
 
                         <StackPanel  x:Name="tagsPanel" Orientation="Vertical" Margin="4,7,0,0">
@@ -143,7 +146,7 @@
             </Grid>
         </StackPanel>
 
-        <Border x:Name="notification" Visibility="Visible" Background="{ThemeResource SystemControlBackgroundAccentBrush}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+        <Border x:Name="notification" Visibility="Collapsed" Background="{ThemeResource SystemControlBackgroundAccentBrush}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
             <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
             <Grid>
                 <StackPanel Orientation="Horizontal">
@@ -160,6 +163,7 @@
             <Slider x:Name="volumeSlider" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
+        
     </Grid>
 
 </Page>

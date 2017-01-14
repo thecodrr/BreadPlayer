@@ -9,7 +9,9 @@
     xmlns:VM="using:BreadPlayer.ViewModels"
     xmlns:Common="using:BreadPlayer.Common"
     xmlns:Player="using:BreadPlayer.Core"
-    xmlns:triggers="using:BreadPlayer.Common"      
+    xmlns:triggers="using:BreadPlayer.Common"  
+      
+    xmlns:blur="using:BreadPlayer.Effects"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours"
@@ -88,7 +90,9 @@
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
                         <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
                         <!--<Setter Target="searchBox.Visibility" Value="Visible"/>-->
+                        <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
                         <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
+
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -99,17 +103,16 @@
                 <EntranceThemeTransition IsStaggeringEnabled="True"
                             FromHorizontalOffset="200"/>
             </TransitionCollection>
-        </Grid.Transitions>
-        <Grid.Background>
-            <ImageBrush  Stretch="UniformToFill" ImageSource="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
-        </Grid.Background>
+        </Grid.Transitions>      
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="47"/>
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-        <Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
-        <TextBlock x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,0,0.4" Grid.RowSpan="2"/>
+       
+        <Border x:Name="backgroundBorder" Visibility="Collapsed" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
+
+        <TextBlock Visibility="Collapsed" x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Margin="35,20,0,0.4" Grid.RowSpan="2"/>
         <!--<AutoSuggestBox x:Name="searchBox" Margin="5,4" Visibility="Collapsed" Grid.Row="0" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource Core}, Path=ShellVM.QueryWord, Mode=TwoWay}" Width="Auto" PlaceholderText="Search" IsSuggestionListOpen="False" Height="32" Grid.RowSpan="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
             <AutoSuggestBox.QueryIcon>
                 <FontIcon Glyph="&#xe721;"/>
@@ -129,9 +132,11 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </AutoSuggestBox>-->
-        <SemanticZoom x:Name="semanticZoom" Background="{ThemeResource ImageFadeBrush}"  ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
+
+        <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
                 <ListView AllowDrop="True" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" SelectionMode="Extended" ScrollViewer.IsScrollInertiaEnabled="True" x:Name="fileBox" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource CustomListItemStyle}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
+                    
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">
@@ -216,7 +221,7 @@
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>
         </StackPanel>
-        <StackPanel x:Name="filteringPanel" Orientation="Horizontal" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" Margin="20,0,0,10">
+        <StackPanel x:Name="filteringPanel" Visibility="Collapsed" Orientation="Horizontal" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" Margin="20,0,0,10">
             <TextBlock x:Name="sortTextBlock" Text="Sort By:" Visibility="Visible" VerticalAlignment="Center"></TextBlock>
             <Button Background="{x:Null}" BorderBrush="{x:Null}" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
                 <StackPanel>
@@ -246,6 +251,7 @@
                 </GridView.ItemTemplate>
             </GridView>
         </Grid>
+        
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}"/>
