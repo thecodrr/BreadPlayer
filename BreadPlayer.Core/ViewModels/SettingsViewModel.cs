@@ -276,7 +276,7 @@ namespace BreadPlayer.ViewModels
                         RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                    await NotificationManager.ShowMessageAsync(" Song(s) Loaded");
+                    await NotificationManager.ShowAsync(" Song(s) Loaded", "Loading...");
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
@@ -309,11 +309,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD:BreadPlayer.Core/ViewModels/SettingsViewModel.cs
                 await NotificationManager.ShowAsync(ex.Message, "");
-=======
-                await NotificationManager.ShowMessageAsync(ex.Message);
->>>>>>> origin/beta-1:BreadPlayer.Views.UWP/ViewModels/SettingsViewModel.cs
             }
         }
         /// <summary>
@@ -340,7 +336,7 @@ namespace BreadPlayer.ViewModels
                 if (count == 0)
                 {
                     string error = "No songs found!";
-                    await NotificationManager.ShowMessageAsync(error);
+                    await NotificationManager.ShowAsync(error);
                     return;
                 }
 
@@ -375,11 +371,7 @@ namespace BreadPlayer.ViewModels
                                         await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
                                     });
                                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-<<<<<<< HEAD:BreadPlayer.Core/ViewModels/SettingsViewModel.cs
                                     await NotificationManager.ShowAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", "Loading...");
-=======
-                                    await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded");
->>>>>>> origin/beta-1:BreadPlayer.Views.UWP/ViewModels/SettingsViewModel.cs
                                     if (TracksCollection.Elements.All(t => t.Title != mp3file.Title))
                                     {
                                         //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
@@ -390,7 +382,7 @@ namespace BreadPlayer.ViewModels
                             catch (Exception ex)
                             {
                                 //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                await NotificationManager.ShowAsync(ex.Message + " || Occured on: " + file.Path);
                                 failedCount++;
                             }
                         }
@@ -412,15 +404,11 @@ namespace BreadPlayer.ViewModels
                     catch (Exception ex)
                     {
                         string message1 = ex.Message + "||" + ex.InnerException;
-                        await NotificationManager.ShowMessageAsync(message1);
+                        await NotificationManager.ShowAsync(message1);
                     }
                 }
                 string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
-<<<<<<< HEAD:BreadPlayer.Core/ViewModels/SettingsViewModel.cs
                 await NotificationManager.ShowAsync(message);
-=======
-                await NotificationManager.ShowMessageAsync(message);
->>>>>>> origin/beta-1:BreadPlayer.Views.UWP/ViewModels/SettingsViewModel.cs
                 service.Dispose();
                 model = null;
             }
@@ -460,7 +448,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch
                 {
-                    await NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3file.OrginalFilename);
+                    await NotificationManager.ShowAsync("Failed to save album art of " + mp3file.OrginalFilename);
                 }
             }
         }
@@ -517,7 +505,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowMessageAsync(ex.Message);
+                await NotificationManager.ShowAsync(ex.Message);
             }
         }
 

@@ -22,6 +22,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using BreadPlayer.Core;
 using System.ComponentModel;
 using BreadPlayer.Models;
@@ -60,7 +61,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            this.timer = new DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
+            this.timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
@@ -175,11 +176,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {               
-<<<<<<< HEAD:BreadPlayer.Core/ViewModels/ShellViewModel.cs
                 DispatcherTimer timer = new DispatcherTimer();
-=======
-                DispatcherTimer timer = new DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
->>>>>>> origin/beta-1:BreadPlayer.Views.UWP/ViewModels/ShellViewModel.cs
                 if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
                 {
                     Reload().ConfigureAwait(false);
@@ -269,7 +266,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch
                 {
-                    await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
+                    await NotificationManager.ShowAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayNext();
