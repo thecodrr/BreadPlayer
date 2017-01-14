@@ -436,7 +436,6 @@
                                         <Setter Target="playlistBtn.Width" Value="355"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                        <Setter Target="TopStackPanel.Orientation" Value="Horizontal"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                         <Setter Target="NavTopMenuList.Margin" Value="-5,0,0,0"/>
@@ -450,6 +449,7 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                      
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
@@ -593,18 +593,9 @@
 
                             </Grid>
                         </SplitView>
-                        <StackPanel x:Name="TopStackPanel" VerticalAlignment="Top">
-                            <!--<ToggleButton x:Name="TogglePaneButtonNarrow"
-                                      TabIndex="1" Margin="0,10,0,0" Visibility="Collapsed"
-                                      Style="{StaticResource SplitViewTogglePaneButtonStyle}"
-                                      IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
-                                      AutomationProperties.Name="Menu1"
-                                      ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>-->
+                      <TextBlock Name="Title" Text="Bread Player" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="20" Margin="48,70,0,0"/>
 
-                            <TextBlock Name="Title" Text="Bread Player" FontWeight="SemiBold" FontSize="20" Margin="48,70,0,0"/>
-                            
-                        </StackPanel>
-                       
+
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
