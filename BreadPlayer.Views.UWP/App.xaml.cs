@@ -69,12 +69,7 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            if (!firsttime)
-            {
-                CoreWindowLogic.EnableDisableSmtc();
-            }
-            else
-                firsttime = false;
+            CoreWindowLogic.EnableDisableSmtc();
             CoreWindowLogic.isBackground = false;
             deferral.Complete();
         }
@@ -84,17 +79,12 @@ namespace BreadPlayer
             var deferral = e.GetDeferral();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc(true);
-            if(!firsttime)
-            {
-                CoreWindowLogic.EnableDisableSmtc();               
-            }
-            else
-                firsttime = false;
+            CoreWindowLogic.EnableDisableSmtc();
             await Task.Delay(200);
             CoreWindowLogic.isBackground = true;
             deferral.Complete();
         }
-        bool firsttime = true;
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -185,7 +175,7 @@ namespace BreadPlayer
             if (RequestedTheme == ApplicationTheme.Dark)
             {
                 view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
-                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);                
+                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 0);                
             }
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {              
