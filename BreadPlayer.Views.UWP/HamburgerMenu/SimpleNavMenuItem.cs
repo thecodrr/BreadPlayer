@@ -35,8 +35,23 @@ namespace SplitViewMenu
         public string FontGlyph { get; set; }
         object args;
         public object Arguments { get { return args; } set { Set(ref args, value); } }
-    
-        List<Shortcut> shortcuts = new List<Shortcut>() { new Shortcut() { SymbolAsChar = "\xE00E", ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.Frame.GoBack()) }, new Shortcut() { SymbolAsChar = "\xE110", ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.Frame.GoForward()) }, new Shortcut() { SymbolAsChar = "\xE149" }, new Shortcut { SymbolAsChar = "\xE80F" }, new Shortcut() { SymbolAsChar = "\xE094" } };
+
+        List<Shortcut> shortcuts = new List<Shortcut>()
+        {
+            new Shortcut() { SymbolAsChar = "\xE00E",
+                ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.Frame.GoBack()) },
+            new Shortcut() { SymbolAsChar = "\xE149",
+                ShortcutCommand = new DelegateCommand(() =>
+                {
+                    BreadPlayer.Services.NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
+                })},
+            new Shortcut { SymbolAsChar = "\xE80F",
+                ShortcutCommand = new DelegateCommand(() =>
+                {
+                    BreadPlayer.Services.NavigationService.Instance.NavigateToHome();
+                })},
+            new Shortcut() { SymbolAsChar = "\xE094", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
+        };
         public List<Shortcut> Shortcuts
         {
             get { return shortcuts; }

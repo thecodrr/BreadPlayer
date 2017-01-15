@@ -79,8 +79,8 @@
 
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Bread Collection" Arguments="Library" Symbol="Accept">
                     <controls:SimpleNavMenuItem.Shortcuts>
-                        <controls:Shortcut SymbolAsChar="&#xE71C;"/>
-                        <controls:Shortcut SymbolAsChar="&#xE174;"/>
+                        <controls:Shortcut SymbolAsChar="&#xE71C;" ShortcutFlyout="{StaticResource GenreFlyout}"/>
+                        <controls:Shortcut SymbolAsChar="&#xE174;" ShortcutFlyout="{StaticResource SortMenuFlyout}"/>
                     </controls:SimpleNavMenuItem.Shortcuts>
                 </controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Breads" Symbol="Accept"></controls:SimpleNavMenuItem>

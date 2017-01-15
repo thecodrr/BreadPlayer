@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"  xmlns:VM="using:BreadPlayer.ViewModels" xmlns:Services="using:BreadPlayer.Services"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"  xmlns:Behaviours="using:BreadPlayer.Behaviours" 
-    xmlns:local="using:SplitViewMenu" xmlns:blur="using:BreadPlayer.Effects"  xmlns:Converters="using:BreadPlayer.Converters">
+    xmlns:local="using:SplitViewMenu" xmlns:blur="using:BreadPlayer.Effects" xmlns:Animations="using:Microsoft.Xaml.Interactions.Media"  xmlns:Converters="using:BreadPlayer.Converters">
 
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
     <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>
@@ -457,21 +457,15 @@
                                    CompactPaneLength="48"
                                    IsTabStop="False" 
                                   PaneBackground="{ThemeResource ThemeBackground}">
+                            <SplitView.Resources>
+                                <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">                                  
+                                    <DoubleAnimation Storyboard.TargetName="searchBox"
+                                                   Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
+                                </Storyboard>
+                            </SplitView.Resources>
                             <SplitView.Pane>
                                 <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" >
-                                    <AutoSuggestBox x:Name="searchBox" Visibility="Collapsed"  AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="5,58,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
-                                        <AutoSuggestBox.QueryIcon>
-                                            <FontIcon Glyph="&#xe721;"/>
-                                        </AutoSuggestBox.QueryIcon>
-                                        <Interactivity:Interaction.Behaviors>
-                                            <Core:EventTriggerBehavior EventName="KeyUp">
-                                                <Core:EventTriggerBehavior.Actions>
-                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}"/>
-                                                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource ShellVM}}"/>-->
-                                                </Core:EventTriggerBehavior.Actions>
-                                            </Core:EventTriggerBehavior>
-                                        </Interactivity:Interaction.Behaviors>
-                                    </AutoSuggestBox>
+                                   
                                     <Grid x:Name="UpperGrid" Margin="0,50,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
@@ -492,7 +486,7 @@
 
                                                 <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="1" 
+                                                       TabIndex="3" SelectedIndex="3" 
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
@@ -561,7 +555,7 @@
                                     <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
+                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                         <ItemsControl.ItemsPanel>
@@ -570,6 +564,34 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
+                                    <AutoSuggestBox x:Name="searchBox" Visibility="Visible" Opacity="0" HorizontalAlignment="Left" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="50,110,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                        <AutoSuggestBox.RenderTransform>
+                                            <TranslateTransform X="0"/>
+                                        </AutoSuggestBox.RenderTransform>
+                                        <AutoSuggestBox.QueryIcon>
+                                            <FontIcon Glyph="&#xe721;"/>
+                                        </AutoSuggestBox.QueryIcon>
+                                        <Interactivity:Interaction.Behaviors>
+                                            <Core:EventTriggerBehavior EventName="KeyUp">
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}"/>
+                                                    <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource ShellVM}}"/>-->
+                                                </Core:EventTriggerBehavior.Actions>
+                                            </Core:EventTriggerBehavior>
+                                            <Core:EventTriggerBehavior EventName="LostFocus">
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Animations:ControlStoryboardAction ControlStoryboardOption="Play">
+                                                        <Animations:ControlStoryboardAction.Storyboard>
+                                                            <Storyboard Duration="0:0:0.5">
+                                                                <DoubleAnimation Storyboard.TargetName="searchBox"
+                                                   Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
+                                                            </Storyboard>
+                                                        </Animations:ControlStoryboardAction.Storyboard>
+                                                    </Animations:ControlStoryboardAction>
+                                                </Core:EventTriggerBehavior.Actions>
+                                            </Core:EventTriggerBehavior>
+                                        </Interactivity:Interaction.Behaviors>
+                                    </AutoSuggestBox>
                                     <!--<StackPanel >
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE00F;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE110;" Style="{StaticResource HyperlinkBtn}"/>

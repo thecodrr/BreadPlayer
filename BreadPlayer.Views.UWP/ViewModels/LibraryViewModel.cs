@@ -73,7 +73,7 @@ namespace BreadPlayer.ViewModels
             if (plist != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddPlaylistAsync(plist, false);                
+                await AddPlaylistAsync(plist, false);
             }
         }
         void HandlePlaySongMessage(Message message)
@@ -112,18 +112,18 @@ namespace BreadPlayer.ViewModels
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
-           if(RecentlyPlayedCollection.Count <= 100)
-            {              
+            if (RecentlyPlayedCollection.Count <= 100)
+            {
                 RecentlyPlayedCollection.RemoveAt(RecentlyPlayedCollection.Count + 1);
             }
-        }        
+        }
         private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
             string param = (e.Parameter ?? String.Empty).ToString();    // e.Parameter can be null and throw exception
             if (e.SourcePageType == typeof(LibraryView))
-            {                
-                if (param == "Recent")              
-                   ChangeView("Recently Played", false, RecentlyPlayedCollection);                
+            {
+                if (param == "Recent")
+                    ChangeView("Recently Played", false, RecentlyPlayedCollection);
                 else
                     ChangeView("Music Library", libgrouped, TracksCollection.Elements);
                 await RefreshSourceAsync().ConfigureAwait(false);
@@ -143,7 +143,7 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Properties  
-       
+
         private List<string> _alphabetList;
         public List<string> AlphabetList
         {
@@ -161,7 +161,7 @@ namespace BreadPlayer.ViewModels
                     recentCol = LibraryService.GetRecentCollection();
                 return recentCol; }
             set { Set(ref recentCol, value); }
-        }      
+        }
         LibraryService libraryservice;
         public LibraryService LibraryService
         {
@@ -195,7 +195,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _sort, value);
-               ApplicationData.Current.RoamingSettings.Values["Sort"] = Sort;
+                ApplicationData.Current.RoamingSettings.Values["Sort"] = Sort;
             }
         }
         Mediafile selectedItem;
@@ -204,7 +204,7 @@ namespace BreadPlayer.ViewModels
             get { return selectedItem; }
             set { Set(ref selectedItem, value); }
         }
-      
+
         int songCount;
         public int SongCount
         {
@@ -253,7 +253,7 @@ namespace BreadPlayer.ViewModels
         {
             get { return genreFlyout; }
             set { Set(ref genreFlyout, value); }
-        }
+        } 
         Mediafile _mediaFile;
         /// <summary>
         /// Gets or Sets <see cref="BreadPlayer.Models.Mediafile"/> for this ViewModel
@@ -605,8 +605,7 @@ namespace BreadPlayer.ViewModels
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
             {
-                GenreFlyout = new MenuFlyout();
-                GenreFlyout.MenuFlyoutPresenterStyle = App.Current.Resources["CustomFlyoutPresenter"] as Style;
+                GenreFlyout = Application.Current.Resources["GenreFlyout"] as MenuFlyout;
                 Genre = "All genres";
                 GenreFlyout.Items.Add(CreateMenuItem("All genres"));
                 foreach (var genre in TracksCollection.Elements)

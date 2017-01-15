@@ -25,6 +25,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace SplitViewMenu
@@ -152,7 +153,7 @@ namespace SplitViewMenu
             _splitView = GetTemplateChild("RootSplitView") as SplitView;
 
             _pageFrame = GetTemplateChild("PageFrame") as Frame;
-            NavService = new NavigationService(ref _pageFrame);
+            NavService = new NavigationService(ref _pageFrame, typeof(LibraryView));
             _searchBox = GetTemplateChild("searchBox") as AutoSuggestBox;
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
@@ -192,18 +193,31 @@ namespace SplitViewMenu
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
+            UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
         }
+        public static DelegateCommand SearchClickedCommand()
+        {
+            DelegateCommand cmd = new DelegateCommand(() =>
+            {
+                (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard).Begin();
+                _searchBox.Focus(FocusState.Programmatic);
+                (shortcuts.Items[3] as Shortcut).ShortcutCommand.IsEnabled = false;
+                _searchBox.LostFocus += (sender, e) => (shortcuts.Items[3] as Shortcut).ShortcutCommand.IsEnabled = true;
+            });
+            return cmd;
+        }
+
+       
 
         private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            if (_navTopMenuListView.SelectedIndex != 1)
+            if (_navTopMenuListView.SelectedIndex != 3)
             {
-                _navTopMenuListView.SelectedIndex = 1;
+                _navTopMenuListView.SelectedIndex = 3;
                 _pageFrame.Navigated += _pageFrame_Navigated;
-                _pageFrame.Navigate(typeof(LibraryView));            
+                _pageFrame.Navigate(typeof(LibraryView));
             }
-        }
-
+        }       
         private void _pageFrame_Navigated(object sender, NavigationEventArgs e)
         {
             var page = e.Content as Page;
@@ -212,6 +226,7 @@ namespace SplitViewMenu
                 var control = page;
                 control.Loaded += Control_Loaded; ;
             }
+           
         }
 
         private void Control_Loaded(object sender, RoutedEventArgs e)
@@ -281,7 +296,12 @@ namespace SplitViewMenu
             {
                 var control = page;
                 control.Loaded += PageLoaded;
-            }          
+            }
+            if (e.Parameter?.ToString() == "Home")
+            {
+                _navTopMenuListView.SelectedIndex = 3;
+                UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
+            }
         }
         public static void UnSelectAll()
         {
@@ -294,6 +314,10 @@ namespace SplitViewMenu
         {
             ((Page) sender).Focus(FocusState.Programmatic);
             ((Page) sender).Loaded -= PageLoaded;
+        }
+        public static object GetParameterFromSelectedItem()
+        {
+            return LastItem.Arguments;
         }
         INavigationMenuItem GetItemFromList(Type sourcePagetype)
         {
@@ -361,13 +385,16 @@ namespace SplitViewMenu
                     container.IsTabStop = true;
             }
         }
-
-        private void OnNavMenuItemInvoked(object sender, ListViewItem e)
-        {         
-            var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
+        void UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
+        {
             _headerText.DataContext = item;
             shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
             shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
+        }
+        private void OnNavMenuItemInvoked(object sender, ListViewItem e)
+        {         
+            var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
+            UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&

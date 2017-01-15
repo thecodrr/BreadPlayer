@@ -39,6 +39,8 @@ namespace SplitViewMenu
             ItemClick += ItemClickedHandler;
         }
 
+      
+
         private void OnLoaded(object o, RoutedEventArgs e)
         {
             var parent = VisualTreeHelper.GetParent(this);
@@ -54,7 +56,7 @@ namespace SplitViewMenu
             _splitViewHost.RegisterPropertyChangedCallback(SplitView.IsPaneOpenProperty,
                 (_, __) => { OnPaneToggled(); });
 
-            OnPaneToggled();
+            OnPaneToggled();            
         }
 
         protected override void OnApplyTemplate()
@@ -153,7 +155,7 @@ namespace SplitViewMenu
                 control?.Focus(FocusState.Programmatic);
             }
         }
-
+      
         private void ItemClickedHandler(object sender, ItemClickEventArgs e)
         {
             var item = ContainerFromItem(e.ClickedItem);

@@ -20,14 +20,7 @@
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
     <Page.Resources>
 
-        <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
-            <MenuFlyoutItem Text="Unsorted" Tag="Unsorted" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-            <MenuFlyoutItem Text="Year" Tag="Year" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-            <MenuFlyoutItem Text="Genre" Tag="Genre" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-            <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-            <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-            <MenuFlyoutItem Text="Album" Tag="Album" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-        </MenuFlyout>
+    
 
         <DataTemplate x:Key="MobileJumpListItemTemplate">
             <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
@@ -57,9 +50,6 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="filteringPanel.Visibility" Value="Visible" />
-                        <Setter Target="sortTextBlock.Visibility" Value="Visible" />
-                        <Setter Target="sortSelect.FontSize" Value="15" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -68,8 +58,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="headerText.FontSize" Value="44" />
-                        <Setter Target="sortTextBlock.Visibility" Value="Collapsed" />
-                        <Setter Target="sortLabel.Visibility" Value="Visible" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -78,8 +66,6 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="sortTextBlock.Visibility" Value="Collapsed" />
-                        <Setter Target="sortLabel.Visibility" Value="Visible" />
                         <Setter Target="headerText.FontSize" Value="20" />
                         <Setter Target="headerText.RequestedTheme" Value="Dark" />
                         <Setter Target="headerText.Margin" Value="50,10,0,0" />
@@ -220,25 +206,7 @@
         <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibilty}}">
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>
-        </StackPanel>
-        <StackPanel x:Name="filteringPanel" Visibility="Collapsed" Orientation="Horizontal" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Column="1" Margin="20,0,0,10">
-            <TextBlock x:Name="sortTextBlock" Text="Sort By:" Visibility="Visible" VerticalAlignment="Center"></TextBlock>
-            <Button Background="{x:Null}" BorderBrush="{x:Null}" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
-                <StackPanel>
-                    <TextBlock x:Name="sortLabel" RequestedTheme="{Binding ElementName=headerText,Path=RequestedTheme}" Text="Sort by:" FontSize="9" TextAlignment="Center" Visibility="Collapsed"/>
-                    <TextBlock x:Name="sortSelect" RequestedTheme="{Binding ElementName=headerText,Path=RequestedTheme}" Text="{Binding Sort, FallbackValue=Unsorted}" FontSize="12" />
-                </StackPanel>
-            </Button>
-            <!--<TextBlock Text="Filter:" Visibility="{Binding ElementName=sortTextBlock, Path=Visibility}" VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
-            <Button Content="All"  Background="{x:Null}" BorderBrush="{x:Null}" Margin="3,0,0,0" Flyout="{StaticResource SortMenuFlyout}" VerticalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Height="72"/>-->
-            <TextBlock Text="Genre:" RequestedTheme="{Binding ElementName=headerText,Path=RequestedTheme}" Visibility="{Binding ElementName=sortTextBlock, Path=Visibility}"  VerticalAlignment="Center" Margin="30,0,0,0"></TextBlock>
-            <Button x:Name="genres" RequestedTheme="{Binding ElementName=headerText,Path=RequestedTheme}" Background="{x:Null}" Margin="3,0,0,0" BorderBrush="{x:Null}" Flyout="{Binding GenreFlyout}" VerticalAlignment="Stretch" Style="{StaticResource HyperlinkBtn}">
-                <StackPanel>
-                    <TextBlock x:Name="genreLabel" Visibility="{Binding ElementName=sortLabel, Path=Visibility}" Text="Genre:" FontSize="9" TextAlignment="Center"/>
-                    <TextBlock Text="All genres" FontSize="{Binding ElementName=sortSelect, Path=FontSize}"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
+        </StackPanel>        
         <Grid Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed" Background="{ThemeResource ThemeBackground}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
