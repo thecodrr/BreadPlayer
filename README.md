@@ -16,16 +16,16 @@
 [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle)
 
 ##Current Status:
-### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle) to check out the new features! 
+#### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle) to check out the new features! 
 
-###Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
+#### Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
 ### Alpha Preview (Video):
 [![Introducing Bread Player - Alpha Preview](http://i.imgur.com/DOhQP0A.png)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
 ### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
 ![Imgur](http://i.imgur.com/5lUUhBH.jpg)
 
-###Main Features:
+### Main Features:
 1. Flawlessly plays all major formats (mp3, wav, flac, ogg, aiff etc.)! 
 2. Full functional music library with sorting, filtering, search etc.
 3. Amazing performance i.e. ability to import 12000 songs in 120s with complete tags and album arts.
@@ -35,13 +35,27 @@
 7. Loading songs from Windows Explorer
 8. Drag/Drop songs directly into library.
 
-##About the project:
-This project is being developed to acknowledge and rectify the scarcity of Music players in Windows 10 Store and also to provide flawless and feature-rich Music player to the end-user. It is still in a very **experimental stage**. [Go here to get an idea of where the project's going.](https://github.com/theweavrs/BreadPlayer/wiki/Road-to-the-first-release)
-###Why the name change?
-Basically, the main reason behind the name change is that the previous one didn't make any sense but aside from that it wasn't SEO friendly. Who would _ever_ search for the word _Macalifa_? :D The second reason that is why we chose **Bread Player**, is because it is catchy and it invokes curiousity; furthermore, it has a nice ring to it and it is metaphoric...you know breads and burgers :D
+### What Happens Next?
+**Development on Beta version has started.** 
+#### Beta Feature List:
 
-###What Happens Next?
-We will probably start the development of **Beta Version** after _Alpha_ is released. **Beta-Feature List will be published soon.** 
+- [ ] 1. Equalizer/Effects
+- [ ] 2. Most Played, Recently Added, Favorites and Now Playing section
+- [ ] 3. Prevent screen from locking.
+- [ ] 4. Stop playing after this song.
+- [ ] 5. .lrc lyrics (Synchronized lyrics) and unsynced lyrics.
+- [ ] 6. Ability to hide a specific folder and its songs.
+- [ ] 7. Private Playlists
+- [ ] 8. Ability to relocate (change location) of a song.
+- [ ] 9. Fade in/out when changing the song.
+- [ ] 10. Last.fm Scrobbling.
+- [ ] 11. SoundCloud Support
+- [ ] 12. Manual adding of Album arts
+- [x] 13. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
+- [ ] 14. _Initiate Android Support._
+ 
+_Note: All of these features might not reach the next Beta and some might be postponed due to obvious reasons. **Any help regarding these features including testing, research, code contribution, will be highly appreciated.**_
+
 ###Libraries used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
