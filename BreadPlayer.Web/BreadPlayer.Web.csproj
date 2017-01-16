@@ -1,22 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{8BAA2DC7-9675-480F-A9F5-8D8D6245689B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BreadPlayer.Core</RootNamespace>
-    <AssemblyName>BreadPlayer.Core</AssemblyName>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <RootNamespace>BreadPlayer.Web</RootNamespace>
+    <AssemblyName>BreadPlayer.Web</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -54,57 +73,43 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\Collections.cs" />
-    <Compile Include="Common\DelegateCommand.cs" />
-    <Compile Include="Common\Enums.cs" />
-    <Compile Include="Common\INotificationManager.cs" />
-    <Compile Include="Events\MediaEndedEventArgs.cs" />
-    <Compile Include="Events\MediaStateChangedEventArgs.cs" />
-    <Compile Include="Extensions\ObservableCollection.cs" />
-    <Compile Include="InitializeCore.cs" />
-    <Compile Include="Models\Album.cs" />
-    <Compile Include="Models\Mediafile.cs" />
-    <Compile Include="Models\Playlist.cs" />
-    <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />
-    <Compile Include="PlayerWrapper\Effects.cs" />
-    <Compile Include="PlayerWrapper\NativeMethods.cs" />
-    <Compile Include="PortableAPIs\DispatcherTimer.cs" />
+    <Compile Include="123music\API.cs" />
+    <Compile Include="123music\Endpoints.cs" />
+    <Compile Include="123music\Track.cs" />
+    <Compile Include="Lastfm\BreadScrobbler.cs" />
+    <Compile Include="Lastfm\InitializeLastfm.cs" />
+    <Compile Include="Lastfm\Lastfm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
-      <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
-      <Name>BreadPlayer.Framework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="app.config" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ManagedBass">
-      <HintPath>..\..\ManagedBass\src\Portable\bin\Release\ManagedBass.dll</HintPath>
+    <Reference Include="PCLStorage">
+      <HintPath>..\..\PCLStorage\src\PCLStorage\bin\Debug\PCLStorage.dll</HintPath>
     </Reference>
-    <Reference Include="ManagedBass.PInvoke">
-      <HintPath>..\..\ManagedBass.PInvoke\src\Portable\bin\Release\ManagedBass.PInvoke.dll</HintPath>
+    <Reference Include="PCLStorage.Abstractions">
+      <HintPath>..\..\PCLStorage\src\PCLStorage\bin\Debug\PCLStorage.Abstractions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

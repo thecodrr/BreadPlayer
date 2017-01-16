@@ -46,6 +46,8 @@ using Windows.ApplicationModel.Core;
 using SamplesCommon;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI;
+using BreadPlayer.Web.Lastfm;
+using IF.Lastfm.Core.Api;
 
 namespace BreadPlayer
 {
@@ -63,17 +65,8 @@ namespace BreadPlayer
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
-
-            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, a) =>
-            //{
-            //    var ignored = false;
-            //    hamburgerMenu.BackRequested(ref ignored);
-            //    a.Handled = true;
-            //};
-            
         }
-       
+           
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter is StorageFile)

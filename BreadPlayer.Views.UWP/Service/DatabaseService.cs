@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
-using LiteDB.Platform;
 using Windows.Storage;
 using BreadPlayer.Models;
 using System.Diagnostics;
@@ -35,7 +34,6 @@ namespace BreadPlayer.Service
         public LiteCollection<Mediafile> recent;
         public DatabaseService()
         {
-            LitePlatform.Initialize(new LitePlatformWindowsStore());
             CreateDB();
         }
         bool isValid;
@@ -44,8 +42,9 @@ namespace BreadPlayer.Service
         {
             try
             {
-                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db;password=helloall;journal=true;");
-                IsValid = db.DbVersion.ToString() != "";
+                var disk = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db", new FileOptions() { FileMode = FileMode.Exclusive, Journal= true });
+                db = new LiteDatabase(disk);
+                IsValid = db.Engine != null;
                 if (IsValid)
                 {
                     tracks = db.GetCollection<Mediafile>("tracks");
@@ -60,6 +59,7 @@ namespace BreadPlayer.Service
                     CreateDB();
                 }
                 GetTrackCount();
+                db.Dispose();
             }
             catch(Exception)
             {

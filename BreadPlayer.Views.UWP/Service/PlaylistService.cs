@@ -1,6 +1,5 @@
 ﻿using BreadPlayer.Models;
 using LiteDB;
-using LiteDB.Platform;
 using System;
 using Windows.Storage;
 
@@ -13,8 +12,9 @@ namespace BreadPlayer.Service
         public override async void CreateDB()
         {
             System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
-            db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db;journal=false;");
-            IsValid = db.DbVersion.ToString() != "";
+            var disk = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db", new FileOptions() { FileMode = FileMode.Exclusive, Journal = true });
+            db = new LiteDatabase(disk);
+            IsValid = db.Engine != null;
             if (IsValid)
             {
                 tracks = db.GetCollection<Mediafile>("songs");
@@ -29,7 +29,6 @@ namespace BreadPlayer.Service
         }
         public PlaylistService(string name)
         {
-            LitePlatform.Initialize(new LitePlatformWindowsStore());
             Name = name;
             CreateDB();
         }
