@@ -11,7 +11,7 @@
 [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
  
-[![alpha](https://img.shields.io/badge/alpha-v1.1.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.1-alpha)
+[![alpha](https://img.shields.io/badge/alpha-v1.2.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.2-alpha)
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
 [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle)
 
