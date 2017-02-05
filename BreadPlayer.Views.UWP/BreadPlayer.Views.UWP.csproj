@@ -135,6 +135,8 @@
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
+    <Compile Include="BreadLogger\AsyncFileTarget.cs" />
+    <Compile Include="BreadLogger\BLogger.cs" />
     <Compile Include="Common\BackDrop.cs" />
     <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DeviceInfoHelper.cs" />
@@ -144,10 +146,12 @@
     <Compile Include="Common\RoamingSettingsHelper.cs" />
     <Compile Include="Common\StringCompressor.cs" />
     <Compile Include="Common\SurfaceLoader.cs" />
+    <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\MediafileToPropertyStringConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
+    <Compile Include="Converters\SortSettingToFormattedStringConverter.cs" />
     <Compile Include="Converters\StringToIconConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
@@ -182,6 +186,8 @@
     <Compile Include="Service\LibraryService.cs" />
     <Compile Include="Service\NavigationService.cs" />
     <Compile Include="Service\PlaylistService.cs" />
+    <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
+    <Compile Include="StateTriggers\ITriggerValue.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
@@ -407,6 +413,14 @@
       <Project>{8baa2dc7-9675-480f-a9f5-8d8d6245689b}</Project>
       <Name>BreadPlayer.Web</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="XLog">
+      <HintPath>..\..\XLog\Bin\Release\AnyCPU\XLog\XLog.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -37,6 +37,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 
 namespace BreadPlayer.ViewModels
 {
@@ -57,15 +58,32 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region MessageHandling
+        void HandleSearchStartedMessage(Message message)
+        {
+            if (message.Payload != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                if (!Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                    Header = message.Payload.ToString();
+            }
+        }
         void HandleDisposeMessage()
         {
             Reset();
         }
         void HandleUpdateSongCountMessage(Message message)
         {
-            var count = (Int16)message.Payload;
-            message.HandledStatus = MessageHandledStatus.HandledCompleted;
-            SongCount = Convert.ToInt32(count);
+            if (message.Payload is short)
+            {
+                var count = (short)message.Payload;
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                SongCount = Convert.ToInt32(count);
+                IsLibraryLoading = true;
+            }
+            else
+            {
+                IsLibraryLoading = false;
+            }
         }
         async void HandleAddPlaylistMessage(Message message)
         {
@@ -107,6 +125,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
             Messenger.Instance.Register(MessageTypes.MSG_ADD_PLAYLIST, new Action<Message>(HandleAddPlaylistMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleUpdateSongCountMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_SEARCH_STARTED, new Action<Message>(HandleSearchStartedMessage));
         }
 
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -175,6 +194,12 @@ namespace BreadPlayer.ViewModels
         {
             get { return viewSource; }
             set { Set(ref viewSource, value); }
+        }
+        bool isMultiSelectModeEnabled = false;
+        public bool IsMultiSelectModeEnabled
+        {
+            get { return isMultiSelectModeEnabled; }
+            set { Set(ref isMultiSelectModeEnabled, value); }
         }
         string _header;
         public string Header
@@ -253,15 +278,15 @@ namespace BreadPlayer.ViewModels
         {
             get { return genreFlyout; }
             set { Set(ref genreFlyout, value); }
-        } 
-        Mediafile _mediaFile;
+        }
+        bool isLibraryLoading;
         /// <summary>
         /// Gets or Sets <see cref="BreadPlayer.Models.Mediafile"/> for this ViewModel
         /// </summary>
-        public Mediafile Mediafile
+        public bool IsLibraryLoading
         {
-            get { return _mediaFile; }
-            set { Set(ref _mediaFile, value); }
+            get { return isLibraryLoading; }
+            set { Set(ref isLibraryLoading, value); }
         }
         #endregion
 
@@ -273,7 +298,12 @@ namespace BreadPlayer.ViewModels
         RelayCommand _addtoplaylistCommand;   
         RelayCommand _refreshViewCommand;
         RelayCommand _initCommand;
-      
+        DelegateCommand changeSelectionModeCommand;
+        public ICommand ChangeSelectionModeCommand
+        {
+            get
+            { if (changeSelectionModeCommand == null) { changeSelectionModeCommand = new DelegateCommand(ChangeSelectionMode); } return changeSelectionModeCommand; }
+        }
         /// <summary>
         /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -317,22 +347,26 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Implementations    
+        #region Implementations  
+        void ChangeSelectionMode()
+        {
+            IsMultiSelectModeEnabled = IsMultiSelectModeEnabled ? false : true;
+        }
         /// <summary>
         /// Refreshes the view with new sorting order and/or filtering. <seealso cref="RefreshViewCommand"/>
         /// </summary>
         /// <param name="para"><see cref="MenuFlyoutItem"/> to get sorting/filtering base from.</param>
-        void RefreshView(object para)
+        async void RefreshView(object para)
         {
             MenuFlyoutItem selectedItem = para as MenuFlyoutItem;
             if (selectedItem.Tag.ToString() == "genre")
             {
                 Genre = selectedItem.Text;
-                RefreshView(Genre, null, false);
+                await RefreshView(Genre, null, false).ConfigureAwait(false);
             }
             else
             {
-                RefreshView(null, selectedItem.Tag.ToString());
+                await RefreshView(null, selectedItem.Tag.ToString()).ConfigureAwait(false);
             }
         }
         /// <summary>
@@ -361,9 +395,9 @@ namespace BreadPlayer.ViewModels
                     SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-             
+                BLogger.Logger.Error("Error occured while deleting a song from collection and list.", ex);
             }
         }
 
@@ -455,7 +489,14 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-    
+        public void PlayOnTap(object sender, TappedRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
+            {
+                var mediafile = (e.OriginalSource as Border).Tag;
+                Play(mediafile);
+            }
+        }
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -501,21 +542,29 @@ namespace BreadPlayer.ViewModels
                     ViewSource.Source = TracksCollection.Elements;
 
                 ViewSource.IsSourceGrouped = group;
-                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false), true);              
+                await SplitList(300).ConfigureAwait(false);
             });
         }
-
+        public async Task SplitList(int nSize = 30)
+        {
+            for (int i = 0; i < SongCount; i += nSize)
+            {
+                TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
+            }
+        }
         /// <summary>
         /// Refresh the view, based on filters and sorting mechanisms.
         /// </summary>
-        public async void RefreshView(string genre = "All genres", string propName = "Title", bool doOrderFiles = true)
+        public async Task RefreshView(string genre = "All genres", string propName = "Title", bool doOrderFiles = true)
         {
             if (doOrderFiles)
             {
                 Sort = propName;
                 if (propName != "Unsorted")
                 {
-                    if (files == null)
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                    {
+                        if (files == null)
                         files = TracksCollection.Elements;
                     grouped = true;
                     TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
@@ -523,10 +572,10 @@ namespace BreadPlayer.ViewModels
                     ViewSource.IsSourceGrouped = true;
                     TracksCollection.AddRange(files, true, false);
                     TracksCollection.CollectionChanged += TracksCollection_CollectionChanged1;
-                    if(propName == "Year")
-                        AlphabetList = TracksCollection.Keys.ToList();
-                    else
-                        AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
+                        UpdateJumplist(propName);
+
+                        await RemoveDuplicateGroups();
+                    });
                 }
                 else
                 {
@@ -552,10 +601,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void TracksCollection_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            await RemoveDuplicateGroups().ConfigureAwait(false);
-            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-        }
+        { }
         async Task RemoveDuplicateGroups()
         {
             //the only workaround to remove the first group which is a 'false' duplicate really.
@@ -563,6 +609,7 @@ namespace BreadPlayer.ViewModels
             { 
                 if (ViewSource.IsSourceGrouped)
                 {
+                    UpdateJumplist(Sort);
                     ViewSource.IsSourceGrouped = false;
                     ViewSource.IsSourceGrouped = true;
                 }
@@ -575,9 +622,22 @@ namespace BreadPlayer.ViewModels
             {
                 f = t => StartsWithLetter(GetPropValue(t, propName) as string) ? (GetPropValue(t, propName) as string).Remove(1).ToUpper() : StartsWithNumber(GetPropValue(t, propName) as string) ? "#" : StartsWithSymbol(GetPropValue(t, propName) as string) ? "&" : (GetPropValue(t, propName) as string); //determine whether the Title, by which groups are made, start with number, letter or symbol. On the basis of that we define the Key for each Group.
             }
-            else if(propName == "Year")
+            else if (propName == "Year")
             {
                 f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Year" : GetPropValue(t, propName) as string;
+            }
+            else if (propName == "Length")
+            {
+                string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" };
+                f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) || GetPropValue(t, propName) as String == "0:00" ? "Unknown Length" : Math.Round((TimeSpan.ParseExact((GetPropValue(t, propName) as String), timeformats, System.Globalization.CultureInfo.InvariantCulture).TotalMinutes)).ToString() + " minutes";
+            }
+            else if (propName == "TrackNumber")
+            {
+                f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Track No." : (GetPropValue(t, propName) as String);
+            }
+            else if (propName == "FolderPath")
+            {
+                f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Folder" : new DirectoryInfo((GetPropValue(t, propName) as String)).FullName;
             }
             else
             {
@@ -585,7 +645,27 @@ namespace BreadPlayer.ViewModels
             }
             return f;
         }
-
+        void UpdateJumplist(string propName)
+        {
+            if (propName == "Year" || propName == "TrackNumber")
+            {
+                AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+            }
+            else if (propName == "Length")
+            {
+                AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+            }
+            else if (propName == "FolderPath")
+            {
+                AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
+                AlphabetList.Sort();
+            }
+            else
+            {
+                AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
+            }
+            AlphabetList.Sort();
+        }
         bool StartsWithLetter(string input)
         {
             return Regex.Match(input.Remove(1), "[a-zA-Z]").Success;
@@ -659,12 +739,15 @@ namespace BreadPlayer.ViewModels
                                     await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
                                     AddMediafile(mp3file);
                                 }
-                                catch { }
+                                catch (Exception ex)
+                                {
+                                    BLogger.Logger.Error("Error occured while drag/drop operation.", ex);
+                                }
                             }
                         }
                         else if (item.IsOfType(StorageItemTypes.Folder))
                         {
-                          // await SettingsViewModel.AddFolderToLibraryAsync((item as StorageFolder).CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions()));
+                           await SettingsVM.AddFolderToLibraryAsync((item as StorageFolder).CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions()));
                         }
 
                     }
@@ -725,30 +808,38 @@ namespace BreadPlayer.ViewModels
         {
             if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
             {
-                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
+                await RemoveDuplicateGroups().ConfigureAwait(false);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
             }           
         }
-
+        bool libraryLoaded = false;
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
-            if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+            if (!libraryLoaded)
             {
-                var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
+                libraryLoaded = true;
+                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+                {
+                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                    foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
+                }
+                string path = RoamingSettingsHelper.GetSetting<string>("path", "");
+                if (TracksCollection.Elements.Any(t => t.Path == path))
+                {
+                    TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
+                }
+                await CreateGenreMenu().ConfigureAwait(false);
+                BLogger.Logger.Info("Library successfully loaded!");
+                await NotificationManager.ShowMessageAsync("Library successfully loaded!");
+                await Task.Delay(10000);
+                Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
             }
-            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
-            if (TracksCollection.Elements.Any(t => t.Path == path))
-            {
-                TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
-            }
-            await CreateGenreMenu().ConfigureAwait(false);
-            await NotificationManager.ShowMessageAsync("Library successfully loaded!");
-            await Task.Delay(10000);
-            Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
         }
-       
+
         #endregion
 
         #region Playlist Methods
@@ -796,7 +887,11 @@ namespace BreadPlayer.ViewModels
                 Title = title,
                 Text = playlistName,
                 Description = desc
-            };          
+            };
+            if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+            else
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
                 var Playlist = new Playlist();

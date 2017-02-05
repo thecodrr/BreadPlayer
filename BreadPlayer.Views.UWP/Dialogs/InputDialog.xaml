@@ -11,8 +11,8 @@
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-    <StackPanel Width="498">
-        <TextBox x:Name="text" Header="*Name:" Text="{Binding ElementName=InputDia, Path=Text, Mode=TwoWay}" />
-        <TextBox x:Name="desc" Header="Description (Optional):" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,0,0,0"/>
-    </StackPanel>
+  <StackPanel Width="{Binding ElementName=InputDia, Path=DialogWidth, UpdateSourceTrigger=Explicit}">
+    <TextBox x:Name="text" Header="Name:" Text="{Binding ElementName=InputDia, Path=Text, Mode=TwoWay}" />
+    <TextBox x:Name="desc" Header="Description (Optional):" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,0,0,0"/>
+  </StackPanel>
 </ContentDialog>

@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "ksemenenko.ColorThief": "1.1.0.2",
-    "LiteDB": "3.0.0",
+    "lightbuzz-smtp": "1.8.0",
     "ManagedBass": "1.0.2",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Toolkit.Uwp.Notifications": "1.2.0",

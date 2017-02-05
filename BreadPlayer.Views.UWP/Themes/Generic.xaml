@@ -326,7 +326,7 @@
     </Style>
 
     <DataTemplate x:Key="NavMenuItemTemplate">
-        <Grid>
+        <Grid ToolTipService.ToolTip="{Binding Path=Tooltip}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="38" />
                 <ColumnDefinition />
@@ -338,7 +338,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="NavMenuItemTemplateLight">
-        <Grid>
+        <Grid ToolTipService.ToolTip="{Binding Path=Tooltip}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="38" />
                 <ColumnDefinition />

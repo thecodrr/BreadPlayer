@@ -34,6 +34,7 @@ using BreadPlayer.Models;
 using System.Text;
 using System.Xml;
 using System.IO;
+using Windows.Storage.Streams;
 
 namespace BreadPlayer
 {
@@ -62,33 +63,14 @@ namespace BreadPlayer
                     Player.PlayerState = PlayerState.Paused;
                     try
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume }); 
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
                     }
-                    catch (UnauthorizedAccessException) { }
-                }
-            }
-
-            var folderPaths = RoamingSettingsHelper.GetSetting<string>(foldersKey, null);
-            if (folderPaths != null)
-            {
-                foreach (var folder in folderPaths.Split('|'))
-                {
-                    if (!string.IsNullOrEmpty(folder))
+                    catch (UnauthorizedAccessException ex)
                     {
-                        var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
-                        SettingsVM.LibraryFoldersCollection.Add(storageFolder);
+                        BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
                     }
                 }
             }
-           
-        }
-
-        //
-        //we will replace this later
-        private static void LibVM_MusicLibraryLoaded()
-        {
-           // 
-          //  ShellVM.UpcomingSong = await ShellVM.GetUpcomingSong().ConfigureAwait(false);
         }
 
         public static void SaveSettings()
@@ -109,13 +91,13 @@ namespace BreadPlayer
         #region SystemMediaTransportControls Methods/Events
         static MediaPlayer player;
         public static void InitSmtc()
-        {           
+        {
             player = new MediaPlayer();
             player.CommandManager.IsEnabled = false;
             player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
-            _smtc.IsEnabled = false;
+            _smtc.IsEnabled = true;
             _smtc.IsPlayEnabled = true;
             _smtc.IsPauseEnabled = true;
             _smtc.IsStopEnabled = true;
@@ -123,7 +105,7 @@ namespace BreadPlayer
             _smtc.IsPreviousEnabled = true;
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
-            Player.MediaStateChanged += Player_MediaStateChanged;  
+            Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -143,33 +125,26 @@ namespace BreadPlayer
                 }
             });
         }
-        public static bool isBackground =false;
+        public static bool isBackground = false;
         public static void EnableDisableSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
                 if (_smtc.IsEnabled == true)
                 {
-                    _smtc.IsEnabled = false;
                     update = true;
                 }
                 else if (_smtc.IsEnabled == false)
                 {
                     update = false;
-                    _smtc.IsEnabled = true;
-                    _smtc.IsPlayEnabled = true;
-                    _smtc.IsPauseEnabled = true;
-                    _smtc.IsStopEnabled = true;
-                    _smtc.IsNextEnabled = true;
-                    _smtc.IsPreviousEnabled = true;
                 }
             }
             else
             {
-                _smtc.IsEnabled = true;                
+                _smtc.IsEnabled = true;
             }
         }
-       static bool isPlaying = true;
+        static bool isPlaying = true;
         static bool update = true;
         static bool isforwardbackword = false;
         public async static void UpdateSmtc(bool play = false)
@@ -195,12 +170,16 @@ namespace BreadPlayer
                     {
                         player.Pause();
                     }
-                        player.Volume = 0;
+                    player.Volume = 0;
 
                 }
                 musicProps.Title = Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
                 musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
+                if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile.AttachedPicture))
+                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.AttachedPicture));
+                else
+                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
             }
             _smtc.DisplayUpdater.Update();
         }
@@ -233,7 +212,7 @@ namespace BreadPlayer
                 switch (e.NewState)
                 {
                     case PlayerState.Playing:
-                         _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                         if (_smtc.IsEnabled == false)
                         {
                             if (update)
@@ -248,7 +227,7 @@ namespace BreadPlayer
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                         break;
                     case PlayerState.Stopped:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;                      
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                         break;
                     default:
                         break;
@@ -259,7 +238,7 @@ namespace BreadPlayer
         #region CoreWindow Dispose Methods
         public void DisposeObjects()
         {
-            Player.Dispose();           
+            Player.Dispose();
         }
         #endregion
 
@@ -271,7 +250,7 @@ namespace BreadPlayer
         public void ShowToast(string msg, string subMsg = null)
         {
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
-          
+
             var toastImageElements = toastXml.GetElementsByTagName("image");
             var toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
@@ -282,25 +261,32 @@ namespace BreadPlayer
         }
         public static void UpdateTile(Mediafile mediaFile)
         {
-            string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
-            string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
-            string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
-            string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
-            string xml = "<tile> <visual displayName=\"Now Playing\" branding=\"nameAndLogo\">" +
-                "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" + 
-                "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
-                "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
-                "<binding template=\"TileLarge\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"80\"/> <group> <subgroup hint-weight=\"1\"/> <subgroup hint-weight=\"2\"> <image src=\"" + mediaFile.AttachedPicture + "\" hint-crop=\"circle\"/> </subgroup> <subgroup hint-weight=\"1\"/> </group> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text> </binding> </visual> </tile>";
-            var formattedXML = string.Format(xml, title, artist, album);
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(formattedXML);
-            var notification = new TileNotification(doc);
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+            try
+            {
+                string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
+                string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
+                string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
+                string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
+                string xml = "<tile> <visual displayName=\"Now Playing\" branding=\"nameAndLogo\">" +
+                    "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" +
+                    "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
+                    "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
+                    "<binding template=\"TileLarge\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"80\"/> <group> <subgroup hint-weight=\"1\"/> <subgroup hint-weight=\"2\"> <image src=\"" + mediaFile.AttachedPicture + "\" hint-crop=\"circle\"/> </subgroup> <subgroup hint-weight=\"1\"/> </group> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text> </binding> </visual> </tile>";
+                var formattedXML = string.Format(xml, title, artist, album);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(formattedXML);
+                var notification = new TileNotification(doc);
+                TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating tile.", ex);
+            }
         }
-       
+
         public static async void ShowMessage(string msg, string title)
         {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);           
+            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);
             await dialog.ShowAsync();
         }
 

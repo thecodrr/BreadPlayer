@@ -38,6 +38,13 @@ namespace BreadPlayer.Dialogs
             get { return (string)GetValue(DescriptionProperty); }
             set { SetValue(DescriptionProperty, value); }
         }
+        public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
+         "DialogWidth", typeof(double), typeof(InputDialog), new PropertyMetadata(null));
+        public double DialogWidth
+        {
+            get { return (double)GetValue(DialogWidthProperty); }
+            set { SetValue(DialogWidthProperty, value); }
+        }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }

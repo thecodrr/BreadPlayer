@@ -126,6 +126,9 @@
     <Reference Include="ManagedBass.PInvoke">
       <HintPath>..\..\ManagedBass.PInvoke\src\Portable\bin\Release\ManagedBass.PInvoke.dll</HintPath>
     </Reference>
+    <Reference Include="XLog">
+      <HintPath>..\..\XLog\Bin\Release\AnyCPU\XLog\XLog.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,17 +57,17 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public async new void Add(T item)
     {
-        if(_dispatcher == null) _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        if (_dispatcher == null) _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         if (_dispatcher.HasThreadAccess)
             DoAdd(item);
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
     }
 
     private void DoAdd(T item)
     {
-        if(!sync.IsWriteLockHeld)
-        sync.EnterWriteLock();
+        if (!sync.IsWriteLockHeld)
+            sync.EnterWriteLock();
         base.Add(item);
         sync.ExitWriteLock();
     }
@@ -77,24 +77,27 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         if (_dispatcher.HasThreadAccess)
             DoClear();
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
     }
 
     protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
             try
             {
                 if (_isObserving)
                     base.OnCollectionChanged(e);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+            }
         });
     }
     protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });  
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });
     }
 
     /// <summary> 
@@ -113,11 +116,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             newItems.AddRange(range);
 
             // add the items, making sure no events are fired
-          
+
             _isObserving = false;
             foreach (var item in range)
             {
-                 Add(item);
+                Add(item);
             }
             _isObserving = true;
 
@@ -126,11 +129,16 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
             // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+            //if(reset)
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
         }
-        catch { }
+        catch (Exception ex)
+        {
+            BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
+        }
     }
+
     /// <summary> 
     /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T). 
     /// </summary> 
@@ -176,17 +184,19 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             this.Insert(base.Count - 1, i);
         sync.ExitWriteLock();
     }
-    
+
     private void DoClear()
     {
-        sync.EnterWriteLock();
+        if (!sync.IsWriteLockHeld)
+            sync.EnterWriteLock();
         base.Clear();
         sync.ExitWriteLock();
     }
 
     public new bool Contains(T item)
     {
-        sync.EnterReadLock();
+        if (!sync.IsReadLockHeld)
+            sync.EnterReadLock();
         var result = base.Contains(item);
         sync.ExitReadLock();
         return result;
@@ -203,11 +213,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         get
         {
-            if (sync.IsWriteLockHeld)
-                sync.ExitWriteLock();
-            sync.EnterReadLock();
+            if (!sync.IsWriteLockHeld)
+                sync.EnterReadLock();
             var result = base.Count;
-            sync.ExitReadLock();
+            if (sync.IsReadLockHeld)
+                sync.ExitReadLock();
             return result;
         }
     }
@@ -266,8 +276,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private void DoInsert(int index, T item)
     {
-        if(!sync.IsWriteLockHeld)
-        sync.EnterWriteLock();
+        if (!sync.IsWriteLockHeld)
+            sync.EnterWriteLock();
         base.Insert(index, item);
         sync.ExitWriteLock();
     }
@@ -277,7 +287,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         if (_dispatcher.HasThreadAccess)
             DoRemoveAt(index);
         else
-           await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoRemoveAt(index));
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoRemoveAt(index));
     }
 
     private void DoRemoveAt(int index)
@@ -322,7 +332,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         return new ThreadSafeObservableCollectionEnumerableWrapper<T>(this);
     }
 }
-    public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
+public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
 {
     private readonly ThreadSafeObservableCollection<T> m_Inner;
 

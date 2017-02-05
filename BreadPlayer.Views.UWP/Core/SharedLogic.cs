@@ -42,7 +42,18 @@ namespace BreadPlayer.Core
         public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-
+        public static Windows.UI.Xaml.Thickness DynamicMargin
+        {
+            get
+            {
+                if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
+                {
+                    return new Windows.UI.Xaml.Thickness(34, 0, 0, 0);
+                }
+                else
+                    return new Windows.UI.Xaml.Thickness(48, 0, 0, 0);
+            }
+        }
         #region ICommands
 
         #region Definitions

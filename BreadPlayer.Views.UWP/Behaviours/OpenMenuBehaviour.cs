@@ -47,14 +47,14 @@ namespace BreadPlayer.Behaviours
                 {
                     return null;
                 }
-                else                
+                else
                     OpenMenu(sender, (parameter as RightTappedRoutedEventArgs).GetPosition(sender as FrameworkElement));
             }
             else
             {
                 OpenMenu(sender, null);
             }
-            
+
             return null;
         }
         public void OpenMenu(object sender, Point? position)
@@ -72,11 +72,11 @@ namespace BreadPlayer.Behaviours
             ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
             if (listItem != null) listItem.IsSelected = true;
             //var items = //((Parameter as Binding).Path as ListViewItem);
-            if (Parameter.ToString() == "BindableFlyout")
+            if (Parameter is BindableFlyout)
             {
                 if (listView?.SelectedItems.Count == 1) { listView.SelectedIndex = -1; }
                 if (item != null) item.IsSelected = true;
-                var flyout = (senderElement as Button).GetAncestorsOfType<Grid>().Where(t => t.Name == "LayoutRoot").ToList()[0].Resources["PlaylistsFlyout"] as BindableFlyout;
+                var flyout = Parameter as BindableFlyout;
                 flyout.ShowAt(senderElement);
             }
 
@@ -95,14 +95,15 @@ namespace BreadPlayer.Behaviours
                     listView.SelectedIndex = -1;
                     if (item != null) item.IsSelected = true;
                 }
-                var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                (flyout.Items[0] as MenuFlyoutItem).CommandParameter = item.Content;
                 if (position.HasValue && position != null)
                     flyout.ShowAt(senderElement, position.Value);
                 else
                     flyout.ShowAt(senderElement);
             }
-            
+
         }
-        
+
     }
 }

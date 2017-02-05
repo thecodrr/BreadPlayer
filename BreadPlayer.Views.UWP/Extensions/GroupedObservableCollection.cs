@@ -49,7 +49,7 @@ namespace BreadPlayer.Extensions
             : this(readKey)
         {
             //this.readKey = readKey;
-            Elements = new SortedObservableCollection<TElement>();
+            Elements = new SortedObservableCollection<TElement, string>(t => (t as Mediafile).Title);
             Elements.AddRange(items);
             // this.AddRange(items, false);
             foreach (var item in items)
@@ -84,11 +84,15 @@ namespace BreadPlayer.Extensions
             try
             {
                 var key = this.readKey(item);
-                if (addToElement) Elements.Insert(0,item);
+                if (addToElement)
+                    Elements.AddSorted(item);
                 var s = FindOrCreateGroup(key);
                 s.Add(item);
-            } catch { }
-         
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while adding file to grouped collection.", ex);
+            }
         }
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
@@ -101,7 +105,7 @@ namespace BreadPlayer.Extensions
                 if (range == null || !range.Any()) return;
 
                 if (!addkey)
-                    Elements.AddRange(range);
+                    Elements.AddSortedRange(range);
                 // prepare data for firing the events
                 int newStartingIndex = Elements.Count;
                 var newItems = new List<TElement>();
@@ -133,8 +137,10 @@ namespace BreadPlayer.Extensions
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
             }
-            catch { }
-                    
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
+            }
         }
         protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -145,12 +151,11 @@ namespace BreadPlayer.Extensions
                     if (_isObserving == true && e != null && e.NewItems?.Count > 0)
                         base.OnCollectionChanged(e);
                 }
-                catch (COMException ex)
+                catch (Exception ex)
                 {
+                    BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
                     System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
                 }
-                
-                
             });  
                    
         }
@@ -162,8 +167,9 @@ namespace BreadPlayer.Extensions
                 {
                     if (_isObserving) base.OnPropertyChanged(e);
                 }
-                catch (COMException ex)
+                catch (Exception ex)
                 {
+                    BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
                     System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
                 }
 
@@ -176,7 +182,7 @@ namespace BreadPlayer.Extensions
             Elements.Remove(item);
         }
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
-        public SortedObservableCollection<TElement> Elements { get; set; } = new SortedObservableCollection<TElement>();
+        public SortedObservableCollection<TElement, string> Elements { get; set; } = new SortedObservableCollection<TElement, string>(t => (t as Mediafile).Title);
         public GroupedObservableCollection<TKey, TElement> ReplaceWith(GroupedObservableCollection<TKey, TElement> replacementCollection, IEqualityComparer<TElement> itemComparer)
         {
             // First make sure that the top level group containers match
@@ -347,7 +353,10 @@ namespace BreadPlayer.Extensions
 
                 this.lastEffectedGroup = result;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while finding or creating a group.", ex);
+            }
 
             return result;
         }

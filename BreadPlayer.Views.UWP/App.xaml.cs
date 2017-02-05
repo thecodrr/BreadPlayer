@@ -16,26 +16,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using BreadPlayer.Services;
-using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -54,23 +47,51 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
+            InitializeTheme();
+            BLogger.InitLogger();
+            this.Suspending += OnSuspending;
+            this.EnteredBackground += App_EnteredBackground;
+            this.LeavingBackground += App_LeavingBackground;
+            this.UnhandledException += App_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+        }
+
+        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            BLogger.Logger.Error(string.Format("Task ({0}) terminating...", e.Exception.Source), e.Exception);
+        }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            BLogger.Logger.Fatal("Something caused the app to crash!", e.Exception);
+        }
+
+        private void InitializeTheme()
+        {
             var value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
             if (value != null)
             {
                 var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
                 this.RequestedTheme = (ApplicationTheme)theme;
-                Debug.Write("ApplicationTheme: " + RequestedTheme.ToString());
+                Debug.Write("ApplicationTheme: " + RequestedTheme);
             }
-            this.Suspending += OnSuspending;
-            this.EnteredBackground += App_EnteredBackground;
-            this.LeavingBackground += App_LeavingBackground;   
+            else
+            {
+                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = RequestedTheme.ToString();
+            }
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            CoreWindowLogic.EnableDisableSmtc();
+            if (!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();
+            }
+            else
+                firsttime = false;
             CoreWindowLogic.isBackground = false;
+            BLogger.Logger.Info("App left background and is now in foreground...");
             deferral.Complete();
         }
 
@@ -79,12 +100,19 @@ namespace BreadPlayer
             var deferral = e.GetDeferral();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc(true);
-            CoreWindowLogic.EnableDisableSmtc();
+            if (!firsttime)
+            {
+                CoreWindowLogic.EnableDisableSmtc();
+            }
+            else
+                firsttime = false;
             await Task.Delay(200);
             CoreWindowLogic.isBackground = true;
+            BLogger.Logger.Info("App has entered background...");
             deferral.Complete();
         }
-
+        bool firsttime = true;
+        Stopwatch SessionWatch;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -92,14 +120,16 @@ namespace BreadPlayer
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            SessionWatch = Stopwatch.StartNew();
+            BLogger.Logger?.Info("App launched and session started...");
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;                
+                this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-          if(e.PreviousExecutionState != ApplicationExecutionState.Running)
-            LoadFrame(e, e.Arguments);           
+            if (e.PreviousExecutionState != ApplicationExecutionState.Running)
+                LoadFrame(e, e.Arguments);
         }
 
         /// <summary>
@@ -109,6 +139,7 @@ namespace BreadPlayer
         /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            BLogger.Logger.Error("Navigation failed while navigating to: " + e.SourcePageType.FullName, e.Exception);
             //throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
@@ -122,6 +153,9 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            SessionWatch.Stop();
+            BLogger.Logger.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
+            await BLogger.CopyLogAndMailAsync();
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();
@@ -132,71 +166,81 @@ namespace BreadPlayer
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
                 Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { args.Files[0], 0.0, true, 50.0 });
-
+                BLogger.Logger.Info("File was loaded successfully while app was running...");
                 // ShellVM.Play(args.Files[0]);
             }
             else
             {
                 LoadFrame(args, args.Files[0]);
+                BLogger.Logger.Info("Player opened successfully with file as argument...");
             }
         }
 
         void LoadFrame(IActivatedEventArgs args, object arguments)
         {
-            var stop = Stopwatch.StartNew();
-            Frame rootFrame = Window.Current.Content as Frame;
-           
-            // Do not repeat app initialization when the Window already has content
-            if (rootFrame == null)
+            try
             {
-                // Create a Frame to act as the navigation context
-                rootFrame = new Frame();
+                var stop = Stopwatch.StartNew();
+                BLogger.Logger.Info("Loading frame started...");
+                Frame rootFrame = Window.Current.Content as Frame;
 
-                if (args.PreviousExecutionState ==  ApplicationExecutionState.Terminated)
+                // Do not repeat app initialization when the Window already has content
+                if (rootFrame == null)
                 {
-                    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
-                    //TODO: Load state from previously suspended application
+                    // Create a Frame to act as the navigation context
+                    rootFrame = new Frame();
+                    BLogger.Logger.Info("New frame created.");
+                    if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                    {
+                        //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
+                        //TODO: Load state from previously suspended application
+                    }
+                    rootFrame.NavigationFailed += OnNavigationFailed;
+                    // Place the frame in the current Window
+                    Window.Current.Content = rootFrame;
+                    BLogger.Logger.Info("Content set to Window successfully...");
                 }
-                rootFrame.NavigationFailed += OnNavigationFailed;
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-            }               
-            if (rootFrame.Content == null)
-            {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(typeof(Shell), arguments);
-            }
-            
-            // CoreWindowLogic logic = new CoreWindowLogic();
-            var view = ApplicationView.GetForCurrentView();
-            view.SetPreferredMinSize(new Size(360, 100));
-            if (RequestedTheme == ApplicationTheme.Dark)
-            {
-                view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
-                view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 0);                
-            }
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {              
-                //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                var statusBar = StatusBar.GetForCurrentView();
-                statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
-                statusBar.BackgroundOpacity = 1;
-                statusBar.ForegroundColor = Colors.White;
-            }
-            if (args.Kind != ActivationKind.File)
-            {
-                CoreWindowLogic.LoadSettings();
-            }
-            else
-            {
-                CoreWindowLogic.LoadSettings(true);
-            }
-            Window.Current.Activate();
-            stop.Stop();
-            Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
+                if (rootFrame.Content == null)
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+                    BLogger.Logger.Info("Navigating to Shell...");
+                    rootFrame.Navigate(typeof(Shell), arguments);
+                }
 
+                // CoreWindowLogic logic = new CoreWindowLogic();
+                var view = ApplicationView.GetForCurrentView();
+                view.SetPreferredMinSize(new Size(360, 100));
+                if (RequestedTheme == ApplicationTheme.Dark)
+                {
+                    view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
+                    view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
+                }
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                {
+                    //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                    var statusBar = StatusBar.GetForCurrentView();
+                    statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
+                    statusBar.BackgroundOpacity = 1;
+                    statusBar.ForegroundColor = Colors.White;
+                }
+                if (args.Kind != ActivationKind.File)
+                {
+                    CoreWindowLogic.LoadSettings();
+                }
+                else
+                {
+                    CoreWindowLogic.LoadSettings(true);
+                }
+                Window.Current.Activate();
+                stop.Stop();
+                Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger?.Info("Exception occured in LoadFrame Method", ex);
+            }
         }
 
         void ReInitialize()

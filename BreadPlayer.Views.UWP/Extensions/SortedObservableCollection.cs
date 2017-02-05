@@ -10,92 +10,103 @@ using Windows.UI.Core;
 
 namespace BreadPlayer.Extensions
 {
-    public class SortedObservableCollection<T>
-        : ThreadSafeObservableCollection<T> where T : IComparable<T>
+    public class SortedObservableCollection<T, TKey>
+        : ThreadSafeObservableCollection<T>
     {
         private CoreDispatcher _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-        
-        protected async override void InsertItem(int index, T item)
+
+        /// <summary>
+		/// Creates a new SortedObservableCollection instance.
+		/// </summary>
+		/// <param name="keySelector">The function to select the sorting key.</param>
+		public SortedObservableCollection(Func<T, TKey> keySelector)
+        {
+            this.keySelector = keySelector;
+            this.comparer = Comparer<TKey>.Default;
+        }
+
+        Func<T, TKey> keySelector;
+        IComparer<TKey> comparer;
+
+        /// <summary>
+        /// Adds an item to a sorted collection.
+        /// </summary>
+        public async void AddSorted(T item)
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if(base.sync.IsWriteLockHeld)
-                    base.sync.ExitWriteLock();
-                if (this.Count == 0)
+                int i = 0;
+                int j = Count - 1;
+
+                while (i <= j)
                 {
-                    base.sync.EnterWriteLock();
-                    base.InsertItem(0, item);
-                    return;
+                    int n = (i + j) / 2;
+                    int c = comparer.Compare(keySelector(item), keySelector(this[n]));
+
+                    if (c == 0) { i = n; break; }
+                    if (c > 0) i = n + 1;
+                    else j = n - 1;
                 }
 
-                index = Compare(item, 0, this.Count - 1);
-
-                base.InsertItem(index, item);
+                Insert(i, item);
             });
         }
 
-        private int Compare(T item, int lowIndex, int highIndex)
-        {
-            int compareIndex = (lowIndex + highIndex) / 2;
 
-            if (compareIndex == 0)
+        public void AddSortedRange(IEnumerable<T> range)
+        {
+            try
             {
-                return SearchIndexByIteration(lowIndex, highIndex, item);
-            }
+                // get out if no new items
+                if (range == null || !range.Any()) return;
 
-            int result = item.CompareTo(this[compareIndex]);
+                // prepare data for firing the events
+                int newStartingIndex = Count;
+                var newItems = new List<T>();
+                newItems.AddRange(range);
 
-            if (result < 0)
-            {   //item precedes indexed obj in the sort order
+                // add the items, making sure no events are fired
 
-                if ((lowIndex + compareIndex) < 100 || compareIndex == (lowIndex + compareIndex) / 2)
+                _isObserving = false;
+                foreach (var item in range)
                 {
-                    return SearchIndexByIteration(lowIndex, compareIndex, item);
+                    AddSorted(item);
                 }
+                _isObserving = true;
 
-                return Compare(item, lowIndex, compareIndex);
+                // fire the events
+                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+                //if(reset)
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
             }
-
-            if (result > 0)
-            {   //item follows indexed obj in the sort order
-
-                if ((compareIndex + highIndex) < 100 || compareIndex == (compareIndex + highIndex) / 2)
-                {
-                    return SearchIndexByIteration(compareIndex, highIndex, item);
-                }
-
-                return Compare(item, compareIndex, highIndex);
-            }
-
-            return compareIndex;
-        }
-
-        /// <summary>
-        /// Iterates through sequence of the collection from low to high index
-        /// and returns the index where to insert the new item
-        /// </summary>
-        private int SearchIndexByIteration(int lowIndex, int highIndex, T item)
-        {
-            for (int i = lowIndex; i <= highIndex; i++)
+            catch (Exception ex)
             {
-                if (item.CompareTo(this[i]) < 0)
-                {
-                    return i;
-                }
+                BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
             }
-            return this.Count;
         }
 
-        /// <summary>
-        /// Adds the item to collection by ignoring the index
-        /// </summary>
-        protected override void SetItem(int index, T item)
+        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            this.InsertItem(index, item);
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    if (_isObserving)
+                        base.OnCollectionChanged(e);
+                }
+                catch (Exception ex)
+                {
+                    BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+                }
+            });
         }
-
-        private const string _InsertErrorMessage
-           = "Inserting and moving an item using an explicit index are not support by sorted observable collection";
+        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });
+        }
     }
 }
- 

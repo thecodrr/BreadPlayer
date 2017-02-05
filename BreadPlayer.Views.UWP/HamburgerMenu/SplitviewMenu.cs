@@ -329,6 +329,10 @@ namespace SplitViewMenu
             {
                 return BottomNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
             }
+            else if (sourcePagetype == typeof(AlbumArtistView))
+            {
+                return TopNavigationItems[2];
+            }
             else
                 return null;
         }
@@ -350,31 +354,38 @@ namespace SplitViewMenu
         private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
-                return;           
-            var item = GetItemFromList(e.SourcePageType); 
+                return;
+            var item = GetItemFromList(e.SourcePageType);
             if (item == null && _pageFrame.BackStackDepth > 0)
             {
                 foreach (var entry in _pageFrame.BackStack.Reverse())
                 {
-                    if(entry.SourcePageType == typeof(PlaylistView))
+                    if (entry.SourcePageType == typeof(PlaylistView))
                     {
-                        var para = entry.Parameter as Dictionary<Playlist, IEnumerable<Mediafile>>; //get previous entry's parameter
-                        item = PlaylistsItems.SingleOrDefault(p => p.Label == para.First().Key.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                        var para = entry.Parameter; //get previous entry's parameter
+                        if (para is Playlist)
+                            item = PlaylistsItems.SingleOrDefault(p => p.Label == (para as Playlist).Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                        else if (para is Album)
+                        {
+                            _pageFrame.Navigate(typeof(PlaylistView), para as Album);
+                            return;
+                        }
                     }
-                    else if(entry.SourcePageType == typeof(LibraryView))
+
+                    else if (entry.SourcePageType == typeof(LibraryView))
                     {
                         var para = entry.Parameter;
-                        if(para != null)
+                        if (para != null)
                             item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
                         else
                             item = TopNavigationItems[1];
 
                     }
-                    if (item != null) 
+                    if (item != null)
                         break;  //if item is successfully got break the loop. We got what we needed.
                 }
             }
-            if(item != null)
+            if (item != null)
             {
                 var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
                 if (container != null)

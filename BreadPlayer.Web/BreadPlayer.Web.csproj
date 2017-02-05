@@ -92,8 +92,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="123music\Album.cs" />
     <Compile Include="123music\API.cs" />
+    <Compile Include="123music\Artist.cs" />
+    <Compile Include="123music\DataType.cs" />
     <Compile Include="123music\Endpoints.cs" />
+    <Compile Include="123music\ResponseMessage.cs" />
     <Compile Include="123music\Track.cs" />
     <Compile Include="Lastfm\BreadScrobbler.cs" />
     <Compile Include="Lastfm\InitializeLastfm.cs" />

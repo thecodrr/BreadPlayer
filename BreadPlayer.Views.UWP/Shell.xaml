@@ -73,24 +73,24 @@
 
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Eaten" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="Most Eaten" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="Recently Added" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Eaten" Arguments="Recent" Tooltip="Navigate to your recently played songs." Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="Most Eaten" Tooltip="Navigate to your music library." Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="Recently Added" Tooltip="Navigate to your music library." Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
 
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Bread Collection" Arguments="Library" Symbol="Accept">
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Bread Collection" Arguments="Library" Symbol="Accept" Tooltip="Navigate to your music library.">
                     <controls:SimpleNavMenuItem.Shortcuts>
                         <controls:Shortcut SymbolAsChar="&#xE71C;" ShortcutFlyout="{StaticResource GenreFlyout}"/>
                         <controls:Shortcut SymbolAsChar="&#xE174;" ShortcutFlyout="{StaticResource SortMenuFlyout}"/>
                     </controls:SimpleNavMenuItem.Shortcuts>
                 </controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Label="My Breads" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Tooltip="Navigate to your music library." Label="My Breads" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>
 
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0049;" Label="Favorites" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x004b;" Label="Now Baking" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0049;" Tooltip="Navigate to your music library." Label="Favorites" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
-                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Tooltip="Navigate to your music library." Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
 
@@ -137,16 +137,16 @@
                     <AppBarButton BorderBrush="White" ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
                     <AppBarButton BorderBrush="WhiteSmoke" Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                     <AppBarButton BorderBrush="WhiteSmoke" Icon="Next" VerticalAlignment="Stretch"  IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
-                        <ToolTipService.ToolTip>
-                            <StackPanel Width="200" DataContext="{Binding UpcomingSong}">
-                                <Image Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="UniformToFill"/>
-                                <StackPanel Margin="0,0,0,0">
-                                    <TextBlock Text="{Binding Path=Title, FallbackValue='No upcoming song', TargetNullValue='No upcoming song'}" FontSize="19" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
-                                    <TextBlock Text="{Binding Path=LeadArtist}" Visibility="{Binding Path=LeadArtist, Converter={StaticResource BoolToVisibility}}" FontSize="14" FontWeight="SemiLight"/>
-                                    <TextBlock Text="{Binding Path=Album}" Visibility="{Binding Path=Album, Converter={StaticResource BoolToVisibility}}" FontSize="12"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </ToolTipService.ToolTip>
+                      <ToolTipService.ToolTip>
+                        <StackPanel Orientation="Horizontal" Width="250" DataContext="{Binding UpcomingSong}" Height="Auto">
+                          <Image Height="60" Width="65" Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="UniformToFill"/>
+                          <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="{Binding Path=Title, FallbackValue='No upcoming song', TargetNullValue='No upcoming song'}" FontSize="14" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
+                            <TextBlock Text="{Binding Path=LeadArtist}" Visibility="{Binding Path=LeadArtist, Converter={StaticResource BoolToVisibility}}" FontSize="14" FontWeight="SemiLight"/>
+                            <TextBlock Text="{Binding Path=Album}" Visibility="{Binding Path=Album, Converter={StaticResource BoolToVisibility}}" FontSize="14"/>
+                          </StackPanel>
+                        </StackPanel>
+                      </ToolTipService.ToolTip>
                     </AppBarButton>
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Stretch" IsChecked="False" IsCompact="True" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}"/>
                     <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Stretch" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="50" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle"/>
@@ -174,8 +174,7 @@
             </Grid.ColumnDefinitions>
             <Slider x:Name="volumeSlider" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
-        </Grid>
-       
+        </Grid>       
     </Grid>
 
 </Page>

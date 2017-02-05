@@ -60,6 +60,7 @@ namespace SplitViewMenu
                 Set(ref shortcuts, value);
             }
         }
+        public string Tooltip { get; set; }
         public Type DestinationPage { get; set; }
 
         void Select(object param) { }

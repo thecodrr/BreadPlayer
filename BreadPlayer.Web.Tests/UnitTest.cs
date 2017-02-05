@@ -2,6 +2,7 @@
 using BreadPlayer.Web.Lastfm;
 using System.Threading.Tasks;
 using BreadPlayer.Models;
+using BreadPlayer.Web._123music;
 
 namespace MyFirstUWPTests
 {
@@ -37,6 +38,27 @@ namespace MyFirstUWPTests
         public async void _123MusicAPISearchTest(string term)
         {
             Assert.True(await new BreadPlayer.Web._123music.API().SearchSongs(term));
+        }
+        [Theory]
+        [InlineData(DataType._new)]
+        [InlineData(DataType._hot)]
+        public async void SongsListTest(DataType term)
+        {
+            Assert.True(await new API().GetSongsList(term));
+        }
+        [Theory]
+        [InlineData(DataType._new)]
+        [InlineData(DataType._hot)]
+        public async void ArtistsListTest(DataType term)
+        {
+            Assert.True(await new API().GetArtistsList(term));
+        }
+        [Theory]
+        [InlineData(DataType._new)]
+        [InlineData(DataType._hot)]
+        public async void AlbumsListTest(DataType term)
+        {
+            Assert.True(await new API().GetAlbumsList(term));
         }
         async Task<bool> HasScrobbled(params string[] mediaFile)
         {

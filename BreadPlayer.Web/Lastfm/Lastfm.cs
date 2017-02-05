@@ -12,8 +12,7 @@ namespace BreadPlayer.Web.Lastfm
     public class Lastfm
     {
         public async Task<bool> Scrobble(ILastAuth Auth, params string[] data)
-        {
-          
+        {          
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync("db",
                 CreationCollisionOption.OpenIfExists);

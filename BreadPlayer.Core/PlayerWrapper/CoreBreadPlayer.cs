@@ -99,7 +99,7 @@ namespace BreadPlayer.Core
                         InitializeExtensions(path);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                        CurrentlyPlayingFile = mediaFile;                       
+                        CurrentlyPlayingFile = mediaFile;
                     });
 
                     return true;
@@ -147,7 +147,6 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                //Bass.Start();
                 ManagedBass.Bass.ChannelPlay(handle);
                 PlayerState = PlayerState.Playing;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));

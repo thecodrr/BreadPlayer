@@ -44,6 +44,7 @@ namespace BreadPlayer.ViewModels
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
         LibraryService service = new LibraryService(new DatabaseService());
+        int SongCount = 0;
         #endregion
 
         #region Constructor
@@ -55,7 +56,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleEnablePlayMessage));
-
+            SearchCommand.IsEnabled = false;
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
@@ -73,14 +74,17 @@ namespace BreadPlayer.ViewModels
         #region HandleMessages
         void HandleEnablePlayMessage(Message message)
         {
-            var count = (Int16)message.Payload;
-            if(count > 0)
+            if (message.Payload is short)
             {
-                message.HandledStatus = MessageHandledStatus.HandledContinue;
-                PlayPauseCommand.IsEnabled = true;
-            }           
+                var count = (short)message.Payload;
+                if (count > 0)
+                {
+                    message.HandledStatus = MessageHandledStatus.HandledContinue;
+                    PlayPauseCommand.IsEnabled = true;
+                }
+            }
         }
-        private void HandleLibraryLoadedMessage(Message message)
+        private async void HandleLibraryLoadedMessage(Message message)
         {
             if (message.Payload is ThreadSafeObservableCollection<Mediafile>)
             {
@@ -93,6 +97,8 @@ namespace BreadPlayer.ViewModels
                 TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
                 IsSourceGrouped = (bool)listObject[1];
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
+                SongCount = TracksCollection.Elements.Count;
                 GetSettings();
             }
         }
@@ -100,7 +106,10 @@ namespace BreadPlayer.ViewModels
         private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (TracksCollection.Elements.Count > 0)
+            {
+                searchCommand.IsEnabled = true;
                 PlayPauseCommand.IsEnabled = true;
+            }
         }
 
         void HandlePlaySongMessage(Message message)
@@ -174,24 +183,29 @@ namespace BreadPlayer.ViewModels
         public void Search(object para)
         {
             try
-            {               
-                DispatcherTimer timer = new DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
-                if (QueryWord.Length == 0 && TracksCollection.Elements.Count < service.SongCount)
+            {
+                DispatcherTimer timer = new  DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
+                if (QueryWord.Length < 2 && TracksCollection.Elements.Count < SongCount)
                 {
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Music Library");
                     Reload().ConfigureAwait(false);
                 }
-                else
+                else if (QueryWord.Length > 2)
                 {
                     timer.Interval = TimeSpan.FromMilliseconds(200);
                     timer.Start();
                     timer.Tick += (sender, args) =>
                     {
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Results for \"" + QueryWord + "\"");
                         Search().ConfigureAwait(false);
                         timer.Stop();
                     };
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while searching. Search string length: " + QueryWord.Length, ex);
+            }
         }
         void SetRepeat()
         {
@@ -263,8 +277,9 @@ namespace BreadPlayer.ViewModels
                     }
                     return toPlayFile;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    BLogger.Logger.Error("An error occured while trying to play next song.", ex);
                     await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
@@ -515,7 +530,7 @@ namespace BreadPlayer.ViewModels
             if (cache == null || TracksCollection.Elements.Count < service.SongCount)
             {
                 TracksCollection.Clear();
-                TracksCollection.AddRange(await service.GetAllMediafiles().ConfigureAwait(false), true);
+                await SplitList(400).ConfigureAwait(false);
                 cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
             }
             else
@@ -524,12 +539,21 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.AddRange(cache, false, true);
             }
         }
+        public async Task SplitList(int nSize = 30)
+        {
+            for (int i = 0; i < service.SongCount; i += nSize)
+            {
+                TracksCollection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, false);
+            }
+        }
         async Task<object> Search()
         {
-            if (QueryWord.Length > 0)
+            if (QueryWord.Length > 2)
             {
                 TracksCollection.Clear();
-                TracksCollection.AddRange(await service.Query("Title", QueryWord).ConfigureAwait(false), true);
+                TracksCollection.AddRange((await service.Query("Title", QueryWord).ConfigureAwait(false)), false, false);
+                if (TracksCollection.Elements.Count <= 0)
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Nothing found for keyword \"" + QueryWord + "\"");
             }
             return null;
         }
@@ -563,48 +587,54 @@ namespace BreadPlayer.ViewModels
             });
             return shuffled;
         }
-        
+
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
-        {          
+        {
             if (mp3file != null)
-            {              
-                if (play == true)
-                    Player.IgnoreErrors = true;
-               
-                if (await Player.Load(mp3file))
+            {
+                try
                 {
-                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
-                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                    PlayPauseCommand.IsEnabled = true;
-                    mp3file.State = PlayerState.Playing;
-                    if(Player.Volume == 50)
-                        Player.Volume = vol;
-                    if (play)
+                    if (play == true)
+                        Player.IgnoreErrors = true;
+
+                    if (await Player.Load(mp3file))
                     {
-                        PlayPauseCommand.Execute(null);
+                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                        PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                        PlayPauseCommand.IsEnabled = true;
+                        mp3file.State = PlayerState.Playing;
+                        if (Player.Volume == 50)
+                            Player.Volume = vol;
+                        if (play)
+                        {
+                            PlayPauseCommand.Execute(null);
+                        }
+                        else
+                        {
+                            DontUpdatePosition = true;
+                            CurrentPosition = currentPos;
+                        }
+                        if (GetPlayingCollection() != null)
+                            UpcomingSong = await GetUpcomingSong();
+
+                        Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
                     }
                     else
                     {
-                        DontUpdatePosition = true;
-                        CurrentPosition = currentPos;
+                        BLogger.Logger.Error("Failed to load file. Loading next file...");
+                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                        PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                        mp3file.State = PlayerState.Playing;
+                        int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));
+                        Player.IgnoreErrors = false;
+                        Load(await GetUpcomingSong(), true);
                     }
-                    if(GetPlayingCollection() != null)
-                        UpcomingSong = await GetUpcomingSong();
-
-                    Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
                 }
-                else
+                catch (Exception ex)
                 {
-                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
-                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-
-                    mp3file.State = PlayerState.Playing;
-                    int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));
-                    Player.IgnoreErrors = false;
-                    Load(await GetUpcomingSong(), true);
+                    BLogger.Logger.Error("Failed to load file.", ex);
                 }
             }
-
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
         {

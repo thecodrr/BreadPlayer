@@ -17,12 +17,12 @@ namespace BreadPlayer.Service
             {
                 if (db == null)
                 {
-                    
                     db = new LiteDatabase(service);
                     CreateDB();
                 }
                 return db;
             }
+            set { db = value; }
         }
         public override async void CreateDB()
         {
@@ -53,6 +53,7 @@ namespace BreadPlayer.Service
         public new void Dispose()
         {
             db.Dispose();
+            DB = null;
         }
     }
 }

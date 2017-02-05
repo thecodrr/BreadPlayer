@@ -7,6 +7,7 @@ using System.Windows.Input;
 using LiteDB;
 using Windows.Storage;
 using BreadPlayer.Messengers;
+using System.Diagnostics;
 
 namespace BreadPlayer.ViewModels
 {
@@ -41,19 +42,19 @@ namespace BreadPlayer.ViewModels
                 albumCollection.EnsureIndex(t => t.AlbumName);
                 albumCollection.EnsureIndex(t => t.Artist);
             }
-            catch
+            catch (Exception ex)
             {
+                BLogger.Logger.Error("Error occured while initiating albums database.", ex);
                 await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\albums.db")).DeleteAsync();
                 InitDB();
             }
         }
         public async Task LoadAlbums()
         {
-            //foreach(var album in await GetAlbums().ConfigureAwait(false))
-            //{
             AlbumCollection.AddRange(await GetAlbums().ConfigureAwait(false));//.Add(album);
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
-           // }
+            if (AlbumCollection.Count <= 0)
+                AlbumsLoaded = false;
         }
 
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

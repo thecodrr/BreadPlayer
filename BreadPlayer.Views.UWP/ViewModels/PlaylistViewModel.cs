@@ -32,6 +32,7 @@ using BreadPlayer.Core;
 using System.IO;
 using Windows.Storage;
 using BreadPlayer.Service;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
 {
@@ -99,39 +100,51 @@ namespace BreadPlayer.ViewModels
         }
         void Delete(object para)
         {
-            PlaylistArt = null;
-            var mediafile = para as Mediafile;
-            if (mediafile == null)
-                mediafile = Player.CurrentlyPlayingFile;
-            var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-            using (PlaylistService service = new PlaylistService(Playlist.Name))
+            try
             {
-                service.Remove(mediafile);
-                Songs.Remove(mediafile);
-                // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
-                // Songs.Remove(mediafile);
-                // LibVM.Database.Update(mediafile);
-                Refresh();
-            }
-            
-        }
-       public async void Refresh()
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
-            {
-                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                TotalSongs = Songs.Count.ToString() + " Songs";
-                if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
+                PlaylistArt = null;
+                var mediafile = para as Mediafile;
+                if (mediafile == null)
+                    mediafile = Player.CurrentlyPlayingFile;
+                var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
+                using (PlaylistService service = new PlaylistService(Playlist.Name))
                 {
-                    BitmapImage image = new BitmapImage(new Uri(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
-                   
-                    PlaylistArt = image;
-                    Themes.ThemeManager.SetThemeColor(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture);
+                    service.Remove(mediafile);
+                    Songs.Remove(mediafile);
+                    // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
+                    // Songs.Remove(mediafile);
+                    // LibVM.Database.Update(mediafile);
+                    Refresh();
                 }
-                var mp3 = Songs?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
-                if (mp3 != null) mp3.State = PlayerState.Playing;
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while deleting song from playlist.", ex);
+            }
+        }
+        public async Task Refresh()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    PlaylistArt = null;
+                    TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                    TotalSongs = Songs.Count.ToString() + " Songs";
+                    if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
+                    {
+                        BitmapImage image = new BitmapImage(new Uri(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture, UriKind.RelativeOrAbsolute));
+                        PlaylistArt = image;
+                        Themes.ThemeManager.SetThemeColor(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture);
+                    }
+                    var mp3 = Songs?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                    if (mp3 != null) mp3.State = PlayerState.Playing;
+                }
+                catch (Exception ex)
+                {
+                    BLogger.Logger.Error("Error occured while refreshing playlist.", ex);
+                }
             });
-            
         }
         RelayCommand _renamePlaylistCommand;
         /// <summary>
@@ -154,24 +167,34 @@ namespace BreadPlayer.ViewModels
         }
         async void DeletePlaylist(object playlist)
         {
-            var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
-            MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
-            dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
-            dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
-            dia.DefaultCommandIndex = 0;
-            dia.CancelCommandIndex = 1;
-            var result = await dia.ShowAsync();
-            if (result.Label == "Yes")
+            try
             {
-                string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
-                if (File.Exists(path)) File.Delete(path);
-                PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
-                OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                using (LibraryService service = new LibraryService(new DatabaseService()))
+                var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
+                if (selectedPlaylist != null)
                 {
-                    service.RemovePlaylist(selectedPlaylist);//delete from database.
+                    MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
+                    dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
+                    dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
+                    dia.DefaultCommandIndex = 0;
+                    dia.CancelCommandIndex = 1;
+                    var result = await dia.ShowAsync();
+                    if (result.Label == "Yes")
+                    {
+                        string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
+                        if (File.Exists(path)) File.Delete(path);
+                        PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                        OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                        using (LibraryService service = new LibraryService(new DatabaseService()))
+                        {
+                            service.RemovePlaylist(selectedPlaylist);//delete from database.
+                        }
+                    }
                 }
-             }
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while deleting playlist.", ex);
+            }
         }
 
         async void RenamePlaylist(object playlist)
@@ -215,14 +238,14 @@ namespace BreadPlayer.ViewModels
             {
                 IsMenuVisible = false;
                 Playlist = new Playlist() { Name = (data as Album).AlbumName, Description = (data as Album).Artist};
-                LoadAlbumSongs(data as Album);
-                Refresh();
+                LoadAlbumSongs(data as Album);               
             }
             Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
         }
-        void LoadAlbumSongs(Album album)
+        async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(album.AlbumSongs);          
+            Songs.AddRange(album.AlbumSongs);
+            await Refresh();        
         }
         async void LoadDB()
         {
@@ -232,13 +255,9 @@ namespace BreadPlayer.ViewModels
                 {
                     var ss = service.GetTrackCount();
                     Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
-                    Refresh();
+                    await Refresh();
                 }
             }
-        }
-        private void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Refresh();
         }
         
         RelayCommand _initCommand;
@@ -255,12 +274,10 @@ namespace BreadPlayer.ViewModels
         public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
         void Init(object para)
         {
-            Songs.CollectionChanged += Elements_CollectionChanged;           
         }
         
         public void Reset()
-        {
-            
+        {            
             PlaylistArt = null;
             TotalSongs = "0";
             TotalMinutes = "0";
