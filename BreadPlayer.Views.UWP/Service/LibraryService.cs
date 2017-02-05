@@ -10,12 +10,13 @@ namespace BreadPlayer.Service
 	/// </summary>
 	public class LibraryService : ILibraryService
     {
+
         private IDatabaseService Database
         {
             get;
             set;
         }
-        
+
         public LibraryService(IDatabaseService service)
         {
             Database = service;
@@ -29,6 +30,10 @@ namespace BreadPlayer.Service
         public async Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {
             return await Database.GetTracks().ConfigureAwait(false);
+        }
+        public async Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit)
+        {
+            return await Database.GetRangeOfTracks(skip, limit).ConfigureAwait(false);
         }
         public void AddMediafile(Mediafile data)
         {
@@ -49,7 +54,7 @@ namespace BreadPlayer.Service
         public void RemoveFolder(string folderPath)
         {
             Database.RemoveTracks(LiteDB.Query.EQ("FolderPath", folderPath));
-           // Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
+            // Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
         }
         public void RemoveMediafile(Mediafile data)
         {
@@ -69,11 +74,11 @@ namespace BreadPlayer.Service
         }
         public IEnumerable<Playlist> GetPlaylists()
         {
-           return Database.GetCollection<Playlist>("playlists").FindAll();
-        }       
-        public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T:new()
+            return Database.GetCollection<Playlist>("playlists").FindAll();
+        }
+        public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new()
         {
-           return Database.GetCollection<T>(collection.Name).Exists(query);
+            return Database.GetCollection<T>(collection.Name).Exists(query);
         }
         public void RemovePlaylist(Playlist List)
         {

@@ -664,7 +664,7 @@ namespace BreadPlayer.ViewModels
                         }
                         else if (item.IsOfType(StorageItemTypes.Folder))
                         {
-                           await SettingsViewModel.AddFolderToLibraryAsync((item as StorageFolder).CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions()));
+                          // await SettingsViewModel.AddFolderToLibraryAsync((item as StorageFolder).CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions()));
                         }
 
                     }

@@ -126,6 +126,18 @@ namespace BreadPlayer.ViewModels
             get { return changeAccentByAlbumart; }
             set { Set(ref changeAccentByAlbumart, value); }
         }
+        Stopwatch watch;
+        public Stopwatch LibraryLoadStopwatch
+        {
+            get { return watch; }
+            set { Set(ref watch, value); }
+        }
+        string status;
+        public string Status
+        {
+            get { return status; }
+            set { Set(ref status, value); }
+        }
         #endregion
 
         #region MessageHandling
@@ -317,10 +329,13 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public static async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
+        public async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
         {
             if (queryResult != null)
             {
+                Status = "Started Loading Songs....";
+                LibraryLoadStopwatch = new Stopwatch();
+               
                 //we create two uints. 'index' for the index of current block/batch of files and 'stepSize' for the size of the block. This optimizes the loading operation tremendously.
                 uint index = 0, stepSize = 200;
                 //a list containing the files we recieved after querying using the two uints we created above.
@@ -346,6 +361,7 @@ namespace BreadPlayer.ViewModels
                 //'i' is a variable for the index of currently processing file
                 short i = 0;
                 //using while loop until number of files become 0. This is to confirm that we process all files without leaving anything out.
+                LibraryLoadStopwatch.Restart();
                 while (files.Count != 0)
                 {
                     try
@@ -361,17 +377,21 @@ namespace BreadPlayer.ViewModels
                                     //A null Mediafile which we will use afterwards.
                                     Mediafile mp3file = null;
                                     i++; //Notice here that we are increasing the 'i' variable by one for each file.
-                                    //we send a message to anyone listening relaying that song count has to be updated.
+                                         //we send a message to anyone listening relaying that song count has to be updated.
                                     Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
                                     await Task.Run(async () =>
                                     {
-                                        //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                                        mp3file = await CreateMediafile(file, false); //the core of the whole method.
-                                        mp3file.FolderPath = Path.GetDirectoryName(file.Path);
-                                        await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
-                                    });
+                                            //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
+                                            mp3file = await CreateMediafile(file, false); //the core of the whole method.
+                                            mp3file.FolderPath = Path.GetDirectoryName(file.Path);
+                                            //await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
+                                        });
                                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                                    await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded");
+                                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                                    {
+                                        Status = i.ToString() + " Songs Loaded in " + String.Format("{0:0.00}", LibraryLoadStopwatch.Elapsed.TotalSeconds) + " seconds";
+                                    });
+                                    //await NotificationManager.ShowMessageAsync(i.ToString() + " Songs Loaded\\" + LibraryLoadStopwatch.Elapsed.TotalSeconds.ToString() + " Song(s) Loaded");
                                     if (TracksCollection.Elements.All(t => t.Title != mp3file.Title))
                                     {
                                         //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
@@ -382,10 +402,11 @@ namespace BreadPlayer.ViewModels
                             catch (Exception ex)
                             {
                                 //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                //await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
                                 failedCount++;
                             }
                         }
+                        
                         //await SaveMultipleAlbumArtsAsync(tempList).ConfigureAwait(false);
                         //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                         Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
@@ -407,6 +428,7 @@ namespace BreadPlayer.ViewModels
                         await NotificationManager.ShowMessageAsync(message1);
                     }
                 }
+                LibraryLoadStopwatch.Stop();
                 string message = string.Format("Library successfully loaded! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
                 await NotificationManager.ShowMessageAsync(message);
                 service.Dispose();

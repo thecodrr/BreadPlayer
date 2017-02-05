@@ -8,8 +8,9 @@ namespace BreadPlayer.Service
 {
 	public interface IDatabaseService : IDisposable
     {
-        void CreateDB();
+       void CreateDB();
         Task<IEnumerable<Mediafile>> GetTracks();
+        Task<IEnumerable<Mediafile>> GetRangeOfTracks(int skip, int limit);
         void UpdateTrack(Mediafile file);
         Task<IEnumerable<Mediafile>> Query(string field, object term);
         void RemoveTracks(Query query);

@@ -1,8 +1,8 @@
 ﻿{
   "dependencies": {
     "ksemenenko.ColorThief": "1.1.0.2",
-    "LiteDB": "3.0.0-beta3",
-    "ManagedBass": "0.24.0",
+    "LiteDB": "3.0.0",
+    "ManagedBass": "1.0.2",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Toolkit.Uwp.Notifications": "1.2.0",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",

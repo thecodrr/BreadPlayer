@@ -9,27 +9,44 @@ namespace BreadPlayer.Service
     {
         public string Name { get; set; }
         LiteDatabase db;
+        readonly string ConnectionString = ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;";
+        IDiskService service;
+        LiteDatabase DB
+        {
+            get
+            {
+                if (db == null)
+                {
+                    
+                    db = new LiteDatabase(service);
+                    CreateDB();
+                }
+                return db;
+            }
+        }
         public override async void CreateDB()
         {
-            System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
-            var disk = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db", new FileOptions() { FileMode = FileMode.Exclusive, Journal = true });
-            db = new LiteDatabase(disk);
-            IsValid = db.Engine != null;
-            if (IsValid)
+            using (DB)
             {
-                tracks = db.GetCollection<Mediafile>("songs");
-                tracks.EnsureIndex(t => t.Title);
-                tracks.EnsureIndex(t => t.LeadArtist);
-            }
-            else
-            {
-                await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db")).DeleteAsync(StorageDeleteOption.PermanentDelete);
-                CreateDB();
+                System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
+                IsValid = db.Engine != null;
+                if (IsValid)
+                {
+                    tracks = db.GetCollection<Mediafile>("songs");
+                    tracks.EnsureIndex(t => t.Title);
+                    tracks.EnsureIndex(t => t.LeadArtist);
+                }
+                else
+                {
+                    await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db")).DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    CreateDB();
+                }
             }
         }
         public PlaylistService(string name)
         {
             Name = name;
+            service = new FileDiskService(string.Format(ConnectionString, Name), new FileOptions() { FileMode = FileMode.Exclusive, Journal = true });
             CreateDB();
         }
 

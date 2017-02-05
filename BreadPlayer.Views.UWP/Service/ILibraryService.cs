@@ -13,6 +13,7 @@ namespace BreadPlayer.Service
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Mediafile>> GetAllMediafiles();
+        Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit);
         Task<IEnumerable<Mediafile>> Query(string field, object term);
         /// <summary>
         /// Update a customer in the data store
@@ -29,6 +30,6 @@ namespace BreadPlayer.Service
         bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new();
         void AddPlaylist(Playlist pList);
         IEnumerable<Playlist> GetPlaylists();
-        int SongCount { get;}
+        int SongCount { get; }
     }
 }

@@ -29,22 +29,34 @@ namespace BreadPlayer.Service
 	public class DatabaseService : IDatabaseService
     {
         LiteDatabase db;
+        IDiskService service = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db", new FileOptions() { FileMode = FileMode.Exclusive, Journal = true });
+        LiteDatabase DB
+        {
+            get
+            {
+                if (db == null)
+                {
+                    db = new LiteDatabase(service);
+                    CreateDB();
+                }
+                return db;
+            }
+        }
+
         public LiteCollection<Mediafile> tracks;
         public LiteCollection<Playlist> playlists;
         public LiteCollection<Mediafile> recent;
         public DatabaseService()
         {
-            CreateDB();
         }
         bool isValid;
         public bool IsValid { get { return isValid; } set { isValid = value; } }
+
         public virtual async void CreateDB()
         {
             try
             {
-                var disk = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db", new FileOptions() { FileMode = FileMode.Exclusive, Journal= true });
-                db = new LiteDatabase(disk);
-                IsValid = db.Engine != null;
+                IsValid = DB.Engine != null;
                 if (IsValid)
                 {
                     tracks = db.GetCollection<Mediafile>("tracks");
@@ -59,7 +71,6 @@ namespace BreadPlayer.Service
                     CreateDB();
                 }
                 GetTrackCount();
-                db.Dispose();
             }
             catch(Exception)
             {
@@ -69,21 +80,23 @@ namespace BreadPlayer.Service
         }
         public LiteCollection<T> GetCollection<T>(string colName) where T : new()
         {
-            return db.GetCollection<T>(colName);
+            using (DB)
+                return DB.GetCollection<T>(colName);
         }
         public void Insert(IEnumerable<Mediafile> fileCol)
         {
             try
             {
-                tracks.Insert(fileCol);
-            }  
-            catch(Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
+                if (DB != null)
+                    tracks.Insert(fileCol);
+            }
+            catch (Exception ex) { Debug.WriteLine(ex.Message + "|" + fileCol.Count()); }        
         }
         public int GetTrackCount()
         {
             try
             {
-                if (db != null && this != null && tracks != null)
+                if (DB != null && this != null && tracks != null)
                     return tracks.Count();
                 else
                     return 0;
@@ -95,56 +108,84 @@ namespace BreadPlayer.Service
         }
         public void FindOne(string path)
         {
-            tracks.FindOne(t => t.Path == path);
+            using (DB)
+                tracks.FindOne(t => t.Path == path);
         }
         public void Remove(Mediafile file)
         {
-            tracks.Delete(file._id);
+            using (DB)
+                tracks.Delete(file._id);
         }
         public void Insert(Mediafile file)
-        {            
-            tracks.Insert(file);
+        {
+            using (DB)
+                tracks.Insert(file);
         }
         public void RemoveTracks(Query query)
         {
-            tracks.Delete(query);
+            using (DB)
+                tracks.Delete(query);
         }
         public async Task<IEnumerable<Mediafile>> GetTracks()
-        {     
+        {
             IEnumerable<Mediafile> collection = null;
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            using (DB)
             {
-                collection = tracks.Find(LiteDB.Query.All());
-            });
+                await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    collection = tracks.Find(LiteDB.Query.All());
+                });
+            }
+            return collection;
+        }
 
+        public async Task<IEnumerable<Mediafile>> GetRangeOfTracks(int skip, int limit)
+        {
+            IEnumerable<Mediafile> collection = null;
+            using (DB)
+            {
+                await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    collection = tracks.Find(LiteDB.Query.All(), skip, limit);
+                });
+            }
             return collection;
         }
         public void UpdateTrack(Mediafile file)
         {
-            if (file != null && tracks.Exists(t => t.Path == file.Path))
+            using (DB)
             {
-                tracks.Update(file);                
+                if (file != null && tracks.Exists(t => t.Path == file.Path))
+                {
+                    tracks.Update(file);
+                }
             }
         }
         public void UpdateTracks(IEnumerable<Mediafile> files)
         {
-            if (files != null)
+            using (DB)
             {
-                tracks.Update(files);
+                if (files != null)
+                {
+                    tracks.Update(files);
+                }
             }
         }
         public async Task<IEnumerable<Mediafile>> Query(string field, object term)
         {
             IEnumerable<Mediafile> collection = null;
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            using (DB)
             {
-                collection = tracks.Find(LiteDB.Query.Contains(field, term.ToString()));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
-            });
+                await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    collection = tracks.Find(LiteDB.Query.Contains(field, term.ToString()));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
+                });
+            }
             return collection;
         }
         public void Dispose()
         {
-            db?.Dispose();
+            DB?.Dispose();
         }
     }
 }

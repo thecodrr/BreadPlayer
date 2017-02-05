@@ -137,6 +137,7 @@
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
     <Compile Include="Common\BackDrop.cs" />
     <Compile Include="Common\DataTrigger.cs" />
+    <Compile Include="Common\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\FrameworkElementExtensions.cs" />
     <Compile Include="Common\NotificationManager.cs" />

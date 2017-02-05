@@ -68,9 +68,9 @@
             </VisualStateGroup>
 
         </VisualStateManager.VisualStateGroups>
-       
+
         <Image Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
-      
+
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Eaten" Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -93,7 +93,7 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
-     
+
         <StackPanel x:Name="playbarPanel" VerticalAlignment="Bottom">
             <Grid Height="70" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" >
                 <Grid.ColumnDefinitions>
@@ -175,7 +175,7 @@
             <Slider x:Name="volumeSlider" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
-        
+       
     </Grid>
 
 </Page>
