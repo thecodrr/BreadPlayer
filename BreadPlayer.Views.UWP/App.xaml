@@ -1004,7 +1004,15 @@
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding OpenSongLocationCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-                        <MenuFlyoutItem Text="Delete"
+                        <MenuFlyoutItem Text="Relocate Song"
+                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding OpenSongLocationCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
+                        <MenuFlyoutItem Text="Stop Playing After This Song"
+                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding OpenSongLocationCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
+                       <MenuFlyoutItem Text="Delete"
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                         Command="{Binding DeleteCommand}"

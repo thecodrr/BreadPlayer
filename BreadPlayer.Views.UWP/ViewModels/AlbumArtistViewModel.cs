@@ -55,13 +55,18 @@ namespace BreadPlayer.ViewModels
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
                 AlbumsLoaded = false;
+           
         }
 
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             //Albums are loaded, we can now hide the progress ring.
             if (AlbumCollection.Count > 0)
+            {
                 AlbumsLoaded = false;
+                db.Dispose();
+                db = null;
+            }
             else
                 AlbumsLoaded = true;
         }

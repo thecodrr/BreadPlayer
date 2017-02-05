@@ -880,13 +880,15 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        async Task<Playlist> ShowAddPlaylistDialogAsync(string title = "Name this playlist", string playlistName = "", string desc = "")
+        async Task<Playlist> ShowAddPlaylistDialogAsync(string title = "Name this playlist", string playlistName = "", string desc = "", string password = "")
         {
             var dialog = new InputDialog()
             {
                 Title = title,
                 Text = playlistName,
-                Description = desc
+                Description = desc,
+                IsPrivate = password.Length > 0,
+                Password = password
             };
             if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;

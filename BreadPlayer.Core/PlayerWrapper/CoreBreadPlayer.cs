@@ -28,6 +28,7 @@ namespace BreadPlayer.Core
         #region Fields
         int handle = 0;
         private SyncProcedure _sync;
+        private SyncProcedure _posSync;
         #endregion
 
         #region Constructor
@@ -35,6 +36,7 @@ namespace BreadPlayer.Core
         {
             Init();
             _sync = new SyncProcedure(EndSync);
+            _posSync = new SyncProcedure(PositonReachedSync);
         }        
         #endregion
 
@@ -88,7 +90,7 @@ namespace BreadPlayer.Core
             {
                 try
                 {
-                    string path = mediaFile.Path;
+                    string path = mediaFile.Path;                    
                     await Stop();
                     await Task.Run(() =>
                     {
@@ -99,6 +101,7 @@ namespace BreadPlayer.Core
                         InitializeExtensions(path);
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
                         CurrentlyPlayingFile = mediaFile;
                     });
 
@@ -131,11 +134,15 @@ namespace BreadPlayer.Core
         /// <returns></returns>
         public async Task Pause()
         {
-            await Task.Run(() =>
+            PlayerState = PlayerState.Paused;
+            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Paused));
+            await Task.Run(async () =>
             {
+                Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 700);
+                await Task.Delay(700);
                 Bass.ChannelPause(handle);
-                PlayerState = PlayerState.Paused;
-                MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Paused));
+                //var vol = (float)Volume / 100f;
+                //Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, vol);
             });
 
         }
@@ -147,10 +154,12 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
+                var vol = (float)Volume / 100f;
+                Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, 0f);
                 ManagedBass.Bass.ChannelPlay(handle);
+                Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, vol, 3000);
                 PlayerState = PlayerState.Playing;
                 MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
-              
             });
 
         }
@@ -183,7 +192,7 @@ namespace BreadPlayer.Core
             get { return _volume; }
             set {
                 Set(ref _volume, value);
-                Bass.Volume =  _volume / 100;
+                Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, _volume / 100);               
             }
         }
      
@@ -234,9 +243,13 @@ namespace BreadPlayer.Core
             get { return _ignoreErrors; }
             set { Set(ref _ignoreErrors, value); }
         }
-       
-        #endregion
 
+        #endregion
+        private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
+        {
+            Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
+            //MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
+        }
         private void EndSync(int handle, int channel, int data, IntPtr user)
         {
             MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));

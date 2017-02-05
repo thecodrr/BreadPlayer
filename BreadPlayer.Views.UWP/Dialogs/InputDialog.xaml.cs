@@ -38,6 +38,20 @@ namespace BreadPlayer.Dialogs
             get { return (string)GetValue(DescriptionProperty); }
             set { SetValue(DescriptionProperty, value); }
         }
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register(
+          "Password", typeof(string), typeof(InputDialog), new PropertyMetadata(null));
+        public string Password
+        {
+            get { return (string)GetValue(PasswordProperty); }
+            set { SetValue(PasswordProperty, value); }
+        }
+        public static readonly DependencyProperty IsPrivateProperty = DependencyProperty.Register(
+        "IsPrivate", typeof(bool), typeof(InputDialog), new PropertyMetadata(null));
+        public bool IsPrivate
+        {
+            get { return (bool)GetValue(IsPrivateProperty); }
+            set { SetValue(IsPrivateProperty, value); }
+        }
         public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
          "DialogWidth", typeof(double), typeof(InputDialog), new PropertyMetadata(null));
         public double DialogWidth
