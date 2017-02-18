@@ -56,8 +56,7 @@ namespace BreadPlayer.Core
         }
         private void InitializeExtensions(string path)
         {
-            ////Tags = new CoreTags(path);
-            ////Effect = new Effects(handle);
+            Effect = new Effects(handle);
         }
         #endregion
 
@@ -186,6 +185,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
+        public Effects Effect { get; set; }
         double _volume = 50;
         public double Volume
         {
