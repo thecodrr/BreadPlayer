@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Views.UWP", "BreadPlayer.Views.UWP\BreadPlayer.Views.UWP.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
 EndProject
@@ -70,8 +70,8 @@ Global
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|x64.Build.0 = Release|x64
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|x86.ActiveCfg = Debug|Any CPU
 		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|x86.Build.0 = Debug|Any CPU
-		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|Any CPU.Build.0 = Debug|x86
+		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|ARM.ActiveCfg = Debug|ARM
 		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|ARM.Build.0 = Debug|ARM
 		{F22742C9-7088-4325-9F87-0A1AA34DDA74}.Debug|x64.ActiveCfg = Debug|x64
