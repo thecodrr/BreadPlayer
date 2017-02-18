@@ -421,7 +421,7 @@ namespace BreadPlayer.ViewModels
             }
             else if(path is Playlist)
             {
-                using (Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name))
+                using (Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password))
                 {
                     if (service.IsValid)
                     {
@@ -899,9 +899,11 @@ namespace BreadPlayer.ViewModels
                 var Playlist = new Playlist();
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
+                Playlist.IsPrivate = dialog.Password.Length > 0;
+                Playlist.Password = dialog.Password;
                 if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
                 {
-                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
+                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description, dialog.Password);
                 }
                 return Playlist;
             }
@@ -912,7 +914,7 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                PlaylistService service = new PlaylistService(list.Name);
+                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Password);
                 int index = 0;
                 foreach (var item in songsToadd)
                 {

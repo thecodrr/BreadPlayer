@@ -88,7 +88,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                                        Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
+                                                                    Value="{ThemeResource HoverBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -205,6 +205,100 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="NavMenuItemContainerDarkStyle" TargetType="ListViewItem" BasedOn="{StaticResource NavMenuItemContainerStyle}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Grid x:Name="LayoutRoot" BorderBrush="{ThemeResource HoverBrush}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource HoverBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
+                                                                       Storyboard.TargetProperty="FontWeight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="SemiBold" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerDownThemeAnimation TargetName="LayoutRoot"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"></VisualState>
+                                <VisualState x:Name="PointerOverSelected">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource HoverBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
+                                                                       Storyboard.TargetProperty="FontWeight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="Bold" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="border"
+                                                                       Storyboard.TargetProperty="Opacity">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="1" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
+                                                                       Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="{ThemeResource HoverBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>-->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
+                                                                       Storyboard.TargetProperty="FontWeight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="SemiBold" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="border"
+                                                                       Storyboard.TargetProperty="Opacity">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                                                    Value="1" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="myback" Background="Transparent">
+                            <StackPanel Orientation="Horizontal">
+                                <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}"/>
+                                <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            </StackPanel>
+                        </Border>
+                        <Grid.Resources>
+                            <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
+                                <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                <!--<MenuFlyoutItem Text="Add to"/>-->
+                                <MenuFlyoutItem Text="Delete Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
+                                <MenuFlyoutItem Text="Rename Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                            </MenuFlyout>
+                        </Grid.Resources>
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="RightTapped">
+                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist"/>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
         <Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}" />
         <Setter Property="Height" Value="20" />
@@ -225,11 +319,6 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{ThemeResource HoverBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
-                                                                       Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightListLowBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -239,23 +328,12 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="SemiBold" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
-                                                                       Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
                                         <PointerDownThemeAnimation TargetName="LayoutRoot"/>
-
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled"></VisualState>
                                 <VisualState x:Name="PointerOverSelected">
-                                    <Storyboard>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
-                                                                       Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightListLowBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
+                                    <Storyboard>                                       
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -271,21 +349,10 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="1" />
                                         </ObjectAnimationUsingKeyFrames>
-
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
-                                    <Storyboard>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
-                                                                       Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
-                                                                       Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
+                                    <Storyboard>                                    
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -332,11 +399,12 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" Foreground="White" FontWeight="SemiLight" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
+                      HorizontalAlignment="Center" FontWeight="SemiLight" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="White" Margin="5,0,0,0"/>
 
         </Grid>
     </DataTemplate>
+    
     <DataTemplate x:Key="NavMenuItemTemplateLight">
         <Grid ToolTipService.ToolTip="{Binding Path=Tooltip}">
             <Grid.ColumnDefinitions>
@@ -351,6 +419,7 @@
 
         </Grid>
     </DataTemplate>
+   
     <Style TargetType="local:SplitViewMenu">
         <Setter Property="NavMenuItemContainerStyle" Value="{StaticResource NavMenuItemContainerStyle}" />
         <Setter Property="NavMenuItemTemplate" Value="{StaticResource NavMenuItemTemplate}" />
@@ -366,7 +435,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
-                                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />                                        
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -376,7 +445,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-
+                                        <Setter Target="Shortcuts.HorizontalAlignment" Value="Center"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,30,0,0"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -405,32 +475,16 @@
                                         <Setter Target="backgroundBorder.Visibility" Value="Collapsed"/>
 
                                     </VisualState.Setters>
-                                </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="TogglePaneButton.Foreground" Value="White"/>
-                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
-                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
-                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
-                                        <Setter Target="playlistBtn.Width" Value="320"/>
-
-                                        <Setter Target="UpperGrid.Margin" Value="0"/>
-                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                        <!--<Setter Target="searchBtn.Width" Value="320"/>
-                                        <Setter Target="searchBtn.Visibility" Value="Visible"/>
-                                        <Setter Target="searchBox.Visibility" Value="Collapsed"/>-->
-                                    </VisualState.Setters>
-                                </VisualState>
+                                </VisualState>                                
                                 <VisualState>
                                     <VisualState.StateTriggers>
                                         <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
+                                        <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
+                                        <Setter Target="NavTopMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
+                                        <Setter Target="NavBottomMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
                                         <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
                                         <Setter Target="playlistBtn.Width" Value="355"/>
@@ -438,13 +492,12 @@
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
-                                        <Setter Target="NavTopMenuList.Margin" Value="-5,0,0,0"/>
-                                        <Setter Target="NavBottomMenuList.Margin" Value="-5,0,0,0"/>
                                         <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
                                         <Setter Target="Shortcuts.Margin" Value="30,50,0,0"/>
-                                        <!--<Setter Target="PageFrame.Margin" Value="0,120,0,0"/>-->
                                         <Setter Target="Pane.Margin" Value="0"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
+                                        <Setter Target="TogglePaneButton.Margin" Value="0"/>
+                                        <Setter Target="playlistBtn.Margin" Value="0"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -474,11 +527,8 @@
                                         <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto">
 
                                             <StackPanel Orientation="Vertical" Grid.Row="0" >
-                                                <!--<Button x:Name="searchBtn" Visibility="Collapsed"
-                                                TabIndex="2" Width="320" Foreground="White" Margin="0,48,0,0" FontSize="22"
-                                                Style="{StaticResource SearchButtonStyle}"/>-->
                                                 <ToggleButton x:Name="TogglePaneButton"
-                                      TabIndex="1" 
+                                      TabIndex="1" Margin="6,0,0,0"
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu"
@@ -490,24 +540,15 @@
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-
-                                                    <!--<local:NavMenuListView.Header>
-                                        <Button x:Name="BackButton"
-                                                TabIndex="2"
-                                                Style="{StaticResource NavigationBackButtonStyle}"
-                                                IsEnabled="{Binding Path=CanGoBack, ElementName=PageFrame}"
-                                                Width="{Binding Path=ItemsPanelRoot.Width, ElementName=NavMenuList}"
-                                                HorizontalAlignment="{Binding Path=ItemsPanelRoot.HorizontalAlignment, ElementName=NavMenuList}" />
-                                    </local:NavMenuListView.Header>-->
                                                 </local:NavMenuListView>
                                                 <MenuFlyoutSeparator x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
 
                                                 <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="355">
                                                     <Button x:Name="playlistBtn" 
-                                                TabIndex="2" Width="270" 
+                                                TabIndex="2" Width="270" Margin="5,0,0,0"
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
                                                     <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
-                                                TabIndex="2" Width="50" Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
+                                                TabIndex="2" Width="50"  Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
                                                 </StackPanel>
                                                 <local:NavMenuListView x:Name="PlaylistsMenuList"
@@ -533,14 +574,6 @@
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                <!--<local:NavMenuListView.Header>
-                                        <Button x:Name="BackButton"
-                                                TabIndex="2"
-                                                Style="{StaticResource NavigationBackButtonStyle}"
-                                                IsEnabled="{Binding Path=CanGoBack, ElementName=PageFrame}"
-                                                Width="{Binding Path=ItemsPanelRoot.Width, ElementName=NavMenuList}"
-                                                HorizontalAlignment="{Binding Path=ItemsPanelRoot.HorizontalAlignment, ElementName=NavMenuList}" />
-                                    </local:NavMenuListView.Header>-->
                                             </local:NavMenuListView>
                                         </StackPanel>
                                     </Grid>
@@ -551,7 +584,7 @@
 
                                 <blur:BackDrop BlurAmount="30" TintColor="#CCE5E5E5" />
                                 <Grid VerticalAlignment="Top">
-
+                                    <Button x:Name="toggleButton" FontFamily="Segoe MDL2 Assets" Margin="0,30,0,0" FontSize="22" Background="Transparent" Content="&#xE700;" Style="{StaticResource HyperlinkBtn}"/>
                                     <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -564,7 +597,7 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
-                                    <AutoSuggestBox x:Name="searchBox" Visibility="Visible" Opacity="0" HorizontalAlignment="Left" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="50,110,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    <AutoSuggestBox x:Name="searchBox" Visibility="Visible" Opacity="0" HorizontalAlignment="Left" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="50,115,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
                                         <AutoSuggestBox.RenderTransform>
                                             <TranslateTransform X="0"/>
                                         </AutoSuggestBox.RenderTransform>

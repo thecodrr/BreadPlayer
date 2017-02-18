@@ -654,7 +654,7 @@ Control.IsTemplateFocusTarget="True"/>
                 </StackPanel>
             </Grid>
         </Grid>
-        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" DisplayMemberPath="Title" Grid.Row="2" ItemContainerStyle="{StaticResource CustomPlaylistItemStyle}"></ListView>
+        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" DisplayMemberPath="Title" Grid.Row="2" ItemContainerStyle="{StaticResource PlaylistItemExpanded}"></ListView>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}"/>

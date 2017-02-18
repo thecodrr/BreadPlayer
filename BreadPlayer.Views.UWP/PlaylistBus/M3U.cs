@@ -18,7 +18,7 @@ namespace BreadPlayer.PlaylistBus
             Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                using (PlaylistService service = new PlaylistService(Playlist.Name))
+                using (PlaylistService service = new PlaylistService(Playlist.Name, false, ""))
                 {
                     string line;
                     int index = 0;

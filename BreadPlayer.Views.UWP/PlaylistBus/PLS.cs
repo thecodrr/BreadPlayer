@@ -67,7 +67,7 @@ namespace BreadPlayer.PlaylistBus
                         continue;
                     }
                 }
-                using (PlaylistService service = new PlaylistService(file.DisplayName))
+                using (PlaylistService service = new PlaylistService(file.DisplayName, false, ""))
                 {
                     for (int i = 0; i < noe; i++)
                     {

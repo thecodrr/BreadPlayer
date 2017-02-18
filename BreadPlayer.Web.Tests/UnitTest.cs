@@ -3,6 +3,8 @@ using BreadPlayer.Web.Lastfm;
 using System.Threading.Tasks;
 using BreadPlayer.Models;
 using BreadPlayer.Web._123music;
+using BreadPlayer.Web.BaiduLyricsAPI;
+using BreadPlayer.Web.TagParser;
 
 namespace MyFirstUWPTests
 {
@@ -59,6 +61,33 @@ namespace MyFirstUWPTests
         public async void AlbumsListTest(DataType term)
         {
             Assert.True(await new API().GetAlbumsList(term));
+        }
+        [Theory]
+        [InlineData("172072")]
+        public async void RequestSongInfoTest(string id)
+        {
+            Assert.NotNull(await new ApiMethods().RequestAlbumByArtist(id));
+        }
+        [Theory]
+        [InlineData("172072")]
+        public async void RequestArtistInfoTest(string id)
+        {
+            Assert.NotNull(await new ApiMethods().RequestArtistInfo(id));
+        }
+        [Theory]
+        [InlineData("172072")]
+        public async void RequestMusicInfoTest(string id)
+        {
+            Assert.NotNull(await new ApiMethods().RequestMusicInfo(id));
+        }
+        [Theory]
+        [InlineData("eminem", "justin bieber")]
+        [InlineData("The Way I Am", "Nothing Like Us")]
+        [InlineData("The Way I Am", "eminem")]
+        [InlineData("justin bieber", "Nothing Like Us")]
+        public void ComparisonTest(string a, string b)
+        {
+            Assert.NotNull(new BreadParser().Compare2Strings(a, b));
         }
         async Task<bool> HasScrobbled(params string[] mediaFile)
         {

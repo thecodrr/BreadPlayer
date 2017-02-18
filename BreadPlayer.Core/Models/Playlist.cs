@@ -25,9 +25,13 @@ namespace BreadPlayer.Models
 
         string name;
         public string Name { get { return name; }set { Set(ref name, value); } }
+        bool isPrivate;
+        public bool IsPrivate { get { return isPrivate; } set { Set(ref isPrivate, value); } }
         string description;
         public string Description { get { return description; } set { Set(ref description, value); } }
-      
+        string password;
+        public string Password { get { return password; } set { Set(ref password, value); } }
+
         public Playlist()
         {
 

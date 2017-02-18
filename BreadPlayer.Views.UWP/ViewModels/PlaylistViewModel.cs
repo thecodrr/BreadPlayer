@@ -98,7 +98,26 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
         }
-        void Delete(object para)
+       async Task<string> ShowPasswordDialog(bool isPrivate)
+        {
+            if (isPrivate)
+            {
+                var dialog = new PasswordDialog()
+                {
+                    Title = "Hold on a second, baker! First enter the password then see the contents.",
+                };
+                if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                else
+                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    return dialog.Password;
+                }
+            }
+            return "";
+        }
+        async void Delete(object para)
         {
             try
             {
@@ -107,14 +126,15 @@ namespace BreadPlayer.ViewModels
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-                using (PlaylistService service = new PlaylistService(Playlist.Name))
+                
+                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, await ShowPasswordDialog(Playlist.IsPrivate)))
                 {
                     service.Remove(mediafile);
                     Songs.Remove(mediafile);
                     // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
                     // Songs.Remove(mediafile);
                     // LibVM.Database.Update(mediafile);
-                    Refresh();
+                    await Refresh();
                 }
             }
             catch (Exception ex)
@@ -249,14 +269,22 @@ namespace BreadPlayer.ViewModels
         }
         async void LoadDB()
         {
-            using (Service.PlaylistService service = new Service.PlaylistService(Playlist.Name))
+            string password = await ShowPasswordDialog(Playlist.IsPrivate);
+            if (password == playlist.Password)
             {
-                if (service.IsValid)
+                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password))
                 {
-                    var ss = service.GetTrackCount();
-                    Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
-                    await Refresh();
+                    if (service.IsValid)
+                    {
+                        var ss = service.GetTrackCount();
+                        Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
+                        await Refresh();
+                    }
                 }
+            }
+            else
+            {
+                LoadDB();
             }
         }
         
