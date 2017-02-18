@@ -130,13 +130,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ManagedBass">
-      <HintPath>..\..\ManagedBass\src\Portable\bin\Release\ManagedBass.dll</HintPath>
+      <HintPath>..\libs\ManagedBass.dll</HintPath>
     </Reference>
     <Reference Include="ManagedBass.PInvoke">
-      <HintPath>..\..\ManagedBass.PInvoke\src\Portable\bin\Release\ManagedBass.PInvoke.dll</HintPath>
+      <HintPath>..\libs\ManagedBass.PInvoke.dll</HintPath>
     </Reference>
     <Reference Include="XLog">
-      <HintPath>..\..\XLog\Bin\Release\AnyCPU\XLog\XLog.dll</HintPath>
+      <HintPath>..\libs\XLog.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
