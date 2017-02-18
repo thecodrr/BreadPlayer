@@ -66,12 +66,12 @@ namespace BreadPlayer
             CoreWindowLogic logic = new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
         }
-           
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter is StorageFile)
              Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
-            
+           
             base.OnNavigatedTo(e);
         }
         bool isDragging = false;

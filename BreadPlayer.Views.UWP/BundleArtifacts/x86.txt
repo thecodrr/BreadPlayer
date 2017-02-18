@@ -1,0 +1,2 @@
+MainPackage=C:\Users\The Weaver\Source\Repos\BreadPlayer-Beta\BreadPlayer.Views.UWP\bin\x64\Release\x86\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_1.1.0.0_x86.appx
+SymbolPackage=C:\Users\The Weaver\Source\Repos\BreadPlayer-Beta\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_1.1.0.0_Test\BreadPlayer.Views.UWP_1.1.0.0_x86.appxsym
