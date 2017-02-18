@@ -7,7 +7,7 @@ platform: x86
 before_build:
 - cmd: nuget restore BreadPlayer.sln
 build:
-  project: BreadPlayer.sln
+  project: BreadPlayer.NoTests.sln
   parallel: true
   verbosity: minimal
 artifacts:
