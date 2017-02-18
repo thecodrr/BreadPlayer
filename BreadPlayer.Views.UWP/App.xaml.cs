@@ -155,7 +155,7 @@ namespace BreadPlayer
             var deferral = e.SuspendingOperation.GetDeferral();
             SessionWatch.Stop();
             BLogger.Logger.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
-           // await BLogger.CopyLogAndMailAsync();
+            await BLogger.CopyLogAndMailAsync();
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();

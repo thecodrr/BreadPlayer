@@ -56,7 +56,8 @@ namespace BreadPlayer.Core
         }
         private void InitializeExtensions(string path)
         {
-            Effect = new Effects(handle);
+            ////Tags = new CoreTags(path);
+            ////Effect = new Effects(handle);
         }
         #endregion
 
@@ -185,7 +186,6 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
-        public Effects Effect { get; set; }
         double _volume = 50;
         public double Volume
         {
@@ -194,7 +194,8 @@ namespace BreadPlayer.Core
                 Set(ref _volume, value);
                 Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, _volume / 100);               
             }
-        }    
+        }
+     
 
         double _seek = 0;
         public double Position
@@ -247,6 +248,7 @@ namespace BreadPlayer.Core
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {
             Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
+            //MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
         private void EndSync(int handle, int channel, int data, IntPtr user)
         {

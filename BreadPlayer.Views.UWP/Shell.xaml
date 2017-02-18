@@ -167,16 +167,14 @@
                 </StackPanel>
             </Grid>
         </Border>
-        
-        <Grid x:Name="volumeGrid" Margin="0,0,0,69" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="311">
+        <Grid x:Name="volumeGrid" Margin="0,69,0,0" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>
             </Grid.ColumnDefinitions>
             <Slider x:Name="volumeSlider" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="10,0,0,1"/>
             <TextBlock Grid.Column="1" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,15,6,15" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
-        </Grid>   
-        
+        </Grid>       
     </Grid>
 
 </Page>
