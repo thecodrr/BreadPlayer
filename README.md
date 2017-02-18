@@ -5,6 +5,8 @@
   <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
 
+[![Donate|Help Us Grow](https://img.shields.io/badge/Donate-Help%20Us%20Grow-green.svg)](http://blog.breadplayer.com/donate)
+
 [![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/)
 [![Join the chat at https://gitter.im/BreadPlayer/Lobby](https://badges.gitter.im/BreadPlayer/Lobby.svg)](https://gitter.im/BreadPlayer/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
  
@@ -45,10 +47,10 @@
 - [ ] 4. Stop playing after this song.
 - [ ] 5. .lrc lyrics (Synchronized lyrics) and unsynced lyrics.
 - [ ] 6. Ability to hide a specific folder and its songs.
-- [ ] 7. Private Playlists
+- [x] 7. Private Playlists
 - [ ] 8. Ability to relocate (change location) of a song.
-- [ ] 9. Fade in/out when changing the song.
-- [ ] 10. Last.fm Scrobbling.
+- [x] 9. Fade in/out when changing the song.
+- [x] 10. Last.fm Scrobbling.
 - [ ] 11. SoundCloud Support
 - [ ] 12. Manual adding of Album arts
 - [x] 13. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
