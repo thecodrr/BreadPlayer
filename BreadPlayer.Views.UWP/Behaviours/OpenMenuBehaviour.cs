@@ -96,7 +96,8 @@ namespace BreadPlayer.Behaviours
                     if (item != null) item.IsSelected = true;
                 }
                 var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                (flyout.Items[0] as MenuFlyoutItem).CommandParameter = item.Content;
+                if(flyout.Items[0] is MenuFlyoutItem)
+                    (flyout.Items[0] as MenuFlyoutItem).CommandParameter = item.Content;
                 if (position.HasValue && position != null)
                     flyout.ShowAt(senderElement, position.Value);
                 else

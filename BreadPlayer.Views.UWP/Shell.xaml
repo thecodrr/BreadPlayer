@@ -122,7 +122,7 @@
                     </StackPanel>
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="RightTapped">
-                            <Behaviours:OpenMenuFlyoutAction Parameter="SimpleContextMenu"/>
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
                 </Grid>
@@ -167,7 +167,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Grid x:Name="volumeGrid" Margin="0,69,0,0" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Top" HorizontalAlignment="Right" Width="311">
+        <Grid x:Name="volumeGrid" Margin="0,0,0,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" Height="56" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="311">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="254*"/>
                 <ColumnDefinition Width="57*"/>
