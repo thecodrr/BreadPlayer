@@ -48,7 +48,7 @@
 - [ ] 5. .lrc lyrics (Synchronized lyrics) and unsynced lyrics.
 - [ ] 6. Ability to hide a specific folder and its songs.
 - [x] 7. Private Playlists
-- [ ] 8. Ability to relocate (change location) of a song.
+- [x] 8. Ability to relocate (change location) of a song.
 - [x] 9. Fade in/out when changing the song.
 - [x] 10. Last.fm Scrobbling.
 - [ ] 11. SoundCloud Support
