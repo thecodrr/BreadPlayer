@@ -344,7 +344,7 @@ namespace BreadPlayer.ViewModels
             var picker = new FileOpenPicker();
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.Thumbnail;
-            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;            
             openPicker.FileTypeFilter.Add(".mp3");
             openPicker.FileTypeFilter.Add(".wav");
             openPicker.FileTypeFilter.Add(".ogg");

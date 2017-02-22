@@ -33,6 +33,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -298,7 +299,13 @@ namespace BreadPlayer.ViewModels
         RelayCommand _addtoplaylistCommand;   
         RelayCommand _refreshViewCommand;
         RelayCommand _initCommand;
+        RelayCommand _relocateSongCommand;
         DelegateCommand changeSelectionModeCommand;
+        public ICommand RelocateSongCommand
+        {
+            get
+            { if (_relocateSongCommand == null) { _relocateSongCommand = new RelayCommand(RelocateSong); } return _relocateSongCommand; }
+        }
         public ICommand ChangeSelectionModeCommand
         {
             get
@@ -348,6 +355,32 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Implementations  
+        async void RelocateSong(object para)
+        {
+            if (para is Mediafile)
+            {
+                FileOpenPicker openPicker = new FileOpenPicker()
+                {
+                    CommitButtonText = "Relocate Song",
+                };
+                openPicker.FileTypeFilter.Add(".mp3");
+                openPicker.FileTypeFilter.Add(".wav");
+                openPicker.FileTypeFilter.Add(".ogg");
+                openPicker.FileTypeFilter.Add(".flac");
+                openPicker.FileTypeFilter.Add(".m4a");
+                openPicker.FileTypeFilter.Add(".aif");
+                openPicker.FileTypeFilter.Add(".wma");
+                var newFile = await openPicker.PickSingleFileAsync();
+                if (newFile != null)
+                {
+                    var newMediafile = await CreateMediafile(newFile);
+                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path).Length = newMediafile.Length;
+                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path)._id = newMediafile._id;
+                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path).Path = newMediafile.Path;
+                    LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == (para as Mediafile)._id));
+                }
+            }
+        }
         void ChangeSelectionMode()
         {
             IsMultiSelectModeEnabled = IsMultiSelectModeEnabled ? false : true;
