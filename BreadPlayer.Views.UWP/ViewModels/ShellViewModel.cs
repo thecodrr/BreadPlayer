@@ -515,7 +515,7 @@ namespace BreadPlayer.ViewModels
 
         Mediafile previoussong = new Mediafile(); //we init beforehand so no null exception occurs
         public Mediafile PreviousSong
-				{
+        {
             get { return previoussong; }
             set { Set(ref previoussong, value); }
         }
