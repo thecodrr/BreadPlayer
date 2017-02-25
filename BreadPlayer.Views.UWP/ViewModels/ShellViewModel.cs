@@ -301,9 +301,11 @@ namespace BreadPlayer.ViewModels
 
         async void PlayNext()
         {
-            if (Player.CurrentlyPlayingFile != null)
-                history.Do(Player.CurrentlyPlayingFile);
-
+            if (Player.CurrentlyPlayingFile != null) {
+								PreviousSong= Player.CurrentlyPlayingFile;
+								history.Do(Player.CurrentlyPlayingFile);
+						}
+                
             Mediafile toPlayFile = await GetUpcomingSong(true);
             if (toPlayFile == null)
             {
@@ -337,7 +339,8 @@ namespace BreadPlayer.ViewModels
                 return;
             }
             var file = history.Undo(null);
-            if (file != null) PlayFile(file);
+						PreviousSong = history.SemiUndo(null);
+						if (file != null) PlayFile(file);
         }
         async void Open(object para)
         {
@@ -507,6 +510,13 @@ namespace BreadPlayer.ViewModels
         {
             get { return upcomingsong; }
             set { Set(ref upcomingsong, value); }
+        }
+
+				Mediafile previoussong = new Mediafile(); //we init beforehand so no null exception occurs
+        public Mediafile PreviousSong
+				{
+            get { return previoussong; }
+            set { Set(ref previoussong, value); }
         }
         #endregion
 

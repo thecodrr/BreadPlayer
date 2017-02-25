@@ -134,7 +134,18 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <AppBarButton BorderBrush="White" ToolTipService.ToolTip="Previous Song" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50"/>
+                    <AppBarButton BorderBrush="White" Icon="Previous" VerticalAlignment="Stretch" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="50">
+									<ToolTipService.ToolTip>
+                        <StackPanel Orientation="Horizontal" Width="250" DataContext="{Binding PreviousSong}" Height="Auto">
+                          <Image Height="60" Width="65" Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="UniformToFill"/>
+                          <StackPanel Margin="4,0,0,0">
+														<TextBlock Text="{Binding Path=Title, FallbackValue='No previous song', TargetNullValue='No previous song'}" FontSize="14" TextTrimming="WordEllipsis" TextWrapping="NoWrap" FontWeight="SemiLight"/>
+                            <TextBlock Text="{Binding Path=LeadArtist}" Visibility="{Binding Path=LeadArtist, Converter={StaticResource BoolToVisibility}}" FontSize="14" FontWeight="SemiLight"/>
+                            <TextBlock Text="{Binding Path=Album}" Visibility="{Binding Path=Album, Converter={StaticResource BoolToVisibility}}" FontSize="14"/>
+                          </StackPanel>
+                        </StackPanel>
+                      </ToolTipService.ToolTip>
+									</AppBarButton>
                     <AppBarButton BorderBrush="WhiteSmoke" Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Stretch" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="50"/>
                     <AppBarButton BorderBrush="WhiteSmoke" Icon="Next" VerticalAlignment="Stretch"  IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="50">
                       <ToolTipService.ToolTip>
