@@ -301,13 +301,12 @@ namespace BreadPlayer.ViewModels
 
         async void PlayNext()
         {
-			if (Player.CurrentlyPlayingFile != null)
-			{
-				PreviousSong = Player.CurrentlyPlayingFile;
-				history.Do(Player.CurrentlyPlayingFile);
-			}
-
-			Mediafile toPlayFile = await GetUpcomingSong(true);
+            if (Player.CurrentlyPlayingFile != null) {
+								PreviousSong= Player.CurrentlyPlayingFile;
+								history.Do(Player.CurrentlyPlayingFile);
+						}
+                
+            Mediafile toPlayFile = await GetUpcomingSong(true);
             if (toPlayFile == null)
             {
                 PlayPause();
@@ -340,8 +339,8 @@ namespace BreadPlayer.ViewModels
                 return;
             }
             var file = history.Undo(null);
-			PreviousSong = history.SemiUndo(null);
-			if (file != null) PlayFile(file);
+						PreviousSong = history.SemiUndo(null);
+						if (file != null) PlayFile(file);
         }
         async void Open(object para)
         {
@@ -513,16 +512,16 @@ namespace BreadPlayer.ViewModels
             set { Set(ref upcomingsong, value); }
         }
 
-		Mediafile previoussong = new Mediafile(); //we init beforehand so no null exception occurs
-		public Mediafile PreviousSong
-		{
-			get { return previoussong; }
-			set { Set(ref previoussong, value); }
-		}
-		#endregion
+				Mediafile previoussong = new Mediafile(); //we init beforehand so no null exception occurs
+        public Mediafile PreviousSong
+				{
+            get { return previoussong; }
+            set { Set(ref previoussong, value); }
+        }
+        #endregion
 
-		#region Reset
-		public void Reset()
+        #region Reset
+        public void Reset()
         {
             PlaylistSongCollection?.Clear();
             TracksCollection?.Clear();
