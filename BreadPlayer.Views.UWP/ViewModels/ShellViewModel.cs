@@ -302,7 +302,7 @@ namespace BreadPlayer.ViewModels
         async void PlayNext()
         {
             if (Player.CurrentlyPlayingFile != null) 
-	    {
+            {
 		PreviousSong= Player.CurrentlyPlayingFile;
 		history.Do(Player.CurrentlyPlayingFile);
             }
