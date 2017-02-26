@@ -1037,33 +1037,12 @@
                         <VisualState>
                           <VisualState.StateTriggers>
                             <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource EnumToVisibility}}"/>
-                          </VisualState.StateTriggers>
-                          <VisualState.Setters>
-                            <Setter Target="e1.Visibility" Value="Visible"/>
-                          </VisualState.Setters>
+                          </VisualState.StateTriggers>                          
                           <Storyboard x:Name="myStoryboard"  AutoReverse="True" RepeatBehavior="Forever">
                             <ColorAnimation Storyboard.TargetName="Animie"  Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color }" To="DeepSkyBlue" Duration="0:0:6"/>
                           </Storyboard>
                         </VisualState>
-                      </VisualStateGroup>
-                      <VisualStateGroup x:Name="CustomStates2">
-                        <VisualState>
-                          <VisualState.StateTriggers>
-                            <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource EnumToVisibility}}"/>
-
-                          </VisualState.StateTriggers>
-                          <Storyboard x:Name="r"  RepeatBehavior="Forever">
-
-                            <DoubleAnimation BeginTime="0:0:0" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e1" Storyboard.TargetProperty="Opacity" From="1" To="0.1"></DoubleAnimation>
-                            <DoubleAnimation BeginTime="0:0:1.5" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e2" Storyboard.TargetProperty="Opacity" From="1" To="0.1"></DoubleAnimation>
-                            <DoubleAnimation BeginTime="0:0:0" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e1" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" From="0" To="1.5"></DoubleAnimation>
-                            <DoubleAnimation BeginTime="0:0:1.5" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e2" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" From="0" To="1.5"></DoubleAnimation>
-                            <DoubleAnimation BeginTime="0:0:0" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e1" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0" To="1.5"></DoubleAnimation>
-                            <DoubleAnimation BeginTime="0:0:1.5" RepeatBehavior="Forever" Duration="0:0:3" Storyboard.TargetName="e2" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0" To="1.5"></DoubleAnimation>
-
-                          </Storyboard>
-                        </VisualState>
-                      </VisualStateGroup>
+                      </VisualStateGroup>                    
                       <VisualStateGroup x:Name="CustomStates3">
                         <VisualState>
                           <VisualState.StateTriggers>
@@ -1227,14 +1206,11 @@
                               <EasingDoubleKeyFrame KeyTime="0:0:0" Value="32"/>
                               <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="0" KeySpline="0.1,0.9,0.2,1"/>
                             </DoubleAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Visibility">
-                              <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                              <DiscreteObjectKeyFrame KeyTime="0:0:0.333" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="e1" Storyboard.TargetProperty="Visibility">
-                              <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Visibility">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.333" Value="Collapsed" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
                               <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding Source={StaticResource Core}, Path=DynamicMargin}" />
                             </ObjectAnimationUsingKeyFrames>
                           </Storyboard>
@@ -1262,13 +1238,10 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheck" Storyboard.TargetProperty="Visibility">
                               <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
-                              <DiscreteObjectKeyFrame KeyTime="0" Value="48,0,0,0" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="e1" Storyboard.TargetProperty="Visibility">
-                              <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
-                          </Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="48,0,0,0" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
                         </VisualState>
                       </VisualStateGroup>
 
@@ -1347,10 +1320,8 @@
                             <Setter Target="playBtn.Height" Value="55"/>
                             <Setter Target="button2.Height" Value="55"/>
                             <Setter Target="Buttons_Stack.Height" Value="55"/>
-                            <Setter Target="Buttons_Stack.Margin" Value="-150,0,0,0"/>
-                            <Setter Target="e1.Width" Value="20"/>
-                            <Setter Target="e2.Width" Value="20"/>
-                            <Setter Target="ContentPresenterGrid.Margin" Value="34,0,0,0"/>
+                                                <Setter Target="Buttons_Stack.Margin" Value="-150,0,0,0"/>
+                                                <Setter Target="ContentPresenterGrid.Margin" Value="34,0,0,0"/>
 
                           </VisualState.Setters>
                         </VisualState>
@@ -1400,89 +1371,76 @@
 x:Name="Animie"
 Fill="Transparent"
 Control.IsTemplateFocusTarget="True"/>
-                    <Grid x:Name="ContentPresenterGrid"
+                                <Grid x:Name="ContentPresenterGrid"
   Background="Transparent"
   Margin="0,0,0,0">
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="4*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="Auto"/>
-                      </Grid.ColumnDefinitions>
-                      <Grid.RenderTransform>
-                        <TranslateTransform x:Name="ContentPresenterTranslateTransform"/>
-                      </Grid.RenderTransform>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RenderTransform>
+                                        <TranslateTransform x:Name="ContentPresenterTranslateTransform"/>
+                                    </Grid.RenderTransform>
 
-                      <ContentPresenter x:Name="ContentPresenter"
+                                    <ContentPresenter x:Name="ContentPresenter"
               ContentTransitions="{TemplateBinding ContentTransitions}"
               ContentTemplate="{TemplateBinding ContentTemplate}" Grid.ColumnSpan="9"
               Content="{TemplateBinding Content}" Margin="0,0,32,0"
               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            > </ContentPresenter>
-                      <Border Background="Transparent" Tag="{TemplateBinding Content}" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="50" Grid.ColumnSpan="9">
-                        <Interactivity:Interaction.Behaviors>
-                          <Core:EventTriggerBehavior EventName="DoubleTapped">
-                            <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
-                          </Core:EventTriggerBehavior>
-                          <Core:EventTriggerBehavior EventName="RightTapped">
-                            <Core:EventTriggerBehavior.Actions>
-                              <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
+                            ></ContentPresenter>
+                                    <Border Background="Transparent" Tag="{TemplateBinding Content}" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="50" Grid.ColumnSpan="9">
+                                        <Interactivity:Interaction.Behaviors>
+                                            <Core:EventTriggerBehavior EventName="DoubleTapped">
+                                                <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
+                                            </Core:EventTriggerBehavior>
+                                            <Core:EventTriggerBehavior EventName="RightTapped">
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
                                     Command="{Binding Path=PlayCommand}"/>
-                              <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
-                            </Core:EventTriggerBehavior.Actions>
-                          </Core:EventTriggerBehavior>
-                          <Core:EventTriggerBehavior EventName="Tapped">
-                            <Core:EventTriggerBehavior.Actions>
-                              <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
-                            </Core:EventTriggerBehavior.Actions>
-                          </Core:EventTriggerBehavior>
-                          <Core:EventTriggerBehavior EventName="Holding">
-                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
-                          </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
-                      </Border>
-                      <StackPanel Grid.Column="1" Width="100" Margin="-150,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">
-                        <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
+                                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
+                                                </Core:EventTriggerBehavior.Actions>
+                                            </Core:EventTriggerBehavior>
+                                            <Core:EventTriggerBehavior EventName="Tapped">
+                                                <Core:EventTriggerBehavior.Actions>
+                                                    <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
+                                                </Core:EventTriggerBehavior.Actions>
+                                            </Core:EventTriggerBehavior>
+                                            <Core:EventTriggerBehavior EventName="Holding">
+                                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
+                                            </Core:EventTriggerBehavior>
+                                        </Interactivity:Interaction.Behaviors>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Width="100" Margin="-150,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">
+                                        <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
                                           Width="50" Visibility="Visible"
                                           VerticalAlignment="Stretch" Background="Transparent"
                                           Height="50" FontSize="18" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
                                           Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" Content="&#xE102;" Style="{StaticResource HyperlinkBtn}" FontFamily="Segoe MDL2 Assets">
 
-                        </Button>
-                        <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
+                                        </Button>
+                                        <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
             IsDoubleTapEnabled="False" FontSize="18"
             Visibility="Collapsed" ToolTipService.ToolTip="Add this song to playlist."
             Height="50"  VerticalAlignment="Stretch" Background="Transparent"
             Width="50" Style="{StaticResource HyperlinkBtn}"
             FontFamily="Segoe MDL2 Assets">
 
-                          <Interactivity:Interaction.Behaviors>
-                            <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
-                              <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>
-                            </Core:EventTriggerBehavior>
-                          </Interactivity:Interaction.Behaviors>
-                        </Button>
-                      </StackPanel>
-                    </Grid>
-
-
-                    <Ellipse x:Name="e1" HorizontalAlignment="Left" Margin="10,0,0,0" Visibility="Collapsed" Width="30" Height="{Binding ElementName=e1,Path=Width}" Stroke="White" StrokeThickness="10" RenderTransformOrigin="0.5,0.5">
-                      <Ellipse.RenderTransform>
-                        <ScaleTransform ScaleX="0" ScaleY="0"/>
-                      </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse x:Name="e2" HorizontalAlignment="Left" Margin="10,0,0,0" Visibility="{Binding ElementName=e1, Path=Visibility}" Width="30" Height="{Binding ElementName=e2,Path=Width}" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="10" RenderTransformOrigin="0.5,0.5">
-                      <Ellipse.RenderTransform>
-                        <ScaleTransform ScaleX="0" ScaleY="0"/>
-                      </Ellipse.RenderTransform>
-                    </Ellipse>
-
-                    <Border x:Name="MultiSelectSquare"
+                                            <Interactivity:Interaction.Behaviors>
+                                                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>
+                                                </Core:EventTriggerBehavior>
+                                            </Interactivity:Interaction.Behaviors>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                                <Border x:Name="MultiSelectSquare"
     BorderBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
     BorderThickness="1"
     Width="20"

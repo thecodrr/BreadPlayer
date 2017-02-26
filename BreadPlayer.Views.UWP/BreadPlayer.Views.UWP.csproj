@@ -189,6 +189,7 @@
     <Compile Include="Service\LibraryService.cs" />
     <Compile Include="Service\NavigationService.cs" />
     <Compile Include="Service\PlaylistService.cs" />
+    <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
     <Compile Include="StateTriggers\ITriggerValue.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
@@ -366,10 +367,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\TagDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Shell.DeviceFamily-Mobile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -27,7 +27,7 @@ namespace BreadPlayer.Converters
             if(value is Windows.UI.Xaml.Controls.SplitViewDisplayMode)
             { 
             Windows.UI.Xaml.Controls.SplitViewDisplayMode mode = (Windows.UI.Xaml.Controls.SplitViewDisplayMode)value;
-            if (mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.Overlay || mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay)
+            if (mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay)
                 return true;
             else
                 return false;

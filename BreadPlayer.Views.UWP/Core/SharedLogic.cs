@@ -48,7 +48,7 @@ namespace BreadPlayer.Core
             {
                 if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
                 {
-                    return new Windows.UI.Xaml.Thickness(34, 0, 0, 0);
+                    return new Windows.UI.Xaml.Thickness(28, 0, 0, 0);
                 }
                 else
                     return new Windows.UI.Xaml.Thickness(48, 0, 0, 0);

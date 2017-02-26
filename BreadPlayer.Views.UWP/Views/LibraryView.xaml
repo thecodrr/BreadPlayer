@@ -95,15 +95,11 @@
                         <Setter Target="headerText.RequestedTheme" Value="Dark" />
                         <Setter Target="headerText.Margin" Value="50,10,0,0" />
                         <Setter Target="headerText.(Grid.Row)" Value="0" />
-                        <Setter Target="backgroundBorder.(Grid.RowSpan)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
                         <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
-                        <!--<Setter Target="searchBox.Visibility" Value="Visible"/>-->
-                        <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
-                        <Setter Target="backgroundBorder.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-
+                        
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -121,8 +117,6 @@
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
        
-        <Border x:Name="backgroundBorder" Visibility="Collapsed" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>
-
         <TextBlock Visibility="Collapsed" x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Margin="35,20,0,0.4" Grid.RowSpan="2"/>
        
         <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
