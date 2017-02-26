@@ -520,7 +520,9 @@
                                         <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
                                         <Setter Target="headerText.Margin" Value="25,70,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,75,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
+                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -533,7 +535,7 @@
                                         <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
                                         <Setter Target="headerText.Margin" Value="25,70,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,75,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                     </VisualState.Setters>
