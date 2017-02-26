@@ -31,18 +31,18 @@ namespace BreadPlayer.MomentoPattern
             _Undo = new Stack<T>();
             _Redo = new Stack<T>();
         }
-
-				public T SemiUndo(T input)
-				{
-						if (_Undo.Count > 0)
-						{
-							T cmd = _Undo.Peek();
-							T output = cmd;
-							return output;
-						}
-						return input;
-				}
-
+	
+	public T SemiUndo(T input)
+        {
+            if (_Undo.Count > 0)
+            {
+                T cmd = _Undo.Peek();
+                T output = cmd;
+                return output;
+            }
+                return input;
+        }
+	
         public T Do(T sub)
         {
             T output = sub;
