@@ -1,5 +1,11 @@
 #Release Notes for Bread Player.
 
+##Version 1.3-alpha
+### What's Fixed:
+
+* Background audio issue was fixed.
+* Issue where albums were not being loaded was fixed.
+
 ##Version 1.2-alpha
 ### What's Improved:
 
