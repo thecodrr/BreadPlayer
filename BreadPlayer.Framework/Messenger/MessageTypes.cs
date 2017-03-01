@@ -15,7 +15,7 @@
         MSG_PLAYLIST_LOADED,
         MSG_UPDATE_SONG_COUNT,
         MSG_SEARCH_STARTED,
-        MSG_ADD_STOP_SONG
+        MSG_STOP_AFTER_SONG
 
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
     };

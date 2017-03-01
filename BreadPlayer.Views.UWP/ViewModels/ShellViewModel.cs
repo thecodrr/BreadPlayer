@@ -57,7 +57,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleEnablePlayMessage));
-            Messenger.Instance.Register(MessageTypes.MSG_ADD_STOP_SONG, new Action<Message>(SaveSongToStopAfter));
+            Messenger.Instance.Register(MessageTypes.MSG_STOP_AFTER_SONG, new Action<Message>(HandleSaveSongToStopAfterMessage));
             SearchCommand.IsEnabled = false;
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
@@ -151,7 +151,7 @@ namespace BreadPlayer.ViewModels
             await Player.Stop();
         }
 
-        void SaveSongToStopAfter(Message songToStopAfter)
+        void HandleSaveSongToStopAfterMessage(Message songToStopAfter)
         {            
           if(songToStopAfter.Payload is Mediafile)
           {
@@ -618,16 +618,17 @@ namespace BreadPlayer.ViewModels
                     if (play == true)
                         Player.IgnoreErrors = true;
 
-                    if(_songToStopAfter!=null && _songToStopAfter==PreviousSong)
-                    {
-                       await Player.Pause();
-                        timer.Stop();
-                        Player.PlayerState = PlayerState.Stopped;
-                        PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                       _songToStopAfter = null;
-                       return;
-                    }
-
+                    if(_songToStopAfter!=null && (_songToStopAfter.CompareTo(PreviousSong)==0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile)==0))
+                            {
+                             Player.Pause();
+                             timer.Stop();
+                             Player.PlayerState = PlayerState.Stopped;
+                             PlayPauseIcon = new SymbolIcon(Symbol.Play);
+                             _songToStopAfter = null;
+                             PreviousSong = null;
+                             UpcomingSong = null;
+                             return;
+                            }
 
                     if (await Player.Load(mp3file))
                     {
@@ -661,6 +662,7 @@ namespace BreadPlayer.ViewModels
                         Player.IgnoreErrors = false;
                         Load(await GetUpcomingSong(), true);
                     }
+
                 }
                 catch (Exception ex)
                 {

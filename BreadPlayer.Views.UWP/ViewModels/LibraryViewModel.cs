@@ -471,7 +471,7 @@ namespace BreadPlayer.ViewModels
             else
                 return;
 
-             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_STOP_SONG, mediaFile);
+             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_STOP_AFTER_SONG, mediaFile);
         }
 
         /// <summary>
