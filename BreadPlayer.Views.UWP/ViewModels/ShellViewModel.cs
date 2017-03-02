@@ -619,16 +619,13 @@ namespace BreadPlayer.ViewModels
                         Player.IgnoreErrors = true;
 
                     if(_songToStopAfter!=null && (_songToStopAfter.CompareTo(PreviousSong)==0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile)==0))
-                            {
-                             Player.Pause();
-                             timer.Stop();
-                             Player.PlayerState = PlayerState.Stopped;
-                             PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                             _songToStopAfter = null;
-                             PreviousSong = null;
-                             UpcomingSong = null;
-                             return;
-                            }
+                    {
+                        PlayPause();
+                        _songToStopAfter = null;
+                        PreviousSong = null;
+                        UpcomingSong = null;
+                        return;
+                    }
 
                     if (await Player.Load(mp3file))
                     {
