@@ -296,6 +296,7 @@ namespace BreadPlayer.ViewModels
         #region Definitions
         RelayCommand _deleteCommand;
         RelayCommand _playCommand;
+        RelayCommand _stopAfterCommand;
         RelayCommand _addtoplaylistCommand;   
         RelayCommand _refreshViewCommand;
         RelayCommand _initCommand;
@@ -344,6 +345,16 @@ namespace BreadPlayer.ViewModels
             get
             { if (_playCommand == null) { _playCommand = new RelayCommand(param => this.Play(param)); } return _playCommand; }
         }
+        
+        /// <summary>
+        /// Gets Stop command. This calls the <see cref="StopAfter(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand StopAfterCommand
+        {
+           get
+           { if (_stopAfterCommand == null) { _stopAfterCommand = new RelayCommand(param => this.StopAfter(param)); } return _stopAfterCommand; }
+        }
+
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -432,6 +443,35 @@ namespace BreadPlayer.ViewModels
             {
                 BLogger.Logger.Error("Error occured while deleting a song from collection and list.", ex);
             }
+        }
+        
+        public async void StopAfter(object path)
+        {          
+             Mediafile mediaFile = null;
+            if (path is Mediafile)
+            {
+                mediaFile = path as Mediafile;
+                isPlayingFromPlaylist = false;
+            }
+            else if (path is ThreadSafeObservableCollection<Mediafile>)
+            {
+                mediaFile = (path as ThreadSafeObservableCollection<Mediafile>)[0];
+            }
+            else if(path is Playlist)
+            {
+                using (Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password))
+                {
+                    if (service.IsValid)
+                    {
+                        var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
+                        mediaFile = songList[0];
+                    }
+                }
+            }
+            else
+                return;
+
+             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_STOP_AFTER_SONG, mediaFile);
         }
 
         /// <summary>

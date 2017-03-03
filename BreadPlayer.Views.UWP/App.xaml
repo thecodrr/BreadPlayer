@@ -1010,7 +1010,7 @@
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                         <MenuFlyoutItem Text="Stop Playing After This Song"
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
-                                        Command="{Binding OpenSongLocationCommand}"
+                                        Command="{Binding Path=StopAfterCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                        <MenuFlyoutItem Text="Delete"
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"

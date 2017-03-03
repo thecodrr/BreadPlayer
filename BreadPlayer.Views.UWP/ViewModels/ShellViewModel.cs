@@ -41,6 +41,7 @@ namespace BreadPlayer.ViewModels
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
+        private Mediafile _songToStopAfter;
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
         LibraryService service = new LibraryService(new DatabaseService());
@@ -56,6 +57,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_DISPOSE, new Action(HandleDisposeMessage));
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleEnablePlayMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_STOP_AFTER_SONG, new Action<Message>(HandleSaveSongToStopAfterMessage));
             SearchCommand.IsEnabled = false;
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
@@ -148,6 +150,15 @@ namespace BreadPlayer.ViewModels
             Reset();
             await Player.Stop();
         }
+
+        void HandleSaveSongToStopAfterMessage(Message songToStopAfter)
+        {            
+          if(songToStopAfter.Payload is Mediafile)
+          {
+            _songToStopAfter =(Mediafile)songToStopAfter.Payload;
+          }         
+        }    
+
         #endregion
 
         #region Commands
@@ -301,10 +312,9 @@ namespace BreadPlayer.ViewModels
 
         async void PlayNext()
         {
-            if (Player.CurrentlyPlayingFile != null) 
-            {
-		PreviousSong= Player.CurrentlyPlayingFile;
-		history.Do(Player.CurrentlyPlayingFile);
+            if (Player.CurrentlyPlayingFile != null) {
+                PreviousSong= Player.CurrentlyPlayingFile;
+                history.Do(Player.CurrentlyPlayingFile);
             }
                 
             Mediafile toPlayFile = await GetUpcomingSong(true);
@@ -608,6 +618,15 @@ namespace BreadPlayer.ViewModels
                     if (play == true)
                         Player.IgnoreErrors = true;
 
+                    if(_songToStopAfter!=null && (_songToStopAfter.CompareTo(PreviousSong)==0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile)==0))
+                    {
+                        PlayPause();
+                        _songToStopAfter = null;
+                        PreviousSong = null;
+                        UpcomingSong = null;
+                        return;
+                    }
+
                     if (await Player.Load(mp3file))
                     {
                         TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
@@ -640,6 +659,7 @@ namespace BreadPlayer.ViewModels
                         Player.IgnoreErrors = false;
                         Load(await GetUpcomingSong(), true);
                     }
+
                 }
                 catch (Exception ex)
                 {
