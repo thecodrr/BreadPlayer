@@ -54,6 +54,8 @@ namespace BreadPlayer.Models
         #endregion
 
         #region Properties
+        string lastPlayed;
+        public string LastPlayed { get { return lastPlayed; } set { Set(ref lastPlayed, value); } }
         public int PlayCount { get { return playCount; } set { Set(ref playCount, value); } }
         public string Path { get { return path; } set { Set(ref path, value); } }
         public PlayerState State { get { return state; } set { Set(ref state, value); } }
