@@ -128,7 +128,17 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleUpdateSongCountMessage));
             Messenger.Instance.Register(MessageTypes.MSG_SEARCH_STARTED, new Action<Message>(HandleSearchStartedMessage));
         }
-
+        private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostRecentSongsAsync()
+        {
+            return await Task.Run(() =>
+            {
+                foreach (var item in TracksCollection.Elements.Where(t => t.PlayCount > 1))
+                {
+                    MostEatenSongsCollection.Add(item);
+                }
+                return MostEatenSongsCollection;
+            });
+        }
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
@@ -144,8 +154,11 @@ namespace BreadPlayer.ViewModels
             {
                 if (param == "Recent")
                     ChangeView("Recently Played", false, RecentlyPlayedCollection);
-                else
-                    ChangeView("Music Library", libgrouped, TracksCollection.Elements);
+                else if(param == "MusicCollection")
+                    ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
+                else if(param == "MostEaten")
+                    ChangeView("MostEaten", false, await GetMostRecentSongsAsync());
+               
                 await RefreshSourceAsync().ConfigureAwait(false);
             }
             else
@@ -174,6 +187,7 @@ namespace BreadPlayer.ViewModels
                 OnPropertyChanged();
             }
         }
+        
         LiteDB.LiteCollection<Mediafile> recentCol;
         LiteDB.LiteCollection<Mediafile> RecentCollection
         {
@@ -182,6 +196,7 @@ namespace BreadPlayer.ViewModels
                 return recentCol; }
             set { Set(ref recentCol, value); }
         }
+        
         LibraryService libraryservice;
         public LibraryService LibraryService
         {
@@ -243,6 +258,15 @@ namespace BreadPlayer.ViewModels
         public ObservableRangeCollection<String> GenreCollection
         {
             get { return _GenreCollection; }
+        }
+        ThreadSafeObservableCollection<Mediafile> _MostEatenCollection;
+        /// <summary>
+        /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
+        /// </summary>
+        public ThreadSafeObservableCollection<Mediafile> MostEatenSongsCollection
+        {
+            get { if (_MostEatenCollection == null) _MostEatenCollection = new ThreadSafeObservableCollection<Mediafile>(); return _MostEatenCollection; }
+            set { Set(ref _MostEatenCollection, value); }
         }
         ThreadSafeObservableCollection<Mediafile> _RecentlyPlayedCollection;
         /// <summary>
@@ -511,6 +535,8 @@ namespace BreadPlayer.ViewModels
             AddToRecentCollection(mediaFile);
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
+                mediaFile.PlayCount++;
+                LibraryService.UpdateMediafile(mediaFile);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
                 (PlayCommand as RelayCommand).IsEnabled = false;
                 await Task.Delay(100);
@@ -529,6 +555,7 @@ namespace BreadPlayer.ViewModels
         {
             LibraryService = new LibraryService(new DatabaseService());
             RecentCollection = LibraryService.GetRecentCollection();
+
             if (RecentlyPlayedCollection.Any(t => t.Path == mediaFile.Path))
             {
                 RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mediaFile.Path));
@@ -540,6 +567,7 @@ namespace BreadPlayer.ViewModels
             RecentlyPlayedCollection.Add(mediaFile);
             RecentCollection.Insert(mediaFile);
         }
+        
         async void Init(object para)
         {
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;

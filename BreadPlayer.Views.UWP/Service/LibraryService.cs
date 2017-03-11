@@ -72,6 +72,10 @@ namespace BreadPlayer.Service
         {
             return Database.GetCollection<Mediafile>("recents");
         }
+        public LiteDB.LiteCollection<Mediafile> GetMostEatenCollection()
+        {
+            return Database.GetCollection<Mediafile>("mosteaten");
+        }
         public IEnumerable<Playlist> GetPlaylists()
         {
             return Database.GetCollection<Playlist>("playlists").FindAll();
