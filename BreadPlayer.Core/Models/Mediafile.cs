@@ -55,38 +55,41 @@ namespace BreadPlayer.Models
 
         #region Properties
         string lastPlayed;
-        public string LastPlayed { get { return lastPlayed; } set { Set(ref lastPlayed, value); } }
-        public int PlayCount { get { return playCount; } set { Set(ref playCount, value); } }
-        public string Path { get { return path; } set { Set(ref path, value); } }
-        public PlayerState State { get { return state; } set { Set(ref state, value); } }
-        public string EncryptedMetaFile { get { return encrypted_meta_file; } set { encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; } }
-        public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
-        public string AttachedPicture { get { return attached_picture; } set { attached_picture = value; } }
-        public string Comment { get { return comment; } set { comment = string.IsNullOrEmpty(value) ? comment = NaN : value; } }
-        public string FolderPath { get { return folderPath; } set { folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; } }
+        public string LastPlayed { get => lastPlayed; set => Set(ref lastPlayed, value); }
+
+        string addedDate;
+        public string AddedDate { get => addedDate; set => Set(ref addedDate, value); }
+
+        public int PlayCount { get => playCount; set => Set(ref playCount, value); }
+        public string Path { get => path; set => Set(ref path, value); }
+        public PlayerState State { get => state; set => Set(ref state, value); }
+        public string EncryptedMetaFile { get => encrypted_meta_file; set => encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; }
+        public LiteDB.ObjectId _id { get => id; set => Set(ref id, value); }
+        public string AttachedPicture { get => attached_picture; set => attached_picture = value; }
+        public string Comment { get => comment; set => comment = string.IsNullOrEmpty(value) ? comment = NaN : value; }
+        public string FolderPath { get => folderPath; set => folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; }
         public string SynchronizedLyric
         {
-            get { return synchronized_lyric; }
-            set { synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value; }
+            get => synchronized_lyric; set => synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value;
         }
-        public string Album { get { return album; } set { album = string.IsNullOrEmpty(value) ? album = "Unknown Album" : value; } }
-        public string BeatsPerMinutes { get { return beatsperminutes; } set { beatsperminutes = string.IsNullOrEmpty(value) ? beatsperminutes = NaN : value; } }
-        public string Composer { get { return composer; } set { composer = string.IsNullOrEmpty(value) ? composer = NaN : value; } }
-        public string Genre { get { return genre; } set { genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; } }
-        public string CopyrightMessage { get { return copyright_message; } set { copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; } }
-        public string Date { get { return date; } set { date = string.IsNullOrEmpty(value) ? date = NaN : value; } }
-        public string EncodedBy { get { return encoded_by; } set { encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; } }
-        public string Lyric { get { return lyric; } set { lyric = string.IsNullOrEmpty(value) ? lyric = NaN : value; } }
-        public string ContentGroupDescription { get { return content_group_description; } set { content_group_description = string.IsNullOrEmpty(value) ? content_group_description = NaN : value; } }
-        public string Title { get { return title; } set { title = string.IsNullOrEmpty(value) ? title = System.IO.Path.GetFileNameWithoutExtension(path) : value; } }
-        public string Subtitle { get { return subtitle; } set { subtitle = string.IsNullOrEmpty(value) ? subtitle = NaN : value; } }
-        public string Publisher { get { return publisher; } set { publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; } }
-        public string TrackNumber { get { return track_number; } set { track_number = string.IsNullOrEmpty(value) ? track_number = NaN : value; } }
-        public string Size { get { return size; } set { size = string.IsNullOrEmpty(value) ? size = NaN : value; } }
-        public string Year { get { return year; } set { year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; } }
-        public string LeadArtist { get { return lead_artist; } set { lead_artist = string.IsNullOrEmpty(value) ? lead_artist = NaN : value; } }
-        public string OrginalFilename { get { return orginal_filename; } set { orginal_filename = string.IsNullOrEmpty(value) ? orginal_filename = NaN : value; } }
-        public string Length { get { return length; } set { length = string.IsNullOrEmpty(value) ? length = NaN : value; } }
+        public string Album { get => album; set => album = string.IsNullOrEmpty(value) ? album = "Unknown Album" : value; }
+        public string BeatsPerMinutes { get => beatsperminutes; set => beatsperminutes = string.IsNullOrEmpty(value) ? beatsperminutes = NaN : value; }
+        public string Composer { get => composer; set => composer = string.IsNullOrEmpty(value) ? composer = NaN : value; }
+        public string Genre { get => genre; set => genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; }
+        public string CopyrightMessage { get => copyright_message; set => copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; }
+        public string Date { get => date; set => date = string.IsNullOrEmpty(value) ? date = NaN : value; }
+        public string EncodedBy { get => encoded_by; set => encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; }
+        public string Lyric { get => lyric; set => lyric = string.IsNullOrEmpty(value) ? lyric = NaN : value; }
+        public string ContentGroupDescription { get => content_group_description; set => content_group_description = string.IsNullOrEmpty(value) ? content_group_description = NaN : value; }
+        public string Title { get => title; set => title = string.IsNullOrEmpty(value) ? title = System.IO.Path.GetFileNameWithoutExtension(path) : value; }
+        public string Subtitle { get => subtitle; set => subtitle = string.IsNullOrEmpty(value) ? subtitle = NaN : value; }
+        public string Publisher { get => publisher; set => publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; }
+        public string TrackNumber { get => track_number; set => track_number = string.IsNullOrEmpty(value) ? track_number = NaN : value; }
+        public string Size { get => size; set => size = string.IsNullOrEmpty(value) ? size = NaN : value; }
+        public string Year { get => year; set => year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
+        public string LeadArtist { get => lead_artist; set => lead_artist = string.IsNullOrEmpty(value) ? lead_artist = NaN : value; }
+        public string OrginalFilename { get => orginal_filename; set => orginal_filename = string.IsNullOrEmpty(value) ? orginal_filename = NaN : value; }
+        public string Length { get => length; set => length = string.IsNullOrEmpty(value) ? length = NaN : value; }
 
         #endregion
 

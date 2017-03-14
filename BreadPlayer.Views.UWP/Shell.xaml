@@ -75,7 +75,7 @@
             <controls:SplitViewMenu.TopNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="Recently Eaten" Arguments="Recent" Tooltip="Navigate to your recently played songs." Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="Most Eaten" Tooltip="Navigate to your music library." Arguments="MostEaten" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="Recently Added" Tooltip="Navigate to your music library." Arguments="Recent" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="Recently Added" Tooltip="Navigate to your music library." Arguments="RecentlyAdded" Symbol="Accept"></controls:SimpleNavMenuItem>
 
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="Bread Collection" Arguments="MusicCollection" Symbol="Accept" Tooltip="Navigate to your music library.">
                     <controls:SimpleNavMenuItem.Shortcuts>

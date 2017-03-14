@@ -116,7 +116,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public LibraryViewModel()
         {
-            Header = "Music Library";
+            Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
@@ -128,17 +128,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleUpdateSongCountMessage));
             Messenger.Instance.Register(MessageTypes.MSG_SEARCH_STARTED, new Action<Message>(HandleSearchStartedMessage));
         }
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostRecentSongsAsync()
-        {
-            return await Task.Run(() =>
-            {
-                foreach (var item in TracksCollection.Elements.Where(t => t.PlayCount > 1))
-                {
-                    MostEatenSongsCollection.Add(item);
-                }
-                return MostEatenSongsCollection;
-            });
-        }
+      
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
@@ -154,11 +144,13 @@ namespace BreadPlayer.ViewModels
             {
                 if (param == "Recent")
                     ChangeView("Recently Played", false, RecentlyPlayedCollection);
-                else if(param == "MusicCollection")
+                else if (param == "MusicCollection")
                     ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
-                else if(param == "MostEaten")
-                    ChangeView("MostEaten", false, await GetMostRecentSongsAsync());
-               
+                else if (param == "MostEaten")
+                    ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync());
+                else if (param == "RecentlyAdded")
+                    ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync());
+
                 await RefreshSourceAsync().ConfigureAwait(false);
             }
             else
@@ -267,6 +259,15 @@ namespace BreadPlayer.ViewModels
         {
             get { if (_MostEatenCollection == null) _MostEatenCollection = new ThreadSafeObservableCollection<Mediafile>(); return _MostEatenCollection; }
             set { Set(ref _MostEatenCollection, value); }
+        }
+        ThreadSafeObservableCollection<Mediafile> _RecentlyAddedSongsCollection;
+        /// <summary>
+        /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
+        /// </summary>
+        public ThreadSafeObservableCollection<Mediafile> RecentlyAddedSongsCollection
+        {
+            get { if (_RecentlyAddedSongsCollection == null) _RecentlyAddedSongsCollection = new ThreadSafeObservableCollection<Mediafile>(); return _RecentlyAddedSongsCollection; }
+            set { Set(ref _RecentlyAddedSongsCollection, value); }
         }
         ThreadSafeObservableCollection<Mediafile> _RecentlyPlayedCollection;
         /// <summary>
@@ -590,14 +591,39 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-        public void PlayOnTap(object sender, TappedRoutedEventArgs e)
+        private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
         {
-            if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
+            return await Task.Run(() =>
             {
-                var mediafile = (e.OriginalSource as Border).Tag;
-                Play(mediafile);
-            }
+                foreach (var item in TracksCollection.Elements.Where(t => t.PlayCount > 1))
+                {
+                    if (MostEatenSongsCollection.Any(t => t.Path != item.Path))
+                        MostEatenSongsCollection.Add(item);
+                }
+                return MostEatenSongsCollection;
+            });
         }
+        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
+        {
+            return await Task.Run(() =>
+            {
+                foreach (var item in TracksCollection.Elements)
+                {
+                    if (RecentlyAddedSongsCollection.Any(t => t.Path != item.Path))
+                    {
+                        if (item.AddedDate != null)
+                        {
+                            if ((DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3)
+                            {
+                                RecentlyAddedSongsCollection.Add(item);
+                            }
+                        }
+                    }
+                }
+                return RecentlyAddedSongsCollection;
+            });
+        }
+      
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -1056,6 +1082,15 @@ namespace BreadPlayer.ViewModels
                 await AddSongsToPlaylist(plist, songs).ConfigureAwait(false);
         }
         #endregion
+
+        public void PlayOnTap(object sender, TappedRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
+            {
+                var mediafile = (e.OriginalSource as Border).Tag;
+                Play(mediafile);
+            }
+        }
 
         public void SelectionChanged(object para, SelectionChangedEventArgs selectionEvent)
         {

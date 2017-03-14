@@ -249,7 +249,7 @@ namespace BreadPlayer.Core
                 mediafile.Year = properties.Year.ToString();
                 mediafile.TrackNumber = properties.TrackNumber.ToString();
                 mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-
+                mediafile.AddedDate = DateTime.Now.ToString();
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
