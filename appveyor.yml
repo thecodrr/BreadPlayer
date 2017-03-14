@@ -15,7 +15,7 @@ artifacts:
   name: AppxBundle for BreadPlayer
   type: Auto
 notifications:
-  - provider: Zapier
+  - provider: Webhook
     url: https://hooks.zapier.com/hooks/catch/805495/m03qym/    
     on_build_success: true
     on_build_failure: false
