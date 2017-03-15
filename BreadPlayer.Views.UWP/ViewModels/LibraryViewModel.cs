@@ -56,6 +56,7 @@ namespace BreadPlayer.ViewModels
         bool libgrouped = false;
         object source;
         bool isPlayingFromPlaylist = false;
+        bool libraryLoaded = false;
         #endregion
 
         #region MessageHandling
@@ -842,9 +843,9 @@ namespace BreadPlayer.ViewModels
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
                 RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
-                LoadPlaylists();               
-                AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
-            }
+                LoadPlaylists();
+                UpdateJumplist("Title");
+           }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -852,13 +853,11 @@ namespace BreadPlayer.ViewModels
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MusicLibraryLoaded.Invoke(this, new RoutedEventArgs()); }); //no use raising an event when library isn't ready.             
+                MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());             
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
             }           
         }
-        bool libraryLoaded = false;
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
             if (!libraryLoaded)
@@ -893,7 +892,6 @@ namespace BreadPlayer.ViewModels
                 AddPlaylist(list);
             }
         }
-        public List<Mediafile> SelectedItems { get; set; } = new List<Mediafile>();
         async void AddToPlaylist(object file)
         {
             if (file != null)
@@ -1044,6 +1042,7 @@ namespace BreadPlayer.ViewModels
                 Play(mediafile);
             }
         }
+        public List<Mediafile> SelectedItems { get; set; } = new List<Mediafile>();
 
         public void SelectionChanged(object para, SelectionChangedEventArgs selectionEvent)
         {
