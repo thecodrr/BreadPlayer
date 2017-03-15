@@ -36,6 +36,26 @@ namespace BreadPlayer.Extensions
     /// </summary>
     public static class VisualTreeHelperExtensions
     {
+        public static T FindChildOfType<T>(this DependencyObject root) where T : class
+        {
+            var MyQueue = new Queue<DependencyObject>();
+            MyQueue.Enqueue(root);
+            while (MyQueue.Count > 0)
+            {
+                DependencyObject current = MyQueue.Dequeue();
+                for (int i = 0; i < Windows.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(current); i++)
+                {
+                    var child = Windows.UI.Xaml.Media.VisualTreeHelper.GetChild(current, i);
+                    var typedChild = child as T;
+                    if (typedChild != null)
+                    {
+                        return typedChild;
+                    }
+                    MyQueue.Enqueue(child);
+                }
+            }
+            return null;
+        }
         /// <summary>
         /// Gets the window root that is the top level ascendant of the window.Content.
         /// </summary>

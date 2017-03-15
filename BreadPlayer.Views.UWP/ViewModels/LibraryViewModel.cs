@@ -899,7 +899,7 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region IDisposable
+        #region Disposable
         public void Reset()
         {
             LibraryService.Dispose();
@@ -1037,6 +1037,7 @@ namespace BreadPlayer.ViewModels
             else
                return null;
         }
+
         public async Task AddSongsToPlaylist(Playlist list, List<Mediafile> songsToadd)
         {
             if (songsToadd.Any())

@@ -33,28 +33,7 @@ namespace BreadPlayer.Extensions
     }
 
     static class ObservableCollectionExtensions
-    {
-        public static void Sort<TSource, TKey>(this ThreadSafeObservableCollection<TSource> source, Func<TSource, TKey> keySelector, bool isAZ)
-        {
-            if (isAZ)
-            {
-                List<TSource> sortedList = source.OrderBy(keySelector).ToList();
-                source.Clear();
-                foreach (var sortedItem in sortedList)
-                {
-                    source.Add(sortedItem);
-                }
-            }
-            else
-            {
-                List<TSource> sortedList = source.OrderByDescending(keySelector).ToList();
-                source.Clear();
-                foreach (var sortedItem in sortedList)
-                {
-                    source.Add(sortedItem);
-                }
-            }
-        }
+    {      
         public static void Shuffle<T>(this ThreadSafeObservableCollection<T> list)
         {
             int n = list.Count;

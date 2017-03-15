@@ -90,7 +90,7 @@ namespace BreadPlayer
         bool isPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Thumb volSliderThumb = FrameworkElementExtensions.FindChildOfType<Thumb>(positionSlider);
+            Thumb volSliderThumb = positionSlider.FindChildOfType<Thumb>();
             if (volSliderThumb != null)
             {
                 volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;

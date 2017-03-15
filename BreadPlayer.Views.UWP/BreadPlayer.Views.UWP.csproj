@@ -136,13 +136,10 @@
     <Compile Include="BreadLogger\AsyncFileTarget.cs" />
     <Compile Include="BreadLogger\BLogger.cs" />
     <Compile Include="Common\BackDrop.cs" />
-    <Compile Include="Common\DataTrigger.cs" />
     <Compile Include="Common\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
-    <Compile Include="Common\FrameworkElementExtensions.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
-    <Compile Include="Common\StringCompressor.cs" />
     <Compile Include="Common\SurfaceLoader.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
@@ -173,9 +170,7 @@
       <DependentUpon>TagDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\BindableFlyout.cs" />
-    <Compile Include="Extensions\DispatcherTaskExtensions.cs" />
     <Compile Include="Extensions\GroupedObservableCollection.cs" />
-    <Compile Include="Extensions\ListBoxItemExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Common\UndoRedoStack.cs" />
