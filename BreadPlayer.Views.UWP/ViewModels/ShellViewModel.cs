@@ -398,7 +398,6 @@ namespace BreadPlayer.ViewModels
         }
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
-
             if (Repeat == "Repeat List")
             {
                 PlayNext();
@@ -476,8 +475,6 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["IsPlayBarVisible"] = IsPlayBarVisible;
             }
         }
-      
-        
 
         bool _shuffle = false;
         public bool Shuffle
@@ -551,7 +548,7 @@ namespace BreadPlayer.ViewModels
             if (cache == null || TracksCollection.Elements.Count < service.SongCount)
             {
                 TracksCollection.Clear();
-                await SplitList(400).ConfigureAwait(false);
+                await SplitList(TracksCollection, 400).ConfigureAwait(false);
                 cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
             }
             else
@@ -560,13 +557,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.AddRange(cache, false, true);
             }
         }
-        public async Task SplitList(int nSize = 30)
-        {
-            for (int i = 0; i < service.SongCount; i += nSize)
-            {
-                TracksCollection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, false);
-            }
-        }
+       
         async Task<object> Search()
         {
             if (QueryWord.Length > 2)
@@ -593,7 +584,6 @@ namespace BreadPlayer.ViewModels
             else
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, toPlayFile);
-                //LibVM.PlayCommand.Execute(toPlayFile);
             }
         }
 
@@ -659,7 +649,6 @@ namespace BreadPlayer.ViewModels
                         Player.IgnoreErrors = false;
                         Load(await GetUpcomingSong(), true);
                     }
-
                 }
                 catch (Exception ex)
                 {

@@ -108,6 +108,15 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
+
+        public async Task SplitList(GroupedObservableCollection<string, Mediafile> collection, int nSize = 30)
+        {
+            for (int i = 0; i < service.SongCount; i += nSize)
+            {
+                collection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, false);
+            }
+        }
+
         public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;

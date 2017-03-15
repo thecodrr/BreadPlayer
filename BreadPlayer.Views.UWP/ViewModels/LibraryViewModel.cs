@@ -603,16 +603,10 @@ namespace BreadPlayer.ViewModels
                     ViewSource.Source = TracksCollection.Elements;
 
                 ViewSource.IsSourceGrouped = group;
-                await SplitList(300).ConfigureAwait(false);
+                await SplitList(TracksCollection, 300).ConfigureAwait(false);
             });
         }
-        public async Task SplitList(int nSize = 30)
-        {
-            for (int i = 0; i < SongCount; i += nSize)
-            {
-                TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
-            }
-        }
+
         /// <summary>
         /// Refresh the view, based on filters and sorting mechanisms.
         /// </summary>
@@ -853,7 +847,10 @@ namespace BreadPlayer.ViewModels
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-                MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());             
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());
+                });
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
             }           
@@ -997,6 +994,7 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
+        #region Events
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);
@@ -1054,6 +1052,8 @@ namespace BreadPlayer.ViewModels
             if (selectionEvent.AddedItems.Count > 0)
                 SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
         }
+        #endregion
+
         public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 

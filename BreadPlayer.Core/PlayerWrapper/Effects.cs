@@ -18,10 +18,12 @@
 using System;
 using ManagedBass;
 using ManagedBass.Fx;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BreadPlayer.Core
 {
-    public class Effects
+    public class Effects : ObservableObject
     {
         #region Fields
         int handle = 0;
@@ -35,8 +37,17 @@ namespace BreadPlayer.Core
             handle = coreHandle;
             bool loadbassfx = BassFx.Load();
             _myDSPAddr = new DSPProcedure(SetPreamp);
+            //InitializeEqualizer();
+            EnableEqualizer(null);
         }
+        
         #endregion
+        ObservableCollection<EqualizerBand> bands;
+        public ObservableCollection<EqualizerBand> EqualizerBands
+        {
+            get { return bands; }
+            set { Set(ref bands, value); }
+        }
         public void DisableEqualizer()
         {
             Bass.ChannelRemoveFX(handle, fxEQ);
@@ -54,6 +65,7 @@ namespace BreadPlayer.Core
             eq.fQ = 0f;
             eq.fBandwidth = 2.5f;
             eq.lChannel = FXChannelFlags.All;
+            EqualizerBands = new ObservableCollection<EqualizerBand>();
             //init equalizer bands
             InitializeEqualizerBands(eq);
         }
@@ -74,9 +86,24 @@ namespace BreadPlayer.Core
             {
                 eq.lBand = i;
                 eq.fCenter = DefaultCenterFrequencyList[i];
-                Bass.FXSetParameters(fxEQ, eq);
+                bool loadbassfx = Bass.FXSetParameters(fxEQ, eq);
+                EqualizerBand band = new EqualizerBand();
+                band.Center = eq.fCenter;
+                band.Gain = eq.fGain;
+                band.PropertyChanged += Band_PropertyChanged;
+                EqualizerBands.Add(band);
             }           
         }
+
+        private void Band_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var band = sender as EqualizerBand;
+            if (e.PropertyName == "Gain")
+            {
+                UpdateEQBand(EqualizerBands.IndexOf(EqualizerBands.FirstOrDefault(t => t.Center == band.Center)), band.Gain);
+            }
+        }
+
         /// <summary>
         /// Sets Single Equalizer Band
         /// </summary>
@@ -87,9 +114,9 @@ namespace BreadPlayer.Core
             PeakEQParameters eq = new PeakEQParameters();
             // get values of the selected band
             eq.lBand = band;
-            Bass.FXGetParameters(fxEQ, eq);
+            bool loadbassfx = Bass.FXGetParameters(fxEQ, eq);
             eq.fGain = freq;
-            Bass.FXSetParameters(fxEQ, eq);
+            bool loadbassfx2 = Bass.FXSetParameters(fxEQ, eq);
         }
         private DSPProcedure _myDSPAddr; // make it global, so that the GC can not remove it
         private float[] _data; // local data buffer
@@ -118,6 +145,36 @@ namespace BreadPlayer.Core
             {
                 data[a] = data[a] * _gainAmplification;
             }
+        }
+    }
+
+    public class EqualizerBand : ObservableObject
+    {
+        string FormatNumber(float num)
+        {
+            if (num >= 100000)
+                return FormatNumber(num / 1000) + "K";
+            if (num >= 1000)
+            {
+                return (num / 1000D).ToString("0.#") + "K";
+            }
+            return num.ToString("#0");
+        }
+        public string CenterTitle
+        {
+            get { return FormatNumber(Center); }
+        }
+        float center;
+        public float Center
+        {
+            get { return center; }
+            set { Set(ref center, value); }
+        }
+        float gain;
+        public float Gain
+        {
+            get { return gain; }
+            set { Set(ref gain, value); }
         }
     }
 }

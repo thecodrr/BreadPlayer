@@ -4,7 +4,8 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"  xmlns:Behaviours="using:BreadPlayer.Behaviours" 
     xmlns:local="using:SplitViewMenu"
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
-    xmlns:blur="using:BreadPlayer.Effects" xmlns:Animations="using:Microsoft.Xaml.Interactions.Media"  xmlns:Converters="using:BreadPlayer.Converters">
+    xmlns:blur="using:BreadPlayer.Effects" 
+    xmlns:Animations="using:Microsoft.Xaml.Interactions.Media"  xmlns:Converters="using:BreadPlayer.Converters">
 
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
     <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>

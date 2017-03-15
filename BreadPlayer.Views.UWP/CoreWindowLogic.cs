@@ -32,7 +32,6 @@ using Windows.Data.Xml.Dom;
 using Microsoft.Toolkit.Uwp.Notifications;
 using BreadPlayer.Models;
 using System.Text;
-using System.Xml;
 using System.IO;
 using Windows.Storage.Streams;
 

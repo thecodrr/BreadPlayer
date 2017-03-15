@@ -52,9 +52,10 @@ namespace BreadPlayer.Core
                 Bass.UpdatePeriod = 1000;              
                 Bass.Start();
                 Bass.Init();
+                InitializeExtensions();
             });                   
         }
-        private void InitializeExtensions(string path)
+        private void InitializeExtensions()
         {
             Effect = new Effects(handle);
         }
@@ -97,7 +98,7 @@ namespace BreadPlayer.Core
                         PlayerState = PlayerState.Stopped;
                         Length = 0;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
-                        InitializeExtensions(path);
+                        InitializeExtensions();
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
@@ -185,7 +186,12 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
-        public Effects Effect { get; set; }
+        Effects effect;
+        public Effects Effect
+        {
+            get { return effect; }
+            set { Set(ref effect, value); }
+        }
         double _volume = 50;
         public double Volume
         {
