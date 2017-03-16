@@ -59,52 +59,58 @@ namespace BreadPlayer.Behaviours
         }
         public void OpenMenu(object sender, Point? position)
         {
-            FrameworkElement senderElement = sender as FrameworkElement;
-            var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
-            ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>() != null ? senderElement.GetFirstAncestorOfType<ListViewItem>() : null;
-            ListView listView = null;
-            if (item != null)
+            try
             {
-                listView = item.GetFirstAncestorOfType<ListView>();
-            }
-
-            // if (item != null) item.IsSelected = true;
-            ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
-            if (listItem != null) listItem.IsSelected = true;
-            //var items = //((Parameter as Binding).Path as ListViewItem);
-            if (Parameter is BindableFlyout)
-            {
-                if (listView?.SelectedItems.Count == 1) { listView.SelectedIndex = -1; }
-                if (item != null) item.IsSelected = true;
-                var flyout = Parameter as BindableFlyout;
-                flyout.ShowAt(senderElement);
-            }
-
-            else if (Parameter.ToString() == "Playlist")
-            {
-                if (navList != null)
+                if (sender != null)
                 {
-                    var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                    flyout.ShowAt(senderElement, position.Value);
+                    FrameworkElement senderElement = sender as FrameworkElement;
+                    var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
+                    ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>() != null ? senderElement.GetFirstAncestorOfType<ListViewItem>() : null;
+                    ListView listView = null;
+                    if (item != null)
+                    {
+                        listView = item.GetFirstAncestorOfType<ListView>();
+                    }
+
+                    // if (item != null) item.IsSelected = true;
+                    ListViewItem listItem = senderElement.Tag is ContentPresenter ? (senderElement.Tag as ContentPresenter).Tag as ListViewItem : null;
+                    if (listItem != null) listItem.IsSelected = true;
+                    //var items = //((Parameter as Binding).Path as ListViewItem);
+                    if (Parameter is BindableFlyout)
+                    {
+                        if (listView?.SelectedItems.Count == 1) { listView.SelectedIndex = -1; }
+                        if (item != null) item.IsSelected = true;
+                        var flyout = Parameter as BindableFlyout;
+                        flyout.ShowAt(senderElement);
+                    }
+
+                    else if (Parameter.ToString() == "Playlist")
+                    {
+                        if (navList != null)
+                        {
+                            var flyout = senderElement.Resources["Flyout"] as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                            flyout.ShowAt(senderElement, position.Value);
+                        }
+                    }
+                    else
+                    {
+                        if (listView != null && listView.SelectedItems.Count < 2)
+                        {
+                            listView.SelectedIndex = -1;
+                            if (item != null) item.IsSelected = true;
+                        }
+                        var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
+                        if (flyout.Items[0] is MenuFlyoutItem)
+                            (flyout.Items[0] as MenuFlyoutItem).CommandParameter = item.Content;
+                        if (position.HasValue && position != null)
+                            flyout.ShowAt(senderElement, position.Value);
+                        else
+                            flyout.ShowAt(senderElement);
+                    }
+
                 }
             }
-            else
-            {
-                if (listView != null && listView.SelectedItems.Count < 2)
-                {
-                    listView.SelectedIndex = -1;
-                    if (item != null) item.IsSelected = true;
-                }
-                var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                if(flyout.Items[0] is MenuFlyoutItem)
-                    (flyout.Items[0] as MenuFlyoutItem).CommandParameter = item.Content;
-                if (position.HasValue && position != null)
-                    flyout.ShowAt(senderElement, position.Value);
-                else
-                    flyout.ShowAt(senderElement);
-            }
-
+            catch { }
         }
-
     }
 }

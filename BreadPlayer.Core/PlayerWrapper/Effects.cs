@@ -38,10 +38,11 @@ namespace BreadPlayer.Core
             bool loadbassfx = BassFx.Load();
             _myDSPAddr = new DSPProcedure(SetPreamp);
             //InitializeEqualizer();
-            EnableEqualizer(null);
+            InitializeEqualizer();
         }
-        
+
         #endregion
+
         ObservableCollection<EqualizerBand> bands;
         public ObservableCollection<EqualizerBand> EqualizerBands
         {

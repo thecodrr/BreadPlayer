@@ -235,27 +235,34 @@ namespace BreadPlayer.ViewModels
         }
         private async void PlayPause()
         {
-            if (Player.CurrentlyPlayingFile == null && TracksCollection.Elements.Count > 0)
-                Play(null, TracksCollection.Elements.First());
-            else
+            try
             {
-                switch (Player.PlayerState)
+                if (Player.CurrentlyPlayingFile == null && TracksCollection.Elements.Count > 0)
+                    Play(null, TracksCollection.Elements.First());
+                else
                 {
-                    case PlayerState.Playing:
-                        await Player.Pause();
-                        timer.Stop();
-                        Player.PlayerState = PlayerState.Stopped;
-                        PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                        break;
-                    case PlayerState.Paused:
-                    case PlayerState.Ended:
-                    case PlayerState.Stopped:
-                        await Player.Play();
-                        timer.Start();
-                        PlayPauseIcon = new SymbolIcon(Symbol.Pause);
-                        DontUpdatePosition = false;
-                        break;
+                    switch (Player.PlayerState)
+                    {
+                        case PlayerState.Playing:
+                            await Player.Pause();
+                            timer.Stop();
+                            Player.PlayerState = PlayerState.Stopped;
+                            PlayPauseIcon = new SymbolIcon(Symbol.Play);
+                            break;
+                        case PlayerState.Paused:
+                        case PlayerState.Ended:
+                        case PlayerState.Stopped:
+                            await Player.Play();
+                            timer.Start();
+                            PlayPauseIcon = new SymbolIcon(Symbol.Pause);
+                            DontUpdatePosition = false;
+                            break;
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                await NotificationManager.ShowMessageAsync("Some error occured while playing the song. ERROR INFO: " + ex.Message);
             }
         }
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)

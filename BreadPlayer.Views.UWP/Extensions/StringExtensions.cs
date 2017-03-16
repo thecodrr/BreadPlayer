@@ -22,5 +22,6 @@ namespace BreadPlayer.Extensions
         {
             return Regex.Match(input.Remove(1), "[^a-zA-Z0-9]").Success;
         }
+
     }
 }

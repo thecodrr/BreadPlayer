@@ -243,31 +243,37 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public async void Load()
         {
-            //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
-            FolderPicker picker = new FolderPicker();
-            picker.FileTypeFilter.Add(".mp3");
-            picker.FileTypeFilter.Add(".wav");
-            picker.FileTypeFilter.Add(".ogg");
-            picker.FileTypeFilter.Add(".flac");
-            picker.FileTypeFilter.Add(".m4a");
-            picker.FileTypeFilter.Add(".aif");
-            picker.FileTypeFilter.Add(".wma");
-            picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-            picker.ViewMode = PickerViewMode.List;
-            picker.CommitButtonText = "Import";
-            StorageFolder folder = await picker.PickSingleFolderAsync();
-            if (folder != null)
+            try
+            {  //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
+                FolderPicker picker = new FolderPicker();
+                picker.FileTypeFilter.Add(".mp3");
+                picker.FileTypeFilter.Add(".wav");
+                picker.FileTypeFilter.Add(".ogg");
+                picker.FileTypeFilter.Add(".flac");
+                picker.FileTypeFilter.Add(".m4a");
+                picker.FileTypeFilter.Add(".aif");
+                picker.FileTypeFilter.Add(".wma");
+                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+                picker.ViewMode = PickerViewMode.List;
+                picker.CommitButtonText = "Import";
+                StorageFolder folder = await picker.PickSingleFolderAsync();
+                if (folder != null)
+                {
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, 1);
+                    LibraryFoldersCollection.Add(folder);
+                    StorageApplicationPermissions.FutureAccessList.Add(folder);
+                    //Get query options with which we search for files in the specified folder
+                    var options = Common.DirectoryWalker.GetQueryOptions();
+                    //this is the query result which we recieve after querying in the folder
+                    StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+                    //the event for files changed
+                    queryResult.ContentsChanged += QueryResult_ContentsChanged;
+                    await AddFolderToLibraryAsync(queryResult);
+                }
+            }
+            catch(UnauthorizedAccessException)
             {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, 1);
-                LibraryFoldersCollection.Add(folder);
-                StorageApplicationPermissions.FutureAccessList.Add(folder);
-                //Get query options with which we search for files in the specified folder
-                var options = Common.DirectoryWalker.GetQueryOptions();
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-                //the event for files changed
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                await AddFolderToLibraryAsync(queryResult);
+                await NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
             }
         }
         #endregion
@@ -474,16 +480,20 @@ namespace BreadPlayer.ViewModels
         }
         async Task ShowMessageBox(Action action, params string[] msgContent)
         {
-            MessageDialog dia = new MessageDialog(msgContent[0], msgContent[1]);
-            dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
-            dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
-            dia.DefaultCommandIndex = 0;
-            dia.CancelCommandIndex = 1;
-            var result = await dia.ShowAsync();
-            if (result.Label == "Yes")
+            try
             {
-                action.Invoke();
+                MessageDialog dia = new MessageDialog(msgContent[0], msgContent[1]);
+                dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
+                dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
+                dia.DefaultCommandIndex = 0;
+                dia.CancelCommandIndex = 1;
+                var result = await dia.ShowAsync();
+                if (result.Label == "Yes")
+                {
+                    action.Invoke();
+                }
             }
+            catch (UnauthorizedAccessException) { }
         }
         #endregion
 

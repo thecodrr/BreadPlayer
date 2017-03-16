@@ -694,25 +694,32 @@ namespace BreadPlayer.ViewModels
             }          
             return f;
         }
-        void UpdateJumplist(string propName)
+        private async void UpdateJumplist(string propName)
         {
-            if (propName == "Year" || propName == "TrackNumber")
+            try
             {
-                AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+                if (propName == "Year" || propName == "TrackNumber")
+                {
+                    AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+                }
+                else if (propName == "Length")
+                {
+                    AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+                }
+                else if (propName == "FolderPath")
+                {
+                    AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
+                }
+                else
+                {
+                    AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
+                }
+                AlphabetList.Sort();
             }
-            else if (propName == "Length")
+            catch(ArgumentOutOfRangeException ex)
             {
-                AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+                await NotificationManager.ShowMessageAsync("Unable to update jumplist due to some problem with TracksCollection. ERROR INFO: " + ex.Message);
             }
-            else if (propName == "FolderPath")
-            {
-                AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
-            }
-            else
-            {
-                AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
-            }
-            AlphabetList.Sort();
         }
         
         /// <summary>

@@ -23,12 +23,12 @@ public class BLogger
         set { logger = value; }
     }
     public static void InitLogger()
-    {       
+    {
         var formatter = new LineFormatter();
         var logConfig = new LogConfig(formatter);
         logConfig.AddTarget(LogLevel.Trace, LogLevel.Fatal, new AsyncFileTarget(formatter, "Log.log"));
         LogManager.Init(logConfig);
-        Logger = LogManager.Default.GetLogger("BLogger");      
+        Logger = LogManager.Default.GetLogger("BLogger");
     }
     public async static Task CopyLogAndMailAsync()
     {
@@ -85,7 +85,7 @@ public class BLogger
                 "App Version: {5}" + "\r\n" +
                 "Date Reported: {6}" + "\r\n" +
                 "Exception Count: {7}";
-            emailMessage.Body = string.Format(body, Info.SystemFamily, Info.SystemVersion, Info.SystemArchitecture, Info.DeviceModel, Info.DeviceManufacturer, Info.ApplicationVersion, DateTime.Now, exceptionCount) ;
+            emailMessage.Body = string.Format(body, Info.SystemFamily, Info.SystemVersion, Info.SystemArchitecture, Info.DeviceModel, Info.DeviceManufacturer, Info.ApplicationVersion, DateTime.Now, exceptionCount);
             foreach (var logFile in logFiles)
             {
                 var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(logFile);
@@ -95,9 +95,9 @@ public class BLogger
                     stream);
 
                 emailMessage.Attachments.Add(attachment);
-            }          
+            }
             var x = await client.SendMailAsync(emailMessage);
-            if(x == SmtpResult.OK)
+            if (x == SmtpResult.OK)
                 await ApplicationData.Current.TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }

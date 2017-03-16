@@ -148,39 +148,48 @@ namespace BreadPlayer
         static bool isforwardbackword = false;
         public async static void UpdateSmtc(bool play = false)
         {
-            System.Diagnostics.Debug.Write(MemoryManager.AppMemoryUsage / 1024 + " | " + MemoryManager.AppMemoryUsageLimit + " | " + isBackground);
-            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            var musicProps = _smtc.DisplayUpdater.MusicProperties;
-            _smtc.DisplayUpdater.ClearAll();
-            if (Player.CurrentlyPlayingFile != null)
+            try
             {
-                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+                var musicProps = _smtc.DisplayUpdater.MusicProperties;
+                _smtc.DisplayUpdater.ClearAll();
+                if (Player.CurrentlyPlayingFile != null)
                 {
-                    var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
-                    player.IsLoopingEnabled = true;
-                    player.Source = MediaSource.CreateFromStorageFile(file);
-                    player.CommandManager.IsEnabled = false;
-                    if (isPlaying || play)
+                    if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                     {
-                        player.Play();
-                        isPlaying = false;
-                    }
-                    else
-                    {
-                        player.Pause();
-                    }
-                    player.Volume = 0;
+                        var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                        player.IsLoopingEnabled = true;
+                        player.Source = MediaSource.CreateFromStorageFile(file);
+                        player.CommandManager.IsEnabled = false;
+                        if (isPlaying || play)
+                        {
+                            player.Play();
+                            isPlaying = false;
+                        }
+                        else
+                        {
+                            player.Pause();
+                        }
+                        player.Volume = 0;
 
+                    }
+                    if (Player.CurrentlyPlayingFile != null)
+                    {
+                        musicProps.Title = Player.CurrentlyPlayingFile.Title;
+                        musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
+                        musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
+                        if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile.AttachedPicture))
+                            _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.AttachedPicture));
+                        else
+                            _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
+                    }
                 }
-                musicProps.Title = Player.CurrentlyPlayingFile.Title;
-                musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
-                musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
-                if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile.AttachedPicture))
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.AttachedPicture));
-                else
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
+                _smtc.DisplayUpdater.Update();
             }
-            _smtc.DisplayUpdater.Update();
+            catch(Exception ex)
+            {
+                await NotificationManager.ShowMessageAsync("An error occured while updating SMTC.");
+            }
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {

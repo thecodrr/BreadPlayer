@@ -51,18 +51,11 @@ namespace BreadPlayer.Service
                     recent = StaticDatabase.DB.GetCollection<Mediafile>("recent");
                     tracks.EnsureIndex(t => t.Title);
                     tracks.EnsureIndex(t => t.LeadArtist);
-                }
-                else
-                {
-                    await ApplicationData.Current.ClearAsync();
-                    CreateDB();
-                }
+                }              
                 GetTrackCount();
             }
             catch (Exception)
             {
-                await ApplicationData.Current.ClearAsync();
-                CreateDB();
             }
         }
         public LiteCollection<T> GetCollection<T>(string colName) where T : new()
