@@ -41,7 +41,7 @@
 **Development on Beta version has started.** 
 #### Beta Feature List:
 
-- [ ] 1. Equalizer/Effects
+- [x] 1. Equalizer/Effects
 - [x] 2. Most Played, Recently Added, Favorites and Now Playing section
 - [ ] 3. Prevent screen from locking.
 - [x] 4. Stop playing after this song. _**(thanks to vsarunov)**_
