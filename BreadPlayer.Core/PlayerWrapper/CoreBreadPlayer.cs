@@ -57,7 +57,7 @@ namespace BreadPlayer.Core
         }
         private void InitializeExtensions()
         {
-            Effect = new Effects(handle, reset);
+            Effect = new Effects(handle);
         }
         #endregion
 
