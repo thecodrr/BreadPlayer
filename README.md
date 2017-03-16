@@ -17,7 +17,7 @@
 ![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)
 [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle)
 
-##Current Status:
+## Current Status:
 #### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle) to check out the new features! 
 
 #### Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
@@ -41,7 +41,7 @@
 **Development on Beta version has started.** 
 #### Beta Feature List:
 
-- [ ] 1. Equalizer/Effects
+- [x] 1. Equalizer/Effects
 - [x] 2. Most Played, Recently Added, Favorites and Now Playing section
 - [ ] 3. Prevent screen from locking.
 - [x] 4. Stop playing after this song. _**(thanks to vsarunov)**_
