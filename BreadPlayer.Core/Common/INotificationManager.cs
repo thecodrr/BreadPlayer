@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreadPlayer.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace BreadPlayer.Core.Common
     public interface INotificationManager
     {
         Task ShowMessageBoxAsync(string message, string title);
-        Task ShowMessageAsync(string message);       
+        Task ShowMessageAsync(string message);
+        void SendUpcomingSongNotification(Mediafile mediaFile);
     }
 }

@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using BreadPlayer.Events;
 using BreadPlayer.Models;
+using BreadPlayer.Core.Events;
 
 namespace BreadPlayer.Core
 {
@@ -102,6 +103,8 @@ namespace BreadPlayer.Core
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
+                        Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 15), _posSync);
+
                         CurrentlyPlayingFile = mediaFile;
                     });
 
@@ -253,7 +256,11 @@ namespace BreadPlayer.Core
         #endregion
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {
-            Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
+            if (Position >= Length - 15 && Position < Length - 5)
+                if(MediaAboutToEnd != null)
+                    MediaAboutToEnd(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
+            else if(Position >= Length - 5)
+                Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             //MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
         private void EndSync(int handle, int channel, int data, IntPtr user)
@@ -262,8 +269,10 @@ namespace BreadPlayer.Core
         }
         public event OnMediaStateChanged MediaStateChanged;
         public event OnMediaEnded MediaEnded;
+        public event OnMediaAboutToEnd MediaAboutToEnd;
     }
 
     public delegate void OnMediaStateChanged(object sender, MediaStateChangedEventArgs e);
     public delegate void OnMediaEnded(object sender, MediaEndedEventArgs e);
+    public delegate void OnMediaAboutToEnd(object sender, MediaAboutToEndEventArgs e);
 }

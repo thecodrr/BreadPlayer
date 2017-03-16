@@ -33,6 +33,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
+using Windows.UI.Notifications;
 
 namespace BreadPlayer.ViewModels
 {
@@ -69,8 +70,8 @@ namespace BreadPlayer.ViewModels
             this.timer.Stop();
             Player.MediaEnded += Player_MediaEnded;
             this.PropertyChanged += ShellViewModel_PropertyChanged;
+            Player.MediaAboutToEnd += Player_MediaAboutToEnd;
         }
-
         #endregion
 
         #region HandleMessages
@@ -391,7 +392,11 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events  
-        
+        private void Player_MediaAboutToEnd(object sender, Core.Events.MediaAboutToEndEventArgs e)
+        {
+            NotificationManager.SendUpcomingSongNotification(UpcomingSong);
+        }
+
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Shuffle")
@@ -635,6 +640,7 @@ namespace BreadPlayer.ViewModels
                         if (play)
                         {
                             PlayPauseCommand.Execute(null);
+                            ToastNotificationManager.History.Clear();
                         }
                         else
                         {
