@@ -226,18 +226,15 @@
     <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\lib\ARM\bass.dll" />
-    <Content Include="Assets\lib\ARM\bassmidi.dll" />
+    <!--<Content Include="Assets\lib\ARM\bass.dll" />
     <Content Include="Assets\lib\ARM\bassmix.dll" />
     <Content Include="Assets\lib\ARM\bass_fx.dll" />
     <Content Include="Assets\lib\x64\bass.dll" />
-    <Content Include="Assets\lib\x64\bassmidi.dll" />
     <Content Include="Assets\lib\x64\bassmix.dll" />
     <Content Include="Assets\lib\x64\bass_fx.dll" />
     <Content Include="Assets\lib\x86\bass.dll" />
-    <Content Include="Assets\lib\x86\bassmidi.dll" />
     <Content Include="Assets\lib\x86\bassmix.dll" />
-    <Content Include="Assets\lib\x86\bass_fx.dll" />
+    <Content Include="Assets\lib\x86\bass_fx.dll" />-->
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\albumart.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
@@ -297,10 +294,6 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x86\bassmidi.dll">
-      <Link>bassmidi.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\lib\x86\bassmix.dll">
       <Link>bassmix.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -315,10 +308,6 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x64\bassmidi.dll">
-      <Link>bassmidi.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\lib\x64\bassmix.dll">
       <Link>bassmix.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -331,10 +320,6 @@
     </Content>
     <Content Include="Assets\lib\ARM\bass_fx.dll">
       <Link>bass_fx.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\lib\ARM\bassmidi.dll">
-      <Link>bassmidi.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\lib\ARM\bassmix.dll">

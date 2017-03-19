@@ -21,6 +21,7 @@ using ManagedBass;
 using BreadPlayer.Events;
 using BreadPlayer.Models;
 using BreadPlayer.Core.Events;
+using System.Security;
 
 namespace BreadPlayer.Core
 {
@@ -38,7 +39,7 @@ namespace BreadPlayer.Core
             Init();
             _sync = new SyncProcedure(EndSync);
             _posSync = new SyncProcedure(PositonReachedSync);
-        }        
+        }
         #endregion
 
         #region Initialize Methods
@@ -48,12 +49,19 @@ namespace BreadPlayer.Core
         /// <returns></returns>
         public async Task Init()
         {
-           await Task.Run(() => 
+           await Task.Run(async() => 
             {
-                Bass.UpdatePeriod = 1000;              
-                Bass.Start();
-                Bass.Init();
-                InitializeExtensions();
+                try
+                {
+                    Bass.UpdatePeriod = 1000;
+                    Bass.Start();
+                    Bass.Init();
+                    InitializeExtensions();
+                }
+                catch(Exception ex)
+                {
+                   await Init();
+                }
             });                   
         }
         private void InitializeExtensions()
@@ -99,12 +107,13 @@ namespace BreadPlayer.Core
                         PlayerState = PlayerState.Stopped;
                         Length = 0;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                        Bass.FloatingPointDSP = true;
                         InitializeExtensions();
                         MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 15), _posSync);
-
+                       
                         CurrentlyPlayingFile = mediaFile;
                     });
 

@@ -37,7 +37,7 @@ namespace BreadPlayer.Core
             handle = coreHandle;
             bool loadbassfx = BassFx.Load();
             _myDSPAddr = new DSPProcedure(SetPreamp);
-            //InitializeEqualizer();
+            Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 0);
             InitializeEqualizer();
         }
 
@@ -87,7 +87,7 @@ namespace BreadPlayer.Core
             {
                 eq.lBand = i;
                 eq.fCenter = DefaultCenterFrequencyList[i];
-                bool loadbassfx = Bass.FXSetParameters(fxEQ, eq);
+                Bass.FXSetParameters(fxEQ, eq);
                 EqualizerBand band = new EqualizerBand();
                 band.Center = eq.fCenter;
                 band.Gain = eq.fGain;
@@ -115,37 +115,32 @@ namespace BreadPlayer.Core
             PeakEQParameters eq = new PeakEQParameters();
             // get values of the selected band
             eq.lBand = band;
-            bool loadbassfx = Bass.FXGetParameters(fxEQ, eq);
+            Bass.FXGetParameters(fxEQ, eq);
             eq.fGain = freq;
-            bool loadbassfx2 = Bass.FXSetParameters(fxEQ, eq);
+            Bass.FXSetParameters(fxEQ, eq);
         }
         private DSPProcedure _myDSPAddr; // make it global, so that the GC can not remove it
         private float[] _data; // local data buffer
-        float _preamp = 6f;
+        float _preamp = 1f;
         public float Preamp
         {
             get { return _preamp; }
             set
             {
-                _preamp = value;
-                Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 1);
+                _preamp = value;             
             }
         }
+        //static private float _gainAmplification = 1;
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
             if (_preamp == 1f || length == 0 || buffer == IntPtr.Zero)
                 return;
+            var pointer = (float*)buffer;
 
-            // convert the _gainDB value to a float
-            float _gainAmplification = (float)Math.Pow(10d, _preamp / 20d);
-            // length is in bytes, so the number of floats to process is length/4 
-            int l4 = length / 4;
-            // cast the given buffer IntPtr to a native pointer to float values
-            float* data = (float*)buffer;
-            for (int a = 0; a < l4; a++)
-            {
-                data[a] = data[a] * _gainAmplification;
-            }
+            var n = length / 4; // float is 4 bytes
+
+            for (int i = 0; i < n; ++i)
+                pointer[i] *= _preamp;
         }
     }
 
@@ -163,7 +158,7 @@ namespace BreadPlayer.Core
         }
         public string CenterTitle
         {
-            get { return FormatNumber(Center); }
+            get { return FormatNumber(Center) + "Hz"; }
         }
         float center;
         public float Center

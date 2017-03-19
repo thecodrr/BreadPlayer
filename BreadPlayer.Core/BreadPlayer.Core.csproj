@@ -133,8 +133,8 @@
     <Reference Include="ManagedBass">
       <HintPath>..\libs\ManagedBass.dll</HintPath>
     </Reference>
-    <Reference Include="ManagedBass.PInvoke">
-      <HintPath>..\libs\ManagedBass.PInvoke.dll</HintPath>
+    <Reference Include="ManagedBass.Fx">
+      <HintPath>..\libs\ManagedBass.Fx.dll</HintPath>
     </Reference>
     <Reference Include="XLog">
       <HintPath>..\libs\XLog.dll</HintPath>

@@ -550,7 +550,7 @@
                                    OpenPaneLength="355"
                                    CompactPaneLength="48"
                                    IsTabStop="False" 
-                                  PaneBackground="{ThemeResource ThemeBackground}">
+                                  PaneBackground="{ThemeResource PlaybarBrush}">
                             <SplitView.Resources>
                                 <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">                                  
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
@@ -558,7 +558,7 @@
                                 </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
-                                <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" >
+                                <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource PlaybarBrush}" >
                                    
                                     <Grid x:Name="UpperGrid" Margin="0,50,0,0">
                                         <Grid.RowDefinitions>
@@ -623,7 +623,7 @@
                             <Grid>
                                 <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
 
-                                <blur:BackDrop BlurAmount="30" TintColor="#CCE5E5E5" />
+                                <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
                                 <Grid VerticalAlignment="Top">
                                     <ToggleButton x:Name="toggleButton" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Background="Transparent" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                     <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
