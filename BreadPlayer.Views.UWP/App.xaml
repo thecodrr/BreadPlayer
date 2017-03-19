@@ -31,6 +31,7 @@
                     <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="HoverBrush" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
                     <SolidColorBrush x:Key="HoverBrush2" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
+                    <SolidColorBrush x:Key="NavItemHover" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
                     <SolidColorBrush x:Key="AppBarToggleHover" Color="{ThemeResource SystemAccentColor}" Opacity="0.5"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="Black"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f0f0f0"/>
@@ -62,8 +63,9 @@
                     <SolidColorBrush x:Key="SystemControlHyperlinkTextBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="ContentDialogBorderThemeBrush" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{ThemeResource SystemAccentColor}" />
-                    <SolidColorBrush x:Key="HoverBrush" Color="White" Opacity="1"/>
+                    <SolidColorBrush x:Key="HoverBrush" Color="#323232" Opacity="1"/>
                     <SolidColorBrush x:Key="HoverBrush2" Color="#323232" Opacity="1"/>
+                    <SolidColorBrush x:Key="NavItemHover" Color="#323232" Opacity="1"/>
                     <SolidColorBrush x:Key="AppBarToggleHover" Color="{ThemeResource SystemAccentColor}" Opacity="0.5"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="White"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#0c0c0c"/>

@@ -215,7 +215,7 @@
                 </Grid>
             </StackPanel>
         </Grid>
-        <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
+        <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource ThemeBackground}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

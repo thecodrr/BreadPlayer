@@ -29,7 +29,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid Background="{TemplateBinding Background}" x:Name="LayoutRoot">
+                    <Grid Background="Transparent" x:Name="LayoutRoot">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
@@ -83,11 +83,11 @@
                                 </VisualState>
                                 <VisualState x:Name="CheckedPointerOver">
                                     <Storyboard>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot"
                                                                        Storyboard.TargetProperty="(Grid.Background)">
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                                                     Value="{ThemeResource SystemControlHighlightListLowBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
+                                        </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                                        Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -223,7 +223,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
                                                                        Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
+                                                                    Value="{ThemeResource NavItemHover}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -243,7 +243,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
                                                                        Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
+                                                                    Value="{ThemeResource NavItemHover}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
@@ -550,7 +550,7 @@
                                    OpenPaneLength="355"
                                    CompactPaneLength="48"
                                    IsTabStop="False" 
-                                  PaneBackground="{ThemeResource PlaybarBrush}">
+                                  PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Resources>
                                 <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">                                  
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
