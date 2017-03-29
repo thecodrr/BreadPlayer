@@ -1,6 +1,8 @@
 ﻿using BreadPlayer.Models;
 using LiteDB;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace BreadPlayer.Service
@@ -13,40 +15,26 @@ namespace BreadPlayer.Service
         {
             get;set;
         }
-        public override async void CreateDB()
+        public override void CreateDB()
         {
             if (PDatabase != null)
             {
-                using (PDatabase.DB)
+                IsValid = PDatabase.DB.Engine != null;
+                if (IsValid)
                 {
-                    System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
-                    IsValid = PDatabase.DB.Engine != null;
-                    if (IsValid)
-                    {
-                        tracks = PDatabase.DB.GetCollection<Mediafile>("songs");
-                        tracks.EnsureIndex(t => t.Title);
-                        tracks.EnsureIndex(t => t.LeadArtist);
-                    }
-                    else
-                    {
-                        await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\playlists\" + Name + ".db")).DeleteAsync(StorageDeleteOption.PermanentDelete);
-                        CreateDB();
-                    }
+                    tracks = PDatabase.DB.GetCollection<Mediafile>("songs");
+                    tracks.EnsureIndex(t => t.Title);
+                    tracks.EnsureIndex(t => t.LeadArtist);
                 }
             }
-        }
+        }      
         public PlaylistService(string name, bool isPrivate, string password)
         {
             Name = name;
             Password = password;
-            PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1};",Name, isPrivate ? "password=" + Password : ""));
+            PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1}",Name, isPrivate ? "password=" + Password + ";" : ""));
             CreateDB();
-        }
-
-        public new void Dispose()
-        {
-            PDatabase = null;
-        }
+        }    
     }
     public class PlaylistDatabase
     {
@@ -62,6 +50,8 @@ namespace BreadPlayer.Service
         }
         public PlaylistDatabase(string connectionString)
         {
+            System.IO.Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path + @"\playlists\");
+
             ConnectionString = connectionString;
             if (db == null && ConnectionString != null)
             {

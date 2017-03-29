@@ -36,6 +36,7 @@ using BreadPlayer.ViewModels;
 using System.Diagnostics;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Threading.Tasks;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer
 {
@@ -54,7 +55,12 @@ namespace BreadPlayer
             PlaylistVM = new PlaylistViewModel(e.Parameter);
             this.DataContext = PlaylistVM;
             base.OnNavigatedTo(e);
+
+            fileBox.FindChildOfType<ScrollViewer>().ViewChanging += PlaylistView_ViewChanging;
         }
-       
+
+        private void PlaylistView_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+        }
     }
 }

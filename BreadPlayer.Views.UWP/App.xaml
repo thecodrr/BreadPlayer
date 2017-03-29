@@ -3,7 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"     
     xmlns:Converter="using:BreadPlayer.Converters"
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:MacalifaCore="using:BreadPlayer.Core" xmlns:Services="using:BreadPlayer.Services"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:MacalifaCore="using:BreadPlayer.Core" 
+    xmlns:blur="using:BreadPlayer.Effects" 
       xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
   xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:VM="using:BreadPlayer.ViewModels"  xmlns:Behaviours="using:BreadPlayer.Behaviours" xmlns:Converters="using:BreadPlayer.Converters"  xmlns:Extensions="using:BreadPlayer.Extensions"
     xmlns:local="using:BreadPlayer" RequiresPointerMode="WhenRequested">
@@ -42,6 +44,7 @@
                     <SolidColorBrush x:Key="SecondCircleBrush" Color="#141414" Opacity="0.95"/>
                     <SolidColorBrush x:Key="PlaybarBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.8" />
                     <Color x:Key="BlurTint">#CCE5E5E5</Color>
+                    <Color x:Key="BlurTint2">#99E5E5E5</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>-->
@@ -76,6 +79,7 @@
                     <SolidColorBrush x:Key="SecondCircleBrush" Color="#e9e9e9" Opacity="0.95"/>
                     <SolidColorBrush x:Key="PlaybarBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.8" />
                     <Color x:Key="BlurTint">#CC0C0C0C</Color>
+                    <Color x:Key="BlurTint2">#990C0C0C</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
@@ -160,7 +164,7 @@
                                 </VisualStateManager.VisualStateGroups>
                                 <Rectangle x:Name="CheckedHighlightBackground" RadiusX="20" RadiusY="20" Fill="{ThemeResource SystemControlHighlightAccentBrush}" Opacity="0"/>
                                 <Rectangle x:Name="AccentOverlayBackground" RadiusX="20" RadiusY="20"/>
-                                <ContentPresenter x:Name="Content" AutomationProperties.AccessibilityView="Raw" CornerRadius="40" Content="{TemplateBinding Icon}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <ContentPresenter x:Name="Content" AutomationProperties.AccessibilityView="Raw" CornerRadius="40" Content="{TemplateBinding Icon}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                 <Rectangle x:Name="FocusVisualBlack" RadiusX="20" RadiusY="20" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
                             </Grid>
 
@@ -290,7 +294,7 @@
                                 </VisualStateManager.VisualStateGroups>
                                 <Rectangle x:Name="CheckedHighlightBackground"  RadiusX="20" RadiusY="20" Fill="{ThemeResource SystemControlHighlightAccentBrush}" Opacity="0"/>
                                 <Rectangle x:Name="AccentOverlayBackground"  RadiusX="20" RadiusY="20"/>
-                                <ContentPresenter x:Name="Content" CornerRadius="40" AutomationProperties.AccessibilityView="Raw" Content="{TemplateBinding Icon}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <ContentPresenter x:Name="Content" CornerRadius="40" AutomationProperties.AccessibilityView="Raw" Content="{TemplateBinding Icon}" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                                 <Rectangle x:Name="FocusVisualBlack"  RadiusX="20" RadiusY="20" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
                             </Grid>
 
@@ -1396,8 +1400,8 @@ Control.IsTemplateFocusTarget="True"/>
               ContentTransitions="{TemplateBinding ContentTransitions}"
               ContentTemplate="{TemplateBinding ContentTemplate}" Grid.ColumnSpan="9"
               Content="{TemplateBinding Content}" Margin="0,0,32,0"
-              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
                             ></ContentPresenter>
                                     <Border Background="Transparent" Tag="{TemplateBinding Content}" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="50" Grid.ColumnSpan="9">
                                         <Interactivity:Interaction.Behaviors>
@@ -1514,22 +1518,15 @@ Control.IsTemplateFocusTarget="True"/>
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
-                <Grid x:Name="DataStack_MOBILE" Opacity="100" Height="55" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="titleTxt_MOBILE" Width="1000" VerticalAlignment="Bottom" Foreground="{Binding ElementName=DataStack, Path=Foreground}" TextWrapping="NoWrap" TextTrimming="None" Text="{Binding Title}"/>
-                    <StackPanel Grid.Row="1" x:Name="InfoPanel" Width="1000"  Orientation="Horizontal" VerticalAlignment="Top">
-                        <TextBlock x:Name="artistTxt_MOBILE" Visibility="Visible" Foreground="{Binding ElementName=DataStack, Path=Foreground}" FontSize="13" Text="{Binding LeadArtist}" />
-                        <TextBlock Text="&#x2022;" FontSize="13" Margin="5,0,0,0" Foreground="{Binding ElementName=DataStack, Path=Foreground}"/>
-                        <TextBlock x:Name="albumTxt_MOBILE" Visibility="Visible" Foreground="{Binding ElementName=DataStack, Path=Foreground}" FontSize="13" Text="{Binding Album}" Margin="5,0,0,0" />
-                    </StackPanel>
-                    <TextBlock x:Name="durationTxt_MOBILE" Grid.Column="1" Grid.RowSpan="2" Foreground="{Binding ElementName=DataStack, Path=Foreground}" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Visible" FontSize="11" Margin="15,0,0,0" Text="{Binding Length}"/>
+                <Grid Height="75" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
+                        <Run Text="{Binding Path=Title}"/>
+                        <LineBreak/>
+                        <Run Text="{Binding Path=LeadArtist}" Foreground="Gray"/>
+                        <Run Text=" &#x2022; " FontWeight="Bold" Foreground="Gray"/>
+                        <Run Text="{Binding Path=Album}" Foreground="Gray"/>
+                    </TextBlock>
+                    <!--<TextBlock Text="{Binding Path=Length}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>-->
                 </Grid>
             </DataTemplate>
             <!-- Style for Windows.UI.Xaml.Controls.ListViewItem -->
@@ -2533,7 +2530,7 @@ Control.IsTemplateFocusTarget="True"/>
             <!-- Default style for Windows.UI.Xaml.Controls.ContentDialog -->
             <Style TargetType="ContentDialog" x:Key="ContentDialogControlTemplate">
                 <Setter Property="Foreground" Value="{ThemeResource SystemControlPageTextBaseHighBrush}" />
-                <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
+                <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}"/>
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Top" />
                 <Setter Property="IsTabStop" Value="False" />
@@ -2546,6 +2543,23 @@ Control.IsTemplateFocusTarget="True"/>
                     <Setter.Value>
                         <ControlTemplate TargetType="ContentDialog">
                             <Border x:Name="Container" BorderThickness="0" >
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState>
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="0"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="DialogSpace.Margin" Value="15"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState>
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="600"/>
+                                            </VisualState.StateTriggers>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
                                 <Grid x:Name="LayoutRoot" BorderThickness="0" >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -2553,15 +2567,17 @@ Control.IsTemplateFocusTarget="True"/>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
+                                  
                                     <Border x:Name="BackgroundElement"
-                    Background="{TemplateBinding Background}"
                     FlowDirection="{TemplateBinding FlowDirection}"
-                    BorderThickness=".5" CornerRadius="15"
+                    CornerRadius="15"
                     BorderBrush="{ThemeResource SystemControlForegroundAccentBrush}"
                     MaxWidth="{TemplateBinding MaxWidth}"
                     MaxHeight="{TemplateBinding MaxHeight}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" >
+                                        <Grid CornerRadius="15">
+                                            <blur:BackDrop BlurAmount="10" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />
                                         <Grid x:Name="DialogSpace" Margin="50" VerticalAlignment="Stretch">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -2636,6 +2652,7 @@ Control.IsTemplateFocusTarget="True"/>
                       Grid.Column="1"
                       HorizontalAlignment="Stretch" />
                                             </Grid>
+                                        </Grid>
                                         </Grid>
                                     </Border>
                                 </Grid>

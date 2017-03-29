@@ -8,6 +8,7 @@ using LiteDB;
 using Windows.Storage;
 using BreadPlayer.Messengers;
 using System.Diagnostics;
+using BreadPlayer.Services;
 
 namespace BreadPlayer.ViewModels
 {
@@ -32,7 +33,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_ADD_ALBUMS, new Action<Message>(HandleAddAlbumMessage));
         }       
 
-        public async void InitDB()
+        public void InitDB()
         {
             try
             {
@@ -45,7 +46,7 @@ namespace BreadPlayer.ViewModels
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while initiating albums database.", ex);
-                await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\albums.db")).DeleteAsync();
+                //await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\albums.db")).DeleteAsync();
                 InitDB();
             }
         }
@@ -142,7 +143,9 @@ namespace BreadPlayer.ViewModels
             {
                 Album album = para as Album;
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
-                SplitViewMenu.SplitViewMenu.NavService.Frame.Navigate(typeof(PlaylistView), album);
+               
+                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
+
             }
         }
         

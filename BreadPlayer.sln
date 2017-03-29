@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Views.UWP", "BreadPlayer.Views.UWP\BreadPlayer.Views.UWP.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Web.Tests", "BreadPlayer.Web.Tests\BreadPlayer.Web.Tests.csproj", "{23538FC1-D438-48EB-B0D7-832A401E5247}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Web", "BreadPlayer.Web\BreadPlayer.Web.csproj", "{8BAA2DC7-9675-480F-A9F5-8D8D6245689B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BreadPlayer.LibraryModule", "BreadPlayer.LibraryModule\BreadPlayer.LibraryModule.vcxproj", "{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,6 +124,20 @@ Global
 		{8BAA2DC7-9675-480F-A9F5-8D8D6245689B}.Release|x64.Build.0 = Release|Any CPU
 		{8BAA2DC7-9675-480F-A9F5-8D8D6245689B}.Release|x86.ActiveCfg = Release|Any CPU
 		{8BAA2DC7-9675-480F-A9F5-8D8D6245689B}.Release|x86.Build.0 = Release|Any CPU
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|ARM.Build.0 = Debug|ARM
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|x64.ActiveCfg = Debug|x64
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|x64.Build.0 = Debug|x64
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|x86.ActiveCfg = Debug|Win32
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Debug|x86.Build.0 = Debug|Win32
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|ARM.ActiveCfg = Release|ARM
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|ARM.Build.0 = Release|ARM
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|x64.ActiveCfg = Release|x64
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|x64.Build.0 = Release|x64
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|x86.ActiveCfg = Release|Win32
+		{DC9FDB9B-26C6-41A0-A377-34A37257D0FC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

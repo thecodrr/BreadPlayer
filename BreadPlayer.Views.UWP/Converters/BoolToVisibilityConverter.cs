@@ -64,7 +64,8 @@ namespace BreadPlayer.Converters
                 else
                     flag = true;
             }
-            return (flag ? Visibility.Visible : Visibility.Collapsed);
+            var vis = (flag ? Visibility.Visible : Visibility.Collapsed);
+            return vis;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

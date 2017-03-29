@@ -30,8 +30,8 @@ namespace BreadPlayer.Service
     {
 
         protected LiteCollection<Mediafile> tracks;
-        protected LiteCollection<Playlist> playlists;
-        protected LiteCollection<Mediafile> recent;
+        LiteCollection<Playlist> playlists;
+        LiteCollection<Mediafile> recent;
         public DatabaseService()
         {
             CreateDB();
@@ -39,7 +39,7 @@ namespace BreadPlayer.Service
         bool isValid;
         public bool IsValid { get { return isValid; } set { isValid = value; } }
 
-        public virtual async void CreateDB()
+        public virtual void CreateDB()
         {
             try
             {

@@ -14,10 +14,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.Background>
-            <ImageBrush Stretch="UniformToFill" ImageSource="ms-appx:///Assets/All I Ask.jpg"/>
+            <ImageBrush Stretch="UniformToFill"/>
         </Grid.Background>
         <Rectangle Fill="#99000000" Grid.ColumnSpan="3"/>
-       
-      
+        
+
     </Grid>
 </Page>

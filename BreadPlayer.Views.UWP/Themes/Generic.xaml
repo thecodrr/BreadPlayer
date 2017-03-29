@@ -624,12 +624,26 @@
                                 <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
 
                                 <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
+
+                                <Frame x:Name="PageFrame"  Margin="0,155,0,0" 
+                                   Navigating="OnNavigatingToPage"
+                                   Navigated="OnNavigatedToPage">
+                                    <Frame.ContentTransitions>
+                                        <TransitionCollection>
+                                            <NavigationThemeTransition>
+                                                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                                    <EntranceNavigationTransitionInfo />
+                                                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                            </NavigationThemeTransition>
+                                        </TransitionCollection>
+                                    </Frame.ContentTransitions>
+                                </Frame>
                                 <Grid VerticalAlignment="Top">
                                     <ToggleButton x:Name="toggleButton" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Background="Transparent" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                     <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
+                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                         <ItemsControl.ItemsPanel>
@@ -682,21 +696,7 @@
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE80F;" Style="{StaticResource HyperlinkBtn}"/>
                                     </StackPanel>-->
                                 </Grid>
-                                <TextBlock x:Name="headerText" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Margin="35,135,0,0.4" />
-
-                                <Frame x:Name="PageFrame"  Margin="0,155,0,0" 
-                                   Navigating="OnNavigatingToPage"
-                                   Navigated="OnNavigatedToPage">
-                                    <Frame.ContentTransitions>
-                                        <TransitionCollection>
-                                            <NavigationThemeTransition>
-                                                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                                    <EntranceNavigationTransitionInfo />
-                                                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                            </NavigationThemeTransition>
-                                        </TransitionCollection>
-                                    </Frame.ContentTransitions>
-                                </Frame>
+                                <TextBlock x:Name="headerText" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
 
                             </Grid>
                         </SplitView>

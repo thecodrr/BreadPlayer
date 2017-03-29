@@ -49,6 +49,7 @@ using Windows.UI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using Windows.ApplicationModel.Store;
+using BreadPlayer_LibraryModule;
 
 namespace BreadPlayer
 {
@@ -65,7 +66,7 @@ namespace BreadPlayer
             SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             CoreWindowLogic logic = new CoreWindowLogic();
-            ShellVM = DataContext as ShellViewModel;
+            ShellVM = DataContext as ShellViewModel;           
         }
            
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -125,6 +126,7 @@ namespace BreadPlayer
         {
             var dialog = new Windows.UI.Popups.MessageDialog(msg);
             await dialog.ShowAsync();
-        }        
+        }
+                
     }
 }

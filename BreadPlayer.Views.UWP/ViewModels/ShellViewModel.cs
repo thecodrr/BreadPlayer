@@ -71,7 +71,7 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
             this.PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
-        }
+        }        
         #endregion
 
         #region HandleMessages
@@ -87,7 +87,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        private async void HandleLibraryLoadedMessage(Message message)
+        private void HandleLibraryLoadedMessage(Message message)
         {
             if (message.Payload is ThreadSafeObservableCollection<Mediafile>)
             {
@@ -99,19 +99,19 @@ namespace BreadPlayer.ViewModels
                 var listObject = message.Payload as List<object>;
                 TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
                 IsSourceGrouped = (bool)listObject[1];
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
-                SongCount = TracksCollection.Elements.Count;
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;               
+                SongCount = service.SongCount;
                 GetSettings();
             }
         }
 
-        private void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (TracksCollection.Elements.Count > 0)
             {
                 searchCommand.IsEnabled = true;
                 PlayPauseCommand.IsEnabled = true;
+                UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
             }
         }
 
@@ -197,7 +197,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 DispatcherTimer timer = new  DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
-                if (QueryWord.Length < 2 && TracksCollection.Elements.Count < SongCount)
+                if (QueryWord.Length == 2 && TracksCollection.Elements.Count < SongCount)
                 {
                     Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Music Library");
                     Reload().ConfigureAwait(false);
@@ -392,9 +392,12 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events  
-        private void Player_MediaAboutToEnd(object sender, Core.Events.MediaAboutToEndEventArgs e)
+        private async void Player_MediaAboutToEnd(object sender, Core.Events.MediaAboutToEndEventArgs e)
         {
+            if (UpcomingSong == null)
+                UpcomingSong = await GetUpcomingSong(true);
             NotificationManager.SendUpcomingSongNotification(UpcomingSong);
+            await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
         }
 
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -640,7 +643,6 @@ namespace BreadPlayer.ViewModels
                         if (play)
                         {
                             PlayPauseCommand.Execute(null);
-                            ToastNotificationManager.History.Clear();
                         }
                         else
                         {

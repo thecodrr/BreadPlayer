@@ -75,11 +75,11 @@ namespace BreadPlayer.ViewModels
         }
         void HandleUpdateSongCountMessage(Message message)
         {
-            if (message.Payload is short)
+            if (message.Payload is short || message.Payload is Int32)
             {
-                var count = (short)message.Payload;
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                SongCount = Convert.ToInt32(count);
+                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                SongCount = Convert.ToInt32(message.Payload);
+                Status = SongCount.ToString() + " Song(s) Loaded";
                 IsLibraryLoading = true;
             }
             else
@@ -128,11 +128,16 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_ADD_PLAYLIST, new Action<Message>(HandleAddPlaylistMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleUpdateSongCountMessage));
             Messenger.Instance.Register(MessageTypes.MSG_SEARCH_STARTED, new Action<Message>(HandleSearchStartedMessage));
-        } 
+        }
         #endregion
 
         #region Properties  
-
+        string status = "Loading Library...";
+        public string Status
+        {
+            get { return status; }
+            set { Set(ref status, value); }
+        }
         private List<string> _alphabetList;
         public List<string> AlphabetList
         {
@@ -443,14 +448,16 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
         public async void Play(object path)
         {
+            var currentlyPlaying = Player.CurrentlyPlayingFile;
             Mediafile mediaFile = await GetMediafileFromParameterAsync(path, true);
             AddToRecentCollection(mediaFile);
             mediaFile.PlayCount++;
             LibraryService.UpdateMediafile(mediaFile);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
-            if (TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path) != null)
+
+            if (currentlyPlaying != null && TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path) != null)
             {
-                TracksCollection.Elements.FirstOrDefault(t => t.Path == Player?.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+                TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path).State = PlayerState.Playing;
             }
         }
         
@@ -516,15 +523,10 @@ namespace BreadPlayer.ViewModels
             }
             else if (path is Playlist)
             {
-                using (Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password))
-                {
-                    if (service.IsValid)
-                    {
-                        var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
-                        SendLibraryLoadedMessage(songList, sendUpdateMessage);
-                        return songList[0];
-                    }
-                }
+                Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password);
+                var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
+                SendLibraryLoadedMessage(songList, sendUpdateMessage);
+                return songList[0];
             }
             return null;
         }
@@ -850,10 +852,10 @@ namespace BreadPlayer.ViewModels
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (TracksCollection.Elements.Count > 0 && e.NewItems?.Count == SongCount)
+            SetNowPlayingSong();
+            if (TracksCollection.Elements.Count == SongCount)
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());
@@ -866,25 +868,31 @@ namespace BreadPlayer.ViewModels
         {
             if (!libraryLoaded)
             {
-                libraryLoaded = true;
+                libraryLoaded = true;              
+                await CreateGenreMenu().ConfigureAwait(false);
+                BLogger.Logger.Info("Library successfully loaded!");
+                await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+                await Task.Delay(10000);
+                Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
+            }
+        }
+        private void SetNowPlayingSong()
+        {
+            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
+            if (!TracksCollection.Elements.Any(t => t.Path == path && t.State == PlayerState.Playing))
+            {
                 if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
                 {
                     var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
                     foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
                 }
-                string path = RoamingSettingsHelper.GetSetting<string>("path", "");
                 if (TracksCollection.Elements.Any(t => t.Path == path))
                 {
                     TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
                 }
-                await CreateGenreMenu().ConfigureAwait(false);
-                BLogger.Logger.Info("Library successfully loaded!");
-                await NotificationManager.ShowMessageAsync("Library successfully loaded!");
-                await Task.Delay(10000);
-                Common.DirectoryWalker.SetupDirectoryWatcher(SettingsVM.LibraryFoldersCollection);
-            }
+            }           
         }
-
         #endregion
 
         #region Playlist Methods
@@ -979,14 +987,16 @@ namespace BreadPlayer.ViewModels
         public void AddPlaylist(Playlist Playlist)
         {
             var cmd = new ContextMenuCommand(AddToPlaylistCommand, Playlist.Name);
-            OptionItems.Add(cmd);          
+            OptionItems.Add(cmd);
             PlaylistsItems.Add(new SplitViewMenu.SimpleNavMenuItem
             {
                 Arguments = Playlist,
                 Label = Playlist.Name,
                 DestinationPage = typeof(PlaylistView),
                 Symbol = Symbol.List,
-                FontGlyph = "\u0045"
+                FontGlyph = "\u0045",
+                ShortcutTheme = ElementTheme.Dark,
+                HeaderVisibility = Visibility.Collapsed
             });
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)

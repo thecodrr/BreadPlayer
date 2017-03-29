@@ -42,6 +42,7 @@ namespace BreadPlayer.Themes
                    "HoverBrush2",
                    "AppBarToggleHover",
                    "SystemControlBackgroundAccentBrush",
+                   "PlaybarBrush"
 
         };
 

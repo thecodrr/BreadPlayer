@@ -67,14 +67,14 @@ namespace BreadPlayer.PlaylistBus
                         continue;
                     }
                 }
-                using (PlaylistService service = new PlaylistService(file.DisplayName, false, ""))
-                {
+               
                     for (int i = 0; i < noe; i++)
                     {
                         await Task.Run(async () =>
                         {
                             try
                             {
+                                PlaylistService service = new PlaylistService(file.DisplayName, false, "");
                                 count++;
                                 string trackPath = tracks[i, 0];
                                 FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
@@ -101,8 +101,7 @@ namespace BreadPlayer.PlaylistBus
                                 failedFiles++;
                             }
                         });
-                    }
-                }
+                    }                
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
                 await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
             }

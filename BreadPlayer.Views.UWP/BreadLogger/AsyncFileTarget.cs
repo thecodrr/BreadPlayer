@@ -43,11 +43,13 @@ namespace BreadPlayer.Targets
         StreamWriter writer;
         public override void Write(string content)
         {
-            if(writer != null)
+            if (writer != null)
             {
-                writer.Write(content);
-                writer.Flush();
-            }          
+                try { writer.Write(content);
+                    writer.Flush();
+                }
+                catch { }    
+                }      
         }
 
         public string GetLastLogs()

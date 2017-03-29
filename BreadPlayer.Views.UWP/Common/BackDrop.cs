@@ -22,8 +22,9 @@ namespace BreadPlayer.Effects
 #endif
 
         public BackDrop()
-        {
+        { 
             m_rootVisual = ElementCompositionPreview.GetElementVisual(this as UIElement);
+
             Compositor = m_rootVisual.Compositor;
 
             m_blurVisual = Compositor.CreateSpriteVisual();

@@ -259,7 +259,7 @@ namespace BreadPlayer.ViewModels
                 StorageFolder folder = await picker.PickSingleFolderAsync();
                 if (folder != null)
                 {
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, 1);
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, (short)2);
                     LibraryFoldersCollection.Add(folder);
                     StorageApplicationPermissions.FutureAccessList.Add(folder);
                     //Get query options with which we search for files in the specified folder
@@ -384,7 +384,7 @@ namespace BreadPlayer.ViewModels
 
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
-
+               
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync().AsTask().ConfigureAwait(false);
                 if (count == 0)
@@ -401,6 +401,7 @@ namespace BreadPlayer.ViewModels
                 //'i' is a variable for the index of currently processing file
                 short i = 0;
 
+                Stopwatch watch = Stopwatch.StartNew();
                 try
                 {
                     foreach (StorageFile file in await queryResult.GetFilesAsync().AsTask().ConfigureAwait(false))
@@ -426,17 +427,18 @@ namespace BreadPlayer.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                           // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
                             //we catch and report any exception without distrubing the 'foreach flow'.
                             await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
                             failedCount++;
                         }
                     }
-                    BLogger.Logger.Info(string.Format("{0} out of {1} songs loaded. {2} is iteration count.", tempList.Count, count, i));
+
+                    // BLogger.Logger.Info(string.Format("{0} out of {1} songs loaded. {2} is iteration count.", tempList.Count, count, i));
                 }
                 catch (Exception ex)
                 {
-                    BLogger.Logger.Error("Failed to import songs in library.", ex);
+                    //BLogger.Logger.Error("Failed to import songs in library.", ex);
                     string message1 = ex.Message + "||" + ex.InnerException;
                     await NotificationManager.ShowMessageAsync(message1);
                 }
@@ -445,8 +447,12 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
                 service.AddMediafiles(tempList);
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
+
+                watch.Stop();
+                var secs = watch.Elapsed.TotalSeconds;
+
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                 //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                 isLibraryLoading = false;
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
@@ -512,18 +518,7 @@ namespace BreadPlayer.ViewModels
 
                     if (!VerifyFileExists(albumartLocation, 300))
                     {
-                        bool albumSaved = false;
-                        StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale).AsTask().ConfigureAwait(false);
-                        switch (thumbnail.Type)
-                        {
-                            case ThumbnailType.Image:
-                                albumSaved = await SaveImagesAsync(thumbnail, mp3file).ConfigureAwait(false);
-                                break;
-                            case ThumbnailType.Icon:
-                            default:
-                                albumSaved = await SaveImagesAsync(file, mp3file).ConfigureAwait(false);
-                                break;
-                        }
+                        bool albumSaved = await SaveImagesAsync(file, mp3file);                       
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
                     }
                 }

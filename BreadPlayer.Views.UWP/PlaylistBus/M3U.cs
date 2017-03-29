@@ -18,8 +18,8 @@ namespace BreadPlayer.PlaylistBus
             Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                using (PlaylistService service = new PlaylistService(Playlist.Name, false, ""))
-                {
+                PlaylistService service = new PlaylistService(Playlist.Name, false, "");
+                
                     string line;
                     int index = 0;
                     int failedFiles = 0;
@@ -66,8 +66,7 @@ namespace BreadPlayer.PlaylistBus
                                 }
                             });
                         }
-
-                    }
+                    
                     string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", index, failedFiles, index - failedFiles, file.DisplayName);
                     await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
                 }

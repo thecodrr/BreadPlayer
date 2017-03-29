@@ -99,6 +99,7 @@ namespace BreadPlayer.Core
             {
                 try
                 {
+                    MediaChanging(this, new EventArgs());
                     string path = mediaFile.Path;                    
                     await Stop();
                     await Task.Run(() =>
@@ -109,13 +110,13 @@ namespace BreadPlayer.Core
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                         Bass.FloatingPointDSP = true;
                         InitializeExtensions();
-                        MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 15), _posSync);
                        
                         CurrentlyPlayingFile = mediaFile;
                     });
+                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
 
                     return true;
                 }
@@ -171,8 +172,8 @@ namespace BreadPlayer.Core
                 ManagedBass.Bass.ChannelPlay(handle);
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, vol, 3000);
                 PlayerState = PlayerState.Playing;
-                MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
             });
+            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
 
         }
         /// <summary>
@@ -191,8 +192,9 @@ namespace BreadPlayer.Core
                 handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
-                MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
             });
+
+            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
 
         }
         #endregion
@@ -279,9 +281,11 @@ namespace BreadPlayer.Core
         public event OnMediaStateChanged MediaStateChanged;
         public event OnMediaEnded MediaEnded;
         public event OnMediaAboutToEnd MediaAboutToEnd;
+        public event OnMediaChanging MediaChanging;
     }
 
     public delegate void OnMediaStateChanged(object sender, MediaStateChangedEventArgs e);
     public delegate void OnMediaEnded(object sender, MediaEndedEventArgs e);
     public delegate void OnMediaAboutToEnd(object sender, MediaAboutToEndEventArgs e);
+    public delegate void OnMediaChanging(object sender, EventArgs e);
 }

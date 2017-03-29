@@ -126,16 +126,11 @@ namespace BreadPlayer.ViewModels
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-                
-                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, await ShowPasswordDialog(Playlist.IsPrivate)))
-                {
-                    service.Remove(mediafile);
-                    Songs.Remove(mediafile);
-                    // mediafile.Playlists.Remove(mediafile.Playlists.Single(t => t.Name == pName));
-                    // Songs.Remove(mediafile);
-                    // LibVM.Database.Update(mediafile);
-                    await Refresh();
-                }
+
+                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, await ShowPasswordDialog(Playlist.IsPrivate));
+                service.Remove(mediafile);
+                Songs.Remove(mediafile);
+                await Refresh();                
             }
             catch (Exception ex)
             {
@@ -280,17 +275,11 @@ namespace BreadPlayer.ViewModels
         async void LoadDB()
         {
             string password = await ShowPasswordDialog(Playlist.IsPrivate);
-            if (password == playlist.Password)
+            if (password == playlist.Password || playlist.IsPrivate == false)
             {
-                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password))
-                {
-                    if (service.IsValid)
-                    {
-                        var ss = service.GetTrackCount();
-                        Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
-                        await Refresh();
-                    }
-                }
+                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password);
+                Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
+                await Refresh();
             }
             else
             {

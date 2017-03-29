@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 namespace SplitViewMenu
 {
@@ -15,5 +9,6 @@ namespace SplitViewMenu
         public object ShortcutCommandParameter { get; set; }
         MenuFlyout shortcutFlyout;
         public MenuFlyout ShortcutFlyout { get { return shortcutFlyout; } set { Set(ref shortcutFlyout, value); } }
+        
     }
 }

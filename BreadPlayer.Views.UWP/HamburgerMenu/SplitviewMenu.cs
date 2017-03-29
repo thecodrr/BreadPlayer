@@ -30,28 +30,28 @@ using Windows.UI.Xaml.Navigation;
 
 namespace SplitViewMenu
 {
-	public sealed class SplitViewMenu : Control
+    public sealed class SplitViewMenu : Control
     {
         public static NavigationService NavService { get; set; }
         internal static readonly DependencyProperty MenuItemDataTemplateSelectorProperty =
-            DependencyProperty.Register("MenuItemDataTemplateSelector", typeof (DataTemplateSelector),
-                typeof (SplitViewMenu), new PropertyMetadata(null));
+            DependencyProperty.Register("MenuItemDataTemplateSelector", typeof(DataTemplateSelector),
+                typeof(SplitViewMenu), new PropertyMetadata(null));
 
         internal static readonly DependencyProperty NavMenuItemTemplateProperty =
-            DependencyProperty.Register("NavMenuItemTemplate", typeof (DataTemplate), typeof (SplitViewMenu),
+            DependencyProperty.Register("NavMenuItemTemplate", typeof(DataTemplate), typeof(SplitViewMenu),
                 new PropertyMetadata(null));
 
         internal static readonly DependencyProperty NavMenuItemContainerStyleProperty =
-            DependencyProperty.Register("NavMenuItemContainerStyle", typeof (Style), typeof (SplitViewMenu),
+            DependencyProperty.Register("NavMenuItemContainerStyle", typeof(Style), typeof(SplitViewMenu),
                 new PropertyMetadata(null));
 
         internal static readonly DependencyProperty InitialPageProperty =
-            DependencyProperty.Register("InitialPage", typeof (Type), typeof (SplitViewMenu),
+            DependencyProperty.Register("InitialPage", typeof(Type), typeof(SplitViewMenu),
                 new PropertyMetadata(null));
 
         internal static readonly DependencyProperty TopNavigationItemsProperty =
-            DependencyProperty.Register("TopNavigationItems", typeof (List<INavigationMenuItem>),
-                typeof (SplitViewMenu),
+            DependencyProperty.Register("TopNavigationItems", typeof(List<INavigationMenuItem>),
+                typeof(SplitViewMenu),
                 new PropertyMetadata(new List<INavigationMenuItem>(), OnTopNavigationItemsPropertyChanged));
 
         internal static readonly DependencyProperty BottomNavigationItemsProperty =
@@ -77,38 +77,38 @@ namespace SplitViewMenu
         private static ItemsControl shortcuts;
         public SplitViewMenu()
         {
-            DefaultStyleKey = typeof (SplitViewMenu);
+            DefaultStyleKey = typeof(SplitViewMenu);
             Loaded += OnSplitViewMenuLoaded;
-            
+
         }
 
         public DataTemplateSelector MenuItemDataTemplateSelector
         {
-            get { return (DataTemplateSelector) GetValue(MenuItemDataTemplateSelectorProperty); }
+            get { return (DataTemplateSelector)GetValue(MenuItemDataTemplateSelectorProperty); }
             set { SetValue(MenuItemDataTemplateSelectorProperty, value); }
         }
 
         public DataTemplate NavMenuItemTemplate
         {
-            get { return (DataTemplate) GetValue(NavMenuItemTemplateProperty); }
+            get { return (DataTemplate)GetValue(NavMenuItemTemplateProperty); }
             set { SetValue(NavMenuItemTemplateProperty, value); }
         }
 
         public Style NavMenuItemContainerStyle
         {
-            get { return (Style) GetValue(NavMenuItemContainerStyleProperty); }
+            get { return (Style)GetValue(NavMenuItemContainerStyleProperty); }
             set { SetValue(NavMenuItemContainerStyleProperty, value); }
         }
 
         public Type InitialPage
         {
-            get { return (Type) GetValue(InitialPageProperty); }
+            get { return (Type)GetValue(InitialPageProperty); }
             set { SetValue(InitialPageProperty, value); }
         }
 
         public List<INavigationMenuItem> TopNavigationItems
         {
-            get { return (List<INavigationMenuItem>) GetValue(TopNavigationItemsProperty); }
+            get { return (List<INavigationMenuItem>)GetValue(TopNavigationItemsProperty); }
             set { SetValue(TopNavigationItemsProperty, value); }
         }
         public List<INavigationMenuItem> BottomNavigationItems
@@ -130,7 +130,7 @@ namespace SplitViewMenu
 
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var menu = (SplitViewMenu) d;
+            var menu = (SplitViewMenu)d;
             if (_navTopMenuListView != null)
                 _navTopMenuListView.ItemsSource = e.NewValue;
         }
@@ -184,7 +184,7 @@ namespace SplitViewMenu
             {
                 _backButton.Click += OnBackButtonClick;
             }
-            if(_searchBox != null)
+            if (_searchBox != null)
             {
                 _searchBox.KeyUp += _searchBox_KeyUp;
             }
@@ -207,7 +207,7 @@ namespace SplitViewMenu
             return cmd;
         }
 
-       
+
 
         private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
@@ -217,7 +217,7 @@ namespace SplitViewMenu
                 _pageFrame.Navigated += _pageFrame_Navigated;
                 _pageFrame.Navigate(typeof(LibraryView));
             }
-        }       
+        }
         private void _pageFrame_Navigated(object sender, NavigationEventArgs e)
         {
             var page = e.Content as Page;
@@ -226,7 +226,7 @@ namespace SplitViewMenu
                 var control = page;
                 control.Loaded += Control_Loaded; ;
             }
-           
+
         }
 
         private void Control_Loaded(object sender, RoutedEventArgs e)
@@ -241,7 +241,7 @@ namespace SplitViewMenu
             {
                 _navTopMenuListView.SelectedIndex = -1;
                 _navBottomMenuListView.SelectedIndex = -1;
-                LastItem =  new SimpleNavMenuItem();
+                LastItem = new SimpleNavMenuItem();
             }
             else
             {
@@ -252,14 +252,14 @@ namespace SplitViewMenu
 
         private void _navBottomMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-                _navTopMenuListView.SelectedIndex = -1;
-                _playlistsMenuListView.SelectedIndex = -1;
+            _navTopMenuListView.SelectedIndex = -1;
+            _playlistsMenuListView.SelectedIndex = -1;
         }
 
         private void _navTopMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _navBottomMenuListView.SelectedIndex = -1;
-                _playlistsMenuListView.SelectedIndex = -1;
+            _playlistsMenuListView.SelectedIndex = -1;
         }
 
         private void OnBackButtonClick(object sender, RoutedEventArgs e)
@@ -281,7 +281,7 @@ namespace SplitViewMenu
         {
             if (!args.InRecycleQueue && args.Item is INavigationMenuItem)
             {
-                args.ItemContainer.SetValue(AutomationProperties.NameProperty, ((INavigationMenuItem) args.Item).Label);
+                args.ItemContainer.SetValue(AutomationProperties.NameProperty, ((INavigationMenuItem)args.Item).Label);
             }
             else
             {
@@ -302,6 +302,10 @@ namespace SplitViewMenu
                 _navTopMenuListView.SelectedIndex = 3;
                 UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
             }
+            else if(e.Parameter is Album)
+            {
+                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+            }
         }
         public static void UnSelectAll()
         {
@@ -312,8 +316,8 @@ namespace SplitViewMenu
         }
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
-            ((Page) sender).Focus(FocusState.Programmatic);
-            ((Page) sender).Loaded -= PageLoaded;
+            ((Page)sender).Focus(FocusState.Programmatic);
+            ((Page)sender).Loaded -= PageLoaded;
         }
         public static object GetParameterFromSelectedItem()
         {
@@ -403,8 +407,8 @@ namespace SplitViewMenu
             shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
         }
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
-        {         
-            var item = (INavigationMenuItem) ((NavMenuListView) sender).ItemFromContainer(e);
+        {
+            var item = (INavigationMenuItem)((NavMenuListView)sender).ItemFromContainer(e);
             UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
@@ -420,16 +424,16 @@ namespace SplitViewMenu
               item.Label != LastItem?.Label)
                 {
                     _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-                   
+
                 }
             }
             LastItem = item;
-        if(_splitView.DisplayMode == SplitViewDisplayMode.Inline)
+            if (_splitView.DisplayMode == SplitViewDisplayMode.Inline)
             {
                 TogglePaneButton.IsChecked = false;
             }
         }
 
-       
+
     }
 }

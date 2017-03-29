@@ -18,6 +18,7 @@
 using BreadPlayer;
 using System;
 using System.Collections.Generic;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace SplitViewMenu
@@ -35,7 +36,16 @@ namespace SplitViewMenu
         public string FontGlyph { get; set; }
         object args;
         public object Arguments { get { return args; } set { Set(ref args, value); } }
-
+        public Visibility HeaderVisibility
+        {
+            get; set;
+        } = Visibility.Visible;
+        ElementTheme shortcutTheme;
+        public ElementTheme ShortcutTheme
+        {
+            get { return shortcutTheme; }
+            set { Set(ref shortcutTheme, value); }
+        }
         List<Shortcut> shortcuts = new List<Shortcut>()
         {
             new Shortcut() { SymbolAsChar = "\xE00E",
@@ -61,6 +71,7 @@ namespace SplitViewMenu
             }
         }
         public string Tooltip { get; set; }
+
         public Type DestinationPage { get; set; }
 
         void Select(object param) { }
