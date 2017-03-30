@@ -413,6 +413,10 @@ namespace BreadPlayer.ViewModels
         }
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
+            var mediaFile = Player.CurrentlyPlayingFile;
+            mediaFile.PlayCount++;
+            mediaFile.LastPlayed = DateTime.Now.ToString();
+            service.UpdateMediafile(mediaFile);
             if (Repeat == "Repeat List")
             {
                 PlayNext();

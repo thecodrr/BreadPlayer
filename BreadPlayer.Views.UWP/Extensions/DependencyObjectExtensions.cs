@@ -24,5 +24,26 @@ namespace BreadPlayer.Extensions
             zgo.Children.Add(col);
             zgo.Begin();
         }
+        public static void ZoomAnimate(this DependencyObject obj, int from, int to, string targetPath)
+        {
+            Storyboard board = null;
+            if (board == null)
+            {
+                board = new Storyboard();
+                var zoomAnimate = new DoubleAnimation()
+                {
+                    From = from,
+                    To = to,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    FillBehavior = FillBehavior.HoldEnd,
+                    EnableDependentAnimation = true,
+                };
+                Storyboard.SetTarget(zoomAnimate, obj);// (SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]);
+                Storyboard.SetTargetProperty(zoomAnimate, targetPath);// "(SolidColorBrush.Color)");
+                board.Children.Add(zoomAnimate);
+                board.Begin();
+                board.Completed += (send, eventArgs) => { board = null; };
+            }
+        }
     }
 }

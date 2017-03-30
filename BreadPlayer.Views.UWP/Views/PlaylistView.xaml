@@ -509,7 +509,8 @@ Control.IsTemplateFocusTarget="True"/>
         </MenuFlyout>
         <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs}"/>
     </Page.Resources>
-    <Grid  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -560,64 +561,60 @@ Control.IsTemplateFocusTarget="True"/>
                     <VisualState.Setters>
                         <Setter Target="headerText.TextAlignment" Value="Center" />
                         <Setter Target="headerText.FontSize" Value="44" />
-                        <Setter Target="headerText.Margin" Value="30,15" />
-                        <Setter Target="headerDesc.Margin" Value="30,0" />
+                        <Setter Target="headerText.Margin" Value="0" />
+                        <Setter Target="headerStack.Margin" Value="0,40,0,0" />
+                        <Setter Target="headerDesc.Margin" Value="0" />
                         <Setter Target="headerDesc.TextAlignment" Value="Center" />
                     </VisualState.Setters>
                 </VisualState>
-            </VisualStateGroup>
-
+            </VisualStateGroup>          
         </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <!--<RowDefinition Height="Auto"/>-->
-        </Grid.RowDefinitions>
-        <Border x:Name="art" Margin="0,-154,0,0" Height="354" VerticalAlignment="Top" >
-            <Border.Background>
-                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding PlaylistArt}"/>
-            </Border.Background>
-        </Border>
-        <Border Margin="0,-154,0,0" Height="354" VerticalAlignment="Top" Background="#99000000"/>
-        <Grid Grid.Row="0" RequestedTheme="Dark" MinHeight="200" MaxHeight="300">
-
-            <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <!--<RowDefinition Height="{Binding ElementName=playlistScrollViewer, Path=ActualHeight}"/>-->
             </Grid.RowDefinitions>
-            <!--<Border x:Name="backgroundBorder" Background="{ThemeResource SystemControlBackgroundAccentBrush}"/>-->
-            <!--<TextBlock x:Name="headerText" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" RequestedTheme="Dark" FontSize="20" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="60,10,0,0"/>-->
-            <StackPanel x:Name="headerStack" Margin="35,0,0,0" Grid.Row="0" >
-                <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
-                <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
-            </StackPanel>
-            <Grid VerticalAlignment="Bottom" Grid.Row="1" Margin="15,0,15,10"  >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
-                    <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
-                    <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
-                    <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
-                    <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding Path=Songs[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
-                            <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
+            <Border x:Name="art" Margin="0,-154,0,0" Height="354" VerticalAlignment="Top" >
+                <Border.Background>
+                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding PlaylistArt}"/>
+                </Border.Background>
+            <Grid>
+                <Border Background="#99000000"/>
+                <Grid Grid.Row="0" RequestedTheme="Dark" Margin="0,120,0,0">
+                    <StackPanel x:Name="headerStack" Margin="35,0,0,0" Grid.Row="0" >
+                        <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
+                        <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
+                    </StackPanel>
+                    <Grid VerticalAlignment="Bottom" Margin="15,0,15,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                            <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
+                            <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
+                            <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
                         </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibilty}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
-                </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
+                            <Button Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding Path=Songs[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
+                                    <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibilty}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Grid>
+        </Border>
+     
+        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" ItemContainerStyle="{StaticResource PlaylistItemExpanded}" Loaded="fileBox_Loaded"/>
+            <Interactivity:Interaction.Behaviors>
+                <Core:EventTriggerBehavior EventName="Loaded">
+                    <Core:InvokeCommandAction Command="{Binding InitCommand}"/>
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
         </Grid>
-        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="2" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" ItemContainerStyle="{StaticResource PlaylistItemExpanded}"/>
-        <Interactivity:Interaction.Behaviors>
-            <Core:EventTriggerBehavior EventName="Loaded">
-                <Core:InvokeCommandAction Command="{Binding InitCommand}"/>
-            </Core:EventTriggerBehavior>
-        </Interactivity:Interaction.Behaviors>
-    </Grid>
 </Page>

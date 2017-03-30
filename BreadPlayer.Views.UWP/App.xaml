@@ -1519,12 +1519,12 @@ Control.IsTemplateFocusTarget="True"/>
             </DataTemplate>
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
                 <Grid Height="75" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
-                        <Run Text="{Binding Path=Title}"/>
+                    <TextBlock Typography.Capitals="AllSmallCaps" Typography.CapitalSpacing="True" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
+                        <Run Text="{Binding Path=Title}" FontSize="20"/>
                         <LineBreak/>
-                        <Run Text="{Binding Path=LeadArtist}" Foreground="Gray"/>
-                        <Run Text=" &#x2022; " FontWeight="Bold" Foreground="Gray"/>
-                        <Run Text="{Binding Path=Album}" Foreground="Gray"/>
+                        <Run Text="{Binding Path=LeadArtist}" Foreground="{ThemeResource ThemeForeground}" FontSize="17"/>
+                        <Run Text=" &#x2022; " FontWeight="Bold" Foreground="{ThemeResource ThemeForeground}" FontSize="17"/>
+                        <Run Text="{Binding Path=Album}" Foreground="{ThemeResource ThemeForeground}" FontSize="15"/>
                     </TextBlock>
                     <!--<TextBlock Text="{Binding Path=Length}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>-->
                 </Grid>

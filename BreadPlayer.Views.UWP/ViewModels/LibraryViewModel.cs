@@ -451,8 +451,6 @@ namespace BreadPlayer.ViewModels
             var currentlyPlaying = Player.CurrentlyPlayingFile;
             Mediafile mediaFile = await GetMediafileFromParameterAsync(path, true);
             AddToRecentCollection(mediaFile);
-            mediaFile.PlayCount++;
-            LibraryService.UpdateMediafile(mediaFile);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
 
             if (currentlyPlaying != null && TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path) != null)
@@ -548,7 +546,7 @@ namespace BreadPlayer.ViewModels
             {
                 foreach (var item in TracksCollection.Elements)
                 {
-                    if (RecentlyAddedSongsCollection.Any(t => t.Path != item.Path))
+                    if (RecentlyAddedSongsCollection.All(t => t.Path != item.Path))
                     {
                         if (item.AddedDate != null)
                         {
