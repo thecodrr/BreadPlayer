@@ -60,14 +60,14 @@
  
 _Note: All of these features might not reach the next Beta and some might be postponed due to obvious reasons. **Any help regarding these features including testing, research, code contribution, will be highly appreciated.**_
 
-###Libraries used:
+### Libraries used:
 1. C#/.NET
 2. UWP API (Windows Aniversary Edition 10.0; Build 14393)
 2. [BASS](http://www.un4seen.com/bass.html) & [ManagedBass](https://github.com/ManagedBass/ManagedBass) (for audio processing)
 3. [LiteDB](https://github.com/mbdavid/LiteDB) (for library managment)
 4. Taglib#
 
-###Contributors:
+### Contributors:
 Thanks to these awesome people Project Bread has come this far:
 
 1. Danny [@DannyTalent](https://github.com/DannyTalent)
