@@ -5,7 +5,10 @@
     xmlns:local="using:SplitViewMenu"
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:blur="using:BreadPlayer.Effects" 
-    xmlns:Animations="using:Microsoft.Xaml.Interactions.Media"  xmlns:Converters="using:BreadPlayer.Converters">
+    xmlns:Controls="using:BreadPlayer.Controls"
+    xmlns:Animations="using:Microsoft.Xaml.Interactions.Media" 
+    xmlns:Extensions="using:BreadPlayer.Extensions"
+    xmlns:Converters="using:BreadPlayer.Converters">
 
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />
     <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>
@@ -151,7 +154,7 @@
                     </Grid.ColumnDefinitions>
                     <FontIcon FontSize="16" Grid.Column="0" Glyph="&#xe721;" Margin="0,0,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="White"/>
-                    <TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
+                    <TextBlock x:Name="Text" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
                                VerticalAlignment="Center" />
 
                 </Grid>
@@ -176,7 +179,7 @@
                     </Grid.ColumnDefinitions>
                     <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0049;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
-                    <TextBlock Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
+                    <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
 
                 </Grid>
@@ -418,7 +421,7 @@
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>-->
             <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center"  FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
-            <TextBlock Grid.Column="1" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center"/>
 
         </Grid>
     </DataTemplate>
@@ -696,8 +699,8 @@
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE80F;" Style="{StaticResource HyperlinkBtn}"/>
                                     </StackPanel>-->
                                 </Grid>
-                                <TextBlock x:Name="headerText" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
-
+                                <TextBlock x:Name="headerText" Tag="Heading" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
+                               
                             </Grid>
                         </SplitView>
                       <TextBlock Name="Title" Text="Bread Player" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="20" Margin="48,70,0,0"/>

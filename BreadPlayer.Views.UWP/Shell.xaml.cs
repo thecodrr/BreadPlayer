@@ -89,6 +89,7 @@ namespace BreadPlayer
             isDragging = false;
         }
         bool isPressed;
+        bool isProgBarPressed = false;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Thumb volSliderThumb = positionSlider.FindChildOfType<Thumb>();
@@ -97,36 +98,63 @@ namespace BreadPlayer
                 volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
                 volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
             }
-            Window.Current.CoreWindow.PointerPressed += (ea, a) =>
-            {
-                if (positionSlider.GetBoundingRect().Contains(a.CurrentPoint.Position) && !isDragging)
-                {
-                    isPressed = true;
-                    ShellVM.DontUpdatePosition = true;
-                }
-            };
-
-            Window.Current.CoreWindow.PointerReleased += (ea, a) => 
-            {
-                if (isPressed && !isDragging) { UpdatePosition(true); isPressed = false; }
-            };
+            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
+            Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
+            Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
         }
-                
-        async void UpdatePosition(bool wait = false)
+
+        private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
+        {
+            if (isPressed && !isDragging)
+            {
+                UpdatePosition(true);
+                isPressed = false;
+            }
+            else if (isProgBarPressed)
+            {
+                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight - 4, "Height");
+                isProgBarPressed = false;
+                UpdatePosition(true, true);
+            }
+        }
+
+        private void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
+        {
+            if (isProgBarPressed)
+            {
+                double MousePosition = args.CurrentPoint.Position.X;
+                double ratio = MousePosition / positionProgressBar.ActualWidth;
+                double ProgressBarValue = ratio * positionProgressBar.Maximum;
+                positionProgressBar.Value = ProgressBarValue;
+            }
+        }
+
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
+        {
+            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !isDragging)
+            {
+                isPressed = true;
+                ShellVM.DontUpdatePosition = true;
+            }
+            if (seekRect.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight + 4, "Height");
+                ShellVM.DontUpdatePosition = true;
+                isProgBarPressed = true;
+            }
+        }
+
+        async void UpdatePosition(bool wait = false, bool progressBar = false)
         {
             if (ShellVM != null)
             {
-                ShellVM.CurrentPosition = positionSlider.Value < positionSlider.Maximum ? positionSlider.Value : positionSlider.Value - 1;
+                if(!progressBar)
+                    ShellVM.CurrentPosition = positionSlider.Value < positionSlider.Maximum ? positionSlider.Value : positionSlider.Value - 1;
+                else
+                    ShellVM.CurrentPosition = positionProgressBar.Value < positionProgressBar.Maximum ? positionProgressBar.Value : positionProgressBar.Value - 1;
             }
             if (wait) await Task.Delay(500);
             ShellVM.DontUpdatePosition = false;
-        }
-            
-        public async void ShowMessage(string msg)
-        {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg);
-            await dialog.ShowAsync();
-        }
-                
+        }      
     }
 }

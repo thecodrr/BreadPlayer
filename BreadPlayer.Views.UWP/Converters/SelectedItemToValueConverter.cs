@@ -12,7 +12,7 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            //if (value is int)
+            //if (value is string)
             //{
             //    var combobox = parameter as ComboBox;
             //    var toSelectItem = combobox.Items.FirstOrDefault(t => (t as ComboBoxItem).Content == value) as ComboBoxItem;
@@ -25,7 +25,7 @@ namespace BreadPlayer.Converters
         {
             if (value is ComboBoxItem)
             {
-                return System.Convert.ToInt32((value as ComboBoxItem).Content.ToString());
+                return (value as ComboBoxItem).Content.ToString();
             }
             return 0;
         }

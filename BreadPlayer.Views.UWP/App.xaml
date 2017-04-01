@@ -7,7 +7,11 @@
     xmlns:MacalifaCore="using:BreadPlayer.Core" 
     xmlns:blur="using:BreadPlayer.Effects" 
       xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
-  xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:VM="using:BreadPlayer.ViewModels"  xmlns:Behaviours="using:BreadPlayer.Behaviours" xmlns:Converters="using:BreadPlayer.Converters"  xmlns:Extensions="using:BreadPlayer.Extensions"
+  xmlns:Core="using:Microsoft.Xaml.Interactions.Core" 
+    xmlns:VM="using:BreadPlayer.ViewModels" 
+    xmlns:Behaviours="using:BreadPlayer.Behaviours" 
+    xmlns:Converters="using:BreadPlayer.Converters"  
+    xmlns:Extensions="using:BreadPlayer.Extensions"
     xmlns:local="using:BreadPlayer" RequiresPointerMode="WhenRequested">
     <Application.Resources>
         <ResourceDictionary>
@@ -1492,12 +1496,12 @@ Control.IsTemplateFocusTarget="True"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="titleTxt" Width="10000" Grid.Column="0" Margin="0,0,5,0" TextWrapping="NoWrap" TextTrimming="Clip" Text="{Binding Title}" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="artistTxt" Width="10000" Grid.Column="1" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding LeadArtist}"  VerticalAlignment="Center"/>
-                    <TextBlock x:Name="albumTxt" Width="10000" Grid.Column="2" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Album}" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="yearTxt" Width="10000" Grid.Column="3"  Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Year}" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="genreTxt" Width="10000" Grid.Column="4" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Genre}" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="durationTxt" Width="50" Grid.Column="5" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Length}" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="titleTxt" Width="10000" Grid.Column="0" Margin="0,0,5,0" TextWrapping="NoWrap" FontSize="14" TextTrimming="Clip" Text="{Binding Title}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="artistTxt" Width="10000" Grid.Column="1" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding LeadArtist}"  VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="albumTxt" Width="10000" Grid.Column="2" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Album}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="yearTxt" Width="10000" Grid.Column="3"  Visibility="Visible" Margin="15,0,0,0" FontSize="13" Tag="Numerical" Text="{Binding Year}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="genreTxt" Width="10000" Grid.Column="4" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{Binding Genre}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock x:Name="durationTxt" Width="50" Grid.Column="5" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Tag="Numerical" Text="{Binding Length}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 </Grid>
             </DataTemplate>

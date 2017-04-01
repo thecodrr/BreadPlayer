@@ -23,6 +23,9 @@ namespace BreadPlayer.Extensions
         {
             return Regex.Match(input.Remove(1), "[^a-zA-Z0-9]").Success;
         }
-
+        public static bool ContainsOnlyNumbers(this string input)
+        {
+            return Regex.Match(input, "\\d").Success;
+        }
     }
 }

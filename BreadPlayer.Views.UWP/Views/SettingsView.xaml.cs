@@ -24,12 +24,7 @@ namespace BreadPlayer
     {
         public SettingsView()
         {
-            this.InitializeComponent();
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-            {
-                playbarLoc.Visibility = Visibility.Collapsed;
-                playbarLoc_ComboBox.Visibility = Visibility.Collapsed;
-            }
+            this.InitializeComponent();           
         }
     }
 }

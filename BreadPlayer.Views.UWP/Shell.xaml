@@ -57,7 +57,8 @@
                         <Setter Target="controlsPanel.(Grid.ColumnSpan)" Value="3"/>
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="2"/>
                         <Setter Target="playbarGrid.(Grid.ColumnDefinitions)[1].Width" Value="*"/>
-
+                        <Setter Target="seekRect.Visibility" Value="Visible"/>
+                        <Setter Target="positionProgressBar.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -187,13 +188,14 @@
         </Border>
         
         <StackPanel x:Name="playbarPanel" VerticalAlignment="Bottom">
-            <ProgressBar Background="Transparent" Foreground="White" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
+            <ProgressBar Name="positionProgressBar" Visibility="Collapsed" Background="Transparent" Foreground="White" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
             <Grid x:Name="playbarGrid" Height="70" Background="{ThemeResource PlaybarBrush}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <Rectangle Fill="Transparent" Visibility="Collapsed" Name="seekRect" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="10"/>
                 <Grid x:Name="infoBar" DataContext="{StaticResource Core}" Padding="0" Grid.Column="0" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0">
                    <Grid.Resources>
                         <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource LibVM}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">

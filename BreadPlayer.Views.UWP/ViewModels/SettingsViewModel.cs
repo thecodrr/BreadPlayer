@@ -35,12 +35,24 @@ using BreadPlayer.Common;
 using System.Diagnostics;
 using Windows.UI.Popups;
 using Windows.UI.Core;
+using BreadPlayer.Services;
+using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        string uiTextType;
+        public string UITextType
+        {
+            get { return uiTextType; }
+            set
+            {
+                Set(ref uiTextType, value);
+                RoamingSettingsHelper.SaveSetting("UITextType", uiTextType);
+            }
+        }
         bool _isThemeDark;
         public bool IsThemeDark
         {
@@ -102,26 +114,6 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        int playbarLocation = 0;
-        public int PlaybarLocation
-        {
-            get
-            {
-                return isPlaybarOnBottom ? 1 : 0;
-            }
-            set
-            {
-                Set(ref playbarLocation, value);
-                IsPlaybarOnBottom = playbarLocation == 0 ? false : true;
-                RoamingSettingsHelper.SaveSetting("IsPlaybarOnBottom", IsPlaybarOnBottom);
-            }
-        }
-        bool isPlaybarOnBottom;
-        public bool IsPlaybarOnBottom
-        {
-            get { return isPlaybarOnBottom; }
-            set { Set(ref isPlaybarOnBottom, value); }
-        }
         bool changeAccentByAlbumart;
         public bool ChangeAccentByAlbumArt
         {
@@ -170,11 +162,11 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
-            IsPlaybarOnBottom = RoamingSettingsHelper.GetSetting<bool>("IsPlaybarOnBottom", false);
             ChangeAccentByAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             FileBatchSize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
+            UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion

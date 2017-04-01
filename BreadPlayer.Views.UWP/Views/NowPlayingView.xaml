@@ -25,21 +25,18 @@
                 <TextBlock Text="25" FontSize="18" FontWeight="Bold"/>
             </StackPanel>
         </StackPanel>
-        <ListView x:Name="playcontrolsListView" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid ToolTipService.ToolTip="{Binding Path=Tooltip}">                       
-                        <FontIcon FontSize="20" Glyph="{Binding FontGlyph}" Margin="4,0,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" FontWeight="SemiLight" FontFamily="Segoe MDL2 Assets"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel VerticalAlignment="Bottom"></ItemsStackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
+        <Grid x:Name="playcontrolsPanel" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
+            <StackPanel VerticalAlignment="Bottom">
+                <AppBarButton/>
+                <AppBarButton />
+                <AppBarButton Icon="Volume" Width="50" Height="50"/>
+                <AppBarButton Icon="OpenFile" Width="50" Height="50"/>
+                <AppBarButton Icon="RepeatAll" Width="50" Height="50"/>
+                <AppBarButton Icon="Previous" Width="50" Height="50"/>
+                <AppBarButton Icon="Next" Width="50" Height="50"/>
+                <AppBarButton Icon="Play" Width="50" Height="50"/>
+            </StackPanel>
+        </Grid>
        
     </Grid>
 </Page>
