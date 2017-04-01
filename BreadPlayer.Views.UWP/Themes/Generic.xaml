@@ -498,6 +498,11 @@
                                         <Setter Target="toggleButton.Visibility" Value="Visible"/>
                                         <Setter Target="toggleButton.Margin" Value="20,50,0,0"/>
                                         <Setter Target="Title.HorizontalAlignment" Value="Left"/>
+                                        <Setter Target="headerText.FontSize" Value="24"/>
+                                        <Setter Target="headerText.Margin" Value="25,125,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,115,0,0"/>
+                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Title.Margin" Value="0,30,0,40"/>
                                     </VisualState.Setters>
                                 </VisualState>
