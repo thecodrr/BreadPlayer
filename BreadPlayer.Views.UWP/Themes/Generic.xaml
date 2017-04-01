@@ -517,7 +517,6 @@
                                 <VisualState>
                                     <VisualState.StateTriggers>
                                         <StateTriggers:DeviceFamilyWithConditionStateTrigger DeviceFamily="Mobile" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
-                                        <StateTriggers:DeviceFamilyWithConditionStateTrigger DeviceFamily="Desktop" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
@@ -533,7 +532,6 @@
                                 <VisualState>
                                     <VisualState.StateTriggers>
                                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
-                                        <AdaptiveTrigger MinWindowWidth="0" />
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>

@@ -200,6 +200,19 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
+        bool isVolumeMuted;
+        public bool IsVolumeMuted
+        {
+            get { return isVolumeMuted; }
+            set
+            {
+                Set(ref isVolumeMuted, value);
+                if (value == true)
+                    Bass.Volume = 0;
+                else
+                    Bass.Volume = 1;
+            }
+        }
         Effects effect;
         public Effects Effect
         {
