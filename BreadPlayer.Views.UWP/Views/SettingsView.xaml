@@ -15,7 +15,7 @@
         </Canvas>-->
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
-    <Grid Margin="25,0,0,0" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
+    <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -43,6 +43,7 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="ParentGrid.Margin" Value="10,0,0,0"/>
                         <Setter Target="libraryGrid.MinWidth" Value="300"/>
                         <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
@@ -62,18 +63,22 @@
                     <TextBlock x:Name="headerText" Text="{Binding}" FontSize="28" FontFamily="Segoe UI" FontWeight="Bold" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
-            <PivotItem Header="Library">                
-                <StackPanel x:Name="libraryGrid" Margin="0,15,0,0">
+            <PivotItem Header="Library">
+                <StackPanel x:Name="libraryGrid" MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock x:Name="importHeader" Text="Import Breads" FontWeight="Bold" FontSize="18"/>
-                    <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
                         <Button x:Name="importFolderBtn" FontSize="16" Padding="0" Margin="0" Content="Import folders to your library" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" HorizontalAlignment="Stretch"/>
-                        <ToggleButton x:Name="showhideListBtn" HorizontalContentAlignment="Right" Grid.Column="1" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="10,4,0,0" Height="20" >
+                        <ToggleButton Grid.Column="1" x:Name="showhideListBtn" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="3,4,0,0" Height="20" >
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="showSymbol"  Text="&#xE011;  " FontSize="13" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
                                 <TextBlock x:Name="showLabel" FontSize="16" Text="Show more" VerticalAlignment="Center"/>
                             </StackPanel>
                         </ToggleButton>
-                    </StackPanel>
+                    </Grid>
                     <TextBlock x:Name="importHelp" Text="Imported file types are MP3, WAV, OGG, FLAC, M4A, AIF, WMA" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
                     <!--<ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>-->
@@ -104,30 +109,30 @@
             </PivotItem>
 
             <PivotItem Header="Personalization">
-                <StackPanel>
+                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock Text="Appearence" FontSize="18" FontWeight="Bold"/>
-                    <ToggleSwitch x:Name="themeChange" Margin="0,10,0,0" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" HorizontalAlignment="Stretch">
-                        <ToggleSwitch.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock>
-                                    <Run Text="Theme:"/>
-                                    <LineBreak/>
-                                    <Run Text="Change of theme requires shutdown." FontSize="11" Foreground="Gray"/>
-                                </TextBlock>
-                            </DataTemplate>
-                        </ToggleSwitch.HeaderTemplate>
-                    </ToggleSwitch>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="uiTextTypeText" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock VerticalAlignment="Center">
+                                    <Run Text="Theme:"/>
+                                    <LineBreak/>
+                                    <Run Text="Change of theme requires shutdown." FontSize="11" Foreground="Gray"/>
+                        </TextBlock>
+                        <ToggleSwitch Grid.Column="1" x:Name="themeChange" Margin="0,10,0,0" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" HorizontalAlignment="Stretch" VerticalAlignment="Center"></ToggleSwitch>
+
+                        <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="uiTextTypeText">
                             <Run Text="Font Capitilization:"/>
                             <LineBreak/>
                             <Run FontSize="11" Text="This changes the text capitalization of the UI." Foreground="Gray"/>
                         </TextBlock>
-                        <ComboBox x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" SelectedItem="{Binding UITextType, Mode=TwoWay}">
+                        <ComboBox Grid.Row="1" VerticalAlignment="Center" x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" SelectedItem="{Binding UITextType, Mode=TwoWay}">
                             <x:String>Normal</x:String>
                             <x:String>All Capitals</x:String>
                         </ComboBox>
