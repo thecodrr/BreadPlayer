@@ -1021,6 +1021,10 @@
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding RelocateSongCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
+                                        <MenuFlyoutItem Text="Change Album Art"
+                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding ChangeAlbumArtCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                                         <MenuFlyoutItem Text="Stop Playing After This Song"
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding Path=StopAfterCommand}"

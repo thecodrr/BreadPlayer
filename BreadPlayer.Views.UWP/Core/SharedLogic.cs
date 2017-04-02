@@ -101,6 +101,7 @@ namespace BreadPlayer.Core
                 TagLib.IPicture[] pictures = new TagLib.IPicture[1];
                 pictures[0] = new TagLib.Picture(new SimpleFileAbstraction(albumArt));
                 tagFile.Tag.Pictures = pictures;
+                tagFile.Save();
                 var createAlbumArt = AlbumArtFileExists(mediaFile);
                 await albumArt.CopyAsync(await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\"), createAlbumArt.FileName + Path.GetExtension(albumArt.Path), NameCollisionOption.ReplaceExisting);
                 mediaFile.AttachedPicture = ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\" + createAlbumArt.FileName + Path.GetExtension(albumArt.Path);

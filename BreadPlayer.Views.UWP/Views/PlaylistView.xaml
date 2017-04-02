@@ -45,7 +45,14 @@ mc:Ignorable="d">
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding OpenSongLocationCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-
+                                    <MenuFlyoutItem Text="Change Album Art"
+                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding ChangeAlbumArtCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
+                                    <MenuFlyoutItem Text="Stop Playing After This Song"
+                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding Path=StopAfterCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                                     <MenuFlyoutItem Text="Delete from playlist"
                                         Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
