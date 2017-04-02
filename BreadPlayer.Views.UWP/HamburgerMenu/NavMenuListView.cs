@@ -39,7 +39,7 @@ namespace SplitViewMenu
             ItemClick += ItemClickedHandler;
         }
 
-      
+
 
         private void OnLoaded(object o, RoutedEventArgs e)
         {

@@ -1,40 +1,36 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Interface;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
     public class Album : IQueryResult
     {
-        public String album_id { get; set; }
-        public String author { get; set; }
-        public String title { get; set; }
-        public String publishcompany { get; set; }
-        public String prodcompany { get; set; }
-        public String country { get; set; }
-        public String language { get; set; }
+        public string album_id { get; set; }
+        public string author { get; set; }
+        public string title { get; set; }
+        public string publishcompany { get; set; }
+        public string prodcompany { get; set; }
+        public string country { get; set; }
+        public string language { get; set; }
         public int songs_total { get; set; }
-        public String info { get; set; }
-        public String styles { get; set; }
-        public String style_id { get; set; }
-        public String publishtime { get; set; }
-        public String artist_ting_uid { get; set; }
-        public String all_artist_ting_uid { get; set; }
-        public String gender { get; set; }
-        public String area { get; set; }
-        public String pic_small { get; set; }
-        public String pic_big { get; set; }
+        public string info { get; set; }
+        public string styles { get; set; }
+        public string style_id { get; set; }
+        public string publishtime { get; set; }
+        public string artist_ting_uid { get; set; }
+        public string all_artist_ting_uid { get; set; }
+        public string gender { get; set; }
+        public string area { get; set; }
+        public string pic_small { get; set; }
+        public string pic_big { get; set; }
         public int hot { get; set; }
         public int favorites_num { get; set; }
         public int recommend_num { get; set; }
-        public String artist_id { get; set; }
-        public String all_artist_id { get; set; }
-        public String pic_radio { get; set; }
-        public String pic_s180 { get; set; }
-        public String GetName()
+        public string artist_id { get; set; }
+        public string all_artist_id { get; set; }
+        public string pic_radio { get; set; }
+        public string pic_s180 { get; set; }
+        public string GetName()
         {
             return title;
         }
@@ -42,6 +38,5 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
         {
             return QueryType.Album;
         }
-
     }
 }

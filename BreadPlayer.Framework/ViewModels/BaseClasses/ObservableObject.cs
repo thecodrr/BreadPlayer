@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-
 public class ObservableObject : INotifyPropertyChanged
 {
     /// <summary>Occurs when a property value changes. </summary>

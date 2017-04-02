@@ -1,26 +1,21 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Interface;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BreadPlayer.Web.BaiduLyricsAPI.Util;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
     public class SongSug : AbstractMusic, IQueryResult
     {
-        public String songid;
-        public String songname;
-        public String encrypted_songid;
-        public String has_mv;
-        public String yyr_artist;
-        public String artistname;
-        public String control;
+        public string songid;
+        public string songname;
+        public string encrypted_songid;
+        public string has_mv;
+        public string yyr_artist;
+        public string artistname;
+        public string control;
 
         public BitRate bitrate;
         public SongInfo songInfo;
-        public String GetName()
+        public string GetName()
         {
             return songname;
         }
@@ -46,18 +41,18 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
             return MusicType.Online;
         }
         
-        public override String GetTitle()
+        public override string GetTitle()
         {
             return songname;
         }
         
-        public override String GetArtist()
+        public override string GetArtist()
         {
             return artistname;
         }
 
         //返回""加载默认的图片
-        public String GetArtPic()
+        public string GetArtPic()
         {
             return songInfo != null ? songInfo.pic_small : "";
         }

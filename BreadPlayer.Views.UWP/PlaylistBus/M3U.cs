@@ -19,60 +19,59 @@ namespace BreadPlayer.PlaylistBus
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 PlaylistService service = new PlaylistService(Playlist.Name, false, "");
-                
-                    string line;
-                    int index = 0;
-                    int failedFiles = 0;
-                    bool ext = false;
-                    while ((line = streamReader.ReadLine()) != null)
+
+                string line;
+                int index = 0;
+                int failedFiles = 0;
+                bool ext = false;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    if (line.ToLower() == "#extm3u") //m3u header
+                        ext = true;
+                    else if (ext && line.ToLower().StartsWith("#extinf:")) //extinfo of each song
+                        continue;
+                    else if (line.StartsWith("#") || line == "") //pass blank lines
+                        continue;
+                    else
                     {
-
-                        if (line.ToLower() == "#extm3u") //m3u header
-                            ext = true;
-                        else if (ext && line.ToLower().StartsWith("#extinf:")) //extinfo of each song
-                            continue;
-                        else if (line.StartsWith("#") || line == "") //pass blank lines
-                            continue;
-                        else
+                        await Task.Run(async () =>
                         {
-                            await Task.Run(async () =>
+                            try
                             {
-                                try
-                                {
-                                    index++;
-                                    FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
+                                index++;
+                                FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
                                     string path = line;
-                                    if (!File.Exists(line) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
-                                    {
-                                        path = info.DirectoryName + line; //add directory path to song path.
-                                    }
-
-                                    var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                                    var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
-
-                                    Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
-                                    await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
-
-                                    await Core.SharedLogic.NotificationManager.ShowMessageAsync(index.ToString() + " songs sucessfully added into playlist: " + file.DisplayName);
-
-                                    if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
-                                        service.Insert(mp3File);
-
-                                    StorageApplicationPermissions.FutureAccessList.Remove(token);
-                                }
-                                catch
+                                if (!File.Exists(line) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
                                 {
-                                    failedFiles++;
+                                    path = info.DirectoryName + line; //add directory path to song path.
                                 }
-                            });
-                        }
-                    
+
+                                var accessFile = await StorageFile.GetFileFromPathAsync(path);
+                                var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
+
+                                Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
+
+                                await Core.SharedLogic.NotificationManager.ShowMessageAsync(index.ToString() + " songs sucessfully added into playlist: " + file.DisplayName);
+
+                                if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
+                                    service.Insert(mp3File);
+
+                                StorageApplicationPermissions.FutureAccessList.Remove(token);
+                            }
+                            catch
+                            {
+                                failedFiles++;
+                            }
+                        });
+                    }
+
                     string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", index, failedFiles, index - failedFiles, file.DisplayName);
                     await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
                 }
-
             }
         }
+
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)
         {
             FileSavePicker picker = new FileSavePicker();
@@ -85,7 +84,7 @@ namespace BreadPlayer.PlaylistBus
                 writer.WriteLine("");
                 foreach (var track in Songs)
                 {
-                    writer.WriteLine(String.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title));
+                    writer.WriteLine(string.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title));
                     writer.WriteLine(track.Path);
                     writer.WriteLine("");
                 }

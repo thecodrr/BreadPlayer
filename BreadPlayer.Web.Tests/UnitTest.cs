@@ -1,7 +1,6 @@
 ﻿using Xunit;
 using BreadPlayer.Web.Lastfm;
 using System.Threading.Tasks;
-using BreadPlayer.Models;
 using BreadPlayer.Web._123music;
 using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.TagParser;

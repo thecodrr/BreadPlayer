@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
 {
@@ -23,15 +19,15 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
         /**
          * 获取歌曲名
          */
-        public abstract String GetTitle();
+        public abstract string GetTitle();
 
-        public abstract String GetArtist();
+        public abstract string GetArtist();
 
         //    /**
         //     * 获取艺术家图片
         //     * @return   uri
         //     */
-        //    public abstract String getArtPic();
+        //    public abstract string getArtPic();
 
         /**
          * 加载艺术家图片  上面的方法废弃
@@ -54,7 +50,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
          *
          * @return
          */
-        public String GetDurationStr()
+        public string GetDurationStr()
         {
             return GetDuration().ToString(@"mm\:ss");           
         }

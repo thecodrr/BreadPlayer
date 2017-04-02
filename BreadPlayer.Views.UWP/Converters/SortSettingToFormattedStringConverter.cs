@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
@@ -32,8 +28,7 @@ namespace BreadPlayer.Converters
             {
                 return "A to Z";
             }
-            else
-                return sort;
+            return sort;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

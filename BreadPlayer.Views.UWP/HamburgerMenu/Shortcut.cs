@@ -9,6 +9,5 @@ namespace SplitViewMenu
         public object ShortcutCommandParameter { get; set; }
         MenuFlyout shortcutFlyout;
         public MenuFlyout ShortcutFlyout { get { return shortcutFlyout; } set { Set(ref shortcutFlyout, value); } }
-        
     }
 }

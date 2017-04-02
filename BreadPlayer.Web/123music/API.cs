@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AngleSharp;
 using System.Net.Http;
 using AngleSharp.Parser.Html;
 using AngleSharp.Dom.Html;
@@ -31,7 +29,6 @@ namespace BreadPlayer.Web._123music
                     Songs.AddRange(GetSongs(page));
                 }
             }
-           
             return true;
         }
         public async Task<bool> GetSongsList(DataType type)
@@ -61,8 +58,8 @@ namespace BreadPlayer.Web._123music
                 return (IEnumerable<T>)GetArtists(htmlDoc, directList);
             else if (typeof(T) == typeof(Track))
                 return (IEnumerable<T>)GetSongs(htmlDoc, directList);
-            else
-                return null;
+
+            return null;
         }
         public async Task<bool> GetAlbumsList(DataType type)
         {
@@ -70,20 +67,20 @@ namespace BreadPlayer.Web._123music
         }       
         private async Task<IHtmlDocument> GetJsonResponseDocumentAsync(string url)
         {
-            HttpClient httpClient = new HttpClient();
-            var response = await httpClient.GetStringAsync(url);
-            var tmp = JsonConvert.DeserializeObject<ResponseMessage>(response);
-            var parser = new HtmlParser();
-            var htmlDoc = await new HtmlParser().ParseAsync(tmp.html);
-            return htmlDoc;
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetStringAsync(url);
+                var tmp = JsonConvert.DeserializeObject<ResponseMessage>(response);
+                return await new HtmlParser().ParseAsync(tmp.html);
+            }
         }
         private async Task<IHtmlDocument> GetHtmlResponseDocumentAsync(string url)
         {
-            HttpClient httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
-            var parser = new HtmlParser();
-            var htmlDoc = await parser.ParseAsync(html);
-            return htmlDoc;
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var html = await httpClient.GetStringAsync(url);
+                return await new HtmlParser().ParseAsync(html);
+            }
         }
         private IEnumerable<Track> GetSongs(IHtmlDocument htmlDoc, bool directList = false)
         {

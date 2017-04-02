@@ -28,7 +28,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
@@ -77,7 +76,7 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload is short || message.Payload is Int32)
             {
-                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 SongCount = Convert.ToInt32(message.Payload);
                 Status = SongCount.ToString() + " Song(s) Loaded";
                 IsLibraryLoading = true;
@@ -98,9 +97,8 @@ namespace BreadPlayer.ViewModels
         }
         void HandlePlaySongMessage(Message message)
         {
-            if (message.Payload is Mediafile)
+            if (message.Payload is Mediafile song)
             {
-                var song = message.Payload as Mediafile;
                 if (message != null)
                     message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 if (song != null)
@@ -366,7 +364,7 @@ namespace BreadPlayer.ViewModels
         /// <param name="para">The Mediafile to relocate</param>
         private async void RelocateSong(object para)
         {
-            if (para is Mediafile)
+            if (para is Mediafile mediafile)
             {
                 FileOpenPicker openPicker = new FileOpenPicker()
                 {
@@ -377,10 +375,10 @@ namespace BreadPlayer.ViewModels
                 if (newFile != null)
                 {
                     var newMediafile = await CreateMediafile(newFile);
-                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path).Length = newMediafile.Length;
-                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path)._id = newMediafile._id;
-                    TracksCollection.Elements.Single(t => t.Path == (para as Mediafile).Path).Path = newMediafile.Path;
-                    LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == (para as Mediafile)._id));
+                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
+                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path)._id = newMediafile._id;
+                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
+                    LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == mediafile._id));
                 }
             }
         }
@@ -546,21 +544,17 @@ namespace BreadPlayer.ViewModels
             {
                 foreach (var item in TracksCollection.Elements)
                 {
-                    if (RecentlyAddedSongsCollection.All(t => t.Path != item.Path))
+                    if (RecentlyAddedSongsCollection.All(t => t.Path != item.Path)
+                        && item.AddedDate != null
+                        && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3)
                     {
-                        if (item.AddedDate != null)
-                        {
-                            if ((DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3)
-                            {
-                                RecentlyAddedSongsCollection.Add(item);
-                            }
-                        }
+                        RecentlyAddedSongsCollection.Add(item);
                     }
                 }
                 return RecentlyAddedSongsCollection;
             });
         }
-      
+
         async Task RefreshSourceAsync()
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -698,21 +692,21 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if (propName == "Year" || propName == "TrackNumber")
+                switch (propName)
                 {
-                    AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
-                }
-                else if (propName == "Length")
-                {
-                    AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
-                }
-                else if (propName == "FolderPath")
-                {
-                    AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
-                }
-                else
-                {
-                    AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
+                    case "Year":
+                    case "TrackNumber":
+                        AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+                        break;
+                    case "Length":
+                        AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+                        break;
+                    case "FolderPath":
+                        AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
+                        break;
+                    default:
+                        AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
+                        break;
                 }
                 AlphabetList.Sort();
             }
@@ -846,7 +840,7 @@ namespace BreadPlayer.ViewModels
                 RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
                 LoadPlaylists();
                 UpdateJumplist("Title");
-           }
+            }
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -957,8 +951,7 @@ namespace BreadPlayer.ViewModels
                 }
                 return Playlist;
             }
-            else
-               return null;
+            return null;
         }
 
         public async Task AddSongsToPlaylist(Playlist list, List<Mediafile> songsToadd)
@@ -969,15 +962,13 @@ namespace BreadPlayer.ViewModels
                 int index = 0;
                 foreach (var item in songsToadd)
                 {
-                    
-                        index++;
-                        item.State = PlayerState.Stopped;
-                        //NotificationManager.ShowMessageAsync(index.ToString() + " of " + songsToadd.Count.ToString() + " added into playlist: " + list.Name);
-                        await Task.Run(() =>
-                        {
-                            service.Insert(item);
-                        }).ConfigureAwait(false);
-                    
+                    index++;
+                    item.State = PlayerState.Stopped;
+                    //NotificationManager.ShowMessageAsync(index.ToString() + " of " + songsToadd.Count.ToString() + " added into playlist: " + list.Name);
+                    await Task.Run(() =>
+                    {
+                        service.Insert(item);
+                    }).ConfigureAwait(false);
                 }
             }
         }
@@ -1020,31 +1011,36 @@ namespace BreadPlayer.ViewModels
         }
         private async void Frame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
-            string param = (e.Parameter ?? String.Empty).ToString();    // e.Parameter can be null and throw exception
+            string param = (e.Parameter ?? string.Empty).ToString();    // e.Parameter can be null and throw exception
             if (e.SourcePageType == typeof(LibraryView))
             {
-                if (param == "Recent")
-                    ChangeView("Recently Played", false, RecentlyPlayedCollection);
-                else if (param == "MusicCollection")
-                    ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
-                else if (param == "MostEaten")
-                    ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync());
-                else if (param == "RecentlyAdded")
-                    ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync());
+                switch(param)
+                {
+                    case "Recent":
+                        ChangeView("Recently Played", false, RecentlyPlayedCollection);
+                        break;
+                    case "MusicCollection":
+                        ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
+                        break;
+                    case "MostEaten":
+                        ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync());
+                        break;
+                    case "RecentlyAdded":
+                        ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync());
+                        break;
+                    default:
+                        break;
+                }
 
                 await RefreshSourceAsync().ConfigureAwait(false);
             }
-            else
+            else if (ViewSource.Source != null)
             {
-                if (ViewSource.Source != null)
-                {
-                    source = ViewSource.Source;
-                    grouped = ViewSource.IsSourceGrouped;
-                    ViewSource.Source = null;
-                    GC.Collect();
-                }
+                source = ViewSource.Source;
+                grouped = ViewSource.IsSourceGrouped;
+                ViewSource.Source = null;
+                GC.Collect();
             }
-
         }
 
         public void PlayOnTap(object sender, TappedRoutedEventArgs e)
@@ -1060,10 +1056,12 @@ namespace BreadPlayer.ViewModels
         public void SelectionChanged(object para, SelectionChangedEventArgs selectionEvent)
         {
             if (selectionEvent.RemovedItems.Count > 0)
+            {
                 foreach (var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
                 {
                     SelectedItems.Remove(toRemove);
                 }
+            }
             if (selectionEvent.AddedItems.Count > 0)
                 SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
         }

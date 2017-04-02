@@ -147,7 +147,7 @@ namespace BreadPlayer.Messengers
 		/// <param name="parameter">The parameter to pass together with the message.</param>
 		public NotificationResult NotifyColleagues(MessageTypes messageType, object parameter)
 		{
-			//if (String.IsNullOrEmpty(message))
+			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
 			NotificationResult result = NotificationResult.MessageNotRegistered;
 
@@ -207,7 +207,7 @@ namespace BreadPlayer.Messengers
 		/// <param name="messageType">The message to broadcast.</param>
 		public void NotifyColleagues(MessageTypes messageType)
 		{
-			//if (String.IsNullOrEmpty(message))
+			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
 
 			Type registeredParameterType;

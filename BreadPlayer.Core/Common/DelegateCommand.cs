@@ -20,7 +20,6 @@ using System.Diagnostics;
 using System.Windows.Input;
 
 namespace BreadPlayer
-
 {
     public class DelegateCommand : ICommand
     {
@@ -112,4 +111,4 @@ namespace BreadPlayer
         public void Execute(object parameter) { _execute(parameter); }
         #endregion // ICommand Members 
     }
-    }
+}

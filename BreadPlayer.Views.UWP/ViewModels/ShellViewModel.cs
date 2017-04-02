@@ -33,7 +33,6 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
-using Windows.UI.Notifications;
 
 namespace BreadPlayer.ViewModels
 {
@@ -77,14 +76,10 @@ namespace BreadPlayer.ViewModels
         #region HandleMessages
         void HandleEnablePlayMessage(Message message)
         {
-            if (message.Payload is short)
+            if (message.Payload is short count && count > 0)
             {
-                var count = (short)message.Payload;
-                if (count > 0)
-                {
-                    message.HandledStatus = MessageHandledStatus.HandledContinue;
-                    PlayPauseCommand.IsEnabled = true;
-                }
+                message.HandledStatus = MessageHandledStatus.HandledContinue;
+                PlayPauseCommand.IsEnabled = true;
             }
         }
         private void HandleLibraryLoadedMessage(Message message)
@@ -131,9 +126,8 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload != null)
             {
-                if(message.Payload is List<object>)
+                if(message.Payload is List<object> list)
                 {
-                    var list = message.Payload as List<object>;
                     double volume = 0;
                     if ((double)list[3] == 50.0)
                         volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
@@ -153,12 +147,12 @@ namespace BreadPlayer.ViewModels
         }
 
         void HandleSaveSongToStopAfterMessage(Message songToStopAfter)
-        {            
-          if(songToStopAfter.Payload is Mediafile)
-          {
-            _songToStopAfter =(Mediafile)songToStopAfter.Payload;
-          }         
-        }    
+        {
+            if (songToStopAfter.Payload is Mediafile)
+            {
+                _songToStopAfter = (Mediafile)songToStopAfter.Payload;
+            }
+        }
 
         #endregion
 
@@ -221,17 +215,19 @@ namespace BreadPlayer.ViewModels
         }
         void SetRepeat()
         {
-            if (Repeat == "No Repeat")
+            switch (Repeat)
             {
-                Repeat = "Repeat Song";
-            }
-            else if (Repeat == "Repeat Song")
-            {
-                Repeat = "Repeat List";
-            }
-            else if (Repeat == "Repeat List")
-            {
-                Repeat = "No Repeat";
+                case "No Repeat":
+                    Repeat = "Repeat Song";
+                    break;
+                case "Repeat Song":
+                    Repeat = "Repeat List";
+                    break;
+                case "Repeat List":
+                    Repeat = "No Repeat";
+                    break;
+                default:
+                    break;
             }
         }
         private async void PlayPause()
@@ -303,8 +299,6 @@ namespace BreadPlayer.ViewModels
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlayNext();
-
-                    return null;
                 }
             }
             return null;
@@ -320,7 +314,8 @@ namespace BreadPlayer.ViewModels
 
         async void PlayNext()
         {
-            if (Player.CurrentlyPlayingFile != null) {
+            if (Player.CurrentlyPlayingFile != null)
+            {
                 PreviousSong= Player.CurrentlyPlayingFile;
                 history.Do(Player.CurrentlyPlayingFile);
             }
@@ -343,10 +338,7 @@ namespace BreadPlayer.ViewModels
             {
                 return TracksCollection.Elements;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
         void PlayPrevious()
         {
@@ -402,13 +394,10 @@ namespace BreadPlayer.ViewModels
 
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Shuffle")
+            if (e.PropertyName == "Shuffle" && Shuffle == true)
             {
-                if (Shuffle == true)
-                {
-                    ShuffledList = await ShuffledCollection().ConfigureAwait(false);
-                    UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
-                }
+                ShuffledList = await ShuffledCollection().ConfigureAwait(false);
+                UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
             }
         }
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
@@ -690,6 +679,4 @@ namespace BreadPlayer.ViewModels
         #endregion
 
     }
-
-
 }

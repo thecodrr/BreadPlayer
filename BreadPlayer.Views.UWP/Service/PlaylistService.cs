@@ -1,8 +1,5 @@
 ﻿using BreadPlayer.Models;
 using LiteDB;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace BreadPlayer.Service
@@ -13,7 +10,7 @@ namespace BreadPlayer.Service
         public string Password { get; set; }
         public PlaylistDatabase PDatabase
         {
-            get;set;
+            get; set;
         }
         public override void CreateDB()
         {
