@@ -1,9 +1,4 @@
 ﻿using BreadPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Events
 {
@@ -12,7 +7,7 @@ namespace BreadPlayer.Core.Events
         private Mediafile mediaFile;
         public MediaAboutToEndEventArgs(Mediafile mediafile)
         {
-            mediaFile = mediafile;
+            this.mediaFile = mediafile;
         } // eo ctor
 
         public Mediafile MediaFile { get { return mediaFile; } }

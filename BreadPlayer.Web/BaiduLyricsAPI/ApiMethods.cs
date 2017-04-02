@@ -1,8 +1,4 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using BreadPlayer.Web.BaiduLyricsAPI.Models;
@@ -54,6 +50,5 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             var obj = (SongInfo)JsonConvert.DeserializeObject(response, typeof(SongInfo));
             return obj;
         }
-        
     }
 }

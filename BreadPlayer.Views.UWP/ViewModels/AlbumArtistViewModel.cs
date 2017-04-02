@@ -7,12 +7,11 @@ using System.Windows.Input;
 using LiteDB;
 using Windows.Storage;
 using BreadPlayer.Messengers;
-using System.Diagnostics;
 using BreadPlayer.Services;
 
 namespace BreadPlayer.ViewModels
 {
-	public class AlbumArtistViewModel : ViewModelBase
+    public class AlbumArtistViewModel : ViewModelBase
     {
         async void HandleAddAlbumMessage(Message message)
         {
@@ -56,7 +55,6 @@ namespace BreadPlayer.ViewModels
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
                 AlbumsLoaded = false;
-           
         }
 
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -128,8 +126,6 @@ namespace BreadPlayer.ViewModels
                     albumCollection.Insert(albums);
                     AlbumCollection.AddRange(albums);                               
             }).AsTask().ConfigureAwait(false);
-
-           
         }
         RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand
@@ -145,9 +141,7 @@ namespace BreadPlayer.ViewModels
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
                
                 NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
-
             }
         }
-        
     }
 }

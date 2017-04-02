@@ -64,10 +64,9 @@ namespace BreadPlayer.Services
 
         public void NavigateTo(Type pageType, object parameter)
         {
-            if (PageStack.Count > 0)
+            if (PageStack.Count > 0 && PageStack.Peek() == pageType)
             {
-                if (PageStack.Peek() == pageType)
-                    return;
+                return;
             }
             PageStack.Push(pageType);
             Frame.Navigate(pageType, parameter);
@@ -104,13 +103,13 @@ namespace BreadPlayer.Services
                     AppViewBackButtonVisibility = Frame.CanGoBack ?
                      AppViewBackButtonVisibility.Visible :
                          AppViewBackButtonVisibility.Collapsed;
-            }
-    #endregion
+        }
+        #endregion
 
-            #region Event Methods for windows and phone
+        #region Event Methods for windows and phone
 
         private void NavigationService_BackRequested
-    (object sender, BackRequestedEventArgs e)
+            (object sender, BackRequestedEventArgs e)
         {
             if (Frame.CanGoBack)
                 Frame.GoBack();

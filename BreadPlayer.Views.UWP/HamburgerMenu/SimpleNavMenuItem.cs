@@ -75,6 +75,5 @@ namespace SplitViewMenu
         public Type DestinationPage { get; set; }
 
         void Select(object param) { }
-
     }
 }

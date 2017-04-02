@@ -2,7 +2,6 @@
 {
     /// <summary>
     /// Use an enumeration for the messages to ensure consistency.
-    /// 
     /// </summary>
     public enum MessageTypes
     {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using XLog;
@@ -45,30 +42,31 @@ namespace BreadPlayer.Targets
         {
             if (writer != null)
             {
-                try { writer.Write(content);
+                try
+                {
+                    writer.Write(content);
                     writer.Flush();
                 }
                 catch { }    
-                }      
+            }      
         }
 
         public string GetLastLogs()
         {
-                Flush();            
-                int numOfRetries = 3;
-                do
+            Flush();
+            int numOfRetries = 3;
+            do
+            {
+                try
                 {
-                    try
-                    {
-                        return ReadFileContentsAsync(File).Result;
-                    }
-                    catch (IOException)
-                    {
-                    }
-                } while (--numOfRetries > 0);
+                    return ReadFileContentsAsync(File).Result;
+                }
+                catch (IOException)
+                {
+                }
+            } while (--numOfRetries > 0);
 
-                return string.Empty;
-            
+            return string.Empty;
         }
 
         private async static Task<string> ReadFileContentsAsync(StorageFile f)
@@ -77,9 +75,7 @@ namespace BreadPlayer.Targets
             var copiedFile = await File.CopyAsync(ApplicationData.Current.LocalFolder, copyName);
             try
             {
-                
-                    return await FileIO.ReadTextAsync(copiedFile);
-                
+                return await FileIO.ReadTextAsync(copiedFile);
             }
             finally
             {

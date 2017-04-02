@@ -32,7 +32,7 @@ namespace BreadPlayer.MomentoPattern
             _Redo = new Stack<T>();
         }
 	
-	public T SemiUndo(T input)
+	    public T SemiUndo(T input)
         {
             if (_Undo.Count > 0)
             {
@@ -40,7 +40,7 @@ namespace BreadPlayer.MomentoPattern
                 T output = cmd;
                 return output;
             }
-                return input;
+            return input;
         }
 	
         public T Do(T sub)
@@ -78,7 +78,5 @@ namespace BreadPlayer.MomentoPattern
                 return input;
             }
         }
-
-
     }
 }

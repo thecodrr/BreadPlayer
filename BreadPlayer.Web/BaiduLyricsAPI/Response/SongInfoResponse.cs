@@ -1,10 +1,6 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
@@ -38,6 +34,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
             }
         }
     }
+
     public class UrlList
     {
         private List<SongUrl> url;
@@ -53,6 +50,5 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
                 url = value;
             }
         }
-        
     }
 }
