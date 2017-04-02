@@ -91,7 +91,8 @@
             <VM:ShellViewModel x:Key="ShellVM"/>
             <VM:LibraryViewModel x:Key="LibVM"/>
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>
-
+            <VM:AccountsViewModel x:Key="AccountsVM"/>
+            
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem x:Name="unsorted" Text="Unsorted" DataContext="{StaticResource LibVM}" Tag="Unsorted" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 <MenuFlyoutItem Text="Year" Tag="Year" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>

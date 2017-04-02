@@ -157,7 +157,10 @@ namespace BreadPlayer.Extensions
                     MenuFlyoutSubItem addTo = new MenuFlyoutSubItem() { Text = "Add to" };
                     MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = core.ShowPropertiesCommand, CommandParameter = null };
                     MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = core.OpenSongLocationCommand, CommandParameter = null };
+                    MenuFlyoutItem changeAlbumArt= new MenuFlyoutItem() { Text = "Change Album Art", Command = core.ChangeAlbumArtCommand, CommandParameter = null };
+
                     menuFlyout.Items.Add(addTo);
+                    menuFlyout.Items.Add(changeAlbumArt);
                     menuFlyout.Items.Add(openLoc);
                     menuFlyout.Items.Add(properties);
                     foreach (var menuItem in core.OptionItems)

@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Media;
 using BreadPlayer.NotificationManager;
 using Windows.Storage.FileProperties;
 using BreadPlayer.Web.Lastfm;
+using Windows.Storage.Pickers;
 
 namespace BreadPlayer.Core
 {
@@ -56,6 +57,7 @@ namespace BreadPlayer.Core
         #region ICommands
 
         #region Definitions
+        RelayCommand _changeAlbumArtCommand;
         RelayCommand _showPropertiesCommand;
         RelayCommand _opensonglocationCommand;
         /// <summary>
@@ -73,10 +75,37 @@ namespace BreadPlayer.Core
         {
             get
             { if (_opensonglocationCommand == null) { _opensonglocationCommand = new RelayCommand(param => this.OpenSongLocation(param)); } return _opensonglocationCommand; }
+        }/// <summary>
+         /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
+         /// </summary>
+        public ICommand ChangeAlbumArtCommand
+        {
+            get
+            { if (_changeAlbumArtCommand == null) { _changeAlbumArtCommand = new RelayCommand(param => this.ChangeAlbumArt(param)); } return _changeAlbumArtCommand; }
         }
         #endregion
 
         #region Implementation
+        private async void ChangeAlbumArt(object para)
+        {
+            Mediafile mediaFile = null;
+            if (para == null)
+                mediaFile = Player.CurrentlyPlayingFile;
+            FileOpenPicker albumArtPicker = new FileOpenPicker();
+            albumArtPicker.FileTypeFilter.Add(".jpg");
+            albumArtPicker.FileTypeFilter.Add(".png");
+            var albumArt = await albumArtPicker.PickSingleFileAsync();
+            if (albumArt != null)
+            {
+                TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(await StorageFile.GetFileFromPathAsync(mediaFile.Path)));
+                TagLib.IPicture[] pictures = new TagLib.IPicture[1];
+                pictures[0] = new TagLib.Picture(new SimpleFileAbstraction(albumArt));
+                tagFile.Tag.Pictures = pictures;
+                var createAlbumArt = AlbumArtFileExists(mediaFile);
+                await albumArt.CopyAsync(await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\"), createAlbumArt.FileName + Path.GetExtension(albumArt.Path), NameCollisionOption.ReplaceExisting);
+                mediaFile.AttachedPicture = ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\" + createAlbumArt.FileName + Path.GetExtension(albumArt.Path);
+            }         
+        }
         async void ShowProperties(object para)
         {
             Mediafile file = null;
@@ -100,7 +129,7 @@ namespace BreadPlayer.Core
                 StorageFile storageFile = await StorageFile.GetFileFromPathAsync(mp3File.Path);
                 var folderOptions = new FolderLauncherOptions();
                 folderOptions.ItemsToSelect.Add(storageFile);
-                await Launcher.LaunchFolderAsync(folder, folderOptions);
+                await Launcher.LaunchFolderAsync(folder, folderOptions);                
             }
         }
 
@@ -148,7 +177,7 @@ namespace BreadPlayer.Core
                 //var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
                 return (true, md5Path);
             }
-            return (false, "");
+            return (false, md5Path);
         }
         /// <summary>
         /// Asynchronously saves all the album arts in the library. 

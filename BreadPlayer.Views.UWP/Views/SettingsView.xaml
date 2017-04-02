@@ -125,14 +125,14 @@
                                     <LineBreak/>
                                     <Run Text="Change of theme requires shutdown." FontSize="11" Foreground="Gray"/>
                         </TextBlock>
-                        <ToggleSwitch Grid.Column="1" x:Name="themeChange" Margin="0,10,0,0" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" HorizontalAlignment="Stretch" VerticalAlignment="Center"></ToggleSwitch>
+                        <ToggleSwitch Grid.Column="1" x:Name="themeChange" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
 
                         <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="uiTextTypeText">
                             <Run Text="Font Capitilization:"/>
                             <LineBreak/>
                             <Run FontSize="11" Text="This changes the text capitalization of the UI." Foreground="Gray"/>
                         </TextBlock>
-                        <ComboBox Grid.Row="1" VerticalAlignment="Center" x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" SelectedItem="{Binding UITextType, Mode=TwoWay}">
+                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UITextType, Mode=TwoWay}">
                             <x:String>Normal</x:String>
                             <x:String>All Capitals</x:String>
                         </ComboBox>

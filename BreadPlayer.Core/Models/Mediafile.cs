@@ -65,7 +65,7 @@ namespace BreadPlayer.Models
         public PlayerState State { get => state; set => Set(ref state, value); }
         public string EncryptedMetaFile { get => encrypted_meta_file; set => encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; }
         public LiteDB.ObjectId _id { get => id; set => Set(ref id, value); }
-        public string AttachedPicture { get => attached_picture; set => attached_picture = value; }
+        public string AttachedPicture { get => attached_picture; set => Set(ref attached_picture, value); }
         public string Comment { get => comment; set => comment = string.IsNullOrEmpty(value) ? comment = NaN : value; }
         public string FolderPath { get => folderPath; set => folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; }
         public string SynchronizedLyric
