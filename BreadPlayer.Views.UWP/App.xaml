@@ -2992,7 +2992,7 @@ Control.IsTemplateFocusTarget="True"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
-                            <Grid x:Name="RootGrid" BorderBrush="Transparent" BorderThickness="2" Background="{TemplateBinding Background}" CornerRadius="20">
+                            <Grid x:Name="RootGrid" BorderBrush="Transparent" BorderThickness="2" Background="{TemplateBinding Background}" CornerRadius="25">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualState x:Name="Normal">

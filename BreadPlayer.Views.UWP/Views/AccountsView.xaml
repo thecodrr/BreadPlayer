@@ -5,9 +5,12 @@
     xmlns:local="using:BreadPlayer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:VM="using:BreadPlayer.ViewModels"
     mc:Ignorable="d">
-
-    <Grid Margin="35,50,0,0">
+    <Page.Resources>
+        <VM:AccountsViewModel x:Key="AccountsVM"/>
+    </Page.Resources>
+    <Grid Margin="35,50,0,0" DataContext="{StaticResource AccountsVM}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
@@ -22,8 +25,7 @@
         <TextBox Header="Username:" Padding="14,6,14,8" Text="{Binding Path=LastfmUsername, Mode=TwoWay}" PlaceholderText="Enter Your Last.fm Username Here..." Grid.Row="1" Margin="0,10,0,0" Style="{StaticResource RoundedTextBoxStyle}"/>
         <PasswordBox Header="Password:" Password="{Binding Path=LastfmPassword, Mode=TwoWay}" PlaceholderText="Enter Your Last.fm Password Here..." Padding="14,6,14,8"  Grid.Row="2" Margin="0,10,0,0" Style="{StaticResource RoundedPasswordBoxStyle}"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,0">
-            <Button Width="150" Content="Reset" BorderThickness="1" Style="{StaticResource RoundedIconButtonStyle}"></Button>
-            <Button Width="150" Content="Login" Margin="5,0,0,0" BorderThickness="1" Style="{StaticResource RoundedIconButtonStyle}"/>
+           <Button Width="300" Content="Login" Margin="5,0,0,0" Command="{Binding Path=LastfmLoginCommand}" BorderThickness="1" Style="{StaticResource RoundedIconButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Page>
