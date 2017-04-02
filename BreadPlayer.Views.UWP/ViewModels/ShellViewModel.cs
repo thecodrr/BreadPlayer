@@ -34,6 +34,7 @@ using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
 using Windows.UI.Notifications;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
@@ -630,7 +631,7 @@ namespace BreadPlayer.ViewModels
             });
             return shuffled;
         }
-
+        
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
             if (mp3file != null)
@@ -660,6 +661,7 @@ namespace BreadPlayer.ViewModels
                         if (play)
                         {
                             PlayPauseCommand.Execute(null);
+                            await LockscreenHelper.ChangeLockscreenImage(mp3file);
                         }
                         else
                         {

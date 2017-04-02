@@ -67,6 +67,8 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
             }
         }
+
+
         string uiTextType;
         public string UITextType
         {
@@ -186,13 +188,26 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
+            this.PropertyChanged += SettingsViewModel_PropertyChanged;
             ChangeAccentByAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             FileBatchSize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
             UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
-            ReplaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ReplaceLockscreenWithAlbumArt", false);
+             ReplaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ReplaceLockscreenWithAlbumArt", false);
+            
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
+        }
+
+        private async void SettingsViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ReplaceLockscreenWithAlbumArt")
+            {
+                if (ReplaceLockscreenWithAlbumArt == true)
+                    replaceLockscreenWithAlbumArt = await Helpers.LockscreenHelper.SaveCurrentLockscreenImage();
+                else
+                    await Helpers.LockscreenHelper.ResetLockscreenImage();
+            }
         }
         #endregion
 
@@ -323,6 +338,7 @@ namespace BreadPlayer.ViewModels
                 displayRequest = null;
             }
         }
+        
         #endregion
 
         #region LoadFoldersCommand
