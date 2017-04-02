@@ -63,6 +63,22 @@
                     <TextBlock x:Name="headerText" Text="{Binding}" FontSize="28" FontFamily="Segoe UI" FontWeight="Bold" />
                 </DataTemplate>
             </Pivot.HeaderTemplate>
+            <PivotItem Header="General">
+                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
+                    <TextBlock Text="Lockscreen" FontWeight="Bold" FontSize="18"/>
+                    <CheckBox Margin="0,0,0,0" Content="Prevent screen from locking." IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
+                        <Run Text="Enabling this will prevent the OS from locking the screen after regular intervals. "/>
+                        <Bold>This feature is extremely battery consuming and hence, is not persisted through sessions.</Bold>
+                    </TextBlock>
+                    <CheckBox Margin="0,0,0,0" Content="Replace lockscreen wallpaper with album art." IsChecked="{Binding ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
+                        <Run Text="This will replace the lockscreen wallpaper with currently playing song's album art. "/>
+                        <Bold>Rest assured that your lockscreen wallpaper will be automatically resetted when you exit the app.</Bold>
+                    </TextBlock>                
+                </StackPanel>
+            </PivotItem>
+            
             <PivotItem Header="Library">
                 <StackPanel x:Name="libraryGrid" MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock x:Name="importHeader" Text="Import Breads" FontWeight="Bold" FontSize="18"/>
@@ -106,7 +122,7 @@
                     <TextBlock Margin="0,-4,0,0" Text="This will reset your library, playlists, settings, play history etc." TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
                 </StackPanel>
-            </PivotItem>
+            </PivotItem>            
             
             <PivotItem Header="Personalization">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
@@ -141,6 +157,7 @@
                     <TextBlock Text="Enabling this makes the player adapt the accent color according to the album art of the currently playing song." TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
                 </StackPanel>
             </PivotItem>
+            
             <PivotItem Header="About">
                 <Grid>
                     <Grid.ColumnDefinitions>

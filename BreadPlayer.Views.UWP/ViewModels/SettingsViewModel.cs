@@ -37,12 +37,36 @@ using Windows.UI.Popups;
 using Windows.UI.Core;
 using BreadPlayer.Services;
 using Windows.UI.Xaml.Controls;
+using Windows.System.Display;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        bool preventScreenFromLocking;
+        public bool PreventScreenFromLocking
+        {
+            get { return preventScreenFromLocking; }
+            set
+            {
+                Set(ref preventScreenFromLocking, value);
+                if (value == true)
+                    KeepScreenActive();
+                else
+                    ReleaseDisplayRequest();
+            }
+        }
+        bool replaceLockscreenWithAlbumArt;
+        public bool ReplaceLockscreenWithAlbumArt
+        {
+            get { return replaceLockscreenWithAlbumArt; }
+            set
+            {
+                Set(ref replaceLockscreenWithAlbumArt, value);
+                RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
+            }
+        }
         string uiTextType;
         public string UITextType
         {
@@ -167,6 +191,7 @@ namespace BreadPlayer.ViewModels
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
             UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
+            ReplaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ReplaceLockscreenWithAlbumArt", false);
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion
@@ -273,7 +298,33 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-        
+
+        #region General Settings Methods
+        DisplayRequest displayRequest;
+        private void KeepScreenActive()
+        {
+            if (displayRequest == null)
+            {
+                displayRequest = new DisplayRequest();
+                // This call activates a display-required request. If successful,  
+                // the screen is guaranteed not to turn off automatically due to user inactivity. 
+                displayRequest.RequestActive();
+            }
+        }
+        private void ReleaseDisplayRequest()
+        {
+            // This call de-activates the display-required request. If successful, the screen 
+            // might be turned off automatically due to a user inactivity, depending on the 
+            // power policy settings of the system. The requestRelease method throws an exception  
+            // if it is called before a successful requestActive call on this object. 
+            if (displayRequest != null)
+            {
+                displayRequest.RequestRelease();
+                displayRequest = null;
+            }
+        }
+        #endregion
+
         #region LoadFoldersCommand
         public async Task LoadFolders()
         {
