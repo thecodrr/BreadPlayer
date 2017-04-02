@@ -107,7 +107,7 @@
 
                 </StackPanel>
             </PivotItem>
-
+            
             <PivotItem Header="Personalization">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock Text="Appearence" FontSize="18" FontWeight="Bold"/>

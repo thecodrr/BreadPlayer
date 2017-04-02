@@ -399,7 +399,19 @@ namespace BreadPlayer.ViewModels
             NotificationManager.SendUpcomingSongNotification(UpcomingSong);
             await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
         }
-
+        private async Task ScrobblePlayingSong()
+        {
+            if (LastfmScrobbler != null)
+            {
+                var scrobble = await LastfmScrobbler.Scrobble(Player.CurrentlyPlayingFile.LeadArtist, Player.CurrentlyPlayingFile.Album, Player.CurrentlyPlayingFile.Title);
+                if (scrobble.Success)
+                    await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
+                else
+                    await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble.Exception.Message), "Failed to scrobble this song");
+            }
+            else
+                await NotificationManager.ShowMessageAsync("Failed to scrobble this song. User not logged in.");
+        }
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Shuffle")
@@ -413,6 +425,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
+            await ScrobblePlayingSong();
             var mediaFile = Player.CurrentlyPlayingFile;
             mediaFile.PlayCount++;
             mediaFile.LastPlayed = DateTime.Now.ToString();

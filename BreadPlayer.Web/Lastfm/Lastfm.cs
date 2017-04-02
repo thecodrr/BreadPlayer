@@ -11,15 +11,22 @@ namespace BreadPlayer.Web.Lastfm
 {
     public class Lastfm
     {
-        public async Task<bool> Scrobble(ILastAuth Auth, params string[] data)
-        {          
+        ILastAuth Auth { get; set; }
+        public Lastfm(ILastAuth auth)
+        {
+            Auth = auth;
+        }
+        public async Task<ScrobbleResponse> Scrobble(params string[] data)
+        {
+            if (!Auth.Authenticated)
+                return new ScrobbleResponse(IF.Lastfm.Core.Api.Enums.LastResponseStatus.BadAuth);
             IFolder rootFolder = FileSystem.Current.LocalStorage;
             IFolder folder = await rootFolder.CreateFolderAsync("db",
                 CreationCollisionOption.OpenIfExists);
             IFile file = await folder.CreateFileAsync("scrobbles.db",
                 CreationCollisionOption.ReplaceExisting);
             IScrobbler _scrobbler = new BreadScrobbler(Auth, file.Path);
-           return (await _scrobbler.ScrobbleAsync(new IF.Lastfm.Core.Objects.Scrobble(data[0], data[1], data[2], DateTimeOffset.Now))).Success;
+            return (await _scrobbler.ScrobbleAsync(new IF.Lastfm.Core.Objects.Scrobble(data[0], data[1], data[2], DateTimeOffset.Now)));
         }
     }
 }

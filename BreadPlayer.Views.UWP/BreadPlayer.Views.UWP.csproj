@@ -186,10 +186,14 @@
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
     <Compile Include="StateTriggers\ITriggerValue.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\AccountsView.xaml.cs">
+      <DependentUpon>AccountsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AlbumArtistView.xaml.cs">
       <DependentUpon>AlbumArtistView.xaml</DependentUpon>
     </Compile>
@@ -342,6 +346,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\TagDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AccountsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

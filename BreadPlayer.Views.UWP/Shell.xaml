@@ -140,6 +140,7 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
+                <controls:SimpleNavMenuItem DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="Navigate to your accounts." Label="Your Accounts" Symbol="Accept"></controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:SettingsView" FontGlyph="&#x0048;" Tooltip="Navigate to your music library." Label="Settings" Symbol="Accept"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.BottomNavigationItems>
         </controls:SplitViewMenu>
