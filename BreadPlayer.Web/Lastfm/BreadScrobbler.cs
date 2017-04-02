@@ -3,11 +3,9 @@ using IF.Lastfm.Core.Api.Enums;
 using IF.Lastfm.Core.Objects;
 using IF.Lastfm.Core.Scrobblers;
 using LiteDB;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.Lastfm
@@ -35,7 +33,6 @@ namespace BreadPlayer.Web.Lastfm
                 }
 
                 var cached = scrobbles.Find(Query.All());
-                db.Dispose();
 
                 return Task.FromResult(cached);
             }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,8 +41,10 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
         }
         public async Task<string> MakeRequest(string url)
         {
-            HttpClient client = new HttpClient();
-            return await client.GetStringAsync(url);
+            using (HttpClient client = new HttpClient())
+            {
+                return await client.GetStringAsync(url);
+            }
         }
     }
 }

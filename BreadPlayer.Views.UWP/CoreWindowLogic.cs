@@ -26,13 +26,9 @@ using Windows.Storage.AccessCache;
 using Windows.Media.Playback;
 using Windows.Foundation.Metadata;
 using Windows.Media.Core;
-using Windows.System;
 using BreadPlayer.Common;
 using Windows.Data.Xml.Dom;
-using Microsoft.Toolkit.Uwp.Notifications;
 using BreadPlayer.Models;
-using System.Text;
-using System.IO;
 using Windows.Storage.Streams;
 
 namespace BreadPlayer
@@ -221,14 +217,11 @@ namespace BreadPlayer
                 {
                     case PlayerState.Playing:
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        if (_smtc.IsEnabled == false)
+                        if (_smtc.IsEnabled == false && update)
                         {
-                            if (update)
-                            {
-                                UpdateSmtc(true);
-                                update = false;
-                                player.Pause();
-                            }
+                            UpdateSmtc(true);
+                            update = false;
+                            player.Pause();
                         }
                         break;
                     case PlayerState.Paused:

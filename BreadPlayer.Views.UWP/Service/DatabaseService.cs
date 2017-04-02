@@ -28,7 +28,6 @@ namespace BreadPlayer.Service
 {
     public class DatabaseService : IDatabaseService
     {
-
         protected LiteCollection<Mediafile> tracks;
         LiteCollection<Playlist> playlists;
         LiteCollection<Mediafile> recent;
@@ -76,13 +75,9 @@ namespace BreadPlayer.Service
             {
                 if (StaticDatabase.DB != null && this != null && tracks != null)
                     return tracks.Count();
-                else
-                    return 0;
             }
-            catch
-            {
-                return 0;
-            }
+            catch { }
+            return 0;
         }
         public void FindOne(string path)
         {
@@ -125,16 +120,13 @@ namespace BreadPlayer.Service
             {
                 tracks.Update(file);
             }
-
         }
         public void UpdateTracks(IEnumerable<Mediafile> files)
         {
-
             if (files != null)
             {
                 tracks.Update(files);
             }
-
         }
         public async Task<IEnumerable<Mediafile>> Query(string field, object term)
         {

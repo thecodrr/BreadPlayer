@@ -67,45 +67,46 @@ namespace BreadPlayer.PlaylistBus
                         continue;
                     }
                 }
-               
-                    for (int i = 0; i < noe; i++)
-                    {
-                        await Task.Run(async () =>
-                        {
-                            try
-                            {
-                                PlaylistService service = new PlaylistService(file.DisplayName, false, "");
-                                count++;
-                                string trackPath = tracks[i, 0];
-                                FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
-                                string path = trackPath;
-                                if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
-                                {
-                                    path = info.DirectoryName + line; //add directory path to song path.
-                                }
-                                var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                                var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
 
-                                Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+                for (int i = 0; i < noe; i++)
+                {
+                    await Task.Run(async () =>
+                    {
+                        try
+                        {
+                            PlaylistService service = new PlaylistService(file.DisplayName, false, "");
+                            count++;
+                            string trackPath = tracks[i, 0];
+                            FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
+                                string path = trackPath;
+                            if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
+                                {
+                                path = info.DirectoryName + line; //add directory path to song path.
+                                }
+                            var accessFile = await StorageFile.GetFileFromPathAsync(path);
+                            var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
+
+                            Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
-                                await Core.SharedLogic.NotificationManager.ShowMessageAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
+                            await Core.SharedLogic.NotificationManager.ShowMessageAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
 
-                                if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
-                                    service.Insert(mp3File);
+                            if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
+                                service.Insert(mp3File);
 
-                                StorageApplicationPermissions.FutureAccessList.Remove(token);
-                            }
-                            catch
-                            {
-                                failedFiles++;
-                            }
-                        });
-                    }                
+                            StorageApplicationPermissions.FutureAccessList.Remove(token);
+                        }
+                        catch
+                        {
+                            failedFiles++;
+                        }
+                    });
+                }
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
                 await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
             }
         }
+
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)
         {
             FileSavePicker picker = new FileSavePicker();
@@ -120,9 +121,9 @@ namespace BreadPlayer.PlaylistBus
                 foreach (var track in Songs)
                 {
                     i++;
-                    writer.WriteLine(String.Format("File{0}={1}", i, track.Path));
-                    writer.WriteLine(String.Format("Title{0}={1}", i, track.Title));
-                    writer.WriteLine(String.Format("Length{0}={1}", i, track.Length));
+                    writer.WriteLine(string.Format("File{0}={1}", i, track.Path));
+                    writer.WriteLine(string.Format("Title{0}={1}", i, track.Title));
+                    writer.WriteLine(string.Format("Length{0}={1}", i, track.Length));
                     writer.WriteLine("");
                 }
                 writer.WriteLine("NumberOfEntries=" + i);
@@ -132,4 +133,3 @@ namespace BreadPlayer.PlaylistBus
         }
     }
 }
-

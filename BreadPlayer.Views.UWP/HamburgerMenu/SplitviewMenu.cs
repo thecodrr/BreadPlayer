@@ -79,7 +79,6 @@ namespace SplitViewMenu
         {
             DefaultStyleKey = typeof(SplitViewMenu);
             Loaded += OnSplitViewMenuLoaded;
-
         }
 
         public DataTemplateSelector MenuItemDataTemplateSelector
@@ -433,7 +432,5 @@ namespace SplitViewMenu
                 TogglePaneButton.IsChecked = false;
             }
         }
-
-
     }
 }

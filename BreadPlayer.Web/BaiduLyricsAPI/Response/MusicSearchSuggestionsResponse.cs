@@ -1,9 +1,5 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
@@ -19,6 +15,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
         public List<SongSug> song;
         public List<ArtistSug> artist;
         public List<AlbumSug> album;
-        public String order;
+        public string order;
     }
 }

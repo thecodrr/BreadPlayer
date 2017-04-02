@@ -29,7 +29,7 @@ namespace BreadPlayer.Common
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new String[] { ".mp3" });
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new string[] { ".mp3" });
             options.FileTypeFilter.Add(".wav");
             options.FileTypeFilter.Add(".ogg");
             options.FileTypeFilter.Add(".flac");
@@ -39,7 +39,7 @@ namespace BreadPlayer.Common
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
-            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new String[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new string[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
             if(aqsQuery != null)
                 options.ApplicationSearchFilter += "kind:music " + aqsQuery;
            

@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading;
 using Windows.UI.Core;
 
-
 /// <summary>
 /// a thread safe observable collection using reader writer lock - created with the help of http://web.archive.org/web/20101105144104/http://www.deanchalk.me.uk/post/Thread-Safe-Dispatcher-Safe-Observable-Collection-for-WPF.aspx
 /// 
@@ -324,7 +323,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             base[index] = value;
             sync.ExitWriteLock();
         }
-
     }
 
     public IEnumerable<T> AsLocked()
@@ -332,6 +330,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         return new ThreadSafeObservableCollectionEnumerableWrapper<T>(this);
     }
 }
+
 public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
 {
     private readonly ThreadSafeObservableCollection<T> m_Inner;
@@ -357,6 +356,7 @@ public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
 
     #endregion
 }
+
 /// <summary>
 /// Created with the help of http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C 
 /// provides a ThreadSafe enumerator for ThreadSafeObservableCollection

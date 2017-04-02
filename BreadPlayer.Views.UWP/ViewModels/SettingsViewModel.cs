@@ -26,7 +26,6 @@ using BreadPlayer.Core;
 using Windows.Storage.AccessCache;
 using BreadPlayer.Models;
 using BreadPlayer.PlaylistBus;
-using Windows.Storage.FileProperties;
 using BreadPlayer.Extensions;
 using Windows.Storage.Search;
 using BreadPlayer.Messengers;
@@ -35,8 +34,6 @@ using BreadPlayer.Common;
 using System.Diagnostics;
 using Windows.UI.Popups;
 using Windows.UI.Core;
-using BreadPlayer.Services;
-using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {

@@ -1,9 +1,5 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Interface;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
@@ -13,7 +9,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
         public string artistname { get; set; }
         public string artistpic { get; set; }
         public string yyr_artist { get; set; }
-        public String GetName()
+        public string GetName()
         {
             return artistname;
         }

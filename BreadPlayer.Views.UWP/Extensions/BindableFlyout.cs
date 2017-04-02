@@ -244,8 +244,5 @@ namespace BreadPlayer.Extensions
         {
             Setup(Menu);
         }
-
     }
-
-
 }

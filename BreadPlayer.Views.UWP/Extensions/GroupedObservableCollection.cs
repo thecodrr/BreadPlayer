@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using Windows.UI.Core;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using BreadPlayer.Models;
 
 namespace BreadPlayer.Extensions
@@ -146,8 +145,8 @@ namespace BreadPlayer.Extensions
         {
             await Core.SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
-                try {
-                   
+                try
+                {
                     if (_isObserving == true && e != null && e.NewItems?.Count > 0)
                         base.OnCollectionChanged(e);
                 }
@@ -172,8 +171,6 @@ namespace BreadPlayer.Extensions
                     BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
                     System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
                 }
-
-
             });
         }
         public void RemoveItem(TElement item)
@@ -363,26 +360,24 @@ namespace BreadPlayer.Extensions
     }
 }
 
-    public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>, IGrouping<TKey, TElement>
+public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>, IGrouping<TKey, TElement>
+{
+    public Grouping(TKey key)
     {
-        public Grouping(TKey key)
-        {
-            this.Key = key;
-        }
-
-        public Grouping(TKey key, IEnumerable<TElement> items)
-            : this(key)
-        {
-
-        AddRange(items);
-        
-            //foreach (var item in items)
-            //{
-            //    this.Add(item);
-            //}
-        }
-
-        public TKey Key { get; }
+        this.Key = key;
     }
 
+    public Grouping(TKey key, IEnumerable<TElement> items)
+        : this(key)
+    {
 
+        AddRange(items);
+
+        //foreach (var item in items)
+        //{
+        //    this.Add(item);
+        //}
+    }
+
+    public TKey Key { get; }
+}

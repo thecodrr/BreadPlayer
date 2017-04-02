@@ -21,7 +21,6 @@ using ManagedBass;
 using BreadPlayer.Events;
 using BreadPlayer.Models;
 using BreadPlayer.Core.Events;
-using System.Security;
 
 namespace BreadPlayer.Core
 {

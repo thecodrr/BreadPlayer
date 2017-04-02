@@ -25,7 +25,6 @@ using Windows.UI.Xaml.Controls;
 using System.Windows.Input;
 using Windows.UI.Core;
 using BreadPlayer.Dialogs;
-using BreadPlayer.Extensions;
 using Windows.UI.Popups;
 using System.Globalization;
 using BreadPlayer.Core;
@@ -98,7 +97,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
         }
-       async Task<string> ShowPasswordDialog(bool isPrivate)
+        async Task<string> ShowPasswordDialog(bool isPrivate)
         {
             if (isPrivate)
             {
