@@ -7,14 +7,14 @@ namespace BreadPlayer.Core.Common
     public class PasswordStorage
     {
         // These constants may be changed without breaking existing hashes.
-        private const int SALT_BYTES = 24;
+        private const int SALT_BYTES = 64;
 
         /// <summary>
-        /// Returns a Tuple, item1 is the salt and item2 is the hash
+        /// Returns the salt and the hash
         /// </summary>
         /// <param name="password">The password that needs to be hashed</param>
-        /// <returns>A Tuple, item1 is the salt and item2 is the hash</returns>
-        public static Tuple<string, string> CreateHash(string password)
+        /// <returns>Returns the salt and the hash</returns>
+        public static (string Salt, string Hash) CreateHash(string password)
         {
             // Generate a random salt
             byte[] salt = new byte[SALT_BYTES];
@@ -24,8 +24,7 @@ namespace BreadPlayer.Core.Common
                 csprng.GetBytes(salt);
             }
 
-            return new Tuple<string, string>(
-                Convert.ToBase64String(salt),
+            return (Convert.ToBase64String(salt),
                 Convert.ToBase64String(ComputeSHA512(password, Convert.ToBase64String(salt))));
         }
 

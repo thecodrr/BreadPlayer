@@ -941,13 +941,13 @@ namespace BreadPlayer.ViewModels
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
-                Tuple<string, string> salthash = Core.Common.PasswordStorage.CreateHash(dialog.Password);
+                var salthash = Core.Common.PasswordStorage.CreateHash(dialog.Password);
                 var Playlist = new Playlist();
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
                 Playlist.IsPrivate = dialog.Password.Length > 0;
-                Playlist.Hash = salthash.Item2;
-                Playlist.Salt = salthash.Item1;
+                Playlist.Hash = salthash.Hash;
+                Playlist.Salt = salthash.Salt;
                 if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
                 {
                     Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
