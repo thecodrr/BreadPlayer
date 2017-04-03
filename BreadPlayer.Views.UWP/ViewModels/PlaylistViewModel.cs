@@ -304,7 +304,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                LoadDB();
+                Services.NavigationService.Instance.NavigateToHome();
             }
         }
         
