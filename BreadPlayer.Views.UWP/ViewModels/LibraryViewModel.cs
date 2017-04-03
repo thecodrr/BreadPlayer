@@ -527,19 +527,19 @@ namespace BreadPlayer.ViewModels
         }
         private async Task<Mediafile> GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
         {
-            if (path is Mediafile)
+            if (path is Mediafile mediaFile)
             {
                 isPlayingFromPlaylist = false;
-                return path as Mediafile;
+                return mediaFile;
             }
-            else if (path is ThreadSafeObservableCollection<Mediafile>)
+            else if (path is ThreadSafeObservableCollection<Mediafile> tmediaFile)
             {
-                SendLibraryLoadedMessage(path as ThreadSafeObservableCollection<Mediafile>, sendUpdateMessage);
-                return (path as ThreadSafeObservableCollection<Mediafile>)[0];
+                SendLibraryLoadedMessage(tmediaFile, sendUpdateMessage);
+                return tmediaFile[0];
             }
-            else if (path is Playlist)
+            else if (path is Playlist playlist)
             {
-                Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password);
+                Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Hash);
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
@@ -973,14 +973,16 @@ namespace BreadPlayer.ViewModels
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
+                var salthash = Core.Common.PasswordStorage.CreateHash(dialog.Password);
                 var Playlist = new Playlist();
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
                 Playlist.IsPrivate = dialog.Password.Length > 0;
-                Playlist.Password = dialog.Password;
+                Playlist.Hash = salthash.Hash;
+                Playlist.Salt = salthash.Salt;
                 if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
                 {
-                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description, dialog.Password);
+                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
                 return Playlist;
             }
@@ -991,7 +993,7 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Password);
+                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash);
                 int index = 0;
                 foreach (var item in songsToadd)
                 {

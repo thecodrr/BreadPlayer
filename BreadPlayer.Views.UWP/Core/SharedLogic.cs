@@ -293,7 +293,7 @@ namespace BreadPlayer.Core
         {
             if (playlist.IsPrivate)
             {
-                if (await ShowPasswordDialog(playlist.Password))
+                if (await ShowPasswordDialog(playlist.Hash, playlist.Salt))
                 {
                     return true;
                 }
@@ -302,7 +302,7 @@ namespace BreadPlayer.Core
                 return true;
             return false;
         }
-        public async Task<bool> ShowPasswordDialog(string password)
+        public async Task<bool> ShowPasswordDialog(string hash, string salt)
         {
             var dialog = new PasswordDialog()
             {
@@ -314,15 +314,16 @@ namespace BreadPlayer.Core
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
-                if (dialog.Password == password)
+                if (Common.PasswordStorage.VerifyPassword(dialog.Password, salt, hash))
                     return true;
                 else
-                    return await ShowPasswordDialog(password);
+                    return await ShowPasswordDialog(hash, salt);
             }
 
             return false;
         }
     }
+
     public class SimpleFileAbstraction : TagLib.File.IFileAbstraction
     {
         private StorageFile file;

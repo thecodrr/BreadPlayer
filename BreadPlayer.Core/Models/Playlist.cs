@@ -29,8 +29,10 @@ namespace BreadPlayer.Models
         public bool IsPrivate { get { return isPrivate; } set { Set(ref isPrivate, value); } }
         string description;
         public string Description { get { return description; } set { Set(ref description, value); } }
-        string password;
-        public string Password { get { return password; } set { Set(ref password, value); } }
+        string hash;
+        public string Hash { get { return hash; } set { Set(ref hash, value); } }
+        string salt;
+        public string Salt { get { return salt; } set { Set(ref salt, value); } }
 
         public Playlist()
         {

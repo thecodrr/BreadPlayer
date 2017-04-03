@@ -26,10 +26,10 @@ namespace BreadPlayer.Service
                 }
             }
         }      
-        public PlaylistService(string name, bool isPrivate, string password)
+        public PlaylistService(string name, bool isPrivate, string hash)
         {
             Name = name;
-            Password = password;
+            Password = hash;
             PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1}",Name, isPrivate ? "password=" + Password + ";" : ""));
             CreateDB();
         }
