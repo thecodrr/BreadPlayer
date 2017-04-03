@@ -13,10 +13,10 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <ListView x:Name="listView" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" SelectionChanged="ListView_SelectionChanged">
+        <ListView x:Name="listView" ScrollViewer.HorizontalScrollMode="Enabled" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" SelectionChanged="ListView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <TextBlock Text="{Binding Title}"/>
                         <TextBlock Text="{Binding Path=Path}" Margin="20,0,0,0"/>
                     </StackPanel>

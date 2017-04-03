@@ -470,12 +470,18 @@ namespace BreadPlayer.ViewModels
                             foreach (var duplicate in selectedDuplicates)
                             {
                                 var duplicateIndex = 0;
-                                for (int i = 0; i <= TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename); i++)
+                                var duplicateCount = TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
+                                if (duplicateCount > 2)
                                 {
-                                    duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                                    if(duplicateIndex > -1)
-                                        RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                    for (int i = 0; i < duplicateCount - 1; i++)
+                                    {
+                                        duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
+                                        if (duplicateIndex > -1)
+                                            RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                    }
                                 }
+                                else
+                                    RemoveMediafile(duplicate);
                             }
                         }
                     }, duplicateFiles);
