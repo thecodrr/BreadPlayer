@@ -183,8 +183,20 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
+                bool proceed = false;
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
-                if (selectedPlaylist != null)
+                if (selectedPlaylist.IsPrivate)
+                {
+                    if (await ShowPasswordDialog(true) == selectedPlaylist.Password)
+                    {
+                        proceed = true;
+                    }
+                    else
+                        DeletePlaylist(selectedPlaylist);
+                }
+                else
+                    proceed = true;
+                if (selectedPlaylist != null && proceed == true)
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
                     dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
@@ -194,8 +206,10 @@ namespace BreadPlayer.ViewModels
                     var result = await dia.ShowAsync();
                     if (result.Label == "Yes")
                     {
+                        Services.NavigationService.Instance.NavigateToHome();
                         string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
-                        if (File.Exists(path)) File.Delete(path);
+                        if (File.Exists(path))
+                            File.Delete(path);
                         PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                         OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                         using (LibraryService service = new LibraryService(new DatabaseService()))
@@ -218,32 +232,45 @@ namespace BreadPlayer.ViewModels
                 if (playlist != null)
                 {
                     var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
-                    var dialog = new InputDialog()
+                    bool proceed = false;
+                    if (selectedPlaylist.IsPrivate)
                     {
-                        Title = "Rename this playlist",
-                        Text = selectedPlaylist.Name,
-                        Description = selectedPlaylist.Description
-                    };
-                    var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                    if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-                    {
-                        var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
-                        string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
-                        if (File.Exists(path + selectedPlaylist.Name + ".db"))
-                            File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
-                        PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                        PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
-                        OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                        using (LibraryService service = new LibraryService(new DatabaseService()))
+                        if (await ShowPasswordDialog(true) == selectedPlaylist.Password)
                         {
-                            service.RemovePlaylist(selectedPlaylist);//delete from database.
-                            service.AddPlaylist(pl); //add new playlist in the database.
-                            Playlist = pl; //set this.Playlist to pl (local variable);
+                            proceed = true;
+                        }
+                    }
+                    else
+                        proceed = true;
+                    if (proceed == true)
+                    {
+                        var dialog = new InputDialog()
+                        {
+                            Title = "Rename this playlist",
+                            Text = selectedPlaylist.Name,
+                            Description = selectedPlaylist.Description
+                        };
+                        var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                        {
+                            var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
+                            string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
+                            if (File.Exists(path + selectedPlaylist.Name + ".db"))
+                                File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
+                            PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                            PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                            OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                            using (LibraryService service = new LibraryService(new DatabaseService()))
+                            {
+                                service.RemovePlaylist(selectedPlaylist);//delete from database.
+                                service.AddPlaylist(pl); //add new playlist in the database.
+                                Playlist = pl; //set this.Playlist to pl (local variable);
+                            }
                         }
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 await NotificationManager.ShowMessageAsync("Cannot rename playlist. Please try again.");
             }
@@ -269,16 +296,19 @@ namespace BreadPlayer.ViewModels
         async void LoadAlbumSongs(Album album)
         {
             Songs.AddRange(album.AlbumSongs);
-            await Refresh();        
+            await Refresh();
         }
+        PlaylistService PlaylistService;
         async void LoadDB()
         {
             string password = await ShowPasswordDialog(Playlist.IsPrivate);
             if (password == playlist.Password || playlist.IsPrivate == false)
             {
-                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password);
-                Songs.AddRange(await service.GetTracks().ConfigureAwait(false));
-                await Refresh();
+                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password))
+                {
+                    Songs.AddRange(await PlaylistService.GetTracks().ConfigureAwait(false));
+                    await Refresh();
+                }
             }
             else
             {

@@ -1,10 +1,11 @@
 ﻿using BreadPlayer.Models;
 using LiteDB;
+using System;
 using Windows.Storage;
 
 namespace BreadPlayer.Service
 {
-	public class PlaylistService : DatabaseService, IDatabaseService
+	public class PlaylistService : DatabaseService, IDatabaseService, IDisposable
     {
         public string Name { get; set; }
         public string Password { get; set; }
@@ -31,7 +32,12 @@ namespace BreadPlayer.Service
             Password = password;
             PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1}",Name, isPrivate ? "password=" + Password + ";" : ""));
             CreateDB();
-        }    
+        }
+        public new void Dispose()
+        {
+            PDatabase.DB.Dispose();
+            PDatabase = null;
+        }
     }
     public class PlaylistDatabase
     {
