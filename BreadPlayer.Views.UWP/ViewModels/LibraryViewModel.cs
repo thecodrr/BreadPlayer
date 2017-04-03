@@ -527,19 +527,19 @@ namespace BreadPlayer.ViewModels
         }
         private async Task<Mediafile> GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
         {
-            if (path is Mediafile)
+            if (path is Mediafile mediaFile)
             {
                 isPlayingFromPlaylist = false;
-                return path as Mediafile;
+                return mediaFile;
             }
-            else if (path is ThreadSafeObservableCollection<Mediafile>)
+            else if (path is ThreadSafeObservableCollection<Mediafile> tmediaFile)
             {
-                SendLibraryLoadedMessage(path as ThreadSafeObservableCollection<Mediafile>, sendUpdateMessage);
-                return (path as ThreadSafeObservableCollection<Mediafile>)[0];
+                SendLibraryLoadedMessage(tmediaFile, sendUpdateMessage);
+                return tmediaFile[0];
             }
-            else if (path is Playlist)
+            else if (path is Playlist playlist)
             {
-                Service.PlaylistService service = new Service.PlaylistService((path as Playlist).Name, (path as Playlist).IsPrivate, (path as Playlist).Password);
+                Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Password);
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
@@ -977,10 +977,10 @@ namespace BreadPlayer.ViewModels
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
                 Playlist.IsPrivate = dialog.Password.Length > 0;
-                Playlist.Password = dialog.Password;
+                Playlist.Password = Security.ComputeSHA512(dialog.Password);
                 if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
                 {
-                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description, dialog.Password);
+                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description, Playlist.Password);
                 }
                 return Playlist;
             }
