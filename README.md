@@ -43,7 +43,7 @@
 
 - [x] 1. Equalizer/Effects
 - [x] 2. Most Played, Recently Added, Favorites and Now Playing section
-- [ ] 3. Prevent screen from locking.
+- [x] 3. Prevent screen from locking.
 - [x] 4. Stop playing after this song. _**(thanks to vsarunov)**_
 - [ ] 5. .lrc lyrics (Synchronized lyrics) and unsynced lyrics.
 - [ ] 6. Ability to hide a specific folder and its songs.
@@ -52,7 +52,7 @@
 - [x] 9. Fade in/out when changing the song.
 - [x] 10. Last.fm Scrobbling.
 - [ ] 11. SoundCloud Support
-- [ ] 12. Manual adding of Album arts
+- [x] 12. Manual adding of Album arts
 - [x] 13. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
 - [x] 14. A preview for previous song just like for next song. _**(thanks to vsarunov)**_
 - [x] 15. A notification for upcoming song when the position reaches last 15-10 seconds.
