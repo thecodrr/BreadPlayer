@@ -108,7 +108,7 @@ namespace BreadPlayer.ViewModels
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
 
-                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password))
+                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
                 {
                     service.RemoveTracks(LiteDB.Query.EQ("Path", mediafile.Path));
                     Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
@@ -267,7 +267,7 @@ namespace BreadPlayer.ViewModels
         {
             if (await AskForPassword(playlist))
             {
-                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password))
+                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
                 {
                     Songs.AddRange(await PlaylistService.GetTracks().ConfigureAwait(false));
                     await Refresh();

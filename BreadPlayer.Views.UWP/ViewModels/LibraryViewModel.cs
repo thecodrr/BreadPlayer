@@ -519,7 +519,7 @@ namespace BreadPlayer.ViewModels
             }
             else if (path is Playlist playlist)
             {
-                Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Password);
+                Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Hash);
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
@@ -941,14 +941,16 @@ namespace BreadPlayer.ViewModels
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
+                Tuple<string, string> salthash = Core.Common.PasswordStorage.CreateHash(dialog.Password);
                 var Playlist = new Playlist();
                 Playlist.Name = dialog.Text;
                 Playlist.Description = dialog.Description;
                 Playlist.IsPrivate = dialog.Password.Length > 0;
-                Playlist.Password = Security.ComputeSHA512(dialog.Password);
+                Playlist.Hash = salthash.Item2;
+                Playlist.Salt = salthash.Item1;
                 if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
                 {
-                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description, Playlist.Password);
+                    Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
                 return Playlist;
             }
@@ -959,7 +961,7 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Password);
+                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash);
                 int index = 0;
                 foreach (var item in songsToadd)
                 {

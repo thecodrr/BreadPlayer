@@ -106,7 +106,7 @@
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\INotificationManager.cs" />
-    <Compile Include="Common\Security.cs" />
+    <Compile Include="Common\PasswordStorage.cs" />
     <Compile Include="Events\MediaAboutToEndEventArgs.cs" />
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
