@@ -39,6 +39,24 @@ namespace BreadPlayer.Dialogs
             get { return (List<Mediafile>)GetValue(SelectedDuplicatesProperty); }
             set { SetValue(SelectedDuplicatesProperty, value); }
         }
+        public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
+        "DialogWidth", typeof(double), typeof(DuplicatesDialog), new PropertyMetadata(null, (sender, e) => 
+        {
+            var dialog = sender as DuplicatesDialog;
+            var width = (double)e.NewValue;
+            if (width < 501)
+            {
+                dialog.listView.ItemContainerStyle = dialog.Resources["CenterAlignedStyle"] as Style;
+                dialog.listView.ItemTemplate = App.Current.Resources["MediafileUnselectedMobileTemplate"] as DataTemplate;
+            }
+            else
+                dialog.listView.ItemTemplate = App.Current.Resources["MediafileUnselectedNarrowTemplate"] as DataTemplate;
+        }));
+        public double DialogWidth
+        {
+            get { return (double)GetValue(DialogWidthProperty); }
+            set { SetValue(DialogWidthProperty, value); }
+        }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             SelectedDuplicates = new List<Mediafile>(this.listView.SelectedItems.Cast<Mediafile>());

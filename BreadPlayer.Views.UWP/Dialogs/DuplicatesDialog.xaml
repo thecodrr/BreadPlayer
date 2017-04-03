@@ -7,21 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="TITLE"
+               xmlns:Extensions="using:BreadPlayer.Extensions"
     PrimaryButtonText="Delete Selected"
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    MinWidth="{Binding ElementName=DuplicatesDialog1, Path=DialogWidth, UpdateSourceTrigger=Explicit}">
+    <ContentDialog.Resources>
+        <Style TargetType="ListViewItem" x:Key="CenterAlignedStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </ContentDialog.Resources>
     <Grid>
-        <ListView x:Name="listView" ScrollViewer.HorizontalScrollMode="Enabled" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollMode="Enabled" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" SelectionChanged="ListView_SelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding Title}"/>
-                        <TextBlock Text="{Binding Path=Path}" Margin="20,0,0,0"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <ListView x:Name="listView" ScrollViewer.VerticalScrollMode="Enabled" HorizontalContentAlignment="Center" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" SelectionChanged="ListView_SelectionChanged" ItemTemplate="{StaticResource MediafileUnselectedNarrowTemplate}"></ListView>
     </Grid>
 </ContentDialog>

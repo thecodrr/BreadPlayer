@@ -494,7 +494,12 @@ namespace BreadPlayer.ViewModels
             {
                 DuplicatesDialog dialog = new DuplicatesDialog();
                 dialog.Duplicates = Duplicates.DistinctBy(t => t.OrginalFilename);
-                dialog.Title = string.Format("Do you want to delete {0} duplicate songs?", Duplicates.Count());               
+                dialog.Title = string.Format("Do you want to delete {0} duplicate songs?", Duplicates.Count());
+                if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                else
+                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+
                 var result = await dialog.ShowAsync();
                 if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
                 {
