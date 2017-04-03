@@ -65,7 +65,7 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.IsPlaybarOnBottom}"/>
+                        <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, UpdateSourceTrigger=PropertyChanged}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--<Setter Target="playbarPanel.VerticalAlignment" Value="Bottom"/>
@@ -73,7 +73,8 @@
                         <Setter Target="notification.Visibility" Value="Collapsed"/>
                         <Setter Target="volumeGrid.VerticalAlignment" Value="Bottom"/>
                         <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>-->
-
+                        <Setter Target="hamburgerMenu.Margin" Value="0,0,0,0"/>
+                        <Setter Target="playbarPanel.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -137,7 +138,7 @@
                 <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>
 
                 <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0049;" Tooltip="Navigate to your music library." Label="Favorites" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="Navigate to your accounts." Label="My Bakeries" Symbol="Accept"></controls:SimpleNavMenuItem>

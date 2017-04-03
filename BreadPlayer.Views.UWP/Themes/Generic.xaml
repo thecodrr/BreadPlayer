@@ -550,6 +550,19 @@
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTrigger IsActive="{Binding Source={StaticResource ShellVM}, Path=IsPlaybarHidden}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="PageFrame.Margin" Value="0"/>
+                                        <Setter Target="Shortcuts.Visibility" Value="Collapsed"/>
+                                        <Setter Target="searchBox.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                       
                         <SplitView x:Name="RootSplitView"

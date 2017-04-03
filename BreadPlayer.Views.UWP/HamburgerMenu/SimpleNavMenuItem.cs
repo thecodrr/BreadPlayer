@@ -40,6 +40,7 @@ namespace SplitViewMenu
         {
             get; set;
         } = Visibility.Visible;
+       
         ElementTheme shortcutTheme;
         public ElementTheme ShortcutTheme
         {

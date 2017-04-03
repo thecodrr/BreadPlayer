@@ -1,4 +1,5 @@
-﻿using SplitViewMenu;
+﻿using BreadPlayer.ViewModels;
+using SplitViewMenu;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,8 @@ namespace BreadPlayer
     {
         public NowPlayingView()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();
+            (App.Current.Resources["ShellVM"] as ShellViewModel).IsPlaybarHidden = true;
         }
     }
 }

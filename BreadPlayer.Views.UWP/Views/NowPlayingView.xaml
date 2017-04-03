@@ -4,39 +4,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BreadPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
     mc:Ignorable="d">
-
+  
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid.Background>
-            <ImageBrush Stretch="UniformToFill"/>
-        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Rectangle Fill="#99000000" Grid.ColumnSpan="3"/>
-        <StackPanel Grid.Column="0" Background="Gray" Grid.ColumnSpan="2" Margin="0,0,-50,0" Orientation="Horizontal" VerticalAlignment="Bottom">
-            <Image Source="ms-appx:///Assets/albumart.png"  Margin="-60,0,0,0" VerticalAlignment="Bottom" Height="150" Width="150"/>
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Typography.Capitals="AllSmallCaps" Text="Hello" FontSize="18" FontWeight="ExtraLight"/>
-                <TextBlock Text="Adele" FontSize="18" FontWeight="Bold"/>
-                <TextBlock Text="25" FontSize="18" FontWeight="Bold"/>
+        <StackPanel Grid.Column="0" Grid.Row="1" DataContext="{StaticResource Core}" Background="Gray" Grid.ColumnSpan="2" Margin="0,0,0,0" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <Border Width="150" Height="150" CornerRadius="100" Margin="-70,10,10,10">
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture}"/>
+                </Border.Background>
+            </Border>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <TextBlock Typography.Capitals="AllSmallCaps" TextWrapping="Wrap" MaxLines="2" Text="{Binding Path=Player.CurrentlyPlayingFile.Title}" FontSize="18" FontWeight="ExtraLight"/>
+                <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist}" FontSize="18" FontWeight="ExtraLight"/>
+                <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Player.CurrentlyPlayingFile.Album}" FontSize="18" FontWeight="ExtraLight"/>
             </StackPanel>
         </StackPanel>
-        <Grid x:Name="playcontrolsPanel" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
-            <StackPanel VerticalAlignment="Bottom">
+        <Grid Margin="0,31,0,0" x:Name="playcontrolsPanel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
+            <StackPanel VerticalAlignment="Bottom" DataContext="{StaticResource ShellVM}">
                 <AppBarButton/>
                 <AppBarButton />
-                <AppBarButton Icon="Volume" Width="50" Height="50"/>
-                <AppBarButton Icon="OpenFile" Width="50" Height="50"/>
-                <AppBarButton Icon="RepeatAll" Width="50" Height="50"/>
-                <AppBarButton Icon="Previous" Width="50" Height="50"/>
-                <AppBarButton Icon="Next" Width="50" Height="50"/>
-                <AppBarButton Icon="Play" Width="50" Height="50"/>
+                <AppBarButton Icon="Volume" Width="55" Height="50"/>
+                <AppBarButton Icon="OpenFile" Width="55" Height="50" Command="{Binding OpenSongLocationCommand}"/>
+                <AppBarButton Icon="RepeatAll" Width="55" Height="50" />
+                <AppBarButton Icon="Previous" Width="55" Height="50" Command="{Binding PlayPreviousCommand}"/>
+                <AppBarButton Icon="Next" Width="55" Height="50" Command="{Binding PlayNextCommand}"/>
+                <AppBarButton Icon="Play" Width="50" Height="50" Command="{Binding PlayPauseCommand}"/>
             </StackPanel>
-        </Grid>
-       
+        </Grid>        
     </Grid>
 </Page>

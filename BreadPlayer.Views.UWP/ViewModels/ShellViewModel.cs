@@ -440,6 +440,12 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Properties
+        bool isPlaybarHidden;
+        public bool IsPlaybarHidden
+        {
+            get { return isPlaybarHidden; }
+            set { Set(ref isPlaybarHidden, value); }
+        }
         bool isPlayingFromPlaylist;
         public bool IsPlayingFromPlaylist
         {
