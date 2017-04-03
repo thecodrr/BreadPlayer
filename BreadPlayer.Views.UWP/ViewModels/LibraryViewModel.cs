@@ -912,8 +912,9 @@ namespace BreadPlayer.ViewModels
                     songList.Add(Player.CurrentlyPlayingFile);
                 }
                 var menu = file as MenuFlyoutItem;
-                Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : new Playlist() { Name = menu?.Text };
-                if (dictPlaylist != null)
+                Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : LibraryService.GetPlaylist(menu?.Text);
+                
+                if (dictPlaylist != null && await AskForPassword(dictPlaylist))
                     await AddPlaylistAsync(dictPlaylist, true, songList);
             }
             else

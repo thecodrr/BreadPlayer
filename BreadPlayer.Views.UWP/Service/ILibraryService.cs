@@ -30,6 +30,7 @@ namespace BreadPlayer.Service
         bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new();
         void AddPlaylist(Playlist pList);
         IEnumerable<Playlist> GetPlaylists();
+        Playlist GetPlaylist(string name);
         int SongCount { get; }
     }
 }

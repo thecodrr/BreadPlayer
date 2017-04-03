@@ -18,6 +18,8 @@ using BreadPlayer.NotificationManager;
 using Windows.Storage.FileProperties;
 using BreadPlayer.Web.Lastfm;
 using Windows.Storage.Pickers;
+using BreadPlayer.Dialogs;
+using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Core
 {
@@ -286,6 +288,39 @@ namespace BreadPlayer.Core
                 await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
             return mediafile;
+        }
+        public async Task<bool> AskForPassword(Playlist playlist)
+        {
+            if (playlist.IsPrivate)
+            {
+                if (await ShowPasswordDialog(playlist.Password))
+                {
+                    return true;
+                }
+            }
+            else
+                return true;
+            return false;
+        }
+        public async Task<bool> ShowPasswordDialog(string password)
+        {
+            var dialog = new PasswordDialog()
+            {
+                Title = "This is private property. \rPlease enter the correct password to proceed.",
+            };
+            if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+            else
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                if (dialog.Password == password)
+                    return true;
+                else
+                    return await ShowPasswordDialog(password);
+            }
+
+            return false;
         }
     }
     public class SimpleFileAbstraction : TagLib.File.IFileAbstraction

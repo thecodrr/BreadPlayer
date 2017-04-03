@@ -97,26 +97,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
         }
-        async Task<bool> ShowPasswordDialog(string password)
-        {
-            var dialog = new PasswordDialog()
-            {
-                Title = "A fantastic day, isn't it?\rPlease enter the correct password to proceed.",
-            };
-            if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
-                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
-            else
-                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                if (dialog.Password == password)
-                    return true;
-                else
-                   return await ShowPasswordDialog(password);
-            }
-
-            return false;
-        }
+        
         async void Delete(object para)
         {
             try
@@ -216,19 +197,7 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while deleting playlist.", ex);
             }
         }
-        async Task<bool> AskForPassword(Playlist playlist)
-        {
-            if (playlist.IsPrivate)
-            {
-                if (await ShowPasswordDialog(playlist.Password))
-                {
-                    return true;
-                }
-            }
-            else
-                return true;
-            return false;
-        }
+       
         async void RenamePlaylist(object playlist)
         {
             try

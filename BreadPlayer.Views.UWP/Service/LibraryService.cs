@@ -80,6 +80,10 @@ namespace BreadPlayer.Service
         {
             return Database.GetCollection<Playlist>("playlists").FindAll();
         }
+        public Playlist GetPlaylist(string name)
+        {
+            return Database.GetCollection<Playlist>("playlists").FindOne(t => t.Name == name);
+        }
         public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new()
         {
             return Database.GetCollection<T>(collection.Name).Exists(query);
