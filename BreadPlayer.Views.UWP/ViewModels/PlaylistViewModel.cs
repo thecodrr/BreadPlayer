@@ -97,24 +97,25 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
         }
-        async Task<string> ShowPasswordDialog(bool isPrivate)
+        async Task<bool> ShowPasswordDialog(string password)
         {
-            if (isPrivate)
+            var dialog = new PasswordDialog()
             {
-                var dialog = new PasswordDialog()
-                {
-                    Title = "Hold on a second, baker! First enter the password then see the contents.",
-                };
-                if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
-                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                Title = "A fantastic day, isn't it?\rPlease enter the correct password to proceed.",
+            };
+            if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+            else
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                if (dialog.Password == password)
+                    return true;
                 else
-                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
-                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-                {
-                    return dialog.Password;
-                }
+                   return await ShowPasswordDialog(password);
             }
-            return "";
+
+            return false;
         }
         async void Delete(object para)
         {
@@ -125,8 +126,8 @@ namespace BreadPlayer.ViewModels
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-
-                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, await ShowPasswordDialog(Playlist.IsPrivate));
+               // await ShowPasswordDialog(Playlist.IsPrivate);
+                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password);
                 service.Remove(mediafile);
                 Songs.Remove(mediafile);
                 await Refresh();                
@@ -183,20 +184,9 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                bool proceed = false;
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
-                if (selectedPlaylist.IsPrivate)
-                {
-                    if (await ShowPasswordDialog(true) == selectedPlaylist.Password)
-                    {
-                        proceed = true;
-                    }
-                    else
-                        DeletePlaylist(selectedPlaylist);
-                }
-                else
-                    proceed = true;
-                if (selectedPlaylist != null && proceed == true)
+              
+                if (selectedPlaylist != null && await AskForPassword(selectedPlaylist))
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
                     dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
@@ -224,7 +214,19 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while deleting playlist.", ex);
             }
         }
-
+        async Task<bool> AskForPassword(Playlist playlist)
+        {
+            if (playlist.IsPrivate)
+            {
+                if (await ShowPasswordDialog(playlist.Password))
+                {
+                    return true;
+                }
+            }
+            else
+                return true;
+            return false;
+        }
         async void RenamePlaylist(object playlist)
         {
             try
@@ -232,17 +234,8 @@ namespace BreadPlayer.ViewModels
                 if (playlist != null)
                 {
                     var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
-                    bool proceed = false;
-                    if (selectedPlaylist.IsPrivate)
-                    {
-                        if (await ShowPasswordDialog(true) == selectedPlaylist.Password)
-                        {
-                            proceed = true;
-                        }
-                    }
-                    else
-                        proceed = true;
-                    if (proceed == true)
+                    
+                    if (await AskForPassword(selectedPlaylist))
                     {
                         var dialog = new InputDialog()
                         {
@@ -301,10 +294,9 @@ namespace BreadPlayer.ViewModels
         PlaylistService PlaylistService;
         async void LoadDB()
         {
-            string password = await ShowPasswordDialog(Playlist.IsPrivate);
-            if (password == playlist.Password || playlist.IsPrivate == false)
+            if (await AskForPassword(playlist))
             {
-                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, password))
+                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password))
                 {
                     Songs.AddRange(await PlaylistService.GetTracks().ConfigureAwait(false));
                     await Refresh();
