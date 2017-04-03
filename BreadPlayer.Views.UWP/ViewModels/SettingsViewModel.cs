@@ -34,6 +34,7 @@ using BreadPlayer.Common;
 using System.Diagnostics;
 using Windows.UI.Popups;
 using Windows.UI.Core;
+using BreadPlayer.Dialogs;
 
 namespace BreadPlayer.ViewModels
 {
@@ -450,42 +451,48 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync(message);
                 service.Dispose();
                 model = null;
-                await DeleteDuplicates(tempList).ConfigureAwait(false);
+                await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);
 
                 tempList.Clear();
             }
         }
-        async Task DeleteDuplicates(List<Mediafile> source)
+        async Task DeleteDuplicates(IEnumerable<Mediafile> source)
         {
-            var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1).DistinctBy(t => t.OrginalFilename).ToList();
-            if (duplicateFiles.Count > 0)
+            var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
+            if (duplicateFiles.Count() > 0)
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    await ShowMessageBox(() =>
+                    await ShowMessageBox((selectedDuplicates) =>
                     {
-                        duplicateFiles.ForEach((file) =>
+                        if (selectedDuplicates.Any())
                         {
-                            RemoveMediafile(file);
-                            //TracksCollection.Elements.RemoveAt(TracksCollection.Elements.IndexOf(file));
-                        });
-                    }, string.Format("Do you want to delete {0} duplicate songs?", duplicateFiles.Count), string.Format("{0} duplicates found!", duplicateFiles.Count));
+                            foreach (var duplicate in selectedDuplicates)
+                            {
+                                var duplicateIndex = 0;
+                                for (int i = 0; i <= TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename); i++)
+                                {
+                                    duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
+                                    if(duplicateIndex > -1)
+                                        RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                }
+                            }
+                        }
+                    }, duplicateFiles);
                 });
             }
         }
-        async Task ShowMessageBox(Action action, params string[] msgContent)
+        async Task ShowMessageBox(Action<IEnumerable<Mediafile>> action, IEnumerable<Mediafile> Duplicates)
         {
             try
             {
-                MessageDialog dia = new MessageDialog(msgContent[0], msgContent[1]);
-                dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
-                dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
-                dia.DefaultCommandIndex = 0;
-                dia.CancelCommandIndex = 1;
-                var result = await dia.ShowAsync();
-                if (result.Label == "Yes")
+                DuplicatesDialog dialog = new DuplicatesDialog();
+                dialog.Duplicates = Duplicates.DistinctBy(t => t.OrginalFilename);
+                dialog.Title = string.Format("Do you want to delete {0} duplicate songs?", Duplicates.Count());               
+                var result = await dialog.ShowAsync();
+                if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
                 {
-                    action.Invoke();
+                    action.Invoke(dialog.SelectedDuplicates);
                 }
             }
             catch (UnauthorizedAccessException) { }
