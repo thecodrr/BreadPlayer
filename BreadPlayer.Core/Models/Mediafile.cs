@@ -59,7 +59,8 @@ namespace BreadPlayer.Models
 
         string addedDate;
         public string AddedDate { get => addedDate; set => Set(ref addedDate, value); }
-
+        bool isFavorite;
+        public bool IsFavorite { get => isFavorite; set => Set(ref isFavorite, value); }
         public int PlayCount { get => playCount; set => Set(ref playCount, value); }
         public string Path { get => path; set => Set(ref path, value); }
         public PlayerState State { get => state; set => Set(ref state, value); }

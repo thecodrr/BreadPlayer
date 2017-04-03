@@ -83,7 +83,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="headerText.FontSize" Value="44" />
-                        <Setter Target="lonelyTxt.FontSize" Value="44"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -206,7 +205,7 @@
         <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibilty}}">
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>
-        </StackPanel>        
+        </StackPanel>
         <Grid Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed" Background="{ThemeResource ThemeBackground}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -219,40 +218,11 @@
                 </GridView.ItemTemplate>
             </GridView>
         </Grid>
-        <Grid x:Name="loadingOverlay" Grid.ColumnSpan="2" Grid.RowSpan="3" Background="{ThemeResource ImageFadeBrush}" Visibility="{Binding IsLibraryLoading, UpdateSourceTrigger=Explicit, FallbackValue=Collapsed, Converter={StaticResource BoolToVisibilty}}">
-            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <!--<Grid>
-                    <Ellipse x:Name="e1" HorizontalAlignment="Center" Margin="10,0,0,0" Visibility="Visible" Width="150" Height="{Binding ElementName=e1,Path=Width}" Stroke="{ThemeResource SecondCircleBrush}" StrokeThickness="25" RenderTransformOrigin="0.5,0.5">
-                        <Ellipse.RenderTransform>
-                            <ScaleTransform ScaleX="0" ScaleY="0"/>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse x:Name="e2" HorizontalAlignment="Center" Margin="10,0,0,0" Visibility="{Binding ElementName=e1, Path=Visibility}" Width="150" Height="{Binding ElementName=e2, Path=Width}" Stroke="{ThemeResource SystemControlBackgroundAccentBrush}" StrokeThickness="25" RenderTransformOrigin="0.5,0.5">
-                        <Ellipse.RenderTransform>
-                            <ScaleTransform ScaleX="0" ScaleY="0"/>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                </Grid>-->
-                <TextBlock x:Name="statusTxt" Margin="0,10,0,0" TextAlignment="Center" Text="{Binding Path=Status, UpdateSourceTrigger=Explicit}" FontSize="38" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-            </StackPanel>
-        </Grid>
-        <!--<Grid Height="75" Grid.Row="2" Background="Black" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
-                        <Run Text="Hello"/>
-                        <LineBreak/>
-                        <Run Text="Hello" Foreground="Gray"/>
-                        <Run Text=" &#x2022; " FontWeight="Bold" Foreground="Gray"/>
-                        <Run Text="Hello" Foreground="Gray"/>
-            </TextBlock>
-            --><!--<TextBlock Text="{Binding Path=Length}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>--><!--
-        </Grid>-->
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}"/>
             </Core:EventTriggerBehavior>
-        </Interactivity:Interaction.Behaviors>
-    
-    
+        </Interactivity:Interaction.Behaviors>       
     </Grid>
 
 </Page>

@@ -105,6 +105,7 @@
     <Compile Include="Common\Collections.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\ICommand.cs" />
     <Compile Include="Common\INotificationManager.cs" />
     <Compile Include="Events\MediaAboutToEndEventArgs.cs" />
     <Compile Include="Events\MediaEndedEventArgs.cs" />
