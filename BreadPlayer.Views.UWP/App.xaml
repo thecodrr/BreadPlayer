@@ -1256,7 +1256,7 @@
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="48,0,0,0" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="78,0,0,0" />
                                                 </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -1434,7 +1434,7 @@ Control.IsTemplateFocusTarget="True"/>
                                             </Core:EventTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
                                     </Border>
-                                    <ToggleButton Content="&#xEB51;" IsChecked="{Binding Path=IsFavorite, Mode=TwoWay}" Margin="-40,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
+                                    <ToggleButton Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="-40,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
                                     </ToggleButton>
 
                                     <StackPanel Grid.Column="1" Width="100" Margin="-150,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">

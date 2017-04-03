@@ -66,7 +66,13 @@ namespace BreadPlayer
             SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             CoreWindowLogic logic = new CoreWindowLogic();
-            ShellVM = DataContext as ShellViewModel;           
+            ShellVM = DataContext as ShellViewModel;
+            LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
+            {
+                SymbolAsChar = "\uE762",
+                ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
+            });
+
         }
            
         protected override void OnNavigatedTo(NavigationEventArgs e)

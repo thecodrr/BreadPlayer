@@ -6,13 +6,14 @@ namespace SplitViewMenu
     public class Shortcut : ObservableObject
     {
         public string SymbolAsChar { get; set; }
+        ICommand shortcutCommand;
         public ICommand ShortcutCommand
         {
-            get;
-            set;
+            get => shortcutCommand; 
+            set => Set(ref shortcutCommand, value);
         }
         public object ShortcutCommandParameter { get; set; }
         MenuFlyout shortcutFlyout;
-        public MenuFlyout ShortcutFlyout { get { return shortcutFlyout; } set { Set(ref shortcutFlyout, value); } }
+        public MenuFlyout ShortcutFlyout { get => shortcutFlyout; set { Set(ref shortcutFlyout, value); } }
     }
 }

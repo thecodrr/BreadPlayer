@@ -226,6 +226,15 @@ namespace BreadPlayer.ViewModels
             get { if (_MostEatenCollection == null) _MostEatenCollection = new ThreadSafeObservableCollection<Mediafile>(); return _MostEatenCollection; }
             set { Set(ref _MostEatenCollection, value); }
         }
+        ThreadSafeObservableCollection<Mediafile> _FavoriteSongsCollection;
+        /// <summary>
+        /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
+        /// </summary>
+        public ThreadSafeObservableCollection<Mediafile> FavoriteSongsCollection
+        {
+            get { if (_FavoriteSongsCollection == null) _FavoriteSongsCollection = new ThreadSafeObservableCollection<Mediafile>(); return _FavoriteSongsCollection; }
+            set { Set(ref _FavoriteSongsCollection, value); }
+        }
         ThreadSafeObservableCollection<Mediafile> _RecentlyAddedSongsCollection;
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
@@ -293,6 +302,7 @@ namespace BreadPlayer.ViewModels
         RelayCommand _initCommand;
         RelayCommand _relocateSongCommand;
         DelegateCommand changeSelectionModeCommand;
+        RelayCommand addToFavoritesCommand;
         public ICommand RelocateSongCommand
         {
             get
@@ -303,6 +313,12 @@ namespace BreadPlayer.ViewModels
             get
             { if (changeSelectionModeCommand == null) { changeSelectionModeCommand = new DelegateCommand(ChangeSelectionMode); } return changeSelectionModeCommand; }
         }
+        public ICommand AddToFavoritesCommand
+        {
+            get
+            { if (addToFavoritesCommand == null) { addToFavoritesCommand = new RelayCommand(AddToFavorites); } return addToFavoritesCommand; }
+        }
+
         /// <summary>
         /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -356,7 +372,12 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
-        #region Implementations  
+        #region Implementations 
+        private async void AddToFavorites(object para)
+        {
+            var mediaFile = await GetMediafileFromParameterAsync(para, false);
+            LibraryService.UpdateMediafile(mediaFile);
+        }
         /// <summary>
         /// Relocates song to a new location. We only update _id, Path and Length of the song.
         /// </summary>
@@ -531,10 +552,22 @@ namespace BreadPlayer.ViewModels
             {
                 foreach (var item in TracksCollection.Elements.Where(t => t.PlayCount > 1))
                 {
-                    if (MostEatenSongsCollection.Any(t => t.Path != item.Path))
+                    if (MostEatenSongsCollection.All(t => t.Path != item.Path))
                         MostEatenSongsCollection.Add(item);
                 }
                 return MostEatenSongsCollection;
+            });
+        }
+        private async Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
+        {
+            return await Task.Run(() =>
+            {
+                foreach (var item in TracksCollection.Elements.Where(t => t.IsFavorite))
+                {
+                    if (FavoriteSongsCollection.All(t => t.Path != item.Path))
+                        FavoriteSongsCollection.Add(item);
+                }
+                return FavoriteSongsCollection;
             });
         }
         private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
@@ -1028,7 +1061,11 @@ namespace BreadPlayer.ViewModels
                     case "RecentlyAdded":
                         ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync());
                         break;
+                    case "Favorites":
+                        ChangeView("Favorites", false, await GetFavoriteSongs());
+                        break;
                     default:
+                        ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
                         break;
                 }
 
