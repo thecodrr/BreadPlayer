@@ -59,8 +59,7 @@ namespace BreadPlayer
 
         protected virtual void OnCanExecuteChanged()
         {
-            EventHandler handler = CanExecuteChanged;
-            if (handler != null) handler(this, EventArgs.Empty);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
     public class RelayCommand : ICommand
@@ -91,9 +90,7 @@ namespace BreadPlayer
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             enabled = true;
-            if (execute == null)
-                throw new ArgumentNullException("execute");
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException("execute");
             _canExecute = canExecute;
         }
         #endregion // Constructors 

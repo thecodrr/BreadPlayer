@@ -314,7 +314,7 @@ namespace BreadPlayer.Core
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
-                if (dialog.Password == password)
+                if (BreadPlayer.Common.Security.ComputeSHA512(dialog.Password) == password)
                     return true;
                 else
                     return await ShowPasswordDialog(password);
@@ -323,6 +323,7 @@ namespace BreadPlayer.Core
             return false;
         }
     }
+
     public class SimpleFileAbstraction : TagLib.File.IFileAbstraction
     {
         private StorageFile file;
