@@ -49,7 +49,6 @@ namespace BreadPlayer
     {
         double MaxFontSize;
         double MinFontSize;
-        PlaylistViewModel PlaylistVM;
         public PlaylistView()
         {
             this.InitializeComponent();
@@ -59,8 +58,9 @@ namespace BreadPlayer
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            PlaylistVM = new PlaylistViewModel(e.Parameter);
-            this.DataContext = PlaylistVM;
+            var PlaylistVM = App.Current.Resources["PlaylistVM"] as PlaylistViewModel;
+            PlaylistVM.Init(e.Parameter);
+            this.DataContext = App.Current.Resources["PlaylistVM"];
             base.OnNavigatedTo(e);
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)

@@ -618,10 +618,5 @@ Control.IsTemplateFocusTarget="True"/>
         </Border>
      
         <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" ItemContainerStyle="{StaticResource PlaylistItemExpanded}" Loaded="fileBox_Loaded"/>
-            <Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="Loaded">
-                    <Core:InvokeCommandAction Command="{Binding InitCommand}"/>
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
-        </Grid>
+    </Grid>
 </Page>

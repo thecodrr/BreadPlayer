@@ -126,11 +126,13 @@ namespace BreadPlayer.ViewModels
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-               // await ShowPasswordDialog(Playlist.IsPrivate);
-                PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password);
-                service.Remove(mediafile);
-                Songs.Remove(mediafile);
-                await Refresh();                
+
+                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Password))
+                {
+                    service.RemoveTracks(LiteDB.Query.EQ("Path", mediafile.Path));
+                    Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
+                    await Refresh();
+                }
             }
             catch (Exception ex)
             {
@@ -271,7 +273,7 @@ namespace BreadPlayer.ViewModels
         public PlaylistViewModel()
         {
         }
-        public PlaylistViewModel(object data)
+        public void Init(object data)
         {
             if (data is Playlist)
             {
@@ -308,21 +310,10 @@ namespace BreadPlayer.ViewModels
             }
         }
         
-        RelayCommand _initCommand;
-        /// <summary>
-        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
-        public ICommand InitCommand
-        {
-            get
-            { if (_initCommand == null) { _initCommand = new RelayCommand(param => this.Init(param)); } return _initCommand; }
-        }
         public ListView PlaylistSongsListBox;
         bool _isPageLoaded;
         public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
-        void Init(object para)
-        {
-        }
+        
         
         public void Reset()
         {            
