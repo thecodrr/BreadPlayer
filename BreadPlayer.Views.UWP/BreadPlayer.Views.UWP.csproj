@@ -150,6 +150,9 @@
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\SharedLogic.cs" />
+    <Compile Include="Dialogs\DuplicatesDialog.xaml.cs">
+      <DependentUpon>DuplicatesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\PasswordDialog.xaml.cs">
       <DependentUpon>PasswordDialog.xaml</DependentUpon>
     </Compile>
@@ -338,6 +341,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dialogs\DuplicatesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
