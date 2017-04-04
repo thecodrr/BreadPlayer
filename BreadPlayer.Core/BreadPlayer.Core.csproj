@@ -115,6 +115,7 @@
     <Compile Include="Extensions\ObservableCollection.cs" />
     <Compile Include="InitializeCore.cs" />
     <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\EqualizerBand.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />

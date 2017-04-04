@@ -20,6 +20,7 @@ using ManagedBass;
 using ManagedBass.Fx;
 using System.Collections.ObjectModel;
 using System.Linq;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core
 {
@@ -30,6 +31,7 @@ namespace BreadPlayer.Core
         int fxEQ;
         float[] DefaultCenterFrequencyList = new float[] { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
         float[] OldEqualizerSettings = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private DSPProcedure _myDSPAddr; // make it global, so that the GC can not remove it  
         #endregion
 
         #region Initialize
@@ -41,52 +43,47 @@ namespace BreadPlayer.Core
             this.PropertyChanged += Effects_PropertyChanged;
         }
 
-        private void Effects_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName== "EnableEq")
-            {
-                EnableDisableEqualizer();
-            }
-            SaveEqualizerSettings();
-        }
-        private void EnableDisableEqualizer()
-        {
-            SaveEqualizerSettings();
-            if (EnableEq)
-            {
-                EnableEqualizer();
-                //LoadEqualizerSettings();
-            }
-            else
-                DisableEqualizer();
-        }
-        public void UpdateHandle(int coreHandle)
-        {
-            handle = coreHandle;
-            var version = BassFx.Version;
-            _myDSPAddr = new DSPProcedure(SetPreamp);
-            Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 0);
-            EnableDisableEqualizer();
-        }
+      
+       
         #endregion
 
+        #region Properties
         ObservableCollection<EqualizerBand> bands;
         public ObservableCollection<EqualizerBand> EqualizerBands
         {
             get { return bands; }
             set { Set(ref bands, value); }
         }
-        public void DisableEqualizer()
+
+        float _preamp = 1f;
+        public float Preamp
         {
-            Bass.ChannelRemoveFX(handle, fxEQ);
+            get { return _preamp; }
+            set
+            {
+                _preamp = value;
+            }
         }
-        public void EnableEqualizer(float[] frequencies = null)
+        bool enableEqualizer;
+        public bool EnableEq
+        {
+            get => enableEqualizer;
+            set => Set(ref enableEqualizer, value);
+        }
+        #endregion
+
+        #region Private Methods
+        private void EnableEqualizer(float[] frequencies = null)
         {
             InitializeEqualizer();
             LoadEqualizerSettings();
             SetAllEqualizerBandsFrequencies(frequencies ?? OldEqualizerSettings);
         }
-        void InitializeEqualizer()
+        private void DisableEqualizer()
+        {
+            Bass.ChannelRemoveFX(handle, fxEQ);
+        }
+        private void InitializeEqualizer()
         {
             // Set peaking equalizer effect with no bands          
             PeakEQParameters eq = new PeakEQParameters();
@@ -104,27 +101,23 @@ namespace BreadPlayer.Core
             OldEqualizerSettings = eqConfig.EqConfig;
             EnableEq = eqConfig.IsEnabled;
             Preamp = eqConfig.PreAMP;
-            for (int i = 0; i< 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 EqualizerBands[i].Gain = OldEqualizerSettings[i];
-            }           
+            }
         }
         private void SaveEqualizerSettings()
-        {           
+        {
             InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
         }
-        public void SetAllEqualizerBandsFrequencies(float[] frequencies)
+        private void SetAllEqualizerBandsFrequencies(float[] frequencies)
         {
             for (int i = 0; i < 10; i++)
             {
                 UpdateEQBand(i, frequencies[i]);
             }
         }
-        public void ResetEqualizer()
-        {
-            SetAllEqualizerBandsFrequencies(new float[] {0,0,0,0,0,0,0,0,0,0});
-        } 
-        void InitializeEqualizerBands(PeakEQParameters eq)
+        private void InitializeEqualizerBands(PeakEQParameters eq)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -136,9 +129,59 @@ namespace BreadPlayer.Core
                 band.Gain = eq.fGain;
                 band.PropertyChanged += Band_PropertyChanged;
                 EqualizerBands.Add(band);
-            }           
+            }
         }
+        /// <summary>
+        /// Sets Single Equalizer Band
+        /// </summary>
+        /// <param name="band">Band to set</param>
+        /// <param name="freq">Gain to set</param>
+        private void UpdateEQBand(int band, float freq)
+        {
+            PeakEQParameters eq = new PeakEQParameters();
+            // get values of the selected band
+            eq.lBand = band;
+            Bass.FXGetParameters(fxEQ, eq);
+            eq.fGain = freq;
+            Bass.FXSetParameters(fxEQ, eq);
+        }
+        #endregion
 
+        #region Public Methods
+        public void UpdateHandle(int coreHandle)
+        {
+            handle = coreHandle;
+            var version = BassFx.Version;
+            _myDSPAddr = new DSPProcedure(SetPreamp);
+            Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 0);
+            EnableDisableEqualizer();
+        }
+        public void EnableDisableEqualizer()
+        {
+            SaveEqualizerSettings();
+            if (EnableEq)
+            {
+                EnableEqualizer();
+                //LoadEqualizerSettings();
+            }
+            else
+                DisableEqualizer();
+        }
+        public void ResetEqualizer()
+        {
+            SetAllEqualizerBandsFrequencies(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+        }
+        #endregion
+
+        #region Events  
+        private void Effects_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "EnableEq")
+            {
+                EnableDisableEqualizer();
+            }
+            SaveEqualizerSettings();
+        }
         private void Band_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var band = sender as EqualizerBand;
@@ -148,39 +191,9 @@ namespace BreadPlayer.Core
             }
             SaveEqualizerSettings();
         }
+        #endregion
 
-        /// <summary>
-        /// Sets Single Equalizer Band
-        /// </summary>
-        /// <param name="band">Band to set</param>
-        /// <param name="freq">Gain to set</param>
-        public void UpdateEQBand(int band, float freq)
-        {
-            PeakEQParameters eq = new PeakEQParameters();
-            // get values of the selected band
-            eq.lBand = band;
-            Bass.FXGetParameters(fxEQ, eq);
-            eq.fGain = freq;
-            Bass.FXSetParameters(fxEQ, eq);
-        }
-        private DSPProcedure _myDSPAddr; // make it global, so that the GC can not remove it
-        private float[] _data; // local data buffer
-        float _preamp = 1f;
-        public float Preamp
-        {
-            get { return _preamp; }
-            set
-            {
-                _preamp = value;             
-            }
-        }
-        bool enableEqualizer;
-        public bool EnableEq
-        {
-            get => enableEqualizer;
-            set => Set(ref enableEqualizer, value);
-        }
-        //static private float _gainAmplification = 1;
+        #region unsafe Methods            
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
             if (_preamp == 1f || length == 0 || buffer == IntPtr.Zero)
@@ -192,35 +205,7 @@ namespace BreadPlayer.Core
             for (int i = 0; i < n; ++i)
                 pointer[i] *= _preamp;
         }
+        #endregion
     }
-
-    public class EqualizerBand : ObservableObject
-    {
-        string FormatNumber(float num)
-        {
-            if (num >= 100000)
-                return FormatNumber(num / 1000) + "K";
-            if (num >= 1000)
-            {
-                return (num / 1000D).ToString("0.#") + "K";
-            }
-            return num.ToString("#0");
-        }
-        public string CenterTitle
-        {
-            get { return FormatNumber(Center) + "Hz"; }
-        }
-        float center;
-        public float Center
-        {
-            get { return center; }
-            set { Set(ref center, value); }
-        }
-        float gain;
-        public float Gain
-        {
-            get { return gain; }
-            set { Set(ref gain, value); }
-        }
-    }
+    
 }
