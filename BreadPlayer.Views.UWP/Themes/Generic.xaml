@@ -494,16 +494,15 @@
                                         <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                         <Setter Target="Shortcuts.HorizontalAlignment" Value="Center"/>
-                                        <Setter Target="Shortcuts.Margin" Value="0,50,0,0"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,0,0,0"/>
                                         <Setter Target="toggleButton.Visibility" Value="Visible"/>
-                                        <Setter Target="toggleButton.Margin" Value="20,50,0,0"/>
-                                        <Setter Target="Title.HorizontalAlignment" Value="Left"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,0,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
-                                        <Setter Target="headerText.Margin" Value="25,125,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,115,0,0"/>
+                                        <Setter Target="headerText.Margin" Value="25,95,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,80,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
-                                        <Setter Target="Title.Margin" Value="0,30,0,40"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -539,7 +538,7 @@
                                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        
                                         <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
                                         <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
@@ -547,6 +546,45 @@
                                         <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                
+                            </VisualStateGroup>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTriggers:AdaptiveTriggerWithCondition MinWindowWidth="0" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
+                                        <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
+                                        <Setter Target="Shortcuts.HorizontalAlignment" Value="Center"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,0,0,0"/>
+                                        <Setter Target="toggleButton.Visibility" Value="Visible"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,0,0,0"/>
+                                        <Setter Target="headerText.FontSize" Value="24"/>
+                                        <Setter Target="headerText.Margin" Value="25,95,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,80,0,0"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTriggers:AdaptiveTriggerWithCondition MinWindowWidth="0" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="toggleButton.Visibility" Value="Visible"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,0,0,0"/>
+                                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
+                                        <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
+                                        <Setter Target="Shortcuts.HorizontalAlignment" Value="Center"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,0,0,0"/>
+                                        <Setter Target="toggleButton.Visibility" Value="Visible"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,0,0,0"/>
+                                        <Setter Target="headerText.FontSize" Value="24"/>
+                                        <Setter Target="headerText.Margin" Value="25,95,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,80,0,0"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -682,7 +720,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.Template>
                                             <ControlTemplate TargetType="ItemsControl">
-                                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
                                                     <ItemsPresenter/>
                                                 </ScrollViewer>
                                             </ControlTemplate>
