@@ -494,7 +494,7 @@
                                         <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                         <Setter Target="Shortcuts.HorizontalAlignment" Value="Center"/>
-                                        <Setter Target="Shortcuts.Margin" Value="30,50,0,0"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,50,0,0"/>
                                         <Setter Target="toggleButton.Visibility" Value="Visible"/>
                                         <Setter Target="toggleButton.Margin" Value="20,50,0,0"/>
                                         <Setter Target="Title.HorizontalAlignment" Value="Left"/>
@@ -573,7 +573,10 @@
                                    IsTabStop="False" 
                                   PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Resources>
-                                <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">                                  
+                                <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                    </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
                                 </Storyboard>
@@ -659,9 +662,14 @@
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>
-                                <Grid VerticalAlignment="Top">
+                                <TextBlock x:Name="headerText" Tag="Heading" HorizontalAlignment="Left" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
+                                <Grid VerticalAlignment="Top" Height="150">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
                                     <ToggleButton x:Name="toggleButton" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Background="Transparent" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
-                                    <ItemsControl x:Name="Shortcuts" Background="{x:Null}" HorizontalAlignment="Left" Height="100" Margin="20,30,0,0">
+                                    <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="{x:Null}" HorizontalAlignment="Left" Height="50" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
@@ -672,8 +680,15 @@
                                                 <StackPanel Orientation="Horizontal"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+                                        <ItemsControl.Template>
+                                            <ControlTemplate TargetType="ItemsControl">
+                                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                                    <ItemsPresenter/>
+                                                </ScrollViewer>
+                                            </ControlTemplate>
+                                        </ItemsControl.Template>
                                     </ItemsControl>
-                                    <AutoSuggestBox x:Name="searchBox" Visibility="Visible" Opacity="0" HorizontalAlignment="Left" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="50,115,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    <AutoSuggestBox x:Name="searchBox" Visibility="Collapsed" Grid.Column="1" Opacity="0" HorizontalAlignment="Left" AutoMaximizeSuggestionArea="False" Text="{Binding Source={StaticResource ShellVM}, Path=QueryWord, Mode=TwoWay}"  Margin="50,115,5,0" Width="310" PlaceholderText="Search" IsSuggestionListOpen="False">
                                         <AutoSuggestBox.RenderTransform>
                                             <TranslateTransform X="0"/>
                                         </AutoSuggestBox.RenderTransform>
@@ -692,6 +707,9 @@
                                                     <Animations:ControlStoryboardAction ControlStoryboardOption="Play">
                                                         <Animations:ControlStoryboardAction.Storyboard>
                                                             <Storyboard Duration="0:0:0.5">
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                                                </ObjectAnimationUsingKeyFrames>
                                                                 <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
                                                             </Storyboard>
@@ -717,7 +735,6 @@
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE80F;" Style="{StaticResource HyperlinkBtn}"/>
                                     </StackPanel>-->
                                 </Grid>
-                                <TextBlock x:Name="headerText" Tag="Heading" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
                                
                             </Grid>
                         </SplitView>
