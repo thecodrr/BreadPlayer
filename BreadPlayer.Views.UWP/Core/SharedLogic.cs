@@ -20,6 +20,7 @@ using BreadPlayer.Web.Lastfm;
 using Windows.Storage.Pickers;
 using BreadPlayer.Dialogs;
 using Windows.UI.Xaml.Controls;
+using BreadPlayer.Common;
 
 namespace BreadPlayer.Core
 {
@@ -29,6 +30,7 @@ namespace BreadPlayer.Core
         {
             InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);
             InitializeCore.NotificationManager = NotificationManager;
+            InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
             LibraryModule = new BreadPlayer_LibraryModule.LibraryModule();
         }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;

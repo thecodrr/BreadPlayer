@@ -188,6 +188,7 @@
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+12dB" FontSize="11"/>
                 </Grid>
             </StackPanel>
+            <ToggleSwitch HorizontalAlignment="Right" VerticalAlignment="Top" OnContent="On" OffContent="Off" IsOn="{Binding Source={StaticResource Core}, Path=Player.Effect.EnableEq, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </Grid>
 
         <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">

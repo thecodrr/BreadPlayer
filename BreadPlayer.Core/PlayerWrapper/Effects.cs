@@ -29,18 +29,44 @@ namespace BreadPlayer.Core
         int handle = 0;
         int fxEQ;
         float[] DefaultCenterFrequencyList = new float[] { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
+        float[] OldEqualizerSettings = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         #endregion
 
         #region Initialize
-        public Effects(int coreHandle)
+        public Effects()
         {
-            handle = coreHandle;
-            bool loadbassfx = BassFx.Load();
-            _myDSPAddr = new DSPProcedure(SetPreamp);
-            Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 0);
+            EqualizerBands = new ObservableCollection<EqualizerBand>();
             InitializeEqualizer();
+            LoadEqualizerSettings();
+            this.PropertyChanged += Effects_PropertyChanged;
         }
 
+        private void Effects_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName== "EnableEq")
+            {
+                EnableDisableEqualizer();
+            }
+        }
+        private void EnableDisableEqualizer()
+        {
+            SaveEqualizerSettings();
+            if (EnableEq)
+            {
+                EnableEqualizer();
+                //LoadEqualizerSettings();
+            }
+            else
+                DisableEqualizer();
+        }
+        public void UpdateHandle(int coreHandle)
+        {
+            handle = coreHandle;
+            var version = BassFx.Version;
+            _myDSPAddr = new DSPProcedure(SetPreamp);
+            Bass.ChannelSetDSP(handle, _myDSPAddr, IntPtr.Zero, 0);
+            EnableDisableEqualizer();
+        }
         #endregion
 
         ObservableCollection<EqualizerBand> bands;
@@ -56,7 +82,8 @@ namespace BreadPlayer.Core
         public void EnableEqualizer(float[] frequencies = null)
         {
             InitializeEqualizer();
-            SetAllEqualizerBandsFrequencies(frequencies ?? new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            LoadEqualizerSettings();
+            SetAllEqualizerBandsFrequencies(frequencies ?? OldEqualizerSettings);
         }
         void InitializeEqualizer()
         {
@@ -66,9 +93,27 @@ namespace BreadPlayer.Core
             eq.fQ = 0f;
             eq.fBandwidth = 2.5f;
             eq.lChannel = FXChannelFlags.All;
-            EqualizerBands = new ObservableCollection<EqualizerBand>();
             //init equalizer bands
-            InitializeEqualizerBands(eq);
+            if (EqualizerBands.Count < 10)
+                InitializeEqualizerBands(eq);
+        }
+        private void LoadEqualizerSettings()
+        {
+            var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
+            OldEqualizerSettings = eqConfig.EqConfig;
+            EnableEq = eqConfig.IsEnabled;
+            for (int i = 0; i< 10; i++)
+            {
+                EqualizerBands[i].Gain = OldEqualizerSettings[i];
+            }           
+        }
+        private void SaveEqualizerSettings()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                OldEqualizerSettings[i] = EqualizerBands[i].Gain;
+            }
+            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(OldEqualizerSettings, EnableEq);
         }
         public void SetAllEqualizerBandsFrequencies(float[] frequencies)
         {
@@ -87,7 +132,7 @@ namespace BreadPlayer.Core
             {
                 eq.lBand = i;
                 eq.fCenter = DefaultCenterFrequencyList[i];
-                Bass.FXSetParameters(fxEQ, eq);
+                var res = Bass.FXSetParameters(fxEQ, eq);
                 EqualizerBand band = new EqualizerBand();
                 band.Center = eq.fCenter;
                 band.Gain = eq.fGain;
@@ -129,6 +174,12 @@ namespace BreadPlayer.Core
             {
                 _preamp = value;             
             }
+        }
+        bool enableEqualizer;
+        public bool EnableEq
+        {
+            get => enableEqualizer;
+            set => Set(ref enableEqualizer, value);
         }
         //static private float _gainAmplification = 1;
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)

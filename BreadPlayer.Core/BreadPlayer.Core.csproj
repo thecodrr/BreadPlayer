@@ -107,6 +107,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ICommand.cs" />
     <Compile Include="Common\INotificationManager.cs" />
+    <Compile Include="Common\IEqualizerSettingsHelper.cs" />
     <Compile Include="Common\PasswordStorage.cs" />
     <Compile Include="Events\MediaAboutToEndEventArgs.cs" />
     <Compile Include="Events\MediaEndedEventArgs.cs" />
@@ -133,10 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ManagedBass">
-      <HintPath>..\libs\ManagedBass.dll</HintPath>
+      <HintPath>..\..\ManagedBass\src\AddOns\BassFx\Portable\bin\Release\ManagedBass.dll</HintPath>
     </Reference>
     <Reference Include="ManagedBass.Fx">
-      <HintPath>..\libs\ManagedBass.Fx.dll</HintPath>
+      <HintPath>..\..\ManagedBass\src\AddOns\BassFx\Portable\bin\Release\ManagedBass.Fx.dll</HintPath>
     </Reference>
     <Reference Include="XLog">
       <HintPath>..\libs\XLog.dll</HintPath>

@@ -55,17 +55,13 @@ namespace BreadPlayer.Core
                     Bass.UpdatePeriod = 1000;
                     Bass.Start();
                     Bass.Init();
-                    InitializeExtensions();
+                    Effect = new Effects();
                 }
                 catch(Exception ex)
                 {
                    await Init();
                 }
             });                   
-        }
-        private void InitializeExtensions()
-        {
-            Effect = new Effects(handle);
         }
         #endregion
 
@@ -108,7 +104,7 @@ namespace BreadPlayer.Core
                         Length = 0;
                         Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
                         Bass.FloatingPointDSP = true;
-                        InitializeExtensions();
+                        Effect.UpdateHandle(handle);
                         Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
                         Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 15), _posSync);

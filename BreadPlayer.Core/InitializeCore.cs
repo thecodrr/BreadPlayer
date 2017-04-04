@@ -9,7 +9,12 @@ public class InitializeCore
         get { return notificationManager; }
         set { notificationManager = value; }
     }
-
+    static IEqualizerSettingsHelper equalizerSettingsHelper;
+    public static IEqualizerSettingsHelper EqualizerSettingsHelper
+    {
+        get => equalizerSettingsHelper;
+        set => equalizerSettingsHelper = value;
+    }
     static IDispatcher dispatcher;
     public static IDispatcher Dispatcher
     {
