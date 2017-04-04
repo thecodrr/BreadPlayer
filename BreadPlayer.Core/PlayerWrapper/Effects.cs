@@ -43,10 +43,11 @@ namespace BreadPlayer.Core
 
         private void Effects_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName== "EnableEq")
+            if (e.PropertyName== "EnableEq")
             {
                 EnableDisableEqualizer();
             }
+            SaveEqualizerSettings();
         }
         private void EnableDisableEqualizer()
         {
@@ -102,18 +103,15 @@ namespace BreadPlayer.Core
             var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
             OldEqualizerSettings = eqConfig.EqConfig;
             EnableEq = eqConfig.IsEnabled;
+            Preamp = eqConfig.PreAMP;
             for (int i = 0; i< 10; i++)
             {
                 EqualizerBands[i].Gain = OldEqualizerSettings[i];
             }           
         }
         private void SaveEqualizerSettings()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                OldEqualizerSettings[i] = EqualizerBands[i].Gain;
-            }
-            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(OldEqualizerSettings, EnableEq);
+        {           
+            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
         }
         public void SetAllEqualizerBandsFrequencies(float[] frequencies)
         {
@@ -148,6 +146,7 @@ namespace BreadPlayer.Core
             {
                 UpdateEQBand(EqualizerBands.IndexOf(EqualizerBands.FirstOrDefault(t => t.Center == band.Center)), band.Gain);
             }
+            SaveEqualizerSettings();
         }
 
         /// <summary>
