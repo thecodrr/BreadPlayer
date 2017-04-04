@@ -76,9 +76,11 @@ namespace BreadPlayer.Services
         public void NavigateBack()
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
-            PageStack.Pop();
-            UpdateBackButtonVisibility();
+                PageStack.Pop();
+                UpdateBackButtonVisibility();
+            }
         }
 
         public void NavigateToHome()

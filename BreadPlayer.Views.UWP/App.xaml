@@ -94,12 +94,15 @@
             <VM:AccountsViewModel x:Key="AccountsVM"/>
             
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
-                <MenuFlyoutItem x:Name="unsorted" Text="Unsorted" DataContext="{StaticResource LibVM}" Tag="Unsorted" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-                <MenuFlyoutItem Text="Year" Tag="Year" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-                <MenuFlyoutItem Text="Genre" Tag="Genre" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-                <MenuFlyoutItem Text="A to Z" Tag="Title" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-                <MenuFlyoutItem Text="Artist" Tag="LeadArtist" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-                <MenuFlyoutItem Text="Album" Tag="Album" DataContext="{StaticResource LibVM}" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Album" Tag="Album" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Folder" Tag="FolderPath" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Genre" Tag="Genre" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Song Length" Tag="Length" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Track No." Tag="TrackNumber" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Unsorted" Tag="Unsorted" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                <MenuFlyoutItem Text="Year" Tag="Year" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
             </MenuFlyout>
             <MenuFlyout x:Key="GenreFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}"></MenuFlyout>
             <Converters:PathToImageSourceConverter x:Key="PathToImage"/>

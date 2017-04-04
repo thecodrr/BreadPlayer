@@ -50,7 +50,7 @@ namespace SplitViewMenu
         List<Shortcut> shortcuts = new List<Shortcut>()
         {
             new Shortcut() { SymbolAsChar = "\xE00E",
-                ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.Frame.GoBack()) },
+                ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.NavigateBack()) },
             new Shortcut() { SymbolAsChar = "\xE149",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
@@ -60,7 +60,8 @@ namespace SplitViewMenu
                 ShortcutCommand = new DelegateCommand(() =>
                 {
                     BreadPlayer.Services.NavigationService.Instance.NavigateToHome();
-                })},
+                }),
+            },
             new Shortcut() { SymbolAsChar = "\xE094", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
         };
         public List<Shortcut> Shortcuts
