@@ -49,20 +49,23 @@ namespace SplitViewMenu
         }
         List<Shortcut> shortcuts = new List<Shortcut>()
         {
-            new Shortcut() { SymbolAsChar = "\xE00E",
+            new Shortcut() { SymbolAsChar = "\xE00E", Tooltip = "Go Back",
                 ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.NavigateBack()) },
             new Shortcut() { SymbolAsChar = "\xE149",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
                     BreadPlayer.Services.NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
-                })},
+                }),
+                Tooltip = "Refresh",
+            },
             new Shortcut { SymbolAsChar = "\xE80F",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
                     BreadPlayer.Services.NavigationService.Instance.NavigateToHome();
                 }),
+                Tooltip = "Go Home",
             },
-            new Shortcut() { SymbolAsChar = "\xE094", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
+            new Shortcut() { SymbolAsChar = "\xE094", Tooltip = "Search Tracks", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
         };
         public List<Shortcut> Shortcuts
         {

@@ -5,6 +5,7 @@ namespace SplitViewMenu
 {
     public class Shortcut : ObservableObject
     {
+        public string Tooltip { get; set; }
         public string SymbolAsChar { get; set; }
         ICommand shortcutCommand;
         public ICommand ShortcutCommand
