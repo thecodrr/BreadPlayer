@@ -642,6 +642,7 @@ namespace BreadPlayer.ViewModels
                         if (play)
                         {
                             PlayPauseCommand.Execute(null);
+                            CoreWindowLogic.UpdateTile(mp3file);
                         }
                         else
                         {

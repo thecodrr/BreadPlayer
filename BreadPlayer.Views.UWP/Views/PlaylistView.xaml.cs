@@ -56,12 +56,18 @@ namespace BreadPlayer
             MaxFontSize = deviceFamily.Contains("Mobile") ? 44 : 60;
             MinFontSize = deviceFamily.Contains("Mobile") ? 34 : 50;
         }
+        PlaylistViewModel PlaylistVM;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var PlaylistVM = App.Current.Resources["PlaylistVM"] as PlaylistViewModel;
+            PlaylistVM = App.Current.Resources["PlaylistVM"] as PlaylistViewModel;
             PlaylistVM.Init(e.Parameter);
             this.DataContext = App.Current.Resources["PlaylistVM"];
             base.OnNavigatedTo(e);
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            PlaylistVM.Songs.Clear();
+            base.OnNavigatedFrom(e);
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)
         {

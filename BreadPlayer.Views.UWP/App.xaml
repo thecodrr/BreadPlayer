@@ -12,6 +12,7 @@
     xmlns:Behaviours="using:BreadPlayer.Behaviours" 
     xmlns:Converters="using:BreadPlayer.Converters"  
     xmlns:Extensions="using:BreadPlayer.Extensions"
+    xmlns:Models="using:BreadPlayer.Models"
     xmlns:local="using:BreadPlayer" RequiresPointerMode="WhenRequested">
     <Application.Resources>
         <ResourceDictionary>
@@ -1913,20 +1914,15 @@ Control.IsTemplateFocusTarget="True"/>
                 </Setter>
             </Style>
 
-            <DataTemplate x:Key="SelectedTemplate" >
-                <Grid x:Name="LayoutRoot" MaxWidth="150" Height="220" >
+            <DataTemplate x:Key="SelectedTemplate">                
+                <Grid x:Name="LayoutRoot" MaxWidth="200" Height="270" Margin="20">
                     <Grid.Resources>
                         <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                     </Grid.Resources>
                     <StackPanel>
-                        <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
-                                <!--<ImageBrush ImageSource="ms-appx:///Assets/albumart.png"/>-->
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock TextAlignment="Center" Margin="5,0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                        <TextBlock TextAlignment="Center" Margin="5,0" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                        <Image Width="200" x:Name="AlbumArt" Height="200" HorizontalAlignment="Center" Stretch="Uniform" Source="{Binding AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                        <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                        <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="13" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,68" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="46">
                         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -1953,21 +1949,7 @@ Control.IsTemplateFocusTarget="True"/>
                         </StackPanel>
                     </Border>
                 </Grid>
-            </DataTemplate>
-            <DataTemplate x:Key="NormalTemplate">
-                <Grid MaxWidth="150" Height="220">
-                    <StackPanel>
-                        <Ellipse Width="150" Height="150" HorizontalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush Stretch="Uniform" ImageSource="{Binding AlbumArt, Converter={StaticResource PathToImage}}"/>
-                                <!--<ImageBrush ImageSource="ms-appx:///Assets/albumart.png"/>-->
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock TextAlignment="Center" Margin="5,0" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                        <TextBlock TextAlignment="Center" Margin="5,0,5,0" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Grid>
-            </DataTemplate>
+            </DataTemplate>           
 
             <Style TargetType="ScrollBar">
                 <Setter Property="MinWidth" Value="12" />
