@@ -29,9 +29,12 @@ namespace BreadPlayer.NotificationManager
             {
                 Status = status;
                 Show = true;
-                hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(duration) };
-                hideTimer.Start();
-                hideTimer.Tick += HideTimer_Tick;
+                if (duration > 0)
+                {
+                    hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(duration) };
+                    hideTimer.Start();
+                    hideTimer.Tick += HideTimer_Tick;
+                }
             });
         }
         public async Task ShowMessageBoxAsync(string message, string title)

@@ -408,10 +408,6 @@
       <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
       <Name>BreadPlayer.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BreadPlayer.LibraryModule\BreadPlayer.LibraryModule.vcxproj">
-      <Project>{dc9fdb9b-26c6-41a0-a377-34a37257d0fc}</Project>
-      <Name>BreadPlayer.LibraryModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Web\BreadPlayer.Web.csproj">
       <Project>{8baa2dc7-9675-480f-a9f5-8d8d6245689b}</Project>
       <Name>BreadPlayer.Web</Name>

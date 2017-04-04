@@ -141,7 +141,8 @@ namespace BreadPlayer.Service
         }
         public void Dispose()
         {
-            //DB?.Dispose();
+            StaticDatabase.DB.Dispose();
+            StaticDatabase.DB = null;
         }
     }
     public static class StaticDatabase
@@ -157,6 +158,10 @@ namespace BreadPlayer.Service
                     db = new LiteDatabase(service);
                 }
                 return db;
+            }
+            set
+            {
+                db = value;
             }
         }
     }

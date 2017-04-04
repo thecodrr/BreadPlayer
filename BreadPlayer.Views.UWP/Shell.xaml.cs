@@ -49,7 +49,6 @@ using Windows.UI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using Windows.ApplicationModel.Store;
-using BreadPlayer_LibraryModule;
 
 namespace BreadPlayer
 {

@@ -411,7 +411,7 @@ namespace BreadPlayer.ViewModels
                                 await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
                             });
                             //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                            await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded");
+                            await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", 0);
                             //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
                             tempList.Add(mp3file);
                         }
@@ -448,12 +448,11 @@ namespace BreadPlayer.ViewModels
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
                 BLogger.Logger.Info(message);
-                await NotificationManager.ShowMessageAsync(message);
-                service.Dispose();
+                await NotificationManager.ShowMessageAsync(message);                
                 model = null;
-                await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);
-
+                await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);               
                 tempList.Clear();
+                service.Dispose();
             }
         }
         async Task DeleteDuplicates(IEnumerable<Mediafile> source)
