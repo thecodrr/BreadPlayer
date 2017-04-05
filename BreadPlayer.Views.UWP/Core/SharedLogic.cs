@@ -136,14 +136,6 @@ namespace BreadPlayer.Core
 
         #endregion
 
-        public async Task SplitList(GroupedObservableCollection<string, Mediafile> collection, int nSize = 30)
-        {
-            for (int i = 0; i < service.SongCount; i += nSize)
-            {
-                collection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, true);
-            }
-        }
-
         public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
@@ -238,13 +230,13 @@ namespace BreadPlayer.Core
             return false;
         }
 
-        static LibraryService service = new LibraryService(new DatabaseService());
+        static LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file != null)
             {
                 if (service == null)
-                    service = new LibraryService(new DatabaseService());
+                    service = new LibraryService(new KeyValueStoreDatabaseService());
                 SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
                 service.AddMediafile(file);
                 return true;
@@ -255,7 +247,8 @@ namespace BreadPlayer.Core
         {
             if (file != null)
             {
-                service = new LibraryService(new DatabaseService());
+                if (service == null)
+                    service = new LibraryService(new KeyValueStoreDatabaseService());
                 SettingsViewModel.TracksCollection.Elements.Remove(file);
                 service.RemoveMediafile(file);
                 return true;

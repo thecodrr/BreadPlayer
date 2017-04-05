@@ -40,6 +40,14 @@ namespace BreadPlayer.Service
             collection = tracks.Find(LiteDB.Query.All());
             return collection;
         }
+        public void Insert(Mediafile file)
+        {
+            tracks.Insert(file);
+        }
+        public void Insert(IEnumerable<Mediafile> fileCol)
+        {
+            tracks.Insert(fileCol);
+        }
         public PlaylistService(string name, bool isPrivate, string hash)
         {
             Name = name;

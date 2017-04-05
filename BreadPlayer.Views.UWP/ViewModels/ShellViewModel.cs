@@ -44,7 +44,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
-        LibraryService service = new LibraryService(new DatabaseService());
+        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
         int SongCount = 0;
         #endregion
 
@@ -562,7 +562,7 @@ namespace BreadPlayer.ViewModels
             if (cache == null || TracksCollection.Elements.Count < service.SongCount)
             {
                 TracksCollection.Clear();
-                await SplitList(TracksCollection, 400).ConfigureAwait(false);
+                TracksCollection.AddRange(service.GetAllMediafiles());
                 cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
             }
             else
@@ -574,13 +574,13 @@ namespace BreadPlayer.ViewModels
        
         async Task<object> Search()
         {
-            //if (QueryWord.Length > 2)
-            //{
-            //    TracksCollection.Clear();
-            //    TracksCollection.AddRange((await service.Query("Title", QueryWord).ConfigureAwait(false)), false, false);
-            //    if (TracksCollection.Elements.Count <= 0)
-            //        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Nothing found for keyword \"" + QueryWord + "\"");
-            //}
+            if (QueryWord.Length > 2)
+            {
+                TracksCollection.Clear();
+                TracksCollection.AddRange((await service.Query("Title", QueryWord).ConfigureAwait(false)), false, false);
+                if (TracksCollection.Elements.Count <= 0)
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Nothing found for keyword \"" + QueryWord + "\"");
+            }
             return null;
         }
         private void GetSettings()

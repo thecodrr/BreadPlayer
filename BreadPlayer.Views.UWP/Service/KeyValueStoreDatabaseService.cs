@@ -46,8 +46,9 @@ namespace BreadPlayer.Service
         public void CreateDB()
         {
             engine = StaticKeyValueDatabase.DB;
-            DBreeze.Utils.CustomSerializator.Serializator =  JsonConvert.SerializeObject;
-            DBreeze.Utils.CustomSerializator.Deserializator = JsonConvert.DeserializeObject;          
+            DBreeze.Utils.CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
+           
+            DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };          
         }
         public bool CheckExists<T>(string table, string path)
         {
@@ -65,7 +66,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                return tran.Select<string, DbCustomSerializer<T>>(table, path).Value.Get;
+                return tran.Select<byte[], byte[]>(table, path.ToBytes()).ObjectGet<T>().Entity;
             }
         } 
         public int GetRecordsCount(string tableName)
@@ -76,11 +77,18 @@ namespace BreadPlayer.Service
             }
         }
        
-        public void InsertRecord<T>(string tableName, string key, T record)
+        public void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record)
         {
             using (var tran = engine.GetTransaction())
             {
-                tran.Insert<string, DbCustomSerializer<T>>(tableName, key, record);
+                var ir = tran.ObjectInsert<T>(tableName, new DBreezeObject<T>
+                {
+                    Indexes = indexes,
+                    NewEntity = true,
+                    //Changes Select-Insert pattern to Insert (speeds up insert process)
+                    Entity = record //Entity itself
+                },
+                        true);
                 tran.Commit();
             }
         }
@@ -91,7 +99,24 @@ namespace BreadPlayer.Service
             {
                 foreach (var record in records)
                 {
-                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path, record);
+                    var ir = tran.ObjectInsert<Mediafile>("Tracks", new DBreezeObject<Mediafile>
+                    {
+                        Indexes = new List<DBreezeIndex>
+                        {
+                        new DBreezeIndex(1, record.Path) { PrimaryIndex = true }, //PI Primary Index
+                        //One PI must be set, if any secondary index will append it to the end, for uniqueness
+                       new DBreezeIndex(2, record.FolderPath), //SI - Secondary Index
+                       new DBreezeIndex(3, record.LeadArtist),
+                       new DBreezeIndex(4, record.Album),
+                       //new DBreezeIndex(3,p.Salary) //SI
+                        //new DBreezeIndex(4,p.Id) { AddPrimaryToTheEnd = false } //SI
+                        },
+
+                        NewEntity = true,
+                        //Changes Select-Insert pattern to Insert (speeds up insert process)
+                        Entity = record //Entity itself
+                    },
+                        true);
                 }
                 tran.Commit();
             }
@@ -101,33 +126,26 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                var records = tran.SelectForwardStartsWith<string, DbCustomSerializer<T>>(tableName, term);
+                var records = tran.TextSearch(tableName).BlockAnd(term).GetDocumentIDs(); // tran.SelectForwardStartsWith<string, DbCustomSerializer<T>>(tableName, term);
                 var recordList = new List<T>();
-                foreach (var record in records)
+                foreach (var doc in records)
                 {
-                    recordList.Add(record.Value.Get);
+                    var obj = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(doc)).ObjectGet<T>();
+                    recordList.Add(obj.Entity);
                 }
                 return recordList;
             }
-        }
+        }              
 
-        public void RemoveRecords<T>(string tableName, string key, IEnumerable<T> records)
+        public void UpdateRecord<T>(string tableName, string primaryKey, T record)
         {
             using (var tran = engine.GetTransaction())
             {
-                foreach (var record in records)
-                {
-                    tran.RemoveKey(tableName, key);
-                }
+                var ord = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey)).ObjectGet<T>();
+                ord.Entity = record;
+                tran.ObjectInsert(tableName, ord, true);
                 tran.Commit();
             }
-        }
-
-        public void UpdateRecord<T>(string tableName, string key, T record)
-        {
-            var getEntry = GetRecord<T>(tableName, key);
-            getEntry = record;
-            InsertRecord<T>(tableName, key, getEntry);
         }
 
         public void UpdateTracks(IEnumerable<Mediafile> records)
@@ -136,9 +154,9 @@ namespace BreadPlayer.Service
             {
                 foreach (var record in records)
                 {
-                    var getEntry = tran.Select<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path).Value.Get;
-                    getEntry = record;
-                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path, getEntry);
+                    var ord = tran.Select<byte[], byte[]>("Tracks", 1.ToIndex(record.Path)).ObjectGet<Mediafile>();
+                    ord.Entity = record;
+                    tran.ObjectInsert("Tracks", ord, true);
                 }
                 tran.Commit();
             }
@@ -148,7 +166,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                tran.RemoveKey(tableName, key);
+                tran.ObjectRemove(tableName, key.ToBytes());
                 tran.Commit();
             }
         }
@@ -156,11 +174,11 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                var records = tran.SelectForward<string, DbCustomSerializer<T>>(tableName);
+                var records = tran.SelectForward<byte[], byte[]>(tableName);
                 var recordList = new List<T>();
                 foreach (var record in records)
                 {
-                    recordList.Add(record.Value.Get);
+                    recordList.Add(record.ObjectGet<T>().Entity);
                 }
                 return recordList;
             }

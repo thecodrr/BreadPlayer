@@ -373,9 +373,9 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Implementations 
-        private async void AddToFavorites(object para)
+        private void AddToFavorites(object para)
         {
-            var mediaFile = await GetMediafileFromParameterAsync(para, false);
+            var mediaFile = GetMediafileFromParameterAsync(para, false);
             LibraryService.UpdateMediafile(mediaFile);
         }
         /// <summary>
@@ -454,9 +454,9 @@ namespace BreadPlayer.ViewModels
             }
         }
         
-        public async void StopAfter(object path)
+        public void StopAfter(object path)
         {
-            Mediafile mediaFile = await GetMediafileFromParameterAsync(path);
+            Mediafile mediaFile = GetMediafileFromParameterAsync(path);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_STOP_AFTER_SONG, mediaFile);
         }
         
@@ -464,13 +464,12 @@ namespace BreadPlayer.ViewModels
         /// Plays the selected file. <seealso cref="PlayCommand"/>
         /// </summary>
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
-        public async void Play(object path)
+        public void Play(object path)
         {
             var currentlyPlaying = Player.CurrentlyPlayingFile;
-            Mediafile mediaFile = await GetMediafileFromParameterAsync(path, true);
-            AddToRecentCollection(mediaFile);
+            Mediafile mediaFile = GetMediafileFromParameterAsync(path, true);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
-
+            mediaFile.LastPlayed = DateTime.Now.ToString();
             if (currentlyPlaying != null && TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path) != null)
             {
                 TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path).State = PlayerState.Playing;
@@ -497,26 +496,8 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #endregion
-
-        #region Methods
-
-        private void AddToRecentCollection(Mediafile mediaFile)
-        {
-            //LibraryService = new LibraryService(new KeyValueStoreDatabaseService());
-            ////RecentCollection = LibraryService.GetRecentCollection();
-
-            //if (RecentlyPlayedCollection.Any(t => t.Path == mediaFile.Path))
-            //{
-            //    RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mediaFile.Path));
-            //}
-            //if (RecentCollection.Exists(t => t.Path == mediaFile.Path))
-            //{
-            //    RecentCollection.Delete(t => t.Path == mediaFile.Path);
-            //}
-            //RecentlyPlayedCollection.Add(mediaFile);
-            //RecentCollection.Insert(mediaFile);
-        }
-
+        
+        #region Methods 
         private void SendLibraryLoadedMessage(object payload, bool sendMessage)
         {
             if (sendMessage)
@@ -525,7 +506,7 @@ namespace BreadPlayer.ViewModels
                 isPlayingFromPlaylist = true;
             }
         }
-        private async Task<Mediafile> GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
+        private Mediafile GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
         {
             if (path is Mediafile mediaFile)
             {
@@ -871,7 +852,6 @@ namespace BreadPlayer.ViewModels
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
-                //RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
                 LoadPlaylists();
                 UpdateJumplist("Title");
             }
@@ -925,10 +905,10 @@ namespace BreadPlayer.ViewModels
 
         void LoadPlaylists()
         {
-            //foreach (var list in LibraryService.GetPlaylists())
-            //{
-            //    AddPlaylist(list);
-            //}
+            foreach (var list in LibraryService.GetPlaylists())
+            {
+                AddPlaylist(list);
+            }
         }
         async void AddToPlaylist(object file)
         {
@@ -982,7 +962,7 @@ namespace BreadPlayer.ViewModels
                 Playlist.IsPrivate = dialog.Password.Length > 0;
                 Playlist.Hash = salthash.Hash;
                 Playlist.Salt = salthash.Salt;
-                if (LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name", Playlist.Name), new PlaylistCollection()))
+                if (LibraryService.CheckExists<Playlist>("Playlists", Playlist.Name))
                 {
                     Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
@@ -995,18 +975,11 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash);
-                int index = 0;
-                foreach (var item in songsToadd)
+                await Task.Run(() =>
                 {
-                    index++;
-                    item.State = PlayerState.Stopped;
-                    //NotificationManager.ShowMessageAsync(index.ToString() + " of " + songsToadd.Count.ToString() + " added into playlist: " + list.Name);
-                    await Task.Run(() =>
-                    {
-                        service.Insert(item);
-                    }).ConfigureAwait(false);
-                }
+                    PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash);
+                    service.Insert(songsToadd);
+                });
             }
         }
       
@@ -1027,13 +1000,13 @@ namespace BreadPlayer.ViewModels
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
         {
-            if (!LibraryService.CheckExists<Playlist>(LiteDB.Query.EQ("Name",plist.Name), new PlaylistCollection()))
+            if (!LibraryService.CheckExists<Playlist>("Playlists", plist.Name))
             {
                 AddPlaylist(plist);
                 LibraryService.AddPlaylist(plist);
             }
             if (addsongs)
-                await AddSongsToPlaylist(plist, songs).ConfigureAwait(false);
+                await AddSongsToPlaylist(plist, songs);
         }
         #endregion
 

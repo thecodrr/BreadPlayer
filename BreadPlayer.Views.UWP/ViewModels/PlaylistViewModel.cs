@@ -185,7 +185,7 @@ namespace BreadPlayer.ViewModels
                             File.Delete(path);
                         PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                         OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                        using (LibraryService service = new LibraryService(new DatabaseService()))
+                        using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
                         {
                             service.RemovePlaylist(selectedPlaylist);//delete from database.
                         }
@@ -224,7 +224,7 @@ namespace BreadPlayer.ViewModels
                             PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
                             PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
                             OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                            using (LibraryService service = new LibraryService(new DatabaseService()))
+                            using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
                             {
                                 service.RemovePlaylist(selectedPlaylist);//delete from database.
                                 service.AddPlaylist(pl); //add new playlist in the database.

@@ -2,6 +2,7 @@
 using BreadPlayer.Models;
 using System.Threading.Tasks;
 using BreadPlayer.Common;
+using DBreeze.Objects;
 
 namespace BreadPlayer.Service
 {
@@ -10,7 +11,23 @@ namespace BreadPlayer.Service
 	/// </summary>
 	public class LibraryService : ILibraryService
     {
-
+        private List<DBreezeIndex> TracksIndexes(Mediafile track)
+        {
+            return new List<DBreezeIndex>()
+            {
+                new DBreezeIndex(1, track.Path) { PrimaryIndex = true },
+                new DBreezeIndex(2, track.FolderPath),
+                new DBreezeIndex(3, track.LeadArtist),
+                new DBreezeIndex(4, track.Album),
+            };
+        }
+        private List<DBreezeIndex> PlaylistIndexes(Playlist playlist)
+        {
+            return new List<DBreezeIndex>()
+            {
+                new DBreezeIndex(1, playlist.Name) { PrimaryIndex = true },
+            };
+        }
         private IDatabaseService Database
         {
             get;
@@ -33,7 +50,7 @@ namespace BreadPlayer.Service
         }
         public void AddMediafile(Mediafile data)
         {
-            Database.InsertRecord("Tracks", data.Path, data);
+            Database.InsertRecord("Tracks", TracksIndexes(data), data);
         }
         public void AddMediafiles(IEnumerable<Mediafile> data)
         {
@@ -62,7 +79,7 @@ namespace BreadPlayer.Service
         }
         public void AddPlaylist(Playlist pList)
         {
-            Database.InsertRecord("Playlists", pList.Name, pList);
+            Database.InsertRecord("Playlists", PlaylistIndexes(pList), pList);
         }
         public IEnumerable<Playlist> GetPlaylists()
         {
