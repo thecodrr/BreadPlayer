@@ -1,19 +1,23 @@
 ﻿using BreadPlayer.Models;
 using LiteDB;
 using System;
+using System.Collections.Generic;
 using Windows.Storage;
 
 namespace BreadPlayer.Service
 {
-	public class PlaylistService : DatabaseService, IDatabaseService, IDisposable
+	public class PlaylistService : IDisposable
     {
+        LiteCollection<Mediafile> tracks;
+        bool isValid;
+        public bool IsValid { get { return isValid; } set { isValid = value; } }
         public string Name { get; set; }
         public string Password { get; set; }
-        public PlaylistDatabase PDatabase
+        private PlaylistDatabase PDatabase
         {
             get; set;
         }
-        public override void CreateDB()
+        public void CreateDB()
         {
             if (PDatabase != null)
             {
@@ -25,7 +29,17 @@ namespace BreadPlayer.Service
                     tracks.EnsureIndex(t => t.LeadArtist);
                 }
             }
-        }      
+        }
+        public void Remove(Mediafile file)
+        {
+            tracks.Delete(file._id);
+        }
+        public IEnumerable<Mediafile> GetTracks()
+        {
+            IEnumerable<Mediafile> collection = null;
+            collection = tracks.Find(LiteDB.Query.All());
+            return collection;
+        }
         public PlaylistService(string name, bool isPrivate, string hash)
         {
             Name = name;
@@ -33,7 +47,7 @@ namespace BreadPlayer.Service
             PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1}",Name, isPrivate ? "password=" + Password + ";" : ""));
             CreateDB();
         }
-        public new void Dispose()
+        public void Dispose()
         {
             PDatabase.DB.Dispose();
             PDatabase = null;
