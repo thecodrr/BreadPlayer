@@ -23,29 +23,25 @@ namespace BreadPlayer.Service
         }
 
         #region ILibraryService 
-        public IEnumerable<Mediafile> Query(string field, object term)
+        public IEnumerable<Mediafile> Query(string term)
         {
-            return Database.Query(field, term);
+            return Database.QueryRecords<Mediafile>("Tracks", term);
         }
         public IEnumerable<Mediafile> GetAllMediafiles()
         {
-            return Database.GetTracks();
-        }
-        public async Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit)
-        {
-            return await Database.GetRangeOfTracks(skip, limit).ConfigureAwait(false);
+            return Database.GetRecords<Mediafile>("Tracks");
         }
         public void AddMediafile(Mediafile data)
         {
-            Database.Insert(data);
+            Database.InsertRecord("Tracks", data.Path, data);
         }
         public void AddMediafiles(IEnumerable<Mediafile> data)
         {
-            Database.Insert(data);
+            Database.InsertTracks(data);
         }
         public void UpdateMediafile(Mediafile data)
         {
-            Database.UpdateTrack(data);
+            Database.UpdateRecord("Tracks", data.Path, data);
         }
         public void UpdateMediafiles(IEnumerable<Mediafile> data)
         {
@@ -53,48 +49,40 @@ namespace BreadPlayer.Service
         }
         public void RemoveFolder(string folderPath)
         {
-            Database.RemoveTracks(LiteDB.Query.EQ("FolderPath", folderPath));
+            //Database.RemoveTracks(LiteDB.Query.EQ("FolderPath", folderPath));
             // Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
         }
         public void RemoveMediafile(Mediafile data)
         {
-            Database.Remove(data);
+            Database.RemoveRecord("Tracks", data.Path);
         }
-        public void GetMediafile(string path)
+        public Mediafile GetMediafile(string path)
         {
-            Database.FindOne(path);
+            return Database.GetRecord<Mediafile>("Tracks", path);
         }
         public void AddPlaylist(Playlist pList)
         {
-            (Database as DatabaseService).GetCollection<Playlist>("playlists").Insert(pList);
-        }
-        public LiteDB.LiteCollection<Mediafile> GetRecentCollection()
-        {
-            return (Database as DatabaseService).GetCollection<Mediafile>("recents");
-        }
-        public LiteDB.LiteCollection<Mediafile> GetMostEatenCollection()
-        {
-            return (Database as DatabaseService).GetCollection<Mediafile>("mosteaten");
+            Database.InsertRecord("Playlists", pList.Name, pList);
         }
         public IEnumerable<Playlist> GetPlaylists()
         {
-            return (Database as DatabaseService).GetCollection<Playlist>("playlists").FindAll();
+            return Database.GetRecords<Playlist>("Playlists");
         }
         public Playlist GetPlaylist(string name)
         {
-            return (Database as DatabaseService).GetCollection<Playlist>("playlists").FindOne(t => t.Name == name);
+            return Database.GetRecord<Playlist>("Playlists", name);
         }
-        public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new()
+        public bool CheckExists<T>(string table, string path)
         {
-            return (Database as DatabaseService).GetCollection<T>(collection.Name).Exists(query);
+            return Database.CheckExists<T>(table, path);
         }
         public void RemovePlaylist(Playlist List)
         {
-            (Database as DatabaseService).GetCollection<Playlist>("playlists").Delete(t => t.Name == List.Name);
+            Database.RemoveRecord("Playlists", List.Name);
         }
         public int SongCount
         {
-            get { return Database.GetTrackCount(); }
+            get { return Database.GetRecordsCount("Tracks"); }
         }
         #endregion
 

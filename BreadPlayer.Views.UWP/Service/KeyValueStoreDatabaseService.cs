@@ -42,13 +42,18 @@ namespace BreadPlayer.Service
         {
             CreateDB();
         }
+       
         public void CreateDB()
         {
             engine = StaticKeyValueDatabase.DB;
             DBreeze.Utils.CustomSerializator.Serializator =  JsonConvert.SerializeObject;
             DBreeze.Utils.CustomSerializator.Deserializator = JsonConvert.DeserializeObject;          
         }
-
+        public bool CheckExists<T>(string table, string path)
+        {
+            return GetRecord<T>(table, path) != null;
+        }
+        
         public void Dispose()
         {
             if (engine != null)
@@ -56,122 +61,108 @@ namespace BreadPlayer.Service
             StaticKeyValueDatabase.DB = null;
         }
 
-        public Mediafile FindOne(string path)
-        {
-            using (var t = engine.GetTransaction())
-            {
-                return t.Select<string, DbCustomSerializer<Mediafile>>("Tracks", path).Value.Get;
-            }
-        }
-        
-        public Task<IEnumerable<Mediafile>> GetRangeOfTracks(int skip, int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetTrackCount()
+        public T GetRecord<T>(string table, string path)
         {
             using (var tran = engine.GetTransaction())
             {
-                return (int)tran.Count("Tracks");
+                return tran.Select<string, DbCustomSerializer<T>>(table, path).Value.Get;
             }
-        }
-
-        public IEnumerable<Mediafile> GetTracks()
+        } 
+        public int GetRecordsCount(string tableName)
         {
             using (var tran = engine.GetTransaction())
             {
-                var fil = tran.SelectForward<string, DbCustomSerializer<Mediafile>>("Tracks");
-                var mediafiles = new List<Mediafile>();
-                foreach(var mp3File in fil)
-                {
-                    mediafiles.Add(mp3File.Value.Get);
-                }
-                return mediafiles;
+                return (int)tran.Count(tableName);
             }
         }
-
-        public void Insert(Mediafile file)
+       
+        public void InsertRecord<T>(string tableName, string key, T record)
         {
             using (var tran = engine.GetTransaction())
             {
-                tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", file.Path, file);
+                tran.Insert<string, DbCustomSerializer<T>>(tableName, key, record);
                 tran.Commit();
             }
         }
 
-        public void Insert(IEnumerable<Mediafile> files)
+        public void InsertTracks(IEnumerable<Mediafile> records)
         {
             using (var tran = engine.GetTransaction())
             {
-                foreach (var file in files)
+                foreach (var record in records)
                 {
-                    try
-                    {
-                        tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", file.Path, file);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
+                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path, record);
                 }
                 tran.Commit();
             }
         }
 
-        public IEnumerable<Mediafile> Query(string term)
+        public IEnumerable<T> QueryRecords<T>(string tableName, string term)
         {
             using (var tran = engine.GetTransaction())
             {
-                var files = tran.SelectForwardStartsWith<string, DbCustomSerializer<Mediafile>>("Tracks", term.ToString());
-                var mediafiles = new List<Mediafile>();
-                foreach (var mp3File in files)
+                var records = tran.SelectForwardStartsWith<string, DbCustomSerializer<T>>(tableName, term);
+                var recordList = new List<T>();
+                foreach (var record in records)
                 {
-                    mediafiles.Add(mp3File.Value.Get);
+                    recordList.Add(record.Value.Get);
                 }
-                return mediafiles;
+                return recordList;
             }
         }
 
-        public void Remove(Mediafile file)
+        public void RemoveRecords<T>(string tableName, string key, IEnumerable<T> records)
         {
             using (var tran = engine.GetTransaction())
             {
-                tran.RemoveKey("Tracks", file.Path);
-                tran.Commit();
-            }
-        }
-
-        public void RemoveTracks(IEnumerable<Mediafile> files)
-        {
-            using (var tran = engine.GetTransaction())
-            {
-                foreach (var mp3File in files)
+                foreach (var record in records)
                 {
-                    tran.RemoveKey("Tracks", mp3File.Path);
+                    tran.RemoveKey(tableName, key);
                 }
                 tran.Commit();
             }
         }
 
-        public void UpdateTrack(Mediafile file)
+        public void UpdateRecord<T>(string tableName, string key, T record)
         {
-            var getEntry = FindOne(file.Path);
-            getEntry = file;
-            Insert(getEntry);
+            var getEntry = GetRecord<T>(tableName, key);
+            getEntry = record;
+            InsertRecord<T>(tableName, key, getEntry);
         }
 
-        public void UpdateTracks(IEnumerable<Mediafile> files)
+        public void UpdateTracks(IEnumerable<Mediafile> records)
         {
             using (var tran = engine.GetTransaction())
             {
-                foreach (var file in files)
+                foreach (var record in records)
                 {
-                    var getEntry = tran.Select<string, DbCustomSerializer<Mediafile>>("Tracks", file.Path).Value.Get;
-                    getEntry = file;
-                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", getEntry.Path, getEntry);
+                    var getEntry = tran.Select<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path).Value.Get;
+                    getEntry = record;
+                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", record.Path, getEntry);
                 }
                 tran.Commit();
+            }
+        }
+
+        public void RemoveRecord(string tableName, string key)
+        {
+            using (var tran = engine.GetTransaction())
+            {
+                tran.RemoveKey(tableName, key);
+                tran.Commit();
+            }
+        }
+        public IEnumerable<T> GetRecords<T>(string tableName)
+        {
+            using (var tran = engine.GetTransaction())
+            {
+                var records = tran.SelectForward<string, DbCustomSerializer<T>>(tableName);
+                var recordList = new List<T>();
+                foreach (var record in records)
+                {
+                    recordList.Add(record.Value.Get);
+                }
+                return recordList;
             }
         }
     }

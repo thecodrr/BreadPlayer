@@ -13,8 +13,7 @@ namespace BreadPlayer.Service
         /// </summary>
         /// <returns></returns>
         IEnumerable<Mediafile> GetAllMediafiles();
-        Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit);
-        IEnumerable<Mediafile> Query(string field, object term);
+        IEnumerable<Mediafile> Query(string term);
         /// <summary>
         /// Update a customer in the data store
         /// </summary>
@@ -25,9 +24,9 @@ namespace BreadPlayer.Service
         void AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
         void RemoveMediafile(Mediafile data);
-        void GetMediafile(string path);
+        Mediafile GetMediafile(string path);
         void RemovePlaylist(Playlist List);
-        bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new();
+        bool CheckExists<T>(string table, string path);
         void AddPlaylist(Playlist pList);
         IEnumerable<Playlist> GetPlaylists();
         Playlist GetPlaylist(string name);

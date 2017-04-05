@@ -9,17 +9,16 @@ namespace BreadPlayer.Service
 	public interface IDatabaseService : IDisposable
     {
         void CreateDB();
-        IEnumerable<Mediafile> GetTracks();
-        Task<IEnumerable<Mediafile>> GetRangeOfTracks(int skip, int limit);
-        void UpdateTrack(Mediafile file);
-        IEnumerable<Mediafile> Query(string term);
-        //void RemoveTracks(Query query);
-        void Insert(Mediafile file);
-        Mediafile FindOne(string path);
-        void Insert(IEnumerable<Mediafile> files);
-        void UpdateTracks(IEnumerable<Mediafile> files);
-        //LiteCollection<T> GetCollection<T>(string colName) where T : new();
-        void Remove(Mediafile file);
-        int GetTrackCount();
+        void InsertRecord<T>(string tableName, string key, T Value);
+        void InsertTracks(IEnumerable<Mediafile> records);
+        IEnumerable<T> GetRecords<T>(string tableName);
+        T GetRecord<T>(string table, string path);
+        void RemoveRecord(string tableName, string key);
+        void RemoveRecords<T>(string tableName, string key, IEnumerable<T> records);
+        void UpdateTracks(IEnumerable<Mediafile> records);
+        void UpdateRecord<T>(string tableName, string key, T record);
+        IEnumerable<T> QueryRecords<T>(string tableName, string term);
+        int GetRecordsCount(string tableName);
+        bool CheckExists<T>(string table, string path);        
     }
 }
