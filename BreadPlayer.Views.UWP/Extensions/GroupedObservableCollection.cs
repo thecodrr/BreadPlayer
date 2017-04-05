@@ -130,7 +130,7 @@ namespace BreadPlayer.Extensions
                 // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
                 // LOLLO NOTE I took out the following so the list viewers don't lose the position.
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+                //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
             }
             catch (Exception ex)
             {

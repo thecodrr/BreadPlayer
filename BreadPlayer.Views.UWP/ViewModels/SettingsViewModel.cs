@@ -51,6 +51,7 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("UITextType", uiTextType);
             }
         }
+       
         bool _isThemeDark;
         public bool IsThemeDark
         {
@@ -394,7 +395,7 @@ namespace BreadPlayer.ViewModels
                 Stopwatch watch = Stopwatch.StartNew();
                 try
                 {
-                    foreach (StorageFile file in await queryResult.GetFilesAsync().AsTask().ConfigureAwait(false))
+                    foreach (StorageFile file in await queryResult.GetFilesAsync())
                     {
                         try
                         {
@@ -403,21 +404,20 @@ namespace BreadPlayer.ViewModels
                             i++; //Notice here that we are increasing the 'i' variable by one for each file.
                                  //we send a message to anyone listening relaying that song count has to be updated.
                             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
-                            await Task.Run(async () =>
-                            {
-                                //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                                mp3file = await CreateMediafile(file, false); //the core of the whole method.
-                                mp3file.FolderPath = Path.GetDirectoryName(file.Path);
-                                await SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
-                            });
+                            //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
+                            mp3file = await CreateMediafile(file, false); //the core of the whole method.
+                            mp3file.FolderPath = Path.GetDirectoryName(file.Path);
+                            await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
+
                             //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                             await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", 0);
                             //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
                             tempList.Add(mp3file);
+                            mp3file = null;
                         }
                         catch (Exception ex)
                         {
-                           // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                            // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
                             //we catch and report any exception without distrubing the 'foreach flow'.
                             await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
                             failedCount++;
@@ -437,7 +437,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
                 service.AddMediafiles(tempList);
-
+                
                 watch.Stop();
                 var secs = watch.Elapsed.TotalSeconds;
 
@@ -527,6 +527,7 @@ namespace BreadPlayer.ViewModels
                         bool albumSaved = await SaveImagesAsync(file, mp3file);                       
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
                     }
+                    file = null;
                 }
                 catch (Exception ex)
                 {

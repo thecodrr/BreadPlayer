@@ -45,7 +45,7 @@ namespace BreadPlayer.Service
         public void CreateDB()
         {
             engine = StaticKeyValueDatabase.DB;
-            DBreeze.Utils.CustomSerializator.Serializator = JsonConvert.SerializeObject;
+            DBreeze.Utils.CustomSerializator.Serializator =  JsonConvert.SerializeObject;
             DBreeze.Utils.CustomSerializator.Deserializator = JsonConvert.DeserializeObject;          
         }
 

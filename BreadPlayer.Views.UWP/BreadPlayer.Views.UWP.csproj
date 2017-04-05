@@ -418,6 +418,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="BinaryRage.Portable">
+      <HintPath>..\..\BinaryRage.Portable\bin\Debug\netstandard1.4\BinaryRage.Portable.dll</HintPath>
+    </Reference>
     <Reference Include="XLog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\XLog.dll</HintPath>

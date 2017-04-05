@@ -113,7 +113,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                    </ListBox>
+                    </ListBox>                   
                     <Button x:Name="importPlistBtn" Padding="0" Content="Import playlists" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
                     <TextBlock x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="Supported playlists are M3U and PLS." TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
                     <TextBlock x:Name="resetHeader" Margin="0,10,0,0"  Text="Reset BreadPlayer" FontWeight="Bold"  FontSize="18"/>

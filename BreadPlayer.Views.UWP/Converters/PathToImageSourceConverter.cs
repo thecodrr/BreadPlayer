@@ -15,8 +15,8 @@ namespace BreadPlayer.Converters
             string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
             if (parameter == null)
             {
-                image.DecodePixelHeight = 160;
-                image.DecodePixelWidth = 160;
+                image.DecodePixelHeight = 200;
+                image.DecodePixelWidth = 200;
             }
             if (value is string && !string.IsNullOrEmpty(value.ToString()))
             {
@@ -24,8 +24,8 @@ namespace BreadPlayer.Converters
             }
             if (value == null)
             {
-                image.DecodePixelHeight = 170;
-                image.DecodePixelWidth = 160;
+                image.DecodePixelHeight = 200;
+                image.DecodePixelWidth = 200;
                 image.UriSource = parameter == null ? new Uri(def, UriKind.RelativeOrAbsolute) : null;
             }
 

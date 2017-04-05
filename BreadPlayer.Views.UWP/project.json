@@ -7,7 +7,6 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.1",
     "Microsoft.Toolkit.Uwp.Notifications": "1.4.0",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
-    "protobuf-portable-net": "2.0.0.668",
     "System.ValueTuple": "4.3.0",
     "TagLib.Portable": "1.0.4",
     "Win2D.uwp": "1.20.0"

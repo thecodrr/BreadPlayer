@@ -73,7 +73,7 @@ namespace BreadPlayer.Extensions
                 // LOLLO NOTE I took out the following so the list viewers don't lose the position.
                 //if(reset)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+               // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
             }
             catch (Exception ex)
             {

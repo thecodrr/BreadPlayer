@@ -79,17 +79,20 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
     }
 
-    protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
     {
-        try
+        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
-            if (_isObserving)
-                base.OnCollectionChanged(e);
-        }
-        catch (Exception ex)
-        {
-            BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
-        }
+            try
+            {
+                if (_isObserving)
+                    base.OnCollectionChanged(e);
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+            }
+        });
     }
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -120,7 +123,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             // LOLLO NOTE I took out the following so the list viewers don't lose the position.
             //if(reset)
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+            //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
         }
         catch (Exception ex)
         {

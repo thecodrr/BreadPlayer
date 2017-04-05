@@ -7,6 +7,7 @@
     xmlns:Converters="using:BreadPlayer.Converters"    
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -25,6 +26,7 @@
         <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
             <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
         </ItemsPanelTemplate>
+       
     </Page.Resources>
     <Grid x:Name="grid" Margin="0,20,0,0">
         <Grid.Resources>
@@ -78,7 +80,19 @@
                 <DataTemplate x:DataType="Models:Album">
                     <Grid MaxWidth="200" Height="270" Margin="20">
                         <StackPanel>
-                            <Image Width="200" x:Name="AlbumArt" Height="200" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                            <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="ImageOpened">
+                                        <Media:ControlStoryboardAction>
+                                            <Media:ControlStoryboardAction.Storyboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetName="AlbumArt" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.8"></DoubleAnimation>
+                                                </Storyboard>
+                                            </Media:ControlStoryboardAction.Storyboard>
+                                        </Media:ControlStoryboardAction>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </Image>
                             <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                             <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                         </StackPanel>
