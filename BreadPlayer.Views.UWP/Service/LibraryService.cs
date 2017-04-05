@@ -23,13 +23,13 @@ namespace BreadPlayer.Service
         }
 
         #region ILibraryService 
-        public async Task<IEnumerable<Mediafile>> Query(string field, object term)
+        public IEnumerable<Mediafile> Query(string field, object term)
         {
-            return await Database.Query(field, term);
+            return Database.Query(field, term);
         }
-        public async Task<IEnumerable<Mediafile>> GetAllMediafiles()
+        public IEnumerable<Mediafile> GetAllMediafiles()
         {
-            return await Database.GetTracks().ConfigureAwait(false);
+            return Database.GetTracks();
         }
         public async Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit)
         {
@@ -66,31 +66,31 @@ namespace BreadPlayer.Service
         }
         public void AddPlaylist(Playlist pList)
         {
-            Database.GetCollection<Playlist>("playlists").Insert(pList);
+            (Database as DatabaseService).GetCollection<Playlist>("playlists").Insert(pList);
         }
         public LiteDB.LiteCollection<Mediafile> GetRecentCollection()
         {
-            return Database.GetCollection<Mediafile>("recents");
+            return (Database as DatabaseService).GetCollection<Mediafile>("recents");
         }
         public LiteDB.LiteCollection<Mediafile> GetMostEatenCollection()
         {
-            return Database.GetCollection<Mediafile>("mosteaten");
+            return (Database as DatabaseService).GetCollection<Mediafile>("mosteaten");
         }
         public IEnumerable<Playlist> GetPlaylists()
         {
-            return Database.GetCollection<Playlist>("playlists").FindAll();
+            return (Database as DatabaseService).GetCollection<Playlist>("playlists").FindAll();
         }
         public Playlist GetPlaylist(string name)
         {
-            return Database.GetCollection<Playlist>("playlists").FindOne(t => t.Name == name);
+            return (Database as DatabaseService).GetCollection<Playlist>("playlists").FindOne(t => t.Name == name);
         }
         public bool CheckExists<T>(LiteDB.Query query, ICollection collection) where T : new()
         {
-            return Database.GetCollection<T>(collection.Name).Exists(query);
+            return (Database as DatabaseService).GetCollection<T>(collection.Name).Exists(query);
         }
         public void RemovePlaylist(Playlist List)
         {
-            Database.GetCollection<Playlist>("playlists").Delete(t => t.Name == List.Name);
+            (Database as DatabaseService).GetCollection<Playlist>("playlists").Delete(t => t.Name == List.Name);
         }
         public int SongCount
         {

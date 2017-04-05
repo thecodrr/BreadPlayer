@@ -265,18 +265,18 @@ namespace BreadPlayer.ViewModels
         PlaylistService PlaylistService;
         async void LoadDB()
         {
-            if (await AskForPassword(playlist))
-            {
-                using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
-                {
-                    Songs.AddRange(await PlaylistService.GetTracks().ConfigureAwait(false));
-                    await Refresh();
-                }
-            }
-            else
-            {
-                Services.NavigationService.Instance.NavigateToHome();
-            }
+            //if (await AskForPassword(playlist))
+            //{
+            //    using (PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
+            //    {
+            //        Songs.AddRange(await PlaylistService.GetTracks().ConfigureAwait(false));
+            //        await Refresh();
+            //    }
+            //}
+            //else
+            //{
+            //    Services.NavigationService.Instance.NavigateToHome();
+            //}
         }
         
         public ListView PlaylistSongsListBox;

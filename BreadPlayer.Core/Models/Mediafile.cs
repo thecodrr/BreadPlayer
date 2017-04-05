@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using BreadPlayer.Core;
+using Newtonsoft.Json;
 using System;
-
 namespace BreadPlayer.Models
 {
     public class Mediafile : ObservableObject, IComparable<Mediafile>
@@ -68,28 +68,41 @@ namespace BreadPlayer.Models
         public int PlayCount { get => playCount; set => Set(ref playCount, value); }
         public string Path { get => path; set => Set(ref path, value); }
         public PlayerState State { get => state; set => Set(ref state, value); }
+        [JsonIgnore]
         public string EncryptedMetaFile { get => encrypted_meta_file; set => encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; }
         public LiteDB.ObjectId _id { get => id; set => Set(ref id, value); }
         public string AttachedPicture { get => attached_picture; set => Set(ref attached_picture, value); }
+        [JsonIgnore]
         public string Comment { get => comment; set => comment = string.IsNullOrEmpty(value) ? comment = NaN : value; }
         public string FolderPath { get => folderPath; set => folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; }
+        [JsonIgnore]
         public string SynchronizedLyric
         {
             get => synchronized_lyric; set => synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value;
         }
         public string Album { get => album; set => album = string.IsNullOrEmpty(value) ? album = "Unknown Album" : value; }
+        [JsonIgnore]
         public string BeatsPerMinutes { get => beatsperminutes; set => beatsperminutes = string.IsNullOrEmpty(value) ? beatsperminutes = NaN : value; }
+        [JsonIgnore]
         public string Composer { get => composer; set => composer = string.IsNullOrEmpty(value) ? composer = NaN : value; }
         public string Genre { get => genre; set => genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; }
+        [JsonIgnore]
         public string CopyrightMessage { get => copyright_message; set => copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; }
+        [JsonIgnore]
         public string Date { get => date; set => date = string.IsNullOrEmpty(value) ? date = NaN : value; }
+        [JsonIgnore]
         public string EncodedBy { get => encoded_by; set => encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; }
+        [JsonIgnore]
         public string Lyric { get => lyric; set => lyric = string.IsNullOrEmpty(value) ? lyric = NaN : value; }
+        [JsonIgnore]
         public string ContentGroupDescription { get => content_group_description; set => content_group_description = string.IsNullOrEmpty(value) ? content_group_description = NaN : value; }
         public string Title { get => title; set => title = string.IsNullOrEmpty(value) ? title = System.IO.Path.GetFileNameWithoutExtension(path) : value; }
+        [JsonIgnore]
         public string Subtitle { get => subtitle; set => subtitle = string.IsNullOrEmpty(value) ? subtitle = NaN : value; }
+        [JsonIgnore]
         public string Publisher { get => publisher; set => publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; }
         public string TrackNumber { get => track_number; set => track_number = string.IsNullOrEmpty(value) ? track_number = NaN : value; }
+        [JsonIgnore]
         public string Size { get => size; set => size = string.IsNullOrEmpty(value) ? size = NaN : value; }
         public string Year { get => year; set => year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
         public string LeadArtist { get => lead_artist; set => lead_artist = string.IsNullOrEmpty(value) ? lead_artist = NaN : value; }
@@ -104,6 +117,7 @@ namespace BreadPlayer.Models
         }
         public Mediafile()
         {
+           
             // GetText(Data);
         }
     }

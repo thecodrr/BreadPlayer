@@ -12,9 +12,9 @@ namespace BreadPlayer.Service
         /// Return a list of Customers' List Data filtered by State
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Mediafile>> GetAllMediafiles();
+        IEnumerable<Mediafile> GetAllMediafiles();
         Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int skip, int limit);
-        Task<IEnumerable<Mediafile>> Query(string field, object term);
+        IEnumerable<Mediafile> Query(string field, object term);
         /// <summary>
         /// Update a customer in the data store
         /// </summary>

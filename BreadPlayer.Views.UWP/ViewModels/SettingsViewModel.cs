@@ -386,7 +386,7 @@ namespace BreadPlayer.ViewModels
                 }
 
                 AlbumArtistViewModel model = new AlbumArtistViewModel();
-                LibraryService service = new LibraryService(new DatabaseService());
+                LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
                 int failedCount = 0;
                 //'i' is a variable for the index of currently processing file
                 short i = 0;
@@ -433,7 +433,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
                 //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                tempList.Sort();
+                //tempList.Sort();
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
                 service.AddMediafiles(tempList);

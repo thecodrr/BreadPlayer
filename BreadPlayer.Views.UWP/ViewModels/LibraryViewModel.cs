@@ -146,20 +146,20 @@ namespace BreadPlayer.ViewModels
             }
         }
         
-        LiteDB.LiteCollection<Mediafile> recentCol;
-        LiteDB.LiteCollection<Mediafile> RecentCollection
-        {
-            get { if (recentCol == null)
-                    recentCol = LibraryService.GetRecentCollection();
-                return recentCol; }
-            set { Set(ref recentCol, value); }
-        }
+        //LiteDB.LiteCollection<Mediafile> recentCol;
+        //LiteDB.LiteCollection<Mediafile> RecentCollection
+        //{
+        //    get { if (recentCol == null)
+        //            recentCol = LibraryService.GetRecentCollection();
+        //        return recentCol; }
+        //    set { Set(ref recentCol, value); }
+        //}
         
         LibraryService libraryservice;
         public LibraryService LibraryService
         {
             get { if (libraryservice == null)
-                    libraryservice = new LibraryService(new DatabaseService());
+                    libraryservice = new LibraryService(new KeyValueStoreDatabaseService());
                 return libraryservice; }
             set { Set(ref libraryservice, value); }
         }
@@ -502,19 +502,19 @@ namespace BreadPlayer.ViewModels
 
         private void AddToRecentCollection(Mediafile mediaFile)
         {
-            LibraryService = new LibraryService(new DatabaseService());
-            RecentCollection = LibraryService.GetRecentCollection();
+            //LibraryService = new LibraryService(new KeyValueStoreDatabaseService());
+            ////RecentCollection = LibraryService.GetRecentCollection();
 
-            if (RecentlyPlayedCollection.Any(t => t.Path == mediaFile.Path))
-            {
-                RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mediaFile.Path));
-            }
-            if (RecentCollection.Exists(t => t.Path == mediaFile.Path))
-            {
-                RecentCollection.Delete(t => t.Path == mediaFile.Path);
-            }
-            RecentlyPlayedCollection.Add(mediaFile);
-            RecentCollection.Insert(mediaFile);
+            //if (RecentlyPlayedCollection.Any(t => t.Path == mediaFile.Path))
+            //{
+            //    RecentlyPlayedCollection.Remove(RecentlyPlayedCollection.First(t => t.Path == mediaFile.Path));
+            //}
+            //if (RecentCollection.Exists(t => t.Path == mediaFile.Path))
+            //{
+            //    RecentCollection.Delete(t => t.Path == mediaFile.Path);
+            //}
+            //RecentlyPlayedCollection.Add(mediaFile);
+            //RecentCollection.Insert(mediaFile);
         }
 
         private void SendLibraryLoadedMessage(object payload, bool sendMessage)
@@ -540,7 +540,7 @@ namespace BreadPlayer.ViewModels
             else if (path is Playlist playlist)
             {
                 Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Hash);
-                var songList = new ThreadSafeObservableCollection<Mediafile>(await service.GetTracks().ConfigureAwait(false));
+                var songList = new ThreadSafeObservableCollection<Mediafile>(service.GetTracks());
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
             }
@@ -614,7 +614,7 @@ namespace BreadPlayer.ViewModels
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 grouped = group;
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
@@ -629,8 +629,10 @@ namespace BreadPlayer.ViewModels
                     ViewSource.Source = TracksCollection.Elements;
 
                 ViewSource.IsSourceGrouped = group;
-                await SplitList(TracksCollection, 300).ConfigureAwait(false);
+                //await SplitList(TracksCollection, 300).ConfigureAwait(false);
             });
+
+            TracksCollection.AddRange(LibraryService.GetAllMediafiles(), false, true);
         }
 
         /// <summary>
@@ -667,16 +669,16 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                Genre = genre;
-                TracksCollection = null;
-                await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
-                {
-                    TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
-                    if (genre != "All genres")
-                        TracksCollection.AddRange(await LibraryService.Query("Genre", genre).ConfigureAwait(false), true);
-                    else
-                        TracksCollection.AddRange(OldItems, true);
-                });
+                //Genre = genre;
+                //TracksCollection = null;
+                //await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                //{
+                //    //TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
+                //    //if (genre != "All genres")
+                //    //    TracksCollection.AddRange(await LibraryService.Query("Genre", genre).ConfigureAwait(false), true);
+                //    //else
+                //    //    TracksCollection.AddRange(OldItems, true);
+                //});
             }
         }
         
@@ -869,7 +871,7 @@ namespace BreadPlayer.ViewModels
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
-                RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
+                //RecentlyPlayedCollection.AddRange(LibraryService.GetRecentCollection().FindAll());
                 LoadPlaylists();
                 UpdateJumplist("Title");
             }
@@ -923,10 +925,10 @@ namespace BreadPlayer.ViewModels
 
         void LoadPlaylists()
         {
-            foreach (var list in LibraryService.GetPlaylists())
-            {
-                AddPlaylist(list);
-            }
+            //foreach (var list in LibraryService.GetPlaylists())
+            //{
+            //    AddPlaylist(list);
+            //}
         }
         async void AddToPlaylist(object file)
         {

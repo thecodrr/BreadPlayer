@@ -139,7 +139,7 @@ namespace BreadPlayer.Core
         {
             for (int i = 0; i < service.SongCount; i += nSize)
             {
-                collection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, false);
+                collection.AddRange(await service.GetRangeOfMediafiles(i, Math.Min(nSize, service.SongCount - i)).ConfigureAwait(false), false, true);
             }
         }
 
@@ -279,6 +279,7 @@ namespace BreadPlayer.Core
                 {
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
+               
                 mediafile._id = LiteDB.ObjectId.NewObjectId();
                 mediafile.Path = file.Path;
                 mediafile.OrginalFilename = file.DisplayName;

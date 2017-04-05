@@ -105,10 +105,6 @@ namespace BreadPlayer.Extensions
 
                 if (!addkey)
                     Elements.AddSortedRange(range);
-                // prepare data for firing the events
-                int newStartingIndex = Elements.Count;
-                var newItems = new List<TElement>();
-                newItems.AddRange(range);
                 // add the items, making sure no events are fired
                 _isObserving = false;
 
@@ -134,44 +130,37 @@ namespace BreadPlayer.Extensions
                 // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
                 // LOLLO NOTE I took out the following so the list viewers don't lose the position.
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
             }
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
             }
         }
-        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            await Core.SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+            try
             {
-                try
-                {
-                    if (_isObserving == true && e != null && e.NewItems?.Count > 0)
-                        base.OnCollectionChanged(e);
-                }
-                catch (Exception ex)
-                {
-                    BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
-                    System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
-                }
-            });  
-                   
+                if (_isObserving == true)
+                    base.OnCollectionChanged(e);
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
+                System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+            }
         }
-        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            await Core.SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            try
             {
-                try
-                {
-                    if (_isObserving) base.OnPropertyChanged(e);
-                }
-                catch (Exception ex)
-                {
-                    BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
-                    System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
-                }
-            });
+                if (_isObserving) base.OnPropertyChanged(e);
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
+                System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+            }
         }
         public void RemoveItem(TElement item)
         {

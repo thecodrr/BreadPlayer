@@ -183,6 +183,7 @@
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Service\IDatabaseService.cs" />
     <Compile Include="Service\ILibraryService.cs" />
+    <Compile Include="Service\KeyValueStoreDatabaseService.cs" />
     <Compile Include="Service\LibraryService.cs" />
     <Compile Include="Service\NavigationService.cs" />
     <Compile Include="Service\PlaylistService.cs" />

@@ -602,7 +602,9 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                      
+                        <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
+
+                        <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
@@ -683,9 +685,7 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                                <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
-
-                                <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
+                               
 
                                 <Frame x:Name="PageFrame"  Margin="0,155,0,0" 
                                    Navigating="OnNavigatingToPage"

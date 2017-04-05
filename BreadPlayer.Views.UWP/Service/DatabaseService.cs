@@ -79,9 +79,9 @@ namespace BreadPlayer.Service
             catch { }
             return 0;
         }
-        public void FindOne(string path)
+        public Mediafile FindOne(string path)
         {
-            tracks.FindOne(t => t.Path == path);
+           return tracks.FindOne(t => t.Path == path);
         }
         public void Remove(Mediafile file)
         {
@@ -95,13 +95,10 @@ namespace BreadPlayer.Service
         {
             tracks.Delete(query);
         }
-        public async Task<IEnumerable<Mediafile>> GetTracks()
+        public IEnumerable<Mediafile> GetTracks()
         {
             IEnumerable<Mediafile> collection = null;
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    collection = tracks.Find(LiteDB.Query.All());
-                });
+            collection = tracks.Find(LiteDB.Query.All());
             return collection;
         }
 
@@ -128,15 +125,10 @@ namespace BreadPlayer.Service
                 tracks.Update(files);
             }
         }
-        public async Task<IEnumerable<Mediafile>> Query(string field, object term)
+        public IEnumerable<Mediafile> Query(string field, object term)
         {
             IEnumerable<Mediafile> collection = null;
-
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                collection = tracks.Find(LiteDB.Query.Contains(field, term.ToString()));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
-            });
-
+            collection = tracks.Find(LiteDB.Query.Contains(field, term.ToString()));//tracks.Find(x => x.Title.Contains(term) || x.LeadArtist.Contains(term));
             return collection;
         }
         public void Dispose()

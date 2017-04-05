@@ -56,12 +56,7 @@ namespace BreadPlayer.Extensions
             {
                 // get out if no new items
                 if (range == null || !range.Any()) return;
-
-                // prepare data for firing the events
-                int newStartingIndex = Count;
-                var newItems = new List<T>();
-                newItems.AddRange(range);
-
+                
                 // add the items, making sure no events are fired
 
                 _isObserving = false;
@@ -78,7 +73,7 @@ namespace BreadPlayer.Extensions
                 // LOLLO NOTE I took out the following so the list viewers don't lose the position.
                 //if(reset)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItems: newItems, startingIndex: newStartingIndex));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
             }
             catch (Exception ex)
             {
@@ -86,11 +81,9 @@ namespace BreadPlayer.Extensions
             }
         }
 
-        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                try
+            try
                 {
                     if (_isObserving)
                         base.OnCollectionChanged(e);
@@ -99,11 +92,10 @@ namespace BreadPlayer.Extensions
                 {
                     BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
                 }
-            });
         }
-        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { if (_isObserving) base.OnPropertyChanged(e); });
+            if (_isObserving) base.OnPropertyChanged(e);
         }
     }
 }
