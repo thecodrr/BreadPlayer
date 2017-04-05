@@ -110,7 +110,7 @@ namespace BreadPlayer.ViewModels
 
                 using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
                 {
-                    service.RemoveTracks(LiteDB.Query.EQ("Path", mediafile.Path));
+                    service.Remove(mediafile);
                     Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
                     await Refresh();
                 }

@@ -119,32 +119,60 @@ namespace BreadPlayer.Service
             }
         }
 
-        public IEnumerable<Mediafile> Query(string field, object term)
+        public IEnumerable<Mediafile> Query(string term)
         {
             using (var tran = engine.GetTransaction())
             {
-                return tran.SelectForwardStartsWith<string, DbCustomSerializer<Mediafile>>("Tracks", term.ToString()).ToList().Select(t => t.Value.Get);
+                var files = tran.SelectForwardStartsWith<string, DbCustomSerializer<Mediafile>>("Tracks", term.ToString());
+                var mediafiles = new List<Mediafile>();
+                foreach (var mp3File in files)
+                {
+                    mediafiles.Add(mp3File.Value.Get);
+                }
+                return mediafiles;
             }
         }
 
         public void Remove(Mediafile file)
         {
-            throw new NotImplementedException();
+            using (var tran = engine.GetTransaction())
+            {
+                tran.RemoveKey("Tracks", file.Path);
+                tran.Commit();
+            }
         }
 
-        public void RemoveTracks(Query query)
+        public void RemoveTracks(IEnumerable<Mediafile> files)
         {
-            throw new NotImplementedException();
+            using (var tran = engine.GetTransaction())
+            {
+                foreach (var mp3File in files)
+                {
+                    tran.RemoveKey("Tracks", mp3File.Path);
+                }
+                tran.Commit();
+            }
         }
 
         public void UpdateTrack(Mediafile file)
         {
-            throw new NotImplementedException();
+            var getEntry = FindOne(file.Path);
+            getEntry = file;
+            Insert(getEntry);
         }
 
         public void UpdateTracks(IEnumerable<Mediafile> files)
         {
-            throw new NotImplementedException();
+            using (var tran = engine.GetTransaction())
+            {
+                foreach (var file in files)
+                {
+                    var getEntry = tran.Select<string, DbCustomSerializer<Mediafile>>("Tracks", file.Path).Value.Get;
+                    getEntry = file;
+                    tran.Insert<string, DbCustomSerializer<Mediafile>>("Tracks", getEntry.Path, getEntry);
+                }
+                tran.Commit();
+            }
         }
     }
 }
