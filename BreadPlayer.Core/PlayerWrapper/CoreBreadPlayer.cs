@@ -54,10 +54,10 @@ namespace BreadPlayer.Core
                 {
                     Bass.UpdatePeriod = 230;
                     Bass.Start();
-                    if(InitializeCore.IsMobile)
-                        //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
-                        //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
-                        NativeMethods.BASS_SetConfig(NativeMethods.BASS_CONFIG_DEV_BUFFER, 230);
+                    //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
+                    //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
+                    if (isMobile)
+                       NativeMethods.BASS_SetConfig(NativeMethods.BASS_CONFIG_DEV_BUFFER, 230);
                         
                     Bass.Init();
                     Effect = new Effects();

@@ -95,8 +95,11 @@ namespace BreadPlayer.Themes
             }
             else
             {
-                ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = color;
-                ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = color;
+                ApplicationView.GetForCurrentView().TitleBar.BackgroundColor = Colors.Transparent;
+                ApplicationView.GetForCurrentView().TitleBar.ButtonBackgroundColor = Colors.Transparent;
+                ApplicationView.GetForCurrentView().TitleBar.ButtonForegroundColor = Colors.Black;
+                ApplicationView.GetForCurrentView().TitleBar.ButtonHoverBackgroundColor = color;
+                ApplicationView.GetForCurrentView().TitleBar.ButtonPressedForegroundColor = Colors.White;
             }
         }
         private static Color GetAccentColor()
