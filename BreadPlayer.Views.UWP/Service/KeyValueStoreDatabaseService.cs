@@ -53,7 +53,12 @@ namespace BreadPlayer.Service
         }
         public bool CheckExists<T>(string table, string path)
         {
-            return GetRecord<T>(table, path) != null;
+            using (var tran = engine.GetTransaction())
+            {
+                var item = tran.Select<byte[], byte[]>(table, path.ToBytes());//.ObjectGet<T>().Entity;
+                return item.Exists;
+            }
+           
         }
         
         public void Dispose()

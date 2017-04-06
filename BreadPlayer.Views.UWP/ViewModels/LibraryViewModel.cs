@@ -613,7 +613,7 @@ namespace BreadPlayer.ViewModels
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
             });
 
-            TracksCollection.AddRange(LibraryService.GetAllMediafiles(), false, true);
+            TracksCollection.AddRange(await LibraryService.GetAllMediafiles(), false, true);
         }
 
         /// <summary>
@@ -846,13 +846,13 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Loads library from the database file.
         /// </summary>
-        void LoadLibrary()
+        async Task LoadLibrary()
         {
             GetSettings();
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
             {
-                LoadPlaylists();
+                await LoadPlaylists();
                 UpdateJumplist("Title");
             }
         }
@@ -903,9 +903,9 @@ namespace BreadPlayer.ViewModels
 
         #region Playlist Methods
 
-        void LoadPlaylists()
+       async Task LoadPlaylists()
         {
-            foreach (var list in LibraryService.GetPlaylists())
+            foreach (var list in await LibraryService.GetPlaylists())
             {
                 AddPlaylist(list);
             }
