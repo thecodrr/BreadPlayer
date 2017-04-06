@@ -43,12 +43,13 @@
                     <SolidColorBrush x:Key="ThemeForeground" Color="Black"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f0f0f0"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#e9e9e9" Opacity="0.7"/>
+                    <SolidColorBrush x:Key="ThemeBackgroundMobile" Color="#e9e9e9" Opacity="0.95"/>
                     <SolidColorBrush x:Key="DisableBrush" Color="#e9e9e9" Opacity="0.95"/>
                     <SolidColorBrush x:Key="ImageFadeBrush" Color="#e5e5e5" Opacity="0.4"/>
                     <SolidColorBrush x:Key="PointerOverBrush" Color="WhiteSmoke"/>
                     <SolidColorBrush x:Key="SecondCircleBrush" Color="#141414" Opacity="0.95"/>
                     <SolidColorBrush x:Key="PlaybarBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.8" />
-                    <Color x:Key="BlurTint">#CCE5E5E5</Color>
+                    <Color x:Key="BlurTint">#99E5E5E5</Color>
                     <Color x:Key="BlurTint2">#99E5E5E5</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
@@ -78,6 +79,7 @@
                     <SolidColorBrush x:Key="ThemeForeground" Color="White"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#0c0c0c"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#141414" Opacity="0.9"/>
+                    <SolidColorBrush x:Key="ThemeBackgroundMobile" Color="#141414" Opacity="0.95"/>
                     <SolidColorBrush x:Key="DisableBrush" Color="Gray" Opacity="0.95"/>
                     <SolidColorBrush x:Key="ImageFadeBrush" Color="#141414" Opacity="0.9"/>
                     <SolidColorBrush x:Key="PointerOverBrush" Color="#b2b2b2"/>

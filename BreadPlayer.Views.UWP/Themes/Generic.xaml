@@ -503,6 +503,8 @@
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
+
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -531,6 +533,7 @@
                                         <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -566,6 +569,7 @@
                                         <Setter Target="headerText.Margin" Value="25,95,0,0"/>
                                         <Setter Target="PageFrame.Margin" Value="0,80,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
