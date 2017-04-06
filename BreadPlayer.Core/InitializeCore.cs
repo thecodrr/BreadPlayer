@@ -3,6 +3,7 @@ using BreadPlayer.Core.Interfaces;
 
 public class InitializeCore
 {
+    public static bool IsMobile { get; set; }
     static INotificationManager notificationManager;
     public static INotificationManager NotificationManager
     {

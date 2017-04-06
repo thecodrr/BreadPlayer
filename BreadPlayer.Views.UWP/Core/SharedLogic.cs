@@ -32,11 +32,22 @@ namespace BreadPlayer.Core
             InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
+            InitializeCore.IsMobile = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
         }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        public static CoreBreadPlayer Player => GenericService<CoreBreadPlayer>.Instance.GenericClass;
+        static CoreBreadPlayer player;
+        public static CoreBreadPlayer Player
+        {
+            get
+            {
+                if (player == null)
+                    player = new CoreBreadPlayer(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+
+                return player;
+            }
+        }
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
         public Lastfm LastfmScrobbler { get; set; }
