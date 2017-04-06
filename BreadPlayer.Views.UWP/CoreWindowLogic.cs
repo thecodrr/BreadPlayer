@@ -89,7 +89,7 @@ namespace BreadPlayer
         {
             player = new MediaPlayer();
             player.CommandManager.IsEnabled = false;
-            player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            //player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
             _smtc.IsEnabled = true;
@@ -107,85 +107,37 @@ namespace BreadPlayer
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused && isBackground == true)
+                if (sender.PlaybackState == MediaPlaybackState.Paused)
                 {
-                    if (Player.PlayerState == PlayerState.Playing && !isforwardbackword)
-                    {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
-                    }
-                    else if (isforwardbackword)
-                    {
-                        isforwardbackword = false;
-                    }
+                    Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
                 }
             });
         }
-        public static bool isBackground = false;
-        public static void EnableDisableSmtc()
-        {
-            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-            {
-                if (_smtc.IsEnabled == true)
-                {
-                    update = true;
-                }
-                else if (_smtc.IsEnabled == false)
-                {
-                    update = false;
-                }
-            }
-            else
-            {
-                _smtc.IsEnabled = true;
-            }
-        }
-        static bool isPlaying = true;
-        static bool update = true;
-        static bool isforwardbackword = false;
-        public async static void UpdateSmtc(bool play = false)
-        {
-            try
-            {
-                _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-                var musicProps = _smtc.DisplayUpdater.MusicProperties;
-                _smtc.DisplayUpdater.ClearAll();
-                if (Player.CurrentlyPlayingFile != null)
-                {
-                    if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                    {
-                        var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
-                        player.IsLoopingEnabled = true;
-                        player.Source = MediaSource.CreateFromStorageFile(file);
-                        player.CommandManager.IsEnabled = false;
-                        if (isPlaying || play)
-                        {
-                            player.Play();
-                            isPlaying = false;
-                        }
-                        else
-                        {
-                            player.Pause();
-                        }
-                        player.Volume = 0;
 
-                    }
-                    if (Player.CurrentlyPlayingFile != null)
-                    {
-                        musicProps.Title = Player.CurrentlyPlayingFile.Title;
-                        musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
-                        musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
-                        if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile.AttachedPicture))
-                            _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.AttachedPicture));
-                        else
-                            _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
-                    }
-                }
-                _smtc.DisplayUpdater.Update();
-            }
-            catch(Exception ex)
+        public async static void UpdateSmtc()
+        {
+            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+            var musicProps = _smtc.DisplayUpdater.MusicProperties;
+            _smtc.DisplayUpdater.ClearAll();
+            if (Player.CurrentlyPlayingFile != null)
             {
-                await NotificationManager.ShowMessageAsync("An error occured while updating SMTC.");
+                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                {
+                    var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                    player.IsLoopingEnabled = true;
+                    player.Source = MediaSource.CreateFromStorageFile(file);
+                    player.Play();
+                    player.Volume = 0;
+                }
+                musicProps.Title = Player.CurrentlyPlayingFile.Title;
+                musicProps.Artist = Player.CurrentlyPlayingFile.LeadArtist;
+                musicProps.AlbumTitle = Player.CurrentlyPlayingFile.Album;
+                if (!string.IsNullOrEmpty(Player.CurrentlyPlayingFile.AttachedPicture))
+                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(Player.CurrentlyPlayingFile.AttachedPicture));
+                else
+                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
             }
+            _smtc.DisplayUpdater.Update();
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
@@ -198,11 +150,9 @@ namespace BreadPlayer
                         Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPause");
                         break;
                     case SystemMediaTransportControlsButton.Next:
-                        isforwardbackword = true;
                         Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayNext");
                         break;
                     case SystemMediaTransportControlsButton.Previous:
-                        isforwardbackword = true;
                         Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, "PlayPrevious");
                         break;
                     default:
@@ -217,12 +167,15 @@ namespace BreadPlayer
                 {
                     case PlayerState.Playing:
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        if (_smtc.IsEnabled == false && update)
-                        {
-                            UpdateSmtc(true);
-                            update = false;
-                            player.Pause();
-                        }
+                        //if (_smtc.IsEnabled == false)
+                        //{
+                        //    if (update)
+                        //    {
+                        //        UpdateSmtc(true);
+                        //        update = false;
+                        //        player.Pause();
+                        //    }
+                        //}
                         break;
                     case PlayerState.Paused:
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
