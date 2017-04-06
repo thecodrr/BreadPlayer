@@ -12,8 +12,8 @@ namespace BreadPlayer.Service
         /// Return a list of Customers' List Data filtered by State
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Mediafile> GetAllMediafiles();
-        IEnumerable<Mediafile> Query(string term);
+        Task<IEnumerable<Mediafile>> GetAllMediafiles();
+        Task<IEnumerable<Mediafile>> Query(string term);
         /// <summary>
         /// Update a customer in the data store
         /// </summary>
@@ -28,7 +28,7 @@ namespace BreadPlayer.Service
         void RemovePlaylist(Playlist List);
         bool CheckExists<T>(string table, string path);
         void AddPlaylist(Playlist pList);
-        IEnumerable<Playlist> GetPlaylists();
+        Task<IEnumerable<Playlist>> GetPlaylists();
         Playlist GetPlaylist(string name);
         int SongCount { get; }
     }

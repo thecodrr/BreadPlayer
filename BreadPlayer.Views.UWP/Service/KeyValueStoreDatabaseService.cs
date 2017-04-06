@@ -11,6 +11,7 @@ using DBreeze.DataTypes;
 using Windows.Storage;
 using LiteDB;
 using DBreeze.Objects;
+using DBreeze.Utils.Async;
 
 namespace BreadPlayer.Service
 {
@@ -60,6 +61,7 @@ namespace BreadPlayer.Service
             if (engine != null)
                 engine.Dispose();
             StaticKeyValueDatabase.DB = null;
+            engine = StaticKeyValueDatabase.DB;
         }
 
         public T GetRecord<T>(string table, string path)
@@ -103,11 +105,12 @@ namespace BreadPlayer.Service
                     {
                         Indexes = new List<DBreezeIndex>
                         {
-                        new DBreezeIndex(1, record.Path) { PrimaryIndex = true }, //PI Primary Index
+                        new DBreezeIndex(1, record.Path, record.FolderPath, record.LeadArtist, record.Album, record.Title) { PrimaryIndex = true }, //PI Primary Index
                         //One PI must be set, if any secondary index will append it to the end, for uniqueness
-                       new DBreezeIndex(2, record.FolderPath), //SI - Secondary Index
-                       new DBreezeIndex(3, record.LeadArtist),
-                       new DBreezeIndex(4, record.Album),
+                       //new DBreezeIndex(2, record.FolderPath) { AddPrimaryToTheEnd = false }, //SI - Secondary Index
+                       //new DBreezeIndex(3, record.LeadArtist){ AddPrimaryToTheEnd = false },
+                       //new DBreezeIndex(4, record.Album){ AddPrimaryToTheEnd = false },
+                       //new DBreezeIndex(5, record.Title){ AddPrimaryToTheEnd = false },
                        //new DBreezeIndex(3,p.Salary) //SI
                         //new DBreezeIndex(4,p.Id) { AddPrimaryToTheEnd = false } //SI
                         },
@@ -122,19 +125,26 @@ namespace BreadPlayer.Service
             }
         }
 
-        public IEnumerable<T> QueryRecords<T>(string tableName, string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string tableName, string term)
         {
-            using (var tran = engine.GetTransaction())
+            return await Task.Run(() =>
             {
-                var records = tran.TextSearch(tableName).BlockAnd(term).GetDocumentIDs(); // tran.SelectForwardStartsWith<string, DbCustomSerializer<T>>(tableName, term);
-                var recordList = new List<T>();
-                foreach (var doc in records)
+                using (var tran = engine.GetTransaction())
                 {
-                    var obj = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(doc)).ObjectGet<T>();
-                    recordList.Add(obj.Entity);
+                    var records = tran.SelectDictionary<byte[], byte[]>(tableName);
+                    var recordList = new List<T>();
+                    foreach (var doc in records)
+                    {
+                        if (doc.Key.ToUTF8String().Contains(term))
+                        {
+                            var key = doc.Key.ToUTF8String();
+                            var val = tran.Select<byte[], byte[]>(tableName, doc.Key).ObjectGet<T>().Entity;
+                            recordList.Add(val);
+                        }
+                    }
+                    return recordList;
                 }
-                return recordList;
-            }
+            });
         }              
 
         public void UpdateRecord<T>(string tableName, string primaryKey, T record)
@@ -143,6 +153,7 @@ namespace BreadPlayer.Service
             {
                 var ord = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey)).ObjectGet<T>();
                 ord.Entity = record;
+                ord.NewEntity = false;
                 tran.ObjectInsert(tableName, ord, true);
                 tran.Commit();
             }
@@ -170,18 +181,23 @@ namespace BreadPlayer.Service
                 tran.Commit();
             }
         }
-        public IEnumerable<T> GetRecords<T>(string tableName)
+       
+        public async Task<IEnumerable<T>> GetRecords<T>(string tableName)
         {
-            using (var tran = engine.GetTransaction())
+            return await Task.Run(() =>
             {
-                var records = tran.SelectForward<byte[], byte[]>(tableName);
                 var recordList = new List<T>();
-                foreach (var record in records)
+                using (var tran = engine.GetTransaction())
                 {
-                    recordList.Add(record.ObjectGet<T>().Entity);
+                    var records = tran.SelectForward<byte[], byte[]>(tableName);
+
+                    foreach (var record in records)
+                    {
+                        recordList.Add(record.ObjectGet<T>().Entity);
+                    }
                 }
                 return recordList;
-            }
+            });            
         }
     }
 }

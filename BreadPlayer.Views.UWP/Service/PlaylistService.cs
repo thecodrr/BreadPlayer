@@ -48,6 +48,10 @@ namespace BreadPlayer.Service
         {
             tracks.Insert(fileCol);
         }
+        public LiteCollection<T> GetCollection<T>(string colName) where T : new()
+        {
+            return PDatabase.DB.GetCollection<T>(colName);
+        }
         public PlaylistService(string name, bool isPrivate, string hash)
         {
             Name = name;
