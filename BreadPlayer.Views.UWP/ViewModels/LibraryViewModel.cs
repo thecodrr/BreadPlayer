@@ -841,7 +841,7 @@ namespace BreadPlayer.ViewModels
             SongCount = -1;
         }
         #endregion
-      
+
         #region Library Methods
         /// <summary>
         /// Loads library from the database file.
@@ -850,11 +850,8 @@ namespace BreadPlayer.ViewModels
         {
             GetSettings();
             OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db"))
-            {
-                await LoadPlaylists();
-                UpdateJumplist("Title");
-            }
+            await LoadPlaylists();
+            UpdateJumplist("Title");
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -927,8 +924,12 @@ namespace BreadPlayer.ViewModels
                 }
                 var menu = file as MenuFlyoutItem;
                 Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : LibraryService.GetPlaylist(menu?.Text);
-                
-                if (dictPlaylist != null && await AskForPassword(dictPlaylist))
+                bool proceed = false;
+                if (menu.Text != "New Playlist")
+                    proceed = await AskForPassword(dictPlaylist);
+                else
+                    proceed = true;
+                if (dictPlaylist != null && proceed)
                     await AddPlaylistAsync(dictPlaylist, true, songList);
             }
             else

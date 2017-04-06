@@ -299,7 +299,7 @@ namespace SplitViewMenu
             if (e.Parameter?.ToString() == "Home")
             {
                 _navTopMenuListView.SelectedIndex = 3;
-                UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
+                UpdateHeaderAndShortCuts(_navTopMenuListView.Items[3] as SimpleNavMenuItem);
             }
             else if(e.Parameter is Album)
             {
@@ -401,9 +401,11 @@ namespace SplitViewMenu
         }
         void UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
         {
-            _headerText.DataContext = item;
-            shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
-            shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
+            if (item != null) _headerText.DataContext = item;
+            {
+                shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
+                shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
+            }
         }
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
         {
