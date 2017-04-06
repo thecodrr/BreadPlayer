@@ -16,7 +16,7 @@ namespace BreadPlayer.Service
         T GetRecord<T>(string table, string path);
         void RemoveRecord(string tableName, string key);
         void UpdateTracks(IEnumerable<Mediafile> records);
-        void UpdateRecord<T>(string tableName, string key, T record);
+        Task<bool> UpdateRecordAsync<T>(string tableName, string primaryKey, T record);
         Task<IEnumerable<T>> QueryRecords<T>(string tableName, string term);
         int GetRecordsCount(string tableName);
         bool CheckExists<T>(string table, string path);        

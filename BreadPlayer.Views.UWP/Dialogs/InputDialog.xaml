@@ -6,15 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" 
-    Title="TITLE"
+    Title="TITLE" MinWidth="800"
     PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-  <StackPanel Width="{Binding ElementName=InputDia, Path=DialogWidth, UpdateSourceTrigger=Explicit}">
-    <TextBox x:Name="text" Header="Name:" Text="{Binding ElementName=InputDia, Path=Text, Mode=TwoWay}" />
-    <TextBox x:Name="desc" Header="Description (Optional):" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,5,0,0"/>
-    <PasswordBox x:Name="password" Visibility="{Binding ElementName=isPrivate, Path=IsChecked, Converter={StaticResource BoolToVisibilty}}" Header="Password:" Password="{Binding ElementName=InputDia, Path=Password, Mode=TwoWay}" Margin="0,5,0,0"/>
-    <CheckBox x:Name="isPrivate" Visibility="Visible" Content="Is Private?" IsChecked="{Binding ElementName=InputDia, Path=IsPrivate, Mode=TwoWay}" Margin="0,5,0,0"/>
+    <StackPanel>
+        <TextBox x:Name="text" Padding="14,6,14,8"  Header="Name:" Style="{StaticResource RoundedTextBoxStyle}" Text="{Binding ElementName=InputDia, Path=Text, Mode=TwoWay}" />
+        <TextBox x:Name="desc" Padding="14,6,14,8"  Header="Description (Optional):" Style="{StaticResource RoundedTextBoxStyle}" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,5,0,0"/>
+        <PasswordBox x:Name="password" Padding="14,6,14,8" Style="{StaticResource RoundedPasswordBoxStyle}" Visibility="{Binding ElementName=isPrivate, Path=IsChecked, Converter={StaticResource BoolToVisibilty}}" Header="Password:" Password="{Binding ElementName=InputDia, Path=Password, Mode=TwoWay}" Margin="0,5,0,0"/>
+        <CheckBox x:Name="isPrivate" Visibility="Visible" Content="Is Private?" IsChecked="{Binding ElementName=InputDia, Path=IsPrivate, Mode=TwoWay}" Margin="0,5,0,0"/>
     </StackPanel>
 </ContentDialog>

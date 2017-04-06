@@ -18,17 +18,17 @@
         <ScrollViewer HorizontalAlignment="Center" VerticalScrollBarVisibility="Auto">
             <VariableSizedWrapGrid x:Name="wrapGrid" HorizontalAlignment="Center" ItemWidth="{Binding ElementName=grid, Path=ActualWidth, Converter={StaticResource ToHalf}}" Orientation="Horizontal" Margin="0" >
                 <StackPanel DataContext="{Binding ElementName=tagDialog, Path=Mediafile}">
-                    <TextBox Header="Title" Grid.Row="0" Text="{Binding Path=Title}" IsReadOnly="True" Margin="10,0,0,0"/>
-                    <TextBox Header="Artist" Grid.Row="0" Text="{Binding Path=LeadArtist}" Margin="10,0,0,0" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True"/>
-                    <TextBox Header="Album" Grid.Row="2" Text="{Binding Path=Album}" IsReadOnly="True" Margin="10,0,0,0"/>
-                    <TextBox Header="Year" Grid.Row="2" Text="{Binding Path=Year}" Grid.Column="1" Margin="10,0,0,0" IsReadOnly="True"/>
-                    <TextBox Header="File Location"  Text="{Binding Path=Path}" IsReadOnly="True" Margin="10,0,0,0" MaxWidth="500"/>
+                    <TextBox Header="Title" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="0" Text="{Binding Path=Title}" IsReadOnly="True" Margin="10,0,0,0"/>
+                    <TextBox Header="Artist" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="0" Text="{Binding Path=LeadArtist}" Margin="10,0,0,0" Grid.Column="1" Grid.ColumnSpan="2" IsReadOnly="True"/>
+                    <TextBox Header="Album" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="2" Text="{Binding Path=Album}" IsReadOnly="True" Margin="10,0,0,0"/>
+                    <TextBox Header="Year" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="2" Text="{Binding Path=Year}" Grid.Column="1" Margin="10,0,0,0" IsReadOnly="True"/>
+                    <TextBox Header="File Location" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Text="{Binding Path=Path}" IsReadOnly="True" Margin="10,0,0,0"/>
                 </StackPanel>
                 <StackPanel DataContext="{Binding ElementName=tagDialog, Path=Mediafile}">
-                    <TextBox Header="Length" Grid.Row="2" Text="{Binding Path=Length}" Grid.Column="2" Margin="10,0,0,0" IsReadOnly="True"/>
-                    <TextBox Header="Track" Grid.Row="4" Text="{Binding Path=TrackNumber}" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,0,0,0" IsReadOnly="True"/>
-                    <TextBox Header="Genre" Grid.Row="4" Text="{Binding Path=Genre}" IsReadOnly="True" Margin="10,0,0,0"/>
-                    <TextBox Header="Filename" Text="{Binding Path=OrginalFilename}" Grid.Row="5" IsReadOnly="True" Margin="10,0,0,0"/>
+                    <TextBox Header="Length" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="2" Text="{Binding Path=Length}" Grid.Column="2" Margin="10,0,0,0" IsReadOnly="True"/>
+                    <TextBox Header="Track" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="4" Text="{Binding Path=TrackNumber}" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,0,0,0" IsReadOnly="True"/>
+                    <TextBox Header="Genre" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="4" Text="{Binding Path=Genre}" IsReadOnly="True" Margin="10,0,0,0"/>
+                    <TextBox Header="Filename" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Text="{Binding Path=OrginalFilename}" Grid.Row="5" IsReadOnly="True" Margin="10,0,0,0"/>
                 </StackPanel>
             </VariableSizedWrapGrid>
         </ScrollViewer>

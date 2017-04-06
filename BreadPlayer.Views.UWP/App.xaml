@@ -1087,7 +1087,7 @@
                                         </VisualState>
                                         <VisualState x:Name="PointerOver">
                                             <VisualState.Setters>
-                                                <Setter Target="Buttons_Stack.Background" Value="#FFC5C5C5"/>
+                                                <Setter Target="Buttons_Stack.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                             </VisualState.Setters>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetName="BorderBackground"
@@ -1340,11 +1340,12 @@
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <Setter Target="Buttons_Stack.(Grid.Column)" Value="6"/>
-                                                <Setter Target="playBtn.Height" Value="55"/>
-                                                <Setter Target="button2.Height" Value="55"/>
-                                                <Setter Target="Buttons_Stack.Height" Value="55"/>
-                                                <Setter Target="Buttons_Stack.Margin" Value="-150,0,0,0"/>
+                                                <Setter Target="playBtn.Height" Value="75"/>
+                                                <Setter Target="button2.Height" Value="75"/>
+                                                <Setter Target="Buttons_Stack.Height" Value="75"/>
+                                                <Setter Target="Buttons_Stack.Margin" Value="-30,0,0,0"/>
                                                 <Setter Target="ContentPresenterGrid.Margin" Value="34,0,0,0"/>
+                                                <Setter Target="FavoriteButton.Margin" Value="-25,0,0,0"/>
 
                                             </VisualState.Setters>
                                         </VisualState>
@@ -1440,10 +1441,10 @@ Control.IsTemplateFocusTarget="True"/>
                                             </Core:EventTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
                                     </Border>
-                                    <ToggleButton Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="-40,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
+                                    <ToggleButton Name="FavoriteButton" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="-40,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
                                     </ToggleButton>
 
-                                    <StackPanel Grid.Column="1" Width="100" Margin="-150,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">
+                                    <StackPanel Grid.Column="1" Width="100" Margin="-160,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">
                                         <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
                                           Width="50" Visibility="Visible"
                                           VerticalAlignment="Stretch" Background="Transparent"
@@ -1537,7 +1538,7 @@ Control.IsTemplateFocusTarget="True"/>
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
-                <Grid Height="75" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                <Grid Height="75" Margin="30,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
                     <TextBlock Typography.Capitals="AllSmallCaps" Typography.CapitalSpacing="True" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
                         <Run Text="{Binding Path=Title}" FontSize="20"/>
                         <LineBreak/>
@@ -2560,6 +2561,11 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
+                                <Border.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource RoundedIconButtonStyle}">
+                                        <Setter Property="Height" Value="44"/>
+                                    </Style>
+                                </Border.Resources>
                                 <Grid x:Name="LayoutRoot" BorderThickness="0" >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -2639,17 +2645,11 @@ Control.IsTemplateFocusTarget="True"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
                                                 <Border x:Name="Button1Host"
-                      Margin="{ThemeResource ContentDialogButton1HostMargin}"
-                      MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                      MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"
-                      Height="{ThemeResource ContentDialogButtonHeight}"
-                      HorizontalAlignment="Stretch" />
+                      Padding="0,0,0,0" 
+                      HorizontalAlignment="Stretch" CornerRadius="20" />
                                                 <Border x:Name="Button2Host"
-                      Margin="{ThemeResource ContentDialogButton2HostMargin}"
-                      MinWidth="{ThemeResource ContentDialogButtonMinWidth}"
-                      MaxWidth="{ThemeResource ContentDialogButtonMaxWidth}"
-                      Height="{ThemeResource ContentDialogButtonHeight}"
-                      Grid.Column="1"
+                      Margin="5,0,0,0"
+                      Grid.Column="1" CornerRadius="20"
                       HorizontalAlignment="Stretch" />
                                             </Grid>
                                         </Grid>
@@ -3043,7 +3043,7 @@ Control.IsTemplateFocusTarget="True"/>
 
             <Style TargetType="ToggleButton" x:Key="FavoriteButtonStyle">
                 <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Foreground" Value="{ThemeResource ThemeForeground}"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Padding" Value="8,4,8,4" />

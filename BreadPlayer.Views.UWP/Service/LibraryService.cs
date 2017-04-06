@@ -56,9 +56,9 @@ namespace BreadPlayer.Service
         {
             Database.InsertTracks(data);
         }
-        public void UpdateMediafile(Mediafile data)
+        public async Task<bool> UpdateMediafile(Mediafile data)
         {
-            Database.UpdateRecord("Tracks", data.Path, data);
+            return await Database.UpdateRecordAsync("Tracks", data.Path + data.FolderPath + data.LeadArtist+ data.Album + data.Title, data);
         }
         public void UpdateMediafiles(IEnumerable<Mediafile> data)
         {

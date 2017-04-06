@@ -152,15 +152,32 @@ namespace BreadPlayer.Service
             });
         }              
 
-        public void UpdateRecord<T>(string tableName, string primaryKey, T record)
+        public async Task<bool> UpdateRecordAsync<T>(string tableName, string primaryKey, T record)
         {
             using (var tran = engine.GetTransaction())
             {
-                var ord = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey)).ObjectGet<T>();
-                ord.Entity = record;
-                ord.NewEntity = false;
-                tran.ObjectInsert(tableName, ord, true);
-                tran.Commit();
+                return await Task.Run(() =>
+                {
+                    try
+                    {
+                        var row = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey));
+                        if (row.Exists)
+                        {
+                            var getRecord = row.ObjectGet<T>();
+                            getRecord.Entity = record;
+                            getRecord.NewEntity = false;
+                            getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, primaryKey) { PrimaryIndex = true } }; //PI Primary Index
+                            tran.ObjectInsert(tableName, getRecord, true);
+                            tran.Commit();
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                    return false;
+                });
             }
         }
 
@@ -168,10 +185,12 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                foreach (var record in records)
+                foreach (var data in records)
                 {
-                    var ord = tran.Select<byte[], byte[]>("Tracks", 1.ToIndex(record.Path)).ObjectGet<Mediafile>();
-                    ord.Entity = record;
+                    var ord = tran.Select<byte[], byte[]>("Tracks", 1.ToIndex(data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title)).ObjectGet<Mediafile>();
+                    ord.Entity = data;
+                    ord.NewEntity = false;
+                    ord.Indexes = new List<DBreezeIndex> {new DBreezeIndex(1, data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title) { PrimaryIndex = true } }; //PI Primary Index
                     tran.ObjectInsert("Tracks", ord, true);
                 }
                 tran.Commit();

@@ -632,7 +632,7 @@ namespace BreadPlayer.ViewModels
 
                     if (await Player.Load(mp3file))
                     {
-                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing)?.ToList()?.ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                         PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                         PlayPauseCommand.IsEnabled = true;
                         mp3file.State = PlayerState.Playing;
@@ -656,7 +656,7 @@ namespace BreadPlayer.ViewModels
                     else
                     {
                         BLogger.Logger.Error("Failed to load file. Loading next file...");
-                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; service.UpdateMediafile(file); }));
+                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                         PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                         mp3file.State = PlayerState.Playing;
                         int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));

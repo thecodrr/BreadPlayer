@@ -18,7 +18,7 @@ namespace BreadPlayer.Service
         /// Update a customer in the data store
         /// </summary>
         /// <param name="?"></param>
-        void UpdateMediafile(Mediafile data);
+        Task<bool> UpdateMediafile(Mediafile data);
         void UpdateMediafiles(IEnumerable<Mediafile> data);
         void AddMediafile(Mediafile data);
         void AddMediafiles(IEnumerable<Mediafile> data);
