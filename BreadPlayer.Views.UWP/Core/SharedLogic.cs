@@ -50,7 +50,19 @@ namespace BreadPlayer.Core
         }
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-        public Lastfm LastfmScrobbler { get; set; }
+        static Lastfm lastfmScrobbler;
+        public static Lastfm LastfmScrobbler
+        {
+            get
+            {
+                return lastfmScrobbler;
+            }
+            set
+            {
+                if (lastfmScrobbler == null)
+                    lastfmScrobbler = value;
+            }
+        }
         public static Windows.UI.Xaml.Thickness DynamicMargin
         {
             get

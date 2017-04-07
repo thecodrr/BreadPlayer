@@ -37,12 +37,24 @@ namespace BreadPlayer.ViewModels
         {
             get { if(lastfmLoginCommand == null) lastfmLoginCommand = new DelegateCommand(LastfmLogin); return lastfmLoginCommand; }
         }
-        private void LastfmLogin()
+        private async void LastfmLogin()
         {
             if (!LastfmPassword.Any() || !LastfmUsername.Any())
+            {
+                await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
                 return;
+            }
             InitializeLastfm lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
+            await lastfm.Login(LastfmUsername, LastfmPassword);
             LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
+            if (lastfm.Auth.Auth.Authenticated)
+            {
+                LastfmLoginCommand.IsEnabled = false;
+                await NotificationManager.ShowMessageAsync("Successfully logged in!");
+            }
+            else
+                await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
+
         }
         #endregion
 

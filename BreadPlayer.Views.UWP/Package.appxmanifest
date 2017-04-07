@@ -44,6 +44,7 @@
     </Application>
   </Applications>
   <Capabilities>
+    <Capability Name="internetClient" />
     <uap:Capability Name="musicLibrary" />
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="removableStorage" />

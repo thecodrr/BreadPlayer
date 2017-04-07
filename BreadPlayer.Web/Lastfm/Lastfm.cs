@@ -21,7 +21,7 @@ namespace BreadPlayer.Web.Lastfm
             IFolder folder = await rootFolder.CreateFolderAsync("db",
                 CreationCollisionOption.OpenIfExists);
             IFile file = await folder.CreateFileAsync("scrobbles.db",
-                CreationCollisionOption.ReplaceExisting);
+                CreationCollisionOption.OpenIfExists);
             IScrobbler _scrobbler = new BreadScrobbler(Auth, file.Path);
             return (await _scrobbler.ScrobbleAsync(new IF.Lastfm.Core.Objects.Scrobble(data[0], data[1], data[2], DateTimeOffset.Now)));
         }

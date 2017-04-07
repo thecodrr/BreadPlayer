@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BreadPlayer.Web._123music;
 using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.TagParser;
+using IF.Lastfm.Core.Api.Helpers;
 
 namespace MyFirstUWPTests
 {
@@ -26,7 +27,7 @@ namespace MyFirstUWPTests
         [InlineData("Eminem", "", "")]
         public async void ScrobbleTest(string artist, string album, string title)
         {
-            Assert.True(await HasScrobbled(artist,album,title));
+            Assert.True((await HasScrobbled(artist,album,title)).Success);
         }
         [Theory]
         [InlineData("Eminem")]
@@ -88,11 +89,11 @@ namespace MyFirstUWPTests
         {
             Assert.NotNull(new BreadParser().Compare2Strings(a, b));
         }
-        async Task<bool> HasScrobbled(params string[] mediaFile)
+        async Task<LastResponse> HasScrobbled(params string[] mediaFile)
         {
-            await init.Login("", "");
-            Lastfm last = new Lastfm();
-            return await last.Scrobble(init.Auth.Auth, mediaFile);
+            await init.Login("thecodrr", "Allatonce1.1");
+            Lastfm last = new Lastfm(init.Auth.Auth);
+            return await last.Scrobble(mediaFile);
         }
         async Task<bool> IsLoggedIn(string user, string pass)
         {

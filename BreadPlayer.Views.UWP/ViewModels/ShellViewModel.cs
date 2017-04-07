@@ -405,7 +405,9 @@ namespace BreadPlayer.ViewModels
             var mediaFile = Player.CurrentlyPlayingFile;
             mediaFile.PlayCount++;
             mediaFile.LastPlayed = DateTime.Now.ToString();
-            service.UpdateMediafile(mediaFile);
+            await service.UpdateMediafile(mediaFile);
+
+            await ScrobblePlayingSong();
             if (Repeat == "Repeat List")
             {
                 PlayNext();
@@ -557,6 +559,19 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
+        private async Task ScrobblePlayingSong()
+        {
+            if (LastfmScrobbler != null)
+            {
+                var scrobble = await LastfmScrobbler.Scrobble(Player.CurrentlyPlayingFile.LeadArtist, Player.CurrentlyPlayingFile.Album, Player.CurrentlyPlayingFile.Title);
+                if (scrobble.Success)
+                    await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
+                else
+                    await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble.Exception.Message), "Failed to scrobble this song");
+            }
+            else
+                await NotificationManager.ShowMessageAsync("Failed to scrobble this song. User not logged in.");
+        }
         async Task Reload()
         {
             if (cache == null || TracksCollection.Elements.Count < service.SongCount)
