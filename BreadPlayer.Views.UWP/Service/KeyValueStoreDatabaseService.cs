@@ -140,7 +140,7 @@ namespace BreadPlayer.Service
                     var recordList = new List<T>();
                     foreach (var doc in records)
                     {
-                        if (doc.Key.ToUTF8String().Contains(term))
+                        if (doc.Key.ToUTF8String().ToLower().Contains(term.ToLower()))
                         {
                             var key = doc.Key.ToUTF8String();
                             var val = tran.Select<byte[], byte[]>(tableName, doc.Key).ObjectGet<T>().Entity;
@@ -158,23 +158,18 @@ namespace BreadPlayer.Service
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    try
+                    var row = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey));
+                    if (row.Exists)
                     {
-                        var row = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey));
-                        if (row.Exists)
+                        var getRecord = row.ObjectGet<T>();
+                        getRecord.Entity = record;
+                        getRecord.NewEntity = false;
+                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, primaryKey) { PrimaryIndex = true } }; //PI Primary Index
+                        if (tran.ObjectInsert(tableName, getRecord, true).EntityWasInserted)
                         {
-                            var getRecord = row.ObjectGet<T>();
-                            getRecord.Entity = record;
-                            getRecord.NewEntity = false;
-                            getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, primaryKey) { PrimaryIndex = true } }; //PI Primary Index
-                            tran.ObjectInsert(tableName, getRecord, true);
                             tran.Commit();
                             return true;
                         }
-                    }
-                    catch (Exception)
-                    {
-                        return false;
                     }
                     return false;
                 }

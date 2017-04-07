@@ -405,7 +405,7 @@ namespace BreadPlayer.ViewModels
             var mediaFile = Player.CurrentlyPlayingFile;
             mediaFile.PlayCount++;
             mediaFile.LastPlayed = DateTime.Now.ToString();
-            await service.UpdateMediafile(mediaFile);
+            var res = await service.UpdateMediafile(mediaFile);
 
             await ScrobblePlayingSong();
             if (Repeat == "Repeat List")
@@ -569,8 +569,6 @@ namespace BreadPlayer.ViewModels
                 else
                     await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble?.Exception?.Message), "Failed to scrobble this song");
             }
-            else
-                await NotificationManager.ShowMessageAsync("Failed to scrobble this song. User not logged in.");
         }
         async Task Reload()
         {
