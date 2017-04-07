@@ -567,7 +567,7 @@ namespace BreadPlayer.ViewModels
                 if (scrobble.Success)
                     await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
                 else
-                    await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble.Exception.Message), "Failed to scrobble this song");
+                    await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble?.Exception?.Message), "Failed to scrobble this song");
             }
             else
                 await NotificationManager.ShowMessageAsync("Failed to scrobble this song. User not logged in.");

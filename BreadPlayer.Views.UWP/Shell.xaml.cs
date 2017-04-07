@@ -15,40 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
+using BreadPlayer.Extensions;
+using BreadPlayer.Models;
+using BreadPlayer.ViewModels;
+using SamplesCommon;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Core;
-using BreadPlayer.Services;
-using BreadPlayer.Common;
-using Windows.Media;
-using BreadPlayer.ViewModels;
-using Windows.Storage;
-using BreadPlayer.Models;
-using BreadPlayer.Extensions;
-using System.Threading.Tasks;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Shapes;
-using System.Diagnostics;
-using Windows.UI.ViewManagement;
-using Windows.ApplicationModel.Core;
-using SamplesCommon;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI;
-using BreadPlayer.Web.Lastfm;
-using IF.Lastfm.Core.Api;
-using Windows.ApplicationModel.Store;
+using Windows.UI.Xaml.Navigation;
 
 namespace BreadPlayer
 {

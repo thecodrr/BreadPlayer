@@ -519,40 +519,7 @@
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
-                            <VisualStateGroup>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTriggers:DeviceFamilyWithConditionStateTrigger DeviceFamily="Mobile" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
-                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
-                                        <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
-                                        <Setter Target="headerText.FontSize" Value="24"/>
-                                        <Setter Target="headerText.Margin" Value="25,70,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
-                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
-                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        
-                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
-                                        <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
-                                        <Setter Target="headerText.FontSize" Value="24"/>
-                                        <Setter Target="headerText.Margin" Value="25,70,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
-                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
-                                    </VisualState.Setters>
-                                </VisualState>
-                                
-                            </VisualStateGroup>
+                           
                             <VisualStateGroup>
                                 <VisualState>
                                     <VisualState.StateTriggers>
@@ -604,6 +571,40 @@
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                     </VisualState.Setters>
                                 </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTriggers:DeviceFamilyWithConditionStateTrigger DeviceFamily="Mobile" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
+                                        <Setter Target="headerText.FontSize" Value="24"/>
+                                        <Setter Target="headerText.Margin" Value="25,70,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
+                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+
+                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
+                                        <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
+                                        <Setter Target="headerText.FontSize" Value="24"/>
+                                        <Setter Target="headerText.Margin" Value="25,70,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
+                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>

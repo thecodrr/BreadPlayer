@@ -21,20 +21,23 @@ namespace BreadPlayer.Web.Lastfm
             CacheEnabled = true;
         }
 
-        public override Task<IEnumerable<Scrobble>> GetCachedAsync()
+        public override async Task<IEnumerable<Scrobble>> GetCachedAsync()
         {
             var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive });
             using (var db = new LiteDatabase(disk))
             {
-                var scrobbles = db.GetCollection<Scrobble>("scrobbles");
-                if (scrobbles.Count() <= 0)
+                return await Task.Run(() => 
                 {
-                    return Task.FromResult(Enumerable.Empty<Scrobble>());
-                }
+                    var scrobbles = db.GetCollection<Scrobble>("scrobbles");
+                    if (scrobbles.Count() <= 0)
+                    {
+                        return Enumerable.Empty<Scrobble>();
+                    }
 
-                var cached = scrobbles.Find(Query.All());
-
-                return Task.FromResult(cached);
+                    var cached = scrobbles.FindAll();//.Find(Query.All());
+                    var notNull = new List<Scrobble>().Concat(cached);
+                    return notNull;
+                });               
             }
         }
 
