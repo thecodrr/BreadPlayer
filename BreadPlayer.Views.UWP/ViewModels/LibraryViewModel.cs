@@ -531,11 +531,7 @@ namespace BreadPlayer.ViewModels
         {
             return await Task.Run(() =>
             {
-                foreach (var item in TracksCollection.Elements.Where(t => t.PlayCount > 1))
-                {
-                    if (MostEatenSongsCollection.All(t => t.Path != item.Path))
-                        MostEatenSongsCollection.Add(item);
-                }
+                MostEatenSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.PlayCount > 1 && !MostEatenSongsCollection.Any(a => a.Path == t.Path)));
                 return MostEatenSongsCollection;
             });
         }
@@ -543,11 +539,7 @@ namespace BreadPlayer.ViewModels
         {
             return await Task.Run(() =>
             {
-                foreach (var item in TracksCollection.Elements.Where(t => t.IsFavorite))
-                {
-                    if (FavoriteSongsCollection.All(t => t.Path != item.Path))
-                        FavoriteSongsCollection.Add(item);
-                }
+                FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
                 return FavoriteSongsCollection;
             });
         }
@@ -555,15 +547,7 @@ namespace BreadPlayer.ViewModels
         {
             return await Task.Run(() =>
             {
-                foreach (var item in TracksCollection.Elements)
-                {
-                    if (RecentlyAddedSongsCollection.All(t => t.Path != item.Path)
-                        && item.AddedDate != null
-                        && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3)
-                    {
-                        RecentlyAddedSongsCollection.Add(item);
-                    }
-                }
+                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.Any(t => t.Path == item.Path)));
                 return RecentlyAddedSongsCollection;
             });
         }

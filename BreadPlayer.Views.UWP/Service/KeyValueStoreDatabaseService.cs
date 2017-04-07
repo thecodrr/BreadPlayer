@@ -150,13 +150,13 @@ namespace BreadPlayer.Service
                     return recordList;
                 }
             });
-        }              
+        }
 
         public async Task<bool> UpdateRecordAsync<T>(string tableName, string primaryKey, T record)
         {
-            using (var tran = engine.GetTransaction())
+            return await Task.Run(() =>
             {
-                return await Task.Run(() =>
+                using (var tran = engine.GetTransaction())
                 {
                     try
                     {
@@ -177,8 +177,8 @@ namespace BreadPlayer.Service
                         return false;
                     }
                     return false;
-                });
-            }
+                }
+            });
         }
 
         public void UpdateTracks(IEnumerable<Mediafile> records)
