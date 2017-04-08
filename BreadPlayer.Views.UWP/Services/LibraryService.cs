@@ -71,7 +71,7 @@ namespace BreadPlayer.Service
         }
         public void RemoveMediafile(Mediafile data)
         {
-            Database.RemoveRecord("Tracks", data.Path);
+            Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title);
         }
         public Mediafile GetMediafile(string path)
         {

@@ -215,7 +215,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                tran.ObjectRemove(tableName, key.ToBytes());
+                tran.ObjectRemove(tableName, 1.ToIndex(key));
                 tran.Commit();
             }
         }

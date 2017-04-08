@@ -258,11 +258,12 @@ namespace BreadPlayer.Core
         {
             if (file != null)
             {
-                if (service == null)
-                    service = new LibraryService(new KeyValueStoreDatabaseService());
-                SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
-                service.AddMediafile(file);
-                return true;
+                using (service = new LibraryService(new KeyValueStoreDatabaseService()))
+                {
+                    SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
+                    service.AddMediafile(file);
+                    return true;
+                }
             }
             return false;
         }
@@ -270,11 +271,12 @@ namespace BreadPlayer.Core
         {
             if (file != null)
             {
-                if (service == null)
-                    service = new LibraryService(new KeyValueStoreDatabaseService());
-                SettingsViewModel.TracksCollection.Elements.Remove(file);
-                service.RemoveMediafile(file);
-                return true;
+                using (service = new LibraryService(new KeyValueStoreDatabaseService()))
+                {
+                    SettingsViewModel.TracksCollection.Elements.Remove(file);
+                    service.RemoveMediafile(file);
+                    return true;
+                }
             }
             return false;
         }
