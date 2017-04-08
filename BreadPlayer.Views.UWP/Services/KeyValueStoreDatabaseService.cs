@@ -72,7 +72,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                return tran.Select<byte[], byte[]>(table, path.ToBytes()).ObjectGet<T>().Entity;
+                return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
             }
         } 
         public int GetRecordsCount(string tableName)
