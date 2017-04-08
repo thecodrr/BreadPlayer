@@ -108,19 +108,25 @@ namespace BreadPlayer.Extensions
                 // add the items, making sure no events are fired
                 _isObserving = false;
 
+                var objectArray = range.ToArray();
                 if (async)
                 {
                     foreach (var item in range)
                     {
                         await Task.Run(() =>
-                             AddItem(item, addkey));
+                       {
+                           for (int i = 0; i < objectArray.Count(); i++)
+                           {
+                               AddItem(objectArray[i]);
+                           }
+                       });
                     }
                 }
                 else
                 {
-                    foreach (var item in range)
+                    for (int i = 0; i < objectArray.Count(); i++)
                     {
-                        AddItem(item, addkey);
+                        AddItem(objectArray[i]);
                     }
                 }
                 _isObserving = true;

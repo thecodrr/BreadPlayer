@@ -60,9 +60,10 @@ namespace BreadPlayer.Extensions
                 // add the items, making sure no events are fired
 
                 _isObserving = false;
-                foreach (var item in range)
+                var objectArray = range.ToArray();
+                for (int i = 0; i < objectArray.Count(); i++)
                 {
-                    AddSorted(item);
+                    AddSorted(objectArray[i]);
                 }
                 _isObserving = true;
 

@@ -35,19 +35,19 @@ namespace BreadPlayer.ViewModels
             {
                 QueryAlbums = new ThreadSafeObservableCollection<Album>();
                 QuerySongs = new ThreadSafeObservableCollection<Mediafile>();
-                IEnumerable<Mediafile> queryresults = await StartSearch(query);
-                foreach (var resultGroup in queryresults.GroupBy(t => t.Album))
+                var queryresults = (await StartSearch(query)).GroupBy(t => t.Album).ToArray();
+                for(int i = 0; i < queryresults.Count(); i++)
                 {
-                    QuerySongs.AddRange(resultGroup.Where(t => t.Title.ToLower().Contains(query.ToLower())));
-                    if (resultGroup.Key.ToLower().Contains(query.ToLower()))
+                    QuerySongs.AddRange(queryresults[i].Where(t => t.Title.ToLower().Contains(query.ToLower())));
+                    if (queryresults[i].Key.ToLower().Contains(query.ToLower()))
                     {
-                        var albumSongs = resultGroup.Select(t => t);
+                        var albumSongs = queryresults[i].Select(t => t);
                         var firstSong = albumSongs.First() ?? new Mediafile();
                         Album album = new Album()
                         {
                             AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumSongs),
                             Artist = firstSong?.LeadArtist,
-                            AlbumName = resultGroup.Key,
+                            AlbumName = queryresults[i].Key,
                             AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
                         };
                         QueryAlbums.Add(album);

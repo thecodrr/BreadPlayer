@@ -110,9 +110,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             if (range == null || !range.Any()) return;            
 
             _isObserving = false;
-            foreach (var item in range)
+            var objectArray = range.ToArray();
+            for (int i = 0; i < objectArray.Count(); i++)
             {
-                Add(item);
+                Add(objectArray[i]);
             }
             _isObserving = true;
 
