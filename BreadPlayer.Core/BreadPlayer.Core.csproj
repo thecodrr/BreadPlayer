@@ -118,6 +118,7 @@
     <Compile Include="Models\EqualizerBand.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlist.cs" />
+    <Compile Include="Models\Query.cs" />
     <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />
     <Compile Include="PlayerWrapper\Effects.cs" />
     <Compile Include="PlayerWrapper\NativeMethods.cs" />

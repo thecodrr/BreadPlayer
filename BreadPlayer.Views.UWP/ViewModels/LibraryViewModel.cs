@@ -825,7 +825,6 @@ namespace BreadPlayer.ViewModels
         }
         private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SetNowPlayingSong();
             if (TracksCollection.Elements.Count == SongCount)
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
@@ -835,7 +834,8 @@ namespace BreadPlayer.ViewModels
                 });
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
-            }           
+            }
+            SetNowPlayingSong();
         }
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {

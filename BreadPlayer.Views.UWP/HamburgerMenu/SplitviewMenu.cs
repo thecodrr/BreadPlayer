@@ -18,6 +18,7 @@
 using BreadPlayer;
 using BreadPlayer.Models;
 using BreadPlayer.Services;
+using BreadPlayer.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -210,27 +211,13 @@ namespace SplitViewMenu
 
         private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            if (_navTopMenuListView.SelectedIndex != 3)
+            if ((sender as AutoSuggestBox).Text.Any())
             {
-                _navTopMenuListView.SelectedIndex = 3;
-                _pageFrame.Navigated += _pageFrame_Navigated;
-                _pageFrame.Navigate(typeof(LibraryView));
+                UnSelectAll();
+                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query() { QueryWord = (sender as AutoSuggestBox).Text });
             }
-        }
-        private void _pageFrame_Navigated(object sender, NavigationEventArgs e)
-        {
-            var page = e.Content as Page;
-            if (page != null && e.Content != null)
-            {
-                var control = page;
-                control.Loaded += Control_Loaded; ;
-            }
-
-        }
-
-        private void Control_Loaded(object sender, RoutedEventArgs e)
-        {
-            _searchBox.Focus(FocusState.Programmatic);
+            else
+                NavigationService.Instance.NavigateToHome();
         }
 
         static INavigationMenuItem LastItem = new SimpleNavMenuItem();
@@ -304,6 +291,10 @@ namespace SplitViewMenu
             else if(e.Parameter is Album)
             {
                 UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+            }
+            else if(e.Parameter is Query)
+            {
+                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + (e.Parameter as Query).QueryWord + "\"" });
             }
         }
         public static void UnSelectAll()
@@ -401,8 +392,9 @@ namespace SplitViewMenu
         }
         void UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
         {
-            if (item != null) _headerText.DataContext = item;
+            if (item != null) 
             {
+                _headerText.DataContext = item;
                 shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
                 shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
             }

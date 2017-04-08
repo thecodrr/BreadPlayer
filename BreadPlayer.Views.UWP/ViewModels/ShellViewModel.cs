@@ -33,6 +33,8 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
+using BreadPlayer.Services;
+using BreadPlayer.Views;
 
 namespace BreadPlayer.ViewModels
 {
@@ -190,23 +192,24 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                DispatcherTimer timer = new  DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
-                if (QueryWord.Length == 2 && TracksCollection.Elements.Count < SongCount)
-                {
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Music Library");
-                    Reload().ConfigureAwait(false);
-                }
-                else if (QueryWord.Length > 2)
-                {
-                    timer.Interval = TimeSpan.FromMilliseconds(200);
-                    timer.Start();
-                    timer.Tick += (sender, args) =>
-                    {
-                        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Results for \"" + QueryWord + "\"");
-                        Search().ConfigureAwait(false);
-                        timer.Stop();
-                    };
-                }
+                //DispatcherTimer timer = new  DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
+                //if (QueryWord.Length == 2 && TracksCollection.Elements.Count < SongCount)
+                //{
+                //    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Music Library");
+                //    Reload().ConfigureAwait(false);
+                //}
+                //else if (QueryWord.Length > 2)
+                //{
+                //    timer.Interval = TimeSpan.FromMilliseconds(200);
+                //    timer.Start();
+                //    timer.Tick += (sender, args) =>
+                //    {
+                //        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Results for \"" + QueryWord + "\"");
+                //        Search().ConfigureAwait(false);
+                //        timer.Stop();
+                //    };
+                //}
+
             }
             catch (Exception ex)
             {

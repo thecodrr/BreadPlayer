@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="BreadPlayer.Views.SearchResultsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BreadPlayer.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="35,35,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Songs" FontSize="24" FontWeight="Bold"/>
+        <ListView Name="SongsList" Grid.Row="1" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}"/>
+        <TextBlock Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
+        <GridView Name="AlbumsList" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" ItemTemplate="{StaticResource SelectedTemplate}"/>
+    </Grid>
+</Page>
