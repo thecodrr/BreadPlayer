@@ -4,25 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using BreadPlayer.Models;
 using System.Windows.Input;
-using LiteDB;
 using Windows.Storage;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
+using DBreeze;
+using Newtonsoft.Json;
+using DBreeze.Utils;
+using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
 {
     public class AlbumArtistViewModel : ViewModelBase
     {
-        async void HandleAddAlbumMessage(Message message)
+        #region Database Methods
+        IDatabaseService AlbumDatabaseService;
+        public void InitDB()
+        {
+            AlbumDatabaseService = new KeyValueStoreDatabaseService(ApplicationData.Current.LocalFolder.Path + @"\AlbumsDB");
+        }       
+        #endregion
+        void HandleAddAlbumMessage(Message message)
         {
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbums(message.Payload as List<Mediafile>).ConfigureAwait(false);
+                AddAlbums(message.Payload as List<Mediafile>);
             }
         }
-        LiteDatabase db;
-        public LiteCollection<Album> albumCollection;
         /// <summary>
         /// The Constructor.
         /// </summary>
@@ -30,28 +38,12 @@ namespace BreadPlayer.ViewModels
         {
             InitDB();
             Messenger.Instance.Register(MessageTypes.MSG_ADD_ALBUMS, new Action<Message>(HandleAddAlbumMessage));
-        }       
-
-        public void InitDB()
-        {
-            try
-            {
-                db = new LiteDatabase("filename=" + ApplicationData.Current.LocalFolder.Path + @"\albums.db;journal=false;");
-
-                albumCollection = db.GetCollection<Album>("albums");
-                albumCollection.EnsureIndex(t => t.AlbumName);
-                albumCollection.EnsureIndex(t => t.Artist);
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while initiating albums database.", ex);
-                //await (await StorageFile.GetFileFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\albums.db")).DeleteAsync();
-                InitDB();
-            }
         }
+
+      
         public async Task LoadAlbums()
         {
-            AlbumCollection.AddRange(await GetAlbums().ConfigureAwait(false));//.Add(album);
+            AlbumCollection.AddRange(await AlbumDatabaseService.GetRecords<Album>("Albums").ConfigureAwait(false));//.Add(album);
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
                 AlbumsLoaded = false;
@@ -63,22 +55,12 @@ namespace BreadPlayer.ViewModels
             if (AlbumCollection.Count > 0)
             {
                 AlbumsLoaded = false;
-                db.Dispose();
-                db = null;
+                AlbumDatabaseService.Dispose();
             }
             else
                 AlbumsLoaded = true;
         }
-
-        public async Task<IEnumerable<Album>> GetAlbums()
-        {
-            IEnumerable<Album> collection = null;
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                collection = albumCollection.Find(LiteDB.Query.All());
-            });
-            return collection;
-        }
+       
         bool albumsLoaded = true;
         /// <summary>
         /// Collection containing all albums.
@@ -104,28 +86,26 @@ namespace BreadPlayer.ViewModels
         /// For instance, for each loop needs to be removed.
         /// Maybe we can use direct database queries and fill the AlbumCollection with it?
         /// </remarks>
-        public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
-        { 
-            var files = mediafiles.ToList();
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+        public void AddAlbums(IEnumerable<Mediafile> mediafiles)
+        {
+            var albumsGroups = mediafiles.GroupBy(t => t.Album);
+            List<Album> albums = new List<Album>();
+            foreach (var albumGroup in albumsGroups)
             {
-                    List<Album> albums = new List<Album>();
-                    foreach (var song in files)
-                    {
-                        Album alb = null;
-                        if (!albums.Any(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist))
-                        {
-                            alb = new Album();
-                            alb.AlbumName = song.Album;
-                            alb.Artist = song.LeadArtist;
-                            alb.AlbumArt = string.IsNullOrEmpty(song.AttachedPicture) ? null : song.AttachedPicture;
-                            albums.Add(alb);
-                        }
-                        if (albums.Any()) albums.FirstOrDefault(t => t.AlbumName == song.Album && t.Artist == song.LeadArtist).AlbumSongs.Add(song);
-                    }
-                    albumCollection.Insert(albums);
-                    AlbumCollection.AddRange(albums);                               
-            }).AsTask().ConfigureAwait(false);
+                var albumSongs = albumGroup.Select(t => t);
+                var firstSong = albumSongs.First() ?? new Mediafile();
+                Album album = new Album()
+                {
+                    AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumSongs),
+                    Artist = firstSong?.LeadArtist,
+                    AlbumName = albumGroup.Key,
+                    AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
+                };
+                albums.Add(album);
+            }
+            AlbumDatabaseService.InsertAlbums(albums);
+            AlbumCollection.AddRange(albums);
+            AlbumDatabaseService.Dispose();
         }
         RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand

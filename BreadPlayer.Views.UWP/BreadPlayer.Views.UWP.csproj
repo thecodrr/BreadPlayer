@@ -166,7 +166,7 @@
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="HamburgerMenu\Shortcut.cs" />
     <Compile Include="Helpers\LockscreenHelper.cs" />
-    <Compile Include="Service\DatabaseService.cs" />
+    <Compile Include="Services\DatabaseService.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -181,12 +181,12 @@
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
-    <Compile Include="Service\IDatabaseService.cs" />
-    <Compile Include="Service\ILibraryService.cs" />
-    <Compile Include="Service\KeyValueStoreDatabaseService.cs" />
-    <Compile Include="Service\LibraryService.cs" />
-    <Compile Include="Service\NavigationService.cs" />
-    <Compile Include="Service\PlaylistService.cs" />
+    <Compile Include="Services\IDatabaseService.cs" />
+    <Compile Include="Services\ILibraryService.cs" />
+    <Compile Include="Services\KeyValueStoreDatabaseService.cs" />
+    <Compile Include="Services\LibraryService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />

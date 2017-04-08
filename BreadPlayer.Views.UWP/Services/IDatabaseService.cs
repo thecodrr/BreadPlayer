@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Models;
+using DBreeze;
 using DBreeze.Objects;
 using LiteDB;
 using System;
@@ -9,7 +10,8 @@ namespace BreadPlayer.Service
 {
 	public interface IDatabaseService : IDisposable
     {
-        void CreateDB();
+        void InsertAlbums(IEnumerable<Album> albums);
+        void CreateDB(string dbPath = null);
         void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record);
         void InsertTracks(IEnumerable<Mediafile> records);
         Task<IEnumerable<T>> GetRecords<T>(string tableName);

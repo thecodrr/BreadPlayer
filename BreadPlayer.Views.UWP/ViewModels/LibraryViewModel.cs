@@ -63,8 +63,8 @@ namespace BreadPlayer.ViewModels
             if (message.Payload != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                if (!Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                    Header = message.Payload.ToString();
+                //if (!Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                //    Header = message.Payload.ToString();
             }
         }
         void HandleDisposeMessage()
@@ -114,7 +114,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public LibraryViewModel()
         {
-            Header = "Music Collection";
+           // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             Dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
@@ -144,16 +144,7 @@ namespace BreadPlayer.ViewModels
                 _alphabetList = value;
                 OnPropertyChanged();
             }
-        }
-        
-        //LiteDB.LiteCollection<Mediafile> recentCol;
-        //LiteDB.LiteCollection<Mediafile> RecentCollection
-        //{
-        //    get { if (recentCol == null)
-        //            recentCol = LibraryService.GetRecentCollection();
-        //        return recentCol; }
-        //    set { Set(ref recentCol, value); }
-        //}
+        }        
         
         LibraryService libraryservice;
         public LibraryService LibraryService
@@ -175,12 +166,7 @@ namespace BreadPlayer.ViewModels
             get { return isMultiSelectModeEnabled; }
             set { Set(ref isMultiSelectModeEnabled, value); }
         }
-        string _header;
-        public string Header
-        {
-            get { return _header; }
-            set { Set(ref _header, value); }
-        }
+       
         string _genre;
         public string Genre
         {
@@ -262,7 +248,7 @@ namespace BreadPlayer.ViewModels
             get
             {
                 if (_TracksCollection == null)
-                    _TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title.Remove(1));
+                    _TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction("FolderPath"));
                 return _TracksCollection;
             }
             set
@@ -490,7 +476,7 @@ namespace BreadPlayer.ViewModels
             }
             else if (source == null && Sort == "Unsorted")
             {
-                await LoadCollectionAsync(t => t.Title, false).ConfigureAwait(false);
+                await LoadCollectionAsync(GetSortFunction("FolderPath"), false).ConfigureAwait(false);
             }
         }
         #endregion
@@ -570,7 +556,7 @@ namespace BreadPlayer.ViewModels
         void ChangeView(string header, bool group, object src)
         {
             ViewSource.Source = null;
-            Header = header;
+            //Header = header;
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;

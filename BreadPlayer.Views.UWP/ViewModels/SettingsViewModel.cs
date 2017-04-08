@@ -385,8 +385,6 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(error);
                     return;
                 }
-
-                AlbumArtistViewModel model = new AlbumArtistViewModel();
                 LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
                 int failedCount = 0;
                 //'i' is a variable for the index of currently processing file
@@ -432,15 +430,18 @@ namespace BreadPlayer.ViewModels
                     string message1 = ex.Message + "||" + ex.InnerException;
                     await NotificationManager.ShowMessageAsync(message1);
                 }
+
                 //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                 //tempList.Sort();
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
                 service.AddMediafiles(tempList);
-                
+                service.Dispose();
+
                 watch.Stop();
                 var secs = watch.Elapsed.TotalSeconds;
 
+                AlbumArtistViewModel vm = new AlbumArtistViewModel();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
                 //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
@@ -448,11 +449,9 @@ namespace BreadPlayer.ViewModels
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
                 BLogger.Logger.Info(message);
-                await NotificationManager.ShowMessageAsync(message);                
-                model = null;
+                await NotificationManager.ShowMessageAsync(message);   
                 await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);               
                 tempList.Clear();
-                service.Dispose();
             }
         }
         async Task DeleteDuplicates(IEnumerable<Mediafile> source)

@@ -17,36 +17,36 @@ namespace BreadPlayer.Service
 {
     public class StaticKeyValueDatabase
     {
+        private static string DbPath { get; set; }       
         static DBreezeEngine db;
-        //static IDiskService service = new FileDiskService(ApplicationData.Current.LocalFolder.Path + @"\breadplayer.db");
-        public static DBreezeEngine DB
+        public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
-            get
+            if (db == null || DbPath != dbPath)
             {
-                if (db == null)
-                {
-                    var dbPath = ApplicationData.Current.LocalFolder.Path + @"\breadplayerDB";
-                    db = new DBreezeEngine(dbPath);
-                }
-                return db;
+                DbPath = dbPath;
+                var databasePath = string.IsNullOrEmpty(dbPath) ? ApplicationData.Current.LocalFolder.Path + @"\breadplayerDB" : dbPath;
+                db = new DBreezeEngine(databasePath);
             }
-            set
-            {
-                db = value;
-            }
+            return db;
+        }
+        public static void DisposeDatabaseEngine()
+        {
+            db = null;
         }
     }
     public class KeyValueStoreDatabaseService : IDatabaseService
     {
+        private string DbPath;
         DBreezeEngine engine = null;
-        public KeyValueStoreDatabaseService()
+        public KeyValueStoreDatabaseService(string dbPath = null)
         {
-            CreateDB();
+            CreateDB(dbPath);
         }
        
-        public void CreateDB()
+        public void CreateDB(string dbPath = null)
         {
-            engine = StaticKeyValueDatabase.DB;
+            DbPath = dbPath;
+            engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
             DBreeze.Utils.CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
            
             DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };          
@@ -65,8 +65,7 @@ namespace BreadPlayer.Service
         {
             if (engine != null)
                 engine.Dispose();
-            StaticKeyValueDatabase.DB = null;
-            engine = StaticKeyValueDatabase.DB;
+            StaticKeyValueDatabase.DisposeDatabaseEngine();
         }
 
         public T GetRecord<T>(string table, string path)
@@ -99,7 +98,27 @@ namespace BreadPlayer.Service
                 tran.Commit();
             }
         }
+        public void InsertAlbums(IEnumerable<Album> albums)
+        {
+            using (var tran = engine.GetTransaction())
+            {
+                foreach (var record in albums)
+                {
+                    var ir = tran.ObjectInsert<Album>("Albums", new DBreezeObject<Album>
+                    {
+                        Indexes = new List<DBreezeIndex>
+                        {
+                        new DBreezeIndex(1, record.AlbumName + record.Artist) { PrimaryIndex = true }, //PI Primary Index
+                        },
 
+                        NewEntity = true,
+                        Entity = record
+                    },
+                        true);
+                }
+                tran.Commit();
+            }
+        }
         public void InsertTracks(IEnumerable<Mediafile> records)
         {
             using (var tran = engine.GetTransaction())
