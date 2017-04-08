@@ -13,6 +13,7 @@
     xmlns:Converters="using:BreadPlayer.Converters"  
     xmlns:Extensions="using:BreadPlayer.Extensions"
     xmlns:Models="using:BreadPlayer.Models"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:local="using:BreadPlayer" RequiresPointerMode="WhenRequested">
     <Application.Resources>
         <ResourceDictionary>
@@ -96,6 +97,10 @@
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>
             <VM:AccountsViewModel x:Key="AccountsVM"/>
             
+            <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
+            <Converter:BoolToVisibilityConverter x:Key="BoolToVisibilty"/>
+            <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
+
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
@@ -108,7 +113,7 @@
                 <MenuFlyoutItem Text="Year" Tag="Year" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
             </MenuFlyout>
             <MenuFlyout x:Key="GenreFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}"></MenuFlyout>
-            <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
+           
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="VerticalAlignment" Value="Top"/>
@@ -640,12 +645,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <x:Double x:Key="FlyoutThemeMaxHeight">758</x:Double>
-            <x:Double x:Key="FlyoutThemeMaxWidth">456</x:Double>
-            <x:Double x:Key="MenuFlyoutThemeMinHeight">32</x:Double>
-            <Thickness x:Key="FlyoutBorderThemeThickness">1</Thickness>
-            <Thickness x:Key="MenuFlyoutPresenterThemePadding">0,0</Thickness>
-
+          
             <Style TargetType="MenuFlyoutPresenter" x:Key="CustomFlyoutPresenter">
                 <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundChromeHighBrush}" />
@@ -687,10 +687,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Converter:BoolToVisibilityConverter x:Key="BoolToVisibilty"/>
-            <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
-
-
+          
             <Style TargetType="ListViewItem" x:Key="CustomListItemStyle">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="TabNavigation" Value="Local" />
@@ -1502,6 +1499,7 @@ Control.IsTemplateFocusTarget="True"/>
                     </Setter.Value>
                 </Setter>
             </Style>
+            
             <DataTemplate x:Key="MediafileUnselectedTemplate">
                 <Grid Height="50">
                     <Grid.ColumnDefinitions>
@@ -1521,6 +1519,7 @@ Control.IsTemplateFocusTarget="True"/>
 
                 </Grid>
             </DataTemplate>
+            
             <DataTemplate x:Key="MediafileUnselectedNarrowTemplate">
                 <Grid Height="50">
                     <Grid.ColumnDefinitions>
@@ -1537,6 +1536,7 @@ Control.IsTemplateFocusTarget="True"/>
 
                 </Grid>
             </DataTemplate>
+           
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
                 <Grid Height="75" Margin="30,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
                     <TextBlock Typography.Capitals="AllSmallCaps" Typography.CapitalSpacing="True" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
@@ -1559,7 +1559,7 @@ Control.IsTemplateFocusTarget="True"/>
                 <Setter Property="IsHoldingEnabled" Value="True"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="0,0,4,4"/>
+                <Setter Property="Margin" Value="20"/>
                 <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}"/>
                 <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}"/>
                 <Setter Property="Template">
@@ -1915,8 +1915,12 @@ Control.IsTemplateFocusTarget="True"/>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-            </Style>
-
+            </Style> 
+            
+            <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
+                <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+            </ItemsPanelTemplate>         
+            
             <DataTemplate x:Key="SelectedTemplate">                
                 <Grid x:Name="LayoutRoot" MaxWidth="200" Height="270" Margin="20">
                     <Grid.Resources>

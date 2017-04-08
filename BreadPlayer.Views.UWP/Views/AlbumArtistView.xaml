@@ -13,7 +13,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
         <DataTemplate x:DataType="Models:Album" x:Key="MobileItemTemplate">
             <Grid Width="130" Height="200" Margin="5">
                 <StackPanel>
@@ -23,15 +22,11 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
-        <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
-            <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
-        </ItemsPanelTemplate>
-       
     </Page.Resources>
     <Grid x:Name="grid" Margin="0,20,0,0">
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
-
+           
         </Grid.Resources>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -76,9 +71,14 @@
                     <AddDeleteThemeTransition></AddDeleteThemeTransition>
                 </TransitionCollection>
             </GridView.Transitions>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="Models:Album">
-                    <Grid MaxWidth="200" Height="270" Margin="20">
+                    <Grid MaxWidth="200" Height="270" Margin="5">
                         <StackPanel>
                             <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
                                 <Interactivity:Interaction.Behaviors>
@@ -99,11 +99,6 @@
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
         </GridView>
         <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=AlbumsLoaded, Converter={StaticResource BoolToVisibilty}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
     
