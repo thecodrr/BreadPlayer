@@ -63,25 +63,21 @@ namespace BreadPlayer.Behaviours
 
         public object Execute(object sender, object parameter)
         {
-            if ((sender as ListView).SelectedItems.Count > 0)
+            if ((sender as ListView).SelectedItems.Count > 0 && parameter is KeyRoutedEventArgs keyParam)
             {
-                KeyRoutedEventArgs keyPrarm = parameter as KeyRoutedEventArgs;
-                if (keyPrarm != null)
+                if (!this.DoubleKeyCommand && keyParam.Key == this.PressedKey)
                 {
-                    if (!this.DoubleKeyCommand && keyPrarm.Key == this.PressedKey)
-                    {
-                        var p = this.CommandParameter;
-                        this.Command.Execute(p);
-                        keyPrarm.Handled = true;
-                    }
-                    else if (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
-                        && keyPrarm.Key == PressedKey)
-                    {
-                        var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
-                        this.Command.Execute(p);
-                        keyPrarm.Handled = true;
-                    }
-                }               
+                    var p = this.CommandParameter;
+                    this.Command.Execute(p);
+                    keyParam.Handled = true;
+                }
+                else if (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
+                    && keyParam.Key == PressedKey)
+                {
+                    var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
+                    this.Command.Execute(p);
+                    keyParam.Handled = true;
+                }
             }
             return null;
         }

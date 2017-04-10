@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Converters
 {
-	public class BoolToVisibilityConverter : IValueConverter
+    public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -37,17 +37,11 @@ namespace BreadPlayer.Converters
             }
             else if (value is int)
             {
-                if (System.Convert.ToInt16(value) <= 1)
-                    flag = true;
-                else
-                    flag = false;
+                flag = System.Convert.ToInt16(value) <= 1;
             }
             else if (value is double)
             {
-                if (System.Convert.ToInt16(value) <= 1)
-                    flag = false;
-                else
-                    flag = true;
+                flag = System.Convert.ToInt16(value) > 1;
             }
             else if (value is ImageSource imageSource)
             {
@@ -55,10 +49,7 @@ namespace BreadPlayer.Converters
             }
             else if(value is string stringValue)
             {
-                if (stringValue.Length <= 0)
-                    flag = false;
-                else
-                    flag = true;
+                flag = stringValue.Length > 0;
             }
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }

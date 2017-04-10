@@ -18,6 +18,7 @@
 using BreadPlayer.Core;
 using Newtonsoft.Json;
 using System;
+
 namespace BreadPlayer.Models
 {
     public class Mediafile : ObservableObject, IComparable<Mediafile>

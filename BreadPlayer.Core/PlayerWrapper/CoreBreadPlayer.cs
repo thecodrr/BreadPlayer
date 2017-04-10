@@ -62,7 +62,7 @@ namespace BreadPlayer.Core
                     Bass.Init();
                     Effect = new Effects();
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                    await Init(isMobile);
                 }
