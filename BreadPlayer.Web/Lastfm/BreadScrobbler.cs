@@ -23,10 +23,10 @@ namespace BreadPlayer.Web.Lastfm
 
         public override async Task<IEnumerable<Scrobble>> GetCachedAsync()
         {
-            var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive });
+            using (var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive }))
             using (var db = new LiteDatabase(disk))
             {
-                return await Task.Run(() => 
+                return await Task.Run(() =>
                 {
                     var scrobbles = db.GetCollection<Scrobble>("scrobbles");
                     if (scrobbles.Count() <= 0)
@@ -37,7 +37,7 @@ namespace BreadPlayer.Web.Lastfm
                     var cached = scrobbles.FindAll();//.Find(Query.All());
                     var notNull = new List<Scrobble>().Concat(cached);
                     return notNull;
-                });               
+                });
             }
         }
 
@@ -53,7 +53,7 @@ namespace BreadPlayer.Web.Lastfm
 
         private void Cache(IEnumerable<Scrobble> scrobbles)
         {
-            var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive });
+            using (var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive }))
             using (var db = new LiteDatabase(disk))
             {
                 var scrobblesCollection = db.GetCollection<Scrobble>("scrobbles");

@@ -22,55 +22,41 @@ using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Converters
 {
-	public class BoolToVisibilityConverter : IValueConverter
+    public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             bool flag = false;
-            if (value is bool)
+            if (value is bool boolValue)
             {
-                flag = (bool)value;
+                flag = boolValue;
             }
             else if (value is bool?)
             {
-                bool? nullable = (bool?)value;
-                flag = nullable.HasValue ? nullable.Value : false;
+                flag = (bool?)value ?? false;
             }
-            else if(value is int)
+            else if (value is int)
             {
-                if (System.Convert.ToInt16(value) <= 1)
-                    flag = true;
-                else
-                    flag = false;
+                flag = System.Convert.ToInt16(value) <= 1;
             }
-            else if(value is double)
+            else if (value is double)
             {
-                if (System.Convert.ToInt16(value) <= 1)
-                    flag = false;
-                else
-                    flag = true;
+                flag = System.Convert.ToInt16(value) > 1;
             }
-            else if(value is ImageSource)
+            else if (value is ImageSource imageSource)
             {
-                if (((ImageSource)value)== null)
-                    flag = false;
-                else
-                    flag = true;
+                flag = imageSource != null;
             }
-            else if(value is string)
+            else if(value is string stringValue)
             {
-                if (((string)value).Length <= 0)
-                    flag = false;
-                else
-                    flag = true;
+                flag = stringValue.Length > 0;
             }
-            var vis = (flag ? Visibility.Visible : Visibility.Collapsed);
-            return vis;
+            return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            return (Visibility)value == Visibility.Collapsed ? false : true;
+            return (Visibility)value != Visibility.Collapsed;
         }
     }
 }

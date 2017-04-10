@@ -130,8 +130,7 @@ namespace BreadPlayer.Extensions
         public static readonly DependencyProperty TagProperty =
             DependencyProperty.Register("Tag", typeof(object), typeof(CustomFlyout), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
             {
-                var obj = o as CustomFlyout;
-                obj.Tag = args.NewValue;
+                (o as CustomFlyout).Tag = args.NewValue;
             }
         ));
     }
@@ -235,13 +234,12 @@ namespace BreadPlayer.Extensions
             DependencyProperty.Register("MyItems",
                 typeof(List<MenuFlyoutItemBase>),
                 typeof(FlyoutMenuExtension),
-                new PropertyMetadata(new ThreadSafeObservableCollection<ContextMenuCommand>(), (sender, e) => {
-                  
+                new PropertyMetadata(new ThreadSafeObservableCollection<ContextMenuCommand>(), (sender, e) =>
+                {
                     var menuFlyout = sender as MenuFlyout;
                     Menu = menuFlyout;
-                   Setup(menuFlyout);
-                    
-                }));      
+                    Setup(menuFlyout);
+                }));
 
         private static void OptionItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

@@ -15,30 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using BreadPlayer.ViewModels;
+using BreadPlayer.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-using BreadPlayer.ViewModels;
-using System.Diagnostics;
-using Windows.UI.Xaml.Media.Imaging;
-using System.Threading.Tasks;
-using BreadPlayer.Extensions;
-using Windows.UI.Xaml.Media.Animation;
-using BreadPlayer.Core;
 
 namespace BreadPlayer
 {
@@ -71,7 +54,7 @@ namespace BreadPlayer
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)
         {
-            fileBox.FindChildOfType<ScrollViewer>().ViewChanging += PlaylistView_ViewChanging; ;
+            fileBox.FindChildOfType<ScrollViewer>().ViewChanging += PlaylistView_ViewChanging;
         }
      
         private void PlaylistView_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)

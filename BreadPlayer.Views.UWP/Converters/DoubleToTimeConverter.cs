@@ -26,9 +26,8 @@ namespace BreadPlayer.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string FormattedTime = "00:00";
-            if (value is double)
+            if (value is double time)
             {
-                double time = (double)value;
                 FormattedTime = TimeSpan.FromSeconds(time).ToString(@"mm\:ss");                
             }
             return FormattedTime;
@@ -58,7 +57,6 @@ namespace BreadPlayer.Converters
                     }
                     return (width / 2) - 20;
                 }
-                    
             }
             return width;
         }

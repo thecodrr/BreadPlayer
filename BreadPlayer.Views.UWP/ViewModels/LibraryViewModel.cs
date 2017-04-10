@@ -560,8 +560,9 @@ namespace BreadPlayer.ViewModels
             grouped = group;
             source = src;
             libgrouped = ViewSource.IsSourceGrouped;
-            if((src as ThreadSafeObservableCollection<Mediafile>)?.Any() == true && Player.CurrentlyPlayingFile != null && (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
-                (src as ThreadSafeObservableCollection<Mediafile>).FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+            var tMediaFile = src as ThreadSafeObservableCollection<Mediafile>;
+            if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
+                tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
@@ -880,18 +881,17 @@ namespace BreadPlayer.ViewModels
         {
             if (file != null)
             {
+                MenuFlyoutItem menu = file as MenuFlyoutItem;
                 //songList is a variable to initiate both (if available) sources of songs. First is AlbumSongs and the second is the direct library songs.
                 List<Mediafile> songList = new List<Mediafile>();
-                if ((file as MenuFlyoutItem).Tag == null)
+                if (menu.Tag == null)
                 {
-                    songList = (file as MenuFlyoutItem).DataContext is Album ?
-                       ((file as MenuFlyoutItem).DataContext as Album).AlbumSongs.ToList() : SelectedItems;
+                    songList = menu.DataContext is Album album ? album.AlbumSongs.ToList() : SelectedItems;
                 }
                 else
                 {
                     songList.Add(Player.CurrentlyPlayingFile);
                 }
-                var menu = file as MenuFlyoutItem;
                 Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : LibraryService.GetPlaylist(menu?.Text);
                 bool proceed = false;
                 if (menu.Text != "New Playlist")
@@ -1031,8 +1031,7 @@ namespace BreadPlayer.ViewModels
         {
             if (e.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
             {
-                var mediafile = (e.OriginalSource as Border).Tag;
-                Play(mediafile);
+                Play((e.OriginalSource as Border).Tag);
             }
         }
         public List<Mediafile> SelectedItems { get; set; } = new List<Mediafile>();

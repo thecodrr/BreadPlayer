@@ -265,9 +265,9 @@ namespace SplitViewMenu
 
         private static void OnContainerContextChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            if (!args.InRecycleQueue && args.Item is INavigationMenuItem)
+            if (!args.InRecycleQueue && args.Item is INavigationMenuItem navigationMenu)
             {
-                args.ItemContainer.SetValue(AutomationProperties.NameProperty, ((INavigationMenuItem)args.Item).Label);
+                args.ItemContainer.SetValue(AutomationProperties.NameProperty, navigationMenu.Label);
             }
             else
             {
@@ -292,9 +292,9 @@ namespace SplitViewMenu
             {
                 UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
             }
-            else if(e.Parameter is Query)
+            else if(e.Parameter is Query query)
             {
-                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + (e.Parameter as Query).QueryWord + "\"" });
+                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + query.QueryWord + "\"" });
             }
         }
         public static void UnSelectAll()
@@ -357,11 +357,11 @@ namespace SplitViewMenu
                     if (entry.SourcePageType == typeof(PlaylistView))
                     {
                         var para = entry.Parameter; //get previous entry's parameter
-                        if (para is Playlist)
-                            item = PlaylistsItems.SingleOrDefault(p => p.Label == (para as Playlist).Name); //search for the item in PlaylistItems with the same label as in parameters Name.
-                        else if (para is Album)
+                        if (para is Playlist playlist)
+                            item = PlaylistsItems.SingleOrDefault(p => p.Label == playlist.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                        else if (para is Album album)
                         {
-                            _pageFrame.Navigate(typeof(PlaylistView), para as Album);
+                            _pageFrame.Navigate(typeof(PlaylistView), album);
                             return;
                         }
                     }
@@ -395,8 +395,8 @@ namespace SplitViewMenu
             if (item != null) 
             {
                 _headerText.DataContext = item;
-                shortcuts.DataContext = (item as SimpleNavMenuItem).Shortcuts;
-                shortcuts.ItemsSource = (item as SimpleNavMenuItem).Shortcuts;
+                shortcuts.DataContext = item.Shortcuts;
+                shortcuts.ItemsSource = item.Shortcuts;
             }
         }
         private void OnNavMenuItemInvoked(object sender, ListViewItem e)
@@ -406,7 +406,7 @@ namespace SplitViewMenu
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&
-              item.DestinationPage != _pageFrame.CurrentSourcePageType)
+                    item.DestinationPage != _pageFrame.CurrentSourcePageType)
                 {
                     _pageFrame.Navigate(item.DestinationPage, item.Arguments);
                 }
@@ -414,7 +414,7 @@ namespace SplitViewMenu
             else
             {
                 if (item?.DestinationPage != null &&
-              item.Label != LastItem?.Label)
+                    item.Label != LastItem?.Label)
                 {
                     _pageFrame.Navigate(item.DestinationPage, item.Arguments);
 

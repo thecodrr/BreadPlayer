@@ -260,6 +260,5 @@ namespace BreadPlayer
             // Run the GC to collect released resources.
             GC.Collect();
         }
-
     }
 }

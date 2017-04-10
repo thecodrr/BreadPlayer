@@ -114,12 +114,12 @@ namespace BreadPlayer.Extensions
                     foreach (var item in range)
                     {
                         await Task.Run(() =>
-                       {
-                           for (int i = 0; i < objectArray.Count(); i++)
-                           {
-                               AddItem(objectArray[i]);
-                           }
-                       });
+                        {
+                            for (int i = 0; i < objectArray.Count(); i++)
+                            {
+                                AddItem(objectArray[i]);
+                            }
+                        });
                     }
                 }
                 else
@@ -147,7 +147,7 @@ namespace BreadPlayer.Extensions
         {
             try
             {
-                if (_isObserving == true)
+                if (_isObserving)
                     base.OnCollectionChanged(e);
             }
             catch (Exception ex)

@@ -242,7 +242,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         var result = base.Remove(item);
         sync.ExitWriteLock();
         return result;
-
     }
 
 
@@ -252,8 +251,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         var result = base.IndexOf(item);
         sync.ExitReadLock();
         return result;
-
-
     }
 
     public new async void Insert(int index, T item)
@@ -262,7 +259,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             DoInsert(index, item);
         else
         {
-
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoInsert(index, item));
         }
     }
@@ -294,7 +290,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
         base.RemoveAt(index);
         sync.ExitWriteLock();
-
     }
 
     public new T this[int index]

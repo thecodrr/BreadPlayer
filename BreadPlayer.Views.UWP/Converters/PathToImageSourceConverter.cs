@@ -18,9 +18,9 @@ namespace BreadPlayer.Converters
                 image.DecodePixelHeight = 200;
                 image.DecodePixelWidth = 200;
             }
-            if (value is string && !string.IsNullOrEmpty(value.ToString()))
+            if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
             {
-                image.UriSource = new Uri(value.ToString(), UriKind.RelativeOrAbsolute);
+                image.UriSource = new Uri(stringValue, UriKind.RelativeOrAbsolute);
             }
             if (value == null)
             {
@@ -41,13 +41,13 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is Color)
+            if (value is Color colorValue)
             {
                 //if(value.ToString() == "#00000000")
                 //{
                 //    return Themes.ThemeManager.GetThemeColor();
                 //}
-                SolidColorBrush color = new SolidColorBrush((Color)value);
+                SolidColorBrush color = new SolidColorBrush(colorValue);
                 //Themes.ThemeManager.SetThemeColor(color.Color);
                 return color;
             }

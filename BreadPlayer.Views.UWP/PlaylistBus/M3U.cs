@@ -40,7 +40,7 @@ namespace BreadPlayer.PlaylistBus
                             {
                                 index++;
                                 FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
-                                    string path = line;
+                                string path = line;
                                 if (!File.Exists(line) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
                                 {
                                     path = info.DirectoryName + line; //add directory path to song path.

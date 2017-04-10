@@ -116,6 +116,8 @@ namespace BreadPlayer
 
         public async static void UpdateSmtc()
         {
+            if (_smtc == null) return;
+
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             _smtc.DisplayUpdater.ClearAll();
@@ -162,30 +164,32 @@ namespace BreadPlayer
         }
         private static void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
         {
-            if (_smtc != null)
-                switch (e.NewState)
-                {
-                    case PlayerState.Playing:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                        //if (_smtc.IsEnabled == false)
-                        //{
-                        //    if (update)
-                        //    {
-                        //        UpdateSmtc(true);
-                        //        update = false;
-                        //        player.Pause();
-                        //    }
-                        //}
-                        break;
-                    case PlayerState.Paused:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
-                        break;
-                    case PlayerState.Stopped:
-                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
-                        break;
-                    default:
-                        break;
-                }
+            if (_smtc == null)
+                return;
+
+            switch (e.NewState)
+            {
+                case PlayerState.Playing:
+                    _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                    //if (_smtc.IsEnabled == false)
+                    //{
+                    //    if (update)
+                    //    {
+                    //        UpdateSmtc(true);
+                    //        update = false;
+                    //        player.Pause();
+                    //    }
+                    //}
+                    break;
+                case PlayerState.Paused:
+                    _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
+                    break;
+                case PlayerState.Stopped:
+                    _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 
@@ -205,7 +209,7 @@ namespace BreadPlayer
         {
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText02);
 
-            var toastImageElements = toastXml.GetElementsByTagName("image");
+            //var toastImageElements = toastXml.GetElementsByTagName("image");
             var toastTextElements = toastXml.GetElementsByTagName("text");
             toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
             toastTextElements[1].AppendChild(toastXml.CreateTextNode(subMsg));
@@ -250,8 +254,7 @@ namespace BreadPlayer
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
-            Player.Volume = volume;
+            Player.Volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
         }
         #endregion
 

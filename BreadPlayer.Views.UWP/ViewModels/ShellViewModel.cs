@@ -25,7 +25,6 @@ using Windows.UI.Core;
 using BreadPlayer.Core;
 using System.ComponentModel;
 using BreadPlayer.Models;
-using System.Windows.Input;
 using BreadPlayer.Extensions;
 using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
@@ -33,8 +32,6 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
-using BreadPlayer.Services;
-using BreadPlayer.Views;
 
 namespace BreadPlayer.ViewModels
 {
@@ -86,10 +83,10 @@ namespace BreadPlayer.ViewModels
         }
         private void HandleLibraryLoadedMessage(Message message)
         {
-            if (message.Payload is ThreadSafeObservableCollection<Mediafile>)
+            if (message.Payload is ThreadSafeObservableCollection<Mediafile> tMediaFile)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                PlaylistSongCollection = message.Payload as ThreadSafeObservableCollection<Mediafile>;
+                PlaylistSongCollection = tMediaFile;
             }
             else
             {
@@ -114,8 +111,7 @@ namespace BreadPlayer.ViewModels
 
         void HandlePlaySongMessage(Message message)
         {
-            var obj = message.Payload as List<object>;
-            if(obj != null)
+            if (message.Payload is List<object> obj)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 var file = obj[0] as Mediafile;
@@ -150,9 +146,9 @@ namespace BreadPlayer.ViewModels
 
         void HandleSaveSongToStopAfterMessage(Message songToStopAfter)
         {
-            if (songToStopAfter.Payload is Mediafile)
+            if (songToStopAfter.Payload is Mediafile mediaFile)
             {
-                _songToStopAfter = (Mediafile)songToStopAfter.Payload;
+                _songToStopAfter = mediaFile;
             }
         }
 
@@ -288,7 +284,7 @@ namespace BreadPlayer.ViewModels
                         }
                         toPlayFile = ShuffledList?.ElementAt(IndexOfCurrentlyPlayingFile + 1);
                     }
-                    else if(IsSourceGrouped)
+                    else if (IsSourceGrouped)
                     {
                         toPlayFile = GetNextSongInGroup();
                     }

@@ -62,7 +62,7 @@ namespace BreadPlayer.Core
                     Bass.Init();
                     Effect = new Effects();
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                    await Init(isMobile);
                 }
@@ -117,7 +117,7 @@ namespace BreadPlayer.Core
                        
                         CurrentlyPlayingFile = mediaFile;
                     });
-                    MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                    MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
 
                     return true;
                 }
@@ -129,13 +129,13 @@ namespace BreadPlayer.Core
             else
             { 
                 string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-                if (IgnoreErrors == false)
+                if (IgnoreErrors)
                 {
-                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
+                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
                 }
                 else
                 {
-                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
+                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
                 }          
             }
             return false;
@@ -149,7 +149,7 @@ namespace BreadPlayer.Core
         public async Task Pause()
         {
             PlayerState = PlayerState.Paused;
-            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Paused));
+            MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Paused));
             await Task.Run(async () =>
             {
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 700);
@@ -168,14 +168,13 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                var vol = (float)Volume / 100f;
                 Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, 0f);
                 ManagedBass.Bass.ChannelPlay(handle);
+                var vol = (float)Volume / 100f;
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, vol, 3000);
                 PlayerState = PlayerState.Playing;
             });
-            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Playing));
-
+            MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
         }
         /// <summary>
         /// Stops the playback if it is playing.
@@ -194,9 +193,7 @@ namespace BreadPlayer.Core
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
             });
-
-            MediaStateChanged(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-
+            MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
         }
         #endregion
 

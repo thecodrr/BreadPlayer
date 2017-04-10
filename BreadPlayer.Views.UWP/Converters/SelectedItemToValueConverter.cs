@@ -20,9 +20,9 @@ namespace BreadPlayer.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            if (value is ComboBoxItem)
+            if (value is ComboBoxItem comboBox)
             {
-                return (value as ComboBoxItem).Content.ToString();
+                return comboBox.Content.ToString();
             }
             return 0;
         }

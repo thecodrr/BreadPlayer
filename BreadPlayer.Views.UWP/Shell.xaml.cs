@@ -44,20 +44,19 @@ namespace BreadPlayer
             this.InitializeComponent();
             SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            CoreWindowLogic logic = new CoreWindowLogic();
+            new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
             LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
             {
                 SymbolAsChar = "\uE762", Tooltip = "Enable Multiselection",
                 ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
-
         }
            
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if(e.Parameter is StorageFile)
-             Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
+                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
             
             base.OnNavigatedTo(e);
         }

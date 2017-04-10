@@ -51,12 +51,12 @@ namespace SplitViewMenu
 
             if (parent == null)
                 return;
-            _splitViewHost = (SplitView) parent;
+            _splitViewHost = (SplitView)parent;
 
             _splitViewHost.RegisterPropertyChangedCallback(SplitView.IsPaneOpenProperty,
                 (_, __) => { OnPaneToggled(); });
 
-            OnPaneToggled();            
+            OnPaneToggled();
         }
 
         protected override void OnApplyTemplate()
@@ -109,9 +109,8 @@ namespace SplitViewMenu
                     var item = focusedItem as ListViewItem;
                     if (item != null && Items != null)
                     {
-                        var currentItem = item;
-                        var onlastitem = IndexFromContainer(currentItem) == Items.Count - 1;
-                        var onfirstitem = IndexFromContainer(currentItem) == 0;
+                        var onlastitem = IndexFromContainer(item) == Items.Count - 1;
+                        var onfirstitem = IndexFromContainer(item) == 0;
 
                         if (!shiftKeyDown)
                         {
@@ -164,16 +163,16 @@ namespace SplitViewMenu
 
         private void InvokeItem(object focusedItem)
         {
-            SetSelectedItem(focusedItem as ListViewItem);
+            ListViewItem item = focusedItem as ListViewItem;
+            SetSelectedItem(item);
             var handler = ItemInvoked;
-            handler?.Invoke(this, focusedItem as ListViewItem);
+            handler?.Invoke(this, item);
 
             if (!_splitViewHost.IsPaneOpen ||
                 (_splitViewHost.DisplayMode != SplitViewDisplayMode.CompactOverlay &&
                  _splitViewHost.DisplayMode != SplitViewDisplayMode.Overlay))
                 return;
             _splitViewHost.IsPaneOpen = false;
-            var item = focusedItem as ListViewItem;
             item?.Focus(FocusState.Programmatic);
         }
 

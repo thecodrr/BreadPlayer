@@ -7,28 +7,22 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            string sort = value as String;
-            if (sort == "LeadArtist")
+            string sort = value as string;
+            switch (sort)
             {
-                return "Artist";
+                case "LeadArtist":
+                    return "Artist";
+                case "TrackNumber":
+                    return "Track No.";
+                case "Length":
+                    return "Song Length";
+                case "FolderPath":
+                    return "Folder";
+                case "Title":
+                    return "A to Z";
+                default:
+                    return sort;
             }
-            else if (sort == "TrackNumber")
-            {
-                return "Track No.";
-            }
-            else if (sort == "Length")
-            {
-                return "Song Length";
-            }
-            else if (sort == "FolderPath")
-            {
-                return "Folder";
-            }
-            else if(sort == "Title")
-            {
-                return "A to Z";
-            }
-            return sort;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
