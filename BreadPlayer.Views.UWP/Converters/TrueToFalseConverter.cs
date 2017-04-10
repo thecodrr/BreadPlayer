@@ -24,22 +24,15 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is Windows.UI.Xaml.Controls.SplitViewDisplayMode)
+            if(value is Windows.UI.Xaml.Controls.SplitViewDisplayMode mode)
             { 
-                Windows.UI.Xaml.Controls.SplitViewDisplayMode mode = (Windows.UI.Xaml.Controls.SplitViewDisplayMode)value;
-                if (mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay)
-                    return true;
-                else
-                    return false;
+                return mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay;
             }
-            else if(value is bool)
+            else if (value is bool boolValue)
             {
                 if (parameter == null)
                 {
-                    if ((bool)value == true)
-                        return false;
-                    else
-                        return true;
+                    return boolValue != true;
                 }
             }
            

@@ -20,11 +20,8 @@ namespace BreadPlayer.Web.Lastfm
         public async Task<bool> Login(string username, string password)
         {
             var response = await Auth.Auth.GetSessionTokenAsync(username, password);
-            if (Auth.Auth.Authenticated)
-            {
-                return true;
-            }
-            return false;
+
+            return Auth.Auth.Authenticated;
         }
     }
 }

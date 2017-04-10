@@ -149,10 +149,8 @@ namespace BreadPlayer.Messengers
 		{
 			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
-			NotificationResult result = NotificationResult.MessageNotRegistered;
 
-			Type registeredParameterType;
-			if (_messageToActionsMap.TryGetParameterType(messageType, out registeredParameterType))
+			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
 			{
 				if (registeredParameterType == null)
 					throw new TargetParameterCountException(string.Format("Cannot pass a parameter with message '{0}'. Registered action(s) expect no parameter.", messageType));
@@ -175,24 +173,18 @@ namespace BreadPlayer.Messengers
 				switch (message.HandledStatus)
 				{
 					case MessageHandledStatus.NotHandled:
-						result = NotificationResult.MessageRegisteredNotHandled;
-						break;
+						return NotificationResult.MessageRegisteredNotHandled;
 					case MessageHandledStatus.HandledContinue:
-						result = NotificationResult.MessageHandled;
-						break;
+						return NotificationResult.MessageHandled;
 					case MessageHandledStatus.HandledCompleted:
-						result = NotificationResult.MessageHandled;
-						break;
+						return NotificationResult.MessageHandled;
 					case MessageHandledStatus.NotHandledAbort:
-						result = NotificationResult.MessageAborted;
-						break;
+						return NotificationResult.MessageAborted;
 					default:
 						break;
 				}
-
 			}
-			return result;
-
+			return NotificationResult.MessageNotRegistered;
 		}
 		private void Invoke(Message message, Delegate method)
 		{
@@ -210,8 +202,7 @@ namespace BreadPlayer.Messengers
 			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
 
-			Type registeredParameterType;
-			if (_messageToActionsMap.TryGetParameterType(messageType, out registeredParameterType))
+			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
 			{
 				if (registeredParameterType != null)
 					throw new TargetParameterCountException(string.Format("Must pass a parameter of type {0} with this message. Registered action(s) expect it.", registeredParameterType.FullName));
@@ -283,8 +274,7 @@ namespace BreadPlayer.Messengers
 			{
 				lock (_map)
 				{
-					List<WeakAction> wr;
-					if (_map.TryGetValue(message, out wr))
+					if (_map.TryGetValue(message, out List<WeakAction> wr))
 					{
 						wr.RemoveAll(wa => target == wa.TargetRef.Target && method == wa.Method);
 
@@ -303,12 +293,10 @@ namespace BreadPlayer.Messengers
 			{
 				lock (_map)
 				{
-					ICollection<List<WeakAction>> x = _map.Values;
-					foreach (var item in x)
+					foreach (var item in _map.Values)
 					{
 						item.RemoveAll(wa => target == wa.TargetRef.Target);
 					}
-
 				}
 			}
 

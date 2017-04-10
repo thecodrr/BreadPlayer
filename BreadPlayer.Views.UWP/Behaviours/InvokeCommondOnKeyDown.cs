@@ -14,8 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/  
-using System.Windows.Input;
+*/
 using Microsoft.Xaml.Interactivity;
 using Windows.System;
 using Windows.UI.Core;
@@ -64,33 +63,23 @@ namespace BreadPlayer.Behaviours
 
         public object Execute(object sender, object parameter)
         {
-            var ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-            ListView fileBox = sender as ListView;
-            if (fileBox.SelectedItems.Count > 0)
+            if ((sender as ListView).SelectedItems.Count > 0)
             {
                 KeyRoutedEventArgs keyPrarm = parameter as KeyRoutedEventArgs;
                 if (keyPrarm != null)
                 {
-                    if (!this.DoubleKeyCommand)
+                    if (!this.DoubleKeyCommand && keyPrarm.Key == this.PressedKey)
                     {
-                        if (keyPrarm.Key == this.PressedKey)
-                        {
-                            var p = this.CommandParameter;
-                            this.Command.Execute(p);
-                            keyPrarm.Handled = true;
-                        }
+                        var p = this.CommandParameter;
+                        this.Command.Execute(p);
+                        keyPrarm.Handled = true;
                     }
-                    else
+                    else if (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
+                        && keyPrarm.Key == PressedKey)
                     {
-                        if (ctrl == CoreVirtualKeyStates.Down)
-                        {
-                            if (keyPrarm.Key == PressedKey)
-                            {
-                                var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
-                                this.Command.Execute(p);
-                                keyPrarm.Handled = true;
-                            }
-                        }
+                        var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
+                        this.Command.Execute(p);
+                        keyPrarm.Handled = true;
                     }
                 }               
             }

@@ -131,8 +131,8 @@ namespace BreadPlayer.Core
         async void ShowProperties(object para)
         {
             Mediafile file = null;
-            if (para is Mediafile)
-                file = para as Mediafile;
+            if (para is Mediafile mediaFile)
+                file = mediaFile;
             else
                 file = Player.CurrentlyPlayingFile;
             BreadPlayer.Dialogs.TagDialog tag = new BreadPlayer.Dialogs.TagDialog(file);
@@ -148,9 +148,9 @@ namespace BreadPlayer.Core
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(mp3File.Path));
             if (folder != null)
             {
-                StorageFile storageFile = await StorageFile.GetFileFromPathAsync(mp3File.Path);
+                var storageFile = StorageFile.GetFileFromPathAsync(mp3File.Path);
                 var folderOptions = new FolderLauncherOptions();
-                folderOptions.ItemsToSelect.Add(storageFile);
+                folderOptions.ItemsToSelect.Add(await storageFile);
                 await Launcher.LaunchFolderAsync(folder, folderOptions);                
             }
         }
@@ -171,9 +171,9 @@ namespace BreadPlayer.Core
                 try
                 {
                     //Create a decoder for the image
-                    var decoder = await BitmapDecoder.CreateAsync(stream);
+                    var decoder = BitmapDecoder.CreateAsync(stream);
                     var colorThief = new ColorThiefDotNet.ColorThief();
-                    var qColor = await colorThief.GetColor(decoder);
+                    var qColor = await colorThief.GetColor(await decoder);
 
                     //read the color 
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
@@ -200,85 +200,78 @@ namespace BreadPlayer.Core
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mediafile)
         {
-
             var albumArt = AlbumArtFileExists(mediafile);
-            if (albumArt.NotExists)
+            if (!albumArt.NotExists) return false;
+
+            try
             {
-                try
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.ReturnOnlyIfCached | ThumbnailOptions.UseCurrentScale))
                 {
-                    using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.ReturnOnlyIfCached | ThumbnailOptions.UseCurrentScale))
+                    if (thumbnail == null) return false;
+                    switch (thumbnail.Type)
                     {
-                        if (thumbnail != null)
-                        {
-                            switch (thumbnail.Type)
+                        case ThumbnailType.Image:
+                            var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                            Windows.Storage.Streams.IBuffer buf;
+                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
+                            using (Windows.Storage.Streams.IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                case ThumbnailType.Image:
-                                    var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-                                    Windows.Storage.Streams.IBuffer buf;
-                                    Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
-                                    using (Windows.Storage.Streams.IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
-                                    {
-                                        while ((buf = (await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None))).Length > 0)
-                                            await albumstream.WriteAsync(buf);
-                                        return true;
-                                    }
-
-                                case ThumbnailType.Icon:
-                                    using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
-                                    {
-                                        if (tagFile.Tag.Pictures.Length >= 1)
-                                        {
-                                            var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-
-                                            using (var albumstream = await image.OpenStreamForWriteAsync())
-                                            {
-                                                await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                                            }
-                                            return true;
-                                        }
-                                    }
-                                    break;
+                                while ((buf = (await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None))).Length > 0)
+                                    await albumstream.WriteAsync(buf);
+                                return true;
                             }
-                            GC.Collect();
-                        }
-                    }
 
-                }
-                catch (Exception ex)
-                {
-                    await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
-                    return false;
+                        case ThumbnailType.Icon:
+                            using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                            {
+                                if (tagFile.Tag.Pictures.Length >= 1)
+                                {
+                                    var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+
+                                    using (var albumstream = await image.OpenStreamForWriteAsync())
+                                    {
+                                        await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                                    }
+                                    return true;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    GC.Collect();
                 }
             }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+            }
+
             return false;
         }
 
         static LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
-            if (file != null)
+            if (file == null) return false;
+
+            using (service = new LibraryService(new KeyValueStoreDatabaseService()))
             {
-                using (service = new LibraryService(new KeyValueStoreDatabaseService()))
-                {
-                    SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
-                    service.AddMediafile(file);
-                    return true;
-                }
+                SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
+                service.AddMediafile(file);
+                return true;
             }
-            return false;
         }
         public static bool RemoveMediafile(Mediafile file)
         {
-            if (file != null)
+            if (file == null) return false;
+
+            using (service = new LibraryService(new KeyValueStoreDatabaseService()))
             {
-                using (service = new LibraryService(new KeyValueStoreDatabaseService()))
-                {
-                    SettingsViewModel.TracksCollection.Elements.Remove(file);
-                    service.RemoveMediafile(file);
-                    return true;
-                }
+                SettingsViewModel.TracksCollection.Elements.Remove(file);
+                service.RemoveMediafile(file);
+                return true;
             }
-            return false;
         }
         public static bool VerifyFileExists(string path, int timeout)
         {
@@ -292,7 +285,6 @@ namespace BreadPlayer.Core
         }
         public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
         {
-
             var mediafile = new Mediafile();
             try
             {               
@@ -332,14 +324,9 @@ namespace BreadPlayer.Core
         {
             if (playlist.IsPrivate)
             {
-                if (await ShowPasswordDialog(playlist.Hash, playlist.Salt))
-                {
-                    return true;
-                }
+                return await ShowPasswordDialog(playlist.Hash, playlist.Salt);
             }
-            else
-                return true;
-            return false;
+            return true;
         }
         public async Task<bool> ShowPasswordDialog(string hash, string salt)
         {

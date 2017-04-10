@@ -8,10 +8,9 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool mode = (bool)value;
-            if (value is bool)
+            if (value is bool mode)
             {
-                if (mode == true)
+                if (mode)
                     return ListViewSelectionMode.Multiple;
                 else
                     return ListViewSelectionMode.Extended;                

@@ -54,28 +54,20 @@ namespace BreadPlayer.Helpers
                     return success;
                 }
             }
-            else
+            else if (!File.Exists(ApplicationData.Current.TemporaryFolder.Path + "\\lockscreen.jpg"))
             {
-                if (!File.Exists(ApplicationData.Current.TemporaryFolder.Path + "\\lockscreen.jpg"))
+                using (IRandomAccessStream imageStream = LockScreen.GetImageStream())
+                using (var reader = new DataReader(imageStream))
                 {
-                    IRandomAccessStream imageStream = null;
-
-                    imageStream = LockScreen.GetImageStream();
-                    using (imageStream)
-                    {
-                        using (var reader = new DataReader(imageStream))
-                        {
-                            var lockscreenFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lockscreen.jpg", CreationCollisionOption.FailIfExists);
-                            await reader.LoadAsync((uint)imageStream.Size);
-                            var buffer = new byte[(int)imageStream.Size];
-                            reader.ReadBytes(buffer);
-                            await Windows.Storage.FileIO.WriteBytesAsync(lockscreenFile, buffer);
-                            DefaultImage = lockscreenFile;
-                            StorageApplicationPermissions.FutureAccessList.Add(DefaultImage);
-                        }
-                        return true;
-                    }
+                    var lockscreenFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("lockscreen.jpg", CreationCollisionOption.FailIfExists);
+                    await reader.LoadAsync((uint)imageStream.Size);
+                    var buffer = new byte[(int)imageStream.Size];
+                    reader.ReadBytes(buffer);
+                    await Windows.Storage.FileIO.WriteBytesAsync(lockscreenFile, buffer);
+                    DefaultImage = lockscreenFile;
+                    StorageApplicationPermissions.FutureAccessList.Add(DefaultImage);
                 }
+                return true;
             }
             return false;
         }        

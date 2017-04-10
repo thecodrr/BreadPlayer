@@ -15,25 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using BreadPlayer.Models;
-using System.Text.RegularExpressions;
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -69,13 +58,13 @@ namespace BreadPlayer
             try
             {  // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
-                Grouping<string, Mediafile> myGroup = null;
-                myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;
-                SemanticZoomLocation zoomloc = new SemanticZoomLocation();
-                zoomloc.Bounds = new Windows.Foundation.Rect(0, 0, 1, 1);
-                zoomloc.Item = myGroup;
-                e.DestinationItem = zoomloc;
+                e.DestinationItem = new SemanticZoomLocation()
+                {
+                    Bounds = new Windows.Foundation.Rect(0, 0, 1, 1),
+                    Item = myGroup
+                };
             }
             catch { }
         }              

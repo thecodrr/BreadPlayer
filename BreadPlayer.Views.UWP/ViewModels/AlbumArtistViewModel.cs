@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BreadPlayer.Models;
-using System.Windows.Input;
 using Windows.Storage;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
-using DBreeze;
-using Newtonsoft.Json;
-using DBreeze.Utils;
 using BreadPlayer.Service;
 
 namespace BreadPlayer.ViewModels
@@ -76,7 +72,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public ThreadSafeObservableCollection<Album> AlbumCollection
         {
-            get {if(albumcollection ==null) albumcollection = new ThreadSafeObservableCollection<Album>(); return albumcollection; }
+            get { if (albumcollection == null) albumcollection = new ThreadSafeObservableCollection<Album>(); return albumcollection; }
             set { Set(ref albumcollection, value); }
         }
         /// <summary>
@@ -88,15 +84,13 @@ namespace BreadPlayer.ViewModels
         /// </remarks>
         public void AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
-            var albumsGroups = mediafiles.GroupBy(t => t.Album);
             List<Album> albums = new List<Album>();
-            foreach (var albumGroup in albumsGroups)
+            foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
             {
-                var albumSongs = albumGroup.Select(t => t);
-                var firstSong = albumSongs.First() ?? new Mediafile();
+                var firstSong = albumGroup.First() ?? new Mediafile();
                 Album album = new Album()
                 {
-                    AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumSongs),
+                    AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumGroup),
                     Artist = firstSong?.LeadArtist,
                     AlbumName = albumGroup.Key,
                     AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
@@ -115,9 +109,8 @@ namespace BreadPlayer.ViewModels
         }
         void NavigateToAlbumPage(object para)
         {
-            if(para is Album)
+            if(para is Album album)
             {
-                Album album = para as Album;
                 SplitViewMenu.SplitViewMenu.UnSelectAll();
                
                 NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);

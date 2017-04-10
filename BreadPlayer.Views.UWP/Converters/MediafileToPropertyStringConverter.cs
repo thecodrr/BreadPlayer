@@ -24,11 +24,7 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            string val = value.ToString();
-            if (val == "Playing")
-                return true;
-            else
-                return false;
+            return value.ToString() == "Playing";
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

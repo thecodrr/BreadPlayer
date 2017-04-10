@@ -20,9 +20,9 @@ namespace BreadPlayer.Web._123music
             if (songCount <= 0)
                 return false;
             int totalPages = Convert.ToInt32(htmlDoc.QuerySelector("ul.pagination")?.Children.Last().FirstElementChild.GetAttribute("data-ci-pagination-page"));
-            List<Track> Songs = new List<Track>(GetSongs(htmlDoc));
             if (totalPages > 0)
             {
+                List<Track> Songs = new List<Track>(GetSongs(htmlDoc));
                 for (int i = 2; i <= 3; i++)
                 {
                     var page = await GetHtmlResponseDocumentAsync(string.Format(Endpoints.SearchEndpoint, "songs", term, i.ToString() + ".html"));
@@ -45,8 +45,7 @@ namespace BreadPlayer.Web._123music
             if (htmlDoc != null)
             {
                 List<T> Items = new List<T>(GetItems<T>(htmlDoc, isJson));
-                if (Items.Count > 0)
-                    return true;
+                return Items.Count > 0;
             }
             return false;
         }

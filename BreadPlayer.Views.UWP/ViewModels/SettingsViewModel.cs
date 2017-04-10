@@ -143,9 +143,9 @@ namespace BreadPlayer.ViewModels
         #region MessageHandling
         private async void HandleLibraryLoadedMessage(Message message)
         {
-            if (message.Payload is List<object>)
+            if (message.Payload is List<object> list)
             {
-                TracksCollection = (message.Payload as List<object>)[0] as GroupedObservableCollection<string, Mediafile>;
+                TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
                 if (new LibraryService(new KeyValueStoreDatabaseService()).SongCount == 0)
                 {
                     //await AutoLoadMusicLibraryAsync().ConfigureAwait(false);

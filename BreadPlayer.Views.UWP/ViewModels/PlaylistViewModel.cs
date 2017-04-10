@@ -22,7 +22,6 @@ using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
-using System.Windows.Input;
 using Windows.UI.Core;
 using BreadPlayer.Dialogs;
 using Windows.UI.Popups;
@@ -244,16 +243,17 @@ namespace BreadPlayer.ViewModels
         }
         public void Init(object data)
         {
-            if (data is Playlist)
+            if (data is Playlist playlist)
             {
-                Playlist = data as Playlist;
+                Playlist = playlist;
                 LoadDB();
             }
             else
             {
+                Album album = data as Album;
                 IsMenuVisible = false;
-                Playlist = new Playlist() { Name = (data as Album).AlbumName, Description = (data as Album).Artist};
-                LoadAlbumSongs(data as Album);               
+                Playlist = new Playlist() { Name = album.AlbumName, Description = album.Artist };
+                LoadAlbumSongs(album);               
             }
             Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
         }
