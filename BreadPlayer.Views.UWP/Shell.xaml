@@ -208,7 +208,7 @@
             <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
             <Grid Margin="20,10">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock FontSize="14" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
+                    <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
                 </StackPanel>
             </Grid>
         </Border>
@@ -227,10 +227,8 @@
                         <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource LibVM}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                         </MenuFlyout>
                     </Grid.Resources>
-                    <StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=albumart, Path=ImageSource, Mode=TwoWay,UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}" VerticalAlignment="Stretch" Height="Auto">
-                        <Grid>
-                            <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
-                        </Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Height="Auto">
+                        <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
                         <StackPanel  x:Name="tagsPanel" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>
                             <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>

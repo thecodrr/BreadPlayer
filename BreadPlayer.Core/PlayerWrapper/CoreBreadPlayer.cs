@@ -99,7 +99,8 @@ namespace BreadPlayer.Core
             {
                 try
                 {
-                   // MediaChanging(this, new EventArgs());
+                    await InitializeCore.Dispatcher.RunAsync(() => { MediaChanging(this, new EventArgs()); });
+                   
                     string path = mediaFile.Path;                    
                     await Stop();
                     await Task.Run(() =>

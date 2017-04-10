@@ -359,10 +359,10 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Implementations 
-        private void AddToFavorites(object para)
+        private async void AddToFavorites(object para)
         {
             var mediaFile = GetMediafileFromParameterAsync(para, false);
-            LibraryService.UpdateMediafile(mediaFile);
+            await LibraryService.UpdateMediafile(mediaFile);
         }
         /// <summary>
         /// Relocates song to a new location. We only update _id, Path and Length of the song.
@@ -384,7 +384,7 @@ namespace BreadPlayer.ViewModels
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path)._id = newMediafile._id;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
-                    LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == mediafile._id));
+                    await LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == mediafile._id));
                 }
             }
         }
@@ -565,7 +565,7 @@ namespace BreadPlayer.ViewModels
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 grouped = group;
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
@@ -581,9 +581,8 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
+                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false), false, false);
             });
-
-            TracksCollection.AddRange(await LibraryService.GetAllMediafiles(), false, true);
         }
 
         /// <summary>

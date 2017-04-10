@@ -241,23 +241,26 @@ namespace BreadPlayer.ViewModels
                     Play(null, TracksCollection.Elements.First());
                 else
                 {
-                    switch (Player.PlayerState)
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
-                        case PlayerState.Playing:
-                            await Player.Pause();
-                            timer.Stop();
-                            Player.PlayerState = PlayerState.Stopped;
-                            PlayPauseIcon = new SymbolIcon(Symbol.Play);
-                            break;
-                        case PlayerState.Paused:
-                        case PlayerState.Ended:
-                        case PlayerState.Stopped:
-                            await Player.Play();
-                            timer.Start();
-                            PlayPauseIcon = new SymbolIcon(Symbol.Pause);
-                            DontUpdatePosition = false;
-                            break;
-                    }
+                        switch (Player.PlayerState)
+                        {
+                            case PlayerState.Playing:
+                                await Player.Pause();
+                                timer.Stop();
+                                Player.PlayerState = PlayerState.Stopped;
+                                PlayPauseIcon = new SymbolIcon(Symbol.Play);
+                                break;
+                            case PlayerState.Paused:
+                            case PlayerState.Ended:
+                            case PlayerState.Stopped:
+                                await Player.Play();
+                                timer.Start();
+                                PlayPauseIcon = new SymbolIcon(Symbol.Pause);
+                                DontUpdatePosition = false;
+                                break;
+                        }
+                    });
                 }
             }
             catch(Exception ex)
@@ -274,7 +277,7 @@ namespace BreadPlayer.ViewModels
                 {                    
                     int IndexOfCurrentlyPlayingFile = -1;
                     if (playingCollection.Any(t => t.State == PlayerState.Playing))
-                        IndexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.SingleOrDefault(t => t.State == PlayerState.Playing));
+                        IndexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.State == PlayerState.Playing));
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
