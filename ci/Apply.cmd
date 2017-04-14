@@ -8,7 +8,7 @@ set SOURCE=%~dp0
 set INSTALL_LOCATION=%~1
 if not defined INSTALL_LOCATION set INSTALL_LOCATION=%VSINSTALLDIR%
 
-set MSBUILD_APPXPACKAGE_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage
+set MSBUILD_APPXPACKAGE_DIR='C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage'
 echo The Microsoft.Appxpackage.Targets file will be installed in the following directory: %MSBUILD_APPXPACKAGE_DIR%
  
 :: Make a backup of the .targets file
