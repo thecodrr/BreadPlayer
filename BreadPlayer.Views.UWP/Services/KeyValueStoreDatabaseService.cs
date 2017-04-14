@@ -119,15 +119,17 @@ namespace BreadPlayer.Service
                 tran.Commit();
             }
         }
-        public void InsertTracks(IEnumerable<Mediafile> records)
+        public async Task InsertTracks(IEnumerable<Mediafile> records)
         {
-            using (var tran = engine.GetTransaction())
+            await Task.Run(() =>
             {
-                foreach (var record in records)
+                using (var tran = engine.GetTransaction())
                 {
-                    var ir = tran.ObjectInsert<Mediafile>("Tracks", new DBreezeObject<Mediafile>
+                    foreach (var record in records)
                     {
-                        Indexes = new List<DBreezeIndex>
+                        var ir = tran.ObjectInsert<Mediafile>("Tracks", new DBreezeObject<Mediafile>
+                        {
+                            Indexes = new List<DBreezeIndex>
                         {
                         new DBreezeIndex(1, record.Path, record.FolderPath, record.LeadArtist, record.Album, record.Title) { PrimaryIndex = true }, //PI Primary Index
                         //One PI must be set, if any secondary index will append it to the end, for uniqueness
@@ -139,14 +141,15 @@ namespace BreadPlayer.Service
                         //new DBreezeIndex(4,p.Id) { AddPrimaryToTheEnd = false } //SI
                         },
 
-                        NewEntity = true,
-                        //Changes Select-Insert pattern to Insert (speeds up insert process)
-                        Entity = record //Entity itself
-                    },
-                        true);
+                            NewEntity = true,
+                            //Changes Select-Insert pattern to Insert (speeds up insert process)
+                            Entity = record //Entity itself
+                        },
+                            true);
+                    }
+                    tran.Commit();
                 }
-                tran.Commit();
-            }
+            });
         }
 
         public async Task<IEnumerable<T>> QueryRecords<T>(string tableName, string term)

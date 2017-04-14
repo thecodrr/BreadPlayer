@@ -19,12 +19,12 @@ namespace BreadPlayer.ViewModels
             AlbumDatabaseService = new KeyValueStoreDatabaseService(ApplicationData.Current.LocalFolder.Path + @"\AlbumsDB");
         }       
         #endregion
-        void HandleAddAlbumMessage(Message message)
+        async void HandleAddAlbumMessage(Message message)
         {
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                AddAlbums(message.Payload as List<Mediafile>);
+                await AddAlbums(message.Payload as List<Mediafile>);
             }
         }
         /// <summary>
@@ -82,24 +82,27 @@ namespace BreadPlayer.ViewModels
         /// For instance, for each loop needs to be removed.
         /// Maybe we can use direct database queries and fill the AlbumCollection with it?
         /// </remarks>
-        public void AddAlbums(IEnumerable<Mediafile> mediafiles)
+        public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
-            List<Album> albums = new List<Album>();
-            foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
+            await Task.Run(() =>
             {
-                var firstSong = albumGroup.First() ?? new Mediafile();
-                Album album = new Album()
+                List<Album> albums = new List<Album>();
+                foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
-                    AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumGroup),
-                    Artist = firstSong?.LeadArtist,
-                    AlbumName = albumGroup.Key,
-                    AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                };
-                albums.Add(album);
-            }
-            AlbumDatabaseService.InsertAlbums(albums);
-            AlbumCollection.AddRange(albums);
-            AlbumDatabaseService.Dispose();
+                    var firstSong = albumGroup.First() ?? new Mediafile();
+                    Album album = new Album()
+                    {
+                        AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumGroup),
+                        Artist = firstSong?.LeadArtist,
+                        AlbumName = albumGroup.Key,
+                        AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
+                    };
+                    albums.Add(album);
+                }
+                AlbumDatabaseService.InsertAlbums(albums);
+                AlbumCollection.AddRange(albums);
+                AlbumDatabaseService.Dispose();
+            });
         }
         RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand

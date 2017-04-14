@@ -434,7 +434,7 @@ namespace BreadPlayer.ViewModels
                 //tempList.Sort();
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
-                service.AddMediafiles(tempList);
+                await service.AddMediafiles(tempList);
                 service.Dispose();
 
                 watch.Stop();
@@ -443,6 +443,7 @@ namespace BreadPlayer.ViewModels
                 AlbumArtistViewModel vm = new AlbumArtistViewModel();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
+                vm = null;
                 //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
                 isLibraryLoading = false;
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);

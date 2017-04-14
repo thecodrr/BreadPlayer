@@ -14,14 +14,14 @@ namespace BreadPlayer.Service
         /// <returns></returns>
         Task<IEnumerable<Mediafile>> GetAllMediafiles();
         Task<IEnumerable<Mediafile>> Query(string term);
-        /// <summary>
-        /// Update a customer in the data store
-        /// </summary>
-        /// <param name="?"></param>
+        ///<summary>
+        ///Update a customer in the data store
+        ///</summary>
+        ///<param name="?"></param>
         Task<bool> UpdateMediafile(Mediafile data);
         void UpdateMediafiles(IEnumerable<Mediafile> data);
         void AddMediafile(Mediafile data);
-        void AddMediafiles(IEnumerable<Mediafile> data);
+        Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
         void RemoveMediafile(Mediafile data);
         Mediafile GetMediafile(string path);

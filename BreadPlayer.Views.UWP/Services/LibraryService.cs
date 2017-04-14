@@ -52,9 +52,9 @@ namespace BreadPlayer.Service
         {
             Database.InsertRecord("Tracks", TracksIndexes(data), data);
         }
-        public void AddMediafiles(IEnumerable<Mediafile> data)
+        public async Task AddMediafiles(IEnumerable<Mediafile> data)
         {
-            Database.InsertTracks(data);
+            await Database.InsertTracks(data);
         }
         public async Task<bool> UpdateMediafile(Mediafile data)
         {
