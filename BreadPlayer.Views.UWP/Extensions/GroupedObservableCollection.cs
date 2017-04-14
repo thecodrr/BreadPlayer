@@ -111,16 +111,13 @@ namespace BreadPlayer.Extensions
                 var objectArray = range.ToArray();
                 if (async)
                 {
-                    foreach (var item in range)
+                    await Task.Run(() =>
                     {
-                        await Task.Run(() =>
+                        for (int i = 0; i < objectArray.Count(); i++)
                         {
-                            for (int i = 0; i < objectArray.Count(); i++)
-                            {
-                                AddItem(objectArray[i]);
-                            }
-                        });
-                    }
+                            AddItem(objectArray[i]);
+                        }                        
+                    });
                 }
                 else
                 {
