@@ -364,6 +364,7 @@
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
+    <MainPackageIdentityName>22102thecodrr.FeatherFacebookLite</MainPackageIdentityName>
     <MainPackageIdentityName>22102thecodrr.Macalifa</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NBLGGH42SRX" />
