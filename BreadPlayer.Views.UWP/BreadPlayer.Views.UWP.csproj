@@ -116,11 +116,6 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\5minsilence.mp3" />
-    <Content Include="Assets\albumart_black.png" />
-    <Content Include="Assets\BadgeLogo.scale-125.png" />
-    <Content Include="Assets\BadgeLogo.scale-150.png" />
-    <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
     <Content Include="Assets\Noise.jpg" />
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
@@ -250,8 +245,6 @@
     <Content Include="Assets\lib\x86\bass.dll" />
     <Content Include="Assets\lib\x86\bassmix.dll" />
     <Content Include="Assets\lib\x86\bass_fx.dll" />-->
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\albumart.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -309,10 +302,6 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x86\bassmix.dll">
-      <Link>bassmix.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'x64'">
     <Content Include="Assets\lib\x64\bass.dll">
@@ -323,10 +312,6 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x64\bassmix.dll">
-      <Link>bassmix.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'ARM'">
     <Content Include="Assets\lib\ARM\bass.dll">
@@ -335,10 +320,6 @@
     </Content>
     <Content Include="Assets\lib\ARM\bass_fx.dll">
       <Link>bass_fx.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\lib\ARM\bassmix.dll">
-      <Link>bassmix.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

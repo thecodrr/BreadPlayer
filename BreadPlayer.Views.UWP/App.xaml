@@ -100,7 +100,12 @@
             <Converters:PathToImageSourceConverter x:Key="PathToImage"/>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibilty"/>
             <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
-
+            <Converters:DoubleToTimeConverter x:Key="DoubleToTime"/>
+            <Converters:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+            <Converters:StringToIconConverter x:Key="StringToIcon"/>
+            <Converters:ColorToBrushConverter x:Key="ColorToBrush"/>
+            <Converters:TrueToFalseConverter x:Key="TrueToFalse"/>
+            
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
@@ -1927,8 +1932,11 @@ Control.IsTemplateFocusTarget="True"/>
                         <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                     </Grid.Resources>
                     <StackPanel>
-                        <Image Width="200" x:Name="AlbumArt" Height="200" HorizontalAlignment="Center" Stretch="Uniform" Source="{Binding AlbumArt, Converter={StaticResource PathToImage}}"></Image>
-                        <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                        <Grid>
+                            <Image Width="200" x:Name="AlbumArt" Height="200" HorizontalAlignment="Center" Stretch="Uniform" Source="{Binding AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                        <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                        </Grid>
+                <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                         <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="13" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,68" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="46">

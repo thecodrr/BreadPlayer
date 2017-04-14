@@ -8,13 +8,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+        xmlns:Behaviours="using:BreadPlayer.Behaviours"
+
    xmlns:Models="using:BreadPlayer.Models" mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:DataType="Models:Album" x:Key="MobileItemTemplate">
             <Grid Width="130" Height="200" Margin="5">
                 <StackPanel>
-                    <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
-                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                    <Grid>
+                        <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                    <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                    </Grid>
+            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                     <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
@@ -28,7 +33,7 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>
+                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -36,7 +41,7 @@
                         <AdaptiveTrigger MinWindowWidth="1200"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
+                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -44,7 +49,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
+                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>-->
                         <Setter Target="AlbumsList.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                         <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MobileItemTemplate}" />
                     </VisualState.Setters>
@@ -60,12 +65,24 @@
         <TextBlock Text="Songs" FontSize="24" FontWeight="Bold"/>
         <ListView Name="SongsList" Grid.Row="1" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}"/>
         <TextBlock Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
-        <GridView Name="AlbumsList" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource GridViewItemExpanded}">
-            <GridView.ItemTemplate>
+        <GridView Name="AlbumsList" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"> 
+            <GridView.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition
+                            FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                    <AddDeleteThemeTransition></AddDeleteThemeTransition>
+                </TransitionCollection>
+            </GridView.Transitions>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel> <GridView.ItemTemplate>
                 <DataTemplate x:DataType="Models:Album">
-                    <Grid MaxWidth="200" Height="270" Margin="20">
+                    <Grid MaxWidth="200" Height="270" Margin="5">
                         <StackPanel>
-                            <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
+                            <Grid>
+                                <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
                                 <Interactivity:Interaction.Behaviors>
                                     <Core:EventTriggerBehavior EventName="ImageOpened">
                                         <Media:ControlStoryboardAction>
@@ -78,7 +95,9 @@
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                             </Image>
-                            <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                     </Grid>
+                    <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                             <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>

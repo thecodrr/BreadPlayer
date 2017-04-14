@@ -12,7 +12,7 @@ namespace BreadPlayer.Converters
         {
             BitmapImage image = new BitmapImage();
             image.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
+          //  string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
             if (parameter == null)
             {
                 image.DecodePixelHeight = 200;
@@ -21,12 +21,6 @@ namespace BreadPlayer.Converters
             if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
             {
                 image.UriSource = new Uri(stringValue, UriKind.RelativeOrAbsolute);
-            }
-            if (value == null)
-            {
-                image.DecodePixelHeight = 200;
-                image.DecodePixelWidth = 200;
-                image.UriSource = parameter == null ? new Uri(def, UriKind.RelativeOrAbsolute) : null;
             }
 
             return image;

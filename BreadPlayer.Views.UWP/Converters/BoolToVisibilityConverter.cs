@@ -19,6 +19,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace BreadPlayer.Converters
 {
@@ -45,7 +46,7 @@ namespace BreadPlayer.Converters
             }
             else if (value is ImageSource imageSource)
             {
-                flag = imageSource != null;
+                flag = ((BitmapImage)imageSource).UriSource == null;
             }
             else if(value is string stringValue)
             {

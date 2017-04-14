@@ -104,20 +104,6 @@ namespace BreadPlayer.ViewModels
                 AlbumDatabaseService.Dispose();
             });
         }
-        RelayCommand _navigateCommand;
-        public ICommand NavigateToAlbumPageCommand
-        {
-            get
-            { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => this.NavigateToAlbumPage(param)); } return _navigateCommand; }
-        }
-        void NavigateToAlbumPage(object para)
-        {
-            if(para is Album album)
-            {
-                SplitViewMenu.SplitViewMenu.UnSelectAll();
-               
-                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
-            }
-        }
+        
     }
 }
