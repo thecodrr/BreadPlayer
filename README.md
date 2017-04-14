@@ -15,10 +15,10 @@
  
 [![alpha](https://img.shields.io/badge/alpha-v1.3.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.3.0-alpha)
 [![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)](https://ci.appveyor.com/project/theweavrs/breadplayer)
-[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle)
+[![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_2.0.0.0_Test/BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle)
 
 ## Current Status:
-#### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_1.1.0.0_Test/BreadPlayer.Views.UWP_1.1.0.0_x86_x64_arm.appxbundle) to check out the new features! 
+#### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_2.0.0.0_Test/BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle) to check out the new features! 
 
 #### Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 

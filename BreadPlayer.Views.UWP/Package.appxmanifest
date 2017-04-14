@@ -33,11 +33,16 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="mp3">
-            <uap:DisplayName>MP3 File</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true" />
+          <uap:FileTypeAssociation Name="fileassociations">
+            <uap:DisplayName>File Associations</uap:DisplayName>
             <uap:SupportedFileTypes>
-              <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
+              <uap:FileType ContentType="audio/mp3">.mp3</uap:FileType>
+              <uap:FileType ContentType="audio/wav">.wav</uap:FileType>
+              <uap:FileType ContentType="audio/ogg">.ogg</uap:FileType>
+              <uap:FileType ContentType="audio/flac">.flac</uap:FileType>
+              <uap:FileType ContentType="audio/x-m4a">.m4a</uap:FileType>
+              <uap:FileType ContentType="audio/x-aiff">.aif</uap:FileType>
+              <uap:FileType ContentType="audio/x-ms-wma">.wma</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
@@ -50,9 +55,6 @@
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="removableStorage" />
     <uap:Capability Name="userAccountInformation" />
-    <Capability Name="backgroundMediaPlayback" xmlns="" />
-    <Capability Name="backgroundMediaPlayback" xmlns="" />
-    <Capability Name="backgroundMediaPlayback" xmlns="" />
     <uap3:Capability Name="backgroundMediaPlayback" />
   </Capabilities>
 </Package>
