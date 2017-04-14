@@ -29,7 +29,3 @@ copy /y %SOURCE%Microsoft.AppxPackage.Targets "%MSBUILD_APPXPACKAGE_DIR%\Microso
 echo.
 echo Done!
 echo.
-
-pause 
-
-verify >nul
