@@ -466,7 +466,7 @@
                                         <Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                         <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
-                                        <Setter Target="Shortcuts.Margin" Value="30,50,0,0"/>
+                                        <Setter Target="Shortcuts.Margin" Value="25,50,0,0"/>
                                         <Setter Target="Pane.Margin" Value="0"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
@@ -579,7 +579,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
-                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,-60,0,0"/>
                                         <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
                                         <Setter Target="headerText.Margin" Value="25,70,0,0"/>
@@ -594,14 +594,15 @@
                                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-
-                                        <Setter Target="Shortcuts.Margin" Value="30,-60,0,0"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,-60,0,0"/>
                                         <Setter Target="toggleButton.Margin" Value="20,-60,0,0"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
                                         <Setter Target="headerText.Margin" Value="25,70,0,0"/>
                                         <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
