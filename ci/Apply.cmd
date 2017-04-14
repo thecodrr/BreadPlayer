@@ -25,3 +25,4 @@ echo.
 echo Copying the Microsoft.AppxPackage.Targets from %SOURCE% to %MSBUILD_APPXPACKAGE_DIR%...
 echo.
 copy /y %SOURCE%Microsoft.AppxPackage.Targets "%MSBUILD_APPXPACKAGE_DIR%\Microsoft.AppxPackage.Targets"
+Pause>nul
