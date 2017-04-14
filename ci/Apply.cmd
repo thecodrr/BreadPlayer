@@ -1,6 +1,6 @@
 echo off
 setlocal
-
+set NOPAUSE=true
 :: Set the Source Directory
 set SOURCE=%~dp0
 
@@ -25,4 +25,3 @@ echo.
 echo Copying the Microsoft.AppxPackage.Targets from %SOURCE% to %MSBUILD_APPXPACKAGE_DIR%...
 echo.
 copy /y %SOURCE%Microsoft.AppxPackage.Targets "%MSBUILD_APPXPACKAGE_DIR%\Microsoft.AppxPackage.Targets"
-Pause>nul
