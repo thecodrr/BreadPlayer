@@ -15,5 +15,5 @@ artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
   type: Auto
-  install:
+install:
 - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/appveyor/ci/master/scripts/hot-fixes/vs2017-uwp-scale-100-fix/Microsoft.AppxPackage.Targets', "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage\Microsoft.AppxPackage.Targets")
