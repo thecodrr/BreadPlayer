@@ -6,10 +6,7 @@ configuration: Release
 platform: x86
 before_build:
 - cmd: >-    
-    appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Apply.cmd
-    appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Microsoft.AppxPackage.Targets
-    Apply.cmd
-    nuget restore BreadPlayer.NoTests.sln
+    appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Apply.cmd & appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Microsoft.AppxPackage.Targets & Apply.cmd & nuget restore BreadPlayer.NoTests.sln
 build:
   project: BreadPlayer.NoTests.sln
   parallel: true
