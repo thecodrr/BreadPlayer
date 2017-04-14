@@ -4,9 +4,11 @@ pull_requests:
 os: Visual Studio 2017
 configuration: Release
 platform: x86
+install:
+- ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/appveyor/ci/master/scripts/hot-fixes/vs2017-uwp-scale-100-fix/Microsoft.AppxPackage.Targets', "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\Microsoft\VisualStudio\v15.0\AppxPackage\Microsoft.AppxPackage.Targets")
 before_build:
 - cmd: >-    
-    appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Apply.cmd & appveyor DownloadFile https://raw.githubusercontent.com/theweavrs/BreadPlayer/master/ci/Microsoft.AppxPackage.Targets & Apply.cmd & nuget restore BreadPlayer.NoTests.sln
+  nuget restore BreadPlayer.NoTests.sln
 build:
   project: BreadPlayer.NoTests.sln
   parallel: true
