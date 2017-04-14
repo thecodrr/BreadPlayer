@@ -1,4 +1,4 @@
-version: 1.8.{build}
+version: 2.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 os: Visual Studio 2017
@@ -14,9 +14,3 @@ artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
   type: Auto
-notifications:
-  - provider: Webhook
-    url: https://hooks.zapier.com/hooks/catch/805495/m03qym/    
-    on_build_success: true
-    on_build_failure: false
-    on_build_status_changed: false
