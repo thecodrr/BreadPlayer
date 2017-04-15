@@ -435,7 +435,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.AddRange(tempList);
                 //now we load 100 songs into database.
                 await service.AddMediafiles(tempList);
-                service.Dispose();
+                //service.Dispose();
 
                 watch.Stop();
                 var secs = watch.Elapsed.TotalSeconds;

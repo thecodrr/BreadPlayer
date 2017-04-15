@@ -504,10 +504,8 @@
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                        <Setter Target="searchBox.Margin" Value="0,95,0,0"/>
-                                        <Setter Target="searchBox.HorizontalAlignment" Value="Center"/>
-                                        <Setter Target="searchBox.Width" Value="250"/>
-
+                                        <Setter Target="searchBox.HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Target="searchBox.Width" Value="Auto"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -626,12 +624,27 @@
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                                     </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="25,145,0,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="-35,105,20,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,135,0,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
                                 </Storyboard>
                                 <Storyboard x:Key="SearchButtonClickedFadeStoryboard" Duration="0:0:0.5">
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="25,95,0,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,80,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
@@ -714,14 +727,16 @@
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>
+                                
                                 <TextBlock x:Name="headerText" Tag="Heading" HorizontalAlignment="Left" VerticalAlignment="Top" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" Margin="35,135,0,0.4" />
+                                
                                 <Grid VerticalAlignment="Top" Height="150">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <ToggleButton x:Name="toggleButton" Background="Transparent" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
-                                    <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="{x:Null}" HorizontalAlignment="Left" Height="50" Margin="20,30,0,0">
+                                    <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="Transparent" HorizontalAlignment="Left" Height="50" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Button FontFamily="Segoe MDL2 Assets" Background="Transparent" Margin="10,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>

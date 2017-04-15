@@ -22,6 +22,7 @@ using BreadPlayer.Dialogs;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Common;
 using System.Collections.Generic;
+using Windows.UI.Xaml;
 
 namespace BreadPlayer.Core
 {
@@ -73,6 +74,18 @@ namespace BreadPlayer.Core
                 }
                 else
                     return new Windows.UI.Xaml.Thickness(48, 0, 0, 0);
+            }
+        }
+        public static DataTemplate DynamicAlbumSelectedTemplate
+        {
+            get
+            {
+                if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
+                {
+                    return App.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
+                }
+                else
+                    return App.Current.Resources["SelectedTemplate"] as DataTemplate;
             }
         }
         #region ICommands

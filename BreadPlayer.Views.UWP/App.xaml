@@ -1648,7 +1648,7 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                             </Storyboard>
                                             <VisualState.Setters>
-                                                <Setter Target="ContentPresenter.ContentTemplate" Value="{StaticResource SelectedTemplate}"/>
+                                                <Setter Target="ContentPresenter.ContentTemplate" Value="{Binding Source={StaticResource Core}, Path=DynamicAlbumSelectedTemplate}"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="PointerOverSelected">
@@ -1678,9 +1678,8 @@ Control.IsTemplateFocusTarget="True"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                             </Storyboard>
-
                                             <VisualState.Setters>
-                                                <Setter Target="ContentPresenter.ContentTemplate" Value="{StaticResource SelectedTemplate}"/>
+                                                <Setter Target="ContentPresenter.ContentTemplate" Value="{Binding Source={StaticResource Core}, Path=DynamicAlbumSelectedTemplate}"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="PressedSelected">
@@ -1843,7 +1842,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualStateGroup.Transitions>
                                             <VisualTransition To="NotDragging" GeneratedDuration="0:0:0.2"/>
                                         </VisualStateGroup.Transitions>
-                                    </VisualStateGroup>
+                                    </VisualStateGroup>                                   
                                 </VisualStateManager.VisualStateGroups>
                                 <ContentPresenter x:Name="ContentPresenter"
                             ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -1924,10 +1923,49 @@ Control.IsTemplateFocusTarget="True"/>
             
             <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
                 <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
-            </ItemsPanelTemplate>         
-            
-            <DataTemplate x:Key="SelectedTemplate">                
-                <Grid x:Name="LayoutRoot" MaxWidth="200" Height="270" Margin="20">
+            </ItemsPanelTemplate>
+            <DataTemplate x:Key="MobileSelectedTemplate">
+                <Grid Width="130" Height="200" Margin="5">                  
+                <Grid.Resources>
+                        <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
+                    </Grid.Resources>
+                    <StackPanel>
+                        <Grid>
+                            <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" Stretch="Uniform" Source="{Binding AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                        </Grid>
+                        <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
+                        <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="11" TextTrimming="CharacterEllipsis" Text="{Binding Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    <Border VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,68" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="46">
+                        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel.Transitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition/>
+                                </TransitionCollection>
+                            </StackPanel.Transitions>
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;" RequestedTheme="Dark"></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="button2" Padding="0,0,0,0" HorizontalAlignment="Center" BorderThickness="0" Width="46" Height="46" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#59152;" RequestedTheme="Dark"></TextBlock>
+                                </StackPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                                        <Behaviours:OpenMenuFlyoutAction Parameter="BindableFlyout"/>
+                                    </Core:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="SelectedTemplate">
+                <Grid x:Name="LayoutRoot" MaxWidth="200" Height="290" Margin="20">
                     <Grid.Resources>
                         <Extensions:BindableFlyout x:Key="PlaylistsFlyout" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
                     </Grid.Resources>

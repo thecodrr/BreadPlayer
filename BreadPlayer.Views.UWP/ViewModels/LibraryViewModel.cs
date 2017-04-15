@@ -1023,7 +1023,7 @@ namespace BreadPlayer.ViewModels
                 source = ViewSource.Source;
                 grouped = ViewSource.IsSourceGrouped;
                 ViewSource.Source = null;
-                LibraryService.Dispose();
+                //LibraryService.Dispose();
                 GC.Collect();
             }
         }
