@@ -701,8 +701,6 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                               
-
                                 <Frame x:Name="PageFrame"  Margin="0,155,0,0" 
                                    Navigating="OnNavigatingToPage"
                                    Navigated="OnNavigatedToPage">
@@ -722,11 +720,11 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ToggleButton x:Name="toggleButton" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Background="Transparent" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
+                                    <ToggleButton x:Name="toggleButton" Background="Transparent" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" Margin="20,30,0,0" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                     <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="{x:Null}" HorizontalAlignment="Left" Height="50" Margin="20,30,0,0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Button FontFamily="Segoe MDL2 Assets" Margin="10,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Background="Transparent" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
+                                                <Button FontFamily="Segoe MDL2 Assets" Background="Transparent" Margin="10,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                         <ItemsControl.ItemsPanel>

@@ -13,6 +13,12 @@
         <!--<Canvas x:Name="appbar_chevron_down" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
             <Path Width="28.5" Height="25.3333" Canvas.Left="23.6016" Canvas.Top="24.9375" Stretch="Fill" Fill="#FF000000" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
         </Canvas>-->
+        <DataTemplate x:Key="LargeHeaderText">
+            <TextBlock x:Name="headerText" Text="{Binding}" FontSize="28" FontFamily="Segoe UI" FontWeight="Bold" />
+        </DataTemplate>
+        <DataTemplate x:Key="SmallHeaderText">
+            <TextBlock x:Name="headerText" Text="{Binding}" FontSize="20" FontFamily="Segoe UI" FontWeight="Bold" />
+        </DataTemplate>
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
     <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
@@ -47,6 +53,8 @@
                         <Setter Target="libraryGrid.MinWidth" Value="300"/>
                         <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="MainPivot.HeaderTemplate" Value="{StaticResource SmallHeaderText}"/>
+                        <Setter Target="MainPivot.Margin" Value="3,-15,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -56,13 +64,7 @@
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-      
-        <Pivot Grid.Row="2">
-            <Pivot.HeaderTemplate>
-                <DataTemplate>
-                    <TextBlock x:Name="headerText" Text="{Binding}" FontSize="28" FontFamily="Segoe UI" FontWeight="Bold" />
-                </DataTemplate>
-            </Pivot.HeaderTemplate>
+        <Pivot Name="MainPivot" Grid.Row="2" Margin="0,-20,0,0" HeaderTemplate="{StaticResource LargeHeaderText}">
             <PivotItem Header="General">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock Text="Lockscreen" FontWeight="Bold" FontSize="18"/>
