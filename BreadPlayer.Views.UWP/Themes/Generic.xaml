@@ -177,7 +177,7 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0049;" Margin="0,5,0,0" VerticalAlignment="Center"
+                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0047;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
@@ -203,7 +203,7 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0049;" Margin="0,5,0,0" VerticalAlignment="Center"
+                    <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0047;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />-->
@@ -484,6 +484,7 @@
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
                                         <Setter Target="toggleButton.Margin" Value="20,30,0,0"/>
                                         <Setter Target="toggleButton.Visibility" Value="Collapsed"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
