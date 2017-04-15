@@ -212,8 +212,6 @@ namespace SplitViewMenu
             return cmd;
         }
 
-
-
         private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             if ((sender as AutoSuggestBox).Text.Any())
