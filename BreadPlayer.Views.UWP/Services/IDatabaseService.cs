@@ -11,7 +11,7 @@ namespace BreadPlayer.Service
 	public interface IDatabaseService : IDisposable
     {
         void InsertAlbums(IEnumerable<Album> albums);
-        void CreateDB(string dbPath = null);
+        void CreateDB(string dbPath = null, bool createNew = true);
         void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record);
         Task InsertTracks(IEnumerable<Mediafile> records);
         Task<IEnumerable<T>> GetRecords<T>(string tableName);
