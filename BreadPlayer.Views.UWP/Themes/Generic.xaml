@@ -504,6 +504,9 @@
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
+                                        <Setter Target="searchBox.Margin" Value="0,95,0,0"/>
+                                        <Setter Target="searchBox.HorizontalAlignment" Value="Center"/>
+                                        <Setter Target="searchBox.Width" Value="250"/>
 
                                     </VisualState.Setters>
                                 </VisualState>
@@ -626,6 +629,13 @@
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
                                 </Storyboard>
+                                <Storyboard x:Key="SearchButtonClickedFadeStoryboard" Duration="0:0:0.5">
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <DoubleAnimation Storyboard.TargetName="searchBox"
+                                                   Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
+                                </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
                                 <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource PlaybarBrush}" >
@@ -745,22 +755,7 @@
                                                     <Core:InvokeCommandAction Command="{Binding Source={StaticResource ShellVM}, Path=SearchCommand}"/>
                                                     <!--<Core:CallMethodAction MethodName="Search" TargetObject="{Binding Source={StaticResource ShellVM}}"/>-->
                                                 </Core:EventTriggerBehavior.Actions>
-                                            </Core:EventTriggerBehavior>
-                                            <Core:EventTriggerBehavior EventName="LostFocus">
-                                                <Core:EventTriggerBehavior.Actions>
-                                                    <Animations:ControlStoryboardAction ControlStoryboardOption="Play">
-                                                        <Animations:ControlStoryboardAction.Storyboard>
-                                                            <Storyboard Duration="0:0:0.5">
-                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
-                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                                                                </ObjectAnimationUsingKeyFrames>
-                                                                <DoubleAnimation Storyboard.TargetName="searchBox"
-                                                   Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
-                                                            </Storyboard>
-                                                        </Animations:ControlStoryboardAction.Storyboard>
-                                                    </Animations:ControlStoryboardAction>
-                                                </Core:EventTriggerBehavior.Actions>
-                                            </Core:EventTriggerBehavior>
+                                            </Core:EventTriggerBehavior>                                            
                                         </Interactivity:Interaction.Behaviors>
                                     </AutoSuggestBox>
                                     <!--<StackPanel >

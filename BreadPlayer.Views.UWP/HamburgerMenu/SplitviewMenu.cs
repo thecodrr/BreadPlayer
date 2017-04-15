@@ -199,10 +199,15 @@ namespace SplitViewMenu
         {
             DelegateCommand cmd = new DelegateCommand(() =>
             {
-                (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard).Begin();
-                _searchBox.Focus(FocusState.Programmatic);
-                (shortcuts.Items[3] as Shortcut).ShortcutCommand.IsEnabled = false;
-                _searchBox.LostFocus += (sender, e) => (shortcuts.Items[3] as Shortcut).ShortcutCommand.IsEnabled = true;
+                if (_searchBox.Visibility == Visibility.Collapsed)
+                {
+                    (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard).Begin();
+                    _searchBox.Focus(FocusState.Programmatic);
+                }
+                else if(_searchBox.Visibility == Visibility.Visible)
+                {
+                    (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard).Begin();
+                }
             });
             return cmd;
         }

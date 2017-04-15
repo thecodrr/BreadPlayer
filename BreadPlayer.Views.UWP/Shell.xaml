@@ -131,10 +131,10 @@
                     </controls:SimpleNavMenuItem.Shortcuts>
                 </controls:SimpleNavMenuItem>
                 <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Tooltip="Navigate to your music library." Label="My Breads" Symbol="Accept"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>
+                <!--<controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>-->
 
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0049;" Tooltip="Navigate to your music library." Label="Favorites" Symbol="Accept" Arguments="Favorites"></controls:SimpleNavMenuItem>
-                <controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
+                <!--<controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>-->
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="Navigate to your accounts." Label="My Bakeries" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -289,7 +289,7 @@
                     <AppBarToggleButton ToolTipService.ToolTip="Show Equalizer" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" x:Name="equalizerBtn" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
                     <AppBarButton BorderBrush="WhiteSmoke" ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="5,0,0,0" Height="40" />
                     <AppBarButton BorderBrush="WhiteSmoke" ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,5,0"/>
-                    <AppBarToggleButton ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Icon="More" FontSize="20"/>
+                    <!--<AppBarToggleButton ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Icon="More" FontSize="20"/>-->
 
                 </StackPanel>
 
