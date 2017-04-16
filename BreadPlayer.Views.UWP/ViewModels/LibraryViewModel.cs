@@ -49,7 +49,7 @@ namespace BreadPlayer.ViewModels
         ThreadSafeObservableCollection<Playlist> PlaylistCollection = new ThreadSafeObservableCollection<Playlist>();
         ObservableRangeCollection<string> _GenreCollection = new ObservableRangeCollection<string>();
         IEnumerable<Mediafile> files = null;
-        public IEnumerable<Mediafile> OldItems;
+        IEnumerable<Mediafile> OldItems;
         bool grouped = false;
         bool libgrouped = false;
         object source;
@@ -71,7 +71,7 @@ namespace BreadPlayer.ViewModels
         {
             Reset();
         }
-        void HandleUpdateSongCountMessage(Message message)
+        async void HandleUpdateSongCountMessage(Message message)
         {
             if (message.Payload is short || message.Payload is Int32)
             {
@@ -82,6 +82,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
+                await CreateGenreMenu().ConfigureAwait(false);
                 IsLibraryLoading = false;
             }
         }
@@ -630,12 +631,16 @@ namespace BreadPlayer.ViewModels
             else
             {
                 Genre = genre;
-                TracksCollection = null;
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
-                    if (genre != "All genres")
-                        TracksCollection.AddRange(await LibraryService.Query(genre).ConfigureAwait(false), true);
-                    else
-                        TracksCollection.AddRange(OldItems, true);                
+                ThreadSafeObservableCollection<Mediafile> FilteredSongsCollection = new ThreadSafeObservableCollection<Mediafile>();
+                if (genre != "All genres")
+                {
+                    var results = await LibraryService.Query(genre);
+                    FilteredSongsCollection.AddRange(results.ToList());
+                }
+                else
+                    FilteredSongsCollection.AddRange(OldItems);
+                ChangeView("Music Collection", false, FilteredSongsCollection);
+                await RefreshSourceAsync();
             }
         }
         
@@ -717,11 +722,12 @@ namespace BreadPlayer.ViewModels
                 GenreFlyout = Application.Current.Resources["GenreFlyout"] as MenuFlyout;
                 Genre = "All genres";
                 GenreFlyout.Items.Add(CreateMenuItem("All genres"));
-                foreach (var genre in TracksCollection.Elements)
+                var genres = TracksCollection.Elements.GroupBy(t => t.Genre);
+                foreach (var genre in genres)
                 {
-                    if (genre.Genre != null && genre.Genre != "NaN" && !GenreFlyout.Items.Any(t => (t as MenuFlyoutItem).Text == genre.Genre))
+                    if (genre.Key != null && genre.Key != "NaN" && !GenreFlyout.Items.All(t => (t as MenuFlyoutItem).Text == genre.Key))
                     {
-                        GenreFlyout.Items.Add(CreateMenuItem(genre.Genre));
+                        GenreFlyout.Items.Add(CreateMenuItem(genre.Key));
                     }
                 }
             });
