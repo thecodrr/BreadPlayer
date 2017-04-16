@@ -249,16 +249,7 @@ namespace BreadPlayer.ViewModels
                 StorageFolder folder = await picker.PickSingleFolderAsync();
                 if (folder != null)
                 {
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, (short)2);
-                    LibraryFoldersCollection.Add(folder);
-                    StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    //Get query options with which we search for files in the specified folder
-                    var options = Common.DirectoryWalker.GetQueryOptions();
-                    //this is the query result which we recieve after querying in the folder
-                    StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-                    //the event for files changed
-                    queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                    await AddFolderToLibraryAsync(queryResult);
+                    await LoadFolderAsync(folder);
                 }
             }
             catch(UnauthorizedAccessException)
@@ -266,6 +257,7 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
             }
         }
+
         #endregion
 
         #endregion
@@ -337,6 +329,19 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Load Methods
+        private async Task LoadFolderAsync(StorageFolder folder)
+        {
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, (short)2);
+            LibraryFoldersCollection.Add(folder);
+            StorageApplicationPermissions.FutureAccessList.Add(folder);
+            //Get query options with which we search for files in the specified folder
+            var options = Common.DirectoryWalker.GetQueryOptions();
+            //this is the query result which we recieve after querying in the folder
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+            //the event for files changed
+            queryResult.ContentsChanged += QueryResult_ContentsChanged;
+            await AddFolderToLibraryAsync(queryResult);
+        }
         /// <summary>
         /// Auto loads the User's Music Libary on first load.
         /// </summary>
@@ -344,15 +349,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                var options = Common.DirectoryWalker.GetQueryOptions();
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
-                //the event for files changed
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                if (await queryResult.GetItemCountAsync() > 0)
-                {
-                    await AddFolderToLibraryAsync(queryResult);
-                }
+                await LoadFolderAsync(KnownFolders.MusicLibrary);
             }
             catch (Exception ex)
             {
@@ -430,11 +427,11 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
 
+                //now we load 100 songs into database.
+                await service.AddMediafiles(tempList);
                 //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                 //tempList.Sort();
                 TracksCollection.AddRange(tempList);
-                //now we load 100 songs into database.
-                await service.AddMediafiles(tempList);
                 //service.Dispose();
 
                 watch.Stop();

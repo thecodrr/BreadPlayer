@@ -78,15 +78,17 @@ namespace BreadPlayer.Service
             {
                 return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
             }
-        } 
+        }
+        
         public int GetRecordsCount(string tableName)
         {
             using (var tran = engine.GetTransaction())
             {
-                return (int)tran.Count(tableName);
+                var count = (int)tran.Count(tableName);
+                return count;
             }
         }
-       
+        
         public void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record)
         {
             using (var tran = engine.GetTransaction())
