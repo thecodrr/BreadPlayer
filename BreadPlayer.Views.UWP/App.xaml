@@ -1379,7 +1379,7 @@
                                             <VisualState.Setters>
                                                 <Setter Target="playBtn.Visibility" Value="Collapsed"/>
                                                 <Setter Target="Buttons_Stack.Width" Value="50"/>
-                                                <Setter Target="Buttons_Stack.Margin" Value="-130,0,0,0"/>
+                                                <Setter Target="Buttons_Stack.Margin" Value="0,0,0,0"/>
 
                                             </VisualState.Setters>
                                         </VisualState>
@@ -1543,7 +1543,7 @@ Control.IsTemplateFocusTarget="True"/>
             </DataTemplate>
            
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
-                <Grid Height="75" Margin="30,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
+                <Grid Height="75" Margin="30,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
                     <TextBlock Typography.Capitals="AllSmallCaps" Typography.CapitalSpacing="True" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
                         <Run Text="{Binding Path=Title}" FontSize="20"/>
                         <LineBreak/>

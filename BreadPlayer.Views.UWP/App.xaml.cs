@@ -216,7 +216,8 @@ namespace BreadPlayer
                 }
                 if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
-                    //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                    Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                        //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
                     var statusBar = StatusBar.GetForCurrentView();
                     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
                     statusBar.BackgroundOpacity = 1;

@@ -30,6 +30,7 @@ using BreadPlayer.Common;
 using Windows.Data.Xml.Dom;
 using BreadPlayer.Models;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 
 namespace BreadPlayer
 {
@@ -255,6 +256,12 @@ namespace BreadPlayer
                 StorageApplicationPermissions.FutureAccessList.Clear();
             InitSmtc();
             Player.Volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
+            Window.Current.SizeChanged += Current_SizeChanged;
+        }
+
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            InitializeCore.IsMobile = e.Size.Width <= 600;
         }
         #endregion
 

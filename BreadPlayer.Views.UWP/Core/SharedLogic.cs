@@ -34,6 +34,8 @@ namespace BreadPlayer.Core
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
             InitializeCore.IsMobile = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
+
+            InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
