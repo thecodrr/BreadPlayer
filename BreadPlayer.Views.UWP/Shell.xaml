@@ -11,6 +11,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:controls="using:SplitViewMenu"
+    xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:blur="using:BreadPlayer.Effects" 
     mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
@@ -34,6 +35,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="sliderGrid.Visibility" Value="Visible" />
+                        <Setter Target="showMoreBtn.IsChecked" Value="False" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
                         <Setter Target="ValueIndicatorText.FontSize" Value="11"/>
                     </VisualState.Setters>
@@ -45,8 +47,15 @@
                     <VisualState.Setters>
                         <Setter Target="sliderGrid.Visibility" Value="Collapsed" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
+                        <Setter Target="showMoreBtn.IsChecked" Value="False" />                       
                         <Setter Target="ValueIndicatorText.FontSize" Value="11"/>
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="2"/>
+                        <Setter Target="BandStackPanel.Margin" Value="0,0,0,-10"/>
+                        <Setter Target="ValueIndicatorGrid.Margin" Value="0,15,-10,75"/>
+                        <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
+                        <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
+                        <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
+                        <Setter Target="EqualizerGrid.Height" Value="220"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -69,9 +78,11 @@
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
                         <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
+                        <Setter Target="EqualizerGrid.Height" Value="220"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+         
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -157,7 +168,7 @@
         </controls:SplitViewMenu>
 
 
-        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="Transparent" Opacity="0" Height="190" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="Transparent" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="130"/>
             </Grid.RenderTransform>
@@ -192,16 +203,19 @@
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                 </Grid>
-                <StackPanel Margin="20,0,0,0" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}">
-                    <Slider Height="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5" Style="{StaticResource CircleSlider}" Minimum="0" Maximum="12" Margin="0,20,0,0" Orientation="Vertical" Value="{Binding Path=Player.Effect.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
-                </StackPanel>
-                <Grid Margin="0,15,0,35" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="0dB" FontSize="11"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+12dB" FontSize="11"/>
-                </Grid>
+               
             </StackPanel>
-            <ToggleSwitch Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Top" OnContent="On" OffContent="Off" IsOn="{Binding Source={StaticResource Core}, Path=Player.Effect.EnableEq, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                <ToggleSwitch Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Center" OnContent="On" OffContent="Off" IsOn="{Binding Source={StaticResource Core}, Path=Player.Effect.EnableEq, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <!--<TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>-->
+            </StackPanel>
+            <StackPanel Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Center" >
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Text="0dB" FontSize="11"/>
+                <Slider Width="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5"  Minimum="0" Maximum="12" Style="{StaticResource CircleSlider}" Orientation="Horizontal" Value="{Binding Path=Player.Effect.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Text="+12dB" FontSize="11"/>
+            </StackPanel>
+            <TextBlock Margin="0,0,0,0" VerticalAlignment="Bottom" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
+            
         </Grid>
 
         <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
@@ -226,7 +240,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <StackPanel Width="50" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
+        <StackPanel Width="50" Name="ShowMorePanel" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
             <AppBarToggleButton HorizontalAlignment="Center" ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="0,0,0,0"/>
             <AppBarToggleButton HorizontalAlignment="Center" Command="{Binding Path=ShowEqualizerCommand}" IsChecked="{Binding ElementName=equalizerBtn, Path=IsChecked, Mode=TwoWay}" ToolTipService.ToolTip="Show Equalizer" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="0,5,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
             <AppBarButton HorizontalAlignment="Center" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="{Binding Repeat}" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0,5,0,0" Height="40" />
@@ -309,7 +323,7 @@
                     </AppBarButton>
                     <AppBarToggleButton x:Name="volBtn" Icon="Volume" VerticalAlignment="Center" IsChecked="False" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0"/>
                     <AppBarToggleButton ToolTipService.ToolTip="Shuffle" x:Name="shuffleBtn" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="5,0,0,0"/>
-                    <AppBarToggleButton ToolTipService.ToolTip="Show Equalizer" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" x:Name="equalizerBtn" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
+                    <AppBarToggleButton ToolTipService.ToolTip="Show Equalizer" Command="{Binding Path=ShowEqualizerCommand}" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" x:Name="equalizerBtn" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
                     <AppBarButton BorderBrush="WhiteSmoke" ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="5,0,0,0" Height="40" />
                     <AppBarButton BorderBrush="WhiteSmoke" ToolTipService.ToolTip="Open a file to play" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,5,0"/>
                     <AppBarToggleButton Name="showMoreBtn" Visibility="Collapsed" IsChecked="False" ToolTipService.ToolTip="Show More Options" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
