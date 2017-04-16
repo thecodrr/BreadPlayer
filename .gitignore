@@ -15,8 +15,6 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
 build/
 bld/
 [Bb]in/
@@ -169,7 +167,6 @@ ClientBin/
 *~
 *.dbmdl
 *.dbproj.schemaview
-*.pfx
 *.publishsettings
 node_modules/
 orleans.codegen.cs
@@ -212,5 +209,11 @@ _Pvt_Extensions/
 ModelManifest.xml
 /BreadPlayer.Web.Tests/BreadPlayer.Web.Tests.nuget.targets
 /BreadPlayer.Web.Tests/BreadPlayer.Web.Tests.nuget.props
+
+# Nuget 3.0 Files
+*.lock.json
+*.nuget.props
+*.nuget.targets
+
 *.appx
 /BreadPlayer.Views.UWP/BundleArtifacts
