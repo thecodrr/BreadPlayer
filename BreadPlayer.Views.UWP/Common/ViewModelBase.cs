@@ -23,13 +23,37 @@ using Windows.UI.Core;
 
 namespace BreadPlayer
 {
-   public class ViewModelBase : SharedLogic, INotifyPropertyChanged
+   public class ViewModelBase : INotifyPropertyChanged
     {
+        NotificationManager.BreadNotificationManager notificationManager;
+        public NotificationManager.BreadNotificationManager NotificationManager
+        {
+            get { if (notificationManager == null) notificationManager = SharedLogic.NotificationManager; return notificationManager; }
+        }
+        CoreBreadPlayer player;
+        public CoreBreadPlayer Player
+        {
+            get
+            {
+                if (player == null)
+                    player = SharedLogic.Player;
+                return player;
+            }
+        }
+        static SharedLogic logic;
+        public static SharedLogic SharedLogic
+        {
+            get
+            {
+                if (logic == null)
+                    logic = new SharedLogic();
+                return logic;
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected async virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             });

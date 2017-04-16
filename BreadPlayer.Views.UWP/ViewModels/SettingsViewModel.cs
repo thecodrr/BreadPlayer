@@ -147,7 +147,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
                 if (new LibraryService(new KeyValueStoreDatabaseService()).SongCount == 0)
                 {
-                    //await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
+                    await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
                 if (TracksCollection != null)
                 {
@@ -249,16 +249,7 @@ namespace BreadPlayer.ViewModels
                 StorageFolder folder = await picker.PickSingleFolderAsync();
                 if (folder != null)
                 {
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, (short)2);
-                    LibraryFoldersCollection.Add(folder);
-                    StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    //Get query options with which we search for files in the specified folder
-                    var options = Common.DirectoryWalker.GetQueryOptions();
-                    //this is the query result which we recieve after querying in the folder
-                    StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-                    //the event for files changed
-                    queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                    await AddFolderToLibraryAsync(queryResult);
+                    await LoadFolderAsync(folder);
                 }
             }
             catch(UnauthorizedAccessException)
@@ -266,6 +257,7 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
             }
         }
+
         #endregion
 
         #endregion
@@ -320,23 +312,36 @@ namespace BreadPlayer.ViewModels
                     if (TracksCollection.Elements.Any(t => t.Path == file.Path))
                     {
                         index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
-                        RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
+                        SharedLogic.RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                    await NotificationManager.ShowMessageAsync(" Song(s) Loaded");
+                    await SharedLogic.NotificationManager.ShowMessageAsync(" Song(s) Loaded");
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
                         mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
                         await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
                     });
-                    AddMediafile(mp3file, index);
+                    SharedLogic.AddMediafile(mp3file, index);
                 }
             }
         }
         #endregion
 
         #region Load Methods
+        private async Task LoadFolderAsync(StorageFolder folder)
+        {
+            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, (short)2);
+            LibraryFoldersCollection.Add(folder);
+            StorageApplicationPermissions.FutureAccessList.Add(folder);
+            //Get query options with which we search for files in the specified folder
+            var options = Common.DirectoryWalker.GetQueryOptions();
+            //this is the query result which we recieve after querying in the folder
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
+            //the event for files changed
+            queryResult.ContentsChanged += QueryResult_ContentsChanged;
+            await AddFolderToLibraryAsync(queryResult);
+        }
         /// <summary>
         /// Auto loads the User's Music Libary on first load.
         /// </summary>
@@ -344,15 +349,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                var options = Common.DirectoryWalker.GetQueryOptions();
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(options);
-                //the event for files changed
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
-                if (await queryResult.GetItemCountAsync() > 0)
-                {
-                    await AddFolderToLibraryAsync(queryResult);
-                }
+                await LoadFolderAsync(KnownFolders.MusicLibrary);
             }
             catch (Exception ex)
             {
@@ -402,7 +399,7 @@ namespace BreadPlayer.ViewModels
                                  //we send a message to anyone listening relaying that song count has to be updated.
                             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
                             //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                            mp3file = await CreateMediafile(file, false); //the core of the whole method.
+                            mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
                             mp3file.FolderPath = Path.GetDirectoryName(file.Path);
                             await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
 
@@ -430,11 +427,11 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
 
+                //now we load 100 songs into database.
+                await service.AddMediafiles(tempList);
                 //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                 //tempList.Sort();
                 TracksCollection.AddRange(tempList);
-                //now we load 100 songs into database.
-                await service.AddMediafiles(tempList);
                 service.Dispose();
 
                 watch.Stop();
@@ -459,7 +456,7 @@ namespace BreadPlayer.ViewModels
             var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
             if (duplicateFiles.Count() > 0)
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     await ShowMessageBox((selectedDuplicates) =>
                     {
@@ -475,11 +472,11 @@ namespace BreadPlayer.ViewModels
                                     {
                                         duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
                                         if (duplicateIndex > -1)
-                                            RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                            SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
                                     }
                                 }
                                 else
-                                    RemoveMediafile(duplicate);
+                                    SharedLogic.RemoveMediafile(duplicate);
                             }
                         }
                     }, duplicateFiles);
@@ -521,9 +518,9 @@ namespace BreadPlayer.ViewModels
                     var albumartFolder = ApplicationData.Current.LocalFolder;
                     var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3file.Album + mp3file.LeadArtist).ToLower().ToSha1() + ".jpg";
 
-                    if (!VerifyFileExists(albumartLocation, 300))
+                    if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
                     {
-                        bool albumSaved = await SaveImagesAsync(file, mp3file);                       
+                        bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3file);                       
                         mp3file.AttachedPicture = albumSaved ? albumartLocation : null;
                     }
                     file = null;
@@ -531,7 +528,7 @@ namespace BreadPlayer.ViewModels
                 catch (Exception ex)
                 {
                     BLogger.Logger.Info("Failed to save albumart.", ex);
-                    await NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3file.OrginalFilename);
+                    await SharedLogic.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3file.OrginalFilename);
                 }
             }
         }
@@ -568,8 +565,8 @@ namespace BreadPlayer.ViewModels
                     //FOR ADDITION (we check all the files to see if we already have the file or not)
                     if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
                     {
-                        var mediafile = await CreateMediafile(file, false);
-                        AddMediafile(mediafile);
+                        var mediafile = await SharedLogic.CreateMediafile(file, false);
+                        SharedLogic.AddMediafile(mediafile);
                         await SaveSingleFileAlbumArtAsync(mediafile);
                     }
                 }
@@ -589,13 +586,13 @@ namespace BreadPlayer.ViewModels
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Some error occured while renaming, deleting or editting the modified files.", ex);
-                await NotificationManager.ShowMessageAsync(ex.Message);
+                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
             }
         }
 
         public async static Task PerformWatcherWorkAsync(StorageFolder folder)
         {
-            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SettingsVM.TimeOpened));
+            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SharedLogic.SettingsVM.TimeOpened));
             var files = await modifiedqueryResult.GetFilesAsync();
             if (await modifiedqueryResult.GetItemCountAsync() > 0)
             {

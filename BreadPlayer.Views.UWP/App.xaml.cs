@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.Common;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
@@ -178,9 +179,22 @@ namespace BreadPlayer
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                         //TODO: Load state from previously suspended application
                     }
+                    else if (args.PreviousExecutionState != ApplicationExecutionState.Running)
+                    {
+                        //bool loadState = (args.PreviousExecutionState == ApplicationExecutionState.Terminated);
+                        if (RoamingSettingsHelper.GetSetting<bool>("FirstRun", true))
+                        {
+                            WelcomeSplashScreen extendedSplash = new WelcomeSplashScreen(rootFrame);
+                            rootFrame.Content = extendedSplash;
+                            Window.Current.Content = rootFrame;
+                        }
+                        else
+                            Window.Current.Content = rootFrame;
+                    }
+                    
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
-                    Window.Current.Content = rootFrame;
+                    
                     BLogger.Logger.Info("Content set to Window successfully...");
                 }
                 if (rootFrame.Content == null)
@@ -202,7 +216,8 @@ namespace BreadPlayer
                 }
                 if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
-                    //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                    Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                        //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
                     var statusBar = StatusBar.GetForCurrentView();
                     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
                     statusBar.BackgroundOpacity = 1;

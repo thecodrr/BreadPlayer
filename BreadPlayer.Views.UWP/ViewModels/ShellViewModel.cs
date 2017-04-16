@@ -32,6 +32,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
+using Windows.Graphics.Display;
 
 namespace BreadPlayer.ViewModels
 {
@@ -62,7 +63,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            this.timer = new DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
+            this.timer = new DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(SharedLogic.Dispatcher));
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             this.timer.Stop();
@@ -162,6 +163,7 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _playNextCommand;
         DelegateCommand _playPauseCommand;
         DelegateCommand _setRepeatCommand;
+        DelegateCommand showEqualizerCommand;
         RelayCommand searchCommand;
         public RelayCommand SearchCommand
         {
@@ -179,10 +181,15 @@ namespace BreadPlayer.ViewModels
         public DelegateCommand PlayNextCommand { get { if (_playNextCommand == null) _playNextCommand = new DelegateCommand(PlayNext); return _playNextCommand; } }
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) _playPreviousCommand = new DelegateCommand(PlayPrevious); return _playPreviousCommand; } }
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) _setRepeatCommand = new DelegateCommand(SetRepeat); return _setRepeatCommand; } }
+        public DelegateCommand ShowEqualizerCommand { get { if (showEqualizerCommand == null) showEqualizerCommand = new DelegateCommand(ShowEqualizer); return showEqualizerCommand; } }
 
         #endregion
 
         #region Implementation 
+        private void ShowEqualizer()
+        {
+            DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;
+        }
         ThreadSafeObservableCollection<Mediafile> cache;
         public void Search(object para)
         {
@@ -237,7 +244,7 @@ namespace BreadPlayer.ViewModels
                     Play(null, TracksCollection.Elements.First());
                 else
                 {
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                    await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
                         switch (Player.PlayerState)
                         {
@@ -371,7 +378,7 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var mp3file = await CreateMediafile(file, true);
+                var mp3file = await SharedLogic.CreateMediafile(file, true);
                 if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
                     Load(mp3file);
                 else
@@ -416,7 +423,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
                     DontUpdatePosition = true;
                     CurrentPosition = 0;
@@ -563,9 +570,9 @@ namespace BreadPlayer.ViewModels
         #region Methods
         private async Task ScrobblePlayingSong()
         {
-            if (LastfmScrobbler != null)
+            if (SharedLogic.LastfmScrobbler != null)
             {
-                var scrobble = await LastfmScrobbler.Scrobble(Player.CurrentlyPlayingFile.LeadArtist, Player.CurrentlyPlayingFile.Album, Player.CurrentlyPlayingFile.Title);
+                var scrobble = await SharedLogic.LastfmScrobbler.Scrobble(Player.CurrentlyPlayingFile.LeadArtist, Player.CurrentlyPlayingFile.Album, Player.CurrentlyPlayingFile.Title);
                 if (scrobble.Success)
                     await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
                 else
@@ -619,7 +626,7 @@ namespace BreadPlayer.ViewModels
         public async Task<ThreadSafeObservableCollection<Mediafile>> ShuffledCollection()
         {
             var shuffled = new ThreadSafeObservableCollection<Mediafile>();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 shuffled.AddRange(TracksCollection.Elements.ToList());
                 shuffled.Shuffle();
@@ -689,7 +696,7 @@ namespace BreadPlayer.ViewModels
         {
             if (para != null)
             {
-                mp3File = await CreateMediafile(para, true);
+                mp3File = await SharedLogic.CreateMediafile(para, true);
             }
             else if (para == null && mp3File == null)
             {

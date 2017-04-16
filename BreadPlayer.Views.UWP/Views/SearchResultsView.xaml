@@ -25,7 +25,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid Margin="35,35,0,0">
+    <Grid Margin="35,35,0,0" Name="MainGrid">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -33,7 +33,7 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>-->
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -41,7 +41,7 @@
                         <AdaptiveTrigger MinWindowWidth="1200"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>-->
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -49,9 +49,14 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>-->
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
                         <Setter Target="AlbumsList.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                         <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MobileItemTemplate}" />
+                        <Setter Target="SongsHeader.Margin" Value="25,15,0,0" />
+                        <Setter Target="SongsHeader.FontSize" Value="18" />
+                        <Setter Target="AlbumsHeader.Margin" Value="25,15,0,0" />
+                        <Setter Target="AlbumsHeader.FontSize" Value="18" />
+                        <Setter Target="MainGrid.Margin" Value="0,35,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -62,9 +67,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Songs" FontSize="24" FontWeight="Bold"/>
+        <TextBlock Name="SongsHeader" Text="Songs" FontSize="24" FontWeight="Bold"/>
         <ListView Name="SongsList" Grid.Row="1" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}"/>
-        <TextBlock Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
+        <TextBlock Name="AlbumsHeader" Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
         <GridView Name="AlbumsList" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"> 
             <GridView.Transitions>
                 <TransitionCollection>
@@ -79,7 +84,7 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel> <GridView.ItemTemplate>
                 <DataTemplate x:DataType="Models:Album">
-                    <Grid MaxWidth="200" Height="270" Margin="5">
+                    <Grid MaxWidth="200" Height="290" Margin="5">
                         <StackPanel>
                             <Grid>
                                 <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">

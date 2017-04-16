@@ -22,6 +22,7 @@ using BreadPlayer.Dialogs;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Common;
 using System.Collections.Generic;
+using Windows.UI.Xaml;
 
 namespace BreadPlayer.Core
 {
@@ -33,6 +34,8 @@ namespace BreadPlayer.Core
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
             InitializeCore.IsMobile = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
+
+            InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
@@ -73,6 +76,18 @@ namespace BreadPlayer.Core
                 }
                 else
                     return new Windows.UI.Xaml.Thickness(48, 0, 0, 0);
+            }
+        }
+        public static DataTemplate DynamicAlbumSelectedTemplate
+        {
+            get
+            {
+                if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
+                {
+                    return App.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
+                }
+                else
+                    return App.Current.Resources["SelectedTemplate"] as DataTemplate;
             }
         }
         #region ICommands

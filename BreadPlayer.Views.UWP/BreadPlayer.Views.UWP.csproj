@@ -182,6 +182,9 @@
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
+    <Compile Include="SplashScreen\WelcomeSplashScreen.xaml.cs">
+      <DependentUpon>WelcomeSplashScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
@@ -245,6 +248,7 @@
     <Content Include="Assets\lib\x86\bass.dll" />
     <Content Include="Assets\lib\x86\bassmix.dll" />
     <Content Include="Assets\lib\x86\bass_fx.dll" />-->
+    <Content Include="Assets\splashImage1.jpeg" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -341,6 +345,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\TagDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SplashScreen\WelcomeSplashScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

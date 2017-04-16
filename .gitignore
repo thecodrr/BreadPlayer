@@ -214,3 +214,6 @@ ModelManifest.xml
 *.lock.json
 *.nuget.props
 *.nuget.targets
+
+*.appx
+/BreadPlayer.Views.UWP/BundleArtifacts

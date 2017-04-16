@@ -25,7 +25,12 @@ namespace BreadPlayer.Service
             {
                 DbPath = dbPath;
                 var databasePath = string.IsNullOrEmpty(dbPath) ? ApplicationData.Current.LocalFolder.Path + @"\breadplayerDB" : dbPath;
-                db = new DBreezeEngine(databasePath);
+                var dbConfig = new DBreezeConfiguration()
+                {
+                    DBreezeDataFolderName = databasePath,
+                    Storage = DBreezeConfiguration.eStorage.DISK
+                };
+                db = new DBreezeEngine(dbConfig);
             }
             return db;
         }
@@ -38,12 +43,12 @@ namespace BreadPlayer.Service
     {
         private string DbPath;
         DBreezeEngine engine = null;
-        public KeyValueStoreDatabaseService(string dbPath = null)
+        public KeyValueStoreDatabaseService(string dbPath = null, bool createNew = true)
         {
-            CreateDB(dbPath);
+            CreateDB(dbPath, createNew);
         }
        
-        public void CreateDB(string dbPath = null)
+        public void CreateDB(string dbPath = null, bool createNew = true)
         {
             DbPath = dbPath;
             engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
@@ -59,8 +64,7 @@ namespace BreadPlayer.Service
                 return item.Exists;
             }
            
-        }
-        
+        }        
         public void Dispose()
         {
             if (engine != null)
@@ -74,15 +78,17 @@ namespace BreadPlayer.Service
             {
                 return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
             }
-        } 
+        }
+        
         public int GetRecordsCount(string tableName)
         {
             using (var tran = engine.GetTransaction())
             {
-                return (int)tran.Count(tableName);
+                var count = (int)tran.Count(tableName);
+                return count;
             }
         }
-       
+        
         public void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record)
         {
             using (var tran = engine.GetTransaction())

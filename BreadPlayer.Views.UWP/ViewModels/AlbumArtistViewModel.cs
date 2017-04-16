@@ -16,7 +16,7 @@ namespace BreadPlayer.ViewModels
         IDatabaseService AlbumDatabaseService;
         public void InitDB()
         {
-            AlbumDatabaseService = new KeyValueStoreDatabaseService(ApplicationData.Current.LocalFolder.Path + @"\AlbumsDB");
+            AlbumDatabaseService = new KeyValueStoreDatabaseService();
         }       
         #endregion
         async void HandleAddAlbumMessage(Message message)
@@ -43,6 +43,8 @@ namespace BreadPlayer.ViewModels
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
                 AlbumsLoaded = false;
+
+            AlbumDatabaseService.Dispose();
         }
 
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -51,7 +53,6 @@ namespace BreadPlayer.ViewModels
             if (AlbumCollection.Count > 0)
             {
                 AlbumsLoaded = false;
-                AlbumDatabaseService.Dispose();
             }
             else
                 AlbumsLoaded = true;

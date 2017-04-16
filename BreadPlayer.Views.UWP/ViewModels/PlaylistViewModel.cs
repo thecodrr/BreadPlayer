@@ -121,7 +121,7 @@ namespace BreadPlayer.ViewModels
         }
         public async Task Refresh()
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 try
                 {
@@ -168,7 +168,7 @@ namespace BreadPlayer.ViewModels
             {
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
               
-                if (selectedPlaylist != null && await AskForPassword(selectedPlaylist))
+                if (selectedPlaylist != null && await SharedLogic.AskForPassword(selectedPlaylist))
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
                     dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
@@ -182,8 +182,8 @@ namespace BreadPlayer.ViewModels
                         string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
                         if (File.Exists(path))
                             File.Delete(path);
-                        PlaylistsItems.Remove(PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
-                        OptionItems.Remove(OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                        SharedLogic.PlaylistsItems.Remove(SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                        SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                         using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
                         {
                             service.RemovePlaylist(selectedPlaylist);//delete from database.
@@ -205,7 +205,7 @@ namespace BreadPlayer.ViewModels
                 {
                     var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
                     
-                    if (await AskForPassword(selectedPlaylist))
+                    if (await SharedLogic.AskForPassword(selectedPlaylist))
                     {
                         var dialog = new InputDialog()
                         {
@@ -220,9 +220,9 @@ namespace BreadPlayer.ViewModels
                             string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
                             if (File.Exists(path + selectedPlaylist.Name + ".db"))
                                 File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
-                            PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                            PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
-                            OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                            SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                            SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                            SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
                             using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
                             {
                                 service.RemovePlaylist(selectedPlaylist);//delete from database.
@@ -264,7 +264,7 @@ namespace BreadPlayer.ViewModels
         }
         async void LoadDB()
         {
-            if (await AskForPassword(playlist))
+            if (await SharedLogic.AskForPassword(playlist))
             {
                 using (PlaylistService PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
                 {

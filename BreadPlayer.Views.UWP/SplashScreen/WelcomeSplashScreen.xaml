@@ -1,0 +1,150 @@
+﻿<Page
+    x:Class="BreadPlayer.WelcomeSplashScreen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BreadPlayer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="900"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="WelcomeText.FontSize" Value="32"/>
+                        <Setter Target="Subheading.FontSize" Value="18"/>
+                        <Setter Target="WhatsNewHeader.FontSize" Value="22"/>
+                        <Setter Target="WhatsNewProperties.FontSize" Value="15"/>
+                        <Setter Target="WhatsNewScrollViewer.Margin" Value="20,0,10,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!--<FlipView Name="flipView1">
+            <FlipViewItem>-->
+                <Grid>
+                    <Grid.Background>
+                        <ImageBrush Stretch="UniformToFill" ImageSource="ms-appx:///Assets/splashImage1.jpeg"/>
+                    </Grid.Background>
+                    <Border Background="{StaticResource ImageFadeBrush}"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top"  Margin="0,100,0,0">
+                        <TextBlock x:Name="WelcomeText" TextAlignment="Center" FontSize="72" Text="Welcome To BreadPlayer" FontWeight="Bold">
+                        </TextBlock>
+                        <TextBlock x:Name="Subheading" TextAlignment="Center" Text="A Music Player Worth Your Music" FontSize="42" FontWeight="Bold">
+                        </TextBlock>
+                        <TextBlock x:Name="WhatsNewHeader" TextAlignment="Center" Text="What's New" Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" FontSize="42" Margin="0,50,0,0"/>
+                        <MenuFlyoutSeparator/>
+                        <ScrollViewer x:Name="WhatsNewScrollViewer" VerticalAlignment="Top" MaxHeight="340" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="WhatsNewProperties" FontSize="22" TextWrapping="WrapWholeWords" VerticalAlignment="Top">
+                            <Run Text="1. Smooth Play/Pause Transitions."/>
+                            <LineBreak/>
+                            <Run Text="2. Private Playlists."/>
+                            <LineBreak/>
+                            <Run Text="3. Manually Change Any Tracks Album Art."/>
+                            <LineBreak/>
+                            <Run Text="4. Hardware-Independent 10-Band Equalizer."/>
+                            <LineBreak/>
+                            <Run Text="5. Prevent Screen From Locking."/>
+                            <LineBreak/>
+                            <Run Text="6. Last.fm Scrobbling."/>
+                            <LineBreak/>
+                            <Run Text="7. Favorite Songs List, Most Played and Recently Added List."/>
+                            <LineBreak/>
+                            <Run Text="8. 'Stop After This Song' Function."/>
+                            <LineBreak/>
+                            <Run Text="9. New Redstone 3 Inspired UI Design."/>
+                            <LineBreak/>
+                            <Run Text="10. New Database Engine."/>
+                            <LineBreak/>
+                        </TextBlock>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Grid>
+            <!--</FlipViewItem>          
+        </FlipView>-->
+        <Button VerticalAlignment="Bottom" Margin="0,0,0,20" HorizontalAlignment="Center" Style="{StaticResource HyperlinkBtn}" Background="Transparent" Click="Button_Click">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Proceed" FontSize="18"/>
+                <SymbolIcon Symbol="Forward" Margin="10,0,0,0"/>
+            </StackPanel>
+        </Button>
+        <!--<GridView Grid.Row="1" Grid.Column="0"
+                      SelectedIndex="{Binding SelectedIndex, ElementName=flipView1, Mode=TwoWay}" VerticalAlignment="Bottom"                    
+                      HorizontalAlignment="Center" Margin="0,0" Padding="0">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal">
+                    </StackPanel>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.Items>
+                <TextBlock Text="&#x2022;" FontSize="32" Padding="0" Margin="0"/>
+                <TextBlock Text="&#x2022;" FontSize="32" Padding="0" Margin="0"/>
+                <TextBlock Text="&#x2022;" FontSize="32" Padding="0" Margin="0"/>
+                <TextBlock Text="&#x2022;" FontSize="32" Padding="0" Margin="0"/>
+            </GridView.Items>
+            <GridView.ItemContainerStyle>
+                --><!-- Default style for Windows.UI.Xaml.Controls.GridViewItem --><!--
+                <Style TargetType="GridViewItem">
+                    <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                    <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                    <Setter Property="TabNavigation" Value="Local"/>
+                    <Setter Property="IsHoldingEnabled" Value="True"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}"/>
+                    <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewItem">
+                                <ListViewItemPresenter
+            ContentTransitions="{TemplateBinding ContentTransitions}"
+            SelectionCheckMarkVisualEnabled="True"
+            CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+            CheckBoxBrush="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+            DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+            DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+            FocusBorderBrush="Transparent"
+            FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+            PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+            PointerOverBackground="Transparent"
+            PointerOverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+            SelectedBackground="Transparent"
+            SelectedForeground="{ThemeResource SystemControlHighlightAccentBrush}"
+            SelectedPointerOverBackground="Transparent"
+            PressedBackground="Transparent"
+            SelectedPressedBackground="Transparent"
+            DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+            DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+            ReorderHintOffset="{ThemeResource GridViewItemReorderHintThemeOffset}"
+            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+            ContentMargin="{TemplateBinding Padding}"
+            CheckMode="Overlay"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </GridView.ItemContainerStyle>
+        </GridView>-->
+    </Grid>
+</Page>

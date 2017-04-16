@@ -81,7 +81,7 @@
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="Models:Album">
-                    <Grid MaxWidth="200" Height="270" Margin="5">
+                    <Grid MaxWidth="200" Height="290" Margin="5">
                         <StackPanel>
                             <Grid>
                                 <Image Width="200" x:Name="AlbumArt" Height="200" Opacity="0" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">

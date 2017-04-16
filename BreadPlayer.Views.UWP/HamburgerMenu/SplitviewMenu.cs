@@ -105,7 +105,7 @@ namespace SplitViewMenu
             get { return (Type)GetValue(InitialPageProperty); }
             set { SetValue(InitialPageProperty, value); }
         }
-
+        public static bool IsSearchBarVisible { get; set; }
         public List<INavigationMenuItem> TopNavigationItems
         {
             get { return (List<INavigationMenuItem>)GetValue(TopNavigationItemsProperty); }
@@ -199,20 +199,25 @@ namespace SplitViewMenu
         {
             DelegateCommand cmd = new DelegateCommand(() =>
             {
+                DiscreteObjectKeyFrame marginKeyFrame = null;
                 if (_searchBox.Visibility == Visibility.Collapsed)
                 {
-                    (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard).Begin();
+                    var searchClickedStoryboard = (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard);//.Begin();
+                    marginKeyFrame = (searchClickedStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
+                    marginKeyFrame.Value = !(Window.Current.Bounds.Width <= 500) ? new Thickness(0, 145, 0, 0) : new Thickness(0, 105, 0, 0);                                    
+                    searchClickedStoryboard.Begin();
                     _searchBox.Focus(FocusState.Programmatic);
                 }
                 else if(_searchBox.Visibility == Visibility.Visible)
                 {
-                    (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard).Begin();
+                    var fadeStoryboard = (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard);//.Begin();
+                    marginKeyFrame = (fadeStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
+                    marginKeyFrame.Value = !(Window.Current.Bounds.Width <= 500) ? new Thickness(0, 105, 0, 0) : new Thickness(0, 65, 0, 0);
+                    fadeStoryboard.Begin();
                 }
             });
             return cmd;
         }
-
-
 
         private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {

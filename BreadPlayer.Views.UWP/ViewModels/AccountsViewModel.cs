@@ -41,7 +41,7 @@ namespace BreadPlayer.ViewModels
             }
             InitializeLastfm lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
             await lastfm.Login(LastfmUsername, LastfmPassword);
-            LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
+            BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
             if (lastfm.Auth.Auth.Authenticated)
             {
                 LastfmLoginCommand.IsEnabled = false;

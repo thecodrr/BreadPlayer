@@ -7,7 +7,6 @@ using XLog;
 using System.IO;
 using Windows.Storage;
 using BreadPlayer.Targets;
-using LightBuzz.SMTP;
 using Windows.ApplicationModel.Email;
 
 public class BLogger
@@ -51,7 +50,7 @@ public class BLogger
             }
             if (logfiles.Count > 0 && totalErrorCount > 0)
             {
-                await MailLogFileAsync(logfiles, totalErrorCount);
+                //await MailLogFileAsync(logfiles, totalErrorCount);
             }
         }
     }
@@ -69,35 +68,35 @@ public class BLogger
             errorCount += count["Fatal".ToUpper()];
         return errorCount;
     }
-    static async Task MailLogFileAsync(IReadOnlyList<StorageFile> logFiles, int exceptionCount)
-    {
-        using (SmtpClient client = new SmtpClient("smtp.1and1.com", 587, false, "support@breadplayer.com", "Allatonce1.1"))
-        {
-            EmailMessage emailMessage = new EmailMessage();
-            emailMessage.To.Add(new EmailRecipient("support@breadplayer.com"));
-            emailMessage.Subject = "Log Report from BreadPlayer";
-            string body = "Device Family: {0}" + "\r\n" +
-                "OS Version: {1}" + "\r\n" +
-                "OS Architecture: {2}" + "\r\n" +
-                "Device Model: {3}" + "\r\n" +
-                "Device Manufacturer: {4}" + "\r\n" +
-                "App Version: {5}" + "\r\n" +
-                "Date Reported: {6}" + "\r\n" +
-                "Exception Count: {7}";
-            emailMessage.Body = string.Format(body, Info.SystemFamily, Info.SystemVersion, Info.SystemArchitecture, Info.DeviceModel, Info.DeviceManufacturer, Info.ApplicationVersion, DateTime.Now, exceptionCount);
-            foreach (var logFile in logFiles)
-            {
-                var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(logFile);
+    //static async Task MailLogFileAsync(IReadOnlyList<StorageFile> logFiles, int exceptionCount)
+    //{
+    //    using (SmtpClient client = new SmtpClient("smtp.1and1.com", 587, false, "support@breadplayer.com", "Allatonce1.1"))
+    //    {
+    //        EmailMessage emailMessage = new EmailMessage();
+    //        emailMessage.To.Add(new EmailRecipient("support@breadplayer.com"));
+    //        emailMessage.Subject = "Log Report from BreadPlayer";
+    //        string body = "Device Family: {0}" + "\r\n" +
+    //            "OS Version: {1}" + "\r\n" +
+    //            "OS Architecture: {2}" + "\r\n" +
+    //            "Device Model: {3}" + "\r\n" +
+    //            "Device Manufacturer: {4}" + "\r\n" +
+    //            "App Version: {5}" + "\r\n" +
+    //            "Date Reported: {6}" + "\r\n" +
+    //            "Exception Count: {7}";
+    //        emailMessage.Body = string.Format(body, Info.SystemFamily, Info.SystemVersion, Info.SystemArchitecture, Info.DeviceModel, Info.DeviceManufacturer, Info.ApplicationVersion, DateTime.Now, exceptionCount);
+    //        foreach (var logFile in logFiles)
+    //        {
+    //            var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(logFile);
 
-                var attachment = new EmailAttachment(
-                    logFile.Name,
-                    stream);
+    //            var attachment = new EmailAttachment(
+    //                logFile.Name,
+    //                stream);
 
-                emailMessage.Attachments.Add(attachment);
-            }
-            var x = await client.SendMailAsync(emailMessage);
-            if (x == SmtpResult.OK)
-                await ApplicationData.Current.TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
+    //            emailMessage.Attachments.Add(attachment);
+    //        }
+    //        var x = await client.SendMailAsync(emailMessage);
+    //        if (x == SmtpResult.OK)
+    //            await ApplicationData.Current.TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+    //    }
     }
-}
+
