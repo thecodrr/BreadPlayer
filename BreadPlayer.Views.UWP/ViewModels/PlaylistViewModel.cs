@@ -200,11 +200,8 @@ namespace BreadPlayer.ViewModels
         async void RenamePlaylist(object playlist)
         {
             try
-            {
-                if (playlist != null)
-                {
-                    var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
-                    
+            {                
+                    var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.                    
                     if (await SharedLogic.AskForPassword(selectedPlaylist))
                     {
                         var dialog = new InputDialog()
@@ -230,8 +227,7 @@ namespace BreadPlayer.ViewModels
                                 Playlist = pl; //set this.Playlist to pl (local variable);
                             }
                         }
-                    }
-                }
+                    }                
             }
             catch (Exception)
             {

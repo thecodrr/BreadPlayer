@@ -652,7 +652,7 @@
                                 </Frame>
                                 <StackPanel VerticalAlignment="Top" Margin="0,70,0,0" Name="MainStackPanel">                                    
                                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0" Name="ShortcutsPanel">
-                                        <ToggleButton x:Name="toggleButton" Background="Transparent" Margin="0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
+                                        <ToggleButton x:Name="toggleButton" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Background="Transparent" Margin="0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                          <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="Transparent" Margin="0">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>

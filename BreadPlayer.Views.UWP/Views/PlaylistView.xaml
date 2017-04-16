@@ -522,7 +522,7 @@ Control.IsTemplateFocusTarget="True"/>
         <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding Songs}"/>
     </Page.Resources>
     
-        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid >
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -591,9 +591,9 @@ Control.IsTemplateFocusTarget="True"/>
                     <ImageBrush Stretch="UniformToFill" ImageSource="{Binding PlaylistArt}"/>
                 </Border.Background>
             <Grid>
-                <Border Background="#99000000"/>
+                <Border Background="#99000000" />
                 <Grid Grid.Row="0" RequestedTheme="Dark" Margin="0,120,0,0">
-                    <StackPanel x:Name="headerStack" Margin="35,0,0,0" Grid.Row="0" >
+                    <StackPanel x:Name="headerStack" Margin="35,40,0,0" Grid.Row="0" >
                         <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
                         <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
                     </StackPanel>
@@ -621,7 +621,7 @@ Control.IsTemplateFocusTarget="True"/>
                 </Grid>
             </Grid>
         </Border>
-     
-        <ListView x:Name="fileBox" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" ItemContainerStyle="{StaticResource PlaylistItemExpanded}" Loaded="fileBox_Loaded"/>
+
+        <ListView x:Name="fileBox" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" ItemContainerStyle="{StaticResource PlaylistItemExpanded}" Loaded="fileBox_Loaded"/>
     </Grid>
 </Page>
