@@ -34,7 +34,6 @@ mc:Ignorable="d">
     BorderBrush="{TemplateBinding BorderBrush}"
     BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid.Resources>
-
                                 <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                     <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{StaticResource LibVM}"
                                         CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
@@ -42,11 +41,15 @@ mc:Ignorable="d">
                                     <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
                                         </MenuFlyoutSubItem>-->
                                     <MenuFlyoutItem Text="Open Song Location"
-                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        DataContext="{Binding Source={StaticResource Core}}"
                                         Command="{Binding OpenSongLocationCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
+                                    <MenuFlyoutItem Text="Relocate Song"
+                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        Command="{Binding RelocateSongCommand}"
+                                        CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                                     <MenuFlyoutItem Text="Change Album Art"
-                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                        DataContext="{Binding Source={StaticResource Core}}"
                                         Command="{Binding ChangeAlbumArtCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                                     <MenuFlyoutItem Text="Stop Playing After This Song"
@@ -55,11 +58,10 @@ mc:Ignorable="d">
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
                                     <MenuFlyoutItem Text="Delete from playlist"
                                         Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}"
-                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">                              
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Properties"
-                                        DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
+                                                    DataContext="{Binding Source={StaticResource Core}}"                                       
                                         Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                         Command="{Binding ShowPropertiesCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
@@ -67,7 +69,7 @@ mc:Ignorable="d">
                                 </MenuFlyout>
 
 
-                                <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource LibVM}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
+                                <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
 
 
                             </Grid.Resources>

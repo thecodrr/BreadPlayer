@@ -243,7 +243,7 @@
                 <Rectangle Fill="Transparent" Visibility="Collapsed" Name="seekRect" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="10"/>
                 <Grid x:Name="infoBar" DataContext="{StaticResource Core}" Padding="0" Grid.Column="0" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0">
                     <Grid.Resources>
-                        <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource LibVM}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
+                        <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                         </MenuFlyout>
                     </Grid.Resources>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Height="Auto">
