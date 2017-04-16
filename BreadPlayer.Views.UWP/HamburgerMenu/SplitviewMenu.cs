@@ -71,7 +71,7 @@ namespace SplitViewMenu
         private static NavMenuListView _navBottomMenuListView;
         private static NavMenuListView _playlistsMenuListView;
         private static Frame _pageFrame;
-        private static SplitView _splitView;
+        private static SwipeableSplitView _splitView;
         private static ToggleButton TogglePaneButton;
         private static AutoSuggestBox _searchBox;
         private static TextBlock _headerText;
@@ -150,7 +150,7 @@ namespace SplitViewMenu
         }
         protected override void OnApplyTemplate()
         {
-            _splitView = GetTemplateChild("RootSplitView") as SplitView;
+            _splitView = GetTemplateChild("RootSplitView") as SwipeableSplitView;
 
             _pageFrame = GetTemplateChild("PageFrame") as Frame;
             NavService = new NavigationService(ref _pageFrame, typeof(LibraryView));
@@ -434,6 +434,7 @@ namespace SplitViewMenu
             if (_splitView.DisplayMode == SplitViewDisplayMode.Inline)
             {
                 TogglePaneButton.IsChecked = false;
+                _splitView.IsSwipeablePaneOpen = false;
             }
         }
     }

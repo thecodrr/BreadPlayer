@@ -160,6 +160,7 @@
     <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="HamburgerMenu\Shortcut.cs" />
+    <Compile Include="HamburgerMenu\SwipableSplitViewMenu.cs" />
     <Compile Include="Helpers\LockscreenHelper.cs" />
     <Compile Include="Services\DatabaseService.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
