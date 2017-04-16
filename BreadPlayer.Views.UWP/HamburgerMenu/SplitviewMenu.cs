@@ -382,7 +382,7 @@ namespace SplitViewMenu
                         if (para != null)
                             item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
                         else
-                            item = TopNavigationItems[1];
+                            item = TopNavigationItems[3];
 
                     }
                     if (item != null)
@@ -391,6 +391,7 @@ namespace SplitViewMenu
             }
             if (item != null)
             {
+                UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
                 var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
                 if (container != null)
                     container.IsTabStop = false;

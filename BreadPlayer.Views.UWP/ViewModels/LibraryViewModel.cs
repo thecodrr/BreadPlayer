@@ -499,10 +499,11 @@ namespace BreadPlayer.ViewModels
                 isPlayingFromPlaylist = false;
                 return mediaFile;
             }
-            else if (path is ThreadSafeObservableCollection<Mediafile> tmediaFile)
+            else if (path is IEnumerable<Mediafile> tmediaFile)
             {
-                SendLibraryLoadedMessage(tmediaFile, sendUpdateMessage);
-                return tmediaFile[0];
+                var col = new ThreadSafeObservableCollection<Mediafile>(tmediaFile);
+                SendLibraryLoadedMessage(col, sendUpdateMessage);
+                return col[0];
             }
             else if (path is Playlist playlist)
             {
