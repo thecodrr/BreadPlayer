@@ -522,6 +522,14 @@ namespace BreadPlayer.ViewModels
                 return MostEatenSongsCollection;
             });
         }
+        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
+        {
+            return await Task.Run(() =>
+            {
+                RecentlyPlayedCollection.AddRange(TracksCollection.Elements.Where(t => t.LastPlayed != null && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed))).Days <= 2 && !MostEatenSongsCollection.Any(a => a.Path == t.Path)));
+                return RecentlyPlayedCollection;
+            });
+        }
         private async Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
         {
             return await Task.Run(() =>
@@ -621,16 +629,13 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                //Genre = genre;
-                //TracksCollection = null;
-                //await Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
-                //{
-                //    //TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
-                //    //if (genre != "All genres")
-                //    //    TracksCollection.AddRange(await LibraryService.Query("Genre", genre).ConfigureAwait(false), true);
-                //    //else
-                //    //    TracksCollection.AddRange(OldItems, true);
-                //});
+                Genre = genre;
+                TracksCollection = null;
+                TracksCollection = new GroupedObservableCollection<string, Mediafile>(t => t.Title);
+                    if (genre != "All genres")
+                        TracksCollection.AddRange(await LibraryService.Query(genre).ConfigureAwait(false), true);
+                    else
+                        TracksCollection.AddRange(OldItems, true);                
             }
         }
         
@@ -923,7 +928,7 @@ namespace BreadPlayer.ViewModels
             if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
             else
-                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 300;
             if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
             {
                 var salthash = Core.Common.PasswordStorage.CreateHash(dialog.Password);
@@ -998,7 +1003,7 @@ namespace BreadPlayer.ViewModels
                 switch(param)
                 {
                     case "Recent":
-                        ChangeView("Recently Played", false, RecentlyPlayedCollection);
+                        ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync());
                         break;
                     case "MusicCollection":
                         ChangeView("Music Collection", libgrouped, TracksCollection.Elements);

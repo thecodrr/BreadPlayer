@@ -50,7 +50,7 @@ namespace BreadPlayer.Service
         }
         public void AddMediafile(Mediafile data)
         {
-            Database.InsertRecord("Tracks", TracksIndexes(data), data);
+            Database.InsertRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre, data);
         }
         public async Task AddMediafiles(IEnumerable<Mediafile> data)
         {
@@ -58,7 +58,7 @@ namespace BreadPlayer.Service
         }
         public async Task<bool> UpdateMediafile(Mediafile data)
         {
-            return await Database.UpdateRecordAsync("Tracks", data.Path + data.FolderPath + data.LeadArtist+ data.Album + data.Title, data);
+            return await Database.UpdateRecordAsync("Tracks", data.Path + data.FolderPath + data.LeadArtist+ data.Album + data.Title + data.Genre, data);
         }
         public void UpdateMediafiles(IEnumerable<Mediafile> data)
         {
@@ -71,7 +71,7 @@ namespace BreadPlayer.Service
         }
         public void RemoveMediafile(Mediafile data)
         {
-            Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title);
+            Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre);
         }
         public Mediafile GetMediafile(string path)
         {
@@ -79,7 +79,7 @@ namespace BreadPlayer.Service
         }
         public void AddPlaylist(Playlist pList)
         {
-            Database.InsertRecord("Playlists", PlaylistIndexes(pList), pList);
+            Database.InsertRecord("Playlists", pList.Name, pList);
         }
         public async Task<IEnumerable<Playlist>> GetPlaylists()
         {

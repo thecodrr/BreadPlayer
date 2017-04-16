@@ -12,7 +12,7 @@ namespace BreadPlayer.Service
     {
         void InsertAlbums(IEnumerable<Album> albums);
         void CreateDB(string dbPath = null, bool createNew = true);
-        void InsertRecord<T>(string tableName, List<DBreezeIndex> indexes, T record);
+        void InsertRecord<T>(string tableName, string primaryKey, T record);
         Task InsertTracks(IEnumerable<Mediafile> records);
         Task<IEnumerable<T>> GetRecords<T>(string tableName);
         T GetRecord<T>(string table, string path);
