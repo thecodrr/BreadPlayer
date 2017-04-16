@@ -213,3 +213,4 @@ ModelManifest.xml
 /BreadPlayer.Web.Tests/BreadPlayer.Web.Tests.nuget.targets
 /BreadPlayer.Web.Tests/BreadPlayer.Web.Tests.nuget.props
 *.appx
+/BreadPlayer.Views.UWP/BundleArtifacts
