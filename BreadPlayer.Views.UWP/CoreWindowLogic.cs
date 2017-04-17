@@ -31,6 +31,7 @@ using Windows.Data.Xml.Dom;
 using BreadPlayer.Models;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
+using System.IO;
 
 namespace BreadPlayer
 {
@@ -53,6 +54,14 @@ namespace BreadPlayer
             if (!onlyVol)
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
+                string folders = (string)ApplicationData.Current.RoamingSettings.Values[foldersKey];
+                folders.Split('|').ToList().ForEach(async(str) =>
+                {
+                    if(!string.IsNullOrEmpty(str) && Directory.Exists(str))
+                        SettingsVM.LibraryFoldersCollection.Add(await StorageFolder.GetFolderFromPathAsync(str));
+                });
+               
+               // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
                 if (path != "" && VerifyFileExists(path, 300))
                 {
                     double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
@@ -80,7 +89,8 @@ namespace BreadPlayer
             ApplicationData.Current.RoamingSettings.Values[timeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string folderPaths = "";
             SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-            ApplicationData.Current.RoamingSettings.Values[foldersKey] = folderPaths;
+            if(!string.IsNullOrEmpty(folderPaths))
+                ApplicationData.Current.RoamingSettings.Values[foldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
         }
         #endregion
 
