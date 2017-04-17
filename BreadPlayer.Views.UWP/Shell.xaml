@@ -249,7 +249,7 @@
             <AppBarButton HorizontalAlignment="Center" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="Open a file to play" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="0,5,0,5"/>
         </StackPanel>
         <StackPanel x:Name="playbarPanel" VerticalAlignment="Bottom">
-            <ProgressBar Name="positionProgressBar" Visibility="Collapsed" Background="Transparent" Foreground="White" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
+            <ProgressBar Name="positionProgressBar" Visibility="Collapsed" Background="Transparent" Foreground="{ThemeResource ThemeForeground}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
             <Grid x:Name="playbarGrid" Height="70" Background="{ThemeResource PlaybarBrush}" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
