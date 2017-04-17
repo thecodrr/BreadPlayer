@@ -739,8 +739,8 @@
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding Path=StopAfterCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-                                        <MenuFlyoutItem Text="Delete from playlist"
-                                        Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}"
+                                        <MenuFlyoutItem Text="Delete"
+                                        Command="{Binding Source={StaticResource LibVM}, Path=DeleteCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                                         </MenuFlyoutItem>
                                         <MenuFlyoutItem Text="Properties"
