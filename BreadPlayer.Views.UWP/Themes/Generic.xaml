@@ -299,6 +299,9 @@
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <Behaviours:OpenMenuFlyoutAction Parameter="Playlist"/>
                             </Core:EventTriggerBehavior>
+                            <Core:EventTriggerBehavior EventName="Holding">
+                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist"/>
+                            </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
                     </Grid>
                 </ControlTemplate>
