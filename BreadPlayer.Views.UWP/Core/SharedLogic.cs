@@ -124,7 +124,7 @@ namespace BreadPlayer.Core
         #region Implementation
         private async void ChangeAlbumArt(object para)
         {
-            Mediafile mediaFile = null;
+            Mediafile mediaFile = para as Mediafile;
             if (para == null)
                 mediaFile = Player.CurrentlyPlayingFile;
             FileOpenPicker albumArtPicker = new FileOpenPicker();
