@@ -33,6 +33,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Services.Store.Engagement;
 
 namespace BreadPlayer
 {
@@ -63,6 +64,7 @@ namespace BreadPlayer
             this.LeavingBackground += App_LeavingBackground;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+           
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -160,7 +162,7 @@ namespace BreadPlayer
             }
         }
 
-        void LoadFrame(IActivatedEventArgs args, object arguments)
+        async void LoadFrame(IActivatedEventArgs args, object arguments)
         {
             try
             {
@@ -218,6 +220,8 @@ namespace BreadPlayer
                 }
                 //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                await engagementManager.RegisterNotificationChannelAsync();
             }
             catch (Exception ex)
             {

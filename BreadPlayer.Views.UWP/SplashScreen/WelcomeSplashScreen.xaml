@@ -70,9 +70,10 @@
                             <LineBreak/>
                             <Run Text="10. New Database Engine."/>
                             <LineBreak/>
-                        </TextBlock>
+                    </TextBlock>
                         </ScrollViewer>
-                    </StackPanel>
+                <HyperlinkButton FontFamily="28" FontWeight="Bold" NavigateUri="https://github.com/theweavrs/BreadPlayer/edit/master/RELEASENOTES.md" Content="See Full Release Notes Here"/>
+            </StackPanel>
                 </Grid>
             <!--</FlipViewItem>          
         </FlipView>-->
