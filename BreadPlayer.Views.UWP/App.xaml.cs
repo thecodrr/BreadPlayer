@@ -47,7 +47,13 @@ namespace BreadPlayer
         /// </summary>
         public App()
         {
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+            }
+            else
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
             this.InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
@@ -74,7 +80,6 @@ namespace BreadPlayer
             var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
             var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
             this.RequestedTheme = (ApplicationTheme)theme;
-            Debug.Write("ApplicationTheme: " + RequestedTheme);
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -159,8 +164,7 @@ namespace BreadPlayer
         {
             try
             {
-                var stop = Stopwatch.StartNew();
-                BLogger.Logger.Info("Loading frame started...");
+               // BLogger.Logger.Info("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
 
                 // Do not repeat app initialization when the Window already has content
@@ -168,7 +172,7 @@ namespace BreadPlayer
                 {
                     // Create a Frame to act as the navigation context
                     rootFrame = new Frame();
-                    BLogger.Logger.Info("New frame created.");
+                  //  BLogger.Logger.Info("New frame created.");
                     if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                     {
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
@@ -200,36 +204,29 @@ namespace BreadPlayer
                     BLogger.Logger.Info("Navigating to Shell...");
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
-
-                // CoreWindowLogic logic = new CoreWindowLogic();
-               // var view = ApplicationView.GetForCurrentView();
-               //// view.SetPreferredMinSize(new Size(360, 100));
-               // if (RequestedTheme == ApplicationTheme.Dark)
-               // {
-               //     view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
-               //     view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
-               // }
-               // if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-               // {
-               //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-               //         //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-               //     var statusBar = StatusBar.GetForCurrentView();
-               //     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
-               //     statusBar.BackgroundOpacity = 1;
-               //     statusBar.ForegroundColor = Colors.White;
-               // }
-                //if (args.Kind != ActivationKind.File)
-                //{
-                //    CoreWindowLogic.LoadSettings();
-                //}
-                //else
-                //{
-                //    CoreWindowLogic.LoadSettings(true);
-                //}
+                
+                 var view = ApplicationView.GetForCurrentView();
+                 view.SetPreferredMinSize(new Size(360, 100));
+                
+                // if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                // {
+                //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                //         //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+                //     var statusBar = StatusBar.GetForCurrentView();
+                //     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
+                //     statusBar.BackgroundOpacity = 1;
+                //     statusBar.ForegroundColor = Colors.White;
+                // }
+                if (args.Kind != ActivationKind.File)
+                {
+                    CoreWindowLogic.LoadSettings();
+                }
+                else
+                {
+                    CoreWindowLogic.LoadSettings(true);
+                }
                 //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
-                stop.Stop();
-                Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
             }
             catch (Exception ex)
             {

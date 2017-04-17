@@ -191,7 +191,7 @@ namespace BreadPlayer.ViewModels
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
             UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
-            IsThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Default") == "Light" ? true : false;
+            IsThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion

@@ -666,7 +666,8 @@ namespace BreadPlayer.ViewModels
                         {
                             PlayPauseCommand.Execute(null);
                             CoreWindowLogic.UpdateTile(mp3file);
-                            await LockscreenHelper.ChangeLockscreenImage(mp3file);
+                            if(SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)
+                                await LockscreenHelper.ChangeLockscreenImage(mp3file);
                         }
                         else
                         {

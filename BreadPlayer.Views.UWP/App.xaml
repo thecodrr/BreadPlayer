@@ -85,7 +85,7 @@
             <VM:AccountsViewModel x:Key="AccountsVM"/>
             
             <Converter:PathToImageSourceConverter x:Key="PathToImage"/>
-            <Converter:BoolToVisibilityConverter x:Key="BoolToVisibilty"/>
+            <Converter:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
             <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
             <Converter:DoubleToTimeConverter x:Key="DoubleToTime"/>
             <Converter:StringToIconConverter x:Key="StringToIcon"/>
@@ -1229,13 +1229,14 @@ Control.IsTemplateFocusTarget="True"/>
            
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
                 <Grid Height="75" Margin="30,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-                    <TextBlock Typography.Capitals="AllSmallCaps" Typography.CapitalSpacing="True" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center">
-                        <Run Text="{Binding Path=Title}" FontSize="20"/>
-                        <LineBreak/>
-                        <Run Text="{Binding Path=LeadArtist}" Foreground="{ThemeResource ThemeForeground}" FontSize="17"/>
-                        <Run Text=" &#x2022; " FontWeight="Bold" Foreground="{ThemeResource ThemeForeground}" FontSize="17"/>
-                        <Run Text="{Binding Path=Album}" Foreground="{ThemeResource ThemeForeground}" FontSize="15"/>
-                    </TextBlock>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Title}" FontSize="20" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center"></TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Typography.Capitals="AllSmallCaps" VerticalAlignment="Center" FontWeight="ExtraLight" TextAlignment="Center" Text="{Binding Path=LeadArtist}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
+                            <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" TextAlignment="Center" Text="&#x2022;" Margin="5,0,5,0" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
+                            <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" TextAlignment="Center" Text="{Binding Path=Album}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
+                        </StackPanel> 
+                    </StackPanel>
                     <!--<TextBlock Text="{Binding Path=Length}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>-->
                 </Grid>
             </DataTemplate>

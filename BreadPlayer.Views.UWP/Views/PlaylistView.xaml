@@ -614,7 +614,7 @@ Control.IsTemplateFocusTarget="True"/>
                                     <TextBlock FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibilty}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                            <Button Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibility}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
                         </StackPanel>
                     </Grid>
                 </Grid>
