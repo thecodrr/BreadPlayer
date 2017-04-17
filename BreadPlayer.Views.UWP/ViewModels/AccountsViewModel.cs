@@ -7,7 +7,7 @@ namespace BreadPlayer.ViewModels
     public class AccountsViewModel : ViewModelBase
     {
         #region Lastfm Configuration
-        DelegateCommand lastfmLoginCommand;
+        RelayCommand lastfmLoginCommand;
         string lastfmUsername;
         string lastfmPassword;
         public string LastfmUsername
@@ -28,28 +28,39 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("LastfmPassword", value);
             }
         }
+        string loginStatus = "(Not Logged In)";
+        public string LoginStatus
+        {
+            get => loginStatus;
+            set => Set(ref loginStatus, value);
+        }
         public ICommand LastfmLoginCommand
         {
-            get { if(lastfmLoginCommand == null) lastfmLoginCommand = new DelegateCommand(LastfmLogin); return lastfmLoginCommand; }
+            get { if(lastfmLoginCommand == null) lastfmLoginCommand = new RelayCommand(LastfmLogin); return lastfmLoginCommand; }
         }
-        private async void LastfmLogin()
+        private async void LastfmLogin(object para)
         {
-            if (!LastfmPassword.Any() || !LastfmUsername.Any())
+            if (Core.SharedLogic.LastfmScrobbler == null)
             {
-                await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
-                return;
+                if (!LastfmPassword.Any() || !LastfmUsername.Any())
+                {
+                    if ((bool)para)
+                    {
+                        await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
+                    }
+                    return;
+                }
+                InitializeLastfm lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
+                await lastfm.Login(LastfmUsername, LastfmPassword);
+                BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
+                if (lastfm.Auth.Auth.Authenticated)
+                {
+                    LoginStatus = "(Logged In)";
+                    await NotificationManager.ShowMessageAsync("Successfully logged in!");
+                }
+                else
+                    await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
             }
-            InitializeLastfm lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
-            await lastfm.Login(LastfmUsername, LastfmPassword);
-            BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
-            if (lastfm.Auth.Auth.Authenticated)
-            {
-                LastfmLoginCommand.IsEnabled = false;
-                await NotificationManager.ShowMessageAsync("Successfully logged in!");
-            }
-            else
-                await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
-
         }
         #endregion
 
@@ -57,7 +68,7 @@ namespace BreadPlayer.ViewModels
         {
             LastfmPassword = RoamingSettingsHelper.GetSetting<string>("LastfmPassword", "");
             LastfmUsername = RoamingSettingsHelper.GetSetting<string>("LastfmUsername", "");
-            LastfmLogin();
-        }
+            LastfmLogin(false);
+        }      
     }
 }

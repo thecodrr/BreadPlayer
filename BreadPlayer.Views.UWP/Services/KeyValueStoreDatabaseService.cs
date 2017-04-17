@@ -82,10 +82,17 @@ namespace BreadPlayer.Service
         
         public int GetRecordsCount(string tableName)
         {
-            using (var tran = engine.GetTransaction())
+            try
             {
-                var count = (int)tran.Count(tableName);
-                return count;
+                using (var tran = engine.GetTransaction())
+                {
+                    var count = (int)tran.Count(tableName);
+                    return count;
+                }
+            }
+            catch
+            {
+                return 0;
             }
         }
         

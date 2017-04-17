@@ -17,6 +17,7 @@
 */
 using BreadPlayer.Common;
 using BreadPlayer.Services;
+using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -224,6 +225,7 @@ namespace BreadPlayer
                 {
                     CoreWindowLogic.LoadSettings(true);
                 }
+                var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
                 stop.Stop();
                 Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
