@@ -1,12 +1,50 @@
-#Release Notes for Bread Player.
+# Release Notes for Bread Player.
+## Version 2.0-beta
+### What's New:
+* Smooth Play/Pause Transitions.
+* Private Playlists.
+* Manually Change Any Tracks Album Art.
+* Hardware-Independent 10-Band Equalizer.
+* Prevent Screen From Locking.
+* Last.fm Scrobbling.
+* Favorite Songs List, Most Played and Recently Added List.
+* 'Stop After This Song' Function.
+* New Redstone 3 Inspired UI Design.
+* New Database Engine.
 
-##Version 1.3-alpha
+### What's Fixed:
+* Fixed Last.fm is not initialized on startup i.e. user is not logged in on startup (Issue #121)
+* Fixed Library folders are not added to folder list on app startup. (Issue #120)
+* Fixed No menu is opened for playlists in HamburgerMenu in Mobile. (Issue #116)
+* Fixed Back Navigation
+* Fixed Crash when changing albumart of any song from the list manually (Issue #115)
+* Fixed Song chamge is not reflected in the SMTC when player is in background (Issue #114)
+* Fixed Playlist Song Is Not Deleted When Delete Button Is Pressed. (Issue #113)
+* Fixed Crash when seeking slider to the end. (Issue #111)
+* Fixed Performance issue on player startup. (Issue #107)
+* Fixed Duplicates window doesn't show title song. (Issue #104)
+* Fixed Random Application crash. (Issue #97)
+* Fixed nullreferenceexeption when clicking on add playlist button on album item.
+* Fixed crash when searching from albumartistview
+* Fixed minor bugs with library loading and playback of song.
+* Fixed Audio does not play in the background )Issue #63)
+
+### What's Improved:
+* Improved Hamburger Menu
+* Improved UI/UX of the whole player
+* Improved Database Engine and Library Import
+* Improved and Cleaned Up Code
+* Improved navigation
+* Improved playlists and albums.
+* Improved everything :D
+
+## Version 1.3-alpha
 ### What's Fixed:
 
 * Background audio issue was fixed.
 * Issue where albums were not being loaded was fixed.
 
-##Version 1.2-alpha
+## Version 1.2-alpha
 ### What's Improved:
 
 * We improved library loading performance and memory allocation.
