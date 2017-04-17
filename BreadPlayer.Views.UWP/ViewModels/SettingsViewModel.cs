@@ -34,6 +34,9 @@ using BreadPlayer.Common;
 using System.Diagnostics;
 using Windows.UI.Core;
 using BreadPlayer.Dialogs;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.ViewModels
 {
@@ -56,18 +59,16 @@ namespace BreadPlayer.ViewModels
         {
             get
             {
-                if (ApplicationData.Current.LocalSettings.Values["SelectedTheme"] != null)
-                    _isThemeDark = ApplicationData.Current.LocalSettings.Values["SelectedTheme"].ToString() == "Light" ? true : false;
-                else
-                    _isThemeDark = false;
                 return _isThemeDark;
             }
             set
             {
                 Set(ref _isThemeDark, value);
-                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = _isThemeDark == true ? "Light" : "Dark";
+                RoamingSettingsHelper.SaveSetting("SelectedTheme", _isThemeDark == true ? "Light" : "Dark");
+               // SharedLogic.InitializeTheme();
             }
         }
+       
         public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
@@ -165,6 +166,7 @@ namespace BreadPlayer.ViewModels
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
             UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
+            IsThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Default") == "Light" ? true : false;
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion

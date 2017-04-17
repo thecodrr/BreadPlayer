@@ -69,17 +69,10 @@ namespace BreadPlayer
 
         private void InitializeTheme()
         {
-            var value = ApplicationData.Current.LocalSettings.Values["SelectedTheme"];
-            if (value != null)
-            {
-                var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
-                this.RequestedTheme = (ApplicationTheme)theme;
-                Debug.Write("ApplicationTheme: " + RequestedTheme);
-            }
-            else
-            {
-                ApplicationData.Current.LocalSettings.Values["SelectedTheme"] = RequestedTheme.ToString();
-            }
+            var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
+            var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
+            this.RequestedTheme = (ApplicationTheme)theme;
+            Debug.Write("ApplicationTheme: " + RequestedTheme);
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)

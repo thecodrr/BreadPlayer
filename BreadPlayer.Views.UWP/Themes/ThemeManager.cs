@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core;
+﻿using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Extensions;
 using System;
 using Windows.Storage;
@@ -48,7 +49,7 @@ namespace BreadPlayer.Themes
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (App.Current.RequestedTheme == ApplicationTheme.Light && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
+                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Default") == "Light" && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
                 {
                     try
                     {

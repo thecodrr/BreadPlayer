@@ -473,8 +473,7 @@ Control.IsTemplateFocusTarget="True"/>
             Visibility="Collapsed" ToolTipService.ToolTip="Add this song to playlist."
             Height="50"  VerticalAlignment="Stretch"  Background="Transparent"
             Width="50" Style="{StaticResource HyperlinkBtn}"
-                        DataContext="{Binding ElementName=plistPage, Path=DataContext}"
-                        Command="{Binding DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
+                         Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
             FontFamily="Segoe MDL2 Assets"></Button>
                                 </StackPanel>
                             </Grid>

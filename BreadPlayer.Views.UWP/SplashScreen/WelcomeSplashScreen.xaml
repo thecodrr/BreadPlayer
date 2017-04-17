@@ -25,7 +25,7 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="WelcomeText.FontSize" Value="32"/>
+                        <Setter Target="WelcomeText.FontSize" Value="28"/>
                         <Setter Target="Subheading.FontSize" Value="18"/>
                         <Setter Target="WhatsNewHeader.FontSize" Value="22"/>
                         <Setter Target="WhatsNewProperties.FontSize" Value="15"/>
