@@ -68,12 +68,12 @@
             <PivotItem Header="General">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock Text="Lockscreen" FontWeight="Bold" FontSize="18"/>
-                    <CheckBox Margin="0,0,0,0" Content="Prevent screen from locking." IsChecked="{Binding Source={StaticResource Core}, Path=PreventScreenFromLocking, Mode=TwoWay}"/>
+                    <CheckBox Margin="0,0,0,0" Content="Prevent screen from locking." IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
                         <Run Text="Enabling this will prevent the OS from locking the screen after regular intervals. "/>
                         <Bold>This feature is extremely battery consuming and hence, is not persisted through sessions.</Bold>
                     </TextBlock>
-                    <CheckBox Margin="0,0,0,0" Content="Replace lockscreen wallpaper with album art." IsChecked="{Binding  Source={StaticResource Core}, Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
+                    <CheckBox Margin="0,0,0,0" Content="Replace lockscreen wallpaper with album art." IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
                         <Run Text="This will replace the lockscreen wallpaper with currently playing song's album art. "/>
                         <Bold>Rest assured that your lockscreen wallpaper will be automatically resetted when you exit the app.</Bold>

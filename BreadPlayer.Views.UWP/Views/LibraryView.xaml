@@ -82,7 +82,6 @@
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="headerText.FontSize" Value="44" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -90,10 +89,6 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="headerText.FontSize" Value="20" />
-                        <Setter Target="headerText.RequestedTheme" Value="Dark" />
-                        <Setter Target="headerText.Margin" Value="50,10,0,0" />
-                        <Setter Target="headerText.(Grid.Row)" Value="0" />
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
@@ -115,8 +110,6 @@
             <RowDefinition Height="13" MinHeight="13"/>
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
-       
-        <TextBlock Visibility="Collapsed" x:Name="headerText" Text="{Binding Header, FallbackValue='Music Library'}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Margin="35,20,0,0.4" Grid.RowSpan="2"/>
        
         <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
@@ -173,7 +166,7 @@
                 </ListView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
-                <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
+                <GridView x:Name="alphabetList" x:DeferLoadStrategy="Lazy" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Button x:Name="alphabet" BorderBrush="{x:Null}" MinWidth="90" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
@@ -192,7 +185,7 @@
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
 
-        <Button x:Name="backBtn" Background="{x:Null}" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right"  Style="{StaticResource HyperlinkBtn}">
+        <Button x:Name="backBtn" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right"  Style="{StaticResource HyperlinkBtn}">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
                     <Core:EventTriggerBehavior.Actions>
@@ -202,22 +195,10 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </Button>
-        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibilty}}">
+        <StackPanel x:Name="lonelyTextPanel" Grid.Row="2" VerticalAlignment="Center" x:DeferLoadStrategy="Lazy" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibilty}}">
             <TextBlock x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}"/>
             <Button Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVM.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}"/>
-        </StackPanel>
-        <Grid Grid.ColumnSpan="2" Grid.RowSpan="3" Visibility="Collapsed" Background="{ThemeResource ThemeBackground}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <GridView VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{Binding AlphabetList}" Margin="0">
-                <GridView.ItemTemplate>
-                    <DataTemplate>
-                        <Button Width="60" Height="40" FontSize="26" Background="Transparent" Content="{Binding}" Foreground="Black" Style="{StaticResource HyperlinkBtn}"/>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-        </Grid>
+        </StackPanel>       
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}"/>

@@ -49,7 +49,8 @@ namespace BreadPlayer
             ShellVM = DataContext as ShellViewModel;
             LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
             {
-                SymbolAsChar = "\uE762", Tooltip = "Enable Multiselection",
+                SymbolAsChar = "\uE762",
+                Tooltip = "Enable Multiselection",
                 ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
         }

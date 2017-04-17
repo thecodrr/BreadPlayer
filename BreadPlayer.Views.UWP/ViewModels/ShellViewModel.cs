@@ -33,6 +33,7 @@ using BreadPlayer.Common;
 using BreadPlayer.Service;
 using System.Reflection;
 using Windows.Graphics.Display;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
@@ -665,6 +666,7 @@ namespace BreadPlayer.ViewModels
                         {
                             PlayPauseCommand.Execute(null);
                             CoreWindowLogic.UpdateTile(mp3file);
+                            await LockscreenHelper.ChangeLockscreenImage(mp3file);
                         }
                         else
                         {

@@ -168,7 +168,7 @@
         </controls:SplitViewMenu>
 
 
-        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="Transparent" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        <Grid Name="EqualizerGrid" Margin="0,0,0,70" x:DeferLoadStrategy="Lazy" Background="Transparent" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="130"/>
             </Grid.RenderTransform>
@@ -218,7 +218,7 @@
             
         </Grid>
 
-        <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
+        <Grid x:Name="volumeGrid" Margin="0,0,10,70" x:DeferLoadStrategy="Lazy" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding ElementName=volBtn, Path=IsChecked}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -229,7 +229,7 @@
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
 
-        <Border CornerRadius="20" Opacity="0" x:Name="notification" Background="{ThemeResource SystemControlBackgroundAccentBrush}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" MinWidth="100" Margin="0,0,0,90" VerticalAlignment="Bottom" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+        <Border CornerRadius="20" Opacity="0" x:Name="notification" x:DeferLoadStrategy="Lazy" Background="{ThemeResource SystemControlBackgroundAccentBrush}" DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}" MinWidth="100" Margin="0,0,0,90" VerticalAlignment="Bottom" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
             <Border.RenderTransform>
                 <TranslateTransform Y="130"/>
             </Border.RenderTransform>
@@ -240,7 +240,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <StackPanel Width="50" Name="ShowMorePanel" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
+        <StackPanel Width="50" Name="ShowMorePanel" x:DeferLoadStrategy="Lazy" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
             <AppBarToggleButton HorizontalAlignment="Center" ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="0,0,0,0"/>
             <AppBarToggleButton HorizontalAlignment="Center" Command="{Binding Path=ShowEqualizerCommand}" IsChecked="{Binding ElementName=equalizerBtn, Path=IsChecked, Mode=TwoWay}" ToolTipService.ToolTip="Show Equalizer" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="0,5,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
             <AppBarButton HorizontalAlignment="Center" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="{Binding Repeat}" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="0,5,0,0" Height="40" />

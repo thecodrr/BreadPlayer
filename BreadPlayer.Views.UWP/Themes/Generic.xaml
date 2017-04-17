@@ -226,7 +226,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
                                                                        Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource NavItemHover}" />
+                                                                    Value="{ThemeResource HoverBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -246,7 +246,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
                                                                        Storyboard.TargetProperty="Background">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource NavItemHover}" />
+                                                                    Value="{ThemeResource HoverBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">

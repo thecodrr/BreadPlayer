@@ -37,12 +37,36 @@ using BreadPlayer.Dialogs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.System.Display;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        bool preventScreenFromLocking;
+        public bool PreventScreenFromLocking
+        {
+            get { return preventScreenFromLocking; }
+            set
+            {
+                Set(ref preventScreenFromLocking, value);
+                if (value == true)
+                    KeepScreenActive();
+                else
+                    ReleaseDisplayRequest();
+            }
+        }
+        bool replaceLockscreenWithAlbumArt;
+        public bool ReplaceLockscreenWithAlbumArt
+        {
+            get { return replaceLockscreenWithAlbumArt; }
+            set
+            {
+                Set(ref replaceLockscreenWithAlbumArt, value);
+                RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
+            }
+        }
         string uiTextType;
         public string UITextType
         {
@@ -127,7 +151,7 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("ChangeAccentByAlbumArt", changeAccentByAlbumart);
             }
         }
-
+      
         bool sendReportOnEveryStartup;
         public bool SendReportOnEveryStartup
         {
@@ -161,6 +185,7 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
+            this.PropertyChanged += SettingsViewModel_PropertyChanged;
             ChangeAccentByAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             FileBatchSize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
             TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -265,7 +290,35 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-        
+
+        #region General Settings Methods
+
+        DisplayRequest displayRequest;
+        private void KeepScreenActive()
+        {
+            if (displayRequest == null)
+            {
+                displayRequest = new DisplayRequest();
+                // This call activates a display-required request. If successful,  
+                // the screen is guaranteed not to turn off automatically due to user inactivity. 
+                displayRequest.RequestActive();
+            }
+        }
+        private void ReleaseDisplayRequest()
+        {
+            // This call de-activates the display-required request. If successful, the screen 
+            // might be turned off automatically due to a user inactivity, depending on the 
+            // power policy settings of the system. The requestRelease method throws an exception  
+            // if it is called before a successful requestActive call on this object. 
+            if (displayRequest != null)
+            {
+                displayRequest.RequestRelease();
+                displayRequest = null;
+            }
+        }
+
+        #endregion
+
         #region LoadFoldersCommand
         public async Task LoadFolders()
         {
@@ -617,6 +670,17 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events
+        private async void SettingsViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ReplaceLockscreenWithAlbumArt")
+            {
+                if (ReplaceLockscreenWithAlbumArt == true)
+                    replaceLockscreenWithAlbumArt = await Helpers.LockscreenHelper.SaveCurrentLockscreenImage();
+                else
+                    await Helpers.LockscreenHelper.ResetLockscreenImage();
+            }
+        }
+
         bool isLibraryLoading;
         private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {

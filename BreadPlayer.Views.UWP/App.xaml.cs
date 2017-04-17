@@ -47,6 +47,7 @@ namespace BreadPlayer
         /// </summary>
         public App()
         {
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             this.InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
@@ -201,31 +202,31 @@ namespace BreadPlayer
                 }
 
                 // CoreWindowLogic logic = new CoreWindowLogic();
-                var view = ApplicationView.GetForCurrentView();
-                view.SetPreferredMinSize(new Size(360, 100));
-                if (RequestedTheme == ApplicationTheme.Dark)
-                {
-                    view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
-                    view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
-                }
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-                {
-                    Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-                        //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                    var statusBar = StatusBar.GetForCurrentView();
-                    statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
-                    statusBar.BackgroundOpacity = 1;
-                    statusBar.ForegroundColor = Colors.White;
-                }
-                if (args.Kind != ActivationKind.File)
-                {
-                    CoreWindowLogic.LoadSettings();
-                }
-                else
-                {
-                    CoreWindowLogic.LoadSettings(true);
-                }
-                var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
+               // var view = ApplicationView.GetForCurrentView();
+               //// view.SetPreferredMinSize(new Size(360, 100));
+               // if (RequestedTheme == ApplicationTheme.Dark)
+               // {
+               //     view.TitleBar.BackgroundColor = Color.FromArgb(20, 20, 20, 1);
+               //     view.TitleBar.ButtonBackgroundColor = Color.FromArgb(20, 20, 20, 1);
+               // }
+               // if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+               // {
+               //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+               //         //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+               //     var statusBar = StatusBar.GetForCurrentView();
+               //     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
+               //     statusBar.BackgroundOpacity = 1;
+               //     statusBar.ForegroundColor = Colors.White;
+               // }
+                //if (args.Kind != ActivationKind.File)
+                //{
+                //    CoreWindowLogic.LoadSettings();
+                //}
+                //else
+                //{
+                //    CoreWindowLogic.LoadSettings(true);
+                //}
+                //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
                 stop.Stop();
                 Debug.Write(stop.ElapsedMilliseconds.ToString() + "\r\n");
