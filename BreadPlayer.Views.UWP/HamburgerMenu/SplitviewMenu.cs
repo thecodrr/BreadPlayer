@@ -186,7 +186,7 @@ namespace SplitViewMenu
             }
             if (_searchBox != null)
             {
-                _searchBox.KeyUp += _searchBox_KeyUp;
+                _searchBox.TextChanged += _searchBox_TextChanged;
             }
             if (_pageFrame != null)
             {
@@ -195,6 +195,18 @@ namespace SplitViewMenu
             }
             UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
         }
+
+        private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if ((sender as AutoSuggestBox).Text.Any())
+            {
+                UnSelectAll();
+                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query() { QueryWord = (sender as AutoSuggestBox).Text });
+            }
+            else
+                NavigationService.Instance.NavigateToHome();
+        }
+
         public static DelegateCommand SearchClickedCommand()
         {
             DelegateCommand cmd = new DelegateCommand(() =>
@@ -217,18 +229,7 @@ namespace SplitViewMenu
                 }
             });
             return cmd;
-        }
-
-        private void _searchBox_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
-        {
-            if ((sender as AutoSuggestBox).Text.Any())
-            {
-                UnSelectAll();
-                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query() { QueryWord = (sender as AutoSuggestBox).Text });
-            }
-            else
-                NavigationService.Instance.NavigateToHome();
-        }
+        }    
 
         static INavigationMenuItem LastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

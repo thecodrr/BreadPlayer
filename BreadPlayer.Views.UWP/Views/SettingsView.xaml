@@ -161,7 +161,8 @@
             </PivotItem>
             
             <PivotItem Header="About">
-                <Grid>
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="400*"/>
                         <ColumnDefinition Width="400*"/>
@@ -198,6 +199,7 @@
                         </TextBlock>
                     </StackPanel>
                 </Grid>
+                </ScrollViewer>
             </PivotItem>
         </Pivot>
 
