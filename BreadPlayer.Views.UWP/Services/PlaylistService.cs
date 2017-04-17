@@ -34,6 +34,11 @@ namespace BreadPlayer.Service
         {
             tracks.Delete(file._id);
         }
+
+        public bool Exists(string path)
+        {
+          return tracks.Exists(t => t.Path == path);
+        }
         public IEnumerable<Mediafile> GetTracks()
         {
             IEnumerable<Mediafile> collection = null;

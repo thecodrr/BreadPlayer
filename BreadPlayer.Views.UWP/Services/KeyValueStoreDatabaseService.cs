@@ -60,7 +60,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                var item = tran.Select<byte[], byte[]>(table, path.ToBytes());//.ObjectGet<T>().Entity;
+                var item = tran.Select<byte[], byte[]>(table, 1.ToIndex(path));//.ObjectGet<T>().Entity;
                 return item.Exists;
             }
            
@@ -74,9 +74,16 @@ namespace BreadPlayer.Service
 
         public T GetRecord<T>(string table, string path)
         {
-            using (var tran = engine.GetTransaction())
+            try
             {
-                return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
+                using (var tran = engine.GetTransaction())
+                {
+                    return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
+                }
+            }
+            catch
+            {
+                return default(T);
             }
         }
         

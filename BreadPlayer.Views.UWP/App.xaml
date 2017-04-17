@@ -1133,7 +1133,7 @@ Control.IsTemplateFocusTarget="True"/>
 
                                     <StackPanel Grid.Column="1" Width="100" Margin="-160,0,0,0" Visibility="{Binding ElementName=button2, Path=Visibility}" Height="50" VerticalAlignment="Stretch" Background="Transparent" x:Name="Buttons_Stack" Orientation="Horizontal">
                                         <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
-                                          Width="50" Visibility="Visible" x:DeferLoadStrategy="Lazy"
+                                          Width="50" Visibility="Visible"
                                           VerticalAlignment="Stretch" Background="Transparent"
                                           Height="50" FontSize="18" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
                                           Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" Content="&#xE102;" Style="{StaticResource HyperlinkBtn}" FontFamily="Segoe MDL2 Assets">

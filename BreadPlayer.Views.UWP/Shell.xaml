@@ -143,7 +143,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Image Margin="0,0,0,70" Stretch="Uniform" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
+        <Image Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
 
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>

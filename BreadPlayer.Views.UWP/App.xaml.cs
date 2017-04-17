@@ -208,15 +208,6 @@ namespace BreadPlayer
                  var view = ApplicationView.GetForCurrentView();
                  view.SetPreferredMinSize(new Size(360, 100));
                 
-                // if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-                // {
-                //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-                //         //view.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-                //     var statusBar = StatusBar.GetForCurrentView();
-                //     statusBar.BackgroundColor = RequestedTheme == ApplicationTheme.Light ? (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color : Color.FromArgb(20, 20, 20, 1);
-                //     statusBar.BackgroundOpacity = 1;
-                //     statusBar.ForegroundColor = Colors.White;
-                // }
                 if (args.Kind != ActivationKind.File)
                 {
                     CoreWindowLogic.LoadSettings();

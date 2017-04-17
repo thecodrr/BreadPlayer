@@ -959,8 +959,10 @@ namespace BreadPlayer.ViewModels
             {
                 await Task.Run(() =>
                 {
-                    PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash);
-                    service.Insert(songsToadd);
+                    using (PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash))
+                    {
+                        service.Insert(songsToadd.Where(t => !service.Exists(t.Path)));
+                    }
                 });
             }
         }

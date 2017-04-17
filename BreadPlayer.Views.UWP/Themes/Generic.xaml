@@ -507,6 +507,7 @@
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>                                       
                                     </VisualState.Setters>
@@ -519,7 +520,9 @@
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
                                         <Setter Target="toggleButton.Visibility" Value="Collapsed"/>
-                                        <Setter Target="headerText.Margin" Value="35,0,0,0"/>
+                                        <Setter Target="headerText.Margin" Value="35,35,0,0"/>
+                                        <Setter Target="searchBox.Margin" Value="35,10,20,0"/>
+
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -560,7 +563,10 @@
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,145,0,0"/>
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,-7.5,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
@@ -570,7 +576,10 @@
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,105,0,0"/>
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,35,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
@@ -640,7 +649,7 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                                <Frame x:Name="PageFrame"  Margin="0,105,0,0" 
+                                <Frame x:Name="PageFrame"  Margin="0,155,0,0" 
                                    Navigating="OnNavigatingToPage"
                                    Navigated="OnNavigatedToPage">
                                     <Frame.ContentTransitions>

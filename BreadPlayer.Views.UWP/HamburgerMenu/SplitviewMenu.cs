@@ -212,11 +212,18 @@ namespace SplitViewMenu
             DelegateCommand cmd = new DelegateCommand(() =>
             {
                 DiscreteObjectKeyFrame marginKeyFrame = null;
+                DiscreteObjectKeyFrame headerMarginKeyFrame = null;
+
                 if (_searchBox.Visibility == Visibility.Collapsed)
                 {
                     var searchClickedStoryboard = (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard);//.Begin();
                     marginKeyFrame = (searchClickedStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                    marginKeyFrame.Value = !(Window.Current.Bounds.Width <= 500) ? new Thickness(0, 145, 0, 0) : new Thickness(0, 105, 0, 0);                                    
+                    headerMarginKeyFrame = (searchClickedStoryboard.Children[2] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
+                    if ((Window.Current.Bounds.Width <= 500))
+                    {
+                        marginKeyFrame.Value = new Thickness(0, 105, 0, 0);
+                        headerMarginKeyFrame.Value = new Thickness(25, 10, 0, 0);
+                    }
                     searchClickedStoryboard.Begin();
                     _searchBox.Focus(FocusState.Programmatic);
                 }
@@ -224,7 +231,14 @@ namespace SplitViewMenu
                 {
                     var fadeStoryboard = (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard);//.Begin();
                     marginKeyFrame = (fadeStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                    marginKeyFrame.Value = !(Window.Current.Bounds.Width <= 500) ? new Thickness(0, 105, 0, 0) : new Thickness(0, 65, 0, 0);
+                    headerMarginKeyFrame = (fadeStoryboard.Children[2] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
+                   
+                    if ((Window.Current.Bounds.Width <= 500))
+                    {
+                        marginKeyFrame.Value = new Thickness(0, 65, 0, 0);
+                        headerMarginKeyFrame.Value = new Thickness(25, 10, 0, 0);
+                    }
+
                     fadeStoryboard.Begin();
                 }
             });

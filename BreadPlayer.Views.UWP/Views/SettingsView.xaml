@@ -21,7 +21,7 @@
         </DataTemplate>
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
-    <Grid Margin="25,20,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
+    <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

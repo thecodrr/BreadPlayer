@@ -67,14 +67,16 @@ namespace BreadPlayer.Themes
                     }
                     //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
+                else
+                    ChangeColor(GetAccentColor());
             });
         }
         private static void ChangeColor(Color color)
         {
+            ChangeTitleBarColor(color);
             var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
             if (oldColor == color)
                 return;
-            ChangeTitleBarColor(color);
             GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
             foreach (var brushKey in brushKeys)
             {
