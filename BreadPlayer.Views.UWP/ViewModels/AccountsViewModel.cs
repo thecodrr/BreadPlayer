@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Common;
+using IF.Lastfm.Core.Objects;
 
 namespace BreadPlayer.ViewModels
 {
@@ -16,7 +17,6 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref lastfmUsername, value);
-                RoamingSettingsHelper.SaveSetting("LastfmUsername", value);
             }
         }
         public string LastfmPassword
@@ -24,8 +24,7 @@ namespace BreadPlayer.ViewModels
             get { return lastfmPassword; }
             set
             {
-                Set(ref lastfmPassword, value);
-                RoamingSettingsHelper.SaveSetting("LastfmPassword", value);
+                Set(ref lastfmPassword, value);               
             }
         }
         string loginStatus = "(Not Logged In)";
@@ -40,30 +39,58 @@ namespace BreadPlayer.ViewModels
         }
         private async void LastfmLogin(object para)
         {
-            if (Core.SharedLogic.LastfmScrobbler == null)
+            if (!LastfmPassword.Any() || !LastfmUsername.Any())
             {
-                if (!LastfmPassword.Any() || !LastfmUsername.Any())
+                if ((bool)para)
                 {
-                    if ((bool)para)
-                    {
-                        await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
-                    }
-                    return;
+                    await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
                 }
-                InitializeLastfm lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
-                await lastfm.Login(LastfmUsername, LastfmPassword);
-                BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
-                if (lastfm.Auth.Auth.Authenticated)
-                {
-                    LoginStatus = "(Logged In)";
-                    await NotificationManager.ShowMessageAsync("Successfully logged in!");
-                }
-                else
-                    await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
+                return;
             }
+
+            InitializeLastfm lastfm = null;
+            var session = GetUserSessionFromSettings();
+            if(!string.IsNullOrEmpty(session.Token) && session.Username == LastfmUsername)
+            {
+                lastfm = new InitializeLastfm();
+                lastfm.Auth.Auth.LoadSession(session);
+            }
+            else
+            {
+                lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
+                await lastfm.Login(LastfmUsername, LastfmPassword);
+            }
+            BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
+            if (lastfm.Auth.Auth.Authenticated)
+            {
+                LoginStatus = "(Logged In)";
+                SaveUserSession(lastfm.Auth.Auth.UserSession);
+                await NotificationManager.ShowMessageAsync("Successfully logged in!");
+            }
+            else
+                await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
         }
         #endregion
-
+        private LastUserSession GetUserSessionFromSettings()
+        {
+            string token = RoamingSettingsHelper.GetSetting<string>("LastfmSessionToken", "");
+            bool IsSubscriber = RoamingSettingsHelper.GetSetting<bool>("LastfmIsSubscriber", false);
+            string username = RoamingSettingsHelper.GetSetting<string>("LastfmSessionUsername", "");
+            return new LastUserSession()
+            {
+                Token = token,
+                IsSubscriber = IsSubscriber,
+                Username = username
+            };
+        }
+        private void SaveUserSession(LastUserSession usersession)
+        {
+            RoamingSettingsHelper.SaveSetting("LastfmSessionToken", usersession.Token);
+            RoamingSettingsHelper.SaveSetting("LastfmIsSubscriber", usersession.IsSubscriber);
+            RoamingSettingsHelper.SaveSetting("LastfmSessionUsername", usersession.Username);
+            RoamingSettingsHelper.SaveSetting("LastfmPassword", LastfmPassword);
+            RoamingSettingsHelper.SaveSetting("LastfmUsername", LastfmUsername);
+        }
         public AccountsViewModel()
         {
             LastfmPassword = RoamingSettingsHelper.GetSetting<string>("LastfmPassword", "");
