@@ -655,7 +655,18 @@ namespace BreadPlayer.ViewModels
 
                     if (await Player.Load(mp3file))
                     {
-                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing)?.ToList()?.ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
+                        if(IsSourceGrouped)
+                        {
+                            TracksCollection.Select(t => t.Select(a => a.State == PlayerState.Playing));
+                            foreach (var song in TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)))
+                            {
+                                song.State = PlayerState.Stopped;
+                            }
+                        }
+                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing)?.ToList()?.ForEach(new Action<Mediafile>((Mediafile file) =>
+                        {
+                            file.State = PlayerState.Stopped;
+                        }));
                         PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                         PlayPauseCommand.IsEnabled = true;
                         mp3file.State = PlayerState.Playing;
