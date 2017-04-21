@@ -56,12 +56,15 @@ namespace BreadPlayer
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
                 string folders = RoamingSettingsHelper.GetSetting<string>(foldersKey, "");
-                folders.Split('|').ToList().ForEach(async(str) =>
+                folders.Split('|').ToList().ForEach(async (str) =>
                 {
-                    if(!string.IsNullOrEmpty(str) && Directory.Exists(str))
-                        SharedLogic.SettingsVM.LibraryFoldersCollection.Add(await StorageFolder.GetFolderFromPathAsync(str));
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        var folder = await StorageFolder.GetFolderFromPathAsync(str);
+                        SharedLogic.SettingsVM.LibraryFoldersCollection.Add(folder);
+                    }
                 });
-               // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
+                // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
                 if (path != "" && SharedLogic.VerifyFileExists(path, 300))
                 {
                     double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);

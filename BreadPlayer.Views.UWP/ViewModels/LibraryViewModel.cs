@@ -592,7 +592,7 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
-                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false), false, false);
+                TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
 

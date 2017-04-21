@@ -1229,9 +1229,9 @@ Control.IsTemplateFocusTarget="True"/>
            
             <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
                 <Grid Height="75" Margin="30,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-                    <StackPanel VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Title}" FontSize="20" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center"></TextBlock>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock Typography.Capitals="AllSmallCaps" VerticalAlignment="Center" FontWeight="ExtraLight" TextAlignment="Center" Text="{Binding Path=LeadArtist}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
                             <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" TextAlignment="Center" Text="&#x2022;" Margin="5,0,5,0" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
                             <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" TextAlignment="Center" Text="{Binding Path=Album}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
