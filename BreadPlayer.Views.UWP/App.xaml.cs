@@ -140,8 +140,8 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            SessionWatch.Stop();
-            BLogger.Logger.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
+            SessionWatch?.Stop();
+            BLogger.Logger?.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();

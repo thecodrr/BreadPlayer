@@ -161,7 +161,7 @@
                 <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <Button x:Name="alphabet" BorderBrush="{x:Null}" MinWidth="90" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
+                            <Button x:Name="alphabet" BorderBrush="{x:Null}" MinWidth="90" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="Bold" Style="{StaticResource HyperlinkBtn}">
                                 <Interactivity:Interaction.Behaviors>
                                     <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
                                         <Core:EventTriggerBehavior.Actions>

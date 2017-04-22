@@ -95,8 +95,8 @@ namespace BreadPlayer.ViewModels
                 var listObject = message.Payload as List<object>;
                 TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
                 IsSourceGrouped = (bool)listObject[1];
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;               
                 SongCount = service.SongCount;
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 GetSettings();
             }
         }
@@ -107,7 +107,10 @@ namespace BreadPlayer.ViewModels
             {
                 searchCommand.IsEnabled = true;
                 PlayPauseCommand.IsEnabled = true;
-                UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
+            }
+            if (TracksCollection.Elements.Count == SongCount)
+            {
+                UpcomingSong = await GetUpcomingSong();
             }
         }
 
