@@ -24,7 +24,7 @@ namespace BreadPlayer.Models
     public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
-        private PlayerState state;
+        private PlayerState state = PlayerState.Stopped;
         private string path;
         private string encrypted_meta_file;
         private LiteDB.ObjectId id;

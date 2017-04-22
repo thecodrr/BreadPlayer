@@ -581,76 +581,75 @@ namespace BreadPlayer.ViewModels
             return shuffled;
         }
 
+        private void ClearPlayerState()
+        {
+            List<Mediafile> songCollectionWithPlayingState = new List<Mediafile>();
+            if (IsSourceGrouped)
+            {
+                songCollectionWithPlayingState.AddRange(TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)));
+            }
+            songCollectionWithPlayingState.AddRange(TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing));
+            songCollectionWithPlayingState.AddRange(PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing));
+            foreach(var song in songCollectionWithPlayingState)
+            {
+                song.State = PlayerState.Stopped;
+            }
+        }
+        private bool IsSongToStopAfter()
+        {
+            if (_songToStopAfter != null && (_songToStopAfter.CompareTo(PreviousSong) == 0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile) == 0))
+            {
+                PlayPause();
+                _songToStopAfter = null;
+                PreviousSong = null;
+                UpcomingSong = null;
+                return true;
+            }
+            return false;
+        }
+        private async Task UpdateUI(Mediafile mediaFile)
+        {
+            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+            CoreWindowLogic.UpdateSmtc();
+            CoreWindowLogic.UpdateTile(mediaFile);
+            if (SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)
+                await LockscreenHelper.ChangeLockscreenImage(mediaFile);
+            UpcomingSong = await GetUpcomingSong();
+        }
         public async void Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
+            ClearPlayerState();
             if (mp3file != null)
             {
-                try
+                if (IsSongToStopAfter())
+                    return;
+                if (play == true)
+                    Player.IgnoreErrors = true;
+                mp3file.State = PlayerState.Playing;
+                Player.Volume = Player.Volume == 50 ? vol : Player.Volume;
+                if (await Player.Load(mp3file))
                 {
-                    if (play == true)
-                        Player.IgnoreErrors = true;
-
-                    if(_songToStopAfter!=null && (_songToStopAfter.CompareTo(PreviousSong)==0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile)==0))
+                    PlayPauseCommand.IsEnabled = true;
+                    if (play)
                     {
-                        PlayPause();
-                        _songToStopAfter = null;
-                        PreviousSong = null;
-                        UpcomingSong = null;
-                        return;
-                    }
-
-                    if (await Player.Load(mp3file))
-                    {
-                        if(IsSourceGrouped)
-                        {
-                            TracksCollection.Select(t => t.Select(a => a.State == PlayerState.Playing));
-                            foreach (var song in TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)))
-                            {
-                                song.State = PlayerState.Stopped;
-                            }
-                        }
-                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing)?.ToList()?.ForEach(new Action<Mediafile>((Mediafile file) =>
-                        {
-                            file.State = PlayerState.Stopped;
-                        }));
-                        PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                        PlayPauseCommand.IsEnabled = true;
-                        mp3file.State = PlayerState.Playing;
-                        CoreWindowLogic.UpdateSmtc();
-                        if (Player.Volume == 50)
-                            Player.Volume = vol;
-                        if (play)
-                        {
-                            PlayPauseCommand.Execute(null);
-                            CoreWindowLogic.UpdateTile(mp3file);
-                            if(SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)
-                                await LockscreenHelper.ChangeLockscreenImage(mp3file);
-                        }
-                        else
-                        {
-                            DontUpdatePosition = true;
-                            CurrentPosition = currentPos;
-                        }
-                        if (GetPlayingCollection() != null)
-                            UpcomingSong = await GetUpcomingSong();
-
-                        Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+                        PlayPauseCommand.Execute(null);
                     }
                     else
                     {
-                        BLogger.Logger.Error("Failed to load file. Loading next file...");
-                        TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                        PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
-                        mp3file.State = PlayerState.Playing;
-                        int indexoferrorfile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.Path == mp3file.Path));
-                        Player.IgnoreErrors = false;
-                        Load(await GetUpcomingSong(), true);
+                        DontUpdatePosition = true;
+                        CurrentPosition = currentPos;
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    BLogger.Logger.Error("Failed to load file.", ex);
+                    BLogger.Logger.Error("Failed to load file. Loading next file...");
+                    var playingCollection = GetPlayingCollection();
+                    int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3file.Path));
+                    Player.IgnoreErrors = false;
+                    Load(await GetUpcomingSong(), true);
                 }
+
+                await UpdateUI(mp3file);
             }
         }
         public async void Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)

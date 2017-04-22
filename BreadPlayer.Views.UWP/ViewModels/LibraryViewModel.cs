@@ -456,11 +456,7 @@ namespace BreadPlayer.ViewModels
             var currentlyPlaying = Player.CurrentlyPlayingFile;
             Mediafile mediaFile = GetMediafileFromParameterAsync(path, true);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
-            mediaFile.LastPlayed = DateTime.Now.ToString();
-            if (currentlyPlaying != null && TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path) != null)
-            {
-                TracksCollection.Elements.FirstOrDefault(t => t.Path == currentlyPlaying.Path).State = PlayerState.Playing;
-            }
+            mediaFile.LastPlayed = DateTime.Now.ToString();           
         }
         
         async void Init(object para)
