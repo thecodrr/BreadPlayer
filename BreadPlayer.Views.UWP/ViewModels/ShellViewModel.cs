@@ -59,7 +59,6 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MSG_EXECUTE_CMD, new Action<Message>(HandleExecuteCmdMessage));
             Messenger.Instance.Register(MessageTypes.MSG_UPDATE_SONG_COUNT, new Action<Message>(HandleEnablePlayMessage));
             Messenger.Instance.Register(MessageTypes.MSG_STOP_AFTER_SONG, new Action<Message>(HandleSaveSongToStopAfterMessage));
-            SearchCommand.IsEnabled = false;
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
@@ -105,7 +104,6 @@ namespace BreadPlayer.ViewModels
         {
             if (TracksCollection.Elements.Count > 0)
             {
-                searchCommand.IsEnabled = true;
                 PlayPauseCommand.IsEnabled = true;
             }
             if (TracksCollection.Elements.Count == SongCount)
@@ -168,11 +166,7 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _playPauseCommand;
         DelegateCommand _setRepeatCommand;
         DelegateCommand showEqualizerCommand;
-        RelayCommand searchCommand;
-        public RelayCommand SearchCommand
-        {
-            get { if (searchCommand == null) searchCommand = new RelayCommand(param => Search(param)); return searchCommand; }
-        }
+   
         /// <summary>
         /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -195,34 +189,7 @@ namespace BreadPlayer.ViewModels
             DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;
         }
         ThreadSafeObservableCollection<Mediafile> cache;
-        public void Search(object para)
-        {
-            try
-            {
-                //DispatcherTimer timer = new  DispatcherTimer(new BreadPlayer.Dispatcher.BreadDispatcher(Dispatcher));
-                //if (QueryWord.Length == 2 && TracksCollection.Elements.Count < SongCount)
-                //{
-                //    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Music Library");
-                //    Reload().ConfigureAwait(false);
-                //}
-                //else if (QueryWord.Length > 2)
-                //{
-                //    timer.Interval = TimeSpan.FromMilliseconds(200);
-                //    timer.Start();
-                //    timer.Tick += (sender, args) =>
-                //    {
-                //        Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Results for \"" + QueryWord + "\"");
-                //        Search().ConfigureAwait(false);
-                //        timer.Stop();
-                //    };
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while searching. Search string length: " + QueryWord.Length, ex);
-            }
-        }
+        
         void SetRepeat()
         {
             switch (Repeat)
@@ -583,31 +550,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble?.Exception?.Message), "Failed to scrobble this song");
             }
         }
-        async Task Reload()
-        {
-            if (cache == null || TracksCollection.Elements.Count < service.SongCount)
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(await service.GetAllMediafiles());
-                cache = new ThreadSafeObservableCollection<Mediafile>(TracksCollection.Elements);
-            }
-            else
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(cache, false, true);
-            }
-        }
-       
-        async Task Search()
-        {
-            if (QueryWord.Length > 2)
-            {
-                TracksCollection.Clear();
-                TracksCollection.AddRange(await service.Query(QueryWord), false, false);
-                if (TracksCollection.Elements.Count <= 0)
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_SEARCH_STARTED, "Nothing found for keyword \"" + QueryWord + "\"");
-            }
-        }
+      
         private void GetSettings()
         {
             Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
