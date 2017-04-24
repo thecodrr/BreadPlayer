@@ -22,8 +22,10 @@ namespace BreadPlayer.Helpers
         public static async Task<bool> SaveCurrentLockscreenImage()
         {
             if (RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", "") != "")
+            {
                 Helpers.LockscreenHelper.DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
-
+                return true;
+            }
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 if (DefaultImage == null)
