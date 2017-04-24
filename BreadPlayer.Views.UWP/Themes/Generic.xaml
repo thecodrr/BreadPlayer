@@ -431,6 +431,7 @@
     <DataTemplate x:Key="MobileShortcutsTemplate">
         <Button FontFamily="Segoe MDL2 Assets" FontSize="18" Background="Transparent" Margin="7,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
     </DataTemplate>
+    
     <Style TargetType="local:SplitViewMenu">
         <Setter Property="NavMenuItemContainerStyle" Value="{StaticResource NavMenuItemContainerStyle}" />
         <Setter Property="NavMenuItemTemplate" Value="{StaticResource NavMenuItemTemplate}" />
@@ -468,7 +469,7 @@
                                         <Setter Target="playlistBtn.Width" Value="355"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>-->
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                         <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
                                         <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>
@@ -505,7 +506,7 @@
                                         <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
                                         <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
@@ -533,7 +534,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -542,14 +543,14 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
 
-                        <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
+                        <blur:BackDrop BlurAmount="30" Visibility="Collapsed" TintColor="{StaticResource BlurTint}" />
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
@@ -586,66 +587,60 @@
                                 </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
-                                <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource PlaybarBrush}" >
-                                   
-                                    <Grid x:Name="UpperGrid" Margin="0,50,0,0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto">
-
-                                            <StackPanel Orientation="Vertical" Grid.Row="0" >
-                                                <ToggleButton x:Name="TogglePaneButton"
-                                      TabIndex="1" Margin="6,0,0,0"
+                                <Grid x:Name="Pane" Margin="30,130,5,0" Background="{ThemeResource PlaybarBrush}" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+                                    <ToggleButton x:Name="TogglePaneButton"
+                                      TabIndex="1" Margin="6,0,0,0" Grid.Row="0"
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu"
                                       ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
 
-                                                <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
+                                        <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="3" 
+                                                       TabIndex="3" SelectedIndex="3" Grid.Row="1"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                </local:NavMenuListView>
-                                                <MenuFlyoutSeparator x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
+                                        </local:NavMenuListView>
+                                    <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
 
-                                                <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="355">
-                                                    <Button x:Name="playlistBtn" 
+                                    <StackPanel x:Name="playlistBtnPanel" Grid.Row="3" Orientation="Horizontal" Width="355">
+                                            <Button x:Name="playlistBtn" 
                                                 TabIndex="2" Width="270" Margin="5,0,0,0"
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
-                                                    <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
+                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50"  Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
-                                                </StackPanel>
-                                                <local:NavMenuListView x:Name="PlaylistsMenuList"
+                                        </StackPanel>
+                                    <local:NavMenuListView x:Name="PlaylistsMenuList"
                                                        ItemsSource="{TemplateBinding PlaylistsItems}"
                                                        TabIndex="3" 
-                                                       
+                                                       Grid.Row="4"
                                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                        ScrollViewer.VerticalScrollMode="Enabled"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                </local:NavMenuListView>
+                                    </local:NavMenuListView>
+                                    <MenuFlyoutSeparator Grid.Row="5" VerticalAlignment="Bottom" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
 
-                                            </StackPanel>
-                                        </ScrollViewer>
-                                        <StackPanel Grid.Row="1">
-                                            <MenuFlyoutSeparator Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
-
-                                            <local:NavMenuListView x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
+                                    <local:NavMenuListView Grid.Row="6" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
                                                        TabIndex="3"
                                                        Margin="0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                            </local:NavMenuListView>
-                                        </StackPanel>
-                                    </Grid>
+                                    </local:NavMenuListView>
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
@@ -656,9 +651,9 @@
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
                                                 <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                                    <EntranceNavigationTransitionInfo />
+                                                    <DrillInNavigationTransitionInfo />
                                                 </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                            </NavigationThemeTransition>
+                                            </NavigationThemeTransition>                                            
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>

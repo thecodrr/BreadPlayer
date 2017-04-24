@@ -11,7 +11,6 @@ namespace BreadPlayer.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             BitmapImage image = new BitmapImage();
-            image.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
           //  string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
             if (parameter == null)
             {

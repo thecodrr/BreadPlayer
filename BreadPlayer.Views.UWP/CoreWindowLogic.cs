@@ -71,7 +71,8 @@ namespace BreadPlayer
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
                     try
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
+                            new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
                     }
                     catch (UnauthorizedAccessException ex)
                     {
@@ -256,12 +257,6 @@ namespace BreadPlayer
             }
         }
 
-        public static async void ShowMessage(string msg, string title)
-        {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);
-            await dialog.ShowAsync();
-        }
-
         #region Ctor
         public CoreWindowLogic()
         {
@@ -278,12 +273,5 @@ namespace BreadPlayer
         }
         #endregion
 
-    }
-    public enum TileSize
-    {
-        Small = 1,
-        Medium = 2,
-        Wide = 3,
-        Large = 4,
     }
 }

@@ -14,6 +14,9 @@
     RequiresPointerMode="WhenRequested">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///BreadPlayer.Controls/ImageEx/ImageEx.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="SystemAccentColor1" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
@@ -2319,7 +2322,7 @@ Control.IsTemplateFocusTarget="True"/>
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" >
                                         <Grid CornerRadius="15" VerticalAlignment="Stretch">
-                                            <blur:BackDrop BlurAmount="10" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />
+                                            <blur:BackDrop BlurAmount="10" Visibility="Collapsed" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />
                                         <Grid x:Name="DialogSpace" Padding="50" VerticalAlignment="Stretch">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />

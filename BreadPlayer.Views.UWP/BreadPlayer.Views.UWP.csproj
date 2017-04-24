@@ -182,9 +182,6 @@
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
-    <Compile Include="SplashScreen\WelcomeSplashScreen.xaml.cs">
-      <DependentUpon>WelcomeSplashScreen.xaml</DependentUpon>
-    </Compile>
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
@@ -248,7 +245,6 @@
     <Content Include="Assets\lib\x86\bass.dll" />
     <Content Include="Assets\lib\x86\bassmix.dll" />
     <Content Include="Assets\lib\x86\bass_fx.dll" />-->
-    <Content Include="Assets\splashImage1.jpeg" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -348,10 +344,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SplashScreen\WelcomeSplashScreen.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\AccountsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -404,6 +396,10 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BreadPlayer.Controls\BreadPlayer.Controls.csproj">
+      <Project>{240c9992-f77c-4d3b-bac2-788111b6b67b}</Project>
+      <Name>BreadPlayer.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj">
       <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
       <Name>BreadPlayer.Core</Name>

@@ -180,22 +180,12 @@ namespace BreadPlayer
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                         //TODO: Load state from previously suspended application
                     }
-                    else if (args.PreviousExecutionState != ApplicationExecutionState.Running)
-                    {
-                        //bool loadState = (args.PreviousExecutionState == ApplicationExecutionState.Terminated);
-                        if (RoamingSettingsHelper.GetSetting<bool>("FirstRun", true))
-                        {
-                            WelcomeSplashScreen extendedSplash = new WelcomeSplashScreen(rootFrame);
-                            rootFrame.Content = extendedSplash;
-                            Window.Current.Content = rootFrame;
-                        }
-                        else
-                            Window.Current.Content = rootFrame;
-                    }
+                  
                     
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
-                    
+                    Window.Current.Content = rootFrame;
+
                     BLogger.Logger.Info("Content set to Window successfully...");
                 }
                 if (rootFrame.Content == null)

@@ -134,7 +134,7 @@ namespace BreadPlayer.ViewModels
                         volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
                     else
                         volume = (double)list[3];
-                  await Play(list[0] as StorageFile, null, (double)list[1], (bool)list[2], volume);
+                  await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2],(double)list[1], volume);
                 }
                 else
                     this.GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
@@ -210,7 +210,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 if (Player.CurrentlyPlayingFile == null && TracksCollection.Elements.Count > 0)
-                    await Play(null, TracksCollection.Elements.First());
+                    await Load(TracksCollection.Elements.First(), true);
                 else
                 {
                     await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -584,16 +584,21 @@ namespace BreadPlayer.ViewModels
 
         private void ClearPlayerState()
         {
-            List<Mediafile> songCollectionWithPlayingState = new List<Mediafile>();
-            if (IsSourceGrouped)
+            if (TracksCollection != null)
             {
-                songCollectionWithPlayingState.AddRange(TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)));
-            }
-            songCollectionWithPlayingState.AddRange(TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing));
-            songCollectionWithPlayingState.AddRange(PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing));
-            foreach(var song in songCollectionWithPlayingState)
-            {
-                song.State = PlayerState.Stopped;
+                List<Mediafile> songCollectionWithPlayingState = new List<Mediafile>();
+                if (IsSourceGrouped)
+                {
+                    songCollectionWithPlayingState.AddRange(TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)));
+                }
+                if (TracksCollection.Elements.Any())
+                    songCollectionWithPlayingState.AddRange(TracksCollection.Elements.Where(t => t.State == PlayerState.Playing));
+                if (PlaylistSongCollection != null && PlaylistSongCollection.Any())
+                    songCollectionWithPlayingState.AddRange(PlaylistSongCollection.Where(t => t.State == PlayerState.Playing));
+                foreach (var song in songCollectionWithPlayingState)
+                {
+                    song.State = PlayerState.Stopped;
+                }
             }
         }
         private bool IsSongToStopAfter()
@@ -652,19 +657,7 @@ namespace BreadPlayer.ViewModels
 
                 await UpdateUI(mp3file);
             }
-        }
-        public async Task Play(StorageFile para, Mediafile mp3File = null, double currentPos = 0, bool play = true, double vol = 50)
-        {
-            if (para != null)
-            {
-                mp3File = await SharedLogic.CreateMediafile(para, true);
-            }
-            else if (para == null && mp3File == null)
-            {
-                return;
-            }
-            await Load(mp3File, play, currentPos, vol);
-        }
+        }       
         #endregion
 
     }
