@@ -34,6 +34,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Services.Store.Engagement;
+using BreadPlayer.Core;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer
 {
@@ -140,6 +142,7 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
+            await LockscreenHelper.ResetLockscreenImage();
             SessionWatch?.Stop();
             BLogger.Logger?.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
