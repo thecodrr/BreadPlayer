@@ -13,19 +13,16 @@
 [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)
 [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)
  
-[![alpha](https://img.shields.io/badge/alpha-v1.3.0-red.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v0.1.3.0-alpha)
+[![alpha](https://img.shields.io/badge/beta-v2.1.0-orange.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v2.0.0)
 [![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e?svg=true)](https://ci.appveyor.com/project/theweavrs/breadplayer)
 [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_2.0.0.0_Test/BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle)
 
 ## Current Status:
-#### Alpha version has been released and development on the first Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_2.0.0.0_Test/BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle) to check out the new features! 
+#### Beta version has been released and development on the second Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/api/projects/theweavrs/BreadPlayer/artifacts/BreadPlayer.Views.UWP/AppPackages/BreadPlayer.Views.UWP_2.0.0.0_Test/BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle) to check out the new features! 
 
 #### Found a bug? Report it here on github (recommended) or [email me here](mailto:enkaboot@gmail.com). 
 
-### Alpha Preview (Video):
-[![Introducing Bread Player - Alpha Preview](http://i.imgur.com/DOhQP0A.png)](https://www.youtube.com/watch?v=xFeIf0GnvaM)
-### [Screenshots](https://github.com/theweavrs/BreadPlayer/wiki/Screenshots):
-![Imgur](http://i.imgur.com/5lUUhBH.jpg)
+### Beta Preview (Video Coming Soon):
 
 ### Main Features:
 1. Flawlessly plays all major formats (mp3, wav, flac, ogg, aiff etc.)! 
@@ -36,27 +33,23 @@
 6. Pickup where you left off.
 7. Loading songs from Windows Explorer
 8. Drag/Drop songs directly into library.
+9. Equalizer/Effects
+10. Most Played, Recently Added, Favorites and Now Playing section
+11. Prevent screen from locking.
+12. Stop playing after this song. _**(thanks to vsarunov)**_
+13. Private Playlists
+14. Ability to relocate (change location) of a song.
+15. Fade in/out when changing the song.
+16. Last.fm Scrobbling.
+17. Manual adding of Album arts
+18. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
+19. A preview for previous song just like for next song. _**(thanks to vsarunov)**_
+20. A notification for upcoming song when the position reaches last 15-10 seconds.
 
 ### What Happens Next?
-**Development on Beta version has started.** 
-#### Beta Feature List:
+**Development on Second Beta version has started.** 
 
-- [x] 1. Equalizer/Effects
-- [x] 2. Most Played, Recently Added, Favorites and Now Playing section
-- [x] 3. Prevent screen from locking.
-- [x] 4. Stop playing after this song. _**(thanks to vsarunov)**_
-- [ ] 5. .lrc lyrics (Synchronized lyrics) and unsynced lyrics.
-- [ ] 6. Ability to hide a specific folder and its songs.
-- [x] 7. Private Playlists
-- [x] 8. Ability to relocate (change location) of a song.
-- [x] 9. Fade in/out when changing the song.
-- [x] 10. Last.fm Scrobbling.
-- [ ] 11. SoundCloud Support
-- [x] 12. Manual adding of Album arts
-- [x] 13. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
-- [x] 14. A preview for previous song just like for next song. _**(thanks to vsarunov)**_
-- [x] 15. A notification for upcoming song when the position reaches last 15-10 seconds.
-- [ ] 16. _Initiate Android Support._
+#### Second-Beta Feature List (Coming Soon):
  
 _Note: All of these features might not reach the next Beta and some might be postponed due to obvious reasons. **Any help regarding these features including testing, research, code contribution, will be highly appreciated.**_
 
@@ -66,6 +59,9 @@ _Note: All of these features might not reach the next Beta and some might be pos
 2. [BASS](http://www.un4seen.com/bass.html) & [ManagedBass](https://github.com/ManagedBass/ManagedBass) (for audio processing)
 3. [LiteDB](https://github.com/mbdavid/LiteDB) (for library managment)
 4. Taglib#
+5. DBreeze
+6. ColorThief
+7. IF.Last.fm
 
 ### Contributors:
 Thanks to these awesome people Project Bread has come this far:
