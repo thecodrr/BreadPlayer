@@ -44,6 +44,16 @@ namespace BreadPlayer.ViewModels
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        bool enableBlur;
+        public bool EnableBlur
+        {
+            get { return enableBlur; }
+            set
+            {
+                Set(ref enableBlur, value);
+                RoamingSettingsHelper.SaveSetting("EnableBlur", value);
+            }
+        }
         bool preventScreenFromLocking;
         public bool PreventScreenFromLocking
         {
@@ -126,16 +136,6 @@ namespace BreadPlayer.ViewModels
             get { return modifiedFiles; }
             set { Set(ref modifiedFiles, value); }
         }
-        int filebatchsize;
-        public int FileBatchSize
-        {
-            get { return filebatchsize; }
-            set
-            {
-                Set(ref filebatchsize, value);
-                RoamingSettingsHelper.SaveSetting("FileBatchSize", FileBatchSize);
-            }
-        }
 
         bool changeAccentByAlbumart;
         public bool ChangeAccentByAlbumArt
@@ -152,16 +152,6 @@ namespace BreadPlayer.ViewModels
             }
         }
       
-        bool sendReportOnEveryStartup;
-        public bool SendReportOnEveryStartup
-        {
-            get { return sendReportOnEveryStartup; }
-            set
-            {
-                Set(ref sendReportOnEveryStartup, value);
-                RoamingSettingsHelper.SaveSetting("SendReportOnEveryStartup", sendReportOnEveryStartup);
-            }
-        }
         #endregion
 
         #region MessageHandling
@@ -186,12 +176,11 @@ namespace BreadPlayer.ViewModels
         public SettingsViewModel()
         {
             this.PropertyChanged += SettingsViewModel_PropertyChanged;
-            ChangeAccentByAlbumArt = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
-            FileBatchSize = RoamingSettingsHelper.GetSetting<int>("FileBatchSize", 100);
-            TimeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            SendReportOnEveryStartup = RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true);
-            UITextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
-            IsThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
+            changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+            timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            uiTextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
+            _isThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
+            enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion

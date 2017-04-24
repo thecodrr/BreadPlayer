@@ -22,6 +22,7 @@ using BreadPlayer.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
@@ -148,7 +149,7 @@ namespace SplitViewMenu
                 _playlistsMenuListView.ItemsSource = e.NewValue;
             }
         }
-        protected override void OnApplyTemplate()
+        protected async override void OnApplyTemplate()
         {
             _splitView = GetTemplateChild("RootSplitView") as SplitView;
 
@@ -193,7 +194,7 @@ namespace SplitViewMenu
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
-            UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
+            await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
         }
 
         private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -300,10 +301,9 @@ namespace SplitViewMenu
             }
         }
 
-        private void OnNavigatedToPage(object sender, NavigationEventArgs e)
+        private async void OnNavigatedToPage(object sender, NavigationEventArgs e)
         {
-            var page = e.Content as Page;
-            if (page != null && e.Content != null)
+            if (e.Content is Page page && e.Content != null)
             {
                 var control = page;
                 control.Loaded += PageLoaded;
@@ -311,15 +311,15 @@ namespace SplitViewMenu
             if (e.Parameter?.ToString() == "Home")
             {
                 _navTopMenuListView.SelectedIndex = 3;
-                UpdateHeaderAndShortCuts(_navTopMenuListView.Items[3] as SimpleNavMenuItem);
+                await UpdateHeaderAndShortCuts(_navTopMenuListView.Items[3] as SimpleNavMenuItem);
             }
             else if(e.Parameter is Album)
             {
-                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
             }
             else if(e.Parameter is Query query)
             {
-                UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + query.QueryWord + "\"" });
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + query.QueryWord + "\"" });
             }
         }
         public static void UnSelectAll()
@@ -370,7 +370,7 @@ namespace SplitViewMenu
                 return _navBottomMenuListView;
             }
         }
-        private void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
+        private async void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
                 return;
@@ -406,7 +406,7 @@ namespace SplitViewMenu
             }
             if (item != null)
             {
-                UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
+                await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
                 var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
                 if (container != null)
                     container.IsTabStop = false;
@@ -416,19 +416,22 @@ namespace SplitViewMenu
                     container.IsTabStop = true;
             }
         }
-        void UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
+        async Task UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
         {
             if (item != null) 
             {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+                { 
                 _headerText.DataContext = item;
                 shortcuts.DataContext = item.Shortcuts;
                 shortcuts.ItemsSource = item.Shortcuts;
+                });
             }
         }
-        private void OnNavMenuItemInvoked(object sender, ListViewItem e)
+        private async void OnNavMenuItemInvoked(object sender, ListViewItem e)
         {
             var item = (INavigationMenuItem)((NavMenuListView)sender).ItemFromContainer(e);
-            UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
+            await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
             if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
             {
                 if (item?.DestinationPage != null &&
@@ -447,10 +450,6 @@ namespace SplitViewMenu
                 }
             }
             LastItem = item;
-            if (_splitView.DisplayMode == SplitViewDisplayMode.Inline)
-            {
-                TogglePaneButton.IsChecked = false;
-            }
         }
     }
 }

@@ -253,7 +253,7 @@ namespace BreadPlayer.ViewModels
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
-                        if (ShuffledList.Count < playingCollection.Count)
+                        if (ShuffledList.Count < playingCollection.Count || ShuffledList == null)
                         {
                             ShuffledList = await ShuffledCollection();
                             IndexOfCurrentlyPlayingFile = 0;

@@ -43,9 +43,10 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
+            //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             new CoreWindowLogic();
+            this.DataContext = new ShellViewModel();
             ShellVM = DataContext as ShellViewModel;
             LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
             {

@@ -236,7 +236,7 @@ namespace BreadPlayer.Core
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.ReturnOnlyIfCached | ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.None))
                 {
                     if (thumbnail == null) return false;
                     switch (thumbnail.Type)

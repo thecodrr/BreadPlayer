@@ -37,8 +37,7 @@ namespace BreadPlayer
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
-       
-
+        
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
@@ -56,7 +55,8 @@ namespace BreadPlayer
                 return;
             }
             try
-            {  // get the selected group
+            { 
+                // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;

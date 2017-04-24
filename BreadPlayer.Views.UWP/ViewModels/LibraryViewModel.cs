@@ -559,16 +559,20 @@ namespace BreadPlayer.ViewModels
                 }
             });
         }
-        void ChangeView(string header, bool group, object src)
+        async Task ChangeView(string header, bool group, object src)
         {
-            ViewSource.Source = null;
-            //Header = header;
-            grouped = group;
-            source = src;
-            libgrouped = ViewSource.IsSourceGrouped;
-            var tMediaFile = src as ThreadSafeObservableCollection<Mediafile>;
-            if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
-                tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            {
+                ViewSource.Source = null;
+                //Header = header;
+                grouped = group;
+                source = src;
+                libgrouped = ViewSource.IsSourceGrouped;
+                var tMediaFile = src as ThreadSafeObservableCollection<Mediafile>;
+                if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
+                    tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+
+            });
         }
         async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
@@ -635,7 +639,7 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                     FilteredSongsCollection.AddRange(OldItems);
-                ChangeView("Music Collection", false, FilteredSongsCollection);
+                await ChangeView("Music Collection", false, FilteredSongsCollection);
                 await RefreshSourceAsync();
             }
         }
@@ -1007,35 +1011,32 @@ namespace BreadPlayer.ViewModels
                 switch(param)
                 {
                     case "Recent":
-                        ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync());
-                        break;
-                    case "MusicCollection":
-                        ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
+                        await ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync().ConfigureAwait(false));
+                        await RefreshSourceAsync().ConfigureAwait(false);
                         break;
                     case "MostEaten":
-                        ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync());
-                        break;
+                        await ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync().ConfigureAwait(false));
+                        await RefreshSourceAsync().ConfigureAwait(false); break;
                     case "RecentlyAdded":
-                        ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync());
-                        break;
+                        await ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync().ConfigureAwait(false));
+                        await RefreshSourceAsync().ConfigureAwait(false); break;
                     case "Favorites":
-                        ChangeView("Favorites", false, await GetFavoriteSongs());
-                        break;
-                    default:
-                        ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
-                        break;
+                        await ChangeView("Favorites", false, await GetFavoriteSongs().ConfigureAwait(false));
+                        await RefreshSourceAsync().ConfigureAwait(false); break;
+                        //case "MusicCollection":
+                        //default:
+                        //    await ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
+                        //    break;
                 }
 
-                await RefreshSourceAsync().ConfigureAwait(false);
+                //
             }
-            else if (ViewSource.Source != null)
-            {
-                source = ViewSource.Source;
-                grouped = ViewSource.IsSourceGrouped;
-                ViewSource.Source = null;
-                //LibraryService.Dispose();
-                GC.Collect();
-            }
+            //else if (ViewSource.Source != null)
+            //{
+            //    source = ViewSource.Source;
+            //    grouped = ViewSource.IsSourceGrouped;
+            //    ViewSource.Source = null;
+            //}
         }
 
         public void PlayOnTap(object sender, TappedRoutedEventArgs e)

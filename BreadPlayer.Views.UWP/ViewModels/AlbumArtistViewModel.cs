@@ -79,15 +79,11 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
-        /// <remarks>This is still experimental, a lot of performance improvements are needed. 
-        /// For instance, for each loop needs to be removed.
-        /// Maybe we can use direct database queries and fill the AlbumCollection with it?
-        /// </remarks>
         public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
+            List<Album> albums = new List<Album>();
             await Task.Run(() =>
             {
-                List<Album> albums = new List<Album>();
                 foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
                     var firstSong = albumGroup.First() ?? new Mediafile();
@@ -100,10 +96,13 @@ namespace BreadPlayer.ViewModels
                     };
                     albums.Add(album);
                 }
+            }).ContinueWith((task) =>
+            {
                 AlbumDatabaseService.InsertAlbums(albums);
                 AlbumCollection.AddRange(albums);
                 AlbumDatabaseService.Dispose();
             });
+           
         }
         
     }
