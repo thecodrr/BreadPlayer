@@ -242,10 +242,8 @@
             </Border.RenderTransform>
             <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
             <Grid Margin="20,10">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
-                </StackPanel>
-            </Grid>
+                <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
+             </Grid>
         </Border>
         <StackPanel Width="50" Name="ShowMorePanel" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
             <AppBarToggleButton HorizontalAlignment="Center" ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="0,0,0,0"/>

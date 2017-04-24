@@ -443,7 +443,7 @@ namespace BreadPlayer.ViewModels
                                  //we send a message to anyone listening relaying that song count has to be updated.
                             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
                             //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                            mp3file = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
+                            mp3file = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
                             mp3file.FolderPath = Path.GetDirectoryName(file.Path);
                             await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
 

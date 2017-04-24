@@ -236,7 +236,7 @@ namespace BreadPlayer.Core
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.None))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, (uint)(InitializeCore.IsMobile ? 500 : 1000), ThumbnailOptions.UseCurrentScale))
                 {
                     if (thumbnail == null) return false;
                     switch (thumbnail.Type)
@@ -253,19 +253,19 @@ namespace BreadPlayer.Core
                             }
 
                         case ThumbnailType.Icon:
-                            using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
-                            {
-                                if (tagFile.Tag.Pictures.Length >= 1)
-                                {
-                                    var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                            //using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                            //{
+                            //    if (tagFile.Tag.Pictures.Length >= 1)
+                            //    {
+                            //        var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
 
-                                    using (var albumstream = await image.OpenStreamForWriteAsync())
-                                    {
-                                        await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                                    }
-                                    return true;
-                                }
-                            }
+                            //        using (var albumstream = await image.OpenStreamForWriteAsync())
+                            //        {
+                            //            await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                            //        }
+                            //        return true;
+                            //    }
+                            //}
                             break;
                         default:
                             break;
