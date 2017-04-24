@@ -3492,7 +3492,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
+                                <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackgroundMobile}"/>
 
                                 <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15" TintColor="{StaticResource BlurTint}" />
                                 <SplitView x:Name="RootSplitView"
