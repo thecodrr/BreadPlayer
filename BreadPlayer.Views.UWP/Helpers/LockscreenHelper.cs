@@ -88,13 +88,16 @@ namespace BreadPlayer.Helpers
         }
         public static async Task ResetLockscreenImage()
         {
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            if (DefaultImage != null)
             {
-                await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(DefaultImage);                
-            }
-            else
-            {
-                await LockScreen.SetImageFileAsync(DefaultImage);
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                {
+                    await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(DefaultImage);
+                }
+                else
+                {
+                    await LockScreen.SetImageFileAsync(DefaultImage);
+                }
             }
         }
     }

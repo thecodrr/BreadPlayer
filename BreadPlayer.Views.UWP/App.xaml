@@ -44,6 +44,8 @@
                     <SolidColorBrush x:Key="DisableBrush" Color="#e9e9e9" Opacity="0.95"/>
                     <SolidColorBrush x:Key="ImageFadeBrush" Color="#e5e5e5" Opacity="0.4"/>
                     <SolidColorBrush x:Key="PlaybarBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.8" />
+                    <SolidColorBrush x:Key="BackgroundOverlay" Color="#e9e9e9" Opacity="0.8"/>
+                    
                     <Color x:Key="BlurTint">#99E5E5E5</Color>
                     <Color x:Key="BlurTint2">#99E5E5E5</Color>
                 </ResourceDictionary>
@@ -3198,7 +3200,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" x:Name="myback">
                                     <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}"/>
                                     <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                                 </StackPanel>
@@ -3381,15 +3383,16 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
                                                 <Setter Target="playlistBtn.Width" Value="355"/>
                                                 <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                                <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                                <!--<Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>-->
+                                                <Setter Target="playlistAddBtn.Width" Value="50"/>                                                
                                                 <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                                 <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
-                                                <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>
-                                                <Setter Target="Pane.Margin" Value="0"/>
+                                                <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>                                              
+                                                <Setter Target="Pane.(RowDefinitions)[0].Height" Value="*"/>
+                                                <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
                                                 <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                                 <Setter Target="TogglePaneButton.Margin" Value="0"/>
                                                 <Setter Target="playlistBtn.Margin" Value="0"/>
+                                                <Setter Target="Pane.Margin" Value="0"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
@@ -3419,11 +3422,11 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
                                                 <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                                 <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                                <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                                 <Setter Target="Title.Visibility" Value="Collapsed"/>
                                                 <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                                 <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                                 <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
+                                                <Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="Auto"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState>
@@ -3448,6 +3451,7 @@ Control.IsTemplateFocusTarget="True"/>
                                             <VisualState.Setters>
                                                 <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                                 <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
+                                                <!--<Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="2*"/>-->
                                                 <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                             </VisualState.Setters>
                                         </VisualState>
@@ -3492,7 +3496,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackgroundMobile}"/>
+                                <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource BackgroundOverlay}"/>
 
                                 <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15" TintColor="{StaticResource BlurTint}" />
                                 <SplitView x:Name="RootSplitView"
@@ -3539,10 +3543,10 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="*"/>
                                                 <RowDefinition Height="*"/>
-                                                <RowDefinition Height="2*"/>
+                                                <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
                                             <ToggleButton x:Name="TogglePaneButton"
-                                      TabIndex="1" Margin="6,0,0,0" Grid.Row="0"
+                                      TabIndex="1" Margin="6,0,0,0" Grid.Row="0" 
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu"
