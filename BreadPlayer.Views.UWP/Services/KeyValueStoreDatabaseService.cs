@@ -234,15 +234,32 @@ namespace BreadPlayer.Service
             }
         }
 
-        public void RemoveRecord(string tableName, string key)
+        public async Task RemoveRecord(string tableName, string key)
         {
-            using (var tran = engine.GetTransaction())
+            await Task.Run(() =>
             {
-                tran.ObjectRemove(tableName, 1.ToIndex(key));
-                tran.Commit();
-            }
+                using (var tran = engine.GetTransaction())
+                {
+                    tran.ObjectRemove(tableName, 1.ToIndex(key));
+                    tran.Commit();
+                }
+            });
         }
-       
+        public async Task RemoveTracks(IEnumerable<Mediafile> records)
+        {
+            await Task.Run(() =>
+            {
+                using (var tran = engine.GetTransaction())
+                {
+                    foreach (var data in records)
+                    { 
+                        tran.ObjectRemove("Tracks", 1.ToIndex(data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre));
+                    }
+                    tran.Commit();
+                }
+                
+            });
+        }
         public async Task<IEnumerable<T>> GetRecords<T>(string tableName)
         {
             return await Task.Run(() =>
@@ -260,5 +277,7 @@ namespace BreadPlayer.Service
                 return recordList;
             });            
         }
+
+      
     }
 }

@@ -16,7 +16,8 @@ namespace BreadPlayer.Service
         Task InsertTracks(IEnumerable<Mediafile> records);
         Task<IEnumerable<T>> GetRecords<T>(string tableName);
         T GetRecord<T>(string table, string path);
-        void RemoveRecord(string tableName, string key);
+        Task RemoveTracks(IEnumerable<Mediafile> records);
+        Task RemoveRecord(string tableName, string key);
         void UpdateTracks(IEnumerable<Mediafile> records);
         Task<bool> UpdateRecordAsync<T>(string tableName, string primaryKey, T record);
         Task<IEnumerable<T>> QueryRecords<T>(string tableName, string term);

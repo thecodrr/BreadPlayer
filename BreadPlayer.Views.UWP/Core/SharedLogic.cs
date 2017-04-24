@@ -232,11 +232,12 @@ namespace BreadPlayer.Core
         public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mediafile)
         {
             var albumArt = AlbumArtFileExists(mediafile);
-            if (!albumArt.NotExists) return false;
+            if (!albumArt.NotExists)
+                return false;
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, (uint)(InitializeCore.IsMobile ? 500 : 1000), ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
                 {
                     if (thumbnail == null) return false;
                     switch (thumbnail.Type)
@@ -252,25 +253,25 @@ namespace BreadPlayer.Core
                                 return true;
                             }
 
-                        case ThumbnailType.Icon:
-                            using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
-                            {
-                                if (tagFile.Tag.Pictures.Length >= 1)
-                                {
-                                    var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                        //case ThumbnailType.Icon:
+                        //    using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                        //    {
+                        //        if (tagFile.Tag.Pictures.Length >= 1)
+                        //        {
+                        //            var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
 
-                                    using (var albumstream = await image.OpenStreamForWriteAsync())
-                                    {
-                                        await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                                    }
-                                    return true;
-                                }
-                            }
-                            break;
+                        //            using (var albumstream = await image.OpenStreamForWriteAsync())
+                        //            {
+                        //                await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                        //            }
+                        //            return true;
+                        //        }
+                        //    }
+                          //  break;
                         default:
                             break;
                     }
-                    GC.Collect();
+                   // GC.Collect();
                 }
             }
             catch (Exception ex)
@@ -293,14 +294,14 @@ namespace BreadPlayer.Core
                 return true;
             }
         }
-        public static bool RemoveMediafile(Mediafile file)
+        public static async Task<bool> RemoveMediafile(Mediafile file)
         {
             if (file == null) return false;
 
             using (service = new LibraryService(new KeyValueStoreDatabaseService()))
             {
                 SettingsViewModel.TracksCollection.Elements.Remove(file);
-                service.RemoveMediafile(file);
+                await service.RemoveMediafile(file);
                 return true;
             }
         }

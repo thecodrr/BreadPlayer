@@ -69,9 +69,13 @@ namespace BreadPlayer.Service
             //Database.RemoveTracks(LiteDB.Query.EQ("FolderPath", folderPath));
             // Core.CoreMethods.LibVM.TracksCollection.Elements.RemoveRange(Core.CoreMethods.LibVM.TracksCollection.Elements.Where(t => t.FolderPath == folderPath));
         }
-        public void RemoveMediafile(Mediafile data)
+        public async Task RemoveMediafile(Mediafile data)
         {
-            Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre);
+            await Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre);
+        }
+        public async Task RemoveMediafiles(IEnumerable<Mediafile> data)
+        {
+            await Database.RemoveTracks(data);
         }
         public Mediafile GetMediafile(string path)
         {

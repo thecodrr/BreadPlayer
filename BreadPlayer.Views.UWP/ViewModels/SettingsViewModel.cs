@@ -503,7 +503,7 @@ namespace BreadPlayer.ViewModels
             {
                 await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    await ShowMessageBox((selectedDuplicates) =>
+                    await ShowMessageBox(async (selectedDuplicates) =>
                     {
                         if (selectedDuplicates.Any())
                         {
@@ -517,11 +517,11 @@ namespace BreadPlayer.ViewModels
                                     {
                                         duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
                                         if (duplicateIndex > -1)
-                                            SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                           await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
                                     }
                                 }
                                 else
-                                    SharedLogic.RemoveMediafile(duplicate);
+                                    await SharedLogic.RemoveMediafile(duplicate);
                             }
                         }
                     }, duplicateFiles);

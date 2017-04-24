@@ -23,7 +23,7 @@ namespace BreadPlayer.Service
         void AddMediafile(Mediafile data);
         Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
-        void RemoveMediafile(Mediafile data);
+        Task RemoveMediafile(Mediafile data);
         Mediafile GetMediafile(string path);
         void RemovePlaylist(Playlist List);
         bool CheckExists<T>(string table, string path);

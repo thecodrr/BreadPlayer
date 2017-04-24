@@ -1012,31 +1012,29 @@ namespace BreadPlayer.ViewModels
                 {
                     case "Recent":
                         await ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync().ConfigureAwait(false));
-                        await RefreshSourceAsync().ConfigureAwait(false);
                         break;
                     case "MostEaten":
                         await ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync().ConfigureAwait(false));
-                        await RefreshSourceAsync().ConfigureAwait(false); break;
+                        break;
                     case "RecentlyAdded":
                         await ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync().ConfigureAwait(false));
-                        await RefreshSourceAsync().ConfigureAwait(false); break;
+                        break;
                     case "Favorites":
                         await ChangeView("Favorites", false, await GetFavoriteSongs().ConfigureAwait(false));
-                        await RefreshSourceAsync().ConfigureAwait(false); break;
-                        //case "MusicCollection":
-                        //default:
-                        //    await ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
-                        //    break;
+                        break;
+                    case "MusicCollection":
+                    default:
+                        await ChangeView("Music Collection", libgrouped, TracksCollection.Elements);
+                        break;
                 }
-
-                //
+                await RefreshSourceAsync().ConfigureAwait(false); 
             }
-            //else if (ViewSource.Source != null)
-            //{
-            //    source = ViewSource.Source;
-            //    grouped = ViewSource.IsSourceGrouped;
-            //    ViewSource.Source = null;
-            //}
+            else if (ViewSource.Source != null)
+            {
+                source = ViewSource.Source;
+                grouped = ViewSource.IsSourceGrouped;
+                ViewSource.Source = null;
+            }
         }
 
         public void PlayOnTap(object sender, TappedRoutedEventArgs e)

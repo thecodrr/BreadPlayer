@@ -2265,8 +2265,8 @@ Control.IsTemplateFocusTarget="True"/>
                     MaxHeight="{TemplateBinding MaxHeight}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" >
-                                        <Grid CornerRadius="15" VerticalAlignment="Stretch">
-                                            <blur:BackDrop BlurAmount="10" Visibility="Collapsed" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />
+                                        <Grid CornerRadius="15" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Stretch">
+                                            <!--<blur:BackDrop BlurAmount="10" Visibility="Collapsed" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />-->
                                             <Grid x:Name="DialogSpace" Padding="50" VerticalAlignment="Stretch">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
