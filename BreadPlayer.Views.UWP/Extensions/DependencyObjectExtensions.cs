@@ -12,7 +12,7 @@ namespace BreadPlayer.Extensions
             ColorAnimation col = new ColorAnimation();
             col.From = fromColor;// ((SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]).Color;
             col.To = toColor;
-            col.Duration = new Duration(TimeSpan.FromSeconds(1));
+            col.Duration = new Duration(TimeSpan.FromSeconds(3));
 
             Storyboard zgo = new Storyboard();
             Storyboard.SetTarget(col, objAnimate);// (SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]);
