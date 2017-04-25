@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BreadPlayer.Common;
 using System;
 
-namespace BreadPlayer.Service
+namespace BreadPlayer.Database
 {
     public interface ILibraryService : IDisposable
     {

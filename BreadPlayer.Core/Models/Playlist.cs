@@ -16,9 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
+
 namespace BreadPlayer.Models
 {
-    public class Playlist : ObservableObject
+    public class Playlist : ObservableObject, Database.IDBRecord
     {
         private long id;
         public long Id { get { return id; } set { Set(ref id, value); } }
@@ -33,5 +35,10 @@ namespace BreadPlayer.Models
         string salt;
         public string Salt { get { return salt; } set { Set(ref salt, value); } }
         public string[] SongsIds { get; set; }
+
+        public string GetTextSearchKey()
+        {
+            return Name;
+        }
     }
 }

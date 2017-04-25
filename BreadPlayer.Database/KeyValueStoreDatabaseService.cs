@@ -54,6 +54,11 @@ namespace BreadPlayer.Database
             DBreeze.Utils.CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
             DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };
         }
+        public void ChangeTable(string tableName, string textTableName)
+        {
+            TextTableName = textTableName;
+            TableName = tableName;
+        }
         public bool CheckExists(IDBRecord record)
         {
             using (var tran = engine.GetTransaction())

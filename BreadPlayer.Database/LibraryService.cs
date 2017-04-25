@@ -5,7 +5,7 @@ using BreadPlayer.Common;
 using DBreeze.Objects;
 using BreadPlayer.Database;
 
-namespace BreadPlayer.Service
+namespace BreadPlayer.Database
 {
 	/// <summary>
 	/// Provide services for retrieving and storing Customer information
@@ -65,26 +65,7 @@ namespace BreadPlayer.Service
         {
             return (Mediafile)Database.GetRecord(id);
         }
-        public void AddPlaylist(Playlist pList)
-        {
-            Database.InsertRecord("Playlists", pList.Name, pList);
-        }
-        public async Task<IEnumerable<Playlist>> GetPlaylists()
-        {
-            return await Database.GetRecords<Playlist>("Playlists");
-        }
-        public Playlist GetPlaylist(string name)
-        {
-            return Database.GetRecord<Playlist>("Playlists", name);
-        }
-        public bool CheckExists<T>(string table, string path)
-        {sacsdacdascdsa
-            return Database.CheckExists<T>(table, path);
-        }
-        public void RemovePlaylist(Playlist List)
-        {
-            Database.RemoveRecord("Playlists", List.Name);
-        }
+      
         public int SongCount
         {
             get { return Database.GetRecordsCount("Tracks"); }
