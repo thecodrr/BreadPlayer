@@ -6,7 +6,7 @@ using BreadPlayer.Models;
 using Windows.Storage;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.ViewModels
 {
@@ -89,8 +89,6 @@ namespace BreadPlayer.ViewModels
                     var firstSong = albumGroup.First() ?? new Mediafile();
                     Album album = new Album()
                     {
-                        SongsIds = albumGroup.Select(t => t.Id).ToArray(),
-                        //AlbumSongs = new ThreadSafeObservableCollection<Mediafile>(albumGroup),
                         Artist = firstSong?.LeadArtist,
                         AlbumName = albumGroup.Key,
                         AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture

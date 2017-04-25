@@ -72,7 +72,7 @@ namespace BreadPlayer.Database
             StaticKeyValueDatabase.DisposeDatabaseEngine();
         }
 
-        public IDBRecord GetRecord(long id)
+        public IDBRecord GetRecordById(long id)
         {
             try
             {
@@ -86,7 +86,17 @@ namespace BreadPlayer.Database
                 return null;
             }
         }
-
+        public async Task<IDBRecord> GetRecordByQueryAsync(string query)
+        {
+            try
+            {
+                return (await QueryRecords<IDBRecord>(query)).First();
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public int GetRecordsCount()
         {
             try

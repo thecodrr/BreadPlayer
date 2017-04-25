@@ -11,7 +11,6 @@ namespace BreadPlayer.Models
         public string AlbumName { get; set; }
         public string Artist { get; set; }
         public string AlbumArt { get; set; }
-        public long[] SongsIds { get; set; }
         [JsonIgnore]
         public ObservableCollection<Mediafile> AlbumSongs { get; set; } = new ObservableCollection<Mediafile>();
 

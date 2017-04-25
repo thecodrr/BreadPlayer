@@ -1,5 +1,5 @@
 ﻿using BreadPlayer.Models;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -18,8 +19,9 @@ namespace BreadPlayer.PlaylistBus
             Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                PlaylistService service = new PlaylistService(Playlist.Name, false, "");
-
+                PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
+                service.AddPlaylist(Playlist);
+                List<Mediafile> PlaylistSongs = new List<Mediafile>();
                 string line;
                 int index = 0;
                 int failedFiles = 0;
@@ -51,12 +53,8 @@ namespace BreadPlayer.PlaylistBus
 
                                 Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
-
                                 await Core.SharedLogic.NotificationManager.ShowMessageAsync(index.ToString() + " songs sucessfully added into playlist: " + file.DisplayName);
-
-                                if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
-                                    service.Insert(mp3File);
-
+                                PlaylistSongs.Add(mp3File);
                                 StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
                             catch
@@ -65,6 +63,7 @@ namespace BreadPlayer.PlaylistBus
                             }
                         });
                     }
+                    await service.InsertTracksAsync(PlaylistSongs, Playlist);
 
                     string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", index, failedFiles, index - failedFiles, file.DisplayName);
                     await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);

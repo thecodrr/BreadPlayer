@@ -13,7 +13,8 @@ namespace BreadPlayer.Database
         Task InsertRecords(IEnumerable<IDBRecord> records);
         Task<IEnumerable<T>> GetRecords<T>();
         Task<IEnumerable<T>> GetRecords<T>(long fromID, long toID);
-        IDBRecord GetRecord(long id);
+        Task<IDBRecord> GetRecordByQueryAsync(string query);
+        IDBRecord GetRecordById(long id);
         Task RemoveRecords(IEnumerable<IDBRecord> records);
         Task RemoveRecord(IDBRecord record);
         void UpdateRecords(IEnumerable<IDBRecord> records);

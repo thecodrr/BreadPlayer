@@ -21,7 +21,6 @@ using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
 using BreadPlayer.Messengers;
 using BreadPlayer.Models;
-using BreadPlayer.Service;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
@@ -37,6 +36,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.ViewModels
 {
@@ -151,10 +151,23 @@ namespace BreadPlayer.ViewModels
         public LibraryService LibraryService
         {
             get { if (libraryservice == null)
-                    libraryservice = new LibraryService(new KeyValueStoreDatabaseService());
+                    libraryservice = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
                 return libraryservice; }
             set { Set(ref libraryservice, value); }
         }
+
+        PlaylistService playlistService;
+        public PlaylistService PlaylistService
+        {
+            get
+            {
+                if (playlistService == null)
+                    playlistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Playlists", "PlaylistsText"));
+                return playlistService;
+            }
+            set { Set(ref playlistService, value); }
+        }
+
         CollectionViewSource viewSource;
         public CollectionViewSource ViewSource
         {
@@ -362,7 +375,7 @@ namespace BreadPlayer.ViewModels
         #region Implementations 
         private async void AddToFavorites(object para)
         {
-            var mediaFile = GetMediafileFromParameterAsync(para, false);
+            var mediaFile = await GetMediafileFromParameterAsync(para, false);
             await LibraryService.UpdateMediafile(mediaFile);
         }
         /// <summary>
@@ -383,9 +396,9 @@ namespace BreadPlayer.ViewModels
                 {
                     var newMediafile = await SharedLogic.CreateMediafile(newFile);
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path)._id = newMediafile._id;
+                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Id = newMediafile.Id;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
-                    await LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t._id == mediafile._id));
+                    await LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t.Id == mediafile.Id));
                 }
             }
         }
@@ -425,7 +438,7 @@ namespace BreadPlayer.ViewModels
                     {
                         index = TracksCollection.Elements.IndexOf(item);
                         TracksCollection.RemoveItem(item);
-                        LibraryService.RemoveMediafile(item);
+                        await LibraryService.RemoveMediafile(item);
                     }
                 }
                
@@ -441,9 +454,9 @@ namespace BreadPlayer.ViewModels
             }
         }
         
-        public void StopAfter(object path)
+        public async void StopAfter(object path)
         {
-            Mediafile mediaFile = GetMediafileFromParameterAsync(path);
+            Mediafile mediaFile = await GetMediafileFromParameterAsync(path);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_STOP_AFTER_SONG, mediaFile);
         }
         
@@ -451,10 +464,10 @@ namespace BreadPlayer.ViewModels
         /// Plays the selected file. <seealso cref="PlayCommand"/>
         /// </summary>
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to play.</param>
-        public void Play(object path)
+        public async void Play(object path)
         {
             var currentlyPlaying = Player.CurrentlyPlayingFile;
-            Mediafile mediaFile = GetMediafileFromParameterAsync(path, true);
+            Mediafile mediaFile =  await GetMediafileFromParameterAsync(path, true);
             Messenger.Instance.NotifyColleagues(MessageTypes.MSG_PLAY_SONG, new List<object>() { mediaFile, true, isPlayingFromPlaylist });
             mediaFile.LastPlayed = DateTime.Now.ToString();           
         }
@@ -489,7 +502,7 @@ namespace BreadPlayer.ViewModels
                 isPlayingFromPlaylist = true;
             }
         }
-        private Mediafile GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
+        private async Task<Mediafile> GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
         {
             if (path is Mediafile mediaFile)
             {
@@ -504,8 +517,7 @@ namespace BreadPlayer.ViewModels
             }
             else if (path is Playlist playlist)
             {
-                Service.PlaylistService service = new Service.PlaylistService(playlist.Name, playlist.IsPrivate, playlist.Hash);
-                var songList = new ThreadSafeObservableCollection<Mediafile>(service.GetTracks());
+                var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
             }
@@ -884,7 +896,7 @@ namespace BreadPlayer.ViewModels
 
        async Task LoadPlaylists()
         {
-            foreach (var list in await LibraryService.GetPlaylists())
+            foreach (var list in await PlaylistService.GetPlaylists())
             {
                 AddPlaylist(list);
             }
@@ -904,7 +916,7 @@ namespace BreadPlayer.ViewModels
                 {
                     songList.Add(Player.CurrentlyPlayingFile);
                 }
-                Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : LibraryService.GetPlaylist(menu?.Text);
+                Playlist dictPlaylist = menu.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : await PlaylistService.GetPlaylistAsync(menu?.Text);
                 bool proceed = false;
                 if (menu.Text != "New Playlist")
                     proceed = await SharedLogic.AskForPassword(dictPlaylist);
@@ -944,7 +956,7 @@ namespace BreadPlayer.ViewModels
                 Playlist.IsPrivate = dialog.Password.Length > 0;
                 Playlist.Hash = salthash.Hash;
                 Playlist.Salt = salthash.Salt;
-                if (LibraryService.CheckExists<Playlist>("Playlists", Playlist.Name))
+                if (PlaylistService.GetPlaylistAsync(Playlist.Name) != null)
                 {
                     Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
@@ -957,12 +969,9 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
-                    using (PlaylistService service = new PlaylistService(list.Name, list.IsPrivate, list.Hash))
-                    {
-                        service.Insert(songsToadd.Where(t => !service.Exists(t.Path)));
-                    }
+                    await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
                 });
             }
         }
@@ -984,10 +993,10 @@ namespace BreadPlayer.ViewModels
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
         {
-            if (!LibraryService.CheckExists<Playlist>("Playlists", plist.Name))
+            if (PlaylistService.GetPlaylistAsync(plist.Name) != null)
             {
                 AddPlaylist(plist);
-                LibraryService.AddPlaylist(plist);
+                PlaylistService.AddPlaylist(plist);
             }
             if (addsongs)
                 await AddSongsToPlaylist(plist, songs);

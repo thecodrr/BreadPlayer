@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Models
 {
-    public class PlaylistSong : IDBRecord
+    public class ChildSong : IDBRecord
     {
         public long Id { get; set; }
         public long SongId { get; set; }
