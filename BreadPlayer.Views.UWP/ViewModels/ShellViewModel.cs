@@ -110,6 +110,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong();
             }
+            TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
         }
 
         async void HandlePlaySongMessage(Message message)

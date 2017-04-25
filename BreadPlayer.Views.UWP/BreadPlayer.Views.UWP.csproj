@@ -116,6 +116,11 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\5minsilence.mp3" />
+    <Content Include="Assets\BadgeLogo.scale-100.png" />
+    <Content Include="Assets\BadgeLogo.scale-125.png" />
+    <Content Include="Assets\BadgeLogo.scale-150.png" />
+    <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
     <Content Include="Assets\Noise.jpg" />
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
@@ -176,9 +181,7 @@
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
-    <Compile Include="Services\IDatabaseService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
-    <Compile Include="Services\KeyValueStoreDatabaseService.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
@@ -399,6 +402,10 @@
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj">
       <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
       <Name>BreadPlayer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Database\BreadPlayer.Database.csproj">
+      <Project>{e63c3de4-ab33-4611-b193-9739fccb1661}</Project>
+      <Name>BreadPlayer.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
       <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DBreeze">
+      <HintPath>..\BreadPlayer.Views.UWP\bin\x86\Release\DBreeze.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
