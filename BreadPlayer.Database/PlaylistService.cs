@@ -1,26 +1,20 @@
 ﻿using BreadPlayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
 	public class PlaylistService : IDisposable
     {
-        bool isValid;
-        public bool IsValid { get { return isValid; } set { isValid = value; } }
-        public string Name { get; set; }
-        public string Password { get; set; }
         private IDatabaseService Database
         {
             get; set;
         }
-        public PlaylistService(string name, bool isPrivate, string hash)
+        public PlaylistService(IDatabaseService database)
         {
-            Name = name;
-            Password = hash;
-            PDatabase = new PlaylistDatabase("filename=" + string.Format(ApplicationData.Current.LocalFolder.Path + @"\playlists\{0}.db;{1}", Name, isPrivate ? "password=" + Password + ";" : ""));
-            CreateDB();
+            Database = database;
         }
         public void AddPlaylist(Playlist pList)
         {
@@ -28,52 +22,71 @@ namespace BreadPlayer.Database
         }
         public async Task<IEnumerable<Playlist>> GetPlaylists()
         {
-            return await Database.GetRecords<Playlist>("Playlists");
+            return await Database.GetRecords<Playlist>();
         }
-        public Playlist GetPlaylist(string name)
+        public Playlist GetPlaylist(long id)
         {
-            return Database.GetRecord<Playlist>("Playlists", name);
+            return (Playlist)Database.GetRecord(id);
+        }        
+        public async Task RemovePlaylistAsync(Playlist List)
+        {
+            await Database.RemoveRecord(List);
         }
-        public bool CheckExists<T>(string table, string path)
+        public async Task UpdatePlaylistAsync(Playlist list)
         {
-            return Database.CheckExists<T>(table, path);
-        }
-        public void RemovePlaylist(Playlist List)
-        {
-            Database.RemoveRecord("Playlists", List.Name);
-        }
-        public void Remove(Mediafile file)
-        {
-            tracks.Delete(file._id);
+            await Database.UpdateRecordAsync(list);
         }
 
-        public bool Exists(string path)
+        //PlaylistSongs Methods
+        public async Task Insert(IEnumerable<Mediafile> fileCol, Playlist pList)
         {
-          return tracks.Exists(t => t.Path == path);
+            List<PlaylistSong> PlaylistSongs = new List<PlaylistSong>();
+            foreach(var file in fileCol)
+            {
+                PlaylistSongs.Add(new PlaylistSong()
+                {
+                    SongId = file.Id,
+                    PlaylistId = pList.Id
+                });
+            }
+            Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
+            await  Database.InsertRecords(PlaylistSongs);
         }
-        public IEnumerable<Mediafile> GetTracks()
+        public void InsertSong(PlaylistSong file)
         {
-            IEnumerable<Mediafile> collection = null;
-            collection = tracks.Find(LiteDB.Query.All());
-            return collection;
+            Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
+            Database.InsertRecord(file);
         }
-        public void Insert(Mediafile file)
+        public async Task RemoveSongAsync(PlaylistSong file)
         {
-            tracks.Insert(file);
+            Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
+            await Database.RemoveRecord(file);
         }
-        public void Insert(IEnumerable<Mediafile> fileCol)
+        public bool Exists(long id)
         {
-            tracks.Insert(fileCol);
+            Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
+            return Database.CheckExists(id);
         }
-        public LiteCollection<T> GetCollection<T>(string colName) where T : new()
+        public async Task<IEnumerable<Mediafile>> GetTracksAsync(long playlistID)
         {
-            return PDatabase.DB.GetCollection<T>(colName);
+            return await Task.Run(async() =>
+            {
+                Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
+                var trackIds = (await Database.QueryRecords<PlaylistSong>(playlistID.ToString())).Select(t => t.SongId);
+
+                Database.ChangeTable("Tracks", "TracksText");
+                List<Mediafile> Tracks = new List<Mediafile>();
+                foreach (var id in trackIds)
+                {
+                    Tracks.Add((Mediafile)Database.GetRecord(id));
+                }
+                return Tracks;
+            });
         }
         
         public void Dispose()
         {
-            PDatabase.DB.Dispose();
-            PDatabase = null;
+            Database.Dispose();
         }
     }   
 }

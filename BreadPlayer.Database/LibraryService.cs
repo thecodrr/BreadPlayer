@@ -65,7 +65,10 @@ namespace BreadPlayer.Database
         {
             return (Mediafile)Database.GetRecord(id);
         }
-      
+        public bool CheckExists(long id)
+        {
+            return Database.CheckExists(id);
+        }
         public int SongCount
         {
             get { return Database.GetRecordsCount("Tracks"); }

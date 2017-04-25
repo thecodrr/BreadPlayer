@@ -12,6 +12,7 @@ namespace BreadPlayer.Database
         void InsertRecord(IDBRecord record);
         Task InsertRecords(IEnumerable<IDBRecord> records);
         Task<IEnumerable<T>> GetRecords<T>();
+        Task<IEnumerable<T>> GetRecords<T>(long fromID, long toID);
         IDBRecord GetRecord(long id);
         Task RemoveRecords(IEnumerable<IDBRecord> records);
         Task RemoveRecord(IDBRecord record);
@@ -19,6 +20,6 @@ namespace BreadPlayer.Database
         Task<bool> UpdateRecordAsync(IDBRecord record);
         Task<IEnumerable<T>> QueryRecords<T>(string term);
         int GetRecordsCount();
-        bool CheckExists(IDBRecord record);
+        bool CheckExists(long id);
     }
 }

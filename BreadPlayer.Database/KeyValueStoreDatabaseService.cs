@@ -59,11 +59,11 @@ namespace BreadPlayer.Database
             TextTableName = textTableName;
             TableName = tableName;
         }
-        public bool CheckExists(IDBRecord record)
+        public bool CheckExists(long id)
         {
             using (var tran = engine.GetTransaction())
             {
-                var item = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(record.Id));//.ObjectGet<T>().Entity;
+                var item = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(id));//.ObjectGet<T>().Entity;
                 return item.Exists;
             }
         }
@@ -234,12 +234,17 @@ namespace BreadPlayer.Database
         }
         public async Task<IEnumerable<T>> GetRecords<T>()
         {
+            return await GetRecords<T>(long.MinValue, long.MaxValue);
+        }
+
+        public async Task<IEnumerable<T>> GetRecords<T>(long fromID, long toID)
+        {
             return await Task.Run(() =>
             {
                 var recordList = new List<T>();
                 using (var tran = engine.GetTransaction())
                 {
-                    foreach (var record in tran.SelectForwardFromTo<byte[], byte[]>(TableName, 1.ToIndex(long.MinValue), true, 1.ToIndex(long.MaxValue), true))
+                    foreach (var record in tran.SelectForwardFromTo<byte[], byte[]>(TableName, 1.ToIndex(fromID), true, 1.ToIndex(toID), true))
                     {
                         recordList.Add(record.ObjectGet<T>().Entity);
                     }
