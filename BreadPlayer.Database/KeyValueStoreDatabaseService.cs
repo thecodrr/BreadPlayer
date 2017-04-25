@@ -1,19 +1,14 @@
-﻿using System;
+﻿using BreadPlayer.Models;
+using DBreeze;
+using DBreeze.Objects;
+using DBreeze.Utils;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using BreadPlayer.Models;
-using DBreeze;
-using Newtonsoft.Json;
-using DBreeze.Utils;
-using DBreeze.DataTypes;
-using Windows.Storage;
-using LiteDB;
-using DBreeze.Objects;
-using DBreeze.Utils.Async;
 
-namespace BreadPlayer.Service
+namespace BreadPlayer.Database
 {
     public class StaticKeyValueDatabase
     {
@@ -24,10 +19,9 @@ namespace BreadPlayer.Service
             if (db == null || DbPath != dbPath)
             {
                 DbPath = dbPath;
-                var databasePath = string.IsNullOrEmpty(dbPath) ? ApplicationData.Current.LocalFolder.Path + @"\breadplayerDB" : dbPath;
                 var dbConfig = new DBreezeConfiguration()
                 {
-                    DBreezeDataFolderName = databasePath,
+                    DBreezeDataFolderName = dbPath,
                     Storage = DBreezeConfiguration.eStorage.DISK
                 };
                 db = new DBreezeEngine(dbConfig);
@@ -36,6 +30,7 @@ namespace BreadPlayer.Service
         }
         public static void DisposeDatabaseEngine()
         {
+            db.Dispose();
             db = null;
         }
     }
@@ -43,57 +38,57 @@ namespace BreadPlayer.Service
     {
         private string DbPath;
         DBreezeEngine engine = null;
-        public KeyValueStoreDatabaseService(string dbPath = null, bool createNew = true)
+        private string TextTableName;
+        private string TableName;
+        public KeyValueStoreDatabaseService(string dbPath, string textTableName, string tableName)
         {
-            CreateDB(dbPath, createNew);
+            CreateDB(dbPath);
+            TextTableName = textTableName;
+            TableName = tableName;
         }
-       
-        public void CreateDB(string dbPath = null, bool createNew = true)
+
+        public void CreateDB(string dbPath)
         {
             DbPath = dbPath;
             engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
             DBreeze.Utils.CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
-           
-            DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };          
+            DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };
         }
-        public bool CheckExists<T>(string table, string path)
+        public bool CheckExists(IDBRecord record)
         {
             using (var tran = engine.GetTransaction())
             {
-                var item = tran.Select<byte[], byte[]>(table, 1.ToIndex(path));//.ObjectGet<T>().Entity;
+                var item = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(record.Id));//.ObjectGet<T>().Entity;
                 return item.Exists;
             }
-           
-        }        
+        }
         public void Dispose()
         {
-            if (engine != null)
-                engine.Dispose();
             StaticKeyValueDatabase.DisposeDatabaseEngine();
         }
 
-        public T GetRecord<T>(string table, string path)
+        public IDBRecord GetRecord(long id)
         {
             try
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    return tran.Select<byte[], byte[]>(table, 1.ToIndex(path)).ObjectGet<T>().Entity;
+                    return tran.Select<byte[], byte[]>(TableName, 1.ToIndex(id)).ObjectGet<IDBRecord>().Entity;
                 }
             }
             catch
             {
-                return default(T);
+                return null;
             }
         }
-        
-        public int GetRecordsCount(string tableName)
+
+        public int GetRecordsCount()
         {
             try
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    var count = (int)tran.Count(tableName);
+                    var count = (int)tran.Count(TableName);
                     return count;
                 }
             }
@@ -102,14 +97,14 @@ namespace BreadPlayer.Service
                 return 0;
             }
         }
-        
-        public void InsertRecord<T>(string tableName, string primaryKey, T record)
+
+        public void InsertRecord(IDBRecord record)
         {
             using (var tran = engine.GetTransaction())
             {
-                var ir = tran.ObjectInsert<T>(tableName, new DBreezeObject<T>
+                var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
                 {
-                    Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, primaryKey) { PrimaryIndex = true } },
+                    Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
                     NewEntity = true,
                     //Changes Select-Insert pattern to Insert (speeds up insert process)
                     Entity = record //Entity itself
@@ -118,28 +113,7 @@ namespace BreadPlayer.Service
                 tran.Commit();
             }
         }
-        public void InsertAlbums(IEnumerable<Album> albums)
-        {
-            using (var tran = engine.GetTransaction())
-            {
-                foreach (var record in albums.ToList())
-                {
-                    var ir = tran.ObjectInsert<Album>("Albums", new DBreezeObject<Album>
-                    {
-                        Indexes = new List<DBreezeIndex>
-                        {
-                        new DBreezeIndex(1, record.AlbumName + record.Artist) { PrimaryIndex = true }, //PI Primary Index
-                        },
-
-                        NewEntity = true,
-                        Entity = record
-                    },
-                        true);
-                }
-                tran.Commit();
-            }
-        }
-        public async Task InsertTracks(IEnumerable<Mediafile> records)
+        public async Task InsertRecords(IEnumerable<IDBRecord> records)
         {
             await Task.Run(() =>
             {
@@ -147,67 +121,56 @@ namespace BreadPlayer.Service
                 {
                     foreach (var record in records)
                     {
-                        var ir = tran.ObjectInsert<Mediafile>("Tracks", new DBreezeObject<Mediafile>
+                        record.Id = tran.ObjectGetNewIdentity<long>(TableName);
+                        var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
                         {
                             Indexes = new List<DBreezeIndex>
                         {
-                        new DBreezeIndex(1, record.Path, record.FolderPath, record.LeadArtist, record.Album, record.Title, record.Genre) { PrimaryIndex = true }, //PI Primary Index
-                        //One PI must be set, if any secondary index will append it to the end, for uniqueness
-                       //new DBreezeIndex(2, record.FolderPath) { AddPrimaryToTheEnd = false }, //SI - Secondary Index
-                       //new DBreezeIndex(3, record.LeadArtist){ AddPrimaryToTheEnd = false },
-                       //new DBreezeIndex(4, record.Album){ AddPrimaryToTheEnd = false },
-                       //new DBreezeIndex(5, record.Title){ AddPrimaryToTheEnd = false },
-                       //new DBreezeIndex(3,p.Salary) //SI
-                        //new DBreezeIndex(4,p.Id) { AddPrimaryToTheEnd = false } //SI
-                        },
-
+                        new DBreezeIndex(1, record.Id) {PrimaryIndex = true }, },
                             NewEntity = true,
                             //Changes Select-Insert pattern to Insert (speeds up insert process)
                             Entity = record //Entity itself
                         },
                             true);
+                        //Using text-search engine for the free text search
+                        tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
                     }
                     tran.Commit();
                 }
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string tableName, string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
         {
             return await Task.Run(() =>
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    var records = tran.SelectDictionary<byte[], byte[]>(tableName);
                     var recordList = new List<T>();
-                    foreach (var doc in records)
+                    foreach (var record in tran.TextSearch(TextTableName).Block(term).GetDocumentIDs())
                     {
-                        if (doc.Key.ToUTF8String().ToLower().Contains(term.ToLower()))
-                        {
-                            var key = doc.Key.ToUTF8String();
-                            var val = tran.Select<byte[], byte[]>(tableName, doc.Key).ObjectGet<T>().Entity;
-                            recordList.Add(val);
-                        }
+                        var o = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(record)).ObjectGet<T>();
+                        recordList.Add(o.Entity);
                     }
                     return recordList;
                 }
             });
         }
 
-        public async Task<bool> UpdateRecordAsync<T>(string tableName, string primaryKey, T record)
+        public async Task<bool> UpdateRecordAsync(IDBRecord record)
         {
             return await Task.Run(() =>
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    var row = tran.Select<byte[], byte[]>(tableName, 1.ToIndex(primaryKey));
+                    var row = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(record.Id));
                     if (row.Exists)
                     {
-                        var getRecord = row.ObjectGet<T>();
+                        var getRecord = row.ObjectGet<IDBRecord>();
                         getRecord.Entity = record;
                         getRecord.NewEntity = false;
-                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, primaryKey) { PrimaryIndex = true } }; //PI Primary Index
-                        if (tran.ObjectInsert(tableName, getRecord, true).EntityWasInserted)
+                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } }; //PI Primary Index
+                        if (tran.ObjectInsert(TableName, getRecord, true).EntityWasInserted)
                         {
                             tran.Commit();
                             return true;
@@ -218,66 +181,66 @@ namespace BreadPlayer.Service
             });
         }
 
-        public void UpdateTracks(IEnumerable<Mediafile> records)
+        public void UpdateRecords(IEnumerable<IDBRecord> records)
         {
             using (var tran = engine.GetTransaction())
             {
                 foreach (var data in records)
                 {
-                    var ord = tran.Select<byte[], byte[]>("Tracks", 1.ToIndex(data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre)).ObjectGet<Mediafile>();
+                    var ord = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(data.Id)).ObjectGet<IDBRecord>();
                     ord.Entity = data;
                     ord.NewEntity = false;
-                    ord.Indexes = new List<DBreezeIndex> {new DBreezeIndex(1, data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre) { PrimaryIndex = true } }; //PI Primary Index
-                    tran.ObjectInsert("Tracks", ord, true);
+                    ord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
+                    tran.ObjectInsert(TableName, ord, true);
                 }
                 tran.Commit();
             }
         }
 
-        public async Task RemoveRecord(string tableName, string key)
+        public async Task RemoveRecord(IDBRecord record)
         {
             await Task.Run(() =>
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    tran.ObjectRemove(tableName, 1.ToIndex(key));
+                    tran.ObjectRemove(TableName, 1.ToIndex(record.Id));
+                    //remove from text engine too
+                    tran.TextRemove(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
                     tran.Commit();
                 }
             });
         }
-        public async Task RemoveTracks(IEnumerable<Mediafile> records)
+
+        public async Task RemoveRecords(IEnumerable<IDBRecord> records)
         {
             await Task.Run(() =>
             {
                 using (var tran = engine.GetTransaction())
                 {
                     foreach (var data in records)
-                    { 
-                        tran.ObjectRemove("Tracks", 1.ToIndex(data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre));
+                    {
+                        tran.ObjectRemove(TableName, 1.ToIndex(data.Id));
+                        //remove from text engine too
+                        tran.TextRemove(TextTableName, data.Id.To_8_bytes_array_BigEndian(), data.GetTextSearchKey());
                     }
                     tran.Commit();
                 }
-                
             });
         }
-        public async Task<IEnumerable<T>> GetRecords<T>(string tableName)
+        public async Task<IEnumerable<T>> GetRecords<T>()
         {
             return await Task.Run(() =>
             {
                 var recordList = new List<T>();
                 using (var tran = engine.GetTransaction())
                 {
-                    var records = tran.SelectForward<byte[], byte[]>(tableName);
-
-                    foreach (var record in records)
+                    foreach (var record in tran.SelectForwardFromTo<byte[], byte[]>(TableName, 1.ToIndex(long.MinValue), true, 1.ToIndex(long.MaxValue), true))
                     {
                         recordList.Add(record.ObjectGet<T>().Entity);
                     }
                 }
                 return recordList;
-            });            
+            });
         }
-
-      
     }
 }

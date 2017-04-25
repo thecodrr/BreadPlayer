@@ -113,6 +113,7 @@
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
     <Compile Include="Extensions\ObservableCollection.cs" />
+    <Compile Include="Common\IDBRecord.cs" />
     <Compile Include="InitializeCore.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\EqualizerBand.cs" />

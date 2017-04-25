@@ -18,13 +18,12 @@
 
 namespace BreadPlayer.Models
 {
-   public class Playlist : ObservableObject
+    public class Playlist : ObservableObject
     {
-        private LiteDB.ObjectId id;
-        public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
-
+        private long id;
+        public long Id { get { return id; } set { Set(ref id, value); } }
         string name;
-        public string Name { get { return name; }set { Set(ref name, value); } }
+        public string Name { get { return name; } set { Set(ref name, value); } }
         bool isPrivate;
         public bool IsPrivate { get { return isPrivate; } set { Set(ref isPrivate, value); } }
         string description;
@@ -33,10 +32,6 @@ namespace BreadPlayer.Models
         public string Hash { get { return hash; } set { Set(ref hash, value); } }
         string salt;
         public string Salt { get { return salt; } set { Set(ref salt, value); } }
-
-        public Playlist()
-        {
-
-        }
+        public string[] SongsIds { get; set; }
     }
 }

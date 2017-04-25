@@ -3,6 +3,7 @@ using BreadPlayer.Models;
 using System.Threading.Tasks;
 using BreadPlayer.Common;
 using DBreeze.Objects;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.Service
 {
@@ -10,24 +11,7 @@ namespace BreadPlayer.Service
 	/// Provide services for retrieving and storing Customer information
 	/// </summary>
 	public class LibraryService : ILibraryService
-    {
-        private List<DBreezeIndex> TracksIndexes(Mediafile track)
-        {
-            return new List<DBreezeIndex>()
-            {
-                new DBreezeIndex(1, track.Path) { PrimaryIndex = true },
-                new DBreezeIndex(2, track.FolderPath),
-                new DBreezeIndex(3, track.LeadArtist),
-                new DBreezeIndex(4, track.Album),
-            };
-        }
-        private List<DBreezeIndex> PlaylistIndexes(Playlist playlist)
-        {
-            return new List<DBreezeIndex>()
-            {
-                new DBreezeIndex(1, playlist.Name) { PrimaryIndex = true },
-            };
-        }
+    {       
         private IDatabaseService Database
         {
             get;
@@ -42,27 +26,27 @@ namespace BreadPlayer.Service
         #region ILibraryService 
         public async Task<IEnumerable<Mediafile>> Query(string term)
         {
-            return await Database.QueryRecords<Mediafile>("Tracks", term);
+            return await Database.QueryRecords<Mediafile>(term);
         }
         public async Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {
-            return await Database.GetRecords<Mediafile>("Tracks");
+            return await Database.GetRecords<Mediafile>();
         }
         public void AddMediafile(Mediafile data)
         {
-            Database.InsertRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre, data);
+            Database.InsertRecord(data);
         }
         public async Task AddMediafiles(IEnumerable<Mediafile> data)
         {
-            await Database.InsertTracks(data);
+            await Database.InsertRecords(data);
         }
         public async Task<bool> UpdateMediafile(Mediafile data)
         {
-            return await Database.UpdateRecordAsync("Tracks", data.Path + data.FolderPath + data.LeadArtist+ data.Album + data.Title + data.Genre, data);
+            return await Database.UpdateRecordAsync(data);
         }
         public void UpdateMediafiles(IEnumerable<Mediafile> data)
         {
-            Database.UpdateTracks(data);
+            Database.UpdateRecords(data);
         }
         public void RemoveFolder(string folderPath)
         {
@@ -71,15 +55,15 @@ namespace BreadPlayer.Service
         }
         public async Task RemoveMediafile(Mediafile data)
         {
-            await Database.RemoveRecord("Tracks", data.Path + data.FolderPath + data.LeadArtist + data.Album + data.Title + data.Genre);
+            await Database.RemoveRecord(data);
         }
         public async Task RemoveMediafiles(IEnumerable<Mediafile> data)
         {
-            await Database.RemoveTracks(data);
+            await Database.RemoveRecords(data);
         }
-        public Mediafile GetMediafile(string path)
+        public Mediafile GetMediafile(long id)
         {
-            return Database.GetRecord<Mediafile>("Tracks", path);
+            return (Mediafile)Database.GetRecord(id);
         }
         public void AddPlaylist(Playlist pList)
         {
@@ -94,7 +78,7 @@ namespace BreadPlayer.Service
             return Database.GetRecord<Playlist>("Playlists", name);
         }
         public bool CheckExists<T>(string table, string path)
-        {
+        {sacsdacdascdsa
             return Database.CheckExists<T>(table, path);
         }
         public void RemovePlaylist(Playlist List)

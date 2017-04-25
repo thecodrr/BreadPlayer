@@ -325,7 +325,6 @@ namespace BreadPlayer.Core
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
                
-                mediafile._id = LiteDB.ObjectId.NewObjectId();
                 mediafile.Path = file.Path;
                 mediafile.OrginalFilename = file.DisplayName;
                 var properties = await file.Properties.GetMusicPropertiesAsync(); //(await file.Properties.RetrievePropertiesAsync(new List<string>() { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" }));//.GetMusicPropertiesAsync();

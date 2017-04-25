@@ -89,7 +89,8 @@ namespace BreadPlayer.ViewModels
                     var firstSong = albumGroup.First() ?? new Mediafile();
                     Album album = new Album()
                     {
-                        AlbumSongs = new ThreadSafeObservableCollection<Mediafile>(albumGroup),
+                        SongsIds = albumGroup.Select(t => t.Id).ToArray(),
+                        //AlbumSongs = new ThreadSafeObservableCollection<Mediafile>(albumGroup),
                         Artist = firstSong?.LeadArtist,
                         AlbumName = albumGroup.Key,
                         AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
