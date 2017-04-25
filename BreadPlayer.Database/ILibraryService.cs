@@ -24,12 +24,8 @@ namespace BreadPlayer.Database
         Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
         Task RemoveMediafile(Mediafile data);
-        Mediafile GetMediafile(string path);
-        void RemovePlaylist(Playlist List);
-        bool CheckExists<T>(string table, string path);
-        void AddPlaylist(Playlist pList);
-        Task<IEnumerable<Playlist>> GetPlaylists();
-        Playlist GetPlaylist(string name);
+        Mediafile GetMediafile(long id);
+        bool CheckExists(long id);
         int SongCount { get; }
     }
 }

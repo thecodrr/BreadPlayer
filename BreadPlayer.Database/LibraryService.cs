@@ -71,7 +71,7 @@ namespace BreadPlayer.Database
         }
         public int SongCount
         {
-            get { return Database.GetRecordsCount("Tracks"); }
+            get { return Database.GetRecordsCount(); }
         }
         #endregion
 

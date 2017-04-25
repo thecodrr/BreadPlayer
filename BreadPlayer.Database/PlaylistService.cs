@@ -18,27 +18,32 @@ namespace BreadPlayer.Database
         }
         public void AddPlaylist(Playlist pList)
         {
+            Database.ChangeTable("Playlists", "PlaylistsText");
             Database.InsertRecord(pList);
         }
         public async Task<IEnumerable<Playlist>> GetPlaylists()
         {
+            Database.ChangeTable("Playlists", "PlaylistsText");
             return await Database.GetRecords<Playlist>();
         }
         public Playlist GetPlaylist(long id)
         {
+            Database.ChangeTable("Playlists", "PlaylistsText");
             return (Playlist)Database.GetRecord(id);
         }        
         public async Task RemovePlaylistAsync(Playlist List)
         {
+            Database.ChangeTable("Playlists", "PlaylistsText");
             await Database.RemoveRecord(List);
         }
         public async Task UpdatePlaylistAsync(Playlist list)
         {
+            Database.ChangeTable("Playlists", "PlaylistsText");
             await Database.UpdateRecordAsync(list);
         }
 
         //PlaylistSongs Methods
-        public async Task Insert(IEnumerable<Mediafile> fileCol, Playlist pList)
+        public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, Playlist pList)
         {
             List<PlaylistSong> PlaylistSongs = new List<PlaylistSong>();
             foreach(var file in fileCol)
@@ -50,7 +55,7 @@ namespace BreadPlayer.Database
                 });
             }
             Database.ChangeTable("PlaylistSongs", "PlaylistSongsText");
-            await  Database.InsertRecords(PlaylistSongs);
+            await Database.InsertRecords(PlaylistSongs);
         }
         public void InsertSong(PlaylistSong file)
         {
