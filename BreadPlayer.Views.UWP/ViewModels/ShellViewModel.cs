@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Messengers;
 using BreadPlayer.Common;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using System.Reflection;
 using Windows.Graphics.Display;
 using BreadPlayer.Helpers;
@@ -45,7 +45,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
-        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
+        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
         int SongCount = 0;
         #endregion
 

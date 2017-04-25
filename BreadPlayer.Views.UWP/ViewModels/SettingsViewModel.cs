@@ -29,7 +29,7 @@ using BreadPlayer.PlaylistBus;
 using BreadPlayer.Extensions;
 using Windows.Storage.Search;
 using BreadPlayer.Messengers;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using BreadPlayer.Common;
 using System.Diagnostics;
 using Windows.UI.Core;
@@ -151,7 +151,8 @@ namespace BreadPlayer.ViewModels
                 RoamingSettingsHelper.SaveSetting("ChangeAccentByAlbumArt", changeAccentByAlbumart);
             }
         }
-      
+
+        private LibraryService LibraryService { get; set; }
         #endregion
 
         #region MessageHandling
@@ -160,7 +161,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is List<object> list)
             {
                 TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (new LibraryService(new KeyValueStoreDatabaseService()).SongCount == 0)
+                if (LibraryService.SongCount == 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
@@ -175,6 +176,7 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
+            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
             this.PropertyChanged += SettingsViewModel_PropertyChanged;
             changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -426,7 +428,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(error);
                     return;
                 }
-                LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
+
                 int failedCount = 0;
                 //'i' is a variable for the index of currently processing file
                 short i = 0;
@@ -473,11 +475,10 @@ namespace BreadPlayer.ViewModels
                 }
 
                 //now we load 100 songs into database.
-                await service.AddMediafiles(tempList);
+                await LibraryService.AddMediafiles(tempList);
                 //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
                 //tempList.Sort();
                 TracksCollection.AddRange(tempList);
-                service.Dispose();
 
                 watch.Stop();
                 var secs = watch.Elapsed.TotalSeconds;

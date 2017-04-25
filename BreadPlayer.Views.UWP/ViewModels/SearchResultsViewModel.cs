@@ -1,5 +1,5 @@
 ﻿using BreadPlayer.Models;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace BreadPlayer.ViewModels
       
         public async Task<IEnumerable<Mediafile>> StartSearch(string query)
         {
-            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(null, false));
+            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
             return await service.Query(query);
         }
         public async Task GetAlbumsAndTracks(string query)

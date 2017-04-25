@@ -17,7 +17,19 @@ namespace BreadPlayer.Database
         }
         public async Task InsertAlbums(IEnumerable<Album> albums)
         {
+            Database.ChangeTable("Albums", "AlbumsText");
             await Database.InsertRecords(albums);
+        }
+        public async Task<IEnumerable<Album>> GetAlbumsAsync()
+        {
+            List<Album> Albums = new List<Album>();
+            foreach(var album in await Database.GetRecords<Album>())
+            {
+                var tracks = await GetTracksAsync(album.Id);
+                album.AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(tracks);
+                Albums.Add(album);
+            }
+            return Albums;
         }
         public void Dispose()
         {

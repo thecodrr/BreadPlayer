@@ -39,10 +39,11 @@ namespace BreadPlayer.Database
             Database.ChangeTable(tablename, texttablename);
             Database.InsertRecord(file);
         }
-        public async Task RemoveSongAsync(ChildSong file)
+        public async Task RemoveSongAsync(Mediafile file)
         {
             Database.ChangeTable(tablename, texttablename);
-            await Database.RemoveRecord(file);
+            var record = await Database.GetRecordByQueryAsync(file.Id.ToString());
+            await Database.RemoveRecord(record);
         }
         public bool Exists(long id)
         {
