@@ -281,12 +281,10 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="myback" Background="Transparent">
-                            <StackPanel Orientation="Horizontal">
-                                <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}"/>
-                                <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                            </StackPanel>
-                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}"/>
+                            <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                        </StackPanel>
                         <Grid.Resources>
                             <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                 <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
@@ -376,12 +374,10 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="myback" Background="Transparent">
-                            <StackPanel Orientation="Horizontal">
-                                <Border x:Name="border" Opacity="0" Width="5" Height="20" Margin="0,0,5,0" CornerRadius="3" Background="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-                                <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                            </StackPanel>
-                        </Border>
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="border" Opacity="0" Width="5" Height="20" Margin="0,0,5,0" CornerRadius="3" Background="{ThemeResource SystemControlBackgroundAccentBrush}"/>
+                            <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                        </StackPanel>
                         <Grid.Resources>
                             <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                 <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
@@ -407,7 +403,7 @@
                 <ColumnDefinition Width="38" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
+            <TextBlock FontSize="14" Text="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" FontWeight="SemiLight" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Text="{Binding Path=Label}" VerticalAlignment="Center" Foreground="White" Margin="5,0,0,0"/>
 
@@ -422,7 +418,7 @@
             </Grid.ColumnDefinitions>
             <!--<FontIcon FontSize="16" Glyph="{Binding Path=SymbolAsChar}" VerticalAlignment="Center"
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}"/>-->
-            <FontIcon FontSize="14" Glyph="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
+            <TextBlock FontSize="14" Text="{Binding FontGlyph}" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center"  FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
             <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVM.UITextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center"/>
 
@@ -431,6 +427,7 @@
     <DataTemplate x:Key="MobileShortcutsTemplate">
         <Button FontFamily="Segoe MDL2 Assets" FontSize="18" Background="Transparent" Margin="7,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
     </DataTemplate>
+    
     <Style TargetType="local:SplitViewMenu">
         <Setter Property="NavMenuItemContainerStyle" Value="{StaticResource NavMenuItemContainerStyle}" />
         <Setter Property="NavMenuItemTemplate" Value="{StaticResource NavMenuItemTemplate}" />
@@ -468,7 +465,7 @@
                                         <Setter Target="playlistBtn.Width" Value="355"/>
                                         <Setter Target="playlistAddBtn.Foreground" Value="White"/>
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,75,0,0"/>-->
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                         <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
                                         <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>
@@ -505,7 +502,7 @@
                                         <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
                                         <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
@@ -533,7 +530,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -542,20 +539,49 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>
+                                        <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="backgroundBlur.Visibility" Value="Visible"/>
+                                        <Setter Target="backgroundBorder.Visibility" Value="Collapsed"/>
+                                        <Setter Target="backgroundBorder.Opacity" Value="0.5"/>
+                                        <Setter Target="backgroundBorder.Width" Value="440"/>
+                                        <Setter Target="backgroundBorder.MaxWidth" Value="440"/>
+                                        <Setter Target="backgroundBorder.HorizontalAlignment" Value="Left"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur, Converter={StaticResource TrueToFalse}}"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="backgroundBlur.Visibility" Value="Collapsed"/>
+                                        <Setter Target="backgroundBorder.Visibility" Value="Visible"/>
+                                        <Setter Target="backgroundBorder.Opacity" Value="1"/>
+                                        <Setter Target="backgroundBorder.Width" Value="Auto"/>
+                                        <Setter Target="backgroundBorder.MaxWidth" Value="Infinity"/>
+                                        <Setter Target="backgroundBorder.HorizontalAlignment" Value="Stretch"/>
+
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource ThemeBackground}"/>
 
-                        <blur:BackDrop BlurAmount="30" TintColor="{StaticResource BlurTint}" />
+                        <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15" TintColor="{StaticResource BlurTint}" />
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
                                    OpenPaneLength="355"
                                    CompactPaneLength="48"
-                                   IsTabStop="False" 
+                                   IsTabStop="False" Template="{StaticResource SplitViewControlTemplate1}"
                                   PaneBackground="{ThemeResource ThemeBackground}">
                             <SplitView.Resources>
                                 <Storyboard x:Key="SearchButtonClickedStoryBoard" Duration="0:0:0.5">
@@ -586,66 +612,65 @@
                                 </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
-                                <Grid x:Name="Pane" Margin="30,70,5,0" Background="{ThemeResource PlaybarBrush}" >
-                                   
-                                    <Grid x:Name="UpperGrid" Margin="0,50,0,0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto">
-
-                                            <StackPanel Orientation="Vertical" Grid.Row="0" >
-                                                <ToggleButton x:Name="TogglePaneButton"
-                                      TabIndex="1" Margin="6,0,0,0"
+                                <Grid x:Name="Pane" Margin="30,130,5,0" Background="{ThemeResource PlaybarBrush}" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="2*"/>
+                                    </Grid.RowDefinitions>
+                                    <ToggleButton x:Name="TogglePaneButton"
+                                      TabIndex="1" Margin="6,0,0,0" Grid.Row="0"
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu"
                                       ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
 
-                                                <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
+                                        <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="3" 
+                                                       TabIndex="3" SelectedIndex="3" Grid.Row="1"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                </local:NavMenuListView>
-                                                <MenuFlyoutSeparator x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
+                                        <local:NavMenuListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </local:NavMenuListView.ItemsPanel>
+                                        </local:NavMenuListView>
+                                    <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
 
-                                                <StackPanel x:Name="playlistBtnPanel" Orientation="Horizontal" Width="355">
-                                                    <Button x:Name="playlistBtn" 
+                                    <StackPanel x:Name="playlistBtnPanel" Grid.Row="3" Orientation="Horizontal" Width="355">
+                                            <Button x:Name="playlistBtn" 
                                                 TabIndex="2" Width="270" Margin="5,0,0,0"
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
-                                                    <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
+                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50"  Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
-                                                </StackPanel>
-                                                <local:NavMenuListView x:Name="PlaylistsMenuList"
+                                        </StackPanel>
+                                    <local:NavMenuListView x:Name="PlaylistsMenuList"
                                                        ItemsSource="{TemplateBinding PlaylistsItems}"
                                                        TabIndex="3" 
-                                                       
+                                                       Grid.Row="4"
                                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                        ScrollViewer.VerticalScrollMode="Enabled"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                </local:NavMenuListView>
+                                    </local:NavMenuListView>
+                                    <MenuFlyoutSeparator Grid.Row="5" VerticalAlignment="Bottom" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
 
-                                            </StackPanel>
-                                        </ScrollViewer>
-                                        <StackPanel Grid.Row="1">
-                                            <MenuFlyoutSeparator Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
-
-                                            <local:NavMenuListView x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
+                                    <local:NavMenuListView Grid.Row="6" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
                                                        TabIndex="3"
                                                        Margin="0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                            </local:NavMenuListView>
-                                        </StackPanel>
-                                    </Grid>
+                                    </local:NavMenuListView>
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
@@ -656,9 +681,9 @@
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
                                                 <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                                    <EntranceNavigationTransitionInfo />
+                                                    <DrillInNavigationTransitionInfo />
                                                 </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                            </NavigationThemeTransition>
+                                            </NavigationThemeTransition>                                            
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>
@@ -731,4 +756,522 @@
         </Setter>
     </Style>
 
+
+    <ControlTemplate x:Key="SplitViewControlTemplate1" TargetType="SplitView">
+        <Grid Background="{TemplateBinding Background}">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="DisplayModeStates">
+        <VisualStateGroup.Transitions>
+            <VisualTransition From="Closed" To="OpenOverlayLeft">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="Closed" To="OpenOverlayRight">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="ClosedCompactLeft" To="OpenCompactOverlayLeft">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.Column)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.NegativeOpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.35" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="ClosedCompactRight" To="OpenCompactOverlayRight">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="*"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition2" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.35" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="OpenOverlayLeft" To="Closed">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.52" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.52" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="OpenOverlayRight" To="Closed">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.52" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.52" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="OpenCompactOverlayLeft" To="ClosedCompactLeft">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.Column)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.12" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.NegativeOpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <VisualTransition From="OpenCompactOverlayRight" To="ClosedCompactRight">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="*"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition2" Storyboard.TargetProperty="Width">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.12" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.OpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <!--  ===================================================================================  -->
+                        <VisualTransition From="OpenInlineLeft" To="Closed">
+
+                            <Storyboard>
+
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+
+                                </ObjectAnimationUsingKeyFrames>
+
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+
+                                </ObjectAnimationUsingKeyFrames>
+
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+
+                                    <SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+
+                                    <!--<LinearDoubleKeyFrame KeyTime="0:0:2"  Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>-->
+
+                                </DoubleAnimationUsingKeyFrames>
+
+                                <!--..-->
+
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="TranslateX">
+
+                                    <!--<SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>-->
+
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+
+                                    <LinearDoubleKeyFrame KeyTime="0:0:2" Value="0"/>
+
+                                </DoubleAnimationUsingKeyFrames>
+
+                                <!--..-->
+
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+
+                                    <!--<SplineDoubleKeyFrame KeyTime="0:0:0.5" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>-->
+
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+
+                                    <LinearDoubleKeyFrame KeyTime="0:0:2"  Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+
+                                </DoubleAnimationUsingKeyFrames>
+
+                            </Storyboard>
+
+                        </VisualTransition>
+                        <VisualTransition From="Closed" To="OpenInlineLeft">
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.NegativeOpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <!--..-->
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="TranslateX">
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <!--..-->
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
+                        <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.85" KeySpline="0.1,0.9 0.2,1.0" Value="0"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </VisualTransition>
+            <!--  ===================================================================================  -->
+        </VisualStateGroup.Transitions>
+        <VisualState x:Name="Closed"/>
+        <VisualState x:Name="ClosedCompactLeft">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.Column)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX" To="{Binding TemplateSettings.NegativeOpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}" Duration="0:0:0"/>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="ClosedCompactRight">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="*"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition2" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="2"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                </ObjectAnimationUsingKeyFrames>
+                <DoubleAnimation Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX" To="{Binding TemplateSettings.OpenPaneLengthMinusCompactLength, RelativeSource={RelativeSource Mode=TemplatedParent}}" Duration="0:0:0"/>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenOverlayLeft">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenOverlayRight">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenInlineLeft">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.Column)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenInlineRight">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="*"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition2" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.OpenPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="(Grid.Column)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenCompactOverlayLeft">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.Column)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+        <VisualState x:Name="OpenCompactOverlayRight">
+            <Storyboard>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition1" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="*"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnDefinition2" Storyboard.TargetProperty="Width">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{Binding TemplateSettings.CompactPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Right"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="HorizontalAlignment">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Left"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightDismissLayer" Storyboard.TargetProperty="Visibility">
+                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+        </VisualState>
+    </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition x:Name="ColumnDefinition1" Width="{Binding TemplateSettings.OpenPaneGridLength, FallbackValue=0, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+        <ColumnDefinition x:Name="ColumnDefinition2" Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Content Area -->
+    <Grid x:Name="ContentRoot" Grid.ColumnSpan="2">
+
+        <!--<Grid.Clip>
+                        <RectangleGeometry x:Name="ContentClipRectangle">
+                            <RectangleGeometry.Transform>
+                                <CompositeTransform x:Name="ContentClipRectangleTransform"/>
+                            </RectangleGeometry.Transform>
+                        </RectangleGeometry>
+                    </Grid.Clip>-->
+
+        <!--<Grid.Clip>
+                        <RectangleGeometry Rect="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.OpenPaneLengthMinusCompactLength}">
+                            <RectangleGeometry.Transform>
+                                <TranslateTransform x:Name="ClipGeometryTransform" X="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.NegativeOpenPaneLength}"/>
+                            </RectangleGeometry.Transform>
+                        </RectangleGeometry>
+                    </Grid.Clip>-->
+
+        <Grid.RenderTransform>
+            <CompositeTransform x:Name="ContentTransform" />
+        </Grid.RenderTransform>
+
+        <Border Child="{TemplateBinding Content}"/>
+        <Rectangle x:Name="LightDismissLayer" Fill="Transparent" Visibility="Collapsed"/>
+    </Grid>
+
+    <!-- Pane Content Area-->
+    <Grid
+					x:Name="PaneRoot"
+					Grid.ColumnSpan="2"
+					HorizontalAlignment="Left"
+					Visibility="Collapsed"
+					Background="{TemplateBinding PaneBackground}"
+					Width="{Binding TemplateSettings.OpenPaneLength, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+        <Grid.Clip>
+            <RectangleGeometry x:Name="PaneClipRectangle">
+                <RectangleGeometry.Transform>
+                    <CompositeTransform x:Name="PaneClipRectangleTransform"/>
+                </RectangleGeometry.Transform>
+            </RectangleGeometry>
+        </Grid.Clip>
+        <Grid.RenderTransform>
+            <CompositeTransform x:Name="PaneTransform"/>
+        </Grid.RenderTransform>
+        <Border Child="{TemplateBinding Pane}"/>
+        <Rectangle
+						x:Name="HCPaneBorder"
+						x:DeferLoadStrategy="Lazy"
+						Visibility="Collapsed"
+						Fill="{ThemeResource SystemControlForegroundTransparentBrush}"
+						Width="1"
+						HorizontalAlignment="Right"/>
+    </Grid>
+    </Grid>
+    </ControlTemplate>
 </ResourceDictionary>

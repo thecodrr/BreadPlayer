@@ -35,10 +35,17 @@ namespace BreadPlayer
         public PlaylistView()
         {
             this.InitializeComponent();
-            var deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-            MaxFontSize = deviceFamily.Contains("Mobile") ? 44 : 60;
-            MinFontSize = deviceFamily.Contains("Mobile") ? 34 : 50;
+            Window.Current.SizeChanged += Current_SizeChanged;
+            MaxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
+
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            MaxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
+        }
+
         PlaylistViewModel PlaylistVM;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -61,9 +68,9 @@ namespace BreadPlayer
         {
             if (e.NextView.VerticalOffset < 15)// > (sender as ScrollViewer).VerticalOffset)
             {
-                if(art.Height == 254)
+                if(art.Height == 264)
                 {
-                   art.ZoomAnimate(254, 354, "Height");
+                   art.ZoomAnimate(264, 354, "Height");
                 }
                 if (headerText.FontSize < MaxFontSize)
                 {
@@ -75,7 +82,7 @@ namespace BreadPlayer
             {
                 if (art.Height == 354)
                 {
-                    art.ZoomAnimate(354, 254, "Height");
+                    art.ZoomAnimate(354, 264, "Height");
                 }
                 if (headerText.FontSize > MinFontSize)
                 {

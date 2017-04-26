@@ -56,19 +56,23 @@ namespace BreadPlayer
             {
                 path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
                 string folders = RoamingSettingsHelper.GetSetting<string>(foldersKey, "");
-                folders.Split('|').ToList().ForEach(async(str) =>
+                folders.Split('|').ToList().ForEach(async (str) =>
                 {
-                    if(!string.IsNullOrEmpty(str) && Directory.Exists(str))
-                        SharedLogic.SettingsVM.LibraryFoldersCollection.Add(await StorageFolder.GetFolderFromPathAsync(str));
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        var folder = await StorageFolder.GetFolderFromPathAsync(str);
+                        SharedLogic.SettingsVM.LibraryFoldersCollection.Add(folder);
+                    }
                 });
-               // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
+                // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
                 if (path != "" && SharedLogic.VerifyFileExists(path, 300))
                 {
                     double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
                     try
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
+                            new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
                     }
                     catch (UnauthorizedAccessException ex)
                     {
@@ -239,7 +243,7 @@ namespace BreadPlayer
                 string xml = "<tile> <visual displayName=\"Now Playing\" branding=\"nameAndLogo\">" +
                     "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" +
                     "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
-                    "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
+                    "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"70\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
                     "<binding template=\"TileLarge\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"80\"/> <group> <subgroup hint-weight=\"1\"/> <subgroup hint-weight=\"2\"> <image src=\"" + mediaFile.AttachedPicture + "\" hint-crop=\"circle\"/> </subgroup> <subgroup hint-weight=\"1\"/> </group> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text> </binding> </visual> </tile>";
                 var formattedXML = string.Format(xml, title, artist, album);
                 XmlDocument doc = new XmlDocument();
@@ -251,12 +255,6 @@ namespace BreadPlayer
             {
                 BLogger.Logger.Error("Error occured while updating tile.", ex);
             }
-        }
-
-        public static async void ShowMessage(string msg, string title)
-        {
-            var dialog = new Windows.UI.Popups.MessageDialog(msg, title);
-            await dialog.ShowAsync();
         }
 
         #region Ctor
@@ -275,12 +273,5 @@ namespace BreadPlayer
         }
         #endregion
 
-    }
-    public enum TileSize
-    {
-        Small = 1,
-        Medium = 2,
-        Wide = 3,
-        Large = 4,
     }
 }

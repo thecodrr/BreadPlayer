@@ -13,7 +13,8 @@
     xmlns:controls="using:SplitViewMenu"
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:blur="using:BreadPlayer.Effects" 
-    mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
+    xmlns:BPControls="using:BreadPlayer.Controls"
+    mc:Ignorable="d" Loaded="Page_Loaded">
     <Page.Resources>
        
         <Storyboard x:Name="ImageTransition">
@@ -26,7 +27,7 @@
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
-    <Grid DataContext="{StaticResource ShellVM}">
+    <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -76,12 +77,13 @@
                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="BandStackPanel.Margin" Value="0,0,0,-10"/>
+                        <Setter Target="EqualizerGrid.Visibility" Value="Visible"/>
+                        <Setter Target="EqualizerGrid.Height" Value="220"/>
+                        <Setter Target="BandStackPanel.Margin" Value="20,0,0,-10"/>
                         <Setter Target="ValueIndicatorGrid.Margin" Value="0,15,-10,75"/>
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
                         <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
-                        <Setter Target="EqualizerGrid.Height" Value="220"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -143,7 +145,11 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <Image Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"/>
+        <BPControls:ImageEx Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
+            <Image x:Name="backgroundImage" Opacity="0" Stretch="UniformToFill">
+            </Image>
+           
+        </BPControls:ImageEx>
 
         <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
             <controls:SplitViewMenu.TopNavigationItems>
@@ -170,7 +176,7 @@
         </controls:SplitViewMenu>
 
 
-        <Grid Name="EqualizerGrid" Margin="0,0,0,70" x:DeferLoadStrategy="Lazy" Background="Transparent" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="130"/>
             </Grid.RenderTransform>
@@ -178,14 +184,13 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <blur:BackDrop BlurAmount="30"  Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>
-            <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center" Orientation="Horizontal">
+            <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
+            <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Stretch"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
                     <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="11"/>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                 </Grid>
-                <ScrollViewer>
-                    <ItemsControl Name="BandPanel" ItemsSource="{Binding Path=Player.Effect.EqualizerBands, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl Name="BandPanel" ItemsSource="{Binding Path=Player.Effect.EqualizerBands, UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
@@ -200,12 +205,10 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                </ScrollViewer>
-                <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid2">
+                    <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid2">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
-                </Grid>
-               
+                </Grid>               
             </StackPanel>
             <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
                 <ToggleSwitch Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Center" OnContent="On" OffContent="Off" IsOn="{Binding Source={StaticResource Core}, Path=Player.Effect.EnableEq, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
@@ -237,10 +240,8 @@
             </Border.RenderTransform>
             <!--Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"-->
             <Grid Margin="20,10">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
-                </StackPanel>
-            </Grid>
+                <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
+             </Grid>
         </Border>
         <StackPanel Width="50" Name="ShowMorePanel" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
             <AppBarToggleButton HorizontalAlignment="Center" ToolTipService.ToolTip="Shuffle" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="0,0,0,0"/>

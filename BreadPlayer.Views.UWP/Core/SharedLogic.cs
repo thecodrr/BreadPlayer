@@ -236,7 +236,7 @@ namespace BreadPlayer.Core
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 1000, ThumbnailOptions.ReturnOnlyIfCached | ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, (uint)(InitializeCore.IsMobile ? 500 : 1000), ThumbnailOptions.UseCurrentScale))
                 {
                     if (thumbnail == null) return false;
                     switch (thumbnail.Type)
@@ -327,7 +327,6 @@ namespace BreadPlayer.Core
                 mediafile._id = LiteDB.ObjectId.NewObjectId();
                 mediafile.Path = file.Path;
                 mediafile.OrginalFilename = file.DisplayName;
-                mediafile.State = PlayerState.Stopped;
                 var properties = await file.Properties.GetMusicPropertiesAsync(); //(await file.Properties.RetrievePropertiesAsync(new List<string>() { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" }));//.GetMusicPropertiesAsync();
                 mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
                 mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");

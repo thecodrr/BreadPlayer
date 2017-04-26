@@ -7,9 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" xmlns:Services="using:BreadPlayer.Services"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Extensions="using:BreadPlayer.Extensions" xmlns:Behaviours="using:BreadPlayer.Behaviours" 
-          xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
-     xmlns:Converters="using:BreadPlayer.Converters"
-mc:Ignorable="d">
+    xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
+    xmlns:Converters="using:BreadPlayer.Converters"
+    mc:Ignorable="d">
     <Page.Resources>
         <Converters:BoolToSelectionModeConverter x:Key="BoolToSelectionMode"/>
 
@@ -555,6 +555,8 @@ Control.IsTemplateFocusTarget="True"/>
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="headerText.FontSize" Value="60" />
+                        <Setter Target="headerDesc.FontSize" Value="24" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -562,7 +564,8 @@ Control.IsTemplateFocusTarget="True"/>
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-
+                        <Setter Target="headerText.FontSize" Value="60" />
+                        <Setter Target="headerDesc.FontSize" Value="24" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -573,7 +576,7 @@ Control.IsTemplateFocusTarget="True"/>
                         <Setter Target="headerText.TextAlignment" Value="Center" />
                         <Setter Target="headerText.FontSize" Value="44" />
                         <Setter Target="headerText.Margin" Value="0" />
-                        <Setter Target="headerStack.Margin" Value="0,40,0,0" />
+                        <Setter Target="headerStack.Margin" Value="0,60,0,0" />
                         <Setter Target="headerDesc.Margin" Value="0" />
                         <Setter Target="headerDesc.TextAlignment" Value="Center" />
                     </VisualState.Setters>
@@ -591,7 +594,7 @@ Control.IsTemplateFocusTarget="True"/>
                 </Border.Background>
             <Grid>
                 <Border Background="#99000000" />
-                <Grid Grid.Row="0" RequestedTheme="Dark" Margin="0,120,0,0">
+                <Grid Grid.Row="0" RequestedTheme="Dark" Margin="0,100,0,0">
                     <StackPanel x:Name="headerStack" Margin="35,40,0,0" Grid.Row="0" >
                         <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
                         <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
@@ -602,7 +605,7 @@ Control.IsTemplateFocusTarget="True"/>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Column="0">
                             <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
                             <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
                             <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>

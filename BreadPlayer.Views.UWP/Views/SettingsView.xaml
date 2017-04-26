@@ -40,7 +40,6 @@
                         <AdaptiveTrigger MinWindowWidth="600"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="libraryGrid.MinWidth" Value="400"/>
                         <Setter Target="fileList.MaxWidth" Value="400"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -50,8 +49,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ParentGrid.Margin" Value="10,0,0,0"/>
-                        <Setter Target="libraryGrid.MinWidth" Value="300"/>
-                        <Setter Target="libraryGrid.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="MainPivot.HeaderTemplate" Value="{StaticResource SmallHeaderText}"/>
                         <Setter Target="MainPivot.Margin" Value="3,-15,0,0"/>
@@ -155,6 +152,8 @@
                             <x:String>All Capitals</x:String>
                         </ComboBox>
                     </Grid>
+                    <CheckBox Margin="0,10,0,0" Content="Enable Blur" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
+                    <TextBlock Text="Blur is performance heavy and is not recommended on low-end devices. Please use with caution." TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
                     <CheckBox Margin="0,10,0,0" Content="Change Accent Color By Album Art" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
                     <TextBlock Text="Enabling this makes the player adapt the accent color according to the album art of the currently playing song." TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
                 </StackPanel>
@@ -168,7 +167,7 @@
                         <ColumnDefinition Width="400*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.ColumnSpan="2" MaxWidth="700" HorizontalAlignment="Left">
-                        <TextBlock Margin="0,10,10,0" Text="v2.0-beta"/>
+                        <TextBlock Margin="0,10,10,0" Text="v2.1.0-beta"/>
                         <TextBlock Margin="0,10,10,0" Text="Copyright © 2016 - 2017 Abdullah Atta"/>
                         <TextBlock Margin="0,10,10,0" HorizontalAlignment="Left" TextWrapping="Wrap">
                       <Run FontSize="12">

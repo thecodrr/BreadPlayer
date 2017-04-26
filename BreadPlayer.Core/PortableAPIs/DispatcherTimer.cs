@@ -17,7 +17,6 @@ namespace BreadPlayer.Core
             target_dispatcher = dispatcher;
         }
 
-
         public void Start()
         {
             if (timer == null)

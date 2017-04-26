@@ -122,7 +122,7 @@ namespace BreadPlayer.Service
         {
             using (var tran = engine.GetTransaction())
             {
-                foreach (var record in albums)
+                foreach (var record in albums.ToList())
                 {
                     var ir = tran.ObjectInsert<Album>("Albums", new DBreezeObject<Album>
                     {

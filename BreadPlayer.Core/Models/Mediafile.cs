@@ -24,7 +24,7 @@ namespace BreadPlayer.Models
     public class Mediafile : ObservableObject, IComparable<Mediafile>
     {
         #region Fields
-        private PlayerState state;
+        private PlayerState state = PlayerState.Stopped;
         private string path;
         private string encrypted_meta_file;
         private LiteDB.ObjectId id;
@@ -68,6 +68,7 @@ namespace BreadPlayer.Models
         }
         public int PlayCount { get => playCount; set => Set(ref playCount, value); }
         public string Path { get => path; set => Set(ref path, value); }
+        [JsonIgnore]
         public PlayerState State { get => state; set => Set(ref state, value); }
         [JsonIgnore]
         public string EncryptedMetaFile { get => encrypted_meta_file; set => encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; }

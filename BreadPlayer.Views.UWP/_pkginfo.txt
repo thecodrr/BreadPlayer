@@ -1,1 +1,1 @@
-C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.0.0.0\BreadPlayer.Views.UWP_2.0.0.0_x86_x64_arm.appxbundle
+C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.0.1.0\BreadPlayer.Views.UWP_2.0.1.0_x86_x64_arm.appxbundle
