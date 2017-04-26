@@ -977,7 +977,7 @@ namespace BreadPlayer.ViewModels
                 await RemoveDuplicateGroups().ConfigureAwait(false);
                 await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());
+                    MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
                 });
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
