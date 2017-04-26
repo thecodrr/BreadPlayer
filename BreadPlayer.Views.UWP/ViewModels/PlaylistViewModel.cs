@@ -226,6 +226,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
+            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "", ""));
         }
         public void Init(object data)
         {
@@ -252,7 +253,6 @@ namespace BreadPlayer.ViewModels
         {
             if (await SharedLogic.AskForPassword(playlist))
             {
-                PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "", ""));
                 Songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
                 await Refresh();
             }

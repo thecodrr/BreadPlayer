@@ -3301,8 +3301,8 @@ Control.IsTemplateFocusTarget="True"/>
                                     <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                         <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                                         <!--<MenuFlyoutItem Text="Add to"/>-->
-                                        <MenuFlyoutItem Text="Delete Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                        <MenuFlyoutItem Text="Rename Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                        <MenuFlyoutItem Text="Delete Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
+                                        <MenuFlyoutItem Text="Rename Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                                     </MenuFlyout>
                                 </Grid.Resources>
                                 <Interactivity:Interaction.Behaviors>
