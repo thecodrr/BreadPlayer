@@ -71,15 +71,10 @@ namespace BreadPlayer
                     {
                         double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
                         SharedLogic.Player.PlayerState = PlayerState.Paused;
-                        try
-                        {
-                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
+
+                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
                                 new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
-                        }
+                        
                     }
                 }
             }
@@ -238,9 +233,7 @@ namespace BreadPlayer
         }
         public static void UpdateTile(Mediafile mediaFile)
         {
-            try
-            {
-                string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
+            string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
                 string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
                 string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
                 string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
@@ -254,11 +247,7 @@ namespace BreadPlayer
                 doc.LoadXml(formattedXML);
                 var notification = new TileNotification(doc);
                 TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while updating tile.", ex);
-            }
+       
         }
 
         #region Ctor

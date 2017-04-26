@@ -273,7 +273,6 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    BLogger.Logger.Error("An error occured while trying to play next song.", ex);
                     await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
                     PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(new Action<Mediafile>((Mediafile file) => { file.State = PlayerState.Stopped; }));
@@ -650,7 +649,6 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    BLogger.Logger.Error("Failed to load file. Loading next file...");
                     var playingCollection = GetPlayingCollection();
                     int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3file.Path));
                     Player.IgnoreErrors = false;

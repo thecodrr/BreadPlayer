@@ -52,47 +52,34 @@ namespace BreadPlayer.Extensions
 
         public void AddSortedRange(IEnumerable<T> range)
         {
-            try
-            {
-                // get out if no new items
-                if (range == null || !range.Any()) return;
-                
-                // add the items, making sure no events are fired
+            // get out if no new items
+            if (range == null || !range.Any()) return;
 
-                _isObserving = false;
-                var objectArray = range.ToArray();
-                for (int i = 0; i < objectArray.Count(); i++)
-                {
-                    AddSorted(objectArray[i]);
-                }
-                _isObserving = true;
+            // add the items, making sure no events are fired
 
-                // fire the events
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-                //if(reset)
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-               // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
-            }
-            catch (Exception ex)
+            _isObserving = false;
+            var objectArray = range.ToArray();
+            for (int i = 0; i < objectArray.Count(); i++)
             {
-                BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
+                AddSorted(objectArray[i]);
             }
+            _isObserving = true;
+
+            // fire the events
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+            // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+            //if(reset)
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+            // OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
         }
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            try
-                {
-                    if (_isObserving)
+            if (_isObserving)
                         base.OnCollectionChanged(e);
-                }
-                catch (Exception ex)
-                {
-                    BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
-                }
+                
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {

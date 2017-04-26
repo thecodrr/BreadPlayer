@@ -49,26 +49,13 @@ namespace BreadPlayer
             this.InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
-            BLogger.InitLogger();
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
-            this.UnhandledException += App_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
             }
-        }
-
-        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-        {
-            BLogger.Logger.Error(string.Format("Task ({0}) terminating...", e.Exception.Source), e.Exception);
-        }
-
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            BLogger.Logger.Fatal("Something caused the app to crash!", e.Exception);
         }
 
         private void InitializeTheme()
@@ -81,7 +68,6 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
-            BLogger.Logger.Info("App left background and is now in foreground...");
             deferral.Complete();
         }
 
@@ -90,10 +76,8 @@ namespace BreadPlayer
             var deferral = e.GetDeferral();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc();
-            BLogger.Logger.Info("App has entered background...");
             deferral.Complete();
         }
-        Stopwatch SessionWatch;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -101,8 +85,6 @@ namespace BreadPlayer
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            SessionWatch = Stopwatch.StartNew();
-            BLogger.Logger?.Info("App launched and session started...");
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -120,8 +102,7 @@ namespace BreadPlayer
         /// <param name="e">Details about the navigation failure</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            BLogger.Logger.Error("Navigation failed while navigating to: " + e.SourcePageType.FullName, e.Exception);
-            //throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+           throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
         /// <summary>
@@ -135,8 +116,6 @@ namespace BreadPlayer
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             await LockscreenHelper.ResetLockscreenImage();
-            SessionWatch?.Stop();
-            BLogger.Logger?.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();
@@ -147,17 +126,15 @@ namespace BreadPlayer
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
                 Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { args.Files[0], 0.0, true, 50.0 });
-                BLogger.Logger.Info("File was loaded successfully while app was running...");
                 // ShellVM.Play(args.Files[0]);
             }
             else
             {
                 LoadFrame(args, args.Files[0]);
-                BLogger.Logger.Info("Player opened successfully with file as argument...");
             }
         }
 
-        async void LoadFrame(IActivatedEventArgs args, object arguments)
+        void LoadFrame(IActivatedEventArgs args, object arguments)
         {
             try
             {
@@ -175,26 +152,24 @@ namespace BreadPlayer
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                         //TODO: Load state from previously suspended application
                     }
-                  
-                    
+
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
                     Window.Current.Content = rootFrame;
 
-                    BLogger.Logger.Info("Content set to Window successfully...");
                 }
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    BLogger.Logger.Info("Navigating to Shell...");
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
                 
                  var view = ApplicationView.GetForCurrentView();
                  view.SetPreferredMinSize(new Size(360, 100));
-                
+                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+
                 if (args.Kind != ActivationKind.File)
                 {
                     CoreWindowLogic.LoadSettings();
@@ -206,9 +181,8 @@ namespace BreadPlayer
                 //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                BLogger.Logger?.Info("Exception occured in LoadFrame Method", ex);
             }
         }
 

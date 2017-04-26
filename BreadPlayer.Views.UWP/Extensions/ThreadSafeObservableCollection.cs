@@ -83,15 +83,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
-            try
-            {
-                if (_isObserving)
-                    base.OnCollectionChanged(e);
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
-            }
+            if (_isObserving)
+                    base.OnCollectionChanged(e);            
         });
     }
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -104,9 +97,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// </summary> 
     public void AddRange(IEnumerable<T> range)
     {
-        try
-        {
-            // get out if no new items
+         // get out if no new items
             if (range == null || !range.Any()) return;            
 
             _isObserving = false;
@@ -125,11 +116,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             //if(reset)
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
             //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
-        }
-        catch (Exception ex)
-        {
-            BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
-        }
+        
     }
 
     /// <summary> 

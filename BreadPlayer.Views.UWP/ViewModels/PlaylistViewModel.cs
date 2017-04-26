@@ -99,9 +99,7 @@ namespace BreadPlayer.ViewModels
 
         async void Delete(object para)
         {
-            try
-            {
-                PlaylistArt = null;
+            PlaylistArt = null;
                 var mediafile = para as Mediafile;
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
@@ -109,19 +107,13 @@ namespace BreadPlayer.ViewModels
                 await PlaylistService.RemoveSongAsync(mediafile);
                 Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
                 await Refresh();
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while deleting song from playlist.", ex);
-            }
+           
         }
         public async Task Refresh()
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                try
-                {
-                    PlaylistArt = null;
+                 PlaylistArt = null;
                     TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
                     TotalSongs = Songs.Count.ToString() + " Songs";
                     if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
@@ -132,11 +124,7 @@ namespace BreadPlayer.ViewModels
                     }
                     var mp3 = Songs?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
                     if (mp3 != null) mp3.State = PlayerState.Playing;
-                }
-                catch (Exception ex)
-                {
-                    BLogger.Logger.Error("Error occured while refreshing playlist.", ex);
-                }
+                
             });
         }
         RelayCommand _renamePlaylistCommand;
@@ -160,9 +148,7 @@ namespace BreadPlayer.ViewModels
         }
         async void DeletePlaylist(object playlist)
         {
-            try
-            {
-                var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
+              var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
               
                 if (selectedPlaylist != null && await SharedLogic.AskForPassword(selectedPlaylist))
                 {
@@ -184,11 +170,7 @@ namespace BreadPlayer.ViewModels
                         await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.                        
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while deleting playlist.", ex);
-            }
+           
         }
 
         async void RenamePlaylist(object playlist)

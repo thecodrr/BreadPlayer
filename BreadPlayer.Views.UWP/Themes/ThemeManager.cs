@@ -62,7 +62,6 @@ namespace BreadPlayer.Themes
                     }
                     catch (Exception ex)
                     {
-                        BLogger.Logger.Error("Failed to update accent.", ex);
                         await Core.SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
                     }
                     //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));

@@ -80,65 +80,51 @@ namespace BreadPlayer.Extensions
         }
         public void AddItem(TElement item, bool addToElement = false)
         {
-            try
-            {
-                var key = this.readKey(item);
-                if (addToElement)
-                    Elements.AddSorted(item);
-                var s = FindOrCreateGroup(key);
-                s.Add(item);
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while adding file to grouped collection.", ex);
-            }
+            var key = this.readKey(item);
+            if (addToElement)
+                Elements.AddSorted(item);
+            var s = FindOrCreateGroup(key);
+            s.Add(item);
         }
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
         /// </summary> 
         public async Task AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
         {
-            try
-            { 
-                // get out if no new items
-                if (range == null || !range.Any()) return;
+            // get out if no new items
+            if (range == null || !range.Any()) return;
 
-                if (!addkey)
-                    Elements.AddSortedRange(range);
-                // add the items, making sure no events are fired
-                _isObserving = false;
+            if (!addkey)
+                Elements.AddSortedRange(range);
+            // add the items, making sure no events are fired
+            _isObserving = false;
 
-                var objectArray = range.ToArray();
-                if (async)
-                {
-                    await Task.Run(() =>
-                    {
-                        for (int i = 0; i < objectArray.Count(); i++)
-                        {
-                            AddItem(objectArray[i]);
-                        }                        
-                    });
-                }
-                else
+            var objectArray = range.ToArray();
+            if (async)
+            {
+                await Task.Run(() =>
                 {
                     for (int i = 0; i < objectArray.Count(); i++)
                     {
                         AddItem(objectArray[i]);
                     }
-                }
-                _isObserving = true;
-                // fire the events
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+                });
             }
-            catch (Exception ex)
+            else
             {
-                BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
+                for (int i = 0; i < objectArray.Count(); i++)
+                {
+                    AddItem(objectArray[i]);
+                }
             }
+            _isObserving = true;
+            // fire the events
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
+            // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
         }
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -149,21 +135,13 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
                 System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            try
-            {
-                if (_isObserving) base.OnPropertyChanged(e);
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
-                System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
-            }
+           if (_isObserving) base.OnPropertyChanged(e);
+            
         }
         public void RemoveItem(TElement item)
         {
@@ -315,9 +293,7 @@ namespace BreadPlayer.Extensions
                 return this.lastEffectedGroup;
             }
 
-            try
-            {
-                var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
+            var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
 
                 if (match == null)
                 {
@@ -341,11 +317,7 @@ namespace BreadPlayer.Extensions
                 }
 
                 this.lastEffectedGroup = result;
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while finding or creating a group.", ex);
-            }
+           
 
             return result;
         }

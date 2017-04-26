@@ -429,9 +429,7 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="BreadPlayer.Models.Mediafile"/> to delete.</param>
         public async void Delete(object path)
         {
-            try
-            {
-                int index = 0;
+            int index = 0;
                 if(SelectedItems.Count > 0)
                 {
                     foreach (var item in SelectedItems)
@@ -447,11 +445,6 @@ namespace BreadPlayer.ViewModels
                     await Task.Delay(100);
                     SelectedItem = index < TracksCollection.Elements.Count ? TracksCollection.Elements.ElementAt(index) : TracksCollection.Elements.ElementAt(index - 1);
                 }
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error occured while deleting a song from collection and list.", ex);
-            }
         }
         
         public async void StopAfter(object path)
@@ -785,16 +778,10 @@ namespace BreadPlayer.ViewModels
                             var tempList = new List<Mediafile>();
                             if (TracksCollection.Elements.All(t => t.Path != path))
                             {
-                                try
-                                {
-                                    mp3file = await SharedLogic.CreateMediafile(item as StorageFile);
+                                mp3file = await SharedLogic.CreateMediafile(item as StorageFile);
                                     await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3file).ConfigureAwait(false);
                                     SharedLogic.AddMediafile(mp3file);
-                                }
-                                catch (Exception ex)
-                                {
-                                    BLogger.Logger.Error("Error occured while drag/drop operation.", ex);
-                                }
+                                
                             }
                         }
                         else if (item.IsOfType(StorageItemTypes.Folder))
@@ -1003,7 +990,6 @@ namespace BreadPlayer.ViewModels
             {
                 libraryLoaded = true;
                 await CreateGenreMenu().ConfigureAwait(false);
-                BLogger.Logger.Info("Library successfully loaded!");
                 await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
                 await Task.Delay(10000);
