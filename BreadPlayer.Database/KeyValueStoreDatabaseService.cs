@@ -157,25 +157,29 @@ namespace BreadPlayer.Database
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
-
-                    foreach (var record in records)
+                    if (records.Any())
                     {
-                        record.Id = tran.ObjectGetNewIdentity<long>(TableName);
-                        var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
+                        tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+
+                        foreach (var record in records.ToList())
                         {
-                            Indexes = new List<DBreezeIndex>
+                            record.Id = tran.ObjectGetNewIdentity<long>(TableName);
+                            var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
+                            {
+                                Indexes = new List<DBreezeIndex>
                         {
                         new DBreezeIndex(1, record.Id) {PrimaryIndex = true }, },
-                            NewEntity = true,
-                            //Changes Select-Insert pattern to Insert (speeds up insert process)
-                            Entity = record //Entity itself
-                        },
-                            true);
-                        //Using text-search engine for the free text search
-                        tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                    }
-                    tran.Commit();
+                                NewEntity = true,
+                                //Changes Select-Insert pattern to Insert (speeds up insert process)
+                                Entity = record //Entity itself
+                            },
+                                true);
+                            //Using text-search engine for the free text search
+                            tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
+                        }
+
+                        tran.Commit();
+                    }                    
                 }
             });
         }

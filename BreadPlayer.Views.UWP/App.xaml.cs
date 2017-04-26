@@ -26,15 +26,11 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Storage;
-using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Services.Store.Engagement;
-using BreadPlayer.Core;
 using BreadPlayer.Helpers;
 
 namespace BreadPlayer
@@ -209,8 +205,6 @@ namespace BreadPlayer
                 }
                 //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
-                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
-                await engagementManager.RegisterNotificationChannelAsync();
             }
             catch (Exception ex)
             {

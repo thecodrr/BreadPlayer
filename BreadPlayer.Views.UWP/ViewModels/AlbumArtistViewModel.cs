@@ -24,7 +24,7 @@ namespace BreadPlayer.ViewModels
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbums(message.Payload as List<Mediafile>);
+                await AddAlbums(message.Payload as IEnumerable<Mediafile>);
             }
         }
         /// <summary>

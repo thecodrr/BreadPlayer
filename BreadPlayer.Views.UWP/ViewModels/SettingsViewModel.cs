@@ -418,7 +418,7 @@ namespace BreadPlayer.ViewModels
 
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
-               
+
                 //'count' is for total files got after querying.
                 var count = await queryResult.GetItemCountAsync().AsTask().ConfigureAwait(false);
                 if (count == 0)
@@ -430,71 +430,61 @@ namespace BreadPlayer.ViewModels
                 }
 
                 int failedCount = 0;
-                //'i' is a variable for the index of currently processing file
+
                 short i = 0;
-
-                Stopwatch watch = Stopwatch.StartNew();
-                try
+                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    foreach (StorageFile file in await queryResult.GetFilesAsync())
+                    try
                     {
-                        try
+                        foreach (StorageFile file in await queryResult.GetFilesAsync())
                         {
-                            //A null Mediafile which we will use afterwards.
-                            Mediafile mp3file = null;
-                            i++; //Notice here that we are increasing the 'i' variable by one for each file.
-                                 //we send a message to anyone listening relaying that song count has to be updated.
-                            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
-                            //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                            mp3file = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
-                            mp3file.FolderPath = Path.GetDirectoryName(file.Path);
-                            await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
+                            try
+                            {
+                                Mediafile mp3file = null;
+                                i++;
+                                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, i);
+                                mp3file = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
+                                mp3file.FolderPath = Path.GetDirectoryName(file.Path);
+                                await SaveSingleFileAlbumArtAsync(mp3file, file).ConfigureAwait(false);
 
-                            //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                            await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", 0);
-                            //we then add the processed song into 'tempList' very silently without anyone noticing and hence, efficiently.
-                            tempList.Add(mp3file);
-                            mp3file = null;
+                                await NotificationManager.ShowMessageAsync(i.ToString() + "\\" + count.ToString() + " Song(s) Loaded", 0);
+
+                                tempList.Add(mp3file);
+                                mp3file = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                                //we catch and report any exception without distrubing the 'foreach flow'.
+                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                failedCount++;
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
-                            //we catch and report any exception without distrubing the 'foreach flow'.
-                            await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
-                            failedCount++;
-                        }
+
                     }
+                    catch (Exception ex)
+                    {
+                        string message1 = ex.Message + "||" + ex.InnerException;
+                        await NotificationManager.ShowMessageAsync(message1);
+                    }
+                    await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
 
-                    // BLogger.Logger.Info(string.Format("{0} out of {1} songs loaded. {2} is iteration count.", tempList.Count, count, i));
-                }
-                catch (Exception ex)
-                {
-                    //BLogger.Logger.Error("Failed to import songs in library.", ex);
-                    string message1 = ex.Message + "||" + ex.InnerException;
-                    await NotificationManager.ShowMessageAsync(message1);
-                }
+                    await LibraryService.AddMediafiles(tempList);
+                    await TracksCollection.AddRange(tempList).ConfigureAwait(false);
+                    await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);
 
-                //now we load 100 songs into database.
-                await LibraryService.AddMediafiles(tempList);
-                //now we add 100 songs directly into our TracksCollection which is an ObservableCollection. This is faster because only one event is invoked.
-                //tempList.Sort();
-                TracksCollection.AddRange(tempList);
+                    AlbumArtistViewModel vm = new AlbumArtistViewModel();
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, TracksCollection.Elements);
+                    vm = null;
 
-                watch.Stop();
-                var secs = watch.Elapsed.TotalSeconds;
+                    isLibraryLoading = false;
+                    string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
-                AlbumArtistViewModel vm = new AlbumArtistViewModel();
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_ADD_ALBUMS, tempList);
-                vm = null;
-                //we send the message to load the album. This comes first so there is enough time to load all albums before new list come up.
-                isLibraryLoading = false;
-                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
-
-                BLogger.Logger.Info(message);
-                await NotificationManager.ShowMessageAsync(message);   
-                await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);               
-                tempList.Clear();
+                    BLogger.Logger.Info(message);
+                    await NotificationManager.ShowMessageAsync(message);
+                    tempList.Clear();
+                });
             }
         }
         async Task DeleteDuplicates(IEnumerable<Mediafile> source)
