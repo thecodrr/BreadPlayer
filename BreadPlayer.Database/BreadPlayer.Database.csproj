@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Reference Include="DBreeze">
-      <HintPath>..\BreadPlayer.Views.UWP\bin\x86\Release\DBreeze.dll</HintPath>
+      <HintPath>..\libs\DBreeze.dll</HintPath>
     </Reference>
   </ItemGroup>
 
