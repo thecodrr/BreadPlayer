@@ -55,7 +55,7 @@ namespace BreadPlayer.Database
             return await Task.Run(async () =>
             {
                 Database.ChangeTable(tablename, texttablename);
-                var trackIds = (await Database.GetRecords<ChildSong>()).Where(t => t.PlaylistId == parentID).Select(t => t.SongId);
+                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentID))).Select(t => t.SongId);
                 Database.ChangeTable("Tracks", "TracksText");
                 List<Mediafile> Tracks = new List<Mediafile>();
                 foreach (var id in trackIds)

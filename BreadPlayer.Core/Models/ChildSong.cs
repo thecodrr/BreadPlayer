@@ -15,7 +15,7 @@ namespace BreadPlayer.Models
 
         public string GetTextSearchKey()
         {
-            return string.Format("pId{0};songid={1}", PlaylistId, SongId);
+            return string.Format("pId={0};songid={1}", PlaylistId, SongId);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace BreadPlayer.ViewModels
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
         private PlaylistService PlaylistService { get; set; }
-        private ChildSongsService ChildSongsService { get; set; }
         string totalSongs;
         public string TotalSongs
         {
