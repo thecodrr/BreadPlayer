@@ -45,7 +45,6 @@ namespace BreadPlayer.ViewModels
                         var firstSong = albumSongs.First() ?? new Mediafile();
                         Album album = new Album()
                         {
-                            AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumSongs),
                             Artist = firstSong?.LeadArtist,
                             AlbumName = queryresults[i].Key,
                             AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture

@@ -161,7 +161,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is List<object> list)
             {
                 TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (LibraryService.SongCount == 0)
+                if (LibraryService.SongCount <= 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }

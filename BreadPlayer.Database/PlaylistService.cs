@@ -30,7 +30,11 @@ namespace BreadPlayer.Database
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
             return (Playlist)await Database.GetRecordByQueryAsync(query);
-        }        
+        }  
+        public bool PlaylistExists(string query)
+        {
+            return Database.CheckExists(query);
+        }
         public async Task RemovePlaylistAsync(Playlist List)
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
@@ -39,7 +43,7 @@ namespace BreadPlayer.Database
         public async Task UpdatePlaylistAsync(Playlist list)
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
-            await Database.UpdateRecordAsync(list);
+            await Database.UpdateRecordAsync(list, list.Id);
         }
 
         //PlaylistSongs Methods

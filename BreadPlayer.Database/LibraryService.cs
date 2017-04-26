@@ -42,7 +42,7 @@ namespace BreadPlayer.Database
         }
         public async Task<bool> UpdateMediafile(Mediafile data)
         {
-            return await Database.UpdateRecordAsync(data);
+            return await Database.UpdateRecordAsync(data, data.Id);
         }
         public void UpdateMediafiles(IEnumerable<Mediafile> data)
         {

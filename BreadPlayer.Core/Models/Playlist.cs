@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace BreadPlayer.Models
 {
@@ -34,7 +35,7 @@ namespace BreadPlayer.Models
         public string Hash { get { return hash; } set { Set(ref hash, value); } }
         string salt;
         public string Salt { get { return salt; } set { Set(ref salt, value); } }
-        //public string[] SongsIds { get; set; }
+        public List<long> SongsIds { get; set; } = new List<long>();
 
         public string GetTextSearchKey()
         {

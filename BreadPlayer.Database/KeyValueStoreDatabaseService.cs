@@ -40,7 +40,7 @@ namespace BreadPlayer.Database
         DBreezeEngine engine = null;
         private string TextTableName;
         private string TableName;
-        public KeyValueStoreDatabaseService(string dbPath, string textTableName, string tableName)
+        public KeyValueStoreDatabaseService(string dbPath, string tableName, string textTableName)
         {
             CreateDB(dbPath);
             TextTableName = textTableName;
@@ -67,35 +67,46 @@ namespace BreadPlayer.Database
                 return item.Exists;
             }
         }
+        public bool CheckExists(string query)
+        {
+            using (var tran = engine.GetTransaction())
+            {
+                var records = tran.TextSearch(TableName).Block(query).GetDocumentIDs();
+                if (records.Any())
+                    return true;
+            }
+            return false;
+        }
         public void Dispose()
         {
             StaticKeyValueDatabase.DisposeDatabaseEngine();
         }
 
-        public IDBRecord GetRecordById(long id)
+        public T GetRecordById<T>(long id)
         {
             try
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    return tran.Select<byte[], byte[]>(TableName, 1.ToIndex(id)).ObjectGet<IDBRecord>().Entity;
+                    var entity= tran.Select<byte[], byte[]>(TableName, 1.ToIndex(id)).ObjectGet<T>();
+                    if (entity != null)
+                        return entity.Entity;
+                    else
+                        return default(T);
                 }
             }
             catch
             {
-                return null;
+                return default(T);
             }
         }
-        public async Task<IDBRecord> GetRecordByQueryAsync(string query)
-        {
-            try
-            {
-                return (await QueryRecords<IDBRecord>(query)).First();
-            }
-            catch
-            {
-                return null;
-            }
+        public async Task<T> GetRecordByQueryAsync<T>(string query)
+        {            
+            var records = (await QueryRecords<T>(query));
+            if (records.Any())
+                return records.First();
+            else
+               return default(T);            
         }
         public int GetRecordsCount()
         {
@@ -104,7 +115,7 @@ namespace BreadPlayer.Database
                 using (var tran = engine.GetTransaction())
                 {
                     var count = (int)tran.Count(TableName);
-                    return count;
+                    return count - 1;
                 }
             }
             catch
@@ -117,6 +128,8 @@ namespace BreadPlayer.Database
         {
             using (var tran = engine.GetTransaction())
             {
+                tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                record.Id = tran.ObjectGetNewIdentity<long>(TableName);
                 var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
                 {
                     Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
@@ -125,6 +138,7 @@ namespace BreadPlayer.Database
                     Entity = record //Entity itself
                 },
                         true);
+                tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
                 tran.Commit();
             }
         }
@@ -134,6 +148,8 @@ namespace BreadPlayer.Database
             {
                 using (var tran = engine.GetTransaction())
                 {
+                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+
                     foreach (var record in records)
                     {
                         record.Id = tran.ObjectGetNewIdentity<long>(TableName);
@@ -172,19 +188,20 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<bool> UpdateRecordAsync(IDBRecord record)
+        public async Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
             return await Task.Run(() =>
             {
                 using (var tran = engine.GetTransaction())
                 {
-                    var row = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(record.Id));
+                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                    var row = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(id));
                     if (row.Exists)
                     {
-                        var getRecord = row.ObjectGet<IDBRecord>();
+                        var getRecord = row.ObjectGet<T>();
                         getRecord.Entity = record;
                         getRecord.NewEntity = false;
-                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } }; //PI Primary Index
+                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, id) { PrimaryIndex = true } }; //PI Primary Index
                         if (tran.ObjectInsert(TableName, getRecord, true).EntityWasInserted)
                         {
                             tran.Commit();
@@ -200,6 +217,7 @@ namespace BreadPlayer.Database
         {
             using (var tran = engine.GetTransaction())
             {
+                tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                 foreach (var data in records)
                 {
                     var ord = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(data.Id)).ObjectGet<IDBRecord>();
@@ -218,6 +236,7 @@ namespace BreadPlayer.Database
             {
                 using (var tran = engine.GetTransaction())
                 {
+                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                     tran.ObjectRemove(TableName, 1.ToIndex(record.Id));
                     //remove from text engine too
                     tran.TextRemove(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
@@ -232,6 +251,8 @@ namespace BreadPlayer.Database
             {
                 using (var tran = engine.GetTransaction())
                 {
+                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+
                     foreach (var data in records)
                     {
                         tran.ObjectRemove(TableName, 1.ToIndex(data.Id));

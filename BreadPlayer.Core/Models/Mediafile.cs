@@ -125,7 +125,7 @@ namespace BreadPlayer.Models
 
         public string GetTextSearchKey()
         {
-            return string.Format("{0} {1} {2} {3} {4} {5}", Title, Album, LeadArtist, Year, Genre, FolderPath);
+            return string.Format("id={0} {1} {2} {3} {4} {5} {6}", Id, Title, Album, LeadArtist, Year, Genre, FolderPath);
         }
     }
 }

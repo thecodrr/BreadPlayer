@@ -11,9 +11,6 @@ namespace BreadPlayer.Models
         public string AlbumName { get; set; }
         public string Artist { get; set; }
         public string AlbumArt { get; set; }
-        [JsonIgnore]
-        public ObservableCollection<Mediafile> AlbumSongs { get; set; } = new ObservableCollection<Mediafile>();
-
         public string GetTextSearchKey()
         {
             return string.Format("{0} {1}", AlbumName, Artist);

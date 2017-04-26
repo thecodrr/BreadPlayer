@@ -41,6 +41,7 @@ namespace BreadPlayer.ViewModels
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
         private PlaylistService PlaylistService { get; set; }
+        private ChildSongsService ChildSongsService { get; set; }
         string totalSongs;
         public string TotalSongs
         {
@@ -244,7 +245,7 @@ namespace BreadPlayer.ViewModels
         }
         async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(album.AlbumSongs);
+            Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
             await Refresh();
         }
         async void LoadDB()

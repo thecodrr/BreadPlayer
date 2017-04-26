@@ -167,7 +167,7 @@ namespace BreadPlayer.ViewModels
             }
             set { Set(ref playlistService, value); }
         }
-
+      
         CollectionViewSource viewSource;
         public CollectionViewSource ViewSource
         {
@@ -516,7 +516,7 @@ namespace BreadPlayer.ViewModels
                 return col[0];
             }
             else if (path is Playlist playlist)
-            {
+            { 
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
@@ -847,33 +847,7 @@ namespace BreadPlayer.ViewModels
             await LoadPlaylists();
             UpdateJumplist("Title");
         }
-        private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (TracksCollection.Elements.Count == SongCount)
-            {
-                await RemoveDuplicateGroups().ConfigureAwait(false);
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());
-                });
-                OldItems = TracksCollection.Elements;
-                TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;              
-            }
-            SetNowPlayingSong();
-        }
-        private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
-        {
-            if (!libraryLoaded)
-            {
-                libraryLoaded = true;              
-                await CreateGenreMenu().ConfigureAwait(false);
-                BLogger.Logger.Info("Library successfully loaded!");
-                await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
-                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
-                await Task.Delay(10000);
-                Common.DirectoryWalker.SetupDirectoryWatcher(SharedLogic.SettingsVM.LibraryFoldersCollection);
-            }
-        }
+     
         private void SetNowPlayingSong()
         {
             string path = RoamingSettingsHelper.GetSetting<string>("path", "");
@@ -910,7 +884,7 @@ namespace BreadPlayer.ViewModels
                 List<Mediafile> songList = new List<Mediafile>();
                 if (menu.Tag == null)
                 {
-                    songList = menu.DataContext is Album album ? album.AlbumSongs.ToList() : SelectedItems;
+                    songList = SelectedItems;
                 }
                 else
                 {
@@ -956,7 +930,7 @@ namespace BreadPlayer.ViewModels
                 Playlist.IsPrivate = dialog.Password.Length > 0;
                 Playlist.Hash = salthash.Hash;
                 Playlist.Salt = salthash.Salt;
-                if (PlaylistService.GetPlaylistAsync(Playlist.Name) != null)
+                if (PlaylistService.PlaylistExists(Playlist.Name))
                 {
                     Playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", Playlist.Name, Playlist.Description);
                 }
@@ -993,7 +967,7 @@ namespace BreadPlayer.ViewModels
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
         {
-            if (PlaylistService.GetPlaylistAsync(plist.Name) != null)
+            if (!PlaylistService.PlaylistExists(plist.Name))
             {
                 AddPlaylist(plist);
                 PlaylistService.AddPlaylist(plist);
@@ -1004,6 +978,33 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events
+        private async void TracksCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (TracksCollection.Elements.Count == SongCount)
+            {
+                await RemoveDuplicateGroups().ConfigureAwait(false);
+                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    MusicLibraryLoaded.Invoke(this, new RoutedEventArgs());
+                });
+                OldItems = TracksCollection.Elements;
+                TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
+            }
+            SetNowPlayingSong();
+        }
+        private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!libraryLoaded)
+            {
+                libraryLoaded = true;
+                await CreateGenreMenu().ConfigureAwait(false);
+                BLogger.Logger.Info("Library successfully loaded!");
+                await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_LIBRARY_LOADED, new List<object>() { TracksCollection, grouped });
+                await Task.Delay(10000);
+                Common.DirectoryWalker.SetupDirectoryWatcher(SharedLogic.SettingsVM.LibraryFoldersCollection);
+            }
+        }
         private async void Elements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await Task.Delay(1000);

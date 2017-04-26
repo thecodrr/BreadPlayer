@@ -1,17 +1,18 @@
 ﻿using BreadPlayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
-    public class AlbumService : ChildSongsService, IDisposable
+    public class AlbumService : IDisposable
     {
         private IDatabaseService Database
         {
             get; set;
         }
-        public AlbumService(IDatabaseService database) : base(database, "AlbumSongs", "AlbumSongsText")
+        public AlbumService(IDatabaseService database)
         {
             Database = database;
         }
@@ -22,14 +23,8 @@ namespace BreadPlayer.Database
         }
         public async Task<IEnumerable<Album>> GetAlbumsAsync()
         {
-            List<Album> Albums = new List<Album>();
-            foreach(var album in await Database.GetRecords<Album>())
-            {
-                var tracks = await GetTracksAsync(album.Id);
-                album.AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(tracks);
-                Albums.Add(album);
-            }
-            return Albums;
+            Database.ChangeTable("Albums", "AlbumsText");                  
+            return await Database.GetRecords<Album>();
         }
         public void Dispose()
         {

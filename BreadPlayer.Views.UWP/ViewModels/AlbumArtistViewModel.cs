@@ -80,8 +80,10 @@ namespace BreadPlayer.ViewModels
         public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
             List<Album> albums = new List<Album>();
+            List<ChildSong> childsongs = new List<ChildSong>();
             await Task.Run(() =>
             {
+                Random albumRandom = new Random();
                 foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
                     var firstSong = albumGroup.First() ?? new Mediafile();
@@ -90,7 +92,7 @@ namespace BreadPlayer.ViewModels
                         Artist = firstSong?.LeadArtist,
                         AlbumName = albumGroup.Key,
                         AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                    };
+                    };                           
                     albums.Add(album);
                 }
             }).ContinueWith(async(task) =>
