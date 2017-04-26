@@ -207,14 +207,14 @@ namespace BreadPlayer.ViewModels
                     var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
                     if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                     {
-                        var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
+                        var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description, Id = selectedPlaylist.Id };
                         string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
                         if (File.Exists(path + selectedPlaylist.Name + ".db"))
                             File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
                         SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
                         SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
                         SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                        await PlaylistService.UpdatePlaylistAsync(selectedPlaylist);
+                        await PlaylistService.UpdatePlaylistAsync(pl);
                         Playlist = pl; //set this.Playlist to pl (local variable);
                     }
                 }
