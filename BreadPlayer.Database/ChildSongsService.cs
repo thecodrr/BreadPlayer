@@ -42,7 +42,7 @@ namespace BreadPlayer.Database
         public async Task RemoveSongAsync(Mediafile file)
         {
             Database.ChangeTable(tablename, texttablename);
-            var record = await Database.GetRecordByQueryAsync(file.Id.ToString());
+            var record = await Database.GetRecordByQueryAsync<ChildSong>(string.Format("songid={0}", file.Id));
             await Database.RemoveRecord(record);
         }
         public bool Exists(long id)

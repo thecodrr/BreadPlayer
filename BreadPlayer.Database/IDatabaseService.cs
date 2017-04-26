@@ -9,7 +9,7 @@ namespace BreadPlayer.Database
     {
         void ChangeTable(string tableName, string textTableName);
         void CreateDB(string dbPath);
-        void InsertRecord(IDBRecord record);
+        Task InsertRecord(IDBRecord record);
         Task InsertRecords(IEnumerable<IDBRecord> records);
         Task<IEnumerable<T>> GetRecords<T>();
         Task<IEnumerable<T>> GetRecords<T>(long fromID, long toID);

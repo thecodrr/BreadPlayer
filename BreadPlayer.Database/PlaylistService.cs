@@ -16,12 +16,12 @@ namespace BreadPlayer.Database
         {
             Database = database;
         }
-        public void AddPlaylist(Playlist pList)
+        public async Task AddPlaylistAsync(Playlist pList)
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
-            Database.InsertRecord(pList);
+            await Database.InsertRecord(pList);
         }
-        public async Task<IEnumerable<Playlist>> GetPlaylists()
+        public async Task<IEnumerable<Playlist>> GetPlaylistsAsync()
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
             return await Database.GetRecords<Playlist>();
@@ -29,7 +29,7 @@ namespace BreadPlayer.Database
         public async Task<Playlist> GetPlaylistAsync(string query)
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
-            return (Playlist)await Database.GetRecordByQueryAsync(query);
+            return await Database.GetRecordByQueryAsync<Playlist>(query);
         }  
         public bool PlaylistExists(string query)
         {

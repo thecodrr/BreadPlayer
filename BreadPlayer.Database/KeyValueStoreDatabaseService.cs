@@ -71,7 +71,7 @@ namespace BreadPlayer.Database
         {
             using (var tran = engine.GetTransaction())
             {
-                var records = tran.TextSearch(TableName).Block(query).GetDocumentIDs();
+                var records = tran.TextSearch(TextTableName).Block(query).GetDocumentIDs();
                 if (records.Any())
                     return true;
             }
@@ -101,12 +101,18 @@ namespace BreadPlayer.Database
             }
         }
         public async Task<T> GetRecordByQueryAsync<T>(string query)
-        {            
-            var records = (await QueryRecords<T>(query));
-            if (records.Any())
-                return records.First();
-            else
-               return default(T);            
+        {
+            using (var tran = engine.GetTransaction())
+            {
+                var records = tran.TextSearch(TextTableName).Block(query).GetDocumentIDs();
+                if (records.Any())
+                {
+                    var o = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(records.First())).ObjectGet<T>();
+                    return o.Entity;
+                }
+                else
+                    return default(T);
+            }                     
         }
         public int GetRecordsCount()
         {
@@ -124,23 +130,26 @@ namespace BreadPlayer.Database
             }
         }
 
-        public void InsertRecord(IDBRecord record)
+        public async Task InsertRecord(IDBRecord record)
         {
-            using (var tran = engine.GetTransaction())
-            {
-                tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
-                record.Id = tran.ObjectGetNewIdentity<long>(TableName);
-                var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
-                {
-                    Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
-                    NewEntity = true,
-                    //Changes Select-Insert pattern to Insert (speeds up insert process)
-                    Entity = record //Entity itself
-                },
-                        true);
-                tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                tran.Commit();
-            }
+            await Task.Run(() =>
+          {
+              using (var tran = engine.GetTransaction())
+              {
+                  tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                  record.Id = tran.ObjectGetNewIdentity<long>(TableName);
+                  var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
+                  {
+                      Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
+                      NewEntity = true,
+                      //Changes Select-Insert pattern to Insert (speeds up insert process)
+                      Entity = record //Entity itself
+                  },
+                          true);
+                  tran.TextInsert(TextTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
+                  tran.Commit();
+              }
+          });
         }
         public async Task InsertRecords(IEnumerable<IDBRecord> records)
         {

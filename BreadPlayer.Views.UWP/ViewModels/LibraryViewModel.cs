@@ -870,7 +870,7 @@ namespace BreadPlayer.ViewModels
 
        async Task LoadPlaylists()
         {
-            foreach (var list in await PlaylistService.GetPlaylists())
+            foreach (var list in await PlaylistService.GetPlaylistsAsync())
             {
                 AddPlaylist(list);
             }
@@ -970,7 +970,7 @@ namespace BreadPlayer.ViewModels
             if (!PlaylistService.PlaylistExists(plist.Name))
             {
                 AddPlaylist(plist);
-                PlaylistService.AddPlaylist(plist);
+                await PlaylistService.AddPlaylistAsync(plist);
             }
             if (addsongs)
                 await AddSongsToPlaylist(plist, songs);

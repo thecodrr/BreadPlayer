@@ -31,7 +31,7 @@ namespace BreadPlayer.PlaylistBus
                 List<string> lines = new List<string>();
                 List<Mediafile> PlaylistSongs = new List<Mediafile>();
                 PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
-                service.AddPlaylist(Playlist);
+                await service.AddPlaylistAsync(Playlist);
                 while ((line = reader.ReadLine()) != null)
                 {
                     lines.Add(line);

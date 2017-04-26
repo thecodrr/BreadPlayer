@@ -20,7 +20,7 @@ namespace BreadPlayer.PlaylistBus
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
-                service.AddPlaylist(Playlist);
+                await service.AddPlaylistAsync(Playlist);
                 List<Mediafile> PlaylistSongs = new List<Mediafile>();
                 string line;
                 int index = 0;
