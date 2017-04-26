@@ -634,7 +634,6 @@ namespace BreadPlayer.ViewModels
                         ViewSource.IsSourceGrouped = true;
                         TracksCollection.AddRange(files, true, false);
                         UpdateJumplist(propName);
-
                         await RemoveDuplicateGroups();
                     });
                 }
@@ -670,8 +669,8 @@ namespace BreadPlayer.ViewModels
                 if (ViewSource.IsSourceGrouped)
                 {
                     UpdateJumplist(Sort);
-                    ViewSource.IsSourceGrouped = false;
-                    ViewSource.IsSourceGrouped = true;
+                    //ViewSource.IsSourceGrouped = false;
+                   // ViewSource.IsSourceGrouped = true;
                 }
             });
         }
