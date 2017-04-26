@@ -387,7 +387,8 @@ namespace BreadPlayer.ViewModels
             var mediaFile = Player.CurrentlyPlayingFile;
             mediaFile.PlayCount++;
             mediaFile.LastPlayed = DateTime.Now.ToString();
-            var res = await service.UpdateMediafile(mediaFile);
+            TracksCollection.Elements.First(T => T.Path == mediaFile.Path).LastPlayed = DateTime.Now.ToString();
+            await service.UpdateMediafile(mediaFile);
 
             await ScrobblePlayingSong();
             if (Repeat == "Repeat List")

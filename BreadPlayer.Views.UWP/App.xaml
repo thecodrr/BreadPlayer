@@ -1617,7 +1617,7 @@ Control.IsTemplateFocusTarget="True"/>
                                     <EntranceThemeTransition/>
                                 </TransitionCollection>
                             </StackPanel.Transitions>
-                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;" RequestedTheme="Dark"></TextBlock>
                                 </StackPanel>

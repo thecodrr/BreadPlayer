@@ -174,7 +174,8 @@ namespace BreadPlayer.ViewModels
                     var result = await dia.ShowAsync();
                     if (result.Label == "Yes")
                     {
-                        Services.NavigationService.Instance.NavigateToHome();
+                        if(Services.NavigationService.Instance.Frame.CurrentSourcePageType != Services.NavigationService.Instance.HomePage.GetType())
+                            Services.NavigationService.Instance.NavigateToHome();
                         string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
                         if (File.Exists(path))
                             File.Delete(path);

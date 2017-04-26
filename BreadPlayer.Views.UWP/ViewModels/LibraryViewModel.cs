@@ -521,13 +521,19 @@ namespace BreadPlayer.ViewModels
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
             }
+            else if(path is Album album)
+            {
+                var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query(album.AlbumName + " " + album.Artist));
+                SendLibraryLoadedMessage(songList, sendUpdateMessage);
+                return songList[0];
+            }
             return null;
         }
         private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
         {
             return await Task.Run(() =>
             {
-                MostEatenSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.PlayCount > 1 && !MostEatenSongsCollection.Any(a => a.Path == t.Path)));
+                MostEatenSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.PlayCount > 1 && !MostEatenSongsCollection.All(a => a.Path == t.Path)));
                 return MostEatenSongsCollection;
             });
         }
@@ -535,7 +541,7 @@ namespace BreadPlayer.ViewModels
         {
             return await Task.Run(() =>
             {
-                RecentlyPlayedCollection.AddRange(TracksCollection.Elements.Where(t => t.LastPlayed != null && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed))).Days <= 2 && !MostEatenSongsCollection.Any(a => a.Path == t.Path)));
+                RecentlyPlayedCollection.AddRange(TracksCollection.Elements.Where(t => t.LastPlayed != null && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed))).Days <= 2 && !RecentlyPlayedCollection.All(a => a.Path == t.Path)));
                 return RecentlyPlayedCollection;
             });
         }
@@ -551,7 +557,7 @@ namespace BreadPlayer.ViewModels
         {
             return await Task.Run(() =>
             {
-                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.Any(t => t.Path == item.Path)));
+                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.All(t => t.Path == item.Path)));
                 return RecentlyAddedSongsCollection;
             });
         }
