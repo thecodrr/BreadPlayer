@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BreadPlayer.Common;
 using System;
 
-namespace BreadPlayer.Service
+namespace BreadPlayer.Database
 {
     public interface ILibraryService : IDisposable
     {
@@ -23,13 +23,9 @@ namespace BreadPlayer.Service
         void AddMediafile(Mediafile data);
         Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
-        void RemoveMediafile(Mediafile data);
-        Mediafile GetMediafile(string path);
-        void RemovePlaylist(Playlist List);
-        bool CheckExists<T>(string table, string path);
-        void AddPlaylist(Playlist pList);
-        Task<IEnumerable<Playlist>> GetPlaylists();
-        Playlist GetPlaylist(string name);
+        Task RemoveMediafile(Mediafile data);
+        Task<Mediafile> GetMediafileAsync(string query);
+        bool CheckExists(long id);
         int SongCount { get; }
     }
 }

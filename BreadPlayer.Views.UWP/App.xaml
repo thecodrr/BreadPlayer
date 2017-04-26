@@ -1618,7 +1618,7 @@ Control.IsTemplateFocusTarget="True"/>
                                     <EntranceThemeTransition/>
                                 </TransitionCollection>
                             </StackPanel.Transitions>
-                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.AlbumSongs}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
+                            <Button Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" BorderThickness="0" Width="46" Height="46" Background="{ThemeResource SystemControlHighlightListAccentLowBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Text="&#xE102;" RequestedTheme="Dark"></TextBlock>
                                 </StackPanel>
@@ -2266,8 +2266,8 @@ Control.IsTemplateFocusTarget="True"/>
                     MaxHeight="{TemplateBinding MaxHeight}"
                     MinWidth="{TemplateBinding MinWidth}"
                     MinHeight="{TemplateBinding MinHeight}" >
-                                        <Grid CornerRadius="15" VerticalAlignment="Stretch">
-                                            <blur:BackDrop BlurAmount="10" Visibility="Collapsed" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />
+                                        <Grid CornerRadius="15" Background="{ThemeResource ThemeBackground}" VerticalAlignment="Stretch">
+                                            <!--<blur:BackDrop BlurAmount="10" Visibility="Collapsed" Grid.RowSpan="4" TintColor="{StaticResource BlurTint2}" />-->
                                             <Grid x:Name="DialogSpace" Padding="50" VerticalAlignment="Stretch">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
@@ -2762,7 +2762,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualState x:Name="PointerOver">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Content">
+                                               Storyboard.TargetProperty="Text">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="&#xEB51;" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
@@ -2771,7 +2771,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualState x:Name="Pressed">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Content">
+                                               Storyboard.TargetProperty="Text">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="&#xEB51;" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
@@ -2792,7 +2792,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualState x:Name="Checked">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Content">
+                                               Storyboard.TargetProperty="Text">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="&#xEB52;" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
@@ -2801,7 +2801,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualState x:Name="CheckedPointerOver">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Content">
+                                               Storyboard.TargetProperty="Text">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="&#xEB52;" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
@@ -2810,7 +2810,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         <VisualState x:Name="CheckedPressed">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Content">
+                                               Storyboard.TargetProperty="Text">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="&#xEB52;" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
@@ -3302,8 +3302,8 @@ Control.IsTemplateFocusTarget="True"/>
                                     <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
                                         <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                                         <!--<MenuFlyoutItem Text="Add to"/>-->
-                                        <MenuFlyoutItem Text="Delete Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                        <MenuFlyoutItem Text="Rename Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                        <MenuFlyoutItem Text="Delete Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
+                                        <MenuFlyoutItem Text="Rename Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
                                     </MenuFlyout>
                                 </Grid.Resources>
                                 <Interactivity:Interaction.Behaviors>

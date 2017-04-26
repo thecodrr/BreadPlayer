@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Messengers;
 using BreadPlayer.Common;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using System.Reflection;
 using Windows.Graphics.Display;
 using BreadPlayer.Helpers;
@@ -45,7 +45,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         DispatcherTimer timer;
         UndoRedoStack<Mediafile> history = new UndoRedoStack<Mediafile>();
-        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
+        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
         int SongCount = 0;
         #endregion
 
@@ -110,6 +110,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong();
             }
+            TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
         }
 
         async void HandlePlaySongMessage(Message message)
@@ -386,7 +387,8 @@ namespace BreadPlayer.ViewModels
             var mediaFile = Player.CurrentlyPlayingFile;
             mediaFile.PlayCount++;
             mediaFile.LastPlayed = DateTime.Now.ToString();
-            var res = await service.UpdateMediafile(mediaFile);
+            TracksCollection.Elements.First(T => T.Path == mediaFile.Path).LastPlayed = DateTime.Now.ToString();
+            await service.UpdateMediafile(mediaFile);
 
             await ScrobblePlayingSong();
             if (Repeat == "Repeat List")

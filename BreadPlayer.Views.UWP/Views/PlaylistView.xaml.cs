@@ -49,9 +49,10 @@ namespace BreadPlayer
         PlaylistViewModel PlaylistVM;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            App.Current.Resources["PlaylistVM"] = new PlaylistViewModel();
             PlaylistVM = App.Current.Resources["PlaylistVM"] as PlaylistViewModel;
             PlaylistVM.Init(e.Parameter);
-            this.DataContext = App.Current.Resources["PlaylistVM"];
+            this.DataContext = PlaylistVM;
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)

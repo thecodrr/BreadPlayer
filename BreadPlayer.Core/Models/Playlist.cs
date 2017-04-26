@@ -16,15 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
+using System.Collections.Generic;
+
 namespace BreadPlayer.Models
 {
-   public class Playlist : ObservableObject
+    public class Playlist : ObservableObject, Database.IDBRecord
     {
-        private LiteDB.ObjectId id;
-        public LiteDB.ObjectId _id { get { return id; } set { Set(ref id, value); } }
-
+        private long id;
+        public long Id { get { return id; } set { Set(ref id, value); } }
         string name;
-        public string Name { get { return name; }set { Set(ref name, value); } }
+        public string Name { get { return name; } set { Set(ref name, value); } }
         bool isPrivate;
         public bool IsPrivate { get { return isPrivate; } set { Set(ref isPrivate, value); } }
         string description;
@@ -33,10 +35,11 @@ namespace BreadPlayer.Models
         public string Hash { get { return hash; } set { Set(ref hash, value); } }
         string salt;
         public string Salt { get { return salt; } set { Set(ref salt, value); } }
+        public List<long> SongsIds { get; set; } = new List<long>();
 
-        public Playlist()
+        public string GetTextSearchKey()
         {
-
+            return Name;
         }
     }
 }

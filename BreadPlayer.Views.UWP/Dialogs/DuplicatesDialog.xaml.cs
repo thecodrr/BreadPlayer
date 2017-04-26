@@ -65,9 +65,12 @@ namespace BreadPlayer.Dialogs
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
+            if ((sender as CheckBox).IsChecked == true)
+                listView.SelectAll();
+            else
+                listView.SelectedIndex = -1;
         }
     }
 }

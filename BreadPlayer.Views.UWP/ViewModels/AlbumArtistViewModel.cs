@@ -6,17 +6,17 @@ using BreadPlayer.Models;
 using Windows.Storage;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.ViewModels
 {
     public class AlbumArtistViewModel : ViewModelBase
     {
         #region Database Methods
-        IDatabaseService AlbumDatabaseService;
+        AlbumService AlbumService { get; set; }
         public void InitDB()
         {
-            AlbumDatabaseService = new KeyValueStoreDatabaseService();
+            AlbumService = new AlbumService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Albums", "AlbumsText"));
         }       
         #endregion
         async void HandleAddAlbumMessage(Message message)
@@ -39,12 +39,10 @@ namespace BreadPlayer.ViewModels
       
         public async Task LoadAlbums()
         {
-            AlbumCollection.AddRange(await AlbumDatabaseService.GetRecords<Album>("Albums").ConfigureAwait(false));//.Add(album);
+            AlbumCollection.AddRange(await AlbumService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
                 AlbumsLoaded = false;
-
-            AlbumDatabaseService.Dispose();
         }
 
         private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -82,28 +80,26 @@ namespace BreadPlayer.ViewModels
         public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
             List<Album> albums = new List<Album>();
+            List<ChildSong> childsongs = new List<ChildSong>();
             await Task.Run(() =>
             {
+                Random albumRandom = new Random();
                 foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
                     var firstSong = albumGroup.First() ?? new Mediafile();
                     Album album = new Album()
                     {
-                        AlbumSongs = new ThreadSafeObservableCollection<Mediafile>(albumGroup),
                         Artist = firstSong?.LeadArtist,
                         AlbumName = albumGroup.Key,
                         AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                    };
+                    };                           
                     albums.Add(album);
                 }
-            }).ContinueWith((task) =>
+            }).ContinueWith(async(task) =>
             {
-                AlbumDatabaseService.InsertAlbums(albums);
+                await AlbumService.InsertAlbums(albums);
                 AlbumCollection.AddRange(albums);
-                AlbumDatabaseService.Dispose();
-            });
-           
-        }
-        
+            });           
+        }        
     }
 }

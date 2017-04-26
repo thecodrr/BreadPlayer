@@ -1,5 +1,5 @@
 ﻿using BreadPlayer.Models;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -17,7 +18,7 @@ namespace BreadPlayer.PlaylistBus
         {
             //Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
             //Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
-            //Playlist Playlist = new Playlist() { Name = file.DisplayName };
+            Playlist Playlist = new Playlist() { Name = file.DisplayName };
             using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 bool hdr = false; //[playlist] header
@@ -29,6 +30,8 @@ namespace BreadPlayer.PlaylistBus
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
                 List<Mediafile> PlaylistSongs = new List<Mediafile>();
+                PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
+                await service.AddPlaylistAsync(Playlist);
                 while ((line = reader.ReadLine()) != null)
                 {
                     lines.Add(line);
@@ -67,15 +70,14 @@ namespace BreadPlayer.PlaylistBus
                         continue;
                     }
                 }
-
+               
                 for (int i = 0; i < noe; i++)
                 {
                     await Task.Run(async () =>
                     {
                         try
                         {
-                            PlaylistService service = new PlaylistService(file.DisplayName, false, "");
-                            count++;
+                          
                             string trackPath = tracks[i, 0];
                             FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
                             string path = trackPath;
@@ -90,10 +92,7 @@ namespace BreadPlayer.PlaylistBus
                             await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
                             await Core.SharedLogic.NotificationManager.ShowMessageAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
-
-                            if (!service.GetCollection<Mediafile>("songs").Exists(t => t._id == mp3File._id))
-                                service.Insert(mp3File);
-
+                            PlaylistSongs.Add(mp3File);
                             StorageApplicationPermissions.FutureAccessList.Remove(token);
                         }
                         catch
@@ -101,6 +100,7 @@ namespace BreadPlayer.PlaylistBus
                             failedFiles++;
                         }
                     });
+                    await service.InsertTracksAsync(PlaylistSongs, Playlist);
                 }
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
                 await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);

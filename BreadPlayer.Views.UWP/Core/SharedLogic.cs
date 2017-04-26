@@ -7,8 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
-using BreadPlayer.Service;
-using System.Windows.Input;
 using Windows.System;
 using SplitViewMenu;
 using Windows.Graphics.Imaging;
@@ -21,8 +19,8 @@ using Windows.Storage.Pickers;
 using BreadPlayer.Dialogs;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Common;
-using System.Collections.Generic;
 using Windows.UI.Xaml;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.Core
 {
@@ -37,6 +35,7 @@ namespace BreadPlayer.Core
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
+        public static string DatabasePath { get => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB"); }
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
@@ -232,11 +231,12 @@ namespace BreadPlayer.Core
         public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mediafile)
         {
             var albumArt = AlbumArtFileExists(mediafile);
-            if (!albumArt.NotExists) return false;
+            if (!albumArt.NotExists)
+                return false;
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, (uint)(InitializeCore.IsMobile ? 500 : 1000), ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
                 {
                     if (thumbnail == null) return false;
                     switch (thumbnail.Type)
@@ -252,25 +252,25 @@ namespace BreadPlayer.Core
                                 return true;
                             }
 
-                        case ThumbnailType.Icon:
-                            using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
-                            {
-                                if (tagFile.Tag.Pictures.Length >= 1)
-                                {
-                                    var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                        //case ThumbnailType.Icon:
+                        //    using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                        //    {
+                        //        if (tagFile.Tag.Pictures.Length >= 1)
+                        //        {
+                        //            var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
 
-                                    using (var albumstream = await image.OpenStreamForWriteAsync())
-                                    {
-                                        await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                                    }
-                                    return true;
-                                }
-                            }
-                            break;
+                        //            using (var albumstream = await image.OpenStreamForWriteAsync())
+                        //            {
+                        //                await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                        //            }
+                        //            return true;
+                        //        }
+                        //    }
+                          //  break;
                         default:
                             break;
                     }
-                    GC.Collect();
+                   // GC.Collect();
                 }
             }
             catch (Exception ex)
@@ -281,26 +281,25 @@ namespace BreadPlayer.Core
             return false;
         }
 
-        static LibraryService service = new LibraryService(new KeyValueStoreDatabaseService());
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file == null) return false;
 
-            using (service = new LibraryService(new KeyValueStoreDatabaseService()))
+            using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
             {
                 SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
                 service.AddMediafile(file);
                 return true;
             }
         }
-        public static bool RemoveMediafile(Mediafile file)
+        public static async Task<bool> RemoveMediafile(Mediafile file)
         {
             if (file == null) return false;
 
-            using (service = new LibraryService(new KeyValueStoreDatabaseService()))
+            using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
             {
                 SettingsViewModel.TracksCollection.Elements.Remove(file);
-                service.RemoveMediafile(file);
+                await service.RemoveMediafile(file);
                 return true;
             }
         }
@@ -324,7 +323,6 @@ namespace BreadPlayer.Core
                     Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
                
-                mediafile._id = LiteDB.ObjectId.NewObjectId();
                 mediafile.Path = file.Path;
                 mediafile.OrginalFilename = file.DisplayName;
                 var properties = await file.Properties.GetMusicPropertiesAsync(); //(await file.Properties.RetrievePropertiesAsync(new List<string>() { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" }));//.GetMusicPropertiesAsync();

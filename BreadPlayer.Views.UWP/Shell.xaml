@@ -80,6 +80,7 @@
                         <Setter Target="EqualizerGrid.Visibility" Value="Visible"/>
                         <Setter Target="EqualizerGrid.Height" Value="220"/>
                         <Setter Target="BandStackPanel.Margin" Value="20,0,0,-10"/>
+                        <Setter Target="BandStackPanel.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="ValueIndicatorGrid.Margin" Value="0,15,-10,75"/>
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
@@ -185,7 +186,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
-            <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Stretch"  Orientation="Horizontal">
+            <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
                     <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="11"/>
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>

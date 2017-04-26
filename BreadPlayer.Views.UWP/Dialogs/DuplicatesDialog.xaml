@@ -18,6 +18,11 @@
         </Style>
     </ContentDialog.Resources>
     <Grid>
-        <ListView x:Name="listView" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Center" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" SelectionChanged="ListView_SelectionChanged" ItemTemplate="{StaticResource MediafileUnselectedNarrowTemplate}"></ListView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <CheckBox Content="Select All" HorizontalAlignment="Right" Click="CheckBox_Click"/>
+        <ListView x:Name="listView" Grid.Row="1" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Center" IsMultiSelectCheckBoxEnabled="True" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" ItemTemplate="{StaticResource MediafileUnselectedNarrowTemplate}"/>
     </Grid>
 </ContentDialog>

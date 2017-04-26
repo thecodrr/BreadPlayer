@@ -1,5 +1,5 @@
 ﻿using BreadPlayer.Models;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace BreadPlayer.ViewModels
       
         public async Task<IEnumerable<Mediafile>> StartSearch(string query)
         {
-            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(null, false));
+            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
             return await service.Query(query);
         }
         public async Task GetAlbumsAndTracks(string query)
@@ -45,7 +45,6 @@ namespace BreadPlayer.ViewModels
                         var firstSong = albumSongs.First() ?? new Mediafile();
                         Album album = new Album()
                         {
-                            AlbumSongs = new System.Collections.ObjectModel.ObservableCollection<Mediafile>(albumSongs),
                             Artist = firstSong?.LeadArtist,
                             AlbumName = queryresults[i].Key,
                             AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture

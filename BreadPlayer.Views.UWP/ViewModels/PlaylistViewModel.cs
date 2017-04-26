@@ -29,7 +29,7 @@ using System.Globalization;
 using BreadPlayer.Core;
 using System.IO;
 using Windows.Storage;
-using BreadPlayer.Service;
+using BreadPlayer.Database;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
@@ -40,7 +40,7 @@ namespace BreadPlayer.ViewModels
         public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
         Playlist playlist;
         public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
-       
+        private PlaylistService PlaylistService { get; set; }
         string totalSongs;
         public string TotalSongs
         {
@@ -96,7 +96,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
         }
-        
+
         async void Delete(object para)
         {
             try
@@ -106,13 +106,9 @@ namespace BreadPlayer.ViewModels
                 if (mediafile == null)
                     mediafile = Player.CurrentlyPlayingFile;
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
-
-                using (PlaylistService service = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
-                {
-                    service.Remove(mediafile);
-                    Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
-                    await Refresh();
-                }
+                await PlaylistService.RemoveSongAsync(mediafile);
+                Songs.Remove(Songs.First(t => t.Path == mediafile.Path));
+                await Refresh();
             }
             catch (Exception ex)
             {
@@ -178,16 +174,14 @@ namespace BreadPlayer.ViewModels
                     var result = await dia.ShowAsync();
                     if (result.Label == "Yes")
                     {
-                        Services.NavigationService.Instance.NavigateToHome();
+                        if(Services.NavigationService.Instance.Frame.CurrentSourcePageType != Services.NavigationService.Instance.HomePage.GetType())
+                            Services.NavigationService.Instance.NavigateToHome();
                         string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\" + selectedPlaylist.Name + ".db";
                         if (File.Exists(path))
                             File.Delete(path);
                         SharedLogic.PlaylistsItems.Remove(SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                         SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                        using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
-                        {
-                            service.RemovePlaylist(selectedPlaylist);//delete from database.
-                        }
+                        await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.                        
                     }
                 }
             }
@@ -196,38 +190,34 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while deleting playlist.", ex);
             }
         }
-       
+
         async void RenamePlaylist(object playlist)
         {
             try
-            {                
-                    var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.                    
-                    if (await SharedLogic.AskForPassword(selectedPlaylist))
+            {
+                var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.                    
+                if (await SharedLogic.AskForPassword(selectedPlaylist))
+                {
+                    var dialog = new InputDialog()
                     {
-                        var dialog = new InputDialog()
-                        {
-                            Title = "Rename this playlist",
-                            Text = selectedPlaylist.Name,
-                            Description = selectedPlaylist.Description
-                        };
-                        var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
-                        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-                        {
-                            var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description };
-                            string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
-                            if (File.Exists(path + selectedPlaylist.Name + ".db"))
-                                File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
-                            SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                            SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
-                            SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                            using (LibraryService service = new LibraryService(new KeyValueStoreDatabaseService()))
-                            {
-                                service.RemovePlaylist(selectedPlaylist);//delete from database.
-                                service.AddPlaylist(pl); //add new playlist in the database.
-                                Playlist = pl; //set this.Playlist to pl (local variable);
-                            }
-                        }
-                    }                
+                        Title = "Rename this playlist",
+                        Text = selectedPlaylist.Name,
+                        Description = selectedPlaylist.Description
+                    };
+                    var Playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                    if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                    {
+                        var pl = new Playlist() { Name = dialog.Text, Description = dialog.Description, Id = selectedPlaylist.Id };
+                        string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
+                        if (File.Exists(path + selectedPlaylist.Name + ".db"))
+                            File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
+                        SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                        SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                        SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                        await PlaylistService.UpdatePlaylistAsync(pl);
+                        Playlist = pl; //set this.Playlist to pl (local variable);
+                    }
+                }
             }
             catch (Exception)
             {
@@ -236,6 +226,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
+            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "", ""));
         }
         public void Init(object data)
         {
@@ -255,18 +246,15 @@ namespace BreadPlayer.ViewModels
         }
         async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(album.AlbumSongs);
+            Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
             await Refresh();
         }
         async void LoadDB()
         {
             if (await SharedLogic.AskForPassword(playlist))
             {
-                using (PlaylistService PlaylistService = new PlaylistService(Playlist.Name, Playlist.IsPrivate, Playlist.Hash))
-                {
-                    Songs.AddRange(PlaylistService.GetTracks());
-                    await Refresh();
-                }
+                Songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
+                await Refresh();
             }
             else
             {

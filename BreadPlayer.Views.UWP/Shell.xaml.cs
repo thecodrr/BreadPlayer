@@ -15,6 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Extensions;
 using BreadPlayer.Models;
 using BreadPlayer.ViewModels;
@@ -54,11 +56,29 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
+          
         }
            
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is StorageFile)
+            if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
+            {
+                string releaseNotes = "FIXES:\r\n\r\nWe fixed the performance issue. The player will be a lot smoother.\n" +
+                    "Fixed issue where a few album arts were loading.\n" +
+                    "Fixed issue with setting album art as lockscreen.\n" +
+                    "Fixed various crashes and bugs.\r\n\r\n" + 
+                    "NEW THINGS:\r\n\r\n" +
+                    "Added an option to turn on or off the blur effect.\n" +
+                    "Added 'Select All' checkbox in Duplicates Dialog.\n" +
+                    "Removed the shitty what's new splash screen and added this.\r\n\r\n" + 
+                    "IMPROVEMENTS:\r\n\r\n" +
+                    "Greatly improved performance and navigation.\n" +
+                    "Improved Equalizer UI.\n" +
+                    "Improved UI (less glitches etc.)\r\n";
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.1.0");
+                RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
+            }
+            if (e.Parameter is StorageFile)
                 Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
             
             base.OnNavigatedTo(e);
