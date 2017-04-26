@@ -266,7 +266,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Height="Auto">
                         <Grid>
                             <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
-                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeBackground}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                         </Grid>
                         <StackPanel  x:Name="tagsPanel" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>

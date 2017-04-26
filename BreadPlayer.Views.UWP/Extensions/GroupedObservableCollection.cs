@@ -96,7 +96,7 @@ namespace BreadPlayer.Extensions
         /// <summary> 
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
         /// </summary> 
-        public async void AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
+        public async Task AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
         {
             try
             { 
