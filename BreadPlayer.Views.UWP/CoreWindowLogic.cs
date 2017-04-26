@@ -51,35 +51,39 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
-            if (!onlyVol)
+            try
             {
-                path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
-                string folders = RoamingSettingsHelper.GetSetting<string>(foldersKey, "");
-                folders.Split('|').ToList().ForEach(async (str) =>
+                var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
+                if (!onlyVol)
                 {
-                    if (!string.IsNullOrEmpty(str))
+                    path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
+                    string folders = RoamingSettingsHelper.GetSetting<string>(foldersKey, "");
+                    folders.Split('|').ToList().ForEach(async (str) =>
                     {
-                        var folder = await StorageFolder.GetFolderFromPathAsync(str);
-                        SharedLogic.SettingsVM.LibraryFoldersCollection.Add(folder);
-                    }
-                });
-                // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-                if (path != "" && SharedLogic.VerifyFileExists(path, 300))
-                {
-                    double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
-                    SharedLogic.Player.PlayerState = PlayerState.Paused;
-                    try
+                        if (!string.IsNullOrEmpty(str))
+                        {
+                            var folder = await StorageFolder.GetFolderFromPathAsync(str);
+                            SharedLogic.SettingsVM.LibraryFoldersCollection.Add(folder);
+                        }
+                    });
+                    // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
+                    if (path != "" && SharedLogic.VerifyFileExists(path, 300))
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
-                            new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
+                        double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
+                        SharedLogic.Player.PlayerState = PlayerState.Paused;
+                        try
+                        {
+                            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD,
+                                new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         public static void SaveSettings()
