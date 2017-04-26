@@ -77,6 +77,7 @@
                     <SolidColorBrush x:Key="DisableBrush" Color="Gray" Opacity="0.95"/>
                     <SolidColorBrush x:Key="ImageFadeBrush" Color="#141414" Opacity="0.9"/>
                     <SolidColorBrush x:Key="PlaybarBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.8" />
+                    <SolidColorBrush x:Key="BackgroundOverlay" Color="#141414" Opacity="0.8"/>
                     <Color x:Key="BlurTint">#CC0C0C0C</Color>
                     <Color x:Key="BlurTint2">#990C0C0C</Color>
                 </ResourceDictionary>
