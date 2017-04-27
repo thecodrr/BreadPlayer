@@ -206,7 +206,6 @@ namespace BreadPlayer
                 {
                     CoreWindowLogic.LoadSettings(true);
                 }
-                //var vm = (this.Resources["AccountsVM"] as AccountsViewModel);
                 Window.Current.Activate();
             }
             catch (Exception ex)
