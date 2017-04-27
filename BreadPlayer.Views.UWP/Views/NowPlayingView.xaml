@@ -30,7 +30,7 @@
                 <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Player.CurrentlyPlayingFile.Album}" FontSize="18" FontWeight="ExtraLight"/>
             </StackPanel>
         </StackPanel>
-        <Grid Margin="0,31,0,0" x:Name="playcontrolsPanel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
+        <Grid Margin="0,0,0,0" x:Name="playcontrolsPanel" DataContext="{StaticResource ShellVM}" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
             <StackPanel VerticalAlignment="Bottom">
                 <AppBarButton/>
                 <AppBarButton />

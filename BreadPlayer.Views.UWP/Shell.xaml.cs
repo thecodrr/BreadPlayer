@@ -46,8 +46,7 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
             SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
-            //new CoreWindowLogic();
-            this.DataContext = new ShellViewModel();
+            new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
             LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
             {
@@ -55,7 +54,7 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
-          
+            NowPlayingItem.Command = ShellVM.NavigateToNowPlayingViewCommand;
         }
            
         protected async override void OnNavigatedTo(NavigationEventArgs e)

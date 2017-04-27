@@ -14,7 +14,7 @@
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:blur="using:BreadPlayer.Effects" 
     xmlns:BPControls="using:BreadPlayer.Controls"
-    mc:Ignorable="d" Loaded="Page_Loaded">
+    mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
        
         <Storyboard x:Name="ImageTransition">
@@ -101,6 +101,8 @@
                         <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>-->
                         <Setter Target="hamburgerMenu.Margin" Value="0,0,0,0"/>
                         <Setter Target="playbarPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
+                        <Setter Target="hamburgerMenu.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -168,7 +170,7 @@
                 <!--<controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>-->
 
                 <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" FontGlyph="&#x0049;" Tooltip="Navigate to your music library." Label="Favorites" Symbol="Accept" Arguments="Favorites"></controls:SimpleNavMenuItem>
-                <!--<controls:SimpleNavMenuItem DestinationPage="local:NowPlayingView" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>-->
+                <controls:SimpleNavMenuItem DestinationPage="local:LibraryView" Arguments="MusicCollection"  x:Name="NowPlayingItem" FontGlyph="&#x004b;" Tooltip="Navigate to your music library." Label="Now Baking" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
             </controls:SplitViewMenu.TopNavigationItems>
             <controls:SplitViewMenu.BottomNavigationItems>
                 <controls:SimpleNavMenuItem DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="Navigate to your accounts." Label="My Bakeries" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -336,7 +338,8 @@
 
             </Grid>
         </StackPanel>
-       
+        
+        <Frame x:Name="NowPlayingFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" SourcePageType="local:NowPlayingView"/>
     </Grid>
 
 </Page>

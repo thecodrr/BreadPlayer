@@ -13,7 +13,6 @@ namespace BreadPlayer
         public NowPlayingView()
         {
             this.InitializeComponent();
-            (App.Current.Resources["ShellVM"] as ShellViewModel).IsPlaybarHidden = true;
         }
     }
 }

@@ -52,6 +52,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
@@ -167,7 +168,7 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _playPauseCommand;
         DelegateCommand _setRepeatCommand;
         DelegateCommand showEqualizerCommand;
-   
+
         /// <summary>
         /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -181,10 +182,15 @@ namespace BreadPlayer.ViewModels
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) _playPreviousCommand = new DelegateCommand(PlayPrevious); return _playPreviousCommand; } }
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) _setRepeatCommand = new DelegateCommand(SetRepeat); return _setRepeatCommand; } }
         public DelegateCommand ShowEqualizerCommand { get { if (showEqualizerCommand == null) showEqualizerCommand = new DelegateCommand(ShowEqualizer); return showEqualizerCommand; } }
+        public DelegateCommand NavigateToNowPlayingViewCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
 
         #endregion
 
         #region Implementation 
+        private void NavigateToNowPlayingView()
+        {
+            IsPlaybarHidden = true;
+        }
         private void ShowEqualizer()
         {
             DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;

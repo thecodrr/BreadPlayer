@@ -87,7 +87,8 @@
             <VM:LibraryViewModel x:Key="LibVM"/>
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>
             <VM:AccountsViewModel x:Key="AccountsVM"/>
-
+            <VM:ShellViewModel x:Key="ShellVM"/>
+            
             <Converter:PathToImageSourceConverter x:Key="PathToImage"/>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
             <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
