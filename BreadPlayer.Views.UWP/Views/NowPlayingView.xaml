@@ -31,7 +31,7 @@
             </StackPanel>
         </StackPanel>
         <Grid Margin="0,31,0,0" x:Name="playcontrolsPanel" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="50" HorizontalAlignment="Right" Background="{ThemeResource SystemControlBackgroundAccentBrush}">
-            <StackPanel VerticalAlignment="Bottom">
+            <StackPanel VerticalAlignment="Bottom" DataContext="{StaticResource ShellVM}">
                 <AppBarButton/>
                 <AppBarButton />
                 <AppBarButton Icon="Volume" Width="55" Height="50"/>

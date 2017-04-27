@@ -214,13 +214,19 @@ namespace BreadPlayer.ViewModels
         #region Implementation
         private async void Reset()
         {
-            Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
+            try
+            {
+                Messenger.Instance.NotifyColleagues(MessageTypes.MSG_DISPOSE);
                 LibraryFoldersCollection.Clear();
                 await ApplicationData.Current.ClearAsync();
                 ResetCommand.IsEnabled = false;
                 await Task.Delay(200);
                 ResetCommand.IsEnabled = true;
-           
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while resetting the player.", ex);
+            }
         }
         private async void ImportPlaylists()
         {
@@ -394,6 +400,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
+                BLogger.Logger.Error("Auto Loading of library failed.", ex);
                 await NotificationManager.ShowMessageAsync(ex.Message);
             }
         }
@@ -417,6 +424,7 @@ namespace BreadPlayer.ViewModels
                 if (count == 0)
                 {
                     string error = "No songs found!";
+                    BLogger.Logger.Error("No songs were found!");
                     await NotificationManager.ShowMessageAsync(error);
                     return;
                 }
@@ -473,6 +481,7 @@ namespace BreadPlayer.ViewModels
                     isLibraryLoading = false;
                     string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
+                    BLogger.Logger.Info(message);
                     await NotificationManager.ShowMessageAsync(message);
                     tempList.Clear();
                 });
@@ -554,6 +563,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    BLogger.Logger.Info("Failed to save albumart.", ex);
                     await SharedLogic.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3file.OrginalFilename);
                 }
             }
@@ -611,6 +621,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
+                BLogger.Logger.Error("Some error occured while renaming, deleting or editting the modified files.", ex);
                 await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
             }
         }

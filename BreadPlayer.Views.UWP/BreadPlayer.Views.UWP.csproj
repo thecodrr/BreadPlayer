@@ -132,6 +132,8 @@
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
+    <Compile Include="BreadLogger\AsyncFileTarget.cs" />
+    <Compile Include="BreadLogger\BLogger.cs" />
     <Compile Include="Common\BackDrop.cs" />
     <Compile Include="Common\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
@@ -409,6 +411,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="XLog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\XLog.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
