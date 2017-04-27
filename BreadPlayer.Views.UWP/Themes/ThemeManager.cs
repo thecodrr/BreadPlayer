@@ -47,7 +47,7 @@ namespace BreadPlayer.Themes
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Default") == "Light" && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
+                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
                 {
                     try
                     {
