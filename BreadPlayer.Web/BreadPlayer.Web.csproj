@@ -139,7 +139,6 @@
     <Compile Include="BaiduLyricsAPI\Response\SongPlayResponse.cs" />
     <Compile Include="BaiduLyricsAPI\Util\Util.cs" />
     <Compile Include="Lastfm\BreadScrobbler.cs" />
-    <Compile Include="Lastfm\InitializeLastfm.cs" />
     <Compile Include="Lastfm\Lastfm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagParser\BreadParser.cs" />
