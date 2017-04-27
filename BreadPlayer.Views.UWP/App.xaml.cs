@@ -198,7 +198,7 @@ namespace BreadPlayer
                 if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
                     BLogger.Logger.Info("Trying to maximize to full screen.");
-                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    view.TryEnterFullScreenMode();
                     BLogger.Logger.Info("Maximized to full screen.");
                 }
                 if (args.Kind != ActivationKind.File)

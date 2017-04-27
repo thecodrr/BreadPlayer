@@ -127,7 +127,6 @@
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
-    <None Include="Service References\HockeyApp\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
