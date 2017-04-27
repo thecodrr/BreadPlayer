@@ -64,7 +64,7 @@ namespace BreadPlayer.Themes
                     {
                         await Core.SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
                     }
-                    //ThemeChanged.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
+                    //ThemeChanged?.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
                 else
                     ChangeColor(GetAccentColor());

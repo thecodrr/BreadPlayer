@@ -525,7 +525,7 @@ namespace BreadPlayer.ViewModels
                 var result = await dialog.ShowAsync();
                 if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
                 {
-                    action.Invoke(dialog.SelectedDuplicates);
+                    action?.Invoke(dialog.SelectedDuplicates);
                 }
             }
             catch (UnauthorizedAccessException) { }
