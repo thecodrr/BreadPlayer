@@ -37,7 +37,7 @@ using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
-	public class ShellViewModel : ViewModelBase
+    public class ShellViewModel : ViewModelBase
     {
         #region Fields
         private SymbolIcon _playPauseIcon = new SymbolIcon(Symbol.Play);
@@ -70,7 +70,7 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
             this.PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
-        }        
+        }
         #endregion
 
         #region HandleMessages
@@ -128,14 +128,14 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload != null)
             {
-                if(message.Payload is List<object> list)
+                if (message.Payload is List<object> list)
                 {
                     double volume = 0;
                     if ((double)list[3] == 50.0)
                         volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
                     else
                         volume = (double)list[3];
-                  await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2],(double)list[1], volume);
+                    await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
                 }
                 else
                     this.GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
@@ -167,7 +167,7 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _playPauseCommand;
         DelegateCommand _setRepeatCommand;
         DelegateCommand showEqualizerCommand;
-   
+
         /// <summary>
         /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -236,7 +236,7 @@ namespace BreadPlayer.ViewModels
                     });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await NotificationManager.ShowMessageAsync("Some error occured while playing the song. ERROR INFO: " + ex.Message);
             }
@@ -247,7 +247,7 @@ namespace BreadPlayer.ViewModels
             if (playingCollection != null && playingCollection.Any())
             {
                 try
-                {                    
+                {
                     int IndexOfCurrentlyPlayingFile = -1;
                     if (playingCollection.Any(t => t.State == PlayerState.Playing))
                         IndexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.State == PlayerState.Playing));
@@ -295,17 +295,17 @@ namespace BreadPlayer.ViewModels
         {
             if (Player.CurrentlyPlayingFile != null)
             {
-                PreviousSong= Player.CurrentlyPlayingFile;
+                PreviousSong = Player.CurrentlyPlayingFile;
                 history.Do(Player.CurrentlyPlayingFile);
             }
-                
+
             Mediafile toPlayFile = await GetUpcomingSong(true);
             if (toPlayFile == null)
             {
                 PlayPause();
             }
             else
-               await PlayFile(toPlayFile);
+                await PlayFile(toPlayFile);
         }
         private ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
@@ -384,13 +384,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void Player_MediaEnded(object sender, Events.MediaEndedEventArgs e)
         {
-            var mediaFile = Player.CurrentlyPlayingFile;
-            mediaFile.PlayCount++;
-            mediaFile.LastPlayed = DateTime.Now.ToString();
-            TracksCollection.Elements.First(T => T.Path == mediaFile.Path).LastPlayed = DateTime.Now.ToString();
-            await service.UpdateMediafile(mediaFile);
-
-            await ScrobblePlayingSong();
+            var lastPlayingSong = Player.CurrentlyPlayingFile;
             if (Repeat == "Repeat List")
             {
                 PlayNext();
@@ -408,6 +402,16 @@ namespace BreadPlayer.ViewModels
                         PlayPause();
                 });
             }
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                lastPlayingSong.PlayCount++;
+                lastPlayingSong.LastPlayed = DateTime.Now.ToString();
+                TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
+                TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
+                await service.UpdateMediafile(lastPlayingSong);
+
+                await ScrobblePlayingSong();
+            });
         }
         private void Timer_Tick(object sender, object e)
         {
