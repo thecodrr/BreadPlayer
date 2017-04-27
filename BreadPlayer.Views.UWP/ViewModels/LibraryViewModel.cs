@@ -604,7 +604,7 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
-                TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
+                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
 
@@ -626,7 +626,7 @@ namespace BreadPlayer.ViewModels
                         TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
-                        TracksCollection.AddRange(files, true, false);
+                        await TracksCollection.AddRange(files, true, false);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
                     });
@@ -991,8 +991,9 @@ namespace BreadPlayer.ViewModels
                 });
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
+
+                SetNowPlayingSong();
             }
-            SetNowPlayingSong();
         }
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
