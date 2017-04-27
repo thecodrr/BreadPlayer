@@ -99,7 +99,7 @@ namespace BreadPlayer.Core
             {
                 try
                 {
-                    await InitializeCore.Dispatcher.RunAsync(() => { MediaChanging(this, new EventArgs()); });
+                    await InitializeCore.Dispatcher.RunAsync(() => { MediaChanging?.Invoke(this, new EventArgs()); });
                    
                     string path = mediaFile.Path;                    
                     await Stop();
@@ -279,15 +279,14 @@ namespace BreadPlayer.Core
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {
             if (Position >= Length - 15 && Position < Length - 5)
-                if(MediaAboutToEnd != null)
-                    MediaAboutToEnd(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
+                MediaAboutToEnd?.Invoke(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
             else if(Position >= Length - 5)
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             //MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
         private void EndSync(int handle, int channel, int data, IntPtr user)
         {
-            MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
+            MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
         public event OnMediaStateChanged MediaStateChanged;
         public event OnMediaEnded MediaEnded;

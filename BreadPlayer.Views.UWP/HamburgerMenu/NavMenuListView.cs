@@ -165,8 +165,7 @@ namespace SplitViewMenu
         {
             ListViewItem item = focusedItem as ListViewItem;
             SetSelectedItem(item);
-            var handler = ItemInvoked;
-            handler?.Invoke(this, item);
+            ItemInvoked?.Invoke(this, item);
 
             if (!_splitViewHost.IsPaneOpen ||
                 (_splitViewHost.DisplayMode != SplitViewDisplayMode.CompactOverlay &&
