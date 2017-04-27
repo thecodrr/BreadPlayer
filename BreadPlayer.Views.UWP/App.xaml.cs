@@ -32,6 +32,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Helpers;
+using Microsoft.HockeyApp;
 
 namespace BreadPlayer
 {
@@ -55,10 +56,11 @@ namespace BreadPlayer
             this.LeavingBackground += App_LeavingBackground;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            }
+            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            //{
+            //    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            //}
+            Microsoft.HockeyApp.HockeyClient.Current.Configure("6085c48bdbf64fa78cb867f1dca0ca4f", new TelemetryConfiguration() { EnableDiagnostics = true, Collectors = WindowsCollectors.Metadata & WindowsCollectors.Session & WindowsCollectors.UnhandledException });
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)

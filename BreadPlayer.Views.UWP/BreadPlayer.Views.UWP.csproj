@@ -20,6 +20,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <HockeyAppResourceId>6085c48bdbf64fa78cb867f1dca0ca4f</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
     <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
@@ -126,6 +127,7 @@
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <None Include="Service References\HockeyApp\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
