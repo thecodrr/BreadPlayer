@@ -51,16 +51,15 @@ namespace BreadPlayer
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
             BLogger.InitLogger();
+            BLogger.Logger.Info("Logger initialized. Progressing in app constructor.");
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            //if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            //{
-            //    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            //}
+            BLogger.Logger.Info("Events initialized. Progressing in app constructor.");
             Microsoft.HockeyApp.HockeyClient.Current.Configure("6085c48bdbf64fa78cb867f1dca0ca4f", new TelemetryConfiguration() { EnableDiagnostics = true, Collectors = WindowsCollectors.Metadata & WindowsCollectors.Session & WindowsCollectors.UnhandledException });
+            BLogger.Logger.Info("HockeyApp initialized. Progressing in app constructor.");
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -196,7 +195,12 @@ namespace BreadPlayer
                 
                  var view = ApplicationView.GetForCurrentView();
                  view.SetPreferredMinSize(new Size(360, 100));
-                
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                {
+                    BLogger.Logger.Info("Trying to maximize to full screen.");
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    BLogger.Logger.Info("Maximized to full screen.");
+                }
                 if (args.Kind != ActivationKind.File)
                 {
                     CoreWindowLogic.LoadSettings();

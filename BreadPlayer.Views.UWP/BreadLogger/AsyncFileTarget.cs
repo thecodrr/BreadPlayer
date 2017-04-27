@@ -31,24 +31,16 @@ namespace BreadPlayer.Targets
         }
         private async void CreateFile(string filename)
         {
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            File =  await storageFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-            stream = await File.OpenStreamForWriteAsync();
-            writer = new StreamWriter(stream);
+            StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync("BreadPlayerLogs", CreationCollisionOption.OpenIfExists);
+            File =  await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
         }
-        Stream stream;
-        StreamWriter writer;
-        public override void Write(string content)
+        public async override void Write(string content)
         {
-            if (writer != null)
+            try
             {
-                try
-                {
-                    writer.Write(content);
-                    writer.Flush();
-                }
-                catch { }    
-            }      
+                await FileIO.AppendTextAsync(File, content);
+            }
+            catch { }
         }
 
         public string GetLastLogs()
