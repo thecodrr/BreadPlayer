@@ -1,4 +1,26 @@
 # Release Notes for Bread Player.
+## Version 2.1-beta
+### What's improved:
+1. 50% performance improvements in mobile
+2. Equazlier UI has been greatly improved.
+3. The over all UI has also been improved.
+
+### What's fixed:
+1. The problem with splash screen will now hopefully be fixed but if it is not, please comment below.
+2. We fixed issue where not all album arts were loading
+3. We fixed the issue in which the app crashed after song import.
+4. We fixed the issue with too slow song import.
+
+### What's New:
+1. There is now an enable/disable blur option in the settings.
+2. There are a couple of new animations. You will notice.
+3. We dumbed the What's new splash screen with a simple dialog.
+4. There is now a select all button when duplicates are shown.
+
+### Known Issues:
+1. Dark theme apparently doesn't work and the app crashes (fixed will release in the next update).
+2. There might be some crashes when importing songs (not confirmed but the app almost always hangs for a bit.)
+
 ## Version 2.0-beta
 ### What's New:
 * Smooth Play/Pause Transitions.

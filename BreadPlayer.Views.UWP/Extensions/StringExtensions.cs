@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace BreadPlayer.Extensions
 {
-	public static class StringExtensions
+    public static class StringExtensions
     {
         public static string ToSha1(this string text) => SHA1.Create().ComputeHash(text.ToBytes()).ToHex();
         public static byte[] ToBytes(this string text) => Encoding.UTF8.GetBytes(text);
@@ -13,19 +13,22 @@ namespace BreadPlayer.Extensions
 
         public static bool StartsWithLetter(this string input)
         {
-            return Regex.Match(input.Remove(1), "[a-zA-Z]").Success;
+            return !string.IsNullOrEmpty(input) && char.IsLetter(input[0]);
         }
+
         public static bool StartsWithNumber(this string input)
         {
-            return Regex.Match(input.Remove(1), "\\d").Success;
+            return !string.IsNullOrEmpty(input) && Regex.IsMatch(input, @"^\d+");
         }
+
         public static bool StartsWithSymbol(this string input)
         {
-            return Regex.Match(input.Remove(1), "[^a-zA-Z0-9]").Success;
+            return !string.IsNullOrEmpty(input) && Regex.IsMatch(input, "[^a-zA-Z0-9]");
         }
+
         public static bool ContainsOnlyNumbers(this string input)
         {
-            return Regex.Match(input, "\\d").Success;
+            return !string.IsNullOrEmpty(input) && Regex.IsMatch(input, "\\d");
         }
     }
 }

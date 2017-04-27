@@ -24,6 +24,7 @@ using BreadPlayer.Models;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -673,23 +674,32 @@ namespace BreadPlayer.ViewModels
             switch (propName)
             {
                 case "Title":
-                    f = t => GetPropValue(t, propName).ToString().StartsWithLetter() ? (GetPropValue(t, propName) as string).Remove(1).ToUpper() : GetPropValue(t, propName).ToString().StartsWithNumber() ? "#" : GetPropValue(t, propName).ToString().StartsWithSymbol() ? "&" : (GetPropValue(t, propName) as string); //determine whether the Title, by which groups are made, start with number, letter or symbol. On the basis of that we define the Key for each Group.
+                    //determine whether the Title, by which groups are made, start with number, letter or symbol. On the basis of that we define the Key for each Group.
+                    f = t =>
+                    {
+                        if (t.Title.StartsWithLetter()) return t.Title[0].ToString().ToUpper();
+                        if (t.Title.StartsWithNumber()) return "#";
+                        if (t.Title.StartsWithSymbol()) return "&";
+                        return t.Title;
+                    };
                     break;
                 case "Year":
-                    f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Year" : GetPropValue(t, propName) as string;
+                    f = t => string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year;
                     break;
                 case "Length":
                     string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" };
-                    f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) || GetPropValue(t, propName) as String == "0:00" ? "Unknown Length" : Math.Round((TimeSpan.ParseExact((GetPropValue(t, propName) as String), timeformats, System.Globalization.CultureInfo.InvariantCulture).TotalMinutes)).ToString() + " minutes";
+                    f = t => string.IsNullOrEmpty(t.Length) || t.Length == "0:00" 
+                    ? "Unknown Length"
+                    : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes";
                     break;
                 case "TrackNumber":
-                    f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Track No." : (GetPropValue(t, propName) as String);
+                    f = t => string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber;
                     break;
                 case "FolderPath":
-                    f = t => string.IsNullOrEmpty(GetPropValue(t, propName) as String) ? "Unknown Folder" : new DirectoryInfo((GetPropValue(t, propName) as String)).FullName;
+                    f = t => string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName;
                     break;
                 default:
-                    f = t => GetPropValue(t, propName) as string; //determine whether the Title, by which groups are made, start with number, letter or symbol. On the basis of that we define the Key for each Group.
+                    f = t => GetPropValue(t, propName) as string; 
                     break;
             }          
             return f;
