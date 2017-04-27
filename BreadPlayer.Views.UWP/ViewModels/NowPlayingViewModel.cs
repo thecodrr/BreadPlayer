@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Web.Lastfm;
+﻿using BreadPlayer.Web.BaiduLyricsAPI;
+using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
 using System;
@@ -37,6 +38,7 @@ namespace BreadPlayer.ViewModels
         {
             GetArtistInfo("Adele");
             GetAlbumInfo("Adele", "25");
+            GetLyrics("Eminem Phenomenal");
         }
         private async void GetArtistInfo(string artistName)
         {
@@ -56,6 +58,11 @@ namespace BreadPlayer.ViewModels
                 LastAlbum album = albumInfoResponse.Content;
                 AlbumTracks = new ThreadSafeObservableCollection<LastTrack>(album.Tracks);
             }
+        }
+        private async void GetLyrics(string query)
+        {
+            ApiMethods methods = new ApiMethods();
+            var response = await methods.Search(query);
         }
     }
 }
