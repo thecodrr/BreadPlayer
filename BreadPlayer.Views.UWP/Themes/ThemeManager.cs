@@ -74,10 +74,10 @@ namespace BreadPlayer.Themes
         private static void ChangeColor(Color color)
         {
             ChangeTitleBarColor(color);
-            var oldColor = GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").Color;
+            var oldColor = GetThemeResource<SolidColorBrush>("PlaybarBrush").Color;
             if (oldColor == color)
                 return;
-            GetThemeResource<SolidColorBrush>("SystemControlBackgroundAccentBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
+            GetThemeResource<SolidColorBrush>("PlaybarBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
             foreach (var brushKey in brushKeys)
             {
                 if (Application.Current.Resources.ContainsKey(brushKey))
