@@ -16,11 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-	public class EnumToVisiblilityConverter : IValueConverter
+	public class PlayerStateToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -30,6 +31,18 @@ namespace BreadPlayer.Converters
             object parameter, string language)
         {
             return (bool)value == true ? "Playing" : "Stopped";
+        }
+    }
+    public class PlayerStateToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return value.ToString() == "Playing" ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            return "Stopped";
         }
     }
 }

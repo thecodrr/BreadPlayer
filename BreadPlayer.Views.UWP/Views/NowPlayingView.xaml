@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:BPControls="using:BreadPlayer.Controls"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <Page.Resources>
         <VM:NowPlayingViewModel x:Key="NowPlayingVM"/>
@@ -53,7 +55,7 @@
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="RepeatAll" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="OpenFile" Command="{Binding OpenSongLocationCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
         </StackPanel>
-        <Pivot Title="Related Information" Grid.ColumnSpan="3" HorizontalAlignment="Center" DataContext="{StaticResource NowPlayingVM}" Margin="50" Style="{StaticResource CustomPivot}">
+        <Pivot Title="Related Information" Grid.ColumnSpan="3" HorizontalAlignment="Center" DataContext="{StaticResource NowPlayingVM}" Margin="50,50,50,10" Style="{StaticResource CustomPivot}">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}" FontWeight="Bold"/>
@@ -68,12 +70,40 @@
                     <ListView Grid.Column="0" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="" Visibility="{Binding Path=State, Converter={StaticResource EnumToVisibility}}"/>
-                                    <TextBlock Text="{Binding Path=Title}"/>
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
+                                    <TextBlock x:Name="Title" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+                                    <Border Grid.ColumnSpan="3" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
+                                        <Interactivity:Interaction.Behaviors>
+                                            <Core:EventTriggerBehavior EventName="DoubleTapped">
+                                                <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
+                                            </Core:EventTriggerBehavior>                                           
+                                            <Core:EventTriggerBehavior EventName="Tapped">
+                                                <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
+                                            </Core:EventTriggerBehavior>
+                                            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource PlaybarBrush}"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource PlaybarBrush}"/>
+                                            </Core:DataTriggerBehavior>
+                                            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="Black"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="Black"/>
+                                            </Core:DataTriggerBehavior>
+                                        </Interactivity:Interaction.Behaviors>
+                                    </Border>
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>                   
                 </Grid>
             </PivotItem>

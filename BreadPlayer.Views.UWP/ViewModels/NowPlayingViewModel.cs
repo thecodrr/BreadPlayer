@@ -47,7 +47,7 @@ namespace BreadPlayer.ViewModels
         }
         public NowPlayingViewModel()
         {
-            GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
+           // GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
             //GetLyrics("Eminem Phenomenal");
         }
         private async void GetArtistInfo(string artistName)

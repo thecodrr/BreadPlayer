@@ -91,7 +91,8 @@
             
             <Converter:PathToImageSourceConverter x:Key="PathToImage"/>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
-            <Converter:EnumToVisiblilityConverter x:Key="EnumToVisibility"/>
+            <Converter:PlayerStateToBoolConverter x:Key="PlayerStateToBool"/>
+            <Converter:PlayerStateToVisibilityConverter x:Key="PlayerStateToVisibility"/>
             <Converter:DoubleToTimeConverter x:Key="DoubleToTime"/>
             <Converter:StringToIconConverter x:Key="StringToIcon"/>
             <Converter:ColorToBrushConverter x:Key="ColorToBrush"/>
@@ -1001,7 +1002,7 @@
                                     <VisualStateGroup x:Name="CustomStates">
                                         <VisualState>
                                             <VisualState.StateTriggers>
-                                                <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource EnumToVisibility}}"/>
+                                                <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource PlayerStateToBool}}"/>
                                             </VisualState.StateTriggers>
                                             <Storyboard x:Name="myStoryboard"  AutoReverse="True" RepeatBehavior="Forever">
                                                 <ColorAnimation Storyboard.TargetName="Animie"  Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color }" To="DeepSkyBlue" Duration="0:0:6"/>
@@ -1011,7 +1012,7 @@
                                     <VisualStateGroup x:Name="CustomStates3">
                                         <VisualState>
                                             <VisualState.StateTriggers>
-                                                <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource EnumToVisibility}}"/>
+                                                <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource PlayerStateToBool}}"/>
 
                                             </VisualState.StateTriggers>
                                             <Storyboard x:Name="myStorybosard"  AutoReverse="True" RepeatBehavior="Forever">
