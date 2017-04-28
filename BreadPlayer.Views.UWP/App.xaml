@@ -1086,22 +1086,7 @@ Control.IsTemplateFocusTarget="True"/>
                                             </Core:EventTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding ElementName=FavoriteButton, Path=IsChecked}">
                                                 <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
-                                            </Core:DataTriggerBehavior>
-                                            <!--<Core:EventTriggerBehavior EventName="RightTapped">
-                                                <Core:EventTriggerBehavior.Actions>
-                                                    <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-                                    Command="{Binding Path=PlayCommand}"/>
-                                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
-                                                </Core:EventTriggerBehavior.Actions>
-                                            </Core:EventTriggerBehavior>
-                                            <Core:EventTriggerBehavior EventName="Tapped">
-                                                <Core:EventTriggerBehavior.Actions>
-                                                    <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
-                                                </Core:EventTriggerBehavior.Actions>
-                                            </Core:EventTriggerBehavior>
-                                            <Core:EventTriggerBehavior EventName="Holding">
-                                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
-                                            </Core:EventTriggerBehavior>-->
+                                            </Core:DataTriggerBehavior>                                      
                                         </Interactivity:Interaction.Behaviors>
                                     </ToggleButton>
 
