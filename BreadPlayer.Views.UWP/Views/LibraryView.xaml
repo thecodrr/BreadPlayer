@@ -8,6 +8,7 @@
       xmlns:Converter="using:BreadPlayer.Converters"
       xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+      xmlns:BPControls="using:BreadPlayer.Controls"
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
       mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
     <Page.Resources>
@@ -108,8 +109,8 @@
        
         <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
-                <ListView x:Name="fileBox" AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" ScrollViewer.IsScrollInertiaEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
-                    <ListView.ItemsPanel>
+                <BPControls:AlternatingRowListView x:Name="fileBox" OddRowBackground="#99e5e5e5" EvenRowBackground="{ThemeResource ThemeBackground}"  AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" ScrollViewer.IsScrollInertiaEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
+                    <BPControls:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">
                                 <ItemsStackPanel.ChildrenTransitions>
@@ -120,7 +121,7 @@
                                 </ItemsStackPanel.ChildrenTransitions>
                             </ItemsStackPanel>
                         </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
+                    </BPControls:AlternatingRowListView.ItemsPanel>
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="KeyDown" SourceObject="{Binding ElementName=fileBox}">
                             <Core:EventTriggerBehavior.Actions>
@@ -147,7 +148,7 @@
                             </Media:ControlStoryboardAction>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
-                    <ListView.GroupStyle>
+                    <BPControls:AlternatingRowListView.GroupStyle>
                         <GroupStyle HidesIfEmpty="True">
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
@@ -165,8 +166,8 @@
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>
-                    </ListView.GroupStyle>
-                </ListView>
+                    </BPControls:AlternatingRowListView.GroupStyle>
+                </BPControls:AlternatingRowListView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
                 <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
