@@ -89,6 +89,7 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 PlaylistSongCollection = tMediaFile;
+                NowPlayingQueue = tMediaFile;
             }
             else
             {
@@ -452,7 +453,12 @@ namespace BreadPlayer.ViewModels
         { get; set; }
         public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }
-
+        ThreadSafeObservableCollection<Mediafile> nowPlayingQueue;      
+        public ThreadSafeObservableCollection<Mediafile> NowPlayingQueue
+        {
+            get => nowPlayingQueue;
+            set => Set(ref nowPlayingQueue, value);
+        }
         string queryWord = "";
         public string QueryWord
         {

@@ -140,7 +140,7 @@
     <Compile Include="Common\SurfaceLoader.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
-    <Compile Include="Converters\MediafileToPropertyStringConverter.cs" />
+    <Compile Include="Converters\PlayerStateToBoolConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
     <Compile Include="Converters\SortSettingToFormattedStringConverter.cs" />

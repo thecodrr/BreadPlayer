@@ -94,11 +94,7 @@
                         <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, UpdateSourceTrigger=PropertyChanged}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="playbarPanel.VerticalAlignment" Value="Bottom"/>
-                        <Setter Target="hamburgerMenu.Margin" Value="0,0,0,70"/>
-                        <Setter Target="notification.Visibility" Value="Collapsed"/>
-                        <Setter Target="volumeGrid.VerticalAlignment" Value="Bottom"/>
-                        <Setter Target="volumeGrid.Margin" Value="0,0,0,69"/>-->
+                        <Setter Target="MainBackgroundImage.Margin" Value="0"/>
                         <Setter Target="hamburgerMenu.Margin" Value="0,0,0,0"/>
                         <Setter Target="playbarPanel.Visibility" Value="Collapsed"/>
                         <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
@@ -148,7 +144,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <BPControls:ImageEx Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
+        <BPControls:ImageEx x:Name="MainBackgroundImage" Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
             <Image x:Name="backgroundImage" Opacity="0" Stretch="UniformToFill">
             </Image>
            

@@ -500,6 +500,7 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile mediaFile)
             {
                 isPlayingFromPlaylist = false;
+                SendLibraryLoadedMessage(TracksCollection.Elements, true);
                 return mediaFile;
             }
             else if (path is IEnumerable<Mediafile> tmediaFile)

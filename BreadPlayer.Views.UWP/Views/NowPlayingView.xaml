@@ -5,12 +5,13 @@
     xmlns:local="using:BreadPlayer"
     xmlns:VM="using:BreadPlayer.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:BPControls="using:BreadPlayer.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <VM:NowPlayingViewModel x:Key="NowPlayingVM"/>
     </Page.Resources>
-    <Grid>
+    <Grid DataContext="{StaticResource NowPlayingVM}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -21,8 +22,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Rectangle Fill="{StaticResource ThemeBackground}" Grid.ColumnSpan="3" Grid.RowSpan="5"/>
-        <Grid DataContext="{StaticResource Core}" Margin="50,0,0,0" Grid.Row="1" VerticalAlignment="Bottom">
+        <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="10" Fill="#FFEBEBEB" Opacity="0.9"/>
+        <Grid DataContext="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile}" Margin="50,0,0,0" Grid.Row="1" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
@@ -32,11 +33,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Width="150" Height="150" Grid.RowSpan="3" Source="ms-appx:///Assets/Noise.jpg">
+            <Image Width="150" Height="150" Grid.RowSpan="3" Source="{Binding Path=AttachedPicture}">
             </Image>
-            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="0" Typography.Capitals="AllSmallCaps" TextWrapping="Wrap" Text="Hello" FontSize="44" FontWeight="ExtraLight"/>
-            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="1" Typography.Capitals="AllSmallCaps" Text="Adele" FontSize="34" FontWeight="ExtraLight"/>
-            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="2" Typography.Capitals="AllSmallCaps" Text="25" FontSize="24" FontWeight="ExtraLight"/>
+            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="0" Typography.Capitals="AllSmallCaps" TextWrapping="Wrap" Text="{Binding Path=Title}" FontSize="44" FontWeight="ExtraLight"/>
+            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="1" Typography.Capitals="AllSmallCaps" Text="{Binding Path=LeadArtist}" FontSize="34" FontWeight="ExtraLight"/>
+            <TextBlock Margin="20,0,0,0" Grid.Column="1" Grid.Row="2" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="24" FontWeight="ExtraLight"/>
         </Grid>
         <StackPanel x:Name="playcontrolsPanel" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Previous" Command="{Binding PlayPreviousCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
@@ -52,26 +53,52 @@
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="RepeatAll" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="OpenFile" Command="{Binding OpenSongLocationCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
         </StackPanel>
-        <Pivot Title="Related Information" DataContext="{StaticResource NowPlayingVM}" Margin="50,50,0,0">
+        <Pivot Title="Related Information" Grid.ColumnSpan="3" HorizontalAlignment="Center" DataContext="{StaticResource NowPlayingVM}" Margin="50" Style="{StaticResource CustomPivot}">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}" FontWeight="Bold"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
+            <PivotItem Header="Now Playing">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView Grid.Column="0" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="" Visibility="{Binding Path=State, Converter={StaticResource EnumToVisibility}}"/>
+                                    <TextBlock Text="{Binding Path=Title}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>                   
+                </Grid>
+            </PivotItem>
             <PivotItem Header="Artist Biography">
-                <TextBlock Text="{Binding Path=ArtistBio}" TextWrapping="WrapWholeWords" TextAlignment="Justify"/>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Padding="0,0,20,0">
+                    <TextBlock Text="{Binding Path=ArtistBio}" TextWrapping="WrapWholeWords" TextAlignment="Justify"/>
+                </ScrollViewer>
             </PivotItem>
             <PivotItem Header="Album Information">
-                <ListView ItemsSource="{Binding Path=AlbumTracks, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"></ListView>
+                <ListView ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Path=AlbumTracks, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"></ListView>
             </PivotItem>           
         </Pivot>
-
-        <ListView Header="Lyrics" Margin="50,50,50,0" Grid.Column="1" ItemsSource="{Binding Path=NowPlayingQueue}">
-            <ListView.HeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" FontWeight="Bold" Margin="10,20,0,0"/>
-                </DataTemplate>
-            </ListView.HeaderTemplate>
-        </ListView>
+        <StackPanel Background="{ThemeResource ThemeBackground}" VerticalAlignment="Center" Visibility="{Binding Path=IsLoading, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" Grid.ColumnSpan="3">
+            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Center">
+            <Run Text="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}"></Run>
+            <Run Text="%"/>
+            </TextBlock>
+            <ProgressBar Value="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}" Maximum="100" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Path=ProgressText, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel x:Name="MetaCorrectionPanel" CornerRadius="20" Margin="50,100,0,0" Visibility="{Binding Path=IsFailed, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" Padding="50" Background="{ThemeResource BackgroundOverlay}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox Padding="14,6,14,8" PlaceholderText="Enter the correct song artist here..." Style="{StaticResource RoundedTextBoxStyle}"/>
+            <TextBox Padding="14,6,14,8" PlaceholderText="Enter the correct song album here..." Margin="0,10,0,0" Style="{StaticResource RoundedTextBoxStyle}"/>
+            <Button Content="Retry" Padding="50,10,50,10" HorizontalAlignment="Center" Margin="0,10,0,0" Style="{StaticResource RoundedIconButtonStyle}"/>
+        </StackPanel>
+      
     </Grid>
 </Page>
