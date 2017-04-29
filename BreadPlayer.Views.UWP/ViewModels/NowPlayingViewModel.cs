@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
 
 namespace BreadPlayer.ViewModels
 {
@@ -47,62 +48,63 @@ namespace BreadPlayer.ViewModels
         }
         public NowPlayingViewModel()
         {
-           // GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
             //GetLyrics("Eminem Phenomenal");
+            InitInfo();
+
+            //the work around to knowing when the new song has started.
+            //the event is needed to update the bio etc.
+            Core.SharedLogic.Player.MediaChanging += (sender, e) =>
+            {
+                Core.SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+            };
         }
-        private async void GetArtistInfo(string artistName)
+
+        private async void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
         {
-            ProgressText = "Sending request for artist info.";
-            IsLoading = true;
-            var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true);
-            ProgressText = "Response for artist info request recieved.";
-            Progress = 25;
-            if (artistInfoResponse.Success)
+            if (e.NewState == Core.PlayerState.Playing)
             {
-                Progress = 30;
-                ProgressText = "Response succeeded; Parsing content.";
-                LastArtist artist = artistInfoResponse.Content;
-                Progress = 40;
-                ArtistBio = artist.Bio.Content;
-                Progress = 50;
-                SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
-                Progress = 60;
-                ProgressText = "Content Parsed.";
-                GetAlbumInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
-            }
-            else
-            {
-                Progress = 0;
-                ProgressText = "Request Failed due bad network or bad artist name.";
-                IsFailed = true;
-                IsLoading = false;
+                await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
+                Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
             }
         }
-        private async void GetAlbumInfo(string artistName, string albumName)
+        private async void InitInfo()
         {
-            ProgressText = "Sending request for album info.";
-            Progress = 65;
+            await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
+        }
+        private async Task GetArtistInfo(string artistName)
+        {
+            ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+            if (InternetConnectionProfile != null)
+            {
+                var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true);
+                if (artistInfoResponse.Success)
+                {
+                    LastArtist artist = artistInfoResponse.Content;
+                    ArtistBio = artist.Bio.Content;
+                    SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
+                }
+                else
+                {
+                    IsFailed = true;
+                    IsLoading = false;
+                }
+                await GetAlbumInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
+            }
+        }
+        private async Task GetAlbumInfo(string artistName, string albumName)
+        {
             var albumInfoResponse = await LastfmClient.Album.GetInfoAsync(artistName, albumName, true);
-            ProgressText = "Response for album info recieved.";
-            Progress = 70;
+
             if (albumInfoResponse.Success)
             {
-                ProgressText = "Parsing content.";
-                Progress = 80;
                 LastAlbum album = albumInfoResponse.Content;
                 AlbumTracks = new ThreadSafeObservableCollection<LastTrack>(album.Tracks);
-                Progress = 90;
-                ProgressText = "Content parsed.";
             }
             else
             {
                 IsFailed = true;
-                ProgressText = "Bad request.";
-                Progress = 0;
             }
-            Progress = 100;
-            ProgressText = "Album info recieved.";
-            await Task.Delay(2000);
             IsLoading = false;
         }
         private async void GetLyrics(string query)

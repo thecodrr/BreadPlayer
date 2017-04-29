@@ -48,7 +48,7 @@
             </AppBarButton>
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Next" Command="{Binding PlayNextCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
         </StackPanel>
-        <StackPanel Height="50" Margin="0,0,0,0" x:Name="extrasPanel" Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Height="50" Margin="0,0,0,20" x:Name="extrasPanel" Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
             <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Icon="Shuffle" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch"/>
             <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch" Content="&#x04c;" FontSize="20" FontFamily="Assets/breadplayer.ttf#breadplayer"/>
             <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Icon="Volume" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch"/>
@@ -108,22 +108,18 @@
                 </Grid>
             </PivotItem>
             <PivotItem Header="Artist Biography">
-                <ScrollViewer VerticalScrollBarVisibility="Visible" Padding="0,0,20,0">
-                    <TextBlock Text="{Binding Path=ArtistBio}" TextWrapping="WrapWholeWords" TextAlignment="Justify"/>
-                </ScrollViewer>
+                <Grid>
+                    <ScrollViewer>
+                        <TextBlock Text="{Binding Path=ArtistBio}" TextWrapping="WrapWholeWords" TextAlignment="Justify"/>
+                    </ScrollViewer>
+                    <ProgressRing Width="50" Height="50" IsActive="{Binding Path=IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
             </PivotItem>
             <PivotItem Header="Album Information">
                 <ListView ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Path=AlbumTracks, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"></ListView>
             </PivotItem>           
         </Pivot>
-        <StackPanel Background="{ThemeResource ThemeBackground}" VerticalAlignment="Center" Visibility="{Binding Path=IsLoading, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" Grid.ColumnSpan="3">
-            <TextBlock HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Center">
-            <Run Text="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}"></Run>
-            <Run Text="%"/>
-            </TextBlock>
-            <ProgressBar Value="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}" Maximum="100" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Path=ProgressText, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Center"/>
-        </StackPanel>
+      
         <StackPanel x:Name="MetaCorrectionPanel" CornerRadius="20" Margin="50,100,0,0" Visibility="{Binding Path=IsFailed, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" Padding="50" Background="{ThemeResource BackgroundOverlay}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBox Padding="14,6,14,8" PlaceholderText="Enter the correct song artist here..." Style="{StaticResource RoundedTextBoxStyle}"/>
             <TextBox Padding="14,6,14,8" PlaceholderText="Enter the correct song album here..." Margin="0,10,0,0" Style="{StaticResource RoundedTextBoxStyle}"/>
