@@ -20,7 +20,6 @@ using BreadPlayer.Core;
 using BreadPlayer.Extensions;
 using BreadPlayer.Models;
 using BreadPlayer.ViewModels;
-using SamplesCommon;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -45,7 +44,7 @@ namespace BreadPlayer
         public Shell()
         {
             this.InitializeComponent();
-            SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
+            //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
             LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()

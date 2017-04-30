@@ -3808,7 +3808,7 @@ Control.IsTemplateFocusTarget="True"/>
                                 </VisualStateManager.VisualStateGroups>
                                 <Border x:Name="backgroundBorder" Opacity="0.5" Width="440" MaxWidth="440" HorizontalAlignment="Left" Background="{ThemeResource BackgroundOverlay}"/>
 
-                                <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15" TintColor="{StaticResource BlurTint}" />
+                                <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15"/>
                                 <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"

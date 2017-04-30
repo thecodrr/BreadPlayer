@@ -105,6 +105,9 @@
                                     <BounceEase Bounces="10" Bounciness="5" EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ShellGrid" Storyboard.TargetProperty="Visibility" BeginTime="0:0:5">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
+                            </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState.Storyboard>
                 </VisualState>
@@ -114,6 +117,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MainBackgroundImage.Margin" Value="0"/>
+                        <Setter Target="ShellGrid.Visibility" Value="Visible"/>
                         <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.Storyboard>
