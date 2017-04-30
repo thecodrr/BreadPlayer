@@ -110,7 +110,7 @@
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Path=IsPlayBarVisible, UpdateSourceTrigger=PropertyChanged}"/>
+                        <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, Converter={StaticResource TrueToFalse}, UpdateSourceTrigger=PropertyChanged}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MainBackgroundImage.Margin" Value="0"/>
@@ -366,7 +366,7 @@
                 </Grid>
             </StackPanel>
         </Grid>
-        <Frame x:Name="NowPlayingFrame" Visibility="Collapsed" x:DeferLoadStrategy="Lazy" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
+        <Frame x:Name="NowPlayingFrame" Visibility="Collapsed" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
             <Frame.RenderTransform>
                 <CompositeTransform TranslateY="-1000"/>
             </Frame.RenderTransform>
