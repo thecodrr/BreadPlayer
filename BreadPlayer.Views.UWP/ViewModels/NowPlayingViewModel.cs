@@ -63,13 +63,13 @@ namespace BreadPlayer.ViewModels
         {
             if (e.NewState == Core.PlayerState.Playing)
             {
-                await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
-                Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
+               // Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
+               // await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
             }
         }
         private async void InitInfo()
         {
-            await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
+            //await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
         }
         private async Task GetArtistInfo(string artistName)
         {

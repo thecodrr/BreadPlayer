@@ -456,6 +456,8 @@ namespace SplitViewMenu
             else
             {
                 (item as SimpleNavMenuItem).Command.Execute(null);
+                UnSelectAll();
+                _navTopMenuListView.SelectedIndex = 3;
             }
         }
     }

@@ -14,5 +14,11 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
         }
+
+        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            (extrasPanel.DataContext as ShellViewModel).IsPlaybarHidden = false;
+            //Services.NavigationService.Instance.NavigateToHome();
+        }
     }
 }
