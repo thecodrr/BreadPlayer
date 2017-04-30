@@ -9,10 +9,19 @@
     xmlns:BPControls="using:BreadPlayer.Controls"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:blur="using:BreadPlayer.Effects"
     mc:Ignorable="d">
     <Page.Resources>
         <VM:NowPlayingViewModel x:Key="NowPlayingVM"/>
+        <Storyboard x:Key="ShowListStoryboard">
+            <DoubleAnimation Storyboard.TargetName="NowPlayingList" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             To="0" From="600" Duration="0:0:0.2"/>
+        </Storyboard>
+        <Storyboard x:Key="HideListStoryboard">
+            <DoubleAnimation Storyboard.TargetName="NowPlayingList" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
+                             To="600" From="0" Duration="0:0:0.2"/>
+        </Storyboard>
     </Page.Resources>
     <Grid DataContext="{StaticResource NowPlayingVM}">
         <Grid.ColumnDefinitions>
@@ -34,10 +43,19 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MetadataGrid.(Grid.ColumnSpan)" Value="2"/>
-                        <Setter Target="NowPlayingList.(Grid.ColumnSpan)" Value="2"/>
-                        <Setter Target="LyricsText.Visibility" Value="Collapsed"/>
                         <Setter Target="LyricsPivotItem.Visibility" Value="Visible"/>
                         <Setter Target="MainPivot.Margin" Value="10"/>
+                        <Setter Target="sliderGrid.Margin" Value="10"/>
+
+                        <Setter Target="NowPlayingList.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="NowPlayingList.VerticalAlignment" Value="Stretch"/>
+                        <Setter Target="NowPlayingList.Margin" Value="0,50,-10,0"/>
+                        <Setter Target="NowPlayingList.(Grid.Column)" Value="0"/>
+                        <Setter Target="NowPlayingList.(Grid.ColumnSpan)" Value="3"/>
+                        <Setter Target="NowPlayingList.(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Value="600"/>
+                        <Setter Target="NowPlayingList.Background" Value="{StaticResource ThemeBackgroundMobile}"/>
+
+                        <Setter Target="positionSlider.Margin" Value="20,0"/>
                         <Setter Target="MetadataGrid.Margin" Value="10,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
@@ -45,7 +63,7 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="900"/>
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>                     
+                    <VisualState.Setters>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -79,7 +97,7 @@
         <Pivot x:Name="MainPivot" Title="Bread Player" Grid.ColumnSpan="3" HorizontalAlignment="Center" DataContext="{StaticResource NowPlayingVM}" Margin="50,20,50,10" Style="{StaticResource CustomPivot}">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding}" FontWeight="Bold" Typography.Capitals="AllSmallCaps"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <PivotItem Header="Now Playing">
@@ -102,7 +120,10 @@
                             <TextBlock TextAlignment="Center" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="24" FontWeight="ExtraLight"/>
                         </StackPanel>
                     </Grid>
-                    <ListView x:Name="NowPlayingList" Margin="0,100" Width="600" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}">
+                    <ListView x:Name="NowPlayingList" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
+                        <ListView.RenderTransform>
+                            <CompositeTransform TranslateX="0"/>
+                        </ListView.RenderTransform>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -116,7 +137,7 @@
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="DoubleTapped">
                                                 <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
-                                            </Core:EventTriggerBehavior>                                           
+                                            </Core:EventTriggerBehavior>
                                             <Core:EventTriggerBehavior EventName="Tapped">
                                                 <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
                                             </Core:EventTriggerBehavior>
@@ -140,7 +161,16 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <TextBlock x:Name="LyricsText" Visibility="Collapsed" FontWeight="Bold" Text="Support for synced lyrics coming soon! Enjoy." FontSize="18" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <ToggleButton Content="&#xEA37;" FontSize="25" Margin="0,10,0,0" FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" Style="{StaticResource HyperlinkToggleBtn}">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Checked">
+                                <Media:ControlStoryboardAction Storyboard="{StaticResource ShowListStoryboard}"/>
+                            </Core:EventTriggerBehavior>
+                            <Core:EventTriggerBehavior EventName="Unchecked">
+                                <Media:ControlStoryboardAction Storyboard="{StaticResource HideListStoryboard}"/>
+                            </Core:EventTriggerBehavior>                          
+                        </Interactivity:Interaction.Behaviors>
+                    </ToggleButton>
                 </Grid>
             </PivotItem>
             <PivotItem x:Name="LyricsPivotItem" Header="Lyrics" Visibility="Collapsed">
@@ -171,10 +201,10 @@
                     </StackPanel>
                 </Grid>
             </PivotItem>
-         
+
         </Pivot>
-      
-        
+
+
         <Button Margin="20,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="&#xE0A6;" FontSize="24" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="Button_Click"/>
     </Grid>
 </Page>

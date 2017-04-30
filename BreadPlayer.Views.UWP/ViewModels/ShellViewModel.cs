@@ -34,6 +34,7 @@ using BreadPlayer.Database;
 using System.Reflection;
 using Windows.Graphics.Display;
 using BreadPlayer.Helpers;
+using Windows.UI.ViewManagement;
 
 namespace BreadPlayer.ViewModels
 {
@@ -191,6 +192,7 @@ namespace BreadPlayer.ViewModels
         private void NavigateToNowPlayingView()
         {
             IsPlaybarHidden = true;
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
         private void ShowEqualizer()
         {
