@@ -24,6 +24,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -40,11 +41,27 @@
                         <Setter Target="MetadataGrid.Margin" Value="10,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="900"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>                     
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <blur:BackDrop Grid.ColumnSpan="3" Grid.RowSpan="10" x:Name="backgroundBlur" BlurAmount="40" />
         <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="10" Opacity="0.2" Fill="#FFEBEBEB"/>
-
+        <Grid Grid.Column="0" DataContext="{StaticResource ShellVM}" Grid.ColumnSpan="3" Grid.Row="1" Margin="50,0" x:Name="sliderGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="12"/>
+            <Slider x:Name="positionSlider" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Grid.Column="1" Margin="50,0"/>
+            <TextBlock Grid.Column="2" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12"/>
+        </Grid>
         <StackPanel x:Name="playcontrolsPanel" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Previous" Command="{Binding PlayPreviousCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource CustomAppBarButtonStyle}">
@@ -85,7 +102,7 @@
                             <TextBlock TextAlignment="Center" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="24" FontWeight="ExtraLight"/>
                         </StackPanel>
                     </Grid>
-                    <ListView x:Name="NowPlayingList" Visibility="Collapsed" Grid.Column="0" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}">
+                    <ListView x:Name="NowPlayingList" Margin="0,100" Width="600" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -94,7 +111,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
-                                    <TextBlock x:Name="Title" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="Title" TextTrimming="Clip" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
                                     <Border Grid.ColumnSpan="3" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="DoubleTapped">
@@ -123,7 +140,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <TextBlock x:Name="LyricsText" FontWeight="Bold" Text="Support for synced lyrics coming soon! Enjoy." FontSize="18" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="LyricsText" Visibility="Collapsed" FontWeight="Bold" Text="Support for synced lyrics coming soon! Enjoy." FontSize="18" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
             </PivotItem>
             <PivotItem x:Name="LyricsPivotItem" Header="Lyrics" Visibility="Collapsed">
