@@ -475,14 +475,13 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["Repeat"] = Repeat;
             }
         }
-        bool _isplaybarvisible = true;
+        bool _isplaybarvisible = false;
         public bool IsPlayBarVisible
         {
             get { return _isplaybarvisible; }
             set
             {
                 Set(ref _isplaybarvisible, value);
-                ApplicationData.Current.RoamingSettings.Values["IsPlayBarVisible"] = IsPlayBarVisible;
             }
         }
 
@@ -568,7 +567,6 @@ namespace BreadPlayer.ViewModels
         private void GetSettings()
         {
             Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
-            IsPlayBarVisible = RoamingSettingsHelper.GetSetting<bool>("IsPlayBarVisible", true);
             Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
         }
         async Task PlayFile(Mediafile toPlayFile, bool play = false)

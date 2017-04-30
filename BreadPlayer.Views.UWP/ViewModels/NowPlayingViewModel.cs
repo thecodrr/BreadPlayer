@@ -1,12 +1,15 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
+using IF.Lastfm.Core.Api.Helpers;
 using IF.Lastfm.Core.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Networking.Connectivity;
 
 namespace BreadPlayer.ViewModels
@@ -48,6 +51,8 @@ namespace BreadPlayer.ViewModels
         }
         public NowPlayingViewModel()
         {
+            tokenSource = new CancellationTokenSource();
+            token = tokenSource.Token;
             //GetLyrics("Eminem Phenomenal");
             InitInfo();
 
@@ -63,21 +68,43 @@ namespace BreadPlayer.ViewModels
         {
             if (e.NewState == Core.PlayerState.Playing)
             {
-               // Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
+                Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
+                await InitInfo();
                // await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
             }
         }
-        private async void InitInfo()
+        Task FetchInfoTask;
+            CancellationToken token;
+        CancellationTokenSource tokenSource;
+        IAsyncOperation<LastResponse<LastArtist>> ArtistInfoOperation;
+        IAsyncOperation<LastResponse<LastAlbum>> AlbumInfoOperation;
+        private async Task InitInfo()
         {
-            //await GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist);
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                if (FetchInfoTask?.IsCompleted == false)
+                    tokenSource.Cancel();
+                FetchInfoTask = GetArtistInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, token);
+                await FetchInfoTask;                         
+            });
         }
-        private async Task GetArtistInfo(string artistName)
+
+        private async Task GetArtistInfo(string artistName, CancellationToken token)
         {
             ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
 
             if (InternetConnectionProfile != null)
             {
-                var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true);
+                //check if there is any old operation running.
+                if (ArtistInfoOperation != null && token.IsCancellationRequested && ArtistInfoOperation.Status != AsyncStatus.Completed)
+                {
+                    //cancel old operiation
+                    ArtistInfoOperation.Cancel();
+                }
+
+                ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
+
+                var artistInfoResponse = await ArtistInfoOperation;
                 if (artistInfoResponse.Success)
                 {
                     LastArtist artist = artistInfoResponse.Content;
@@ -89,13 +116,19 @@ namespace BreadPlayer.ViewModels
                     IsFailed = true;
                     IsLoading = false;
                 }
-                await GetAlbumInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
+                await GetAlbumInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album, token);
             }
         }
-        private async Task GetAlbumInfo(string artistName, string albumName)
+        private async Task GetAlbumInfo(string artistName, string albumName, CancellationToken token)
         {
-            var albumInfoResponse = await LastfmClient.Album.GetInfoAsync(artistName, albumName, true);
-
+            //check if there is any old operation running.
+            if (AlbumInfoOperation != null && token.IsCancellationRequested && AlbumInfoOperation.Status != AsyncStatus.Completed)
+            {
+                //cancel old operiation
+                AlbumInfoOperation.Cancel();
+            }
+            AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
+            var albumInfoResponse = await AlbumInfoOperation;
             if (albumInfoResponse.Success)
             {
                 LastAlbum album = albumInfoResponse.Content;
