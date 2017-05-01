@@ -192,7 +192,7 @@ namespace BreadPlayer.ViewModels
         private void NavigateToNowPlayingView()
         {
             IsPlaybarHidden = true;
-            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
         private void ShowEqualizer()
         {

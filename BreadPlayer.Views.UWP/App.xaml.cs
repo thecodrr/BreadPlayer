@@ -52,10 +52,7 @@ namespace BreadPlayer
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
-            {
-                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            }
+           
         }
 
         private void InitializeTheme()
@@ -169,7 +166,10 @@ namespace BreadPlayer
                  var view = ApplicationView.GetForCurrentView();
                  view.SetPreferredMinSize(new Size(360, 100));
                 CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-
+                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                {
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                }
                 if (args.Kind != ActivationKind.File)
                 {
                     CoreWindowLogic.LoadSettings();
