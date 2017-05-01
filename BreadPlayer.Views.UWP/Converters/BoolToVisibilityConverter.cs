@@ -50,7 +50,11 @@ namespace BreadPlayer.Converters
             }
             else if(value is string stringValue)
             {
-                flag = stringValue.Length > 0;
+                flag = stringValue.Length < 0;
+            }
+            else if(value is null)
+            {
+                flag = true;
             }
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }

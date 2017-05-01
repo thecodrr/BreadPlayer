@@ -5,7 +5,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Microsoft.Graphics.Canvas.Effects;
 using System;
-using SamplesCommon;
 
 namespace BreadPlayer.Effects
 {
@@ -18,7 +17,6 @@ namespace BreadPlayer.Effects
 
 #if SDKVERSION_14393
         bool m_setUpExpressions;
-        CompositionSurfaceBrush m_noiseBrush;
 #endif
 
         public BackDrop()
@@ -30,7 +28,6 @@ namespace BreadPlayer.Effects
             m_blurVisual = Compositor.CreateSpriteVisual();
 
 #if SDKVERSION_14393
-            m_noiseBrush = Compositor.CreateSurfaceBrush();
 
             CompositionEffectBrush brush = BuildBlurBrush();
             brush.SetSourceParameter("source", m_compositor.CreateBackdropBrush());
@@ -38,7 +35,6 @@ namespace BreadPlayer.Effects
             m_blurVisual.Brush = m_blurBrush;
 
             BlurAmount = 9;
-            TintColor = Colors.Transparent;
 #else
             m_blurBrush = Compositor.CreateColorBrush(Colors.White);
             m_blurVisual.Brush = m_blurBrush;
@@ -50,7 +46,6 @@ namespace BreadPlayer.Effects
         }
 
         public const string BlurAmountProperty = nameof(BlurAmount);
-        public const string TintColorProperty = nameof(TintColor);
 
         public double BlurAmount
         {
@@ -72,33 +67,7 @@ namespace BreadPlayer.Effects
                 m_rootVisual.Properties.InsertScalar(BlurAmountProperty, (float)value);
 #endif
             }
-        }
-
-        public Color TintColor
-        {
-            get
-            {
-                Color value;
-#if SDKVERSION_14393
-                m_rootVisual.Properties.TryGetColor("TintColor", out value);
-#else
-                value = ((CompositionColorBrush)m_blurBrush).Color;
-#endif
-                return value;
-            }
-            set
-            {
-#if SDKVERSION_14393
-                if (!m_setUpExpressions)
-                {
-                    m_blurBrush.Properties.InsertColor("Color.Color", value);
-                }
-                m_rootVisual.Properties.InsertColor(TintColorProperty, value);
-#else
-                ((CompositionColorBrush)m_blurBrush).Color = value;
-#endif
-            }
-        }
+        }       
 
         public Compositor Compositor
         {
@@ -118,11 +87,6 @@ namespace BreadPlayer.Effects
         {
             this.SizeChanged += OnSizeChanged;
             OnSizeChanged(this, null);
-
-#if SDKVERSION_14393
-            m_noiseBrush.Surface = await SamplesCommon.SurfaceLoader.LoadFromUri(new Uri("ms-appx:///Assets/Noise.jpg"));
-            m_noiseBrush.Stretch = CompositionStretch.UniformToFill;
-#endif
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -149,10 +113,6 @@ namespace BreadPlayer.Effects
             exprAnimation.SetReferenceParameter("sourceProperties", m_rootVisual.Properties);
 
             m_blurBrush.Properties.StartAnimation("Blur.BlurAmount", exprAnimation);
-
-            exprAnimation.Expression = $"sourceProperties.{TintColorProperty}";
-
-            m_blurBrush.Properties.StartAnimation("Color.Color", exprAnimation);
         }
 
 
@@ -165,35 +125,14 @@ namespace BreadPlayer.Effects
                 BorderMode = EffectBorderMode.Hard,
                 Optimization = EffectOptimization.Balanced,
                 Source = new CompositionEffectSourceParameter("source"),
-            };
-
-            BlendEffect blendEffect = new BlendEffect
-            {
-                Background = blurEffect,
-                Foreground = new ColorSourceEffect { Name = "Color", Color = Color.FromArgb(64, 255, 255, 255) },
-                Mode = BlendEffectMode.SoftLight
-            };
-
-            SaturationEffect saturationEffect = new SaturationEffect
-            {
-                Source = blendEffect,
-                Saturation = 1.75f,
-            };
-
-            BlendEffect finalEffect = new BlendEffect
-            {
-                Foreground = new CompositionEffectSourceParameter("NoiseImage"),
-                Background = saturationEffect,
-                Mode = BlendEffectMode.Screen,
-            };
+            };    
 
             var factory = Compositor.CreateEffectFactory(
-                finalEffect,
-                new[] { "Blur.BlurAmount", "Color.Color" }
+                blurEffect,
+                new[] { "Blur.BlurAmount"}
                 );
 
             CompositionEffectBrush brush = factory.CreateBrush();
-            brush.SetSourceParameter("NoiseImage", m_noiseBrush);
             return brush;
         }
 

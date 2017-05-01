@@ -48,23 +48,22 @@ namespace BreadPlayer.ViewModels
                 return;
             }
 
-            InitializeLastfm lastfm = null;
+            Lastfm lastfm = new Lastfm();
             var session = GetUserSessionFromSettings();
             if(!string.IsNullOrEmpty(session.Token) && session.Username == LastfmUsername)
             {
-                lastfm = new InitializeLastfm();
-                lastfm.Auth.Auth.LoadSession(session);
+                lastfm.LastfmClient.Auth.LoadSession(session);
             }
             else
             {
-                lastfm = new InitializeLastfm(LastfmUsername, LastfmPassword);
                 await lastfm.Login(LastfmUsername, LastfmPassword);
             }
-            BreadPlayer.Core.SharedLogic.LastfmScrobbler = new Lastfm(lastfm.Auth.Auth);
-            if (lastfm.Auth.Auth.Authenticated)
+            Core.SharedLogic.LastfmScrobbler = lastfm;
+
+            if (lastfm.LastfmClient.Auth.Authenticated)
             {
                 LoginStatus = "(Logged In)";
-                SaveUserSession(lastfm.Auth.Auth.UserSession);
+                SaveUserSession(lastfm.LastfmClient.Auth.UserSession);
                 await NotificationManager.ShowMessageAsync("Successfully logged in!");
             }
             else

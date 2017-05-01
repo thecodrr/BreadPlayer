@@ -34,6 +34,7 @@ using BreadPlayer.Database;
 using System.Reflection;
 using Windows.Graphics.Display;
 using BreadPlayer.Helpers;
+using Windows.UI.ViewManagement;
 
 namespace BreadPlayer.ViewModels
 {
@@ -52,6 +53,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
@@ -88,6 +90,7 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 PlaylistSongCollection = tMediaFile;
+                NowPlayingQueue = tMediaFile;
             }
             else
             {
@@ -181,12 +184,19 @@ namespace BreadPlayer.ViewModels
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) _playPreviousCommand = new DelegateCommand(PlayPrevious); return _playPreviousCommand; } }
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) _setRepeatCommand = new DelegateCommand(SetRepeat); return _setRepeatCommand; } }
         public DelegateCommand ShowEqualizerCommand { get { if (showEqualizerCommand == null) showEqualizerCommand = new DelegateCommand(ShowEqualizer); return showEqualizerCommand; } }
+        public DelegateCommand NavigateToNowPlayingViewCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
 
         #endregion
 
         #region Implementation 
+        private void NavigateToNowPlayingView()
+        {
+            IsPlaybarHidden = true;
+            //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+        }
         private void ShowEqualizer()
         {
+            IsEqualizerVisible = IsEqualizerVisible ? false : true;
             DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;
         }
         void SetRepeat()
@@ -435,6 +445,18 @@ namespace BreadPlayer.ViewModels
             get { return isPlaybarHidden; }
             set { Set(ref isPlaybarHidden, value); }
         }
+        bool isEqualizerVisible;
+        public bool IsEqualizerVisible
+        {
+            get { return isEqualizerVisible; }
+            set { Set(ref isEqualizerVisible, value); }
+        }
+        bool isVolumeSliderVisible;
+        public bool IsVolumeSliderVisible
+        {
+            get { return isVolumeSliderVisible; }
+            set { Set(ref isVolumeSliderVisible, value); }
+        }
         bool isPlayingFromPlaylist;
         public bool IsPlayingFromPlaylist
         {
@@ -451,7 +473,12 @@ namespace BreadPlayer.ViewModels
         { get; set; }
         public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }
-
+        ThreadSafeObservableCollection<Mediafile> nowPlayingQueue;      
+        public ThreadSafeObservableCollection<Mediafile> NowPlayingQueue
+        {
+            get => nowPlayingQueue;
+            set => Set(ref nowPlayingQueue, value);
+        }
         string queryWord = "";
         public string QueryWord
         {
@@ -468,17 +495,7 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["Repeat"] = Repeat;
             }
         }
-        bool _isplaybarvisible = true;
-        public bool IsPlayBarVisible
-        {
-            get { return _isplaybarvisible; }
-            set
-            {
-                Set(ref _isplaybarvisible, value);
-                ApplicationData.Current.RoamingSettings.Values["IsPlayBarVisible"] = IsPlayBarVisible;
-            }
-        }
-
+       
         bool _shuffle = false;
         public bool Shuffle
         {
@@ -561,7 +578,6 @@ namespace BreadPlayer.ViewModels
         private void GetSettings()
         {
             Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
-            IsPlayBarVisible = RoamingSettingsHelper.GetSetting<bool>("IsPlayBarVisible", true);
             Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
         }
         async Task PlayFile(Mediafile toPlayFile, bool play = false)

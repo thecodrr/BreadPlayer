@@ -47,6 +47,7 @@ namespace SplitViewMenu
             get { return shortcutTheme; }
             set { Set(ref shortcutTheme, value); }
         }
+        public ICommand Command { get; set; }
         List<Shortcut> shortcuts = new List<Shortcut>()
         {
             new Shortcut() { SymbolAsChar = "\xE00E", Tooltip = "Go Back",

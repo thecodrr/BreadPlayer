@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "DBreeze": "1.84.0",
     "ksemenenko.ColorThief": "1.1.0.3",
     "ManagedBass": "1.0.2",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",

@@ -431,25 +431,34 @@ namespace SplitViewMenu
         private async void OnNavMenuItemInvoked(object sender, ListViewItem e)
         {
             var item = (INavigationMenuItem)((NavMenuListView)sender).ItemFromContainer(e);
-            await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
-            if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
+            if ((item as SimpleNavMenuItem).Command == null)
             {
-                if (item?.DestinationPage != null &&
-                    item.DestinationPage != _pageFrame.CurrentSourcePageType)
+                await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
+                if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
                 {
-                    _pageFrame.Navigate(item.DestinationPage, item.Arguments);
+                    if (item?.DestinationPage != null &&
+                        item.DestinationPage != _pageFrame.CurrentSourcePageType)
+                    {
+                        _pageFrame.Navigate(item.DestinationPage, item.Arguments);
+                    }
                 }
+                else
+                {
+                    if (item?.DestinationPage != null &&
+                        item.Label != LastItem?.Label)
+                    {
+                        _pageFrame.Navigate(item.DestinationPage, item.Arguments);
+
+                    }
+                }
+                LastItem = item;
             }
             else
             {
-                if (item?.DestinationPage != null &&
-                    item.Label != LastItem?.Label)
-                {
-                    _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-
-                }
+                (item as SimpleNavMenuItem).Command.Execute(null);
+                UnSelectAll();
+                _navTopMenuListView.SelectedIndex = 3;
             }
-            LastItem = item;
         }
     }
 }
