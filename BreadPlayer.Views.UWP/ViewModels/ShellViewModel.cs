@@ -196,6 +196,7 @@ namespace BreadPlayer.ViewModels
         }
         private void ShowEqualizer()
         {
+            IsEqualizerVisible = IsEqualizerVisible ? false : true;
             DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;
         }
         void SetRepeat()
@@ -439,6 +440,18 @@ namespace BreadPlayer.ViewModels
             get { return isPlaybarHidden; }
             set { Set(ref isPlaybarHidden, value); }
         }
+        bool isEqualizerVisible;
+        public bool IsEqualizerVisible
+        {
+            get { return isEqualizerVisible; }
+            set { Set(ref isEqualizerVisible, value); }
+        }
+        bool isVolumeSliderVisible;
+        public bool IsVolumeSliderVisible
+        {
+            get { return isVolumeSliderVisible; }
+            set { Set(ref isVolumeSliderVisible, value); }
+        }
         bool isPlayingFromPlaylist;
         public bool IsPlayingFromPlaylist
         {
@@ -477,16 +490,7 @@ namespace BreadPlayer.ViewModels
                 ApplicationData.Current.RoamingSettings.Values["Repeat"] = Repeat;
             }
         }
-        bool _isplaybarvisible = false;
-        public bool IsPlayBarVisible
-        {
-            get { return _isplaybarvisible; }
-            set
-            {
-                Set(ref _isplaybarvisible, value);
-            }
-        }
-
+       
         bool _shuffle = false;
         public bool Shuffle
         {
