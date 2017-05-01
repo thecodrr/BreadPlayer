@@ -221,6 +221,6 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </ToggleButton>
-        <Button Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="&#xE0A6;" FontSize="24" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="Button_Click"/>
+        <Button Margin="20,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="&#xE0A6;" FontSize="24" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="Button_Click"/>
     </Grid>
 </Page>

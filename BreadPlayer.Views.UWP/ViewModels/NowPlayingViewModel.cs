@@ -109,18 +109,26 @@ namespace BreadPlayer.ViewModels
         int retries = 0;
         private async Task GetInfo(string artistName, string albumName)
         {
-            if (FetchArtistInfoTask?.IsCompleted == false)
-                ArtistInfoTokenSource.Cancel();
-            if (FetchAlbumInfoTask?.IsCompleted == false)
-                AlbumInfoTokenSource.Cancel();
-
-            FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
-            FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
             try
             {
-                //start both tasks
-                await FetchAlbumInfoTask;
-                await FetchArtistInfoTask;
+                //start the tasks on another thread so that the UI doesn't hang.
+                await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+                    if (InternetConnectionProfile != null)
+                    {
+                        if (FetchArtistInfoTask?.IsCompleted == false)
+                            ArtistInfoTokenSource.Cancel();
+                        if (FetchAlbumInfoTask?.IsCompleted == false)
+                            AlbumInfoTokenSource.Cancel();
+                        FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
+                        FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
+                        //start both tasks
+                        await FetchAlbumInfoTask;
+                        await FetchArtistInfoTask;
+                    }
+                });
             }
             catch (Exception)
             {
@@ -135,36 +143,32 @@ namespace BreadPlayer.ViewModels
                     await GetInfo(artistName, albumName);
                 }
             }
+
         }
         private async Task GetArtistInfo(string artistName, CancellationToken token)
         {
-            ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-
-            if (InternetConnectionProfile != null)
-            {               
-                CheckAndCancelOperation(ArtistInfoOperation, token);
-                ArtistInfoLoading = true;
-                ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
-                ArtistBio = "";
-                var artistInfoResponse = await ArtistInfoOperation;
-                if (artistInfoResponse.Success)
-                {
-                    LastArtist artist = artistInfoResponse.Content;
-                    ArtistBio = artist.Bio.Content.ScrubHtml();
-                    SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar); 
-                }
-                else
-                {
-                    ArtistFetchFailed = true;
-                    ArtistInfoLoading = false;
-                }
-                //if it is empty or it starts with [unknown],
-                //which is the identifier for unknown artists;
-                //just fail.
-                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]"))
-                    ArtistFetchFailed = true;
+            CheckAndCancelOperation(ArtistInfoOperation, token);
+            ArtistInfoLoading = true;
+            ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
+            ArtistBio = "";
+            var artistInfoResponse = await ArtistInfoOperation;
+            if (artistInfoResponse.Success)
+            {
+                LastArtist artist = artistInfoResponse.Content;
+                ArtistBio = artist.Bio.Content.ScrubHtml();
+                SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
+            }
+            else
+            {
+                ArtistFetchFailed = true;
                 ArtistInfoLoading = false;
             }
+            //if it is empty or it starts with [unknown],
+            //which is the identifier for unknown artists;
+            //just fail.
+            if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]"))
+                ArtistFetchFailed = true;
+            ArtistInfoLoading = false;
         }
         private async Task GetAlbumInfo(string artistName, string albumName, CancellationToken token)
         {
@@ -183,7 +187,7 @@ namespace BreadPlayer.ViewModels
                 AlbumFetchFailed = true;
                 AlbumInfoLoading = false;
             }
-            if(!AlbumTracks.Any())
+            if(AlbumTracks?.Any() == false)
                 AlbumFetchFailed = true;
 
             AlbumInfoLoading = false;
