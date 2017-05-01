@@ -18,6 +18,7 @@
 using BreadPlayer.Common;
 using BreadPlayer.Core;
 using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
 using BreadPlayer.Models;
 using BreadPlayer.ViewModels;
 using System.Collections.Generic;
@@ -80,28 +81,12 @@ namespace BreadPlayer
             
             base.OnNavigatedTo(e);
         }
-        bool isDragging = false;
-        private void VolSliderThumb_DragStarted(object sender, DragStartedEventArgs e)
-        {
-            isDragging = true;
-            ShellVM.DontUpdatePosition = true;
-        }
-
-        private void VolSliderThumb_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            UpdatePosition();
-            isDragging = false;
-        }
+        
         bool isPressed;
         bool isProgBarPressed = false;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Thumb volSliderThumb = positionSlider.FindChildOfType<Thumb>();
-            if (volSliderThumb != null)
-            {
-                volSliderThumb.DragCompleted += VolSliderThumb_DragCompleted;
-                volSliderThumb.DragStarted += VolSliderThumb_DragStarted;
-            }
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, ShellVM); }, () => { ShellVM.DontUpdatePosition = true; });
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
@@ -109,16 +94,16 @@ namespace BreadPlayer
 
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
-            if (isPressed && !isDragging)
+            if (isPressed && !positionSlider.IsDragging())
             {
-                UpdatePosition(true);
+                positionSlider.UpdatePosition(positionProgressBar, ShellVM, true);
                 isPressed = false;
             }
             else if (isProgBarPressed)
             {
                 positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight - 4, "Height");
                 isProgBarPressed = false;
-                UpdatePosition(true, true);
+                positionSlider.UpdatePosition(positionProgressBar, ShellVM, true, true);
             }
         }
 
@@ -135,7 +120,7 @@ namespace BreadPlayer
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !isDragging)
+            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
             {
                 isPressed = true;
                 ShellVM.DontUpdatePosition = true;
@@ -146,19 +131,6 @@ namespace BreadPlayer
                 ShellVM.DontUpdatePosition = true;
                 isProgBarPressed = true;
             }
-        }
-
-        async void UpdatePosition(bool wait = false, bool progressBar = false)
-        {
-            if (ShellVM != null)
-            {
-                if(!progressBar)
-                    ShellVM.CurrentPosition = positionSlider.Value < positionSlider.Maximum ? positionSlider.Value : positionSlider.Value - 1;
-                else
-                    ShellVM.CurrentPosition = positionProgressBar.Value < positionProgressBar.Maximum ? positionProgressBar.Value : positionProgressBar.Value - 1;
-            }
-            if (wait) await Task.Delay(500);
-            ShellVM.DontUpdatePosition = false;
-        }      
+        }           
     }
 }

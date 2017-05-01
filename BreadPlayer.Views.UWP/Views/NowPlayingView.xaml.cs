@@ -1,5 +1,8 @@
-﻿using BreadPlayer.ViewModels;
+﻿using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.ViewModels;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -11,17 +14,42 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class NowPlayingView : Page
     {
+        bool isPressed;
+        ShellViewModel ShellVM;
         public NowPlayingView()
         {
             this.InitializeComponent();
+            ShellVM = (extrasPanel.DataContext as ShellViewModel);
+
+            //events for providing seeking ability to the positon slider.
+            Window.Current.CoreWindow.PointerPressed += (sender, e) =>
+            {
+                if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
+                {
+                    isPressed = true;
+                    ShellVM.DontUpdatePosition = true;
+                }
+            };
+            Window.Current.CoreWindow.PointerReleased += (sender, e) => 
+            {
+                if (isPressed && !positionSlider.IsDragging())
+                {
+                    positionSlider.UpdatePosition(null, ShellVM, true);
+                    isPressed = false;
+                }
+            };
         }
 
         private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //ApplicationView.GetForCurrentView().ExitFullScreenMode();
-            (extrasPanel.DataContext as ShellViewModel).IsPlaybarHidden = false;
-            //Services.NavigationService.Instance.NavigateToHome();
+            ShellVM.IsPlaybarHidden = false;
         }
-        
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            //initialize tap to seek ability in positionSlider.
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(null, ShellVM); }, () => { ShellVM.DontUpdatePosition = true; });
+        }
     }
 }

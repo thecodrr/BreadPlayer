@@ -11,7 +11,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:blur="using:BreadPlayer.Effects"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
     <Page.Resources>
         <VM:NowPlayingViewModel x:Key="NowPlayingVM"/>
         <Storyboard x:Key="ShowListStoryboard">
