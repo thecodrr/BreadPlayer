@@ -27,5 +27,11 @@ namespace BreadPlayer.Extensions
         {
             return Regex.Match(input, "\\d").Success;
         }
+        public static string ScrubHtml(this string value)
+        {
+            var step1 = Regex.Replace(value, @"<(.|\n)*?>", "").Trim();
+            //var step2 = Regex.Replace(step1, @"\s{2,}", " ");
+            return step1;
+        }
     }
 }

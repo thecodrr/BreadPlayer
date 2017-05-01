@@ -189,9 +189,18 @@
                     </StackPanel>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Album Information">
+            <PivotItem Header="Album Tracks">
                 <Grid>
-                    <ListView ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Path=AlbumTracks, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"></ListView>
+                    <ListView ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Path=AlbumTracks, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=Rank}" Width="30"/>
+                                    <TextBlock Text="{Binding Path=Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     <ProgressRing Width="50" Height="50" IsActive="{Binding Path=AlbumInfoLoading}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <StackPanel CornerRadius="20" Margin="0,100,0,0" Grid.ColumnSpan="3" VerticalAlignment="Center" Visibility="{Binding Path=AlbumFetchFailed, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed}" Padding="50,50,50,50" Background="{ThemeResource ThemeBackgroundMobile}" HorizontalAlignment="Center">
                         <TextBlock Text="Failed to fetch album tracks. Please retry." FontWeight="Bold" FontSize="18"/>

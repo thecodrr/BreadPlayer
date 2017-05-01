@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI;
+﻿using BreadPlayer.Extensions;
+using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Api.Helpers;
@@ -144,12 +145,12 @@ namespace BreadPlayer.ViewModels
                 CheckAndCancelOperation(ArtistInfoOperation, token);
                 ArtistInfoLoading = true;
                 ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
-
+                ArtistBio = "";
                 var artistInfoResponse = await ArtistInfoOperation;
                 if (artistInfoResponse.Success)
                 {
                     LastArtist artist = artistInfoResponse.Content;
-                    ArtistBio = artist.Bio.Content;
+                    ArtistBio = artist.Bio.Content.ScrubHtml();
                     SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar); 
                 }
                 else
@@ -169,6 +170,7 @@ namespace BreadPlayer.ViewModels
         {
             CheckAndCancelOperation(AlbumInfoOperation, token);
             AlbumInfoLoading = true;
+            AlbumTracks?.Clear();
             AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
             var albumInfoResponse = await AlbumInfoOperation;
             if (albumInfoResponse.Success)
