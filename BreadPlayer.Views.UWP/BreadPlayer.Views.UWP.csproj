@@ -144,6 +144,7 @@
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
     <Compile Include="Converters\SortSettingToFormattedStringConverter.cs" />
     <Compile Include="Converters\StringToIconConverter.cs" />
+    <Compile Include="Converters\SymbolToCharConverter.cs" />
     <Compile Include="Converters\TrueToFalseConverter.cs" />
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\SharedLogic.cs" />

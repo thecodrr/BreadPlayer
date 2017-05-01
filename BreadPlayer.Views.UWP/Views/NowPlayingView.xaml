@@ -91,7 +91,7 @@
         <StackPanel x:Name="playcontrolsPanel" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Previous" Command="{Binding PlayPreviousCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
             <AppBarButton x:Name="playBtn" Foreground="{StaticResource ThemeForeground}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource CustomAppBarButtonStyle}">
-                <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="34"/>
+                <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="34"/>
             </AppBarButton>
             <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Next" Command="{Binding PlayNextCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
         </StackPanel>
@@ -141,7 +141,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
                                     <TextBlock x:Name="Title" TextTrimming="Clip" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
-                                    <Border Grid.ColumnSpan="3" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
+                                    <Border Grid.ColumnSpan="3" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="DoubleTapped">
                                                 <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
