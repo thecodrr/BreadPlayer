@@ -9,12 +9,20 @@ namespace BreadPlayer.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string val = value.ToString();
+            SymbolIcon symbol = null;
             if (val == "No Repeat")
-                return new SymbolIcon(Symbol.Sync);
+            {
+                symbol = new SymbolIcon(Symbol.Sync);
+            }
             else if (val == "Repeat Song")
-                return new SymbolIcon(Symbol.RepeatOne);
+                symbol = new SymbolIcon(Symbol.RepeatOne);
             else
-                return new SymbolIcon(Symbol.RepeatAll);
+                symbol = new SymbolIcon(Symbol.RepeatAll);
+
+            if (parameter?.ToString() == "char")
+                return (char)(symbol.Symbol);
+            else
+                return symbol;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

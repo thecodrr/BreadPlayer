@@ -89,18 +89,18 @@
             <TextBlock Grid.Column="2" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="12"/>
         </Grid>
         <StackPanel x:Name="playcontrolsPanel" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
-            <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Previous" Command="{Binding PlayPreviousCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
-            <AppBarButton x:Name="playBtn" Foreground="{StaticResource ThemeForeground}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource CustomAppBarButtonStyle}">
+            <Button Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource ThemeForeground}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+            <Button x:Name="playBtn" Margin="20,0,20,0" Background="Transparent" Foreground="{StaticResource ThemeForeground}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
                 <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="34"/>
-            </AppBarButton>
-            <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="Next" Command="{Binding PlayNextCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
+            </Button>
+            <Button  Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource ThemeForeground}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
         </StackPanel>
         <StackPanel Height="50" Margin="0,0,0,20" x:Name="extrasPanel" Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Top" DataContext="{StaticResource ShellVM}" Orientation="Horizontal" HorizontalAlignment="Center">
-            <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Icon="Shuffle" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch"/>
-            <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch" Content="&#x04c;" FontSize="20" FontFamily="Assets/breadplayer.ttf#breadplayer"/>
-            <AppBarToggleButton Foreground="{StaticResource ThemeForeground}" Icon="Volume" Style="{StaticResource CustomAppBarToggleButtonStyle}" VerticalAlignment="Stretch"/>
-            <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="RepeatAll" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
-            <AppBarButton Foreground="{StaticResource ThemeForeground}" Icon="OpenFile" Command="{Binding OpenSongLocationCommand}" Style="{StaticResource CustomAppBarButtonStyle}" VerticalAlignment="Stretch"/>
+            <ToggleButton Foreground="{StaticResource ThemeForeground}" Style="{StaticResource HyperlinkToggleBtn}" VerticalAlignment="Stretch" Content="&#x04c;" FontSize="20" Background="Transparent" FontFamily="Assets/breadplayer.ttf#breadplayer"/>
+            <Button Content="{Binding Repeat, Converter={StaticResource StringToIcon}, ConverterParameter='char'}" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource ThemeForeground}" Background="Transparent" FontSize="20" Margin="20,0,0,0" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch" Command="{Binding SetRepeatCommand}"/>
+            <ToggleButton Content="&#xE8B1;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource ThemeForeground}" Style="{StaticResource HyperlinkToggleBtn}" VerticalAlignment="Stretch" Background="Transparent" FontSize="20" Margin="20,0,0,0"/>
+            <Button Content="&#xE767;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch" Background="Transparent" FontSize="20" Margin="20,0,0,0"/>
+            <Button Content="&#xE8E5;" FontFamily="Segoe MDL2 Assets" Command="{Binding OpenSongLocationCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch" Background="Transparent" FontSize="20" Margin="20,0,0,0"/>
         </StackPanel>
         <Pivot x:Name="MainPivot" Grid.ColumnSpan="3" HorizontalAlignment="Center" DataContext="{StaticResource NowPlayingVM}" Margin="50,20,50,10" Style="{StaticResource CustomPivot}">
             <Pivot.HeaderTemplate>
