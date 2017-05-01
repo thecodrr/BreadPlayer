@@ -109,11 +109,12 @@ namespace BreadPlayer.ViewModels
         int retries = 0;
         private async Task GetInfo(string artistName, string albumName)
         {
-            try
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                //start the tasks on another thread so that the UI doesn't hang.
-                await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                try
                 {
+                    //start the tasks on another thread so that the UI doesn't hang.
+
                     ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
 
                     if (InternetConnectionProfile != null)
@@ -125,25 +126,25 @@ namespace BreadPlayer.ViewModels
                         FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
                         FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
                         //start both tasks
-                        await FetchAlbumInfoTask;
-                        await FetchArtistInfoTask;
+                        await FetchAlbumInfoTask.ConfigureAwait(false);
+                        await FetchArtistInfoTask.ConfigureAwait(false);
                     }
-                });
-            }
-            catch (Exception)
-            {
-                //we use this simple logic to avoid too many retries.
-                //MAX_RETRIES = 10;
-                if (retries <= 10)
-                {
-                    //increase retry count
-                    retries++;
 
-                    //retry
-                    await GetInfo(artistName, albumName);
                 }
-            }
+                catch (Exception)
+                {
+                    //we use this simple logic to avoid too many retries.
+                    //MAX_RETRIES = 10;
+                    if (retries == 10)
+                    {
+                        //increase retry count
+                        retries++;
 
+                        //retry
+                        await GetInfo(artistName, albumName);
+                    }
+                }
+            });
         }
         private async Task GetArtistInfo(string artistName, CancellationToken token)
         {
