@@ -83,7 +83,7 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (AdaptiveTriggerWithCondition)d;
             var val = (bool)e.NewValue;
-            if (CurrentValue >= obj.MinWindowWidth && CurrentValue < 600 && CurrentValue < 900)
+            if (CurrentValue >= obj.MinWindowWidth && CurrentValue < 900)
                 obj.IsActive = val;
             //else if (deviceFamily == "Windows.Desktop")
             //    obj.IsActive = (val == DeviceFamily.Desktop);

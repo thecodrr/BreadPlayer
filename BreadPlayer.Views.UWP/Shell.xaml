@@ -51,6 +51,7 @@
                         <Setter Target="showMoreBtn.IsChecked" Value="False" />
                         <Setter Target="ValueIndicatorText.FontSize" Value="11"/>
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="2"/>
+                        <Setter Target="positionProgressBar.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -68,6 +69,8 @@
                         <Setter Target="playbarGrid.(Grid.ColumnDefinitions)[1].Width" Value="*"/>
                         <Setter Target="seekRect.Visibility" Value="Visible"/>
                         <Setter Target="positionProgressBar.Visibility" Value="Visible"/>
+                        <Setter Target="AlbumArtGrid.Visibility" Value="Collapsed"/>
+                        <Setter Target="tagsPanel.Margin" Value="10,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -250,7 +253,7 @@
                 <AppBarButton HorizontalAlignment="Center" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="Open a file to play" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="0,5,0,5"/>
             </StackPanel>
             <StackPanel x:Name="playbarPanel" VerticalAlignment="Bottom">
-                <ProgressBar Name="positionProgressBar" Visibility="Collapsed" Background="Transparent" Foreground="{ThemeResource ThemeForeground}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
+                <ProgressBar Name="positionProgressBar" ToolTipService.Placement="Top" ToolTipService.ToolTip="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" Visibility="Collapsed" Background="Transparent" Foreground="{ThemeResource ThemeForeground}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
                 <Grid x:Name="playbarGrid" Height="70" Background="{ThemeResource PlaybarBrush}" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -264,7 +267,7 @@
                             </MenuFlyout>
                         </Grid.Resources>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Height="Auto">
-                            <Grid>
+                            <Grid x:Name="AlbumArtGrid">
                                 <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
                                 <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                             </Grid>
