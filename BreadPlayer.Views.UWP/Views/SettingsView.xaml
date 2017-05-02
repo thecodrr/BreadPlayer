@@ -196,7 +196,7 @@
             </PivotItem>
             <PivotItem Header="Contact Us">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock Text="In-app Feedback" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Helpful Links" FontSize="18" FontWeight="Bold"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -213,24 +213,25 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="By Github:" Grid.Row="0" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Report an issue" Padding="30,10" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Request a feature" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Report an issue" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Padding="30,10" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Request a feature" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
                         <TextBlock Text="By Email:" Grid.Row="2" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Report an issue" Padding="30,10" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Request a feature" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Report an issue" Command="{Binding Path=NavigateCommand}" CommandParameter="bug-report" Padding="30,10" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Request a feature" Command="{Binding Path=NavigateCommand}" CommandParameter="feature-request" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
                         <TextBlock Text="By Store:" Grid.Row="4" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Leave a review" Grid.Row="5" Padding="33,10" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Send feedback" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="3" Padding="33,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Leave a review" Command="{Binding Path=NavigateCommand}" CommandParameter="ms-windows-store://review/?ProductId=9nblggh42srx" Grid.Row="5" Padding="33,10" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button Content="Send feedback" Command="{Binding Path=NavigateCommand}" CommandParameter="feedback-hub://" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="3" Padding="33,10" Style="{StaticResource RoundedIconButtonStyle}"/>
                         <TextBlock Text="You can also contact us here:" Grid.Row="6" Grid.ColumnSpan="4" FontSize="18" FontWeight="Bold"/>
                         <HyperlinkButton Grid.Row="7" Width="50" HorizontalAlignment="Center" NavigateUri="https://www.facebook.com/yourbreadplayer/">
-                            <Path Fill="{ThemeResource ThemeForeground}" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
+                            <Path Fill="#3b5998" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
 			C49.652,11.137,38.516,0,24.826,0z M31,25.7h-4.039c0,6.453,0,14.396,0,14.396h-5.985c0,0,0-7.866,0-14.396h-2.845v-5.088h2.845
 			v-3.291c0-2.357,1.12-6.04,6.04-6.04l4.435,0.017v4.939c0,0-2.695,0-3.219,0c-0.524,0-1.269,0.262-1.269,1.386v2.99h4.56L31,25.7z" Stretch="Fill"></Path>
                         </HyperlinkButton>
                         <HyperlinkButton Grid.Row="7" Width="50" Grid.Column="1" HorizontalAlignment="Center"  NavigateUri="https://www.twitter.com/yourbreadplayer/">
-                            <Path Fill="{ThemeResource ThemeForeground}" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
+                            <Path Fill="#4099FF" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
 			C49.652,11.137,38.516,0,24.826,0z M35.901,19.144c0.011,0.246,0.017,0.494,0.017,0.742c0,7.551-5.746,16.255-16.259,16.255
 			c-3.227,0-6.231-0.943-8.759-2.565c0.447,0.053,0.902,0.08,1.363,0.08c2.678,0,5.141-0.914,7.097-2.446
 			c-2.5-0.046-4.611-1.698-5.338-3.969c0.348,0.066,0.707,0.103,1.074,0.103c0.521,0,1.027-0.068,1.506-0.199
@@ -241,7 +242,7 @@
 			C37.987,17.334,37.018,18.341,35.901,19.144z" Stretch="Fill"></Path>
                         </HyperlinkButton>
                         <HyperlinkButton Grid.Row="7" Width="50" Height="60" Grid.Column="2" HorizontalAlignment="Center"  NavigateUri="https://www.github.com/theweavrs/BreadPlayer/">
-                            <Path Fill="{ThemeResource ThemeForeground}" Data="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
+                            <Path Fill="#333" Data="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
 		c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
 		c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
 		c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136
@@ -263,7 +264,7 @@
 		C438.536,184.851,428.728,148.168,409.132,114.573z" Stretch="Fill"></Path>
                         </HyperlinkButton>
                         <HyperlinkButton Grid.Row="7" Width="50" Height="60" Grid.Column="3" HorizontalAlignment="Center" NavigateUri="https://www.reddit.com/user/thecodrr/">
-                            <Path Fill="{ThemeResource ThemeForeground}" Data="M25.098,43.863c-0.977-0.766-2.18-1.207-3.432-1.207c-3.07,0-5.566,2.5-5.566,5.572c0,1.78,0.859,3.422,2.254,4.455
+                            <Path Fill="#FF5700" Data="M25.098,43.863c-0.977-0.766-2.18-1.207-3.432-1.207c-3.07,0-5.566,2.5-5.566,5.572c0,1.78,0.859,3.422,2.254,4.455
 			C19.512,49.369,21.861,46.359,25.098,43.863z M72.748,30.117c2.293,0,4.158-1.867,4.158-4.162s-1.865-4.16-4.158-4.16c-2.295,0-4.164,1.865-4.164,4.16
 			S70.453,30.117,72.748,30.117z M48.875,0C21.883,0,0,21.883,0,48.875S21.883,97.75,48.875,97.75S97.75,75.867,97.75,48.875S75.867,0,48.875,0z
 			 M79.729,55.033c0.131,0.77,0.215,1.549,0.215,2.344c0,11.439-14.002,20.744-31.214,20.744c-17.211,0-31.211-9.305-31.211-20.744
@@ -278,6 +279,8 @@
 			c0.424-0.422,1.109-0.422,1.533,0C60.471,66.084,60.471,66.77,60.047,67.191z M59.498,58.143c-2.537,0-4.604-2.063-4.604-4.604
 			s2.065-4.605,4.604-4.605c2.539,0,4.604,2.066,4.604,4.605S62.037,58.143,59.498,58.143z M76.08,42.656c-1.328,0-2.574,0.479-3.57,1.313c3.217,2.516,5.539,5.546,6.66,8.878c1.531-1.019,2.48-2.722,2.48-4.619
 			C81.65,45.156,79.154,42.656,76.08,42.656z" Stretch="Fill"></Path>
+                        </HyperlinkButton>
+                        <HyperlinkButton Grid.Row="8" Content="&#xE715;" NavigateUri="mailto:support@braedplayer.com" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
                         </HyperlinkButton>
                     </Grid>
                   
