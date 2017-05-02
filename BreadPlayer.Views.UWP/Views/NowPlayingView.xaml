@@ -130,7 +130,7 @@
                             <TextBlock TextAlignment="Center" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="{Binding ElementName=metadataText, Path=FontSize}" FontWeight="ExtraLight"/>
                         </StackPanel>
                     </Grid>
-                    <ListView x:Name="NowPlayingList" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
+                    <ListView x:Name="NowPlayingList" Foreground="{ThemeResource ThemeForeground}" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
                         <ListView.RenderTransform>
                             <CompositeTransform TranslateX="0"/>
                         </ListView.RenderTransform>
@@ -142,7 +142,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
-                                    <TextBlock x:Name="Title" TextTrimming="Clip" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="Title" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
                                     <Border Grid.ColumnSpan="3" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
                                         <Interactivity:Interaction.Behaviors>
                                             <Core:EventTriggerBehavior EventName="DoubleTapped">
@@ -156,8 +156,8 @@
                                                 <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource PlaybarBrush}"/>
                                             </Core:DataTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="Black"/>
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="Black"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource ThemeForeground}"/>
                                             </Core:DataTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
                                     </Border>

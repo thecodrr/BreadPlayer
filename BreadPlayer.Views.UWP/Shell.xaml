@@ -85,6 +85,8 @@
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
                         <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
+                        <Setter Target="backgroundBorder.BlurAmount" Value="5"/>
+                        <Setter Target="backgroundBlur.Opacity" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -117,7 +119,7 @@
                         <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, Converter={StaticResource TrueToFalse}, UpdateSourceTrigger=PropertyChanged}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainBackgroundImage.Margin" Value="0"/>
+                        <Setter Target="MainBackgroundImage.Margin" Value="0,0,0,70"/>
                         <Setter Target="ShellGrid.Visibility" Value="Visible"/>
                         <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
                         <Setter Target="EqualizerGrid.Margin" Value="0,0,0,70"/>
@@ -196,7 +198,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <BPControls:ImageEx x:Name="MainBackgroundImage" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
+        <BPControls:ImageEx x:Name="MainBackgroundImage" Margin="0,0,0,70" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
             <Image x:Name="backgroundImage" Opacity="0" Stretch="UniformToFill">
             </Image>
         </BPControls:ImageEx>
