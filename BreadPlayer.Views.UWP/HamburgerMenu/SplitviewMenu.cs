@@ -329,6 +329,11 @@ namespace SplitViewMenu
             _navTopMenuListView.SelectedIndex = -1;
             _playlistsMenuListView.SelectedIndex = -1;
         }
+        public static void SelectHome()
+        {
+            UnSelectAll();
+            _navTopMenuListView.SelectedIndex = 3;
+        }
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             ((Page)sender).Focus(FocusState.Programmatic);
@@ -451,14 +456,12 @@ namespace SplitViewMenu
 
                     }
                 }
-                LastItem = item;
             }
             else
             {
                 (item as SimpleNavMenuItem).Command.Execute(null);
-                UnSelectAll();
-                _navTopMenuListView.SelectedIndex = 3;
             }
+            LastItem = item;
         }
     }
 }

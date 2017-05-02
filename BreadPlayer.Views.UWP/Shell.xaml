@@ -177,11 +177,32 @@
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="backgroundBlur.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur, Converter={StaticResource TrueToFalse}}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="backgroundBlur.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <BPControls:ImageEx x:Name="MainBackgroundImage" Stretch="UniformToFill" Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}">
             <Image x:Name="backgroundImage" Opacity="0" Stretch="UniformToFill">
             </Image>
         </BPControls:ImageEx>
+        <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15"/>
+        <Border x:Name="backgroundBorder" Opacity="0.6" Background="{ThemeResource ThemeBackgroundMobile}"/>
+
         <Grid x:Name="ShellGrid" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="0"/>

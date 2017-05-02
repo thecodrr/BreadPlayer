@@ -3771,9 +3771,7 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                                 <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                                 <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                                <Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="Auto"/>
-                                                <Setter Target="backgroundBorder.Opacity" Value="1"/>
-
+                                                <Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="Auto"/>                                              
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState>
@@ -3810,29 +3808,9 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                             </VisualState.Setters>
                                         </VisualState>
-                                    </VisualStateGroup>
-                                    <VisualStateGroup>
-                                        <VisualState>
-                                            <VisualState.StateTriggers>
-                                                <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur}"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="backgroundBlur.Visibility" Value="Visible"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState>
-                                            <VisualState.StateTriggers>
-                                                <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur, Converter={StaticResource TrueToFalse}}"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="backgroundBlur.Visibility" Value="Collapsed"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
+                                    </VisualStateGroup>                                  
                                 </VisualStateManager.VisualStateGroups>
 
-                                <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15"/>
-                               <Border x:Name="backgroundBorder" Opacity="0.5" Background="{ThemeResource ThemeBackground}"/>
                                 <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"

@@ -78,8 +78,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <blur:BackDrop Grid.ColumnSpan="3" Grid.RowSpan="10" x:Name="backgroundBlur" BlurAmount="40" />
-        <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="10" Opacity="0.2" Fill="#FFEBEBEB"/>
+        <!--<blur:BackDrop Grid.ColumnSpan="3" Grid.RowSpan="10" x:Name="backgroundBlur" BlurAmount="40" />
+        <Rectangle Grid.ColumnSpan="3" Grid.RowSpan="10" Opacity="0.2" Fill="#FFEBEBEB"/>-->
         <Grid Grid.Column="0" DataContext="{StaticResource ShellVM}" Grid.ColumnSpan="3" Grid.Row="1" Margin="50,0" x:Name="sliderGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
