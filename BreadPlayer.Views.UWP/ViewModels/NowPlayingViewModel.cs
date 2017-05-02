@@ -97,7 +97,6 @@ namespace BreadPlayer.ViewModels
         //this whole bulk of variables is very annoying and must be
         //replaced with more sensible and readable code. I hate this
         //but it works.
-
         Task FetchArtistInfoTask;
         Task FetchAlbumInfoTask;
         CancellationToken ArtistInfoToken;
@@ -109,89 +108,92 @@ namespace BreadPlayer.ViewModels
         int retries = 0;
         private async Task GetInfo(string artistName, string albumName)
         {
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            try
             {
-                try
+                //start the tasks on another thread so that the UI doesn't hang.
+
+                ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+                if (InternetConnectionProfile != null)
                 {
-                    //start the tasks on another thread so that the UI doesn't hang.
-
-                    ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-
-                    if (InternetConnectionProfile != null)
-                    {
-                        if (FetchArtistInfoTask?.IsCompleted == false)
-                            ArtistInfoTokenSource.Cancel();
-                        if (FetchAlbumInfoTask?.IsCompleted == false)
-                            AlbumInfoTokenSource.Cancel();
-                        FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
-                        FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
-                        //start both tasks
-                        await FetchAlbumInfoTask.ConfigureAwait(false);
-                        await FetchArtistInfoTask.ConfigureAwait(false);
-                    }
-
+                    if (FetchArtistInfoTask?.IsCompleted == false)
+                        ArtistInfoTokenSource.Cancel();
+                    if (FetchAlbumInfoTask?.IsCompleted == false)
+                        AlbumInfoTokenSource.Cancel();
+                    FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
+                    FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
+                    //start both tasks
+                    await FetchAlbumInfoTask.ConfigureAwait(false);
+                    await FetchArtistInfoTask.ConfigureAwait(false);
                 }
-                catch (Exception)
+
+            }
+            catch (Exception)
+            {
+                //we use this simple logic to avoid too many retries.
+                //MAX_RETRIES = 10;
+                if (retries == 10)
                 {
-                    //we use this simple logic to avoid too many retries.
-                    //MAX_RETRIES = 10;
-                    if (retries == 10)
-                    {
-                        //increase retry count
-                        retries++;
+                    //increase retry count
+                    retries++;
 
-                        //retry
-                        await GetInfo(artistName, albumName);
-                    }
+                    //retry
+                    await GetInfo(artistName, albumName);
                 }
-            });
+            }
         }
         private async Task GetArtistInfo(string artistName, CancellationToken token)
         {
-            CheckAndCancelOperation(ArtistInfoOperation, token);
-            ArtistInfoLoading = true;
-            ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
-            ArtistBio = "";
-            var artistInfoResponse = await ArtistInfoOperation;
-            if (artistInfoResponse.Success)
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                LastArtist artist = artistInfoResponse.Content;
-                ArtistBio = artist.Bio.Content.ScrubHtml();
-                SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
-            }
-            else
-            {
-                ArtistFetchFailed = true;
+                CheckAndCancelOperation(ArtistInfoOperation, token);
+                ArtistInfoLoading = true;
+                ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
+                ArtistBio = "";
+                var artistInfoResponse = await ArtistInfoOperation;
+                if (artistInfoResponse.Success)
+                {
+                    LastArtist artist = artistInfoResponse.Content;
+                    ArtistBio = artist.Bio.Content.ScrubHtml();
+                    SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
+                }
+                else
+                {
+                    ArtistFetchFailed = true;
+                    ArtistInfoLoading = false;
+                }
+                //if it is empty or it starts with [unknown],
+                //which is the identifier for unknown artists;
+                //just fail.
+                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]"))
+                    ArtistFetchFailed = true;
                 ArtistInfoLoading = false;
-            }
-            //if it is empty or it starts with [unknown],
-            //which is the identifier for unknown artists;
-            //just fail.
-            if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]"))
-                ArtistFetchFailed = true;
-            ArtistInfoLoading = false;
+            });
         }
         private async Task GetAlbumInfo(string artistName, string albumName, CancellationToken token)
         {
-            CheckAndCancelOperation(AlbumInfoOperation, token);
-            AlbumInfoLoading = true;
-            AlbumTracks?.Clear();
-            AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
-            var albumInfoResponse = await AlbumInfoOperation;
-            if (albumInfoResponse.Success)
+            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                LastAlbum album = albumInfoResponse.Content;
-                AlbumTracks = new ThreadSafeObservableCollection<LastTrack>(album.Tracks);
-            }
-            else
-            {
-                AlbumFetchFailed = true;
-                AlbumInfoLoading = false;
-            }
-            if(AlbumTracks?.Any() == false)
-                AlbumFetchFailed = true;
+                CheckAndCancelOperation(AlbumInfoOperation, token);
+                AlbumInfoLoading = true;
+                AlbumTracks?.Clear();
+                AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
+                var albumInfoResponse = await AlbumInfoOperation;
+                if (albumInfoResponse.Success)
+                {
+                    LastAlbum album = albumInfoResponse.Content;
+                    AlbumTracks = new ThreadSafeObservableCollection<LastTrack>(album.Tracks);
+                }
+                else
+                {
+                    AlbumFetchFailed = true;
+                    AlbumInfoLoading = false;
+                }
+                if (AlbumTracks?.Any() == false)
+                    AlbumFetchFailed = true;
 
-            AlbumInfoLoading = false;
+                AlbumInfoLoading = false;
+            });
         }
         private void CheckAndCancelOperation<T>(IAsyncOperation<T> operation, CancellationToken token)
         {

@@ -53,9 +53,9 @@
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <!--<Color x:Key="SystemAccentColor1">#44d4d</Color>-->
+                    <SolidColorBrush x:Key="SystemAccentColor1" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
                     <Color x:Key="SystemAccentColor">#141414</Color>
                     <!--Your accent color-->
-                    <SolidColorBrush x:Key="SystemAccentColor1" Color="{ThemeResource SystemAccentColor}"></SolidColorBrush>
 
                     <SolidColorBrush x:Key="SystemControlBackgroundAccentBrush" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="SystemControlDisabledAccentBrush" Color="{ThemeResource SystemAccentColor}" />

@@ -152,8 +152,8 @@
                                                 <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
                                             </Core:EventTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource PlaybarBrush}"/>
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource PlaybarBrush}"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="DeepSkyBlue"/>
+                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="DeepSkyBlue"/>
                                             </Core:DataTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
                                                 <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}"/>

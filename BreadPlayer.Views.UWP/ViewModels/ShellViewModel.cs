@@ -99,6 +99,7 @@ namespace BreadPlayer.ViewModels
                 IsSourceGrouped = (bool)listObject[1];
                 SongCount = service.SongCount;
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
+                NowPlayingQueue = TracksCollection.Elements;
                 GetSettings();
             }
         }
@@ -192,7 +193,7 @@ namespace BreadPlayer.ViewModels
         private void NavigateToNowPlayingView()
         {
             IsPlaybarHidden = true;
-            //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
         private void ShowEqualizer()
         {
