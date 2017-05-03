@@ -56,7 +56,6 @@
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="removableStorage" />
     <uap:Capability Name="userAccountInformation" />
-    <Capability Name="backgroundMediaPlayback" xmlns="" />
     <uap3:Capability Name="backgroundMediaPlayback" />
   </Capabilities>
 </Package>

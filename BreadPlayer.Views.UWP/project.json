@@ -6,7 +6,6 @@
     "Microsoft.Toolkit.Uwp.Notifications": "1.4.1",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "PCLStorage": "1.0.2",
-    "runtime.win8-arm.runtime.native.System.IO.Compression": "4.0.1",
     "System.ValueTuple": "4.3.0",
     "TagLib.Portable": "1.0.4",
     "Win2D.uwp": "1.20.0"
