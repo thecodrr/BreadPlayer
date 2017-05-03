@@ -983,13 +983,16 @@ namespace BreadPlayer.ViewModels
         }
         public async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
         {
-            if (!PlaylistService.PlaylistExists(plist.Name))
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                AddPlaylist(plist);
-                await PlaylistService.AddPlaylistAsync(plist);
-            }
-            if (addsongs)
-                await AddSongsToPlaylist(plist, songs);
+                if (!PlaylistService.PlaylistExists(plist.Name))
+                {
+                    AddPlaylist(plist);
+                    await PlaylistService.AddPlaylistAsync(plist);
+                }
+                if (addsongs)
+                    await AddSongsToPlaylist(plist, songs);
+            });
         }
         #endregion
 

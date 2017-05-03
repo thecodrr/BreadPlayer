@@ -206,7 +206,7 @@
             </Image>
         </BPControls:ImageEx>
         <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15"/>
-        <Border x:Name="backgroundBorder" Opacity="0.6" Background="{ThemeResource ThemeBackgroundMobile}"/>
+        <Border x:Name="backgroundBorder" Opacity="0.8" Background="{ThemeResource ThemeBackgroundMobile}"/>
 
         <Grid x:Name="ShellGrid" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>

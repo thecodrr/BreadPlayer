@@ -3740,7 +3740,7 @@ Control.IsTemplateFocusTarget="True"/>
                                                 <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                                 <Setter Target="TogglePaneButton.Margin" Value="0"/>
                                                 <Setter Target="playlistBtn.Margin" Value="0"/>
-                                                <Setter Target="Pane.Margin" Value="0,130,0,0"/>
+                                                <Setter Target="Pane.Margin" Value="0,0,0,0"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>

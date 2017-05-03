@@ -61,19 +61,18 @@ namespace BreadPlayer
         {
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
-                string releaseNotes = "FIXES:\r\n\r\nWe fixed the performance issue. The player will be a lot smoother.\n" +
-                    "Fixed issue where a few album arts were loading.\n" +
-                    "Fixed issue with setting album art as lockscreen.\n" +
-                    "Fixed various crashes and bugs.\r\n\r\n" + 
+                string releaseNotes = "FIXES:\r\n\r\n" + 
+                    "We fixed the startup crash.\n" +
+                    "Fixed crash when changing theme.\n" +
+                    "Fixed crash when play songs from an album.\n" +
+                    "Fixed other various bugs and crashes.\r\n\r\n" + 
                     "NEW THINGS:\r\n\r\n" +
-                    "Added an option to turn on or off the blur effect.\n" +
-                    "Added 'Select All' checkbox in Duplicates Dialog.\n" +
-                    "Removed the shitty what's new splash screen and added this.\r\n\r\n" + 
+                    "Added 'Now Playing' Screen with artist and album info fetching.\r\n\r\n" +
                     "IMPROVEMENTS:\r\n\r\n" +
                     "Greatly improved performance and navigation.\n" +
-                    "Improved Equalizer UI.\n" +
+                    "Improved Equalizer UI.\nImproved Blur\n" +
                     "Improved UI (less glitches etc.)\r\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.1.0");
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.3.0");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)
