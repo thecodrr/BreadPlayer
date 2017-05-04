@@ -331,8 +331,17 @@ namespace SplitViewMenu
         }
         public static void SelectHome()
         {
-            UnSelectAll();
             _navTopMenuListView.SelectedIndex = 3;
+        }
+        public static void SelectPrevious()
+        {
+            if (LastItem.Label != null)
+            {
+                var listView = GetParentListViewFromItem(LastItem);
+                var item = listView.Items.First(t => (t as INavigationMenuItem).Label == LastItem.Label);
+                var index = listView.IndexFromContainer((ListViewItem)listView.ContainerFromItem(item));
+                listView.SelectedIndex = index;
+            }
         }
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
@@ -360,9 +369,9 @@ namespace SplitViewMenu
             else
                 return null;
         }
-        NavMenuListView GetParentListViewFromItem(SimpleNavMenuItem item)
+        static NavMenuListView GetParentListViewFromItem(INavigationMenuItem item)
         {
-            if (item.DestinationPage == typeof(LibraryView))
+            if (item.DestinationPage == typeof(LibraryView) || item.DestinationPage == typeof(AlbumArtistView))
             {
                 return _navTopMenuListView;
             }
@@ -456,12 +465,12 @@ namespace SplitViewMenu
 
                     }
                 }
+                LastItem = item;
             }
             else
             {
                 (item as SimpleNavMenuItem).Command.Execute(null);
             }
-            LastItem = item;
         }
     }
 }

@@ -508,7 +508,7 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile mediaFile)
             {
                 isPlayingFromPlaylist = false;
-                SendLibraryLoadedMessage(TracksCollection.Elements, true);
+               // SendLibraryLoadedMessage(TracksCollection.Elements, true);
                 return mediaFile;
             }
             else if (path is IEnumerable<Mediafile> tmediaFile)
@@ -862,24 +862,8 @@ namespace BreadPlayer.ViewModels
             SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             await LoadPlaylists();
             UpdateJumplist("Title");
-        }
-     
-        private void SetNowPlayingSong()
-        {
-            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
-            if (!TracksCollection.Elements.Any(t => t.Path == path && t.State == PlayerState.Playing))
-            {
-                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
-                {
-                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                    foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
-                }
-                if (TracksCollection.Elements.Any(t => t.Path == path))
-                {
-                    TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
-                }
-            }           
-        }
+        }     
+      
         #endregion
 
         #region Playlist Methods
@@ -1008,8 +992,6 @@ namespace BreadPlayer.ViewModels
                 });
                 OldItems = TracksCollection.Elements;
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
-
-                SetNowPlayingSong();
             }
         }
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)

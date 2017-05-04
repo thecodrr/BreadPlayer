@@ -43,7 +43,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MetadataGrid.(Grid.ColumnSpan)" Value="2"/>
-                        <Setter Target="LyricsPivotItem.Visibility" Value="Visible"/>
                         <Setter Target="MainPivot.Margin" Value="10,35,10,10"/>
                         <Setter Target="sliderGrid.Margin" Value="10,10,10,0"/>
 
@@ -174,7 +173,7 @@
                   
                 </Grid>
             </PivotItem>
-            <PivotItem x:Name="LyricsPivotItem" Header="Lyrics" Visibility="Collapsed">
+            <PivotItem x:Name="LyricsPivotItem" Header="Lyrics" Visibility="Visible">
                 <TextBlock FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Text="Support for synced lyrics coming soon! Enjoy." FontSize="18" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </PivotItem>
             <PivotItem Header="Artist Biography">

@@ -90,7 +90,6 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 PlaylistSongCollection = tMediaFile;
-                NowPlayingQueue = tMediaFile;
             }
             else
             {
@@ -99,7 +98,6 @@ namespace BreadPlayer.ViewModels
                 IsSourceGrouped = (bool)listObject[1];
                 SongCount = service.SongCount;
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
-                NowPlayingQueue = TracksCollection.Elements;
                 GetSettings();
             }
         }
@@ -112,6 +110,7 @@ namespace BreadPlayer.ViewModels
             }
             if (TracksCollection.Elements.Count == SongCount)
             {
+                SetNowPlayingSong();
                 UpcomingSong = await GetUpcomingSong();
             }
             TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
@@ -252,9 +251,26 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("Some error occured while playing the song. ERROR INFO: " + ex.Message);
             }
         }
+        private void SetNowPlayingSong()
+        {
+            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
+            if (!TracksCollection.Elements.Any(t => t.Path == path && t.State == PlayerState.Playing))
+            {
+                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+                {
+                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                    foreach (var mp3 in sa) mp3.State = PlayerState.Stopped;
+                }
+                if (TracksCollection.Elements.Any(t => t.Path == path))
+                {
+                    TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
+                }
+            }
+        }
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
         {
             var playingCollection = GetPlayingCollection();
+            NowPlayingQueue = playingCollection;
             if (playingCollection != null && playingCollection.Any())
             {
                 try

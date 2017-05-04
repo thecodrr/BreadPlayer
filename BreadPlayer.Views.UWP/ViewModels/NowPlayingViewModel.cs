@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Extensions;
+﻿using BreadPlayer.Database;
+using BreadPlayer.Extensions;
 using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
@@ -27,7 +28,7 @@ namespace BreadPlayer.ViewModels
         bool albumFetchFailed;
         public bool AlbumFetchFailed { get => albumFetchFailed; set => Set(ref albumFetchFailed, value); }
         #endregion
-
+        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
         string artistBio;
@@ -74,16 +75,18 @@ namespace BreadPlayer.ViewModels
             {
                 if (string.IsNullOrEmpty(CorrectArtist))
                     return;
-                ArtistFetchFailed = false;
                 await GetArtistInfo(CorrectArtist, ArtistInfoToken);
+                Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
             }
             else if(para.ToString() == "Album")
             {
                 if (string.IsNullOrEmpty(CorrectAlbum) || string.IsNullOrEmpty(CorrectArtist))
                     return;
-                AlbumFetchFailed = false;
                 await GetAlbumInfo(CorrectArtist, CorrectAlbum, AlbumInfoToken);
+                Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
+                Core.SharedLogic.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
             }
+            await service.UpdateMediafile(Core.SharedLogic.Player.CurrentlyPlayingFile);
         }
         private async void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
         {
@@ -126,7 +129,11 @@ namespace BreadPlayer.ViewModels
                     await FetchAlbumInfoTask.ConfigureAwait(false);
                     await FetchArtistInfoTask.ConfigureAwait(false);
                 }
-
+                else
+                {
+                    AlbumFetchFailed = true;
+                    ArtistFetchFailed = true;
+                }
             }
             catch (Exception)
             {
@@ -150,6 +157,7 @@ namespace BreadPlayer.ViewModels
                 ArtistInfoLoading = true;
                 ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
                 ArtistBio = "";
+                ArtistFetchFailed = false;
                 var artistInfoResponse = await ArtistInfoOperation;
                 if (artistInfoResponse.Success)
                 {
@@ -165,7 +173,7 @@ namespace BreadPlayer.ViewModels
                 //if it is empty or it starts with [unknown],
                 //which is the identifier for unknown artists;
                 //just fail.
-                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]"))
+                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]") || ArtistBio.StartsWith("This is not an artist"))
                     ArtistFetchFailed = true;
                 ArtistInfoLoading = false;
             });
@@ -177,6 +185,7 @@ namespace BreadPlayer.ViewModels
                 CheckAndCancelOperation(AlbumInfoOperation, token);
                 AlbumInfoLoading = true;
                 AlbumTracks?.Clear();
+                AlbumFetchFailed = false;
                 AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
                 var albumInfoResponse = await AlbumInfoOperation;
                 if (albumInfoResponse.Success)

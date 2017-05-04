@@ -242,19 +242,24 @@ namespace BreadPlayer.ViewModels
                 Playlist = new Playlist() { Name = album.AlbumName, Description = album.Artist };
                 LoadAlbumSongs(album);               
             }
-            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
         }
         async void LoadAlbumSongs(Album album)
         {
             Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
-            await Refresh();
+            await Refresh().ContinueWith((task) =>
+            {
+                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
+            });
         }
         async void LoadDB()
         {
             if (await SharedLogic.AskForPassword(playlist))
             {
                 Songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
-                await Refresh();
+                await Refresh().ContinueWith((task) =>
+                {
+                    Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
+                });
             }
             else
             {
