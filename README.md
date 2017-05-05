@@ -44,6 +44,11 @@
 **Development on Second Beta version has started.** 
 
 #### Second-Beta Feature List (Coming Soon):
+
+- [ ] 1. ExploreView (will include recommendation, song streaming, SoundCloud, Spotify etc.)
+- [x] 2. NowPlayingView (will show what's playing and the nowplaying queue
+- [ ] 3. Windows, Linux & Mac App (Alpha) 
+ 
  
 _Note: All of these features might not reach the next Beta and some might be postponed due to obvious reasons. **Any help regarding these features including testing, research, code contribution, will be highly appreciated.**_
 
