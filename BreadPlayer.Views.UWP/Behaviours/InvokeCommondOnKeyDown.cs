@@ -52,6 +52,14 @@ namespace BreadPlayer.Behaviours
 
         public static readonly DependencyProperty PressedKeyProperty =
             DependencyProperty.Register("PressedKey", typeof(VirtualKey), typeof(InvokeCommandByKeyDown), new PropertyMetadata(VirtualKey.None));
+        public int PressedKeyCode
+        {
+            get { return (int)this.GetValue(PressedKeyCodeProperty); }
+            set { this.SetValue(PressedKeyCodeProperty, value); }
+        }
+
+        public static readonly DependencyProperty PressedKeyCodeProperty =
+            DependencyProperty.Register("PressedKeyCode", typeof(int), typeof(InvokeCommandByKeyDown), new PropertyMetadata(0));
         public bool DoubleKeyCommand
         {
             get { return (bool)this.GetValue(DoubleKeyCommandProperty); }
@@ -63,23 +71,32 @@ namespace BreadPlayer.Behaviours
 
         public object Execute(object sender, object parameter)
         {
-            if ((sender as ListView).SelectedItems.Count > 0 && parameter is KeyRoutedEventArgs keyParam)
+            if (parameter is KeyEventArgs keyParam)
             {
-                if (!this.DoubleKeyCommand && keyParam.Key == this.PressedKey)
-                {
-                    var p = this.CommandParameter;
-                    this.Command.Execute(p);
-                    keyParam.Handled = true;
-                }
-                else if (Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
-                    && keyParam.Key == PressedKey)
-                {
-                    var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
-                    this.Command.Execute(p);
-                    keyParam.Handled = true;
-                }
+                InvokeCommand(keyParam.VirtualKey);
+                keyParam.Handled = true;
+            }
+            else if (parameter is KeyRoutedEventArgs routed)
+            {
+                InvokeCommand(routed.Key);
+                routed.Handled = true;
             }
             return null;
+        }
+        private void InvokeCommand(VirtualKey paramKey)
+        {
+            var code = (int)paramKey;
+            if (!this.DoubleKeyCommand && (int)paramKey == (PressedKeyCode == 0 ? (int)this.PressedKey : PressedKeyCode))
+            {
+                var p = this.CommandParameter;
+                this.Command.Execute(p);
+            }
+            else if (DoubleKeyCommand && Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
+                && (int)paramKey == (PressedKeyCode == 0 ? (int)this.PressedKey : PressedKeyCode))
+            {
+                var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
+                this.Command.Execute(p);
+            }
         }
     }
 }

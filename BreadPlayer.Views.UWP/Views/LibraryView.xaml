@@ -123,10 +123,10 @@
                         </ItemsPanelTemplate>
                     </BPControls:AlternatingRowListView.ItemsPanel>
                     <Interactivity:Interaction.Behaviors>
-                        <Core:EventTriggerBehavior EventName="KeyDown" SourceObject="{Binding ElementName=fileBox}">
+                        <Core:EventTriggerBehavior EventName="KeyUp" SourceObject="{Binding ElementName=fileBox}">
                             <Core:EventTriggerBehavior.Actions>
                                 <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox}" Command="{Binding DeleteCommand}" PressedKey="Delete" DoubleKeyCommand="False"/>
-                                <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding PlayCommand}" PressedKey="P" DoubleKeyCommand="True"/>
+                                <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding PlayCommand}" PressedKey="Enter" DoubleKeyCommand="False"/>
                             </Core:EventTriggerBehavior.Actions>
                         </Core:EventTriggerBehavior>
                         <Core:EventTriggerBehavior EventName="SelectionChanged">

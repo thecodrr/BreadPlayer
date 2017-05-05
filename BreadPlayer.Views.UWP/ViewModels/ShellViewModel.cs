@@ -54,6 +54,11 @@ namespace BreadPlayer.ViewModels
         public ShellViewModel()
         {
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
+            IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
+            DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);
+            SeekForwardCommand = new DelegateCommand(SeekForward);
+            SeekBackwardCommand = new DelegateCommand(SeekBackward);
+            MuteCommand = new DelegateCommand(Mute);
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
             Messenger.Instance.Register(MessageTypes.MSG_PLAY_SONG, new Action<Message>(HandlePlaySongMessage));
@@ -171,6 +176,12 @@ namespace BreadPlayer.ViewModels
         DelegateCommand _setRepeatCommand;
         DelegateCommand showEqualizerCommand;
 
+        public ICommand MuteCommand { get; set; }
+        public ICommand IncreaseVolumeCommand { get; set; }
+        public ICommand DecreaseVolumeCommand { get; set; }
+        public ICommand SeekForwardCommand { get; set; }
+        public ICommand SeekBackwardCommand { get; set; }
+
         /// <summary>
         /// Gets OpenSong command. This calls the <see cref="Open(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -189,6 +200,32 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Implementation 
+        private void Mute()
+        {
+            Player.IsVolumeMuted = Player.IsVolumeMuted ? false : true;
+        }
+        private void IncreaseVolume()
+        {
+            if(Player.Volume < 99)
+                Player.Volume++;
+        }
+        private void DecreaseVolume()
+        {
+            if (Player.Volume > 1)
+                Player.Volume--;
+        }
+        private void SeekForward()
+        {
+            DontUpdatePosition = true;
+            CurrentPosition += 2;
+            DontUpdatePosition = false;
+        }
+        private void SeekBackward()
+        {
+            DontUpdatePosition = true;
+            CurrentPosition -= 2;
+            DontUpdatePosition = false;
+        }
         private void NavigateToNowPlayingView()
         {
             IsPlaybarHidden = true;

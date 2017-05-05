@@ -396,10 +396,30 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <AppBarToggleButton BorderBrush="WhiteSmoke" IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}" VerticalAlignment="Center" Grid.Column="0" ToolTipService.ToolTip="{Binding Repeat}" Icon="Mute" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="15,0,0,0" Height="40" />
+            <AppBarToggleButton BorderBrush="WhiteSmoke" IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}" VerticalAlignment="Center" Grid.Column="0" ToolTipService.ToolTip="{Binding Repeat}" Icon="Mute" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="15,0,0,0" Height="40" />
             <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="5,0,0,0"/>
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
     </Grid>
-
+    <Interactivity:Interaction.Behaviors>
+        <Core:EventTriggerBehavior EventName="GlobalPageKeyDown">
+            <Core:EventTriggerBehavior.Actions>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayPauseCommand}" PressedKey="Space" DoubleKeyCommand="False"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayNextCommand}" PressedKeyCode="190" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayPreviousCommand}" PressedKeyCode="188" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding SetRepeatCommand}" PressedKey="R" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding ShowEqualizerCommand}" PressedKey="E" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding OpenSongCommand}" PressedKey="O" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding MuteCommand}" PressedKey="M" DoubleKeyCommand="True"/>
+                
+                <!--Seek Key bindings-->
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding SeekForwardCommand}" PressedKey="Right" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding SeekBackwardCommand}" PressedKey="Left" DoubleKeyCommand="True"/>
+               
+                <!--Volume Key bindings-->
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding IncreaseVolumeCommand}" PressedKeyCode="187" DoubleKeyCommand="True"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding DecreaseVolumeCommand}" PressedKeyCode="189" DoubleKeyCommand="True"/>
+            </Core:EventTriggerBehavior.Actions>
+        </Core:EventTriggerBehavior>
+    </Interactivity:Interaction.Behaviors>
 </Page>

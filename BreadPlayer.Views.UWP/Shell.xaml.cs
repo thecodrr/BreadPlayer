@@ -21,6 +21,7 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Models;
 using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -31,6 +32,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace BreadPlayer
@@ -40,6 +42,7 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class Shell : Page
     {
+        public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
         ShellViewModel ShellVM;
         List<Mediafile> OldFiles = new List<Mediafile>();
         public Shell()
@@ -59,6 +62,8 @@ namespace BreadPlayer
            
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Window.Current.CoreWindow.KeyDown += (sender, args) =>
+            GlobalPageKeyDown?.Invoke(sender, args);
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
                 string releaseNotes = "FIXES:\r\n\r\n" + 
@@ -80,7 +85,10 @@ namespace BreadPlayer
             
             base.OnNavigatedTo(e);
         }
-        
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
+        }
         bool isPressed;
         bool isProgBarPressed = false;
         private void Page_Loaded(object sender, RoutedEventArgs e)

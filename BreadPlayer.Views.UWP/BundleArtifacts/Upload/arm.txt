@@ -1,5 +1,5 @@
-MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.3.0.0_ARM.appx
-SymbolPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.3.0.0\BreadPlayer.Views.UWP_2.3.0.0_ARM.appxsym
+MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.2.0.0_ARM.appx
+SymbolPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\Upload\BreadPlayer.Views.UWP_2.2.0.0\BreadPlayer.Views.UWP_2.2.0.0_ARM.appxsym
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\_scale-100.appx
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\_scale-125.appx
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\_scale-150.appx
