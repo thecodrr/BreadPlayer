@@ -376,7 +376,8 @@ namespace BreadPlayer.ViewModels
         #region Implementations 
         private async void AddToFavorites(object para)
         {
-            var mediaFile = await GetMediafileFromParameterAsync(para, false);
+            var mediaFile = para as Mediafile;
+            mediaFile.IsFavorite = true;
             await LibraryService.UpdateMediafile(mediaFile);
         }
         /// <summary>

@@ -411,7 +411,8 @@
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding ShowEqualizerCommand}" PressedKey="E" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding OpenSongCommand}" PressedKey="O" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding MuteCommand}" PressedKey="M" DoubleKeyCommand="True"/>
-                
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding Source={StaticResource Core}, Path=ShowPropertiesCommand}" PressedKey="I" DoubleKeyCommand="True"/>
+
                 <!--Seek Key bindings-->
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding SeekForwardCommand}" PressedKey="Right" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding SeekBackwardCommand}" PressedKey="Left" DoubleKeyCommand="True"/>

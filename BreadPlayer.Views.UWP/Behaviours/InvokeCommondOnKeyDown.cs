@@ -91,12 +91,18 @@ namespace BreadPlayer.Behaviours
                 var p = this.CommandParameter;
                 this.Command.Execute(p);
             }
-            else if (DoubleKeyCommand && Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
+            else if (DoubleKeyCommand && IsControlPressed()
                 && (int)paramKey == (PressedKeyCode == 0 ? (int)this.PressedKey : PressedKeyCode))
             {
                 var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
                 this.Command.Execute(p);
             }
+        }
+        private bool IsControlPressed()
+        {
+            return Window.Current.CoreWindow.GetAsyncKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down
+                || Window.Current.CoreWindow.GetAsyncKeyState(VirtualKey.LeftControl) == CoreVirtualKeyStates.Down
+                || Window.Current.CoreWindow.GetAsyncKeyState(VirtualKey.RightControl) == CoreVirtualKeyStates.Down;
         }
     }
 }

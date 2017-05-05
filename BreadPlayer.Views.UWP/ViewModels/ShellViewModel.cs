@@ -206,12 +206,12 @@ namespace BreadPlayer.ViewModels
         }
         private void IncreaseVolume()
         {
-            if(Player.Volume < 99)
+            if(Player.Volume < 100)
                 Player.Volume++;
         }
         private void DecreaseVolume()
         {
-            if (Player.Volume > 1)
+            if (Player.Volume > 0)
                 Player.Volume--;
         }
         private void SeekForward()

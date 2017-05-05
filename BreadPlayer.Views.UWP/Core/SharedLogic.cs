@@ -144,11 +144,7 @@ namespace BreadPlayer.Core
         }
         async void ShowProperties(object para)
         {
-            Mediafile file = null;
-            if (para is Mediafile mediaFile)
-                file = mediaFile;
-            else
-                file = Player.CurrentlyPlayingFile;
+            Mediafile file = para is Mediafile ? para as Mediafile : Player.CurrentlyPlayingFile;
             BreadPlayer.Dialogs.TagDialog tag = new BreadPlayer.Dialogs.TagDialog(file);
             if (CoreWindow.GetForCurrentThread().Bounds.Width >= 501)
                 tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
