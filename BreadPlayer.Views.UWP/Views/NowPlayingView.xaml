@@ -22,6 +22,34 @@
             <DoubleAnimation Storyboard.TargetName="NowPlayingList" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)"
                              To="600" From="0" Duration="0:0:0.2"/>
         </Storyboard>
+        <DataTemplate x:Key="NowPlayingListItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
+                <TextBlock x:Name="Title" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+                <Border Grid.ColumnSpan="3" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="DoubleTapped">
+                            <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
+                        </Core:EventTriggerBehavior>
+                        <Core:EventTriggerBehavior EventName="Tapped">
+                            <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
+                        </Core:EventTriggerBehavior>
+                        <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
+                            <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="DeepSkyBlue"/>
+                            <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="DeepSkyBlue"/>
+                        </Core:DataTriggerBehavior>
+                        <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
+                            <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}"/>
+                            <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource ThemeForeground}"/>
+                        </Core:DataTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Border>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid x:Name="RootGrid" DataContext="{StaticResource NowPlayingVM}">
         <Grid.ColumnDefinitions>
@@ -129,40 +157,10 @@
                             <TextBlock TextAlignment="Center" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="{Binding ElementName=metadataText, Path=FontSize}" FontWeight="ExtraLight"/>
                         </StackPanel>
                     </Grid>
-                    <ListView x:Name="NowPlayingList" Foreground="{ThemeResource ThemeForeground}" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
+                    <ListView x:Name="NowPlayingList" ItemTemplate="{StaticResource NowPlayingListItemTemplate}" Foreground="{ThemeResource ThemeForeground}" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
                         <ListView.RenderTransform>
                             <CompositeTransform TranslateX="0"/>
                         </ListView.RenderTransform>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="PlayIcon" Text="&#xE768;" FontSize="20" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" Visibility="{Binding Path=State, Converter={StaticResource PlayerStateToVisibility}}"/>
-                                    <TextBlock x:Name="Title" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Margin="10,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
-                                    <Border Grid.ColumnSpan="3" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
-                                        <Interactivity:Interaction.Behaviors>
-                                            <Core:EventTriggerBehavior EventName="DoubleTapped">
-                                                <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
-                                            </Core:EventTriggerBehavior>
-                                            <Core:EventTriggerBehavior EventName="Tapped">
-                                                <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
-                                            </Core:EventTriggerBehavior>
-                                            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="DeepSkyBlue"/>
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="DeepSkyBlue"/>
-                                            </Core:DataTriggerBehavior>
-                                            <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}"/>
-                                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=PlayIcon}" Value="{ThemeResource ThemeForeground}"/>
-                                            </Core:DataTriggerBehavior>
-                                        </Interactivity:Interaction.Behaviors>
-                                    </Border>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

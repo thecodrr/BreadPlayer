@@ -65,6 +65,7 @@ namespace BreadPlayer
                     RootGrid.Children.Remove(NowPlayingList);
                     NowPlayingGrid.Children.Add(NowPlayingList);
                 }
+                NowPlayingList.ItemTemplate = (this.Resources["NowPlayingListItemTemplate"] as DataTemplate);
             };
         }
 
@@ -74,7 +75,8 @@ namespace BreadPlayer
             {
                 NowPlayingGrid.Children.Remove(NowPlayingList);
                 RootGrid.Children.Insert(RootGrid.Children.Count - 2, NowPlayingList);
-            }            
+                NowPlayingList.ItemTemplate = (this.Resources["NowPlayingListItemTemplate"] as DataTemplate);
+            }
         }
     }
 }
