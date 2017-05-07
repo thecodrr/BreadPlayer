@@ -3551,7 +3551,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <StackPanel Orientation="Horizontal" x:Name="myback">
+                                <StackPanel Orientation="Horizontal" x:Name="myback" Background="Transparent">
                                     <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}"/>
                                     <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                                 </StackPanel>
@@ -3644,7 +3644,7 @@ Control.IsTemplateFocusTarget="True"/>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Background="Transparent">
                                     <Border x:Name="border" Opacity="0" Width="5" Height="20" Margin="0,0,5,0" CornerRadius="3" Background="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                     <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                                 </StackPanel>
