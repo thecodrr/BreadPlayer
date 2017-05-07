@@ -266,7 +266,6 @@ namespace BreadPlayer.Core
                         default:
                             break;
                     }
-                   // GC.Collect();
                 }
             }
             catch (Exception ex)

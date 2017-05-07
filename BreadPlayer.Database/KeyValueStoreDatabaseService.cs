@@ -12,8 +12,9 @@ namespace BreadPlayer.Database
 {
     public class StaticKeyValueDatabase
     {
-        private static string DbPath { get; set; }       
+        private static string DbPath { get; set; }
         static DBreezeEngine db;
+        public static bool IsDisposed { get; set; }
         public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
             if (db == null || DbPath != dbPath)
@@ -25,6 +26,7 @@ namespace BreadPlayer.Database
                     Storage = DBreezeConfiguration.eStorage.DISK
                 };
                 db = new DBreezeEngine(dbConfig);
+                IsDisposed = false;
             }
             return db;
         }
@@ -32,6 +34,7 @@ namespace BreadPlayer.Database
         {
             db.Dispose();
             db = null;
+            IsDisposed = true;
         }
     }
     public class KeyValueStoreDatabaseService : IDatabaseService
@@ -79,8 +82,10 @@ namespace BreadPlayer.Database
         }
         public void Dispose()
         {
+            StaticKeyValueDatabase.IsDisposed = true;
             StaticKeyValueDatabase.DisposeDatabaseEngine();
-        }
+            engine = null;
+       }
 
         public T GetRecordById<T>(long id)
         {
@@ -134,6 +139,7 @@ namespace BreadPlayer.Database
         {
             await Task.Run(() =>
           {
+              ReinitEngine();
               using (var tran = engine.GetTransaction())
               {
                   tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
@@ -151,10 +157,16 @@ namespace BreadPlayer.Database
               }
           });
         }
+        private void ReinitEngine()
+        {
+            if (StaticKeyValueDatabase.IsDisposed || engine == null)
+                engine = StaticKeyValueDatabase.GetDatabaseEngine(DbPath);
+        }
         public async Task InsertRecords(IEnumerable<IDBRecord> records)
         {
             await Task.Run(() =>
             {
+                ReinitEngine();
                 using (var tran = engine.GetTransaction())
                 {
                     if (records.Any())

@@ -467,7 +467,7 @@ namespace BreadPlayer.ViewModels
                             }
                             catch (Exception ex)
                             {
-                                // BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                                BLogger.Logger.Error("Loading of a song in folder failed.", ex);
                                 //we catch and report any exception without distrubing the 'foreach flow'.
                                 await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
                                 failedCount++;
@@ -484,7 +484,7 @@ namespace BreadPlayer.ViewModels
 
                     await LibraryService.AddMediafiles(tempList);
                     await TracksCollection.AddRange(tempList).ConfigureAwait(false);
-                    await DeleteDuplicates(TracksCollection.Elements).ConfigureAwait(false);
+                    await DeleteDuplicates(tempList).ConfigureAwait(false);
 
                     AlbumArtistViewModel vm = new AlbumArtistViewModel();
                     Messenger.Instance.NotifyColleagues(MessageTypes.MSG_UPDATE_SONG_COUNT, "Done!");
@@ -502,10 +502,10 @@ namespace BreadPlayer.ViewModels
         }
         async Task DeleteDuplicates(IEnumerable<Mediafile> source)
         {
-            var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
-            if (duplicateFiles.Count() > 0)
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
+                if (duplicateFiles.Count() > 0)
                 {
                     await ShowMessageBox(async (selectedDuplicates) =>
                     {
@@ -521,16 +521,17 @@ namespace BreadPlayer.ViewModels
                                     {
                                         duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
                                         if (duplicateIndex > -1)
-                                           await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex));
+                                            await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex)).ConfigureAwait(false);
                                     }
                                 }
                                 else
-                                    await SharedLogic.RemoveMediafile(duplicate);
+                                    await SharedLogic.RemoveMediafile(duplicate).ConfigureAwait(false);
                             }
                         }
-                    }, duplicateFiles);
-                });
-            }
+                    }, duplicateFiles).ConfigureAwait(false);
+
+                }
+            });
         }
         async Task ShowMessageBox(Action<IEnumerable<Mediafile>> action, IEnumerable<Mediafile> Duplicates)
         {
