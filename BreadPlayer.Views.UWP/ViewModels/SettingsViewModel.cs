@@ -511,25 +511,31 @@ namespace BreadPlayer.ViewModels
                     {
                         if (selectedDuplicates.Any())
                         {
-                            foreach (var duplicate in selectedDuplicates)
+                            try
                             {
-                                var duplicateIndex = 0;
-                                var duplicateCount = TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
-                                if (duplicateCount > 2)
+                                foreach (var duplicate in selectedDuplicates)
                                 {
-                                    for (int i = 0; i < duplicateCount - 1; i++)
+                                    var duplicateIndex = 0;
+                                    var duplicateCount = TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
+                                    if (duplicateCount > 2)
                                     {
-                                        duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                                        if (duplicateIndex > -1)
-                                            await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex)).ConfigureAwait(false);
+                                        for (int i = 0; i < duplicateCount - 1; i++)
+                                        {
+                                            duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
+                                            if (duplicateIndex > -1)
+                                                await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex)).ConfigureAwait(false);
+                                        }
                                     }
+                                    else
+                                        await SharedLogic.RemoveMediafile(duplicate).ConfigureAwait(false);
                                 }
-                                else
-                                    await SharedLogic.RemoveMediafile(duplicate).ConfigureAwait(false);
+                            }
+                            catch(Exception ex)
+                            {
+                                BLogger.Logger.Error("Error while deleting duplicates.", ex);
                             }
                         }
                     }, duplicateFiles).ConfigureAwait(false);
-
                 }
             });
         }
