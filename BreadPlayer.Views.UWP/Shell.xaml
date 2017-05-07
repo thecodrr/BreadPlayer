@@ -261,12 +261,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Rectangle Fill="Transparent" Visibility="Collapsed" Name="seekRect" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="10"/>
-                    <Grid x:Name="infoBar" DataContext="{StaticResource Core}" Padding="0" Grid.Column="0" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="{x:Null}" Margin="0">
-                        <Grid.Resources>
+                    <AppBarButton x:Name="infoBar" CommandParameter="{Binding Path=NavigateToNowPlayingViewCommand}" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}">
+                        <AppBarButton.Resources>
                             <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                             </MenuFlyout>
-                        </Grid.Resources>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Height="Auto">
+                        </AppBarButton.Resources>
+                        <StackPanel Orientation="Horizontal" DataContext="{StaticResource Core}" VerticalAlignment="Stretch" Height="70" Margin="0,-15,0,-30">
                             <Grid x:Name="AlbumArtGrid">
                                 <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
                                 <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
@@ -277,6 +277,7 @@
                                 <TextBlock Text="{Binding  Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>
                             </StackPanel>
                         </StackPanel>
+
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
@@ -288,8 +289,8 @@
                                 <Media:ControlStoryboardAction Storyboard="{StaticResource ImageTransition}" />
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
-                    </Grid>
-
+                    </AppBarButton>
+                    
                     <Grid Grid.Column="1" Margin="0,0,10,0" x:Name="sliderGrid" x:DeferLoadStrategy="Lazy">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
