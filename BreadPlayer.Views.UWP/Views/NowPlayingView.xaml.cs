@@ -43,7 +43,9 @@ namespace BreadPlayer
         private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             SplitViewMenu.SplitViewMenu.SelectPrevious();
-            ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            //we don't want to exit fullscreen mode in mobile phones
+            if(!InitializeCore.IsMobile)
+                ApplicationView.GetForCurrentView().ExitFullScreenMode();
             ShellVM.IsPlaybarHidden = false;
         }
 

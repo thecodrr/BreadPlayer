@@ -697,6 +697,8 @@ namespace BreadPlayer.ViewModels
             if (SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             UpcomingSong = await GetUpcomingSong();
+            if (InitializeCore.IsMobile)
+                NavigateToNowPlayingView();
         }
         public async Task Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
