@@ -356,8 +356,8 @@
             <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
             <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
-                    <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="11"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
+                    <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-7dB" FontSize="11"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+7dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                 </Grid>
                 <ItemsControl Name="BandPanel" ItemsSource="{Binding Path=Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemTemplate>
@@ -369,8 +369,8 @@
                                     BorderBrush="{x:Null}" 
                                     Background="#FFC5C5C5"
                                     Style="{StaticResource CircleSlider}" 
-                                    Minimum="-14"
-        							Maximum="14"
+                                    Minimum="-7"
+        							Maximum="7"
         							LargeChange="0.2"
         							SmallChange="0.1"
                                     SnapsTo="Ticks"
@@ -390,8 +390,8 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid2">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-7dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+7dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
                 </Grid>
             </StackPanel>
             <StackPanel Margin="20,0,0,0" Orientation="Horizontal">

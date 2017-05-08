@@ -121,16 +121,16 @@
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\ChildSong.cs" />
     <Compile Include="Models\Query.cs" />
-    <Compile Include="PlayerEngines\BASSPlayerEngine.cs" />
-    <Compile Include="PlayerEngines\Effects.cs" />
-    <Compile Include="PlayerEngines\EqualizerSettings.cs" />
-    <Compile Include="PlayerEngines\FmodEqualizer.cs" />
-    <Compile Include="PlayerEngines\FmodEqualizerBand.cs" />
-    <Compile Include="PlayerEngines\FMODPlayerEngine.cs" />
-    <Compile Include="PlayerEngines\IEqualizer.cs" />
-    <Compile Include="PlayerEngines\IEqualizerBand.cs" />
-    <Compile Include="PlayerEngines\IPlayerEngine.cs" />
-    <Compile Include="PlayerEngines\NativeMethods.cs" />
+    <Compile Include="Engines\BASSEngine\BASSPlayerEngine.cs" />
+    <Compile Include="Engines\BASSEngine\Effects.cs" />
+    <Compile Include="Models\EqualizerSettings.cs" />
+    <Compile Include="Engines\FMODEngine\FmodEqualizer.cs" />
+    <Compile Include="Engines\FMODEngine\FmodEqualizerBand.cs" />
+    <Compile Include="Engines\FMODEngine\FMODPlayerEngine.cs" />
+    <Compile Include="Engines\Interfaces\IEqualizer.cs" />
+    <Compile Include="Engines\Interfaces\IEqualizerBand.cs" />
+    <Compile Include="Engines\Interfaces\IPlayerEngine.cs" />
+    <Compile Include="Engines\NativeMethods.cs" />
     <Compile Include="PortableAPIs\DispatcherTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
