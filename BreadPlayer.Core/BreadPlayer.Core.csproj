@@ -121,9 +121,11 @@
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\ChildSong.cs" />
     <Compile Include="Models\Query.cs" />
-    <Compile Include="PlayerWrapper\CoreBreadPlayer.cs" />
-    <Compile Include="PlayerWrapper\Effects.cs" />
-    <Compile Include="PlayerWrapper\NativeMethods.cs" />
+    <Compile Include="PlayerEngines\BASSPlayerEngine.cs" />
+    <Compile Include="PlayerEngines\Effects.cs" />
+    <Compile Include="PlayerEngines\FMODPlayerEngine.cs" />
+    <Compile Include="PlayerEngines\IPlayerEngine.cs" />
+    <Compile Include="PlayerEngines\NativeMethods.cs" />
     <Compile Include="PortableAPIs\DispatcherTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

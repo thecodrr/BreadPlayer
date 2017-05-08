@@ -21,10 +21,11 @@ using ManagedBass;
 using BreadPlayer.Events;
 using BreadPlayer.Models;
 using BreadPlayer.Core.Events;
+using BreadPlayer.Core.PlayerEngines;
 
 namespace BreadPlayer.Core
 {
-    public sealed class CoreBreadPlayer : ObservableObject, IDisposable
+    public sealed class BASSPlayerEngine : ObservableObject, IPlayerEngine
     {
         #region Fields
         int handle = 0;
@@ -33,7 +34,7 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Constructor
-        public CoreBreadPlayer(bool isMobile)
+        public BASSPlayerEngine(bool isMobile)
         {
             Init(isMobile);
             _sync = new SyncProcedure(EndSync);

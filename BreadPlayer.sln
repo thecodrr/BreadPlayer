@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Views.UWP", "BreadPlayer.Views.UWP\BreadPlayer.Views.UWP.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
 EndProject
@@ -21,6 +21,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Controls", "BreadPlayer.Controls\BreadPlayer.Controls.csproj", "{240C9992-F77C-4D3B-BAC2-788111B6B67B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Database", "BreadPlayer.Database\BreadPlayer.Database.csproj", "{E63C3DE4-AB33-4611-B193-9739FCCB1661}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Fmod", "BreadPlayer.Fmod\BreadPlayer.Fmod.csproj", "{0DE10841-6932-42F3-AD1C-4E17052B68DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -158,6 +160,22 @@ Global
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x64.Build.0 = Release|Any CPU
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x86.ActiveCfg = Release|Any CPU
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x86.Build.0 = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|ARM.Build.0 = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|ARM.Build.0 = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|x64.Build.0 = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{0DE10841-6932-42F3-AD1C-4E17052B68DA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
