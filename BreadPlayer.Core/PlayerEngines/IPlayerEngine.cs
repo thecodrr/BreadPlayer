@@ -19,6 +19,7 @@ namespace BreadPlayer.Core.PlayerEngines
         //PROPERTIES
         bool IsVolumeMuted { get; set; }
         Effects Effect { get; set; }
+        IEqualizer Equalizer { get; set; }
         double Volume { get; set; }
         double Position { get; set; }
         double Length { get; set; }

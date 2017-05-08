@@ -123,7 +123,12 @@
     <Compile Include="Models\Query.cs" />
     <Compile Include="PlayerEngines\BASSPlayerEngine.cs" />
     <Compile Include="PlayerEngines\Effects.cs" />
+    <Compile Include="PlayerEngines\EqualizerSettings.cs" />
+    <Compile Include="PlayerEngines\FmodEqualizer.cs" />
+    <Compile Include="PlayerEngines\FmodEqualizerBand.cs" />
     <Compile Include="PlayerEngines\FMODPlayerEngine.cs" />
+    <Compile Include="PlayerEngines\IEqualizer.cs" />
+    <Compile Include="PlayerEngines\IEqualizerBand.cs" />
     <Compile Include="PlayerEngines\IPlayerEngine.cs" />
     <Compile Include="PlayerEngines\NativeMethods.cs" />
     <Compile Include="PortableAPIs\DispatcherTimer.cs" />

@@ -29,6 +29,8 @@ namespace BreadPlayer.Core.PlayerEngines
         {
             Init(false);
         }
+
+        #region Methods
         public async Task Init(bool isMobile)
         {
             await Task.Run(() =>
@@ -47,13 +49,16 @@ namespace BreadPlayer.Core.PlayerEngines
 
                 //stop currently playing track and free the channel
                 await Stop();
-                
+
                 //create a stream of the new track
                 Result loadResult = FMODSys.CreateStream(mediaFile.Path, Mode.DEFAULT, out FMODSound);
-                
+
                 //load the stream into the channel but don't play it yet.
                 loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);
 
+                //load equalizer
+                Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
+                
                 //get and update length of the track.
                 Length = TimeSpan.FromMilliseconds(FMODSound.LengthInMilliseconds).TotalSeconds;
 
@@ -94,7 +99,7 @@ namespace BreadPlayer.Core.PlayerEngines
             }
             return false;
         }
-       
+
         public Task Pause()
         {
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Paused));
@@ -117,7 +122,7 @@ namespace BreadPlayer.Core.PlayerEngines
         }
 
         public Task Play()
-        {           
+        {
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
             return Task.Run(() =>
             {
@@ -149,7 +154,9 @@ namespace BreadPlayer.Core.PlayerEngines
                 PlayerState = PlayerState.Stopped;
             });
         }
+        #endregion
 
+        #region Callbacks
         private Result ChannelEndCallback(IntPtr channelraw, ChannelControlType controltype, ChannelControlCallbackType type, IntPtr commanddata1, IntPtr commanddata2)
         {
             if (type == ChannelControlCallbackType.SYNCPOINT)
@@ -166,49 +173,14 @@ namespace BreadPlayer.Core.PlayerEngines
                 {
                     FMODChannel.SetFadePoint(FMODChannel.Volume, 0f, FMODChannel.GetTotalSamplesLeft(FMODSound));
                 }
-                else if(position >= Last15Offset && position < Last5Offset)
+                else if (position >= Last15Offset && position < Last5Offset)
                 {
                     MediaAboutToEnd?.Invoke(this, new Events.MediaAboutToEndEventArgs(CurrentlyPlayingFile));
                 }
             }
             return Result.OK;
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~FMODPlayerEngine() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
         #endregion
-
 
         #region Properties
         bool isVolumeMuted;
@@ -229,7 +201,7 @@ namespace BreadPlayer.Core.PlayerEngines
             set
             {
                 Set(ref _volume, value);
-                if(FMODChannel != null)
+                if (FMODChannel != null)
                     FMODChannel.Volume = (float)(_volume / 100);
             }
         }
@@ -239,7 +211,7 @@ namespace BreadPlayer.Core.PlayerEngines
         {
             get
             {
-                
+
                 FMODChannel?.getPosition(out position, TimeUnit.MS);
                 FMODSys?.Update();
                 return TimeSpan.FromMilliseconds(position).TotalSeconds;
@@ -282,6 +254,50 @@ namespace BreadPlayer.Core.PlayerEngines
         {
             get { return _ignoreErrors; }
             set { Set(ref _ignoreErrors, value); }
+        }
+        IEqualizer fmodEqualizer;
+        public IEqualizer Equalizer
+        {
+            get { return fmodEqualizer; }
+            set
+            {
+                Set(ref fmodEqualizer, value);
+            }
+        }
+        #endregion
+        
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~FMODPlayerEngine() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
         }
         #endregion
 

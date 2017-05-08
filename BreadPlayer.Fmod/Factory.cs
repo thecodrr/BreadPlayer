@@ -35,7 +35,7 @@ namespace BreadPlayer.Fmod
 
 
         #region importfunctions
-
+        
         [DllImport(FMODVersion.DLL)]
         private static extern Result FMOD_System_Create                      (out IntPtr system);
 
