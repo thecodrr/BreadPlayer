@@ -15,11 +15,11 @@ using BreadPlayer.Fmod.CoreDSP;
 namespace BreadPlayer.Fmod
 {
     /*
-            'System' API.
+            'FMODSystem' API.
         */
-    public class System : HandleBase
+    public class FMODSystem : HandleBase
     {
-        public Result Release                ()
+        public Result Release()
         {
             Result result = FMOD_System_Release(rawPtr);
             if (result == Result.OK)
@@ -31,19 +31,17 @@ namespace BreadPlayer.Fmod
 
 
         // Pre-init functions.
-        public Result SetOutput              (OutputType output)
+        public OutputType Output
         {
-            return FMOD_System_SetOutput(rawPtr, output);
+            get { FMOD_System_GetOutput(rawPtr, out OutputType output); return output; }
+            set => FMOD_System_SetOutput(rawPtr, value);
         }
-        public Result GetOutput              (out OutputType output)
+        public int NumDrivers
         {
-            return FMOD_System_GetOutput(rawPtr, out output);
+            get { FMOD_System_GetNumDrivers(rawPtr, out int numdrivers); return numdrivers; }
         }
-        public Result GetNumDrivers          (out int numdrivers)
-        {
-            return FMOD_System_GetNumDrivers(rawPtr, out numdrivers);
-        }
-        public Result GetDriverInfo          (int id, StringBuilder name, int namelen, out Guid guid, out int systemrate, out SpeakerMode speakermode, out int speakermodechannels)
+
+        public Result GetDriverInfo(int id, StringBuilder name, int namelen, out Guid guid, out int systemrate, out SpeakerMode speakermode, out int speakermodechannels)
         {
             IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
 
@@ -54,95 +52,89 @@ namespace BreadPlayer.Fmod
 
             return result;
         }
-        public Result SetDriver              (int driver)
+        public int Driver
         {
-            return FMOD_System_SetDriver(rawPtr, driver);
+            get { FMOD_System_GetDriver(rawPtr, out int driver); return driver; }
+            set => FMOD_System_SetDriver(rawPtr, value);
         }
-        public Result GetDriver              (out int driver)
+        public int SoftwareChannels
         {
-            return FMOD_System_GetDriver(rawPtr, out driver);
+            get { FMOD_System_GetSoftwareChannels(rawPtr, out int numsoftwarechannels); return numsoftwarechannels; }
+            set => FMOD_System_SetSoftwareChannels(rawPtr, value);
         }
-        public Result SetSoftwareChannels    (int numsoftwarechannels)
-        {
-            return FMOD_System_SetSoftwareChannels(rawPtr, numsoftwarechannels);
-        }
-        public Result GetSoftwareChannels    (out int numsoftwarechannels)
-        {
-            return FMOD_System_GetSoftwareChannels(rawPtr, out numsoftwarechannels);
-        }
-        public Result SetSoftwareFormat      (int samplerate, SpeakerMode speakermode, int numrawspeakers)
+        public Result SetSoftwareFormat(int samplerate, SpeakerMode speakermode, int numrawspeakers)
         {
             return FMOD_System_SetSoftwareFormat(rawPtr, samplerate, speakermode, numrawspeakers);
         }
-        public Result GetSoftwareFormat      (out int samplerate, out SpeakerMode speakermode, out int numrawspeakers)
+        public Result GetSoftwareFormat(out int samplerate, out SpeakerMode speakermode, out int numrawspeakers)
         {
             return FMOD_System_GetSoftwareFormat(rawPtr, out samplerate, out speakermode, out numrawspeakers);
         }
-        public Result SetDSPBufferSize       (uint bufferlength, int numbuffers)
+        public Result SetDSPBufferSize(uint bufferlength, int numbuffers)
         {
             return FMOD_System_SetDSPBufferSize(rawPtr, bufferlength, numbuffers);
         }
-        public Result GetDSPBufferSize       (out uint bufferlength, out int numbuffers)
+        public Result GetDSPBufferSize(out uint bufferlength, out int numbuffers)
         {
             return FMOD_System_GetDSPBufferSize(rawPtr, out bufferlength, out numbuffers);
         }
-        public Result SetFileSystem          (FILE_OPENCALLBACK useropen, FILE_CLOSECALLBACK userclose, FILE_READCALLBACK userread, FILE_SEEKCALLBACK userseek, FILE_ASYNCREADCALLBACK userasyncread, FILE_ASYNCCANCELCALLBACK userasynccancel, int blockalign)
+        public Result SetFileSystem(FILE_OPENCALLBACK useropen, FILE_CLOSECALLBACK userclose, FILE_READCALLBACK userread, FILE_SEEKCALLBACK userseek, FILE_ASYNCREADCALLBACK userasyncread, FILE_ASYNCCANCELCALLBACK userasynccancel, int blockalign)
         {
             return FMOD_System_SetFileSystem(rawPtr, useropen, userclose, userread, userseek, userasyncread, userasynccancel, blockalign);
         }
-        public Result AttachFileSystem       (FILE_OPENCALLBACK useropen, FILE_CLOSECALLBACK userclose, FILE_READCALLBACK userread, FILE_SEEKCALLBACK userseek)
+        public Result AttachFileSystem(FILE_OPENCALLBACK useropen, FILE_CLOSECALLBACK userclose, FILE_READCALLBACK userread, FILE_SEEKCALLBACK userseek)
         {
             return FMOD_System_AttachFileSystem(rawPtr, useropen, userclose, userread, userseek);
         }
-        public Result SetAdvancedSettings    (ref AdvancedSettings settings)
+        public Result SetAdvancedSettings(ref AdvancedSettings settings)
         {
             settings.cbSize = Marshal.SizeOf(settings);
             return FMOD_System_SetAdvancedSettings(rawPtr, ref settings);
         }
-        public Result GetAdvancedSettings    (ref AdvancedSettings settings)
+        public Result GetAdvancedSettings(ref AdvancedSettings settings)
         {
             settings.cbSize = Marshal.SizeOf(settings);
             return FMOD_System_GetAdvancedSettings(rawPtr, ref settings);
         }
-        public Result SetCallback            (SYSTEM_CALLBACK callback, SystemCallbackType callbackmask)
+        public Result SetCallback(SYSTEM_CALLBACK callback, SystemCallbackType callbackmask)
         {
             return FMOD_System_SetCallback(rawPtr, callback, callbackmask);
         }
 
         // Plug-in support.
-        public Result SetPluginPath          (string path)
+        public Result SetPluginPath(string path)
         {
             return FMOD_System_SetPluginPath(rawPtr, Encoding.UTF8.GetBytes(path + Char.MinValue));
         }
-        public Result LoadPlugin             (string filename, out uint handle, uint priority)
+        public Result LoadPlugin(string filename, out uint handle, uint priority)
         {
             return FMOD_System_LoadPlugin(rawPtr, Encoding.UTF8.GetBytes(filename + Char.MinValue), out handle, priority);
         }
-        public Result LoadPlugin             (string filename, out uint handle)
+        public Result LoadPlugin(string filename, out uint handle)
         {
             return LoadPlugin(filename, out handle, 0);
         }
-        public Result UnloadPlugin           (uint handle)
+        public Result UnloadPlugin(uint handle)
         {
             return FMOD_System_UnloadPlugin(rawPtr, handle);
         }
-        public Result GetNumNestedPlugins    (uint handle, out int count)
+        public Result GetNumNestedPlugins(uint handle, out int count)
         {
             return FMOD_System_GetNumNestedPlugins(rawPtr, handle, out count);
         }
-        public Result GetNestedPlugin        (uint handle, int index, out uint nestedhandle)
+        public Result GetNestedPlugin(uint handle, int index, out uint nestedhandle)
         {
             return FMOD_System_GetNestedPlugin(rawPtr, handle, index, out nestedhandle);
         }
-        public Result GetNumPlugins          (PluginType plugintype, out int numplugins)
+        public Result GetNumPlugins(PluginType plugintype, out int numplugins)
         {
             return FMOD_System_GetNumPlugins(rawPtr, plugintype, out numplugins);
         }
-        public Result GetPluginHandle        (PluginType plugintype, int index, out uint handle)
+        public Result GetPluginHandle(PluginType plugintype, int index, out uint handle)
         {
             return FMOD_System_GetPluginHandle(rawPtr, plugintype, index, out handle);
         }
-        public Result GetPluginInfo          (uint handle, out PluginType plugintype, StringBuilder name, int namelen, out uint version)
+        public Result GetPluginInfo(uint handle, out PluginType plugintype, StringBuilder name, int namelen, out uint version)
         {
             IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
 
@@ -153,11 +145,11 @@ namespace BreadPlayer.Fmod
 
             return result;
         }
-        public Result SetOutputByPlugin      (uint handle)
+        public Result SetOutputByPlugin(uint handle)
         {
             return FMOD_System_SetOutputByPlugin(rawPtr, handle);
         }
-        public Result GetOutputByPlugin      (out uint handle)
+        public Result GetOutputByPlugin(out uint handle)
         {
             return FMOD_System_GetOutputByPlugin(rawPtr, out handle);
         }
@@ -193,18 +185,18 @@ namespace BreadPlayer.Fmod
         */
 
         // Init/Close.
-        public Result Init                   (int maxchannels, InitFlags flags, IntPtr extradriverdata)
+        public Result Init(int maxchannels, InitFlags flags, IntPtr extradriverdata)
         {
             return FMOD_System_Init(rawPtr, maxchannels, flags, extradriverdata);
         }
-        public Result Close                  ()
+        public Result Close()
         {
             return FMOD_System_Close(rawPtr);
         }
 
 
         // General post-init system functions.
-        public Result Update                 ()
+        public Result Update()
         {
             return FMOD_System_Update(rawPtr);
         }
@@ -225,22 +217,26 @@ namespace BreadPlayer.Fmod
         {
             return FMOD_System_GetStreamBufferSize(rawPtr, out filebuffersize, out filebuffersizetype);
         }
-        public Result Set3DSettings          (float dopplerscale, float distancefactor, float rolloffscale)
+        public Result Set3DSettings(float dopplerscale, float distancefactor, float rolloffscale)
         {
             return FMOD_System_Set3DSettings(rawPtr, dopplerscale, distancefactor, rolloffscale);
         }
-        public Result Get3DSettings          (out float dopplerscale, out float distancefactor, out float rolloffscale)
+        public Result Get3DSettings(out float dopplerscale, out float distancefactor, out float rolloffscale)
         {
             return FMOD_System_Get3DSettings(rawPtr, out dopplerscale, out distancefactor, out rolloffscale);
         }
-        public Result Set3DNumListeners      (int numlisteners)
+        public int _3DNumListeners
         {
-            return FMOD_System_Set3DNumListeners(rawPtr, numlisteners);
-        }
-        public Result Get3DNumListeners      (out int numlisteners)
-        {
-            return FMOD_System_Get3DNumListeners(rawPtr, out numlisteners);
-        }
+            get
+            {
+                FMOD_System_Get3DNumListeners(rawPtr, out int numlisteners);
+                return numlisteners;
+            }
+            set
+            {
+                FMOD_System_Set3DNumListeners(rawPtr, value);
+            }
+        }       
         public Result Set3DListenerAttributes(int listener, ref Vector pos, ref Vector vel, ref Vector forward, ref Vector up)
         {
             return FMOD_System_Set3DListenerAttributes(rawPtr, listener, ref pos, ref vel, ref forward, ref up);
@@ -270,15 +266,24 @@ namespace BreadPlayer.Fmod
             return FMOD_System_GetSpeakerModeChannels(rawPtr, mode, out channels);
         }
 
-        // System information functions.
-        public Result GetVersion             (out uint version)
+
+        // FMODSystem information functions.
+        public uint Version
         {
-            return FMOD_System_GetVersion(rawPtr, out version);
+            get
+            {
+                FMOD_System_GetVersion(rawPtr, out uint version);
+                return version;
+            }
         }
-        public Result GetOutputHandle        (out IntPtr handle)
+        public IntPtr OutputHandle
         {
-            return FMOD_System_GetOutputHandle(rawPtr, out handle);
-        }
+            get
+            {
+                FMOD_System_GetOutputHandle(rawPtr, out IntPtr handle);
+                return handle;
+            }
+        }       
         public Result GetChannelsPlaying     (out int channels, out int realchannels)
         {
             return FMOD_System_GetChannelsPlaying(rawPtr, out channels, out realchannels);
@@ -451,26 +456,24 @@ namespace BreadPlayer.Fmod
 
             return result;
         }
-        public Result GetMasterChannelGroup  (out ChannelGroup channelgroup)
+        public ChannelGroup MasterChannelGroup
         {
-            channelgroup = null;
-
-            IntPtr channelgroupraw;
-            Result result = FMOD_System_GetMasterChannelGroup(rawPtr, out channelgroupraw);
-            channelgroup = new ChannelGroup(channelgroupraw);
-
-            return result;
+            get
+            {
+                IntPtr channelgroupraw;
+                Result result = FMOD_System_GetMasterChannelGroup(rawPtr, out channelgroupraw);
+                return new ChannelGroup(channelgroupraw);
+            }
         }
-        public Result GetMasterSoundGroup    (out SoundGroup soundgroup)
+        public SoundGroup MasterSoundGroup
         {
-            soundgroup = null;
-
-            IntPtr soundgroupraw;
-            Result result = FMOD_System_GetMasterSoundGroup(rawPtr, out soundgroupraw);
-            soundgroup = new SoundGroup(soundgroupraw);
-
-            return result;
-        }
+            get
+            {
+                IntPtr soundgroupraw;
+                Result result = FMOD_System_GetMasterSoundGroup(rawPtr, out soundgroupraw);
+                return new SoundGroup(soundgroupraw);
+            }
+        }        
 
         // Routing to ports.
         public Result AttachChannelGroupToPort(uint portType, ulong portIndex, ChannelGroup channelgroup, bool passThru = false)
@@ -492,7 +495,7 @@ namespace BreadPlayer.Fmod
             return FMOD_System_GetReverbProperties(rawPtr, instance, out prop);
         }
 
-        // System level DSP functionality.
+        // FMODSystem level DSP functionality.
         public Result LockDSP            ()
         {
             return FMOD_System_LockDSP(rawPtr);
@@ -570,9 +573,9 @@ namespace BreadPlayer.Fmod
         }
 
         // Network functions
-        public Result SetNetworkProxy               (string proxy)
-        {
-            return FMOD_System_SetNetworkProxy(rawPtr, Encoding.UTF8.GetBytes(proxy + Char.MinValue));
+        public string NetworkProxy
+        {         
+            set => FMOD_System_SetNetworkProxy(rawPtr, Encoding.UTF8.GetBytes(value + Char.MinValue));
         }
         public Result GetNetworkProxy               (StringBuilder proxy, int proxylen)
         {
@@ -585,25 +588,26 @@ namespace BreadPlayer.Fmod
 
             return result;
         }
-        public Result SetNetworkTimeout      (int timeout)
+        public int NetworkTimeout
         {
-            return FMOD_System_SetNetworkTimeout(rawPtr, timeout);
-        }
-        public Result GetNetworkTimeout(out int timeout)
-        {
-            return FMOD_System_GetNetworkTimeout(rawPtr, out timeout);
+            get
+            {
+                FMOD_System_GetNetworkTimeout(rawPtr, out int timeout);
+                return timeout;
+            }
+            set => FMOD_System_SetNetworkTimeout(rawPtr, value);
         }
 
         // Userdata set/get
-        public Result SetUserData            (IntPtr userdata)
+        public IntPtr UserData
         {
-            return FMOD_System_SetUserData(rawPtr, userdata);
-        }
-        public Result GetUserData            (out IntPtr userdata)
-        {
-            return FMOD_System_GetUserData(rawPtr, out userdata);
-        }
-
+            get
+            {
+                FMOD_System_GetUserData(rawPtr, out IntPtr userdata);
+                return userdata;
+            }
+            set => FMOD_System_SetUserData(rawPtr, value);
+        } 
 
         #region importfunctions
         [DllImport(FMODVersion.DLL)]
@@ -794,7 +798,7 @@ namespace BreadPlayer.Fmod
 
         #region wrapperinternal
 
-        public System(IntPtr raw)
+        public FMODSystem(IntPtr raw)
             : base(raw)
         {
         }

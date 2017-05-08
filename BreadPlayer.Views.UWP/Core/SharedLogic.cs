@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Controls;
 using BreadPlayer.Common;
 using Windows.UI.Xaml;
 using BreadPlayer.Database;
+using BreadPlayer.Core.PlayerEngines;
 
 namespace BreadPlayer.Core
 {
@@ -39,14 +40,13 @@ namespace BreadPlayer.Core
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        static CoreBreadPlayer player;
-        public static CoreBreadPlayer Player
+        static IPlayerEngine player;
+        public static IPlayerEngine Player
         {
             get
             {
                 if (player == null)
-                    player = new CoreBreadPlayer(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
-
+                    player = new FMODPlayerEngine();
                 return player;
             }
         }

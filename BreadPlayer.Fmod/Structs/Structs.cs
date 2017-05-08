@@ -1,6 +1,6 @@
 ﻿using BreadPlayer.Fmod.Enums;
 using System;
-using System.Collections.Generic;
+
 using System.Runtime.InteropServices;
 using System.Text;
 using static BreadPlayer.Fmod.Callbacks;
@@ -15,11 +15,11 @@ namespace BreadPlayer.Fmod.Structs
 
         [REMARKS]
         BreadPlayer.Fmod uses a left handed co-ordinate system by default.
-        To use a right handed co-ordinate system specify FMOD_INIT_3D_RIGHTHANDED from FMOD_INITFLAGS in System::init.
+        To use a right handed co-ordinate system specify FMOD_INIT_3D_RIGHTHANDED from FMOD_INITFLAGS in FMODSystem::init.
 
         [SEE_ALSO]
-        System::set3DListenerAttributes
-        System::get3DListenerAttributes
+        FMODSystem::set3DListenerAttributes
+        FMODSystem::get3DListenerAttributes
         Channel::set3DAttributes
         Channel::get3DAttributes
         Geometry::addPolygon
@@ -115,8 +115,8 @@ namespace BreadPlayer.Fmod.Structs
        a null description pointer.
 
        [SEE_ALSO]
-       System::getNumNestedPlugins
-       System::getNestedPlugin
+       FMODSystem::getNumNestedPlugins
+       FMODSystem::getNestedPlugin
    ]
    */
     [StructLayout(LayoutKind.Sequential)]
@@ -222,7 +222,7 @@ namespace BreadPlayer.Fmod.Structs
            [REMARKS]
 
            [SEE_ALSO]
-           System::AttachChannelGroupToPort
+           FMODSystem::AttachChannelGroupToPort
        ]
        */
     public struct PortIndex
@@ -234,8 +234,8 @@ namespace BreadPlayer.Fmod.Structs
     [STRUCTURE]
     [
         [DESCRIPTION]
-        Use this structure with System::createSound when more control is needed over loading.
-        The possible reasons to use this with System::createSound are:
+        Use this structure with FMODSystem::createSound when more control is needed over loading.
+        The possible reasons to use this with FMODSystem::createSound are:
 
         - Loading a file from memory.
         - Loading a file from within another larger (possibly wad/pak) file, by giving the loader an offset and length.
@@ -248,7 +248,7 @@ namespace BreadPlayer.Fmod.Structs
         See below on what members to fill for each of the above types of sound you want to create.
 
         [REMARKS]
-        This structure is optional!  Specify 0 or NULL in System::createSound if you don't need it!
+        This structure is optional!  Specify 0 or NULL in FMODSystem::createSound if you don't need it!
 
         <u>Loading a file from memory.</u>
 
@@ -284,7 +284,7 @@ namespace BreadPlayer.Fmod.Structs
         - Mandatory.  Specify 'dlsname'.
 
         Setting the 'decodebuffersize' is for cpu intensive codecs that may be causing stuttering, not file intensive codecs (ie those from CD or netstreams) which are normally
-        altered with System::setStreamBufferSize.  As an example of cpu intensive codecs, an mp3 file will take more cpu to decode than a PCM wav file.
+        altered with FMODSystem::setStreamBufferSize.  As an example of cpu intensive codecs, an mp3 file will take more cpu to decode than a PCM wav file.
 
         If you have a stuttering effect, then it is using more cpu than the decode buffer playback rate can keep up with.  Increasing the decode buffersize will most likely solve this problem.
 
@@ -297,8 +297,8 @@ namespace BreadPlayer.Fmod.Structs
         Members marked with [w] mean the variable can be written to.  The user can set the value.
 
         [SEE_ALSO]
-        System::createSound
-        System::setStreamBufferSize
+        FMODSystem::createSound
+        FMODSystem::setStreamBufferSize
         FMOD_MODE
         FMOD_SOUND_FORMAT
         FMOD_SOUND_TYPE
@@ -367,11 +367,11 @@ namespace BreadPlayer.Fmod.Structs
         <br>
         Members marked with [r] mean the variable is modified by BreadPlayer.Fmod and is for reading purposes only.  Do not change this value.<br>
         Members marked with [w] mean the variable can be written to.  The user can set the value.<br>
-        Members marked with [r/w] are either read or write depending on if you are using System::setReverbProperties (w) or System::getReverbProperties (r).
+        Members marked with [r/w] are either read or write depending on if you are using FMODSystem::setReverbProperties (w) or FMODSystem::getReverbProperties (r).
 
         [SEE_ALSO]
-        System::setReverbProperties
-        System::getReverbProperties
+        FMODSystem::setReverbProperties
+        FMODSystem::getReverbProperties
         FMOD_REVERB_PRESETS
     ]
     */
@@ -454,8 +454,8 @@ namespace BreadPlayer.Fmod.Structs
             maxMPEGCodecs / maxADPCMCodecs / maxXMACodecs will determine the maximum cpu usage of playing realtime samples.  Use this to lower potential excess cpu usage and also control memory usage.<br>
 
             [SEE_ALSO]
-            System::setAdvancedSettings
-            System::getAdvancedSettings
+            FMODSystem::setAdvancedSettings
+            FMODSystem::getAdvancedSettings
         ]
         */
     [StructLayout(LayoutKind.Sequential)]
@@ -471,7 +471,7 @@ namespace BreadPlayer.Fmod.Structs
         public int maxPCMCodecs;               /* [r/w] Optional. Specify 0 to ignore. For use with PS3 only.                          PCM    codecs consume 12,672 bytes per instance and this number will determine how many streams and PCM voices can be played simultaneously. Default = 16. */
         public int ASIONumChannels;            /* [r/w] Optional. Specify 0 to ignore. Number of channels available on the ASIO device. */
         public IntPtr ASIOChannelList;            /* [r/w] Optional. Specify 0 to ignore. Pointer to an array of strings (number of entries defined by ASIONumChannels) with ASIO channel names. */
-        public IntPtr ASIOSpeakerList;            /* [r/w] Optional. Specify 0 to ignore. Pointer to a list of speakers that the ASIO channels map to.  This can be called after System::init to remap ASIO output. */
+        public IntPtr ASIOSpeakerList;            /* [r/w] Optional. Specify 0 to ignore. Pointer to a list of speakers that the ASIO channels map to.  This can be called after FMODSystem::init to remap ASIO output. */
         public float HRTFMinAngle;               /* [r/w] Optional.                      For use with FMOD_INIT_HRTF_LOWPASS.  The angle range (0-360) of a 3D sound in relation to the listener, at which the HRTF function begins to have an effect. 0 = in front of the listener. 180 = from 90 degrees to the left of the listener to 90 degrees to the right. 360 = behind the listener. Default = 180.0. */
         public float HRTFMaxAngle;               /* [r/w] Optional.                      For use with FMOD_INIT_HRTF_LOWPASS.  The angle range (0-360) of a 3D sound in relation to the listener, at which the HRTF function has maximum effect. 0 = front of the listener. 180 = from 90 degrees to the left of the listener to 90 degrees to the right. 360 = behind the listener. Default = 360.0. */
         public float HRTFFreq;                   /* [r/w] Optional. Specify 0 to ignore. For use with FMOD_INIT_HRTF_LOWPASS.  The cutoff frequency of the HRTF's lowpass filter function when at maximum effect. (i.e. at HRTFMaxAngle).  Default = 4000.0. */

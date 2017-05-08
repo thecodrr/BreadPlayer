@@ -1,7 +1,7 @@
 ﻿using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
 using System;
-using System.Collections.Generic;
+
 using System.Runtime.InteropServices;
 using System.Text;
 using static BreadPlayer.Fmod.Callbacks;
@@ -111,7 +111,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         Members marked with [w] mean the variable can be written to.  The user can set the value.
 
         [SEE_ALSO]
-        System::createDSP
+        FMODSystem::createDSP
         DSP::setParameterFloat
         DSP::getParameterFloat
         FMOD_DSP_PARAMETER_DESC
@@ -139,7 +139,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         Members marked with [w] mean the variable can be written to.  The user can set the value.
 
         [SEE_ALSO]
-        System::createDSP
+        FMODSystem::createDSP
         DSP::setParameterInt
         DSP::getParameterInt
         FMOD_DSP_PARAMETER_DESC
@@ -167,7 +167,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         Members marked with [w] mean the variable can be written to.  The user can set the value.
 
         [SEE_ALSO]
-        System::createDSP
+        FMODSystem::createDSP
         DSP::setParameterBool
         DSP::getParameterBool
         FMOD_DSP_PARAMETER_DESC
@@ -192,7 +192,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         Members marked with [w] mean the variable can be written to.  The user can set the value.
 
         [SEE_ALSO]
-        System::createDSP
+        FMODSystem::createDSP
         DSP::setParameterData
         DSP::getParameterData
         FMOD_DSP_PARAMETER_DATA_TYPE
@@ -223,8 +223,8 @@ namespace BreadPlayer.Fmod.CoreDSP
         A step value of 0.0 would mean the full floating point range is accessable.
 
         [SEE_ALSO]
-        System::createDSP
-        System::getDSP
+        FMODSystem::createDSP
+        FMODSystem::getDSP
     ]
     */
     [StructLayout(LayoutKind.Explicit)]
@@ -418,7 +418,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         The other is to use DSP::showConfigDialog.  This is platform specific and requires a GUI, and will display a dialog box to configure the plugin.
 
         [SEE_ALSO]    
-        System::createDSP
+        FMODSystem::createDSP
         DSP::setParameterFloat
         DSP::setParameterInt
         DSP::setParameterBool
@@ -476,7 +476,7 @@ namespace BreadPlayer.Fmod.CoreDSP
 
         public DSP_SYSTEM_REGISTER_CALLBACK sys_register;       /* [w] Register callback.  This is called when DSP unit is loaded/registered.  Useful for 'global'/per system object init for plugin.  Can be null. */
         public DSP_SYSTEM_DEREGISTER_CALLBACK sys_deregister;     /* [w] Deregister callback.  This is called when DSP unit is unloaded/deregistered.  Useful as 'global'/per system object shutdown for plugin.  Can be null. */
-        public DSP_SYSTEM_MIX_CALLBACK sys_mix;            /* [w] System mix stage callback.  This is called when the mixer starts to execute or is just finishing executing.  Useful for 'global'/per system object once a mix update calls for a plugin.  Can be null. */
+        public DSP_SYSTEM_MIX_CALLBACK sys_mix;            /* [w] FMODSystem mix stage callback.  This is called when the mixer starts to execute or is just finishing executing.  Useful for 'global'/per system object once a mix update calls for a plugin.  Can be null. */
     }
 
     /*
@@ -529,7 +529,7 @@ namespace BreadPlayer.Fmod.CoreDSP
     [STRUCTURE] 
     [
         [DESCRIPTION]
-        Struct containing System level callbacks for plugins, to enable a plugin to query information about the system or allocate memory using BreadPlayer.Fmod's (and therefore possibly the game's) allocators.
+        Struct containing FMODSystem level callbacks for plugins, to enable a plugin to query information about the system or allocate memory using BreadPlayer.Fmod's (and therefore possibly the game's) allocators.
 
         [REMARKS]
         Members marked with [r] mean the variable is modified by BreadPlayer.Fmod and is for reading purposes only.  Do not change this value.
@@ -565,7 +565,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         Members marked with [r] mean the variable is modified by BreadPlayer.Fmod and is for reading purposes only.  Do not change this value.
         Members marked with [w] mean the variable can be written to.  The user can set the value.
         
-        'systemobject' is an integer that relates to the System object that created the DSP or registered the DSP plugin.  If only 1 System object is created then it should be 0.  A second object would be 1 and so on.
+        'systemobject' is an integer that relates to the FMODSystem object that created the DSP or registered the DSP plugin.  If only 1 FMODSystem object is created then it should be 0.  A second object would be 1 and so on.
         FMOD_DSP_STATE_SYSTEMCALLBACKS::getsamplerate and FMOD_DSP_STATE_SYSTEMCALLBACKS::getblocksize could return different results so it could be relevant to plugin developers to monitor which object is being used.
 
         [SEE_ALSO]
@@ -583,7 +583,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         public IntPtr sidechaindata;       /* [r] The mixed result of all incoming sidechains is stored at this pointer address. */
         public int sidechainchannels;   /* [r] The number of channels of pcm data stored within the sidechain buffer. */
         public IntPtr callbacks;           /* [r] Struct containing callbacks for system level functionality. */
-        public int systemobject;        /* [r] BreadPlayer.Fmod::System object index, relating to the System object that created this DSP. */
+        public int systemobject;        /* [r] BreadPlayer.Fmod::FMODSystem object index, relating to the FMODSystem object that created this DSP. */
     }
 
     /*

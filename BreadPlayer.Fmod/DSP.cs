@@ -26,13 +26,13 @@ namespace BreadPlayer.Fmod
             }
             return result;
         }
-        public Result getSystemObject           (out System system)
+        public Result getSystemObject           (out FMODSystem system)
         {
             system = null;
 
             IntPtr systemraw;
             Result result = FMOD_DSP_GetSystemObject(rawPtr, out systemraw);
-            system = new System(systemraw);
+            system = new FMODSystem(systemraw);
 
             return result;
         }

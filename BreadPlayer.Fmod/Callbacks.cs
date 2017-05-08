@@ -1,8 +1,6 @@
 ﻿using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Fmod
 {

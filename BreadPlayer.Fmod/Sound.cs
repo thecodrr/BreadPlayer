@@ -27,13 +27,13 @@ namespace BreadPlayer.Fmod
             }
             return result;
         }
-        public Result getSystemObject         (out System system)
+        public Result getSystemObject         (out FMODSystem system)
         {
             system = null;
 
             IntPtr systemraw;
             Result result = FMOD_Sound_GetSystemObject(rawPtr, out systemraw);
-            system = new System(systemraw);
+            system = new FMODSystem(systemraw);
 
             return result;
         }
@@ -109,6 +109,14 @@ namespace BreadPlayer.Fmod
             Marshal.FreeHGlobal(stringMem);
 
             return result;
+        }
+        public uint LengthInMilliseconds
+        {
+            get
+            {
+                FMOD_Sound_GetLength(rawPtr, out uint length, TimeUnit.MS);
+                return length;
+            }
         }
         public Result getLength               (out uint length, TimeUnit lengthtype)
         {

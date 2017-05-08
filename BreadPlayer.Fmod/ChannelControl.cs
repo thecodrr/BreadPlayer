@@ -17,13 +17,13 @@ namespace BreadPlayer.Fmod
         */
     public class ChannelControl : HandleBase
     {
-        public Result getSystemObject(out System system)
+        public Result getSystemObject(out FMODSystem system)
         {
             system = null;
 
             IntPtr systemraw;
             Result result = FMOD_ChannelGroup_GetSystemObject(rawPtr, out systemraw);
-            system = new System(systemraw);
+            system = new FMODSystem(systemraw);
 
             return result;
         }
@@ -45,12 +45,14 @@ namespace BreadPlayer.Fmod
         {
             get
             {
-                FMOD_ChannelGroup_GetVolume(rawPtr, out float volume);
+                float volume = 0;
+                FMOD_ChannelGroup_GetVolume(rawPtr, out volume);
                 return volume;
             }
             set
             {
-                FMOD_ChannelGroup_SetVolume(rawPtr, value);
+                if(rawPtr != null)
+                    FMOD_ChannelGroup_SetVolume(rawPtr, value);
             }
         }
        

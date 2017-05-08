@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using System.Text;
 
 namespace BreadPlayer.Fmod.CoreDSP
@@ -47,10 +47,10 @@ namespace BreadPlayer.Fmod.CoreDSP
         These definitions can be used for creating BreadPlayer.Fmod defined special effects or DSP units.
 
         [REMARKS]
-        To get them to be active, first create the unit, then add it somewhere into the DSP network, either at the front of the network near the soundcard unit to affect the global output (by using System::getDSPHead), or on a single channel (using Channel::getDSPHead).
+        To get them to be active, first create the unit, then add it somewhere into the DSP network, either at the front of the network near the soundcard unit to affect the global output (by using FMODSystem::getDSPHead), or on a single channel (using Channel::getDSPHead).
 
         [SEE_ALSO]
-        System::createDSPByType
+        FMODSystem::createDSPByType
     ]
     */
     public enum DspType : int
@@ -498,7 +498,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         The original code is COPYRIGHT 1999-2003 Stephan M. Bernsee <smb@dspdimension.com>.
         
         'maxchannels' dictates the amount of memory allocated.  By default, the maxchannels value is 0.  If BreadPlayer.Fmod is set to stereo, the pitch shift unit will allocate enough memory for 2 channels.  If it is 5.1, it will allocate enough memory for a 6 channel pitch shift, etc.
-        If the pitch shift effect is only ever applied to the global mix (ie it was added with System::addDSP), then 0 is the value to set as it will be enough to handle all speaker modes.
+        If the pitch shift effect is only ever applied to the global mix (ie it was added with FMODSystem::addDSP), then 0 is the value to set as it will be enough to handle all speaker modes.
         When the pitch shift is added to a channel (ie Channel::addDSP) then the channel count that comes in could be anything from 1 to 8 possibly.  It is only in this case where you might want to increase the channel count above the output's channel count.
         If a channel pitch shift is set to a lower number than the sound's channel count that is coming in, it will not pitch shift the sound.
 
@@ -562,7 +562,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         DSP::setParameterFloat
         DSP::getParameterFloat
         FMOD_DSP_TYPE
-        System::addDSP
+        FMODSystem::addDSP
     ]
     */
     public enum DspITecho

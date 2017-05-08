@@ -11,11 +11,11 @@ using System.Runtime.InteropServices;
 namespace BreadPlayer.Fmod
 {
     /*
-            BreadPlayer.Fmod System factory functions.  Use this to create an BreadPlayer.Fmod System Instance.  below you will see System init/close to get started.
+            BreadPlayer.Fmod FMODSystem factory functions.  Use this to create an BreadPlayer.Fmod FMODSystem Instance.  below you will see FMODSystem init/close to get started.
         */
     public class Factory
     {
-        public static Result System_Create(out System system)
+        public static Result SystemCreate(out FMODSystem system)
         {
             system = null;
 
@@ -28,7 +28,7 @@ namespace BreadPlayer.Fmod
                 return result;
             }
 
-            system = new System(rawPtr);
+            system = new FMODSystem(rawPtr);
 
             return result;
         }

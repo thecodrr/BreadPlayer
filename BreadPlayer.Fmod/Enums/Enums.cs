@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+
 using System.Text;
 
 namespace BreadPlayer.Fmod.Enums
@@ -44,7 +44,7 @@ namespace BreadPlayer.Fmod.Enums
         ERR_HTTP_SERVER_ERROR,     /* A HTTP server error occurred. */
         ERR_HTTP_TIMEOUT,          /* The HTTP request timed out. */
         ERR_INITIALIZATION,        /* BreadPlayer.Fmod was not initialized correctly to support this function. */
-        ERR_INITIALIZED,           /* Cannot call this command after System::init. */
+        ERR_INITIALIZED,           /* Cannot call this command after FMODSystem::init. */
         ERR_INTERNAL,              /* An error occurred that wasn't supposed to.  Contact support. */
         ERR_INVALID_FLOAT,         /* Value passed in was a NaN, Inf or denormalized float. */
         ERR_INVALID_HANDLE,        /* An invalid object handle was used. */
@@ -81,10 +81,10 @@ namespace BreadPlayer.Fmod.Enums
         ERR_SUBSOUND_ALLOCATED,    /* This subsound is already being used by another sound, you cannot have more than one parent to a sound.  Null out the other parent's entry first. */
         ERR_SUBSOUND_CANTMOVE,     /* Shared subsounds cannot be replaced or moved from their parent stream, such as when the parent stream is an FSB file. */
         ERR_TAGNOTFOUND,           /* The specified tag could not be found or there are no tags. */
-        ERR_TOOMANYCHANNELS,       /* The sound created exceeds the allowable input channel count.  This can be increased using the 'maxinputchannels' parameter in System::setSoftwareFormat. */
+        ERR_TOOMANYCHANNELS,       /* The sound created exceeds the allowable input channel count.  This can be increased using the 'maxinputchannels' parameter in FMODSystem::setSoftwareFormat. */
         ERR_TRUNCATED,             /* The retrieved string is too long to fit in the supplied buffer and has been truncated. */
         ERR_UNIMPLEMENTED,         /* Something in BreadPlayer.Fmod hasn't been implemented when it should be! contact support! */
-        ERR_UNINITIALIZED,         /* This command failed because System::init or System::setDriver was not called. */
+        ERR_UNINITIALIZED,         /* This command failed because FMODSystem::init or FMODSystem::setDriver was not called. */
         ERR_UNSUPPORTED,           /* A command issued was not supported by this object.  Possibly a plugin without certain callbacks specified. */
         ERR_VERSION,               /* The version number of this file format is not supported. */
         ERR_EVENT_ALREADY_LOADED,  /* The specified bank has already been loaded. */
@@ -92,7 +92,7 @@ namespace BreadPlayer.Fmod.Enums
         ERR_EVENT_LIVEUPDATE_MISMATCH, /* The live update connection failed due to the game data being out of sync with the tool. */
         ERR_EVENT_LIVEUPDATE_TIMEOUT, /* The live update connection timed out. */
         ERR_EVENT_NOTFOUND,        /* The requested event, bus or vca could not be found. */
-        ERR_STUDIO_UNINITIALIZED,  /* The Studio::System object is not yet initialized. */
+        ERR_STUDIO_UNINITIALIZED,  /* The Studio::FMODSystem object is not yet initialized. */
         ERR_STUDIO_NOT_LOADED,     /* The specified resource is not loaded, so it can't be unloaded. */
         ERR_INVALID_STRING,        /* An invalid string was passed to this function. */
         ERR_ALREADY_LOCKED,        /* The specified resource is already locked. */
@@ -126,10 +126,10 @@ namespace BreadPlayer.Fmod.Enums
 [ENUM]
 [
    [DESCRIPTION]
-   These output types are used with System::setOutput / System::getOutput, to choose which output method to use.
+   These output types are used with FMODSystem::setOutput / FMODSystem::getOutput, to choose which output method to use.
 
    [REMARKS]
-   To pass information to the driver when initializing fmod use the *extradriverdata* parameter in System::init for the following reasons.
+   To pass information to the driver when initializing fmod use the *extradriverdata* parameter in FMODSystem::init for the following reasons.
 
    - FMOD_OUTPUTTYPE_WAVWRITER     - extradriverdata is a pointer to a char * file name that the wav writer will output to.
    - FMOD_OUTPUTTYPE_WAVWRITER_NRT - extradriverdata is a pointer to a char * file name that the wav writer will output to.
@@ -139,7 +139,7 @@ namespace BreadPlayer.Fmod.Enums
 
    Currently these are the only BreadPlayer.Fmod drivers that take extra information.  Other unknown plugins may have different requirements.
 
-   Note! If FMOD_OUTPUTTYPE_WAVWRITER_NRT or FMOD_OUTPUTTYPE_NOSOUND_NRT are used, and if the System::update function is being called
+   Note! If FMOD_OUTPUTTYPE_WAVWRITER_NRT or FMOD_OUTPUTTYPE_NOSOUND_NRT are used, and if the FMODSystem::update function is being called
    very quickly (ie for a non realtime decode) it may be being called too quickly for the BreadPlayer.Fmod streamer thread to respond to.
    The result will be a skipping/stuttering output in the captured audio.
 
@@ -147,12 +147,12 @@ namespace BreadPlayer.Fmod.Enums
    as it will lock the mixer and the streamer together in the same thread.
 
    [SEE_ALSO]
-       System::setOutput
-       System::getOutput
-       System::setSoftwareFormat
-       System::getSoftwareFormat
-       System::init
-       System::update
+       FMODSystem::setOutput
+       FMODSystem::getOutput
+       FMODSystem::setSoftwareFormat
+       FMODSystem::getSoftwareFormat
+       FMODSystem::init
+       FMODSystem::update
        FMOD_INITFLAGS
 ]
 */
@@ -160,11 +160,11 @@ namespace BreadPlayer.Fmod.Enums
     {
         AUTODETECT,      /* Picks the best output mode for the platform. This is the default. */
 
-        UNKNOWN,         /* All - 3rd party plugin, unknown. This is for use with System::getOutput only. */
+        UNKNOWN,         /* All - 3rd party plugin, unknown. This is for use with FMODSystem::getOutput only. */
         NOSOUND,         /* All - Perform all mixing but discard the final output. */
         WAVWRITER,       /* All - Writes output to a .wav file. */
-        NOSOUND_NRT,     /* All - Non-realtime version of FMOD_OUTPUTTYPE_NOSOUND. User can drive mixer with System::update at whatever rate they want. */
-        WAVWRITER_NRT,   /* All - Non-realtime version of FMOD_OUTPUTTYPE_WAVWRITER. User can drive mixer with System::update at whatever rate they want. */
+        NOSOUND_NRT,     /* All - Non-realtime version of FMOD_OUTPUTTYPE_NOSOUND. User can drive mixer with FMODSystem::update at whatever rate they want. */
+        WAVWRITER_NRT,   /* All - Non-realtime version of FMOD_OUTPUTTYPE_WAVWRITER. User can drive mixer with FMODSystem::update at whatever rate they want. */
 
         DSOUND,          /* Win                  - Direct Sound.                        (Default on Windows XP and below) */
         WINMM,           /* Win                  - Windows Multimedia. */
@@ -263,13 +263,13 @@ namespace BreadPlayer.Fmod.Enums
     public enum MemoryType : uint
     {
         NORMAL = 0x00000000,       /* Standard memory. */
-        STREAM_FILE = 0x00000001,       /* Stream file buffer, size controllable with System::setStreamBufferSize. */
+        STREAM_FILE = 0x00000001,       /* Stream file buffer, size controllable with FMODSystem::setStreamBufferSize. */
         STREAM_DECODE = 0x00000002,       /* Stream decode buffer, size controllable with FMOD_CREATESOUNDEXINFO::decodebuffersize. */
         SAMPLEDATA = 0x00000004,       /* Sample data buffer.  Raw audio data, usually PCM/MPEG/ADPCM/XMA data. */
         DSP_BUFFER = 0x00000008,       /* DSP memory block allocated when more than 1 output exists on a DSP node. */
         PLUGIN = 0x00000010,       /* Memory allocated by a third party plugin. */
         XBOX360_PHYSICAL = 0x00100000,       /* Requires XPhysicalAlloc / XPhysicalFree. */
-        PERSISTENT = 0x00200000,       /* Persistent memory. Memory will be freed when System::release is called. */
+        PERSISTENT = 0x00200000,       /* Persistent memory. Memory will be freed when FMODSystem::release is called. */
         SECONDARY = 0x00400000,       /* Secondary memory. Allocation should be in secondary memory. For example RSX on the PS3. */
         ALL = 0xFFFFFFFF
     }
@@ -278,7 +278,7 @@ namespace BreadPlayer.Fmod.Enums
     [ENUM]
     [
         [DESCRIPTION]
-        These are speaker types defined for use with the System::setSoftwareFormat command.
+        These are speaker types defined for use with the FMODSystem::setSoftwareFormat command.
 
         [REMARKS]
         Note below the phrase 'sound channels' is used.  These are the subchannels inside a sound, they are not related and
@@ -288,7 +288,7 @@ namespace BreadPlayer.Fmod.Enums
         FMOD_SPEAKERMODE_RAW<br>
         ---------------------<br>
         This mode is for output devices that are not specifically mono/stereo/quad/surround/5.1 or 7.1, but are multichannel.<br>
-        Use System::setSoftwareFormat to specify the number of speakers you want to address, otherwise it will default to 2 (stereo).<br>
+        Use FMODSystem::setSoftwareFormat to specify the number of speakers you want to address, otherwise it will default to 2 (stereo).<br>
         Sound channels map to speakers sequentially, so a mono sound maps to output speaker 0, stereo sound maps to output speaker 0 & 1.<br>
         The user assumes knowledge of the speaker order.  FMOD_SPEAKER enumerations may not apply, so raw channel indices should be used.<br>
         Multichannel sounds map input channels to output channels 1:1. <br>
@@ -356,15 +356,15 @@ namespace BreadPlayer.Fmod.Enums
         <br>
 
         [SEE_ALSO]
-        System::setSoftwareFormat
-        System::getSoftwareFormat
+        FMODSystem::setSoftwareFormat
+        FMODSystem::getSoftwareFormat
         DSP::setChannelFormat
     ]
     */
     public enum SpeakerMode : int
     {
         DEFAULT,          /* Default speaker mode based on operating system/output mode.  Windows = control panel setting, Xbox = 5.1, PS3 = 7.1 etc. */
-        RAW,              /* There is no specific speakermode.  Sound channels are mapped in order of input to output.  Use System::setSoftwareFormat to specify speaker count. See remarks for more information. */
+        RAW,              /* There is no specific speakermode.  Sound channels are mapped in order of input to output.  Use FMODSystem::setSoftwareFormat to specify speaker count. See remarks for more information. */
         MONO,             /* The speakers are monaural. */
         STEREO,           /* The speakers are stereo. */
         QUAD,             /* 4 speaker setup.  This includes front left, front right, surround left, surround right.  */
@@ -384,8 +384,8 @@ namespace BreadPlayer.Fmod.Enums
         [REMARKS]
 
         [SEE_ALSO]
-        System::setSpeakerPosition
-        System::getSpeakerPosition
+        FMODSystem::setSpeakerPosition
+        FMODSystem::getSpeakerPosition
     ]
     */
     public enum Speaker : int
@@ -476,15 +476,15 @@ namespace BreadPlayer.Fmod.Enums
     [ENUM]
     [
         [DESCRIPTION]
-        These are plugin types defined for use with the System::getNumPlugins,
-        System::getPluginInfo and System::unloadPlugin functions.
+        These are plugin types defined for use with the FMODSystem::getNumPlugins,
+        FMODSystem::getPluginInfo and FMODSystem::unloadPlugin functions.
 
         [REMARKS]
 
         [SEE_ALSO]
-        System::getNumPlugins
-        System::getPluginInfo
-        System::unloadPlugin
+        FMODSystem::getNumPlugins
+        FMODSystem::getPluginInfo
+        FMODSystem::unloadPlugin
     ]
     */
     public enum PluginType : int
@@ -502,15 +502,15 @@ namespace BreadPlayer.Fmod.Enums
     FMOD_INITFLAGS
 
     [DESCRIPTION]
-    Initialization flags.  Use them with System::init in the *flags* parameter to change various behavior.
+    Initialization flags.  Use them with FMODSystem::init in the *flags* parameter to change various behavior.
 
     [REMARKS]
-    Use System::setAdvancedSettings to adjust settings for some of the features that are enabled by these flags.
+    Use FMODSystem::setAdvancedSettings to adjust settings for some of the features that are enabled by these flags.
 
     [SEE_ALSO]
-    System::init
-    System::update
-    System::setAdvancedSettings
+    FMODSystem::init
+    FMODSystem::update
+    FMODSystem::setAdvancedSettings
     Channel::set3DOcclusion
 ]
 */
@@ -518,13 +518,13 @@ namespace BreadPlayer.Fmod.Enums
     public enum InitFlags : uint
     {
         NORMAL = 0x00000000, /* Initialize normally */
-        STREAM_FROM_UPDATE = 0x00000001, /* No stream thread is created internally.  Streams are driven from System::update.  Mainly used with non-realtime outputs. */
-        MIX_FROM_UPDATE = 0x00000002, /* Win/Wii/PS3/Xbox/Xbox 360 Only - BreadPlayer.Fmod Mixer thread is woken up to do a mix when System::update is called rather than waking periodically on its own timer. */
+        STREAM_FROM_UPDATE = 0x00000001, /* No stream thread is created internally.  Streams are driven from FMODSystem::update.  Mainly used with non-realtime outputs. */
+        MIX_FROM_UPDATE = 0x00000002, /* Win/Wii/PS3/Xbox/Xbox 360 Only - BreadPlayer.Fmod Mixer thread is woken up to do a mix when FMODSystem::update is called rather than waking periodically on its own timer. */
         _3D_RIGHTHANDED = 0x00000004, /* BreadPlayer.Fmod will treat +X as right, +Y as up and +Z as backwards (towards you). */
-        CHANNEL_LOWPASS = 0x00000100, /* All FMOD_3D based voices will add a software lowpass filter effect into the DSP chain which is automatically used when Channel::set3DOcclusion is used or the geometry API.   This also causes sounds to sound duller when the sound goes behind the listener, as a fake HRTF style effect.  Use System::setAdvancedSettings to disable or adjust cutoff frequency for this feature. */
-        CHANNEL_DISTANCEFILTER = 0x00000200, /* All FMOD_3D based voices will add a software lowpass and highpass filter effect into the DSP chain which will act as a distance-automated bandpass filter. Use System::setAdvancedSettings to adjust the center frequency. */
+        CHANNEL_LOWPASS = 0x00000100, /* All FMOD_3D based voices will add a software lowpass filter effect into the DSP chain which is automatically used when Channel::set3DOcclusion is used or the geometry API.   This also causes sounds to sound duller when the sound goes behind the listener, as a fake HRTF style effect.  Use FMODSystem::setAdvancedSettings to disable or adjust cutoff frequency for this feature. */
+        CHANNEL_DISTANCEFILTER = 0x00000200, /* All FMOD_3D based voices will add a software lowpass and highpass filter effect into the DSP chain which will act as a distance-automated bandpass filter. Use FMODSystem::setAdvancedSettings to adjust the center frequency. */
         PROFILE_ENABLE = 0x00010000, /* Enable TCP/IP based host which allows BreadPlayer.Fmod Designer or BreadPlayer.Fmod Profiler to connect to it, and view memory, CPU and the DSP network graph in real-time. */
-        VOL0_BECOMES_VIRTUAL = 0x00020000, /* Any sounds that are 0 volume will go virtual and not be processed except for having their positions updated virtually.  Use System::setAdvancedSettings to adjust what volume besides zero to switch to virtual at. */
+        VOL0_BECOMES_VIRTUAL = 0x00020000, /* Any sounds that are 0 volume will go virtual and not be processed except for having their positions updated virtually.  Use FMODSystem::setAdvancedSettings to adjust what volume besides zero to switch to virtual at. */
         GEOMETRY_USECLOSEST = 0x00040000, /* With the geometry engine, only process the closest polygon rather than accumulating all polygons the sound to listener line intersects. */
         PREFER_DOLBY_DOWNMIX = 0x00080000, /* When using FMOD_SPEAKERMODE_5POINT1 with a stereo output device, use the Dolby Pro Logic II downmix algorithm instead of the SRS Circle Surround algorithm. */
         THREAD_UNSAFE = 0x00100000, /* Disables thread safety for API calls. Only use this if BreadPlayer.Fmod low level is being called from a single thread, and if Studio API is not being used! */
@@ -584,7 +584,7 @@ namespace BreadPlayer.Fmod.Enums
         This is the format the native hardware or software buffer will be or is created in.
 
         [SEE_ALSO]
-        System::createSoundEx
+        FMODSystem::createSoundEx
         Sound::getFormat
     ]
     */
@@ -613,7 +613,7 @@ namespace BreadPlayer.Fmod.Enums
 
         [REMARKS]
         By default a sound will open as a static sound that is decompressed fully into memory to PCM. (ie equivalent of FMOD_CREATESAMPLE)<br>
-        To have a sound stream instead, use FMOD_CREATESTREAM, or use the wrapper function System::createStream.<br>
+        To have a sound stream instead, use FMOD_CREATESTREAM, or use the wrapper function FMODSystem::createStream.<br>
         Some opening modes (ie FMOD_OPENUSER, FMOD_OPENMEMORY, FMOD_OPENMEMORY_POINT, FMOD_OPENRAW) will need extra information.<br>
         This can be provided using the FMOD_CREATESOUNDEXINFO structure.
         <br>
@@ -630,8 +630,8 @@ namespace BreadPlayer.Fmod.Enums
         1. Sound::getName functionality is removed.  256 bytes per sound is saved.<br>
 
         [SEE_ALSO]
-        System::createSound
-        System::createStream
+        FMODSystem::createSound
+        FMODSystem::createStream
         Sound::setMode
         Sound::getMode
         Channel::setMode
@@ -728,7 +728,7 @@ namespace BreadPlayer.Fmod.Enums
     */
     public enum SoundGroupBehavior : int
     {
-        BEHAVIOR_FAIL,              /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will simply fail during System::playSound. */
+        BEHAVIOR_FAIL,              /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will simply fail during FMODSystem::playSound. */
         BEHAVIOR_MUTE,              /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will be silent, then if another sound in the group stops the sound that was silent before becomes audible again. */
         BEHAVIOR_STEALLOWEST,       /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will steal the quietest / least important sound playing in the group. */
 
@@ -745,13 +745,13 @@ namespace BreadPlayer.Fmod.Enums
         Each callback has commanddata parameters passed as int unique to the type of callback.<br>
         See reference to FMOD_CHANNELCONTROL_CALLBACK to determine what they might mean for each type of callback.<br>
         <br>
-        <b>Note!</b>  Currently the user must call System::update for these callbacks to trigger!
+        <b>Note!</b>  Currently the user must call FMODSystem::update for these callbacks to trigger!
 
         [SEE_ALSO]
         Channel::setCallback
         ChannelGroup::setCallback
         FMOD_CHANNELCONTROL_CALLBACK
-        System::update
+        FMODSystem::update
     ]
     */
     public enum ChannelControlCallbackType : int
@@ -827,7 +827,7 @@ namespace BreadPlayer.Fmod.Enums
        FMOD_SYSTEM_CALLBACK_TYPE
 
        [DESCRIPTION]
-       These callback types are used with System::setCallback.
+       These callback types are used with FMODSystem::setCallback.
 
        [REMARKS]
        Each callback has commanddata parameters passed as void* unique to the type of callback.<br>
@@ -838,16 +838,16 @@ namespace BreadPlayer.Fmod.Enums
        <b>Note!</b> The 'system' object pointer will be null for FMOD_SYSTEM_CALLBACK_THREADCREATED and FMOD_SYSTEM_CALLBACK_MEMORYALLOCATIONFAILED callbacks.
 
        [SEE_ALSO]
-       System::setCallback
-       System::update
+       FMODSystem::setCallback
+       FMODSystem::update
        DSP::addInput
    ]
    */
     [Flags]
     public enum SystemCallbackType : uint
     {
-        DEVICELISTCHANGED = 0x00000001,  /* Called from System::update when the enumerated list of devices has changed. */
-        DEVICELOST = 0x00000002,  /* Called from System::update when an output device has been lost due to control panel parameter changes and BreadPlayer.Fmod cannot automatically recover. */
+        DEVICELISTCHANGED = 0x00000001,  /* Called from FMODSystem::update when the enumerated list of devices has changed. */
+        DEVICELOST = 0x00000002,  /* Called from FMODSystem::update when an output device has been lost due to control panel parameter changes and BreadPlayer.Fmod cannot automatically recover. */
         MEMORYALLOCATIONFAILED = 0x00000004,  /* Called directly when a memory allocation fails somewhere in BreadPlayer.Fmod.  (NOTE - 'system' will be NULL in this callback type.)*/
         THREADCREATED = 0x00000008,  /* Called directly when a thread is created. (NOTE - 'system' will be NULL in this callback type.) */
         BADDSPCONNECTION = 0x00000010,  /* Called when a bad connection was made with DSP::addInput. Usually called from mixer thread because that is where the connections are made.  */
@@ -856,10 +856,10 @@ namespace BreadPlayer.Fmod.Enums
         ERROR = 0x00000080,  /* Called when each API function returns an error code, including delayed async functions. */
         MIDMIX = 0x00000100,  /* Called each tick in mix update after clocks have been updated before the main mix occurs. */
         THREADDESTROYED = 0x00000200,  /* Called directly when a thread is destroyed. */
-        PREUPDATE = 0x00000400,  /* Called at start of System::update function. */
-        POSTUPDATE = 0x00000800,  /* Called at end of System::update function. */
-        RECORDLISTCHANGED = 0x00001000,  /* Called from System::update when the enumerated list of recording devices has changed. */
-        ALL = 0xFFFFFFFF,  /* Pass this mask to System::setCallback to receive all callback types.  */
+        PREUPDATE = 0x00000400,  /* Called at start of FMODSystem::update function. */
+        POSTUPDATE = 0x00000800,  /* Called at end of FMODSystem::update function. */
+        RECORDLISTCHANGED = 0x00001000,  /* Called from FMODSystem::update when the enumerated list of recording devices has changed. */
+        ALL = 0xFFFFFFFF,  /* Pass this mask to FMODSystem::setCallback to receive all callback types.  */
     }
 
 
@@ -871,11 +871,11 @@ namespace BreadPlayer.Fmod.Enums
 
         [REMARKS]
         The default resampler type is FMOD_DSP_RESAMPLER_LINEAR.<br>
-        Use System::setSoftwareFormat to tell BreadPlayer.Fmod the resampling quality you require for FMOD_SOFTWARE based sounds.
+        Use FMODSystem::setSoftwareFormat to tell BreadPlayer.Fmod the resampling quality you require for FMOD_SOFTWARE based sounds.
 
         [SEE_ALSO]
-        System::setSoftwareFormat
-        System::getSoftwareFormat
+        FMODSystem::setSoftwareFormat
+        FMODSystem::getSoftwareFormat
     ]
     */
     public enum DspResampler : int
@@ -1003,7 +1003,7 @@ namespace BreadPlayer.Fmod.Enums
             [REMARKS]
 
             [SEE_ALSO]
-            System::getRecordDriverInfo
+            FMODSystem::getRecordDriverInfo
         ]
         */
     [Flags]

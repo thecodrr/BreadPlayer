@@ -178,7 +178,7 @@ namespace BreadPlayer.Extensions
                         addTo.Items.Add(item);
                     }
                 });               
-                SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
+                //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
             }
 
         }

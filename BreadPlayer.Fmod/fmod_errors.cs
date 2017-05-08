@@ -43,7 +43,7 @@ namespace BreadPlayer.Fmod
                 case Result.ERR_HTTP_SERVER_ERROR:         return "A HTTP server error occurred.";
                 case Result.ERR_HTTP_TIMEOUT:              return "The HTTP request timed out.";
                 case Result.ERR_INITIALIZATION:            return "BreadPlayer.Fmod was not initialized correctly to support this function.";
-                case Result.ERR_INITIALIZED:               return "Cannot call this command after System::init.";
+                case Result.ERR_INITIALIZED:               return "Cannot call this command after FMODSystem::init.";
                 case Result.ERR_INTERNAL:                  return "An error occurred that wasn't supposed to.  Contact support.";
                 case Result.ERR_INVALID_FLOAT:             return "Value passed in was a NaN, Inf or denormalized float.";
                 case Result.ERR_INVALID_HANDLE:            return "An invalid object handle was used.";
@@ -80,10 +80,10 @@ namespace BreadPlayer.Fmod
                 case Result.ERR_SUBSOUND_ALLOCATED:        return "This subsound is already being used by another sound, you cannot have more than one parent to a sound.  Null out the other parent's entry first.";
                 case Result.ERR_SUBSOUND_CANTMOVE:         return "Shared subsounds cannot be replaced or moved from their parent stream, such as when the parent stream is an FSB file.";
                 case Result.ERR_TAGNOTFOUND:               return "The specified tag could not be found or there are no tags.";
-                case Result.ERR_TOOMANYCHANNELS:           return "The sound created exceeds the allowable input channel count.  This can be increased using the 'maxinputchannels' parameter in System::setSoftwareFormat.";
+                case Result.ERR_TOOMANYCHANNELS:           return "The sound created exceeds the allowable input channel count.  This can be increased using the 'maxinputchannels' parameter in FMODSystem::setSoftwareFormat.";
                 case Result.ERR_TRUNCATED:                 return "The retrieved string is too long to fit in the supplied buffer and has been truncated.";
                 case Result.ERR_UNIMPLEMENTED:             return "Something in BreadPlayer.Fmod hasn't been implemented when it should be! contact support!";
-                case Result.ERR_UNINITIALIZED:             return "This command failed because System::init or System::setDriver was not called.";
+                case Result.ERR_UNINITIALIZED:             return "This command failed because FMODSystem::init or FMODSystem::setDriver was not called.";
                 case Result.ERR_UNSUPPORTED:               return "A command issued was not supported by this object.  Possibly a plugin without certain callbacks specified.";
                 case Result.ERR_VERSION:                   return "The version number of this file format is not supported.";
                 case Result.ERR_EVENT_ALREADY_LOADED:      return "The specified bank has already been loaded.";
@@ -91,7 +91,7 @@ namespace BreadPlayer.Fmod
                 case Result.ERR_EVENT_LIVEUPDATE_MISMATCH: return "The live update connection failed due to the game data being out of sync with the tool.";
                 case Result.ERR_EVENT_LIVEUPDATE_TIMEOUT:  return "The live update connection timed out.";
                 case Result.ERR_EVENT_NOTFOUND:            return "The requested event, bus or vca could not be found.";
-                case Result.ERR_STUDIO_UNINITIALIZED:      return "The Studio::System object is not yet initialized.";
+                case Result.ERR_STUDIO_UNINITIALIZED:      return "The Studio::FMODSystem object is not yet initialized.";
                 case Result.ERR_STUDIO_NOT_LOADED:         return "The specified resource is not loaded, so it can't be unloaded.";
                 case Result.ERR_INVALID_STRING:            return "An invalid string was passed to this function.";
                 case Result.ERR_ALREADY_LOCKED:            return "The specified resource is already locked.";

@@ -20,6 +20,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using Windows.UI.Core;
+using BreadPlayer.Core.PlayerEngines;
 
 namespace BreadPlayer
 {
@@ -30,8 +31,8 @@ namespace BreadPlayer
         {
             get { if (notificationManager == null) notificationManager = SharedLogic.NotificationManager; return notificationManager; }
         }
-        CoreBreadPlayer player;
-        public CoreBreadPlayer Player
+        IPlayerEngine player;
+        public IPlayerEngine Player
         {
             get
             {

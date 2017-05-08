@@ -691,7 +691,7 @@ namespace BreadPlayer.ViewModels
         }
         private async Task UpdateUI(Mediafile mediaFile)
         {
-            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile.AttachedPicture);
+            Themes.ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.UpdateTile(mediaFile);
             if (SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)

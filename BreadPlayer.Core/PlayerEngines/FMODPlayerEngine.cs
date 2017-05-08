@@ -4,73 +4,134 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BreadPlayer.Models;
-using FMOD;
+using BreadPlayer.Fmod;
 using BreadPlayer.Events;
+using BreadPlayer.Fmod.Enums;
+using BreadPlayer.Fmod.Structs;
+using static BreadPlayer.Fmod.Callbacks;
 
 namespace BreadPlayer.Core.PlayerEngines
 {
-    public class FMODPlayerEngine : IPlayerEngine
+    public class FMODPlayerEngine : ObservableObject, IPlayerEngine
     {
         #region Fields
-        FMOD.System FMODSys;
+        FMODSystem FMODSys;
         Sound FMODSound;
         Channel FMODChannel;
+        private CHANNEL_CALLBACK channelEndCallback;
+        IntPtr EndSyncPoint;
+        IntPtr Last5SyncPoint;
+        IntPtr Last15SyncPoint;
+        uint Last15Offset;
         #endregion
-        public bool IsVolumeMuted { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Effects Effect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Volume { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double Length { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public PlayerState PlayerState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Mediafile CurrentlyPlayingFile { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool IgnoreErrors { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public event OnMediaStateChanged MediaStateChanged;
-        public event OnMediaEnded MediaEnded;
-        public event OnMediaAboutToEnd MediaAboutToEnd;
-        public event OnMediaChanging MediaChanging;
-
+        public FMODPlayerEngine()
+        {
+            Init(false);
+        }
         public async Task Init(bool isMobile)
         {
             await Task.Run(() =>
             {
-                Factory.System_Create(out FMODSys);
-                FMODSys.init(1, FMOD.INITFLAGS.NORMAL, IntPtr.Zero);
+                Factory.SystemCreate(out FMODSys);
+                FMODSys.Init(1, InitFlags.NORMAL, IntPtr.Zero);
+                channelEndCallback = new CHANNEL_CALLBACK(ChannelEndCallback);
             });
         }
-
         public async Task<bool> Load(Mediafile mediaFile)
         {
             if (mediaFile != null && mediaFile.Length != "00:00")
             {
+                //tell all listeners that we are about to change media
                 await InitializeCore.Dispatcher.RunAsync(() => { MediaChanging?.Invoke(this, new EventArgs()); });
-                return await Task.Run(() =>
-                {
-                    RESULT loadResult = FMODSys.CreateStream(mediaFile.Path, FMOD.MODE.DEFAULT, out FMOD.Sound FMODSound);
 
-                    return loadResult == RESULT.OK;
-                });
+                //stop currently playing track and free the channel
+                await Stop();
+                
+                //create a stream of the new track
+                Result loadResult = FMODSys.CreateStream(mediaFile.Path, Mode.DEFAULT, out FMODSound);
+                
+                //load the stream into the channel but don't play it yet.
+                loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);
+
+                //get and update length of the track.
+                Length = TimeSpan.FromMilliseconds(FMODSound.LengthInMilliseconds).TotalSeconds;
+
+                //set the channel callback for all the syncpoints
+                loadResult = FMODChannel.setCallback(channelEndCallback);
+
+                //add all the sync points
+                //1. when song ends
+                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds, TimeUnit.MS, "songended", out EndSyncPoint);
+
+                //2. when song has reached the last 15 seconds
+                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds - 15000, TimeUnit.MS, "songabouttoended", out Last15SyncPoint);
+
+                //3. when song has reached the last 5 seconds
+                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds - 5000, TimeUnit.MS, "fade", out Last5SyncPoint);
+
+                //update the system once here so that 
+                //all the sync points and callbacks are saved and updated.
+                loadResult = FMODSys.Update();
+
+                PlayerState = PlayerState.Stopped;
+                CurrentlyPlayingFile = mediaFile;
+
+                //check if all was successful
+                return loadResult == Result.OK;
             }
             else
-                return false;
+            {
+                string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+                if (IgnoreErrors)
+                {
+                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
+                }
+                else
+                {
+                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
+                }
+            }
+            return false;
         }
-
+       
         public Task Pause()
         {
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Paused));
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                FMODChannel.SetPaused(true);
+                //set state to paused before we pause
+                //this is to update the UI quickly.
                 PlayerState = PlayerState.Paused;
+
+                //set fade points to first 3 seconds of the track.
+                //we simply slide the volume from default value to 0 in the next 0.5 second.
+                FMODChannel.SetFadePoint(FMODChannel.Volume, 0f, FMODSound.ConvertSecondsToPCM(0.5));
+
+                //wait for the fade to over.
+                await Task.Delay(500);
+
+                //set paused to true
+                FMODChannel.SetPaused(true);
             });
         }
 
         public Task Play()
-        {
+        {           
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
             return Task.Run(() =>
             {
-                FMODSys.PlaySound(FMODSound, null, false, out FMODChannel);
+                //set paused to false
+                FMODChannel.SetPaused(false);
+
+                //update volume.
+                Volume = Volume;
+
+                //set fade points to first 3 seconds of the track.
+                //we simply slide the volume from 0 to the default value
+                //in the next 1 second.
+                FMODChannel.SetFadePoint(0f, FMODChannel.Volume, FMODSound.ConvertSecondsToPCM(1));
+
                 PlayerState = PlayerState.Playing;
             });
         }
@@ -80,14 +141,37 @@ namespace BreadPlayer.Core.PlayerEngines
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
             return Task.Run(() =>
             {
-                FMODChannel.Stop();
+                FMODChannel?.Stop();
+                FMODSound?.release();
                 Length = 0;
                 Position = -1;
                 CurrentlyPlayingFile = null;
-                FMODSound = null;
-                FMODChannel = null;
                 PlayerState = PlayerState.Stopped;
             });
+        }
+
+        private Result ChannelEndCallback(IntPtr channelraw, ChannelControlType controltype, ChannelControlCallbackType type, IntPtr commanddata1, IntPtr commanddata2)
+        {
+            if (type == ChannelControlCallbackType.SYNCPOINT)
+            {
+                FMODSound?.getSyncPointInfo(Last15SyncPoint, new StringBuilder("songabouttoend"), 0, out Last15Offset, TimeUnit.MS);
+                uint Last5Offset = 0;
+                FMODSound?.getSyncPointInfo(Last5SyncPoint, new StringBuilder("fade"), 0, out Last5Offset, TimeUnit.MS);
+
+                if (position == FMODSound?.LengthInMilliseconds)
+                {
+                    MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
+                }
+                else if (position >= Last5Offset)
+                {
+                    FMODChannel.SetFadePoint(FMODChannel.Volume, 0f, FMODChannel.GetTotalSamplesLeft(FMODSound));
+                }
+                else if(position >= Last15Offset && position < Last5Offset)
+                {
+                    MediaAboutToEnd?.Invoke(this, new Events.MediaAboutToEndEventArgs(CurrentlyPlayingFile));
+                }
+            }
+            return Result.OK;
         }
 
         #region IDisposable Support
@@ -124,5 +208,86 @@ namespace BreadPlayer.Core.PlayerEngines
             // GC.SuppressFinalize(this);
         }
         #endregion
+
+
+        #region Properties
+        bool isVolumeMuted;
+        public bool IsVolumeMuted
+        {
+            get { return isVolumeMuted; }
+            set
+            {
+                Set(ref isVolumeMuted, value);
+                FMODChannel.setMute(isVolumeMuted);
+            }
+        }
+        public Effects Effect { get; set; }
+        double _volume = 50;
+        public double Volume
+        {
+            get { return _volume; }
+            set
+            {
+                Set(ref _volume, value);
+                if(FMODChannel != null)
+                    FMODChannel.Volume = (float)(_volume / 100);
+            }
+        }
+        double _seek = 0;
+        uint position = 0;
+        public double Position
+        {
+            get
+            {
+                
+                FMODChannel?.getPosition(out position, TimeUnit.MS);
+                FMODSys?.Update();
+                return TimeSpan.FromMilliseconds(position).TotalSeconds;
+            }
+            set
+            {
+                Set(ref _seek, value);
+                FMODChannel?.setPosition(Convert.ToUInt32(TimeSpan.FromSeconds(value < 0 ? 0 : value).TotalMilliseconds), TimeUnit.MS);
+            }
+        }
+        double _length;
+        public double Length
+        {
+            get
+            {
+                if (_length <= 0)
+                    _length = 1;
+                return _length <= 0 ? 1 : _length;
+            }
+            set
+            {
+                Set(ref _length, value);
+            }
+        }
+        public PlayerState PlayerState
+        {
+            get; set;
+        }
+        Mediafile _currentPlayingFile;
+        public Mediafile CurrentlyPlayingFile
+        {
+            get { return _currentPlayingFile; }
+            set
+            {
+                Set(ref _currentPlayingFile, value);
+            }
+        }
+        bool _ignoreErrors = false;
+        public bool IgnoreErrors
+        {
+            get { return _ignoreErrors; }
+            set { Set(ref _ignoreErrors, value); }
+        }
+        #endregion
+
+        public event OnMediaStateChanged MediaStateChanged;
+        public event OnMediaEnded MediaEnded;
+        public event OnMediaAboutToEnd MediaAboutToEnd;
+        public event OnMediaChanging MediaChanging;
     }
 }

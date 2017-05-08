@@ -24,7 +24,7 @@ namespace BreadPlayer.Fmod
     FMOD_REVERB_PROPERTIES prop = FMOD_PRESET_GENERIC;
 
     [SEE_ALSO]
-    System::setReverbProperties
+    FMODSystem::setReverbProperties
     ]
     */
     public class Preset
