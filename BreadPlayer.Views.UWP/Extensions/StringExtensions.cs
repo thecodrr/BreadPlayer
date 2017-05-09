@@ -30,6 +30,18 @@ namespace BreadPlayer.Extensions
         {
             return !string.IsNullOrEmpty(input) && Regex.IsMatch(input, "\\d");
         }
+        public static string ScrubGarbage(this string value)
+        {
+            var step1 = Regex.Replace(value, @"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*", "").Trim();
+            var step2 = Regex.Replace(step1, @"\(\s\)|\(\)|\[\s\]|\[\]", "");
+            return step2;
+        }
+        public static string GetTag(this string value)
+        {
+            var parts = value.Split('-');
+            var tag = parts[parts.Length - 1];
+            return tag;
+        }
         public static string ScrubHtml(this string value)
         {
             var step1 = Regex.Replace(value, @"<(.|\n)*?>", "").Trim();

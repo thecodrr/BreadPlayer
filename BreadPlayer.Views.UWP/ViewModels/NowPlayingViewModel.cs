@@ -57,10 +57,6 @@ namespace BreadPlayer.ViewModels
         public NowPlayingViewModel()
         {
             RetryCommand = new RelayCommand(Retry);
-            AlbumInfoTokenSource = new CancellationTokenSource();
-            ArtistInfoTokenSource = new CancellationTokenSource();
-            ArtistInfoToken = ArtistInfoTokenSource.Token;
-            AlbumInfoToken = AlbumInfoTokenSource.Token;
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
@@ -75,14 +71,14 @@ namespace BreadPlayer.ViewModels
             {
                 if (string.IsNullOrEmpty(CorrectArtist))
                     return;
-                await GetArtistInfo(CorrectArtist, ArtistInfoToken);
+                await GetArtistInfo(CorrectArtist);
                 Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
             }
             else if(para.ToString() == "Album")
             {
                 if (string.IsNullOrEmpty(CorrectAlbum) || string.IsNullOrEmpty(CorrectArtist))
                     return;
-                await GetAlbumInfo(CorrectArtist, CorrectAlbum, AlbumInfoToken);
+                await GetAlbumInfo(CorrectArtist, CorrectAlbum);
                 Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
                 Core.SharedLogic.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
             }
@@ -96,18 +92,7 @@ namespace BreadPlayer.ViewModels
                 await GetInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
             }
         }
-
-        //this whole bulk of variables is very annoying and must be
-        //replaced with more sensible and readable code. I hate this
-        //but it works.
-        Task FetchArtistInfoTask;
-        Task FetchAlbumInfoTask;
-        CancellationToken ArtistInfoToken;
-        CancellationToken AlbumInfoToken;
-        CancellationTokenSource ArtistInfoTokenSource;
-        CancellationTokenSource AlbumInfoTokenSource;
-        IAsyncOperation<LastResponse<LastArtist>> ArtistInfoOperation;
-        IAsyncOperation<LastResponse<LastAlbum>> AlbumInfoOperation;
+        
         int retries = 0;
         private async Task GetInfo(string artistName, string albumName)
         {
@@ -116,18 +101,14 @@ namespace BreadPlayer.ViewModels
                 //start the tasks on another thread so that the UI doesn't hang.
 
                 ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-
+                
                 if (InternetConnectionProfile != null)
                 {
-                    if (FetchArtistInfoTask?.IsCompleted == false)
-                        ArtistInfoTokenSource.Cancel();
-                    if (FetchAlbumInfoTask?.IsCompleted == false)
-                        AlbumInfoTokenSource.Cancel();
-                    FetchArtistInfoTask = GetArtistInfo(artistName, ArtistInfoToken);
-                    FetchAlbumInfoTask = GetAlbumInfo(artistName, albumName, AlbumInfoToken);
+                    //cancel any previous requests
+                    LastfmClient.HttpClient.CancelPendingRequests();
                     //start both tasks
-                    await FetchAlbumInfoTask.ConfigureAwait(false);
-                    await FetchArtistInfoTask.ConfigureAwait(false);
+                    await GetArtistInfo(artistName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                    await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false);
                 }
                 else
                 {
@@ -149,16 +130,16 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        private async Task GetArtistInfo(string artistName, CancellationToken token)
+        private async Task GetArtistInfo(string artistName)
         {
             await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                CheckAndCancelOperation(ArtistInfoOperation, token);
+                LastfmClient.Artist.HttpClient.CancelPendingRequests();
+                //CheckAndCancelOperation(ArtistInfoOperation, token);
                 ArtistInfoLoading = true;
-                ArtistInfoOperation = LastfmClient.Artist.GetInfoAsync(artistName, "en", true).AsAsyncOperation();
+                var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false);
                 ArtistBio = "";
                 ArtistFetchFailed = false;
-                var artistInfoResponse = await ArtistInfoOperation;
                 if (artistInfoResponse.Success)
                 {
                     LastArtist artist = artistInfoResponse.Content;
@@ -178,16 +159,16 @@ namespace BreadPlayer.ViewModels
                 ArtistInfoLoading = false;
             });
         }
-        private async Task GetAlbumInfo(string artistName, string albumName, CancellationToken token)
+        private async Task GetAlbumInfo(string artistName, string albumName)
         {
             await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                CheckAndCancelOperation(AlbumInfoOperation, token);
+                LastfmClient.Album.HttpClient.CancelPendingRequests();
+                //CheckAndCancelOperation(AlbumInfoOperation, token);
                 AlbumInfoLoading = true;
                 AlbumTracks?.Clear();
                 AlbumFetchFailed = false;
-                AlbumInfoOperation = LastfmClient.Album.GetInfoAsync(artistName, albumName, true).AsAsyncOperation();
-                var albumInfoResponse = await AlbumInfoOperation;
+                var albumInfoResponse = await LastfmClient.Album.GetInfoAsync(artistName, albumName, true).ConfigureAwait(false);
                 if (albumInfoResponse.Success)
                 {
                     LastAlbum album = albumInfoResponse.Content;
@@ -203,15 +184,6 @@ namespace BreadPlayer.ViewModels
 
                 AlbumInfoLoading = false;
             });
-        }
-        private void CheckAndCancelOperation<T>(IAsyncOperation<T> operation, CancellationToken token)
-        {
-            //check if there is any old operation running.
-            if (operation != null && token.IsCancellationRequested && operation.Status != AsyncStatus.Completed)
-            {
-                //cancel old operiation
-                operation.Cancel();
-            }
-        }       
+        }     
     }
 }
