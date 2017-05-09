@@ -56,6 +56,15 @@ namespace BreadPlayer.Core.PlayerEngines
                 //load the stream into the channel but don't play it yet.
                 loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);
 
+                //FMODSys.CreateDSPByType(Fmod.CoreDSP.DspType.NORMALIZE, out DSP dsp);
+
+                //FMODChannel.addDSP(ChannelControlDspIndex.HEAD, dsp);
+
+                //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.THRESHHOLD, 1.0f);
+                //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.MAXAMP, 2.0f);
+
+                //dsp.setActive(true);
+                
                 //load equalizer
                 Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
                 

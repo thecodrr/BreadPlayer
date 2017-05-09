@@ -14,17 +14,19 @@ namespace BreadPlayer.Core.PlayerEngines
         private DSP dspEQ;
         private float gain;
         private bool isActive;
+        private Channel FChannel;
 
-        public FmodEqualizerBand(DSP dspParamEq, float centerValue, float gainValue, bool active)
+        public FmodEqualizerBand(Channel fmodChannel, DSP dspParamEq, float centerValue, float gainValue, bool active)
         {
+            FChannel = fmodChannel;
             this.dspEQ = dspParamEq;
             if (centerValue >= 1000)
             {
-                this.BandCaption = string.Format("{0}K", (centerValue / 1000));
+                this.BandCaption = string.Format("{0}KHz", (centerValue / 1000));
             }
             else
             {
-                this.BandCaption = centerValue.ToString(CultureInfo.InvariantCulture);
+                this.BandCaption = centerValue + "Hz";
             }
             this.gain = gainValue;
             this.IsActive = active;
@@ -34,7 +36,8 @@ namespace BreadPlayer.Core.PlayerEngines
         {
             if (this.dspEQ != null)
             {
-                var result = this.dspEQ.release();
+                var result = FChannel?.removeDSP(dspEQ);
+                result = this.dspEQ.release();                
                 this.dspEQ = null;
             }
             this.IsActive = false;

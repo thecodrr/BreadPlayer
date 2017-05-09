@@ -98,7 +98,7 @@ namespace BreadPlayer.Core.PlayerEngines
 
             }
 
-            var band = new FmodEqualizerBand(dspParamEq, centerValue, gainValue, isActive);
+            var band = new FmodEqualizerBand(FChannel, dspParamEq, centerValue, gainValue, isActive);
             return band;
         }
     }
