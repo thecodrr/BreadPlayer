@@ -97,18 +97,18 @@ namespace BreadPlayer.Core
         }
         private void LoadEqualizerSettings()
         {
-            var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
-            OldEqualizerSettings = eqConfig.EqConfig;
-            EnableEq = eqConfig.IsEnabled;
-            Preamp = eqConfig.PreAMP;
-            for (int i = 0; i < 10; i++)
-            {
-                EqualizerBands[i].Gain = OldEqualizerSettings[i];
-            }
+           //// var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
+           //// OldEqualizerSettings = eqConfig.EqConfig;
+           //// EnableEq = eqConfig.IsEnabled;
+           // Preamp = eqConfig.PreAMP;
+           // for (int i = 0; i < 10; i++)
+           // {
+           //     EqualizerBands[i].Gain = OldEqualizerSettings[i];
+           // }
         }
         private void SaveEqualizerSettings()
         {
-            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
+           // InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
         }
         private void SetAllEqualizerBandsFrequencies(float[] frequencies)
         {

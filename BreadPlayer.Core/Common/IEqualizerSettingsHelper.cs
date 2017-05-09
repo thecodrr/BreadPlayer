@@ -1,4 +1,5 @@
 ﻿
+using BreadPlayer.Core.PlayerEngines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace BreadPlayer.Core.Common
 {
     public interface IEqualizerSettingsHelper
     {
-        (float[] EqConfig, bool IsEnabled, float PreAMP) LoadEqualizerSettings();
-        void SaveEqualizerSettings(float[] eqConfig, bool isEnabled, float PreAmp);
+        (EqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string EqConfigName);
+        void SaveEqualizerSettings(EqualizerSettings settings, float PreAmp);
     }
 }

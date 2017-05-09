@@ -16,10 +16,12 @@ namespace BreadPlayer.Core.PlayerEngines
         Channel FChannel { get; set; }
         public FmodEqualizer(FMODSystem system, Channel channel)
         {
+            IsPreampAvailable = false;
             FSystem = system;
             FChannel = channel;
             Name = "DefaultEqualizer";
             Bands = new ObservableCollection<IEqualizerBand>();
+            EqualizerSettings = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings(Name).settings;
             IsEnabled = EqualizerSettings == null || EqualizerSettings.IsEnabled;
             Init();
         }
@@ -61,21 +63,6 @@ namespace BreadPlayer.Core.PlayerEngines
                 }
             }
             FSystem.UnlockDSP();
-        }
-
-        public override void SaveEqualizerSettings()
-        {
-            if (this.FSystem != null)
-            {
-                var equalizerSettings = this.EqualizerSettings;
-                if (equalizerSettings == null)
-                {
-                    equalizerSettings = new EqualizerSettings { Name = this.Name };
-                    this.EqualizerSettings = equalizerSettings;
-                }
-                equalizerSettings.GainValues = this.Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
-                equalizerSettings.IsEnabled = this.IsEnabled;
-            }
         }
 
         public override IEqualizerBand GetEqualizerBand(bool isActive, float centerValue, float bandwithValue, float gainValue)

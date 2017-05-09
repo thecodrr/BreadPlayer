@@ -45,12 +45,24 @@ namespace BreadPlayer.Core.PlayerEngines
                 }
             }
         }
+        public bool IsPreampAvailable { get; set; }
         public string Name { get; set; }
        
         public abstract void Init(bool setToDefaultValues = false);
         public abstract void DeInit();
         public abstract void Dispose();
-        public abstract void SaveEqualizerSettings();
+        public void SaveEqualizerSettings()
+        {
+            var equalizerSettings = this.EqualizerSettings;
+            if (equalizerSettings == null || equalizerSettings.Name == null)
+            {
+                equalizerSettings = new EqualizerSettings { Name = this.Name };
+                this.EqualizerSettings = equalizerSettings;
+            }
+            equalizerSettings.GainValues = this.Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
+            equalizerSettings.IsEnabled = this.IsEnabled;
+            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
+        }
         public void SetToDefault()
         {
             this.DeInit();
