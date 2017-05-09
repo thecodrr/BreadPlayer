@@ -17,6 +17,7 @@
 */
 using BreadPlayer.Common;
 using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Models;
@@ -58,10 +59,14 @@ namespace BreadPlayer
                 ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
             NowPlayingItem.Command = ShellVM.NavigateToNowPlayingViewCommand;
+          
         }
            
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            ConfigSaver saver = new ConfigSaver();
+            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("equalizerPresets.json", CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(file, saver.SaveSettings());
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
             GlobalPageKeyDown?.Invoke(sender, args);
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))

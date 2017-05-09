@@ -26,6 +26,20 @@ namespace BreadPlayer.Core.PlayerEngines
               new[] {16000f, 1f, 0f }
         };
         public EqualizerSettings EqualizerSettings { get; set; }
+        public ObservableCollection<EqualizerSettings> Presets { get; set; }
+        int selectedPreset = 0;
+        public int SelectedPreset
+        {
+            get { return selectedPreset; }
+            set
+            {
+                var preset = Presets[selectedPreset];
+                EqualizerSettings = preset;
+                DeInit();
+                Init();
+                selectedPreset = value;
+            }
+        }
         public ObservableCollection<IEqualizerBand> Bands { get; set; }
         bool isEnabled;
         public bool IsEnabled

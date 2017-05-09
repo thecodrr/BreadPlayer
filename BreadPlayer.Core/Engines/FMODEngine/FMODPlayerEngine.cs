@@ -64,9 +64,12 @@ namespace BreadPlayer.Core.PlayerEngines
                 //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.MAXAMP, 2.0f);
 
                 //dsp.setActive(true);
-                
+
                 //load equalizer
-                Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
+                if(Equalizer == null)
+                    Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
+                else
+                    (Equalizer as FmodEqualizer).ReInit(FMODSys, FMODChannel); 
                 
                 //get and update length of the track.
                 Length = TimeSpan.FromMilliseconds(FMODSound.LengthInMilliseconds).TotalSeconds;

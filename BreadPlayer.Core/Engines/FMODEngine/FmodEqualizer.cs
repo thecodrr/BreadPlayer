@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Fmod;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Fmod;
 using BreadPlayer.Fmod.CoreDSP;
 using BreadPlayer.Fmod.Enums;
 using System;
@@ -21,6 +22,7 @@ namespace BreadPlayer.Core.PlayerEngines
             FChannel = channel;
             Name = "DefaultEqualizer";
             Bands = new ObservableCollection<IEqualizerBand>();
+            Presets = new ObservableCollection<EqualizerSettings>(new ConfigSaver().GetSettings());
             EqualizerSettings = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings(Name).settings;
             IsEnabled = EqualizerSettings == null || EqualizerSettings.IsEnabled;
             Init();
@@ -31,7 +33,13 @@ namespace BreadPlayer.Core.PlayerEngines
             this.Bands.Clear();
             this.FSystem = null;
         }
-
+        public void ReInit(FMODSystem system, Channel channel)
+        {
+            DeInit();
+            FSystem = system;
+            FChannel = channel;
+            Init();
+        }
         public override void DeInit()
         {           
             FSystem.LockDSP();

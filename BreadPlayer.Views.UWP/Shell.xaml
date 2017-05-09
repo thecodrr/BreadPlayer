@@ -353,7 +353,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <ComboBox HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBox Header="Config Name:"/>
+                <Button Content="Save" Margin="10,0,0,0"/>
+            </StackPanel>
+            <ComboBox HorizontalAlignment="Right" ItemsSource="{Binding Path=Player.Equalizer.Presets}" SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" DisplayMemberPath="Name" VerticalAlignment="Center" Margin="0,0,20,0"/>
             <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
             <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">

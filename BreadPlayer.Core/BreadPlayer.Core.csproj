@@ -103,6 +103,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\Collections.cs" />
+    <Compile Include="Common\ConfigSaver.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ICommand.cs" />
