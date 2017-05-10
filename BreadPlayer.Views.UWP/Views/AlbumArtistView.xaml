@@ -20,8 +20,8 @@
                         <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
                     <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
             </Grid>
-            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknown Album'}" HorizontalAlignment="Center"/>
+                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -99,8 +99,8 @@
                             </Image>
                                 <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                             </Grid>
-                    <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                            <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                    <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknown Album'}" HorizontalAlignment="Center"/>
+                            <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
