@@ -124,7 +124,19 @@
     <value>Import songs into your library</value>
   </data>
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Go back to songs list</value>
+    <value>Go back to toasts list</value>
+  </data>
+  <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
+    <value>Change Album Art</value>
+  </data>
+  <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
+    <value>Delete from playlist</value>
+  </data>
+  <data name="deletePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Delete playlist</value>
+  </data>
+  <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Disable multi selection</value>
   </data>
   <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
     <value>Equalizer Off</value>
@@ -132,11 +144,20 @@
   <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
     <value>Equalizer On</value>
   </data>
+  <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Enable multi selection</value>
+  </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
     <value>Favorite Toasts</value>
   </data>
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your favorite toasts.</value>
+  </data>
+  <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add this toast to a playlist or now baking queue</value>
+  </data>
+  <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Play Toast</value>
   </data>
   <data name="lonelyTextBlock.Text" xml:space="preserve">
     <value>Its lonely here :(</value>
@@ -171,6 +192,25 @@
   <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Open a file to play</value>
   </data>
+  <data name="openSongLocationMenuItem.Text" xml:space="preserve">
+    <value>Open Toast Location</value>
+  </data>
+  <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show more options.</value>
+  </data>
+  <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Play all toasts in this playlist</value>
+  </data>
+  <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
+    <value> Play all</value>
+    <comment>(Respect the space at the beginning.)</comment>
+  </data>
+  <data name="playMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="propertiesMenuItem.Text" xml:space="preserve">
+    <value>Properties</value>
+  </data>
   <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
     <value>Recently Added</value>
   </data>
@@ -182,6 +222,12 @@
   </data>
   <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your recently played songs.</value>
+  </data>
+  <data name="relocateSongMenuItem.Text" xml:space="preserve">
+    <value>Relocate Toast</value>
+  </data>
+  <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Rename playlist.</value>
   </data>
   <data name="settingsMenuItem.Label" xml:space="preserve">
     <value>Settings</value>
@@ -197,6 +243,9 @@
   </data>
   <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Shuffle</value>
+  </data>
+  <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
+    <value>Stop Playing After This Toast</value>
   </data>
   <data name="toastCollectionMenuItem.Label" xml:space="preserve">
     <value>Toast Collection</value>
