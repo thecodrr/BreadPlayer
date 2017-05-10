@@ -80,3 +80,6 @@ _Note: I am not an expert developer and as a result the code-base isn't as profe
 4. Enjoy!
 
 _If you encounter any error during installation or building please follow [this guide in the wiki](https://github.com/theweavrs/BreadPlayer/wiki/How-To-Build-Bread-Player)._
+
+## Help us translate Bread Player
+If you would like to translate Bread Player into your language, please [follow the guide here](https://github.com/theweavrs/BreadPlayer/wiki/I-Want-To-Translate!)
