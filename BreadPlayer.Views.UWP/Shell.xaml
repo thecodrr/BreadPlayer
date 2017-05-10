@@ -424,7 +424,7 @@
     <Interactivity:Interaction.Behaviors>
         <Core:EventTriggerBehavior EventName="GlobalPageKeyDown">
             <Core:EventTriggerBehavior.Actions>
-                <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayPauseCommand}" PressedKey="Space" DoubleKeyCommand="False"/>
+                <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayPauseCommand}" PressedKey="P" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayNextCommand}" PressedKeyCode="190" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding PlayPreviousCommand}" PressedKeyCode="188" DoubleKeyCommand="True"/>
                 <Behaviours:InvokeCommandByKeyDown Command="{Binding SetRepeatCommand}" PressedKey="R" DoubleKeyCommand="True"/>

@@ -74,10 +74,10 @@
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
                         <Run x:Uid="replaceLockscreenInfoText" Text=""/>
                         <Run FontWeight="Bold" x:Uid="replaceLockscreenFurtherInfoText"></Run>
-                    </TextBlock>                
+                    </TextBlock>
                 </StackPanel>
             </PivotItem>
-            
+
             <PivotItem x:Uid="libraryPivot" Header="">
                 <StackPanel x:Name="libraryGrid" MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock x:Uid="importToastsHeader" x:Name="importHeader" Text="" FontWeight="Bold" FontSize="18"/>
@@ -112,8 +112,8 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-                    </ListBox>                   
-                    
+                    </ListBox>
+
                     <Button x:Uid="importPlaylistBtn" x:Name="importPlistBtn" Padding="0" Content="" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
                     <TextBlock x:Uid="importPlaylistHelpText" x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
                     <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Margin="0,10,0,0"  Text="" FontWeight="Bold"  FontSize="18"/>
@@ -122,8 +122,8 @@
                     <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
                 </StackPanel>
-            </PivotItem>            
-            
+            </PivotItem>
+
             <PivotItem x:Uid="personalizationPivot" Header="">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <TextBlock x:Uid="appearenceHeader" Text="" FontSize="18" FontWeight="Bold"/>
@@ -159,43 +159,77 @@
                     <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
                 </StackPanel>
             </PivotItem>
-            
-            <PivotItem x:Uid="aboutPivot" Header="">
-                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="versionHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock x:Uid="version" Text=""/>                  
-                    <TextBlock x:Uid="contributorsHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <ItemsControl MaxHeight="250">
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0"/>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                    <TextBlock x:Uid="creditsHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-                    <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
-                    <TextBlock x:Uid="licenseHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
-                         This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version. This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+            <PivotItem Header="Key Bindings">
+                <Grid MaxWidth="500" HorizontalAlignment="Left" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Center" Width="100" Text="Commands" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" TextAlignment="Center" FontWeight="Bold" FontSize="12">
+                        <Run>Basic Commands:</Run>
+                        <LineBreak/>
+                        <Run FontSize="9" FontWeight="Normal" Text="These commands will work from everywhere."/>
                     </TextBlock>
-                </StackPanel>
+                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                        <TextBlock Text="Play/Pause"/>
+                        <TextBlock>Next</TextBlock>
+                        <TextBlock>Previous</TextBlock>
+                        <TextBlock>Seek Forward</TextBlock>
+                        <TextBlock>Seek Backward</TextBlock>
+                        <TextBlock>Volume Up</TextBlock>
+                        <TextBlock>Volume Down</TextBlock>
+                        <TextBlock>Show Equalizer</TextBlock>
+                        <TextBlock>Repeat</TextBlock>
+                        <TextBlock>Shuffle</TextBlock>
+                        <TextBlock>Open file</TextBlock>
+                        <TextBlock>Mute</TextBlock>
+                        <TextBlock>Show Properties</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="20,10,0,0">
+                        <TextBlock Text="Ctrl + P"/>
+                        <TextBlock>Ctrl + (. or >)</TextBlock>
+                        <TextBlock>Ctrl + (, or &lt;)</TextBlock>
+                        <TextBlock>Ctrl + Right Arrow</TextBlock>
+                        <TextBlock>Ctrl + Left Arrow</TextBlock>
+                        <TextBlock>Ctrl + (=)</TextBlock>
+                        <TextBlock>Ctrl + (-)</TextBlock>
+                        <TextBlock>Ctrl + E</TextBlock>
+                        <TextBlock>Ctrl + R</TextBlock>
+                        <TextBlock>Ctrl + S</TextBlock>
+                        <TextBlock>Ctrl + O</TextBlock>
+                        <TextBlock>Ctrl + M</TextBlock>
+                        <TextBlock>Ctrl + I</TextBlock>
+                    </StackPanel>
+                    <TextBlock Grid.Row="3" Grid.ColumnSpan="2" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Bold" FontSize="12">
+                        <Run>Toast Library Commands:</Run>
+                        <LineBreak/>
+                        <Run FontSize="9" FontWeight="Normal" Text="These commands will work only when a Toast is focused."/>
+                    </TextBlock>
+                    <StackPanel Grid.Row="4" Margin="0,10,0,0">
+                        <TextBlock>Play Song</TextBlock>
+                        <TextBlock>Delete</TextBlock>
+                        <!--<TextBlock>Add to queue</TextBlock>-->
+                        <TextBlock>Add to favorites</TextBlock>
+                        <TextBlock>Show Tags</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="20,10,0,0">
+                        <TextBlock>Enter</TextBlock>
+                        <TextBlock>Delete</TextBlock>
+                        <!--<TextBlock>Ctrl + Q</TextBlock>-->
+                        <TextBlock>Ctrl + F</TextBlock>
+                        <TextBlock>Ctrl + T</TextBlock>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Key Bindings" Width="100" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
+                </Grid>
             </PivotItem>
-            
             <PivotItem Header="Contact Us">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
                     <TextBlock Text="Helpful Links" FontSize="18" FontWeight="Bold"/>
@@ -285,19 +319,14 @@
                         <HyperlinkButton x:Uid="mailBtn" Grid.Row="8" Content="&#xE715;" NavigateUri="mailto:support@braedplayer.com" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
                         </HyperlinkButton>
                     </Grid>
-                  
-                      
-                     
-                  
                 </StackPanel>
-
             </PivotItem>
-            
-            <PivotItem Header="About">
+
+            <PivotItem x:Uid="aboutPivot" Header="">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock Text="Version" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="v2.2.0-beta"/>
-                    <TextBlock Text="Contributors" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="versionHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="version" Text=""/>
+                    <TextBlock x:Uid="contributorsHeader" Text="" FontSize="18" FontWeight="Bold"/>
                     <ItemsControl MaxHeight="250">
                         <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
                         <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
@@ -313,11 +342,11 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                    <TextBlock Text="Credits" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="creditsHeader" Text="" FontSize="18" FontWeight="Bold"/>
                     <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-                    <TextBlock Text="Last.fm for artist &amp; album info."></TextBlock>
-                    <TextBlock Text="License" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Justify">
+                    <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
+                    <TextBlock x:Uid="licenseHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
                          This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -328,6 +357,7 @@
                     </TextBlock>
                 </StackPanel>
             </PivotItem>
+        
         </Pivot>
 
     </Grid>
