@@ -159,41 +159,6 @@
                 </StackPanel>
             </PivotItem>
             
-            <PivotItem Header="About">
-                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock Text="Version" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="v2.2.0-beta"/>                  
-                    <TextBlock Text="Contributors" FontSize="18" FontWeight="Bold"/>
-                    <ItemsControl MaxHeight="250">
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0"/>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                    <TextBlock Text="Credits" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-                    <TextBlock Text="Last.fm for artist &amp; album info."></TextBlock>
-                    <TextBlock Text="License" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Justify">
-                         This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version. This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-                    </TextBlock>
-                </StackPanel>
-            </PivotItem>
             <PivotItem Header="Contact Us">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
                     <TextBlock Text="Helpful Links" FontSize="18" FontWeight="Bold"/>
@@ -288,7 +253,43 @@
                      
                   
                 </StackPanel>
+
+            </PivotItem>
             
+            <PivotItem Header="About">
+                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
+                    <TextBlock Text="Version" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="v2.2.0-beta"/>
+                    <TextBlock Text="Contributors" FontSize="18" FontWeight="Bold"/>
+                    <ItemsControl MaxHeight="250">
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0"/>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <TextBlock Text="Credits" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
+                    <TextBlock Text="Last.fm for artist &amp; album info."></TextBlock>
+                    <TextBlock Text="License" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Justify">
+                         This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+                    </TextBlock>
+                </StackPanel>
             </PivotItem>
         </Pivot>
 
