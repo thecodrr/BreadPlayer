@@ -134,6 +134,7 @@ namespace BreadPlayer
             var deferral = e.SuspendingOperation.GetDeferral();
             await LockscreenHelper.ResetLockscreenImage();
             SessionWatch?.Stop();
+            CoreWindowLogic.DisposeObjects();
             BLogger.Logger?.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
@@ -168,7 +169,7 @@ namespace BreadPlayer
                     // Create a Frame to act as the navigation context
                     rootFrame = new Frame();
                   //  BLogger.Logger.Info("New frame created.");
-                    if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                    if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
                     {
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                         //TODO: Load state from previously suspended application

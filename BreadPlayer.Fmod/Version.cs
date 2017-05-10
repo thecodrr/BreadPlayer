@@ -14,9 +14,9 @@ namespace BreadPlayer.Fmod
     public class FMODVersion
     {
         public const int    number = 0x00010807;
-#if WIN64
+#if CPU_X64
         public const string DLL    = "fmod_X64";
-#elif WIN32
+#elif CPU_X86
         public const string DLL    = "fmod_X86";
 #else
         public const string DLL = "fmod_ARM";

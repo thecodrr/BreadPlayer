@@ -100,19 +100,18 @@ namespace BreadPlayer
 
         #region SystemMediaTransportControls Methods/Events
         static MediaPlayer player;
-        static bool changedByButton;
         public async static void InitSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
                 var file = await(await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
                 player = new MediaPlayer();
+                player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
                 player.CommandManager.IsEnabled = false;
                 player.IsLoopingEnabled = true;
                 player.Source = MediaSource.CreateFromStorageFile(file);
                 player.Play();
             }
-            player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
             _smtc.IsEnabled = true;
@@ -202,9 +201,13 @@ namespace BreadPlayer
         #endregion
 
         #region CoreWindow Dispose Methods
-        public void DisposeObjects()
+        public static void DisposeObjects()
         {
             SharedLogic.Player.Dispose();
+            BLogger.Logger.Info("Background Player ran for: " + player?.PlaybackSession.Position.TotalSeconds);
+            BLogger.Logger.Info("Application is being suspended, disposing everything.");
+            player?.Dispose();
+            Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_DISPOSE);
         }
         #endregion
 
