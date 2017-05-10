@@ -242,12 +242,15 @@ namespace BreadPlayer.ViewModels
             {
                 case "No Repeat":
                     Repeat = "Repeat Song";
+                    Player.IsLoopingEnabled = true;
                     break;
                 case "Repeat Song":
                     Repeat = "Repeat List";
+                    Player.IsLoopingEnabled = false;
                     break;
                 case "Repeat List":
                     Repeat = "No Repeat";
+                    Player.IsLoopingEnabled = false;
                     break;
                 default:
                     break;
@@ -457,13 +460,13 @@ namespace BreadPlayer.ViewModels
             {
                 await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    DontUpdatePosition = true;
-                    CurrentPosition = 0;
-                    Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
+                    //DontUpdatePosition = true;
+                    //CurrentPosition = 0;
+                    //Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
                     if (Repeat == "No Repeat" && GetPlayingCollection() != null && GetPlayingCollection().Any())
                         PlayNext();
-                    else
-                        PlayPause();
+                    //else
+                    //    PlayPause();
                 });
             }
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -697,8 +700,6 @@ namespace BreadPlayer.ViewModels
             if (SharedLogic.SettingsVM.ReplaceLockscreenWithAlbumArt)
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             UpcomingSong = await GetUpcomingSong();
-            if (InitializeCore.IsMobile)
-                NavigateToNowPlayingView();
         }
         public async Task Load(Mediafile mp3file, bool play = false, double currentPos = 0, double vol = 50)
         {
@@ -717,6 +718,10 @@ namespace BreadPlayer.ViewModels
                     if (play)
                     {
                         PlayPauseCommand.Execute(null);
+
+                        //navigate to now playing view automatically if on mobile.
+                        if (InitializeCore.IsMobile)
+                            NavigateToNowPlayingView();
                     }
                     else
                     {

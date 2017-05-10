@@ -19,8 +19,8 @@
                         <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
                     <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                     </Grid>
-            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknown Album'}" HorizontalAlignment="Center"/>
+                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -67,9 +67,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Name="SongsHeader" Text="Songs" FontSize="24" FontWeight="Bold"/>
+        <TextBlock x:Uid="songsHeader" Name="SongsHeader" Text="" FontSize="24" FontWeight="Bold"/>
         <ListView Name="SongsList" Grid.Row="1" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}"/>
-        <TextBlock Name="AlbumsHeader" Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
+        <TextBlock x:Uid="albumsHeader" Name="AlbumsHeader" Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
         <GridView Name="AlbumsList" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"> 
             <GridView.Transitions>
                 <TransitionCollection>
@@ -102,8 +102,8 @@
                             </Image>
                             <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                      </Grid>
-                    <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
-                            <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
+                    <TextBlock TextAlignment="Center" Margin="5,10,5,0" FontSize="16" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknonw Album'}" HorizontalAlignment="Center"/>
+                            <TextBlock TextAlignment="Center" Margin="5,10,5,0" x:Phase="1" FontSize="13" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

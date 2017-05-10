@@ -62,39 +62,39 @@
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
         <Pivot Name="MainPivot" Grid.Row="2" Margin="0,-20,0,0" HeaderTemplate="{StaticResource LargeHeaderText}">
-            <PivotItem Header="General">
+            <PivotItem x:Uid="generalPivot" Header="">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock Text="Lockscreen" FontWeight="Bold" FontSize="18"/>
-                    <CheckBox Margin="0,0,0,0" Content="Prevent screen from locking." IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}"/>
+                    <TextBlock x:Uid="lockscreenHeader" Text="" FontWeight="Bold" FontSize="18"/>
+                    <CheckBox x:Uid="preventScreenLockingCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run Text="Enabling this will prevent the OS from locking the screen after regular intervals. "/>
-                        <Bold>This feature is extremely battery consuming and hence, is not persisted through sessions.</Bold>
+                        <Run x:Uid="preventScreenLockingInfoText" Text=""/>
+                        <Run FontWeight="Bold" x:Uid="preventScreenLockingFurtherInfoText"></Run>
                     </TextBlock>
-                    <CheckBox Margin="0,0,0,0" Content="Replace lockscreen wallpaper with album art." IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
+                    <CheckBox x:Uid="replaceLockscreenCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run Text="This will replace the lockscreen wallpaper with currently playing song's album art. "/>
-                        <Bold>Rest assured that your lockscreen wallpaper will be automatically resetted when you exit the app.</Bold>
+                        <Run x:Uid="replaceLockscreenInfoText" Text=""/>
+                        <Run FontWeight="Bold" x:Uid="replaceLockscreenFurtherInfoText"></Run>
                     </TextBlock>                
                 </StackPanel>
             </PivotItem>
             
-            <PivotItem Header="Library">
+            <PivotItem x:Uid="libraryPivot" Header="">
                 <StackPanel x:Name="libraryGrid" MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock x:Name="importHeader" Text="Import Breads" FontWeight="Bold" FontSize="18"/>
+                    <TextBlock x:Uid="importToastsHeader" x:Name="importHeader" Text="" FontWeight="Bold" FontSize="18"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="importFolderBtn" FontSize="16" Padding="0" Margin="0" Content="Import folders to your library" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" HorizontalAlignment="Stretch"/>
+                        <Button x:Uid="importFolderBtn" x:Name="importFolderBtn" FontSize="16" Padding="0" Margin="0" Content="" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" HorizontalAlignment="Stretch"/>
                         <ToggleButton Grid.Column="1" x:Name="showhideListBtn" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="3,4,0,0" Height="20" >
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="showSymbol"  Text="&#xE011;  " FontSize="13" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
-                                <TextBlock x:Name="showLabel" FontSize="16" Text="Show more" VerticalAlignment="Center"/>
+                                <TextBlock x:Uid="importShowMoreLabel" x:Name="showLabel" FontSize="16" Text="" VerticalAlignment="Center"/>
                             </StackPanel>
                         </ToggleButton>
                     </Grid>
-                    <TextBlock x:Name="importHelp" Text="Imported file types are MP3, WAV, OGG, FLAC, M4A, AIF, WMA" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+                    <TextBlock x:Uid="importHelpText" x:Name="importHelp" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
                     <!--<ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>-->
                     <ListBox x:Name="fileList" Visibility="{Binding ElementName=showhideListBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Left" Height="200" Background="{ThemeResource ThemeBackground}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,10,0" ItemsSource="{Binding LibraryFoldersCollection}">
@@ -113,19 +113,20 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>                   
-                    <Button x:Name="importPlistBtn" Padding="0" Content="Import playlists" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-                    <TextBlock x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="Supported playlists are M3U and PLS." TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
-                    <TextBlock x:Name="resetHeader" Margin="0,10,0,0"  Text="Reset BreadPlayer" FontWeight="Bold"  FontSize="18"/>
+                    
+                    <Button x:Uid="importPlaylistBtn" x:Name="importPlistBtn" Padding="0" Content="" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
+                    <TextBlock x:Uid="importPlaylistHelpText" x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+                    <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Margin="0,10,0,0"  Text="" FontWeight="Bold"  FontSize="18"/>
 
-                    <Button FontSize="16" Padding="0" Content="Reset Everything" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-                    <TextBlock Margin="0,-4,0,0" Text="This will reset your library, playlists, settings, play history etc." TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+                    <Button x:Uid="resetEverythingBtn" FontSize="16" Padding="0" Content="" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
+                    <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
                 </StackPanel>
             </PivotItem>            
             
-            <PivotItem Header="Personalization">
+            <PivotItem x:Uid="personalizationPivot" Header="">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock Text="Appearence" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="appearenceHeader" Text="" FontSize="18" FontWeight="Bold"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -136,26 +137,62 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <TextBlock VerticalAlignment="Center">
-                                    <Run Text="Theme:"/>
+                                    <Run x:Uid="themeText" Text=""/>
                                     <LineBreak/>
-                                    <Run Text="Change of theme requires shutdown." FontSize="11" Foreground="Gray"/>
+                                    <Run x:Uid="themeHelpText" Text="" FontSize="11" Foreground="Gray"/>
                         </TextBlock>
-                        <ToggleSwitch Grid.Column="1" x:Name="themeChange" OffContent="Dark" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="Light" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
+                        <ToggleSwitch x:Uid="themeChangeToggleSwitch" Grid.Column="1" x:Name="themeChange" OffContent="" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
 
                         <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="uiTextTypeText">
-                            <Run Text="Font Capitilization:"/>
+                            <Run x:Uid="fontCapsText" Text=""/>
                             <LineBreak/>
-                            <Run FontSize="11" Text="This changes the text capitalization of the UI." Foreground="Gray"/>
+                            <Run x:Uid="fontCapsHelpText" FontSize="11" Text="" Foreground="Gray"/>
                         </TextBlock>
                         <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UITextType, Mode=TwoWay}">
-                            <x:String>Normal</x:String>
-                            <x:String>All Capitals</x:String>
+                            <x:String x:Uid="fontCapsOptionFirst"></x:String>
+                            <x:String x:Uid="fontCapsOptionSecond"></x:String>
                         </ComboBox>
                     </Grid>
-                    <CheckBox Margin="0,10,0,0" Content="Enable Blur" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
-                    <TextBlock Text="Blur is performance heavy and is not recommended on low-end devices. Please use with caution." TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
-                    <CheckBox Margin="0,10,0,0" Content="Change Accent Color By Album Art" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
-                    <TextBlock Text="Enabling this makes the player adapt the accent color according to the album art of the currently playing song." TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
+                    <CheckBox x:Uid="enableBlurCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
+                    <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
+                    <CheckBox x:Uid="changeAccentCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
+                    <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
+                </StackPanel>
+            </PivotItem>
+            
+            <PivotItem x:Uid="aboutPivot" Header="">
+                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
+                    <TextBlock x:Uid="versionHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="version" Text=""/>                  
+                    <TextBlock x:Uid="contributorsHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <ItemsControl MaxHeight="250">
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov"/>
+                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0"/>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <TextBlock x:Uid="creditsHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
+                    <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
+                    <TextBlock x:Uid="licenseHeader" Text="" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
+                         This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+                    </TextBlock>
                 </StackPanel>
             </PivotItem>
             
@@ -180,22 +217,22 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="By Github:" Grid.Row="0" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Report an issue" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Padding="30,10" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Request a feature" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock Text="By Email:" Grid.Row="2" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Report an issue" Command="{Binding Path=NavigateCommand}" CommandParameter="bug-report" Padding="30,10" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Request a feature" Command="{Binding Path=NavigateCommand}" CommandParameter="feature-request" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock Text="By Store:" Grid.Row="4" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button Content="Leave a review" Command="{Binding Path=NavigateCommand}" CommandParameter="ms-windows-store://review/?ProductId=9nblggh42srx" Grid.Row="5" Padding="33,10" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button Content="Send feedback" Command="{Binding Path=NavigateCommand}" CommandParameter="feedback-hub://" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="3" Padding="33,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock Text="You can also contact us here:" Grid.Row="6" Grid.ColumnSpan="4" FontSize="18" FontWeight="Bold"/>
-                        <HyperlinkButton Grid.Row="7" Width="50" HorizontalAlignment="Center" NavigateUri="https://www.facebook.com/yourbreadplayer/">
+                        <TextBlock x:Uid="byGithubHeader" Text="" Grid.Row="0" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
+                        <Button x:Uid="reportIssueBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Padding="30,10" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button x:Uid="requestFeatureBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <TextBlock x:Uid="byEmailHeader" Text="" Grid.Row="2" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
+                        <Button x:Uid="reportIssueBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="bug-report" Padding="30,10" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button x:Uid="requestFeatureBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="feature-request" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <TextBlock x:Uid="byStoreHeader" Text="" Grid.Row="4" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
+                        <Button x:Uid="leaveReviewBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="ms-windows-store://review/?ProductId=9nblggh42srx" Grid.Row="5" Padding="33,10" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <Button x:Uid="sendFeedbackBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="feedback-hub://" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="3" Padding="33,10" Style="{StaticResource RoundedIconButtonStyle}"/>
+                        <TextBlock x:Uid="contactUsHereHeader" Text="" Grid.Row="6" Grid.ColumnSpan="4" FontSize="18" FontWeight="Bold"/>
+                        <HyperlinkButton x:Uid="facebookBtn" Grid.Row="7" Width="50" HorizontalAlignment="Center" NavigateUri="https://www.facebook.com/yourbreadplayer/">
                             <Path Fill="#3b5998" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
 			C49.652,11.137,38.516,0,24.826,0z M31,25.7h-4.039c0,6.453,0,14.396,0,14.396h-5.985c0,0,0-7.866,0-14.396h-2.845v-5.088h2.845
 			v-3.291c0-2.357,1.12-6.04,6.04-6.04l4.435,0.017v4.939c0,0-2.695,0-3.219,0c-0.524,0-1.269,0.262-1.269,1.386v2.99h4.56L31,25.7z" Stretch="Fill"></Path>
                         </HyperlinkButton>
-                        <HyperlinkButton Grid.Row="7" Width="50" Grid.Column="1" HorizontalAlignment="Center"  NavigateUri="https://www.twitter.com/yourbreadplayer/">
+                        <HyperlinkButton x:Uid="twitterBtn" Grid.Row="7" Width="50" Grid.Column="1" HorizontalAlignment="Center"  NavigateUri="https://www.twitter.com/yourbreadplayer/">
                             <Path Fill="#4099FF" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
 			C49.652,11.137,38.516,0,24.826,0z M35.901,19.144c0.011,0.246,0.017,0.494,0.017,0.742c0,7.551-5.746,16.255-16.259,16.255
 			c-3.227,0-6.231-0.943-8.759-2.565c0.447,0.053,0.902,0.08,1.363,0.08c2.678,0,5.141-0.914,7.097-2.446
@@ -206,7 +243,7 @@
 			c1.303-0.256,2.523-0.73,3.63-1.387c-0.43,1.335-1.333,2.454-2.516,3.162c1.157-0.138,2.261-0.444,3.282-0.899
 			C37.987,17.334,37.018,18.341,35.901,19.144z" Stretch="Fill"></Path>
                         </HyperlinkButton>
-                        <HyperlinkButton Grid.Row="7" Width="50" Height="60" Grid.Column="2" HorizontalAlignment="Center"  NavigateUri="https://www.github.com/theweavrs/BreadPlayer/">
+                        <HyperlinkButton x:Uid="githubBtn" Grid.Row="7" Width="50" Height="60" Grid.Column="2" HorizontalAlignment="Center"  NavigateUri="https://www.github.com/theweavrs/BreadPlayer/">
                             <Path Fill="#333" Data="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
 		c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
 		c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
@@ -228,7 +265,7 @@
 		c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906
 		C438.536,184.851,428.728,148.168,409.132,114.573z" Stretch="Fill"></Path>
                         </HyperlinkButton>
-                        <HyperlinkButton Grid.Row="7" Width="50" Height="60" Grid.Column="3" HorizontalAlignment="Center" NavigateUri="https://www.reddit.com/user/thecodrr/">
+                        <HyperlinkButton x:Uid="redditBtn" Grid.Row="7" Width="50" Height="60" Grid.Column="3" HorizontalAlignment="Center" NavigateUri="https://www.reddit.com/user/thecodrr/">
                             <Path Fill="#FF5700" Data="M25.098,43.863c-0.977-0.766-2.18-1.207-3.432-1.207c-3.07,0-5.566,2.5-5.566,5.572c0,1.78,0.859,3.422,2.254,4.455
 			C19.512,49.369,21.861,46.359,25.098,43.863z M72.748,30.117c2.293,0,4.158-1.867,4.158-4.162s-1.865-4.16-4.158-4.16c-2.295,0-4.164,1.865-4.164,4.16
 			S70.453,30.117,72.748,30.117z M48.875,0C21.883,0,0,21.883,0,48.875S21.883,97.75,48.875,97.75S97.75,75.867,97.75,48.875S75.867,0,48.875,0z
@@ -245,7 +282,7 @@
 			s2.065-4.605,4.604-4.605c2.539,0,4.604,2.066,4.604,4.605S62.037,58.143,59.498,58.143z M76.08,42.656c-1.328,0-2.574,0.479-3.57,1.313c3.217,2.516,5.539,5.546,6.66,8.878c1.531-1.019,2.48-2.722,2.48-4.619
 			C81.65,45.156,79.154,42.656,76.08,42.656z" Stretch="Fill"></Path>
                         </HyperlinkButton>
-                        <HyperlinkButton Grid.Row="8" Content="&#xE715;" NavigateUri="mailto:support@braedplayer.com" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <HyperlinkButton x:Uid="mailBtn" Grid.Row="8" Content="&#xE715;" NavigateUri="mailto:support@braedplayer.com" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
                         </HyperlinkButton>
                     </Grid>
                   
