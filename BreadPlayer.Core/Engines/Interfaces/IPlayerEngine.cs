@@ -23,6 +23,7 @@ namespace BreadPlayer.Core.PlayerEngines
         double Volume { get; set; }
         double Position { get; set; }
         double Length { get; set; }
+        bool IsLoopingEnabled { get; set; }
         PlayerState PlayerState { get; set; }
         Mediafile CurrentlyPlayingFile { get; set; }
         bool IgnoreErrors { get; set; }

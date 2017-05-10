@@ -277,6 +277,7 @@ namespace BreadPlayer.Core
         }
 
         public IEqualizer Equalizer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsLoopingEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #endregion
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
