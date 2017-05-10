@@ -46,7 +46,7 @@ namespace BreadPlayer.Core
             get
             {
                 if (player == null)
-                    player = new FMODPlayerEngine();
+                    player = new FMODPlayerEngine(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
                 return player;
             }
         }

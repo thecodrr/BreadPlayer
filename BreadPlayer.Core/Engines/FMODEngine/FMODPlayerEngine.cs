@@ -23,11 +23,13 @@ namespace BreadPlayer.Core.PlayerEngines
         IntPtr Last5SyncPoint;
         IntPtr Last15SyncPoint;
         uint Last15Offset;
+        bool isMobile;
         #endregion
 
-        public FMODPlayerEngine()
+        public FMODPlayerEngine(bool IsMobile)
         {
-            Init(false);
+            isMobile = IsMobile;
+            Init(IsMobile);
         }
 
         #region Methods
@@ -51,7 +53,7 @@ namespace BreadPlayer.Core.PlayerEngines
                 await Stop();
 
                 //create a stream of the new track
-                Result loadResult = FMODSys.CreateStream(mediaFile.Path, Mode.DEFAULT, out FMODSound);
+                Result loadResult = FMODSys.CreateStream(mediaFile.Path, isMobile ? Mode.LOWMEM & Mode.IGNORETAGS : Mode.DEFAULT, out FMODSound);
 
                 //load the stream into the channel but don't play it yet.
                 loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);

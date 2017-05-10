@@ -100,10 +100,17 @@ namespace BreadPlayer
 
         #region SystemMediaTransportControls Methods/Events
         static MediaPlayer player;
-        public static void InitSmtc()
+        public async static void InitSmtc()
         {
-            player = new MediaPlayer();
-            player.CommandManager.IsEnabled = false;
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                var file = await(await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                player = new MediaPlayer();
+                player.CommandManager.IsEnabled = false;
+                player.IsLoopingEnabled = true;
+                player.Source = MediaSource.CreateFromStorageFile(file);
+                player.Play();
+            }
             //player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
@@ -137,15 +144,7 @@ namespace BreadPlayer
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             _smtc.DisplayUpdater.ClearAll();
             if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {
-                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                {
-                    var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
-                    player.IsLoopingEnabled = true;
-                    player.Source = MediaSource.CreateFromStorageFile(file);
-                    player.Play();
-                    player.Volume = 0;
-                }
+            {              
                 musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
                 musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
@@ -158,6 +157,7 @@ namespace BreadPlayer
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
+            player.Play();
             await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 switch (args.Button)

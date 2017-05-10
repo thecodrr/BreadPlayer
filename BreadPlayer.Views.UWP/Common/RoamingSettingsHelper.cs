@@ -22,7 +22,7 @@ namespace BreadPlayer.Common
         {
             var eqJson = GetSetting<string>(EqConfigName, "{}");
             var settings = JsonConvert.DeserializeObject<EqualizerSettings>(eqJson);
-            return (settings, GetSetting<float>("PreAMP", 1));
+            return (settings, GetSetting<float>("PreAMP", 0.0f));
         }
 
         public void SaveEqualizerSettings(EqualizerSettings settings, float PreAMP)

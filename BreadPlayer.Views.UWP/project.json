@@ -5,6 +5,7 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Toolkit.Uwp.Notifications": "1.4.1",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
+    "runtime.win8-arm.runtime.native.System.IO.Compression": "4.0.1",
     "PCLStorage": "1.0.2",
     "System.ValueTuple": "4.3.0",
     "TagLib.Portable": "1.0.4",
