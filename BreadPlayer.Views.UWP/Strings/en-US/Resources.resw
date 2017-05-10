@@ -153,11 +153,39 @@
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your favorite toasts.</value>
   </data>
+  <data name="lastfmLoginBtn.Content" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Log in to your Last.fm account</value>
+  </data>
+  <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Enter Your Last.fm Password Here...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmPasswordTextBlock.Text" xml:space="preserve">
+    <value>Password:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Enter Your Last.fm Username Here...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.Text" xml:space="preserve">
+    <value>Username:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
   <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Add this toast to a playlist or now baking queue</value>
   </data>
   <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Play Toast</value>
+  </data>
+  <data name="loggedInStatus" xml:space="preserve">
+    <value>Logged In</value>
+  </data>
+  <data name="loggedOutStatus" xml:space="preserve">
+    <value>Logged Out</value>
   </data>
   <data name="lonelyTextBlock.Text" xml:space="preserve">
     <value>Its lonely here :(</value>
@@ -203,7 +231,7 @@
   </data>
   <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
     <value> Play all</value>
-    <comment>(Respect the space at the beginning.)</comment>
+    <comment>(Respect the whitespace at the beginning.)</comment>
   </data>
   <data name="playMenuItem.Text" xml:space="preserve">
     <value>Play</value>
