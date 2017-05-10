@@ -58,7 +58,11 @@ namespace BreadPlayer.Core.PlayerEngines
                 //load the stream into the channel but don't play it yet.
                 loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);
 
+                //this checks if looping is enabled and then sets the loop
                 SetLoop();
+
+                //START EXPERIMENT!
+                //volume normalization code.
                 //FMODSys.CreateDSPByType(Fmod.CoreDSP.DspType.NORMALIZE, out DSP dsp);
 
                 //FMODChannel.addDSP(ChannelControlDspIndex.HEAD, dsp);
@@ -67,9 +71,10 @@ namespace BreadPlayer.Core.PlayerEngines
                 //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.MAXAMP, 2.0f);
 
                 //dsp.setActive(true);
+                //END EXPERIMENT!
 
                 //load equalizer
-                if(Equalizer == null)
+                if (Equalizer == null)
                     Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
                 else
                     (Equalizer as FmodEqualizer).ReInit(FMODSys, FMODChannel); 
