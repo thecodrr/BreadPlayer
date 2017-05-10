@@ -36,7 +36,6 @@
 15. Fade in/out when changing the song.
 16. Last.fm Scrobbling.
 17. Manual adding of Album arts
-18. Separate BreadPlayer.Core from BreadPlayer.Views.UWP
 19. A preview for previous song just like for next song. _**(thanks to vsarunov)**_
 20. A notification for upcoming song when the position reaches last 15-10 seconds.
 
