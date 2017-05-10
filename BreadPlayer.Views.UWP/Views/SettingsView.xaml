@@ -159,7 +159,7 @@
                     <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
                 </StackPanel>
             </PivotItem>
-            <PivotItem Header="Key Bindings">
+            <PivotItem x:Uid="keyBindingsPivot" Header="">
                 <Grid MaxWidth="500" HorizontalAlignment="Left" Margin="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -172,26 +172,26 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Center" Width="100" Text="Commands" FontWeight="Bold"/>
+                    <TextBlock x:Uid="commandsHeader" Grid.Column="0" Grid.Row="0" TextAlignment="Center" Width="100" Text="" FontWeight="Bold"/>
                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" TextAlignment="Center" FontWeight="Bold" FontSize="12">
-                        <Run>Basic Commands:</Run>
+                        <Run x:Uid="basicCommandsHeader"></Run>
                         <LineBreak/>
-                        <Run FontSize="9" FontWeight="Normal" Text="These commands will work from everywhere."/>
+                        <Run x:Uid="basicCommandsInfo" FontSize="9" FontWeight="Normal" Text=""/>
                     </TextBlock>
                     <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                        <TextBlock Text="Play/Pause"/>
-                        <TextBlock>Next</TextBlock>
-                        <TextBlock>Previous</TextBlock>
-                        <TextBlock>Seek Forward</TextBlock>
-                        <TextBlock>Seek Backward</TextBlock>
-                        <TextBlock>Volume Up</TextBlock>
-                        <TextBlock>Volume Down</TextBlock>
-                        <TextBlock>Show Equalizer</TextBlock>
-                        <TextBlock>Repeat</TextBlock>
-                        <TextBlock>Shuffle</TextBlock>
-                        <TextBlock>Open file</TextBlock>
-                        <TextBlock>Mute</TextBlock>
-                        <TextBlock>Show Properties</TextBlock>
+                        <TextBlock x:Uid="playPauseCmd" Text=""/>
+                        <TextBlock x:Uid="nextCmd"></TextBlock>
+                        <TextBlock x:Uid="prevCmd"></TextBlock>
+                        <TextBlock x:Uid="seekForwardCmd"></TextBlock>
+                        <TextBlock x:Uid="seekBackwardCmd"></TextBlock>
+                        <TextBlock x:Uid="volUpCmd"></TextBlock>
+                        <TextBlock x:Uid="volDownCmd"></TextBlock>
+                        <TextBlock x:Uid="showEQCmd"></TextBlock>
+                        <TextBlock x:Uid="repeatCmd"></TextBlock>
+                        <TextBlock x:Uid="shuffleCmd"></TextBlock>
+                        <TextBlock x:Uid="openFileCmd"></TextBlock>
+                        <TextBlock x:Uid="muteCmd"></TextBlock>
+                        <TextBlock x:Uid="showPropsCmd"></TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" Margin="20,10,0,0">
                         <TextBlock Text="Ctrl + P"/>
@@ -209,16 +209,16 @@
                         <TextBlock>Ctrl + I</TextBlock>
                     </StackPanel>
                     <TextBlock Grid.Row="3" Grid.ColumnSpan="2" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Bold" FontSize="12">
-                        <Run>Toast Library Commands:</Run>
+                        <Run  x:Uid="toastLibraryCmdsHeader"></Run>
                         <LineBreak/>
-                        <Run FontSize="9" FontWeight="Normal" Text="These commands will work only when a Toast is focused."/>
+                        <Run  x:Uid="toastLibraryCmdsInfoText" FontSize="9" FontWeight="Normal" Text=""/>
                     </TextBlock>
                     <StackPanel Grid.Row="4" Margin="0,10,0,0">
-                        <TextBlock>Play Song</TextBlock>
-                        <TextBlock>Delete</TextBlock>
+                        <TextBlock  x:Uid="playSongCmd"></TextBlock>
+                        <TextBlock x:Uid="deleteSongCmd"></TextBlock>
                         <!--<TextBlock>Add to queue</TextBlock>-->
-                        <TextBlock>Add to favorites</TextBlock>
-                        <TextBlock>Show Tags</TextBlock>
+                        <TextBlock x:Uid="addToFavCmd"></TextBlock>
+                        <TextBlock x:Uid="showTagsCmd"></TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Row="4" Grid.Column="1" Margin="20,10,0,0">
                         <TextBlock>Enter</TextBlock>
@@ -227,12 +227,12 @@
                         <TextBlock>Ctrl + F</TextBlock>
                         <TextBlock>Ctrl + T</TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Key Bindings" Width="100" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
+                    <TextBlock  x:Uid="keyBindingsHeader" Grid.Column="1"  Grid.Row="0" Text="" Width="100" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Contact Us">
+            <PivotItem x:Uid="contactUsPivot" Header="">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock Text="Helpful Links" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="helpfulLinksHeader" Text="" FontSize="18" FontWeight="Bold"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

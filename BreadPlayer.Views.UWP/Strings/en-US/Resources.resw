@@ -502,4 +502,82 @@
   <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show the now baking list of toasts.</value>
   </data>
+  <data name="addToFavCmd.Text" xml:space="preserve">
+    <value>Add to favorites</value>
+  </data>
+  <data name="basicCommandsHeader.Text" xml:space="preserve">
+    <value>Basic Commands</value>
+  </data>
+  <data name="basicCommandsInfo.Text" xml:space="preserve">
+    <value>These commands will work from everywhere.</value>
+  </data>
+  <data name="commandsHeader.Text" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="contactUsPivot.Header" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="deleteSongCmd.Text" xml:space="preserve">
+    <value>Delete Song</value>
+  </data>
+  <data name="helpfulLinksHeader.Text" xml:space="preserve">
+    <value>Helpful Links</value>
+  </data>
+  <data name="keyBindingsHeader.Text" xml:space="preserve">
+    <value>Key Bindings</value>
+  </data>
+  <data name="keyBindingsPivot.Header" xml:space="preserve">
+    <value>Key Bindings</value>
+  </data>
+  <data name="muteCmd.Text" xml:space="preserve">
+    <value>Mute</value>
+  </data>
+  <data name="nextCmd.Text" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="openFileCmd.Text" xml:space="preserve">
+    <value>Open file</value>
+  </data>
+  <data name="playPauseCmd.Text" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="playSongCmd.Text" xml:space="preserve">
+    <value>Play Song</value>
+  </data>
+  <data name="prevCmd.Text" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="repeatCmd.Text" xml:space="preserve">
+    <value>Repeat</value>
+  </data>
+  <data name="seekBackwardCmd.Text" xml:space="preserve">
+    <value>Seek Backward</value>
+  </data>
+  <data name="seekForwardCmd.Text" xml:space="preserve">
+    <value>Seek Forward</value>
+  </data>
+  <data name="showEQCmd.Text" xml:space="preserve">
+    <value>Show Equalizer</value>
+  </data>
+  <data name="showPropsCmd.Text" xml:space="preserve">
+    <value>Show Properties</value>
+  </data>
+  <data name="showTagsCmd.Text" xml:space="preserve">
+    <value>Show Tags</value>
+  </data>
+  <data name="shuffleCmd.Text" xml:space="preserve">
+    <value>Shuffle</value>
+  </data>
+  <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
+    <value>Toast Library Commands</value>
+  </data>
+  <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
+    <value>These commands will work only when a Toast is focused.</value>
+  </data>
+  <data name="volDownCmd.Text" xml:space="preserve">
+    <value>Volume Down</value>
+  </data>
+  <data name="volUpCmd.Text" xml:space="preserve">
+    <value>Volume Up</value>
+  </data>
 </root>
