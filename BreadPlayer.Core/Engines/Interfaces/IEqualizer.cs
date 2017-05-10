@@ -27,17 +27,19 @@ namespace BreadPlayer.Core.PlayerEngines
         };
         public EqualizerSettings EqualizerSettings { get; set; }
         public ObservableCollection<EqualizerSettings> Presets { get; set; }
-        int selectedPreset = 0;
+        int selectedPreset = -1;
         public int SelectedPreset
         {
             get { return selectedPreset; }
             set
             {
+                selectedPreset = value;
+                if (selectedPreset == -1)
+                    return;
                 var preset = Presets[selectedPreset];
                 EqualizerSettings = preset;
                 DeInit();
                 Init();
-                selectedPreset = value;
             }
         }
         public ObservableCollection<IEqualizerBand> Bands { get; set; }
@@ -53,8 +55,7 @@ namespace BreadPlayer.Core.PlayerEngines
                     this.Init();
                 }
                 else
-                {
-                    this.SaveEqualizerSettings();
+                {                    
                     this.DeInit();
                 }
             }

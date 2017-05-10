@@ -67,6 +67,11 @@ namespace BreadPlayer.Core.PlayerEngines
                     {
                         band.Gain = savedValue;
                     }
+                    (band as FmodEqualizerBand).PropertyChanged += (sender, e) =>
+                    {
+                        if(e.PropertyName == "Gain")
+                            this.SaveEqualizerSettings();
+                    };
                     this.Bands.Add(band);
                 }
             }
