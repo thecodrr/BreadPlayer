@@ -464,4 +464,42 @@
   <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="albumRetryText.Text" xml:space="preserve">
+    <value>Failed to fetch Bread's Toasts. Please retry.</value>
+  </data>
+  <data name="albumTracksPivot.Header" xml:space="preserve">
+    <value>Bread Toasts</value>
+  </data>
+  <data name="artistBioPivot.Header" xml:space="preserve">
+    <value>Baker Biography</value>
+  </data>
+  <data name="artistRetryText.Text" xml:space="preserve">
+    <value>Failed to fetch baker biography. Please retry.</value>
+  </data>
+  <data name="correctAlbumTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter the correct song album here...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="correctArtistNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter the correct toast's baker here...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="goBackBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Go back to previous page.</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="lyricsText.Text" xml:space="preserve">
+    <value>Support for synced lyrics coming soon! Enjoy.</value>
+  </data>
+  <data name="nowPlayingPivot.Header" xml:space="preserve">
+    <value>Now Baking</value>
+  </data>
+  <data name="retryBtn.Content" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show the now baking list of toasts.</value>
+  </data>
 </root>
