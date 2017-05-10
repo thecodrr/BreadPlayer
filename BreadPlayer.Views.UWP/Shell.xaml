@@ -400,7 +400,7 @@
                 </Grid>
             </StackPanel>
             <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
-                <ToggleSwitch Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" OnContent="Equalizer On" OffContent="Equalizer Off" IsOn="{Binding Source={StaticResource Core}, Path=Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <ToggleSwitch x:Uid="enableEqToggleSwitch" Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" OnContent="" OffContent="" IsOn="{Binding Source={StaticResource Core}, Path=Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             </StackPanel>
             <StackPanel Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" Orientation="Horizontal" HorizontalAlignment="Center" >
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Text="0dB" FontSize="11"/>
@@ -416,7 +416,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <AppBarToggleButton BorderBrush="WhiteSmoke" IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}" VerticalAlignment="Center" Grid.Column="0" ToolTipService.ToolTip="{Binding Repeat}" Icon="Mute" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="15,0,0,0" Height="40" />
+            <AppBarToggleButton x:Uid="muteBtn" BorderBrush="WhiteSmoke" IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}" VerticalAlignment="Center" Grid.Column="0" ToolTipService.ToolTip="{Binding Repeat}" Icon="Mute" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="15,0,0,0" Height="40" />
             <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="5,0,0,0"/>
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>

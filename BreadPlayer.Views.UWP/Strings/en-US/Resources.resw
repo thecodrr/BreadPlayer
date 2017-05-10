@@ -117,17 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="addSomeSongsBtn.Content" xml:space="preserve">
+    <value>Add some songs</value>
+  </data>
+  <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Import songs into your library</value>
+  </data>
+  <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Go back to songs list</value>
+  </data>
+  <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
+    <value>Equalizer Off</value>
+  </data>
+  <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
+    <value>Equalizer On</value>
+  </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
     <value>Favorite Toasts</value>
   </data>
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your favorite toasts.</value>
   </data>
+  <data name="lonelyTextBlock.Text" xml:space="preserve">
+    <value>Its lonely here :(</value>
+  </data>
   <data name="mostEatenMenuItem.Label" xml:space="preserve">
     <value>Most Eaten</value>
   </data>
   <data name="mostEatenMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your most eaten toasts.</value>
+  </data>
+  <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mute Volume</value>
   </data>
   <data name="myBakeriesMenuItem.Label" xml:space="preserve">
     <value>My Bakeries</value>
