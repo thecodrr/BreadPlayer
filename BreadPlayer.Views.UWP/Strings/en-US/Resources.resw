@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="aboutPivot.Header" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="addSomeSongsBtn.Content" xml:space="preserve">
     <value>Add some songs</value>
   </data>
@@ -126,11 +129,42 @@
   <data name="albumsHeader.Text" xml:space="preserve">
     <value>Breads</value>
   </data>
+  <data name="appearenceHeader.Text" xml:space="preserve">
+    <value>Appearence</value>
+  </data>
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Go back to toasts list</value>
   </data>
+  <data name="byEmailHeader.Text" xml:space="preserve">
+    <value>By Email:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byGithubHeader.Text" xml:space="preserve">
+    <value>By Github:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byStoreHeader.Text" xml:space="preserve">
+    <value>By Store:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="changeAccentCheckBox.Content" xml:space="preserve">
+    <value>Change Accent Color By Album Art</value>
+  </data>
+  <data name="changeAccentHelpText.Text" xml:space="preserve">
+    <value>Enabling this makes the player adapt the accent color according to the album art of the currently playing song.</value>
+  </data>
   <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
     <value>Change Album Art</value>
+  </data>
+  <data name="contactUsHereHeader.Text" xml:space="preserve">
+    <value>You can also contact us here:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="contributorsHeader" xml:space="preserve">
+    <value>Contributors</value>
+  </data>
+  <data name="creditsHeader" xml:space="preserve">
+    <value>Credits</value>
   </data>
   <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
     <value>Delete from playlist</value>
@@ -141,6 +175,12 @@
   <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
     <value>Disable multi selection</value>
   </data>
+  <data name="enableBlurCheckBox.Content" xml:space="preserve">
+    <value>Enable Blur</value>
+  </data>
+  <data name="enableBlurHelpText.Text" xml:space="preserve">
+    <value>Blur is performance heavy and is not recommended on low-end devices. Please use with caution.</value>
+  </data>
   <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
     <value>Equalizer Off</value>
   </data>
@@ -150,11 +190,54 @@
   <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
     <value>Enable multi selection</value>
   </data>
+  <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click to go to our facebook page.</value>
+  </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
     <value>Favorite Toasts</value>
   </data>
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your favorite toasts.</value>
+  </data>
+  <data name="fontCapsHelpText.Text" xml:space="preserve">
+    <value>This changes the text capitalization of the UI.</value>
+  </data>
+  <data name="fontCapsOptionFirst" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="fontCapsOptionSecond" xml:space="preserve">
+    <value>All Capitals</value>
+  </data>
+  <data name="fontCapsText.Text" xml:space="preserve">
+    <value>Font Capitilization:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="generalPivot.Header" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click to go to our github project page.</value>
+  </data>
+  <data name="importFolderBtn.Content" xml:space="preserve">
+    <value>Import folders to your library</value>
+  </data>
+  <data name="importHelpText.Text" xml:space="preserve">
+    <value>Imported file types are MP3, WAV, OGG, FLAC, M4A, AIF, WMA</value>
+  </data>
+  <data name="importPlaylistBtn.Content" xml:space="preserve">
+    <value>Import playlists</value>
+  </data>
+  <data name="importPlaylistHelpText.Text" xml:space="preserve">
+    <value>Supported playlists are M3U and PLS.</value>
+  </data>
+  <data name="importShowMoreLabel.Text" xml:space="preserve">
+    <value>Show more</value>
+  </data>
+  <data name="importToastsHeader.Text" xml:space="preserve">
+    <value>Import Toasts</value>
+  </data>
+  <data name="lastfmCredit" xml:space="preserve">
+    <value>Last.fm for artist &amp;amp; album info.</value>
   </data>
   <data name="lastfmLoginBtn.Content" xml:space="preserve">
     <value>Login</value>
@@ -178,11 +261,33 @@
     <value>Username:</value>
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>
+  <data name="leaveReviewBtn.Content" xml:space="preserve">
+    <value>Leave a review</value>
+  </data>
+  <data name="libraryPivot.Header" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="licenseHeader" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="licenseText" xml:space="preserve">
+    <value>This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</value>
+    <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
+  </data>
   <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Add this toast to a playlist or now baking queue</value>
   </data>
   <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Play Toast</value>
+  </data>
+  <data name="lockscreenHeader.Text" xml:space="preserve">
+    <value>Lockscreen</value>
   </data>
   <data name="loggedInStatus" xml:space="preserve">
     <value>Logged In</value>
@@ -192,6 +297,9 @@
   </data>
   <data name="lonelyTextBlock.Text" xml:space="preserve">
     <value>Its lonely here :(</value>
+  </data>
+  <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click to mail us.</value>
   </data>
   <data name="mostEatenMenuItem.Label" xml:space="preserve">
     <value>Most Eaten</value>
@@ -226,6 +334,9 @@
   <data name="openSongLocationMenuItem.Text" xml:space="preserve">
     <value>Open Toast Location</value>
   </data>
+  <data name="personalizationPivot.Header" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
   <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show more options.</value>
   </data>
@@ -238,6 +349,15 @@
   </data>
   <data name="playMenuItem.Text" xml:space="preserve">
     <value>Play</value>
+  </data>
+  <data name="preventScreenLockingCheckBox.Content" xml:space="preserve">
+    <value>Prevent screen from locking.</value>
+  </data>
+  <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
+    <value>This feature is extremely battery consuming and hence, is not persisted through sessions.</value>
+  </data>
+  <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
+    <value>Enabling this will prevent the OS from locking the screen after regular intervals.</value>
   </data>
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>Properties</value>
@@ -254,11 +374,41 @@
   <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your recently played songs.</value>
   </data>
+  <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click to go to our reddit profile.</value>
+  </data>
   <data name="relocateSongMenuItem.Text" xml:space="preserve">
     <value>Relocate Toast</value>
   </data>
   <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
     <value>Rename playlist.</value>
+  </data>
+  <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
+    <value>Replace lockscreen wallpaper with album art.</value>
+  </data>
+  <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
+    <value>Rest assured that your lockscreen wallpaper will be automatically resetted when you exit the app.</value>
+  </data>
+  <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
+    <value>This will replace the lockscreen wallpaper with currently playing song's album art.</value>
+  </data>
+  <data name="reportIssueBtn.Content" xml:space="preserve">
+    <value>Report an issue</value>
+  </data>
+  <data name="requestFeatureBtn.Content" xml:space="preserve">
+    <value>Request a feature</value>
+  </data>
+  <data name="resetEverythingBtn.Content" xml:space="preserve">
+    <value>Reset Everything</value>
+  </data>
+  <data name="resetEverythingHelpText.Text" xml:space="preserve">
+    <value>This will reset your library, playlists, settings, play history etc.</value>
+  </data>
+  <data name="resetHeader.Text" xml:space="preserve">
+    <value>Reset BreadPlayer</value>
+  </data>
+  <data name="sendFeedbackBtn.Content" xml:space="preserve">
+    <value>Send feedback</value>
   </data>
   <data name="settingsMenuItem.Label" xml:space="preserve">
     <value>Settings</value>
@@ -281,11 +431,27 @@
   <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
     <value>Stop Playing After This Toast</value>
   </data>
+  <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="themeHelpText.Text" xml:space="preserve">
+    <value>Change of theme requires shutdown.</value>
+  </data>
+  <data name="themeText.Text" xml:space="preserve">
+    <value>Theme:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
   <data name="toastCollectionMenuItem.Label" xml:space="preserve">
     <value>Toast Collection</value>
   </data>
   <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your toast collection.</value>
+  </data>
+  <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click to go to our twitter profile.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
     <value>v2.3.0-beta</value>
