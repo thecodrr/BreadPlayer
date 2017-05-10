@@ -59,7 +59,7 @@ namespace BreadPlayer.Core.Common
         public List<EqualizerSettings> GetSettings()
         {
             List<EqualizerSettings> EqualizerSettings = new List<PlayerEngines.EqualizerSettings>();
-            List<Config> ListConfigs = new List<Config>() { Rock, Classical, Club, Dance, FullBass };
+            List<Config> ListConfigs = new List<Config>() { Rock, Classical, Club, Dance, FullBass, FullBassAndTreble };
             foreach (var config in ListConfigs)
             {
                 Dictionary<string, float> Bands = new Dictionary<string, float>();

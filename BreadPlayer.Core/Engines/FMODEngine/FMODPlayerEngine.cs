@@ -179,7 +179,7 @@ namespace BreadPlayer.Core.PlayerEngines
                 uint Last5Offset = 0;
                 FMODSound?.getSyncPointInfo(Last5SyncPoint, new StringBuilder("fade"), 0, out Last5Offset, TimeUnit.MS);
 
-                if (position == FMODSound?.LengthInMilliseconds)
+                if (position >= FMODSound?.LengthInMilliseconds)
                 {
                     MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
                 }

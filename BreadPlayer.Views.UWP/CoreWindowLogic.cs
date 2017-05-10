@@ -185,7 +185,7 @@ namespace BreadPlayer
             switch (e.NewState)
             {
                 case PlayerState.Playing:
-                    player.Play();
+                    player?.Play();
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
                 case PlayerState.Paused:

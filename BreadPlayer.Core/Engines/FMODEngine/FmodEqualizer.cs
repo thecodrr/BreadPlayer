@@ -61,17 +61,18 @@ namespace BreadPlayer.Core.PlayerEngines
             foreach (var value in EqDefaultValues)
             {
                 var band = GetEqualizerBand(this.IsEnabled, value[0], value[1], value[2]);
+                (band as FmodEqualizerBand).PropertyChanged += (sender, e) =>
+                {
+                    if (e.PropertyName == "Gain")
+                        this.SaveEqualizerSettings();
+                };
                 if (band != null)
                 {
                     if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))
                     {
                         band.Gain = savedValue;
                     }
-                    (band as FmodEqualizerBand).PropertyChanged += (sender, e) =>
-                    {
-                        if(e.PropertyName == "Gain")
-                            this.SaveEqualizerSettings();
-                    };
+                   
                     this.Bands.Add(band);
                 }
             }
