@@ -161,9 +161,9 @@
             
             <PivotItem Header="About">
                 <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock Text="Version" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="v2.2.0-beta"/>                  
-                    <TextBlock Text="Contributors" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="versionHeader" Text="Version" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="version" Text="v2.2.0-beta"/>                  
+                    <TextBlock x:Uid="contributorsHeader" Text="Contributors" FontSize="18" FontWeight="Bold"/>
                     <ItemsControl MaxHeight="250">
                         <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
                         <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
@@ -179,11 +179,11 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                    <TextBlock Text="Credits" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="creditsHeader" Text="Credits" FontSize="18" FontWeight="Bold"/>
                     <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-                    <TextBlock Text="Last.fm for artist &amp; album info."></TextBlock>
-                    <TextBlock Text="License" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Justify">
+                    <TextBlock x:Uid="lastfmCredit" Text="Last.fm for artist &amp; album info."></TextBlock>
+                    <TextBlock x:Uid="licenseHeader" Text="License" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Uid="license" TextWrapping="WrapWholeWords" TextAlignment="Justify">
                          This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or

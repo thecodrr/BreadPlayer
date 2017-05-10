@@ -127,6 +127,9 @@
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\en-US\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
@@ -433,6 +436,7 @@
       <HintPath>..\libs\XLog.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
