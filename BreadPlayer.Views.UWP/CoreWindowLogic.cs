@@ -100,6 +100,7 @@ namespace BreadPlayer
 
         #region SystemMediaTransportControls Methods/Events
         static MediaPlayer player;
+        static bool changedByButton;
         public async static void InitSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
@@ -111,7 +112,7 @@ namespace BreadPlayer
                 player.Source = MediaSource.CreateFromStorageFile(file);
                 player.Play();
             }
-            //player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
             _smtc.IsEnabled = true;
@@ -150,13 +151,13 @@ namespace BreadPlayer
                 musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
                 if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
                     _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
-                else
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
             }
             _smtc.DisplayUpdater.Update();
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
+            //we do not want to pause the background player.
+            //pausing may cause stutter, that's why.
             player.Play();
             await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -181,20 +182,12 @@ namespace BreadPlayer
         {
             if (_smtc == null)
                 return;
-
+           
             switch (e.NewState)
             {
                 case PlayerState.Playing:
+                    player.Play();
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                    //if (_smtc.IsEnabled == false)
-                    //{
-                    //    if (update)
-                    //    {
-                    //        UpdateSmtc(true);
-                    //        update = false;
-                    //        player.Pause();
-                    //    }
-                    //}
                     break;
                 case PlayerState.Paused:
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
