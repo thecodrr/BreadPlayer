@@ -123,6 +123,9 @@
   <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Import songs into your library</value>
   </data>
+  <data name="albumsHeader.Text" xml:space="preserve">
+    <value>Breads</value>
+  </data>
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Go back to toasts list</value>
   </data>
@@ -271,6 +274,9 @@
   </data>
   <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Shuffle</value>
+  </data>
+  <data name="songsHeader.Text" xml:space="preserve">
+    <value>Toasts</value>
   </data>
   <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
     <value>Stop Playing After This Toast</value>
