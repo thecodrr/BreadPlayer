@@ -203,7 +203,7 @@ namespace BreadPlayer.Controls
             {
                 if ((_oldImageSource as BitmapImage)?.UriSource != (imageSource as BitmapImage).UriSource)
                 {
-                    StartAnimation(1, 0, 1.5).Completed += (sender, e) => { image.Source = imageSource; StartAnimation(0, 1, 3); };
+                    StartAnimation(1, 0, .5).Completed += (sender, e) => { image.Source = imageSource; StartAnimation(0, 1, 1); };
                     if (imageSource != null)
                     {
                         _oldImageSource = imageSource;

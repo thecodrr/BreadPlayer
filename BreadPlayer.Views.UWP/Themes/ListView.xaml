@@ -7,440 +7,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
-
-    <!--<Style TargetType="ListViewItem" x:Key="ListViewItemExpanded">
-        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-        <Setter Property="TabNavigation" Value="Local"/>
-        <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="12,0,12,0"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}"/>
-        <Setter Property="MinHeight" Value="{ThemeResource ListViewItemMinHeight}"/>
-        <Setter Property="UseSystemFocusVisuals" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ListViewItem">
-                    <Grid x:Name="ContentBorder"
-    Background="{TemplateBinding Background}">
-                        <Grid.Resources></Grid.Resources>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CustomStates">
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource PlayerStateToBool}}"/>
-                                    </VisualState.StateTriggers>
-                                    <Storyboard x:Name="myStoryboard"  AutoReverse="True" RepeatBehavior="Forever">
-                                        <ColorAnimation Storyboard.TargetName="Animie"  Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color }" To="DeepSkyBlue" Duration="0:0:6"/>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="CustomStates3">
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <StateTrigger IsActive="{Binding ElementName=ContentPresenter, Path=Content.State, Converter={StaticResource PlayerStateToBool}}"/>
-
-                                    </VisualState.StateTriggers>
-                                    <Storyboard x:Name="myStorybosard"  AutoReverse="True" RepeatBehavior="Forever">
-                                        <ColorAnimation Storyboard.TargetName="Buttons_Stack" Storyboard.TargetProperty="(StackPanel.Background).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color}" To="DeepSkyBlue" Duration="0:0:6"/>
-
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="PointerOver">
-
-                                    <VisualState.Setters>
-                                        <Setter Target="Buttons_Stack.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-                                    </VisualState.Setters>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="BorderBackground"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="1"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button2" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="BorderBackground"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="1"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button2" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Selected">
-                                    --><!--<VisualState.Setters>
-                                                <Setter Target="Buttons_Stack.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
-                                           </VisualState.Setters>--><!--
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="MultiSelectCheck"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0:0:0"
-             To="1"/>
-                                        <DoubleAnimation Storyboard.TargetName="BorderBackground"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="1"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button2" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundAccentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="PointerOverSelected">
-                                    --><!--<VisualState.Setters>
-                                                <Setter Target="Buttons_Stack.Background" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}"/>
-                                                -->
-                                    <!--<Setter Target="button2.Background" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}"/>-->
-                                    <!--
-                                            </VisualState.Setters>--><!--
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="MultiSelectCheck"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0:0:0"
-             To="1"/>
-                                        <DoubleAnimation Storyboard.TargetName="BorderBackground"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="1"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button2" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentMediumBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="PressedSelected">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="MultiSelectCheck"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0:0:0"
-             To="1"/>
-                                        <DoubleAnimation Storyboard.TargetName="BorderBackground"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="1"/>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="button2" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderBackground" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListAccentHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation TargetName="ContentPresenter" />
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="DisabledStates">
-                                <VisualState x:Name="Enabled"/>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ContentBorder"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="{ThemeResource ListViewItemDisabledThemeOpacity}"/>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="MultiSelectStates">
-                                <VisualState x:Name="MultiSelectDisabled">
-                                    <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheckBoxTransform"
-                            Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="-32" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectClipTransform"
-                           Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="32" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterTranslateTransform"
-                           Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="32"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="0" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.333" Value="Collapsed" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding Source={StaticResource Core}, Path=DynamicMargin}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MultiSelectEnabled">
-                                    <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheckBoxTransform"
-                            Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-32"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="0" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectClipTransform"
-                           Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="32"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="0" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterTranslateTransform"
-                           Storyboard.TargetProperty="X">
-                                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-32"/>
-                                            <SplineDoubleKeyFrame KeyTime="0:0:0.333" Value="0" KeySpline="0.1,0.9,0.2,1"/>
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectSquare" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MultiSelectCheck" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenterGrid" Storyboard.TargetProperty="Margin">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="78,0,0,0" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-
-                            <VisualStateGroup x:Name="ReorderHintStates">
-                                <VisualState x:Name="NoReorderHint"/>
-                                <VisualState x:Name="BottomReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Bottom" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="TopReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Top" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="RightReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Right" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="LeftReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Left" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition To="NoReorderHint" GeneratedDuration="0:0:0.2"/>
-                                </VisualStateGroup.Transitions>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="DragStates">
-                                <VisualState x:Name="NotDragging" />
-                                <VisualState x:Name="Dragging">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ContentBorder"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="{ThemeResource ListViewItemDragThemeOpacity}" />
-                                        <DragItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="DraggingTarget">
-                                    <Storyboard>
-                                        <DropTargetItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MultipleDraggingPrimary">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ContentBorder"
-             Storyboard.TargetProperty="Opacity"
-             Duration="0"
-             To="{ThemeResource ListViewItemDragThemeOpacity}" />
-                                        <DragItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MultipleDraggingSecondary">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="DraggedPlaceholder">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition To="NotDragging" GeneratedDuration="0:0:0.2"/>
-                                </VisualStateGroup.Transitions>
-                            </VisualStateGroup>
-                            <VisualStateGroup>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="0"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="Buttons_Stack.(Grid.Column)" Value="6"/>
-                                        <Setter Target="playBtn.Height" Value="75"/>
-                                        <Setter Target="button2.Height" Value="75"/>
-                                        <Setter Target="Buttons_Stack.Height" Value="75"/>
-                                        <Setter Target="Buttons_Stack.Margin" Value="-30,0,0,0"/>
-                                        <Setter Target="ContentPresenterGrid.Margin" Value="34,0,0,0"/>
-                                        <Setter Target="FavoriteButton.Margin" Value="-25,0,0,0"/>
-
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="600"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="ContentPresenterGrid.Margin" Value="48,0,0,0"/>
-
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        <AdaptiveTrigger MinWindowWidth="1200"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="ContentPresenterGrid.Margin" Value="48,0,0,0"/>
-
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="CustomStates4">
-                                <VisualState>
-                                    <VisualState.StateTriggers>
-                                        --><!--<StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=IsTouchEnabledDevice}"/>--><!--
-                                        <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
-                                    </VisualState.StateTriggers>
-                                    <VisualState.Setters>
-                                        <Setter Target="playBtn.Visibility" Value="Collapsed"/>
-                                        <Setter Target="Buttons_Stack.Width" Value="50"/>
-                                        <Setter Target="Buttons_Stack.Margin" Value="0,0,0,0"/>
-
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-
-                        </VisualStateManager.VisualStateGroups>
-
-                        <Rectangle x:Name="BorderBackground"
-        IsHitTestVisible="False"
-        Fill="{ThemeResource SystemControlHighlightListAccentLowBrush}"
-        Opacity="0"
-        Control.IsTemplateFocusTarget="True">
-
-                        </Rectangle>
-                        <Rectangle
-x:Name="Animie"
-Fill="Transparent"
-Control.IsTemplateFocusTarget="True"/>
-                        <Grid x:Name="ContentPresenterGrid"
-  Background="Transparent"
-  Margin="0,0,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RenderTransform>
-                                <TranslateTransform x:Name="ContentPresenterTranslateTransform"/>
-                            </Grid.RenderTransform>
-
-                            <ContentPresenter x:Name="ContentPresenter"
-              ContentTransitions="{TemplateBinding ContentTransitions}"
-              ContentTemplate="{TemplateBinding ContentTemplate}" Grid.ColumnSpan="9"
-              Content="{TemplateBinding Content}" Margin="0,0,32,0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Center"
-                            ></ContentPresenter>
-
-                            <ToggleButton Name="FavoriteButton" Visibility="Collapsed" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="-40,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
-                                <Interactivity:Interaction.Behaviors>
-                                    <Core:EventTriggerBehavior EventName="PointerEntered" SourceObject="{Binding ElementName=ContentBorder}">
-                                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
-                                    </Core:EventTriggerBehavior>
-                                    <Core:EventTriggerBehavior EventName="PointerExited" SourceObject="{Binding ElementName=ContentBorder}">
-                                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
-                                    </Core:EventTriggerBehavior>
-                                    <Core:DataTriggerBehavior Binding="{Binding ElementName=FavoriteButton, Path=IsChecked}">
-                                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
-                                    </Core:DataTriggerBehavior>
-                                </Interactivity:Interaction.Behaviors>
-                            </ToggleButton>
-                        </Grid>
-                        <Border x:Name="MultiSelectSquare"
-    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-    BorderThickness="1"
-    Width="20"
-    Height="20" Background="Transparent"
-    Margin="12,0,0,0"
-    VerticalAlignment="Center"
-    HorizontalAlignment="Left"
-    Visibility="Collapsed">
-                            <Border.Clip>
-                                <RectangleGeometry Rect="0,0,20,20">
-                                    <RectangleGeometry.Transform>
-                                        <TranslateTransform x:Name="MultiSelectClipTransform"/>
-                                    </RectangleGeometry.Transform>
-                                </RectangleGeometry>
-                            </Border.Clip>
-                            <Border.RenderTransform>
-                                <TranslateTransform x:Name="MultiSelectCheckBoxTransform"/>
-                            </Border.RenderTransform>
-
-                            <FontIcon x:Name="MultiSelectCheck"
-      FontFamily="{ThemeResource SymbolThemeFontFamily}"
-      Glyph="&#xE73E;"
-      FontSize="16" x:DeferLoadStrategy="Lazy"
-      Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-      Visibility="Collapsed"
-      Opacity="0"/>
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
+  
     <Style TargetType="ToggleButton" x:Key="FavoriteButtonStyle">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{ThemeResource ThemeForeground}"/>
@@ -552,6 +119,7 @@ Control.IsTemplateFocusTarget="True"/>
             </Setter.Value>
         </Setter>
     </Style>
+   
     <MenuFlyout x:Key="Flyout">
         <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{StaticResource LibVM}"
                                         CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
@@ -629,16 +197,24 @@ Control.IsTemplateFocusTarget="True"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
                     </Core:EventTriggerBehavior>
+                    <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected}" Value="False" ComparisonCondition="Equal">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Collapsed"/>
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                    </Core:DataTriggerBehavior>
+                    <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected}" Value="True" ComparisonCondition="Equal">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                    </Core:DataTriggerBehavior>
                     <Core:DataTriggerBehavior Binding="{Binding ElementName=FavoriteButton, Path=IsChecked}">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
                     </Core:DataTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Border>
-            <ToggleButton Name="FavoriteButton" Visibility="Collapsed" HorizontalAlignment="Left" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="PointerEntered">
-                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
-                    </Core:EventTriggerBehavior>
+            <ToggleButton Name="FavoriteButton" Background="Transparent" Visibility="Collapsed" HorizontalAlignment="Left" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
+                <Interactivity:Interaction.Behaviors> 
+                 <Core:EventTriggerBehavior EventName="PointerEntered">
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                 </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </ToggleButton>
             <StackPanel x:Name="ButtonsStack" Grid.Column="1" Width="100" HorizontalAlignment="Right" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Height="50" VerticalAlignment="Stretch" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
@@ -714,16 +290,83 @@ Control.IsTemplateFocusTarget="True"/>
     </DataTemplate>
 
     <DataTemplate x:Key="MediafileUnselectedMobileTemplate">
-        <Grid Height="75" Margin="30,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Typography.Capitals="AllSmallCaps" Text="{Binding Path=Title}" FontSize="20" FontWeight="ExtraLight" TextAlignment="Center" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" Grid.Column="0" VerticalAlignment="Center"></TextBlock>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <TextBlock Typography.Capitals="AllSmallCaps" VerticalAlignment="Center" FontWeight="ExtraLight" Text="{Binding Path=LeadArtist}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
-                    <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" Text="&#x2022;" Margin="5,0,5,0" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
-                    <TextBlock Typography.Capitals="AllSmallCaps" FontWeight="ExtraLight" Text="{Binding Path=Album}" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17"/>
-                </StackPanel>
+        <Grid Height="80" x:Name="MainGrid" Background="Transparent" Margin="-12,0,-12,0" Padding="10,0,10,0">
+            <TextBlock Typography.Capitals="AllSmallCaps" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17">
+                <Run Text="{Binding Path=Title}"/>
+                <LineBreak/>
+                <Run Text="{Binding Path=LeadArtist}"/>
+                <Run Text="&#x2022;"/>
+                <Run Text="{Binding Path=Album}"/>
+            </TextBlock>
+            <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="80" Grid.ColumnSpan="9">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="DoubleTapped">
+                        <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="RightTapped">
+                        <Core:EventTriggerBehavior.Actions>
+                            <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
+                                    Command="{Binding Path=PlayCommand}"/>
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
+                        </Core:EventTriggerBehavior.Actions>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="Tapped">
+                        <Core:EventTriggerBehavior.Actions>
+                            <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
+                        </Core:EventTriggerBehavior.Actions>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="Holding">
+                        <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                    </Core:EventTriggerBehavior>
+                    <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected}" Value="False" ComparisonCondition="Equal">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Collapsed"/>
+                    </Core:DataTriggerBehavior>
+                    <Core:DataTriggerBehavior Binding="{Binding ElementName=FavoriteButton, Path=IsChecked}">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                    </Core:DataTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Border>
+            <ToggleButton Name="FavoriteButton" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" HorizontalAlignment="Left" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </ToggleButton>
+            <StackPanel x:Name="ButtonsStack" Grid.Column="0" Width="50" VerticalAlignment="Stretch" HorizontalAlignment="Right" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Height="80" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
+                <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
+            IsDoubleTapEnabled="False" FontSize="18"
+            Visibility="Visible" ToolTipService.ToolTip="Add this song to playlist."
+            Height="80"  VerticalAlignment="Center" Background="Transparent"
+            Width="50" Style="{StaticResource HyperlinkBtn}"
+            FontFamily="Segoe MDL2 Assets">
+
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>
+                        </Core:EventTriggerBehavior>
+                        <Core:EventTriggerBehavior EventName="PointerEntered">
+                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Button>
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
             </StackPanel>
-            <!--<TextBlock Text="{Binding Path=Length}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,20,0"/>-->
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

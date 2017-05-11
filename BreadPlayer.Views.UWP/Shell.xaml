@@ -17,9 +17,9 @@
     mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
         <ResourceDictionary>
-            <!--<ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/HamburgerMenu.xaml"/>
-            </ResourceDictionary.MergedDictionaries>-->
+            </ResourceDictionary.MergedDictionaries>
             <Style TargetType="BPControls:ImageEx">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Foreground" Value="#444" />
@@ -52,7 +52,6 @@
                         <AdaptiveTrigger MinWindowWidth="900" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="sliderGrid.Visibility" Value="Visible" />-->
                         <Setter Target="showMoreBtn.IsChecked" Value="False" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
                         <!--<Setter Target="ValueIndicatorText.FontSize" Value="11"/>-->
@@ -75,12 +74,9 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="infoBar.Width" Value="200" />-->
                         <Setter Target="positionSlider.Visibility" Value="Collapsed" />
                         <Setter Target="shuffleBtn.Visibility" Value="Collapsed" />
                         <Setter Target="showMoreBtn.Visibility" Value="Visible" />
-                        <!--<Setter Target="controlsPanel.(Grid.Column)" Value="3"/>
-                        <Setter Target="controlsPanel.(Grid.ColumnSpan)" Value="3"/>-->
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="4"/>
                         <Setter Target="playbarGrid.(Grid.ColumnDefinitions)[1].Width" Value="*"/>
                         <Setter Target="seekRect.Visibility" Value="Visible"/>
