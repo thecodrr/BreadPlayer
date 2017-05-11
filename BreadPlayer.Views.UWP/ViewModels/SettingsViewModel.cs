@@ -519,7 +519,7 @@ namespace BreadPlayer.ViewModels
 
                     await LibraryService.AddMediafiles(tempList);
                     await TracksCollection.AddRange(tempList).ConfigureAwait(false);
-                    await DeleteDuplicates(tempList).ConfigureAwait(false);
+                    //await DeleteDuplicates(tempList).ConfigureAwait(false);
 
                     AlbumArtistViewModel vm = new AlbumArtistViewModel();
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");

@@ -68,6 +68,7 @@ namespace BreadPlayer.Core.Models
             set => Set(ref _isFavorite, value);
         }
         private bool _isSelected;
+        [JsonIgnore]
         public bool IsSelected
         {
             get => _isSelected;

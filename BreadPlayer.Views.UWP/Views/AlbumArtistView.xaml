@@ -15,7 +15,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Themes/ListView.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Themes/GridView.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:DataType="models:Album" x:Key="MobileItemTemplate">
@@ -35,7 +34,6 @@
     <Grid x:Name="grid" Margin="0,20,0,0">
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
-           
         </Grid.Resources>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -72,7 +70,7 @@
         </Grid.RowDefinitions>
         <!--<Border x:Name="backgroundBorder" Grid.RowSpan="2" Background="{ThemeResource ImageFadeBrush}" Grid.ColumnSpan="2"/>-->
         <TextBlock x:Name="headerText" Visibility="Collapsed" Text="My Albums" FontSize="44" FontFamily="Segoe UI" FontWeight="ExtraLight" Margin="10,0,6,0" Grid.RowSpan="2"/>
-        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" ItemContainerStyle="{StaticResource GridViewItemExpanded}" DataFetchSize="50" >
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" ItemTemplate="{StaticResource SelectedTemplate}" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" ItemsSource="{Binding AlbumCollection}" DataFetchSize="50" SelectionChanged="albumListView_SelectionChanged" >
             <GridView.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition
@@ -85,7 +83,12 @@
                     <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
-            <GridView.ItemTemplate>
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <Setter Property="Margin" Value="20"/>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <!--<GridView.ItemTemplate>
                 <DataTemplate x:DataType="models:Album">
                     <Grid MaxWidth="200" Height="290" Margin="5">
                         <StackPanel>
@@ -110,7 +113,7 @@
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
-            </GridView.ItemTemplate>
+            </GridView.ItemTemplate>-->
         </GridView>
         <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=AlbumsLoaded, Converter={StaticResource BoolToVisibility}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
     

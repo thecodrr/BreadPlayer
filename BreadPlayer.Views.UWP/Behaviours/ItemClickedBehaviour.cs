@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Behaviours
 {

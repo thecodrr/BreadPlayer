@@ -41,7 +41,7 @@ namespace BreadPlayer.Dialogs
             }
             else
             {
-                dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedNarrowTemplate"] as DataTemplate;
+                dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedTemplate"] as DataTemplate;
             }
         }));
         public double DialogWidth

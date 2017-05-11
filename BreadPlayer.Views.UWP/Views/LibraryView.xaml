@@ -126,7 +126,7 @@
                             <Media:ControlStoryboardAction>
                                 <Media:ControlStoryboardAction.Storyboard>
                                     <Storyboard Storyboard.TargetName="fileBox" Storyboard.TargetProperty="Opacity">
-                                        <DoubleAnimation To="1" Duration="0:0:2" FillBehavior="HoldEnd"/>
+                                        <DoubleAnimation To="1" Duration="0:0:0.8" FillBehavior="HoldEnd"/>
                                     </Storyboard>
                                 </Media:ControlStoryboardAction.Storyboard>
                             </Media:ControlStoryboardAction>
