@@ -4,8 +4,8 @@
 /*                                                                                            */
 /* ========================================================================================== */
 
-using BreadPlayer.Fmod.Enums;
 using System.Runtime.InteropServices;
+using BreadPlayer.Fmod.Enums;
 using static BreadPlayer.Fmod.Callbacks;
 
 namespace BreadPlayer.Fmod

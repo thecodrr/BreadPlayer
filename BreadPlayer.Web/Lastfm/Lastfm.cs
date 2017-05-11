@@ -1,8 +1,10 @@
-﻿using IF.Lastfm.Core.Scrobblers;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using PCLStorage;
 using IF.Lastfm.Core.Api;
+using IF.Lastfm.Core.Api.Enums;
+using IF.Lastfm.Core.Objects;
+using IF.Lastfm.Core.Scrobblers;
+using PCLStorage;
 
 namespace BreadPlayer.Web.Lastfm
 {
@@ -29,18 +31,21 @@ namespace BreadPlayer.Web.Lastfm
             try
             {
                 if (!Auth.Authenticated)
-                    return new ScrobbleResponse(IF.Lastfm.Core.Api.Enums.LastResponseStatus.BadAuth);
+                {
+                    return new ScrobbleResponse(LastResponseStatus.BadAuth);
+                }
+
                 IFolder rootFolder = FileSystem.Current.LocalStorage;
                 IFolder folder = await rootFolder.CreateFolderAsync("db",
                     CreationCollisionOption.OpenIfExists);
                 IFile file = await folder.CreateFileAsync("scrobbles.db",
                     CreationCollisionOption.OpenIfExists);
-                IScrobbler _scrobbler = new BreadScrobbler(Auth, file.Path);
-                return (await _scrobbler.ScrobbleAsync(new IF.Lastfm.Core.Objects.Scrobble(data[0], data[1], data[2], DateTimeOffset.Now)));
+                IScrobbler scrobbler = new BreadScrobbler(Auth, file.Path);
+                return (await scrobbler.ScrobbleAsync(new Scrobble(data[0], data[1], data[2], DateTimeOffset.Now)));
             }
             catch (NullReferenceException)
             {
-                return new ScrobbleResponse(IF.Lastfm.Core.Api.Enums.LastResponseStatus.Failure);
+                return new ScrobbleResponse(LastResponseStatus.Failure);
             }
         }      
     }

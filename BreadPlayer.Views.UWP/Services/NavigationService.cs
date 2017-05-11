@@ -86,7 +86,9 @@ namespace BreadPlayer.Services
         public void NavigateToHome()
         {
             if (HomePage != null)
+            {
                 Frame.Navigate(HomePage, "Home");
+            }
         }        
         public bool Reload(object param)
         {
@@ -115,7 +117,9 @@ namespace BreadPlayer.Services
             (object sender, BackRequestedEventArgs e)
         {
             if (Frame.CanGoBack)
+            {
                 Frame.GoBack();
+            }
         }
 
         //private void HardwareButtons_BackPressed

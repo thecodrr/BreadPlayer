@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Diagnostics;
+using Windows.ApplicationModel;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace BreadPlayer.Controls
 {
     partial class ImageEx
     {
-        private bool _isHttpSource = false;
+        private bool _isHttpSource;
 
         #region Source
         public object Source
         {
-            get => (object)GetValue(SourceProperty);
+            get => GetValue(SourceProperty);
             set => SetValue(SourceProperty, value);
         }
 
@@ -90,7 +92,7 @@ namespace BreadPlayer.Controls
             }
         }
 
-        private Uri _currentUri = null;
+        private Uri _currentUri;
 
         private async void SetSourceUri(Uri uri)
         {
@@ -104,7 +106,7 @@ namespace BreadPlayer.Controls
                     {
                         SetProgress();
                         _isHttpSource = true;
-                        if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                        if (!DesignMode.DesignModeEnabled)
                         {
                             cachedUri = await BitmapCache.GetImageUriAsync(uri, (int)_currentSize.Width, (int)_currentSize.Height);
                             if (cachedUri == null)
@@ -135,7 +137,7 @@ namespace BreadPlayer.Controls
         {
             try
             {
-                if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                if (!DesignMode.DesignModeEnabled)
                 {
                     uri = await BitmapCache.GetImageUriAsync(uri, (int)_currentSize.Width, (int)_currentSize.Height);
                 }
@@ -146,11 +148,11 @@ namespace BreadPlayer.Controls
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("RefreshSourceUri. {0}", ex.Message);
+                Debug.WriteLine("RefreshSourceUri. {0}", ex.Message);
             }
         }
 
-        private static int _progressCount = 0;
+        private static int _progressCount;
         private object _progressCountLock = new object();
 
         private void SetProgress()
@@ -199,25 +201,33 @@ namespace BreadPlayer.Controls
             }
             if (imageSource != null)
             {
-                if ((oldImageSource as BitmapImage)?.UriSource != (imageSource as BitmapImage).UriSource)
+                if ((_oldImageSource as BitmapImage)?.UriSource != (imageSource as BitmapImage).UriSource)
                 {
                     StartAnimation(1, 0, 1.5).Completed += (sender, e) => { image.Source = imageSource; StartAnimation(0, 1, 3); };
                     if (imageSource != null)
-                        oldImageSource = imageSource;
+                    {
+                        _oldImageSource = imageSource;
+                    }
                 }
                 else
-                    image.Source = oldImageSource;
+                {
+                    image.Source = _oldImageSource;
+                }
             }
             else
-                image.Source = oldImageSource;
+            {
+                image.Source = _oldImageSource;
+            }
         }
         private Storyboard StartAnimation(int from, int to, double seconds)
         {
             Storyboard animationBoard = new Storyboard();
-            DoubleAnimation opacityAnimation = new DoubleAnimation();
-            opacityAnimation.To = to;
-            opacityAnimation.Duration = TimeSpan.FromSeconds(seconds);
-            opacityAnimation.From = from;
+            DoubleAnimation opacityAnimation = new DoubleAnimation()
+            {
+                To = to,
+                Duration = TimeSpan.FromSeconds(seconds),
+                From = from
+            };
             Storyboard.SetTarget(opacityAnimation, Image);
             Storyboard.SetTargetProperty(opacityAnimation, "Opacity");
             animationBoard.Children.Add(opacityAnimation);
@@ -225,7 +235,7 @@ namespace BreadPlayer.Controls
             return animationBoard;
         }
 
-        private ImageSource oldImageSource;
+        private ImageSource _oldImageSource;
         private void ClearProgress()
         {
             if (Progress != null)

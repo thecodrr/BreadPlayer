@@ -4,14 +4,14 @@ namespace BreadPlayer.Events
 {
     public class ThemeChangedEventArgs
     {
-        private Color oldColor;
-        private Color newColor;
+        private Color _oldColor;
+        private Color _newColor;
         public ThemeChangedEventArgs(Color old, Color newClr)
         {
-            oldColor = old;
-            newColor = newClr;
+            _oldColor = old;
+            _newColor = newClr;
         }
-        public Color NewColor => newColor;
-        public Color OldColor => oldColor;
+        public Color NewColor => _newColor;
+        public Color OldColor => _oldColor;
     }
 }

@@ -23,8 +23,11 @@ namespace BreadPlayer.Core.PortableAPIs
             {
                 long repeatInterval = _interval;
                 if (repeatInterval == 0)
+                {
                     repeatInterval = 1;
-                _timer = new Timer(new TimerCallback(timer_tick),
+                }
+
+                _timer = new Timer(timer_tick,
                             null, new TimeSpan(_interval),
                             new TimeSpan(repeatInterval));
             }
@@ -41,7 +44,9 @@ namespace BreadPlayer.Core.PortableAPIs
         public void Stop()
         {
             if (_timer == null)
+            {
                 return;
+            }
 
             _timer.Dispose();
             _timer = null;
@@ -56,13 +61,17 @@ namespace BreadPlayer.Core.PortableAPIs
             set
             {
                 if (_interval == value.Ticks)
+                {
                     return;
+                }
 
                 _interval = value.Ticks;
 
                 if (_timer != null)
+                {
                     _timer.Change(new TimeSpan(_interval),
                             new TimeSpan(_interval));
+                }
             }
         }
 
@@ -73,9 +82,14 @@ namespace BreadPlayer.Core.PortableAPIs
             set
             {
                 if (value && _timer == null)
+                {
                     Start();
+                }
+
                 if (value == false && _timer != null)
+                {
                     Stop();
+                }
             }
         }
 

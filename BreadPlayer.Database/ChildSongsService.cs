@@ -8,7 +8,7 @@ namespace BreadPlayer.Database
 {
     public class ChildSongsService
     {
-        private string tablename, texttablename;
+        private string _tablename, _texttablename;
         private IDatabaseService Database
         {
             get; set;
@@ -16,52 +16,52 @@ namespace BreadPlayer.Database
         public ChildSongsService(IDatabaseService database, string tableName, string textTableName)
         {
             Database = database;
-            tablename = tableName;
-            texttablename = textTableName;
+            _tablename = tableName;
+            _texttablename = textTableName;
         }
         public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, IDbRecord pList)
         {
-            List<ChildSong> PlaylistSongs = new List<ChildSong>();
+            List<ChildSong> playlistSongs = new List<ChildSong>();
             foreach (var file in fileCol)
             {
-                PlaylistSongs.Add(new ChildSong()
+                playlistSongs.Add(new ChildSong
                 {
                     SongId = file.Id,
                     PlaylistId = pList.Id
                 });
             }
-            Database.ChangeTable(tablename, texttablename);
-            await Database.InsertRecords(PlaylistSongs);
+            Database.ChangeTable(_tablename, _texttablename);
+            await Database.InsertRecords(playlistSongs);
         }
         public void InsertSong(ChildSong file)
         {
-            Database.ChangeTable(tablename, texttablename);
+            Database.ChangeTable(_tablename, _texttablename);
             Database.InsertRecord(file);
         }
         public async Task RemoveSongAsync(Mediafile file)
         {
-            Database.ChangeTable(tablename, texttablename);
+            Database.ChangeTable(_tablename, _texttablename);
             var record = await Database.GetRecordByQueryAsync<ChildSong>(string.Format("songid={0}", file.Id));
             await Database.RemoveRecord(record);
         }
         public bool Exists(long id)
         {
-            Database.ChangeTable(tablename, texttablename);
+            Database.ChangeTable(_tablename, _texttablename);
             return Database.CheckExists(id);
         }
-        public async Task<IEnumerable<Mediafile>> GetTracksAsync(long parentID)
+        public async Task<IEnumerable<Mediafile>> GetTracksAsync(long parentId)
         {
             return await Task.Run(async () =>
             {
-                Database.ChangeTable(tablename, texttablename);
-                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentID))).Select(t => t.SongId);
+                Database.ChangeTable(_tablename, _texttablename);
+                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId))).Select(t => t.SongId);
                 Database.ChangeTable("Tracks", "TracksText");
-                List<Mediafile> Tracks = new List<Mediafile>();
+                List<Mediafile> tracks = new List<Mediafile>();
                 foreach (var id in trackIds)
                 {
-                    Tracks.Add(Database.GetRecordById<Mediafile>(id));
+                    tracks.Add(Database.GetRecordById<Mediafile>(id));
                 }
-                return Tracks;
+                return tracks;
             });
         }
     }

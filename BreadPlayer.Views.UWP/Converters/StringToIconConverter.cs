@@ -15,14 +15,20 @@ namespace BreadPlayer.Converters
                 symbol = new SymbolIcon(Symbol.Sync);
             }
             else if (val == "Repeat Song")
+            {
                 symbol = new SymbolIcon(Symbol.RepeatOne);
+            }
             else
+            {
                 symbol = new SymbolIcon(Symbol.RepeatAll);
+            }
 
             if (parameter?.ToString() == "char")
+            {
                 return (char)(symbol.Symbol);
-            else
-                return symbol;
+            }
+
+            return symbol;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

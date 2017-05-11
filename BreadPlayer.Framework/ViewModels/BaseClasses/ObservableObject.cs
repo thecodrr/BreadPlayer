@@ -25,7 +25,9 @@ public class ObservableObject : INotifyPropertyChanged
     protected virtual bool Set<T>(String propertyName, ref T oldValue, T newValue)
     {
         if (Equals(oldValue, newValue))
+        {
             return false;
+        }
 
         oldValue = newValue;
         RaisePropertyChanged(new PropertyChangedEventArgs(propertyName));
@@ -44,9 +46,13 @@ public class ObservableObject : INotifyPropertyChanged
     protected async virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
         if (InitializeFramework.Dispatcher != null)
+        {
             await InitializeFramework.Dispatcher?.RunAsync(() => { PropertyChanged?.Invoke(this, args); });
+        }
         else
+        {
             PropertyChanged?.Invoke(this, args);
+        }
     }
 
     /// <summary>Raises the property changed event for all properties (string.Empty). </summary>

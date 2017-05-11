@@ -1,8 +1,7 @@
 ﻿using System;
-
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.Foundation;
 
 namespace BreadPlayer.Controls
 {
@@ -15,7 +14,7 @@ namespace BreadPlayer.Controls
             VerticalContentAlignment = VerticalAlignment.Center;
         }
 
-        private Size _currentSize = new Size(BitmapCache.MIDRESOLUTION, BitmapCache.MIDRESOLUTION);
+        private Size _currentSize = new Size(BitmapCache.Midresolution, BitmapCache.Midresolution);
 
         protected override Size MeasureOverride(Size availableSize)
         {

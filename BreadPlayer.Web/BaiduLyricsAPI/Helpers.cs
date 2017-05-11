@@ -6,10 +6,10 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
 {
     public class Helpers
     {
-        public string GetQueryParameterString(string query, string page_no = "1", string page_size = "50", string type = "-1", string data_source = "0", string use_cluster="1")
+        public string GetQueryParameterString(string query, string pageNo = "1", string pageSize = "50", string type = "-1", string dataSource = "0", string useCluster="1")
         {
             var formatString = "&query={0}&page_no={1}&page_size={2}&type={3}&data_source={4}&use_cluster={5}";
-            return string.Format(formatString, query, page_no, page_size, type, data_source, use_cluster);
+            return string.Format(formatString, query, pageNo, pageSize, type, dataSource, useCluster);
         }
         public string GetSongsInfoParameterString(string songid)
         {
@@ -27,16 +27,16 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             var formatString = "&order={0}&tinguid={1}&offset={2}&limits={3}";
             return string.Format(formatString, order, tinguid, offset, limits);
         } 
-        public string GetAlbumDetailParameterString(string album_id)
+        public string GetAlbumDetailParameterString(string albumId)
         {
             var formatString = "&album_id={0}";
-            return string.Format(formatString, album_id);
+            return string.Format(formatString, albumId);
         }  
-        public string GetCallURL(string method, string parameters)
+        public string GetCallUrl(string method, string parameters)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(Endpoints.BASE_API_URL);
-            builder.AppendFormat("?from={0}&version={1}&method={2}&format={3}{4}", Endpoints.API_FROM, Endpoints.API_VERSION, method, Endpoints.API_FORMAT, parameters);
+            builder.Append(Endpoints.BaseApiUrl);
+            builder.AppendFormat("?from={0}&version={1}&method={2}&format={3}{4}", Endpoints.ApiFrom, Endpoints.ApiVersion, method, Endpoints.ApiFormat, parameters);
             return builder.ToString();
         }
         public async Task<string> MakeRequest(string url)

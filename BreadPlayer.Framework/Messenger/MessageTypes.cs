@@ -5,17 +5,17 @@
     /// </summary>
     public enum MessageTypes
     {
-        MSG_LIBRARY_LOADED,	// Sent when a Customer is selected for editing
-        MSG_PLAY_SONG,
-        MSG_DISPOSE,
-        MSG_EXECUTE_CMD,
-        MSG_ADD_PLAYLIST,
-        MSG_ADD_ALBUMS,
-        MSG_PLAYLIST_LOADED,
-        MSG_UPDATE_SONG_COUNT,
-        MSG_SEARCH_STARTED,
-        MSG_STOP_AFTER_SONG
+        MsgLibraryLoaded,	// Sent when a Customer is selected for editing
+        MsgPlaySong,
+        MsgDispose,
+        MsgExecuteCmd,
+        MsgAddPlaylist,
+        MsgAddAlbums,
+        MsgPlaylistLoaded,
+        MsgUpdateSongCount,
+        MsgSearchStarted,
+        MsgStopAfterSong
 
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
-    };
+    }
 }

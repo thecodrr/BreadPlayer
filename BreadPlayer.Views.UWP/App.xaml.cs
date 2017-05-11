@@ -15,8 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Common;
-using BreadPlayer.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,12 +24,16 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Common;
 using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 
 namespace BreadPlayer
 {
@@ -71,7 +74,7 @@ namespace BreadPlayer
         private void InitializeTheme()
         {
             var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
-            var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
+            var theme = Enum.Parse(typeof(ApplicationTheme), value);
             RequestedTheme = (ApplicationTheme)theme;
         }
 
@@ -91,7 +94,7 @@ namespace BreadPlayer
             deferral.Complete();
         }
 
-        private Stopwatch SessionWatch;
+        private Stopwatch _sessionWatch;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -99,7 +102,7 @@ namespace BreadPlayer
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            SessionWatch = Stopwatch.StartNew();
+            _sessionWatch = Stopwatch.StartNew();
             BLogger.Logger?.Info("App launched and session started...");
 #if DEBUG
             if (Debugger.IsAttached)
@@ -108,7 +111,9 @@ namespace BreadPlayer
             }
 #endif
             if (e.PreviousExecutionState != ApplicationExecutionState.Running)
+            {
                 LoadFrame(e, e.Arguments);
+            }
         }
 
         /// <summary>
@@ -133,9 +138,9 @@ namespace BreadPlayer
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             await LockscreenHelper.ResetLockscreenImage();
-            SessionWatch?.Stop();
+            _sessionWatch?.Stop();
             CoreWindowLogic.DisposeObjects();
-            BLogger.Logger?.Info("App suspended and session terminated. Session length: " + SessionWatch.Elapsed.TotalMinutes);
+            BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
             await Task.Delay(500);
             deferral.Complete();
@@ -145,7 +150,7 @@ namespace BreadPlayer
         {
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
-                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { args.Files[0], 0.0, true, 50.0 });
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files[0], 0.0, true, 50.0 });
                 BLogger.Logger.Info("File was loaded successfully while app was running...");
                 // ShellVM.Play(args.Files[0]);
             }
@@ -193,7 +198,7 @@ namespace BreadPlayer
                 
                  var view = ApplicationView.GetForCurrentView();
                  view.SetPreferredMinSize(new Size(360, 100));
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
                     BLogger.Logger.Info("Trying to maximize to full screen.");
                     ApplicationView.GetForCurrentView().TryEnterFullScreenMode();

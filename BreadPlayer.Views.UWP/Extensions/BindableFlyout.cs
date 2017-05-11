@@ -15,9 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using Windows.ApplicationModel;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core;
@@ -36,7 +40,7 @@ namespace BreadPlayer.Extensions
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register("ItemsSource", typeof(ThreadSafeObservableCollection<ContextMenuCommand>), typeof(BindableFlyout), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+            DependencyProperty.Register("ItemsSource", typeof(ThreadSafeObservableCollection<ContextMenuCommand>), typeof(BindableFlyout), new PropertyMetadata(null, (o, args) =>
             {
                 var obj = o as BindableFlyout;
                 obj.Setup(obj);
@@ -50,7 +54,7 @@ namespace BreadPlayer.Extensions
         }
 
         public static readonly DependencyProperty DataContextProperty =
-            DependencyProperty.Register("DataContext", typeof(object), typeof(BindableFlyout), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+            DependencyProperty.Register("DataContext", typeof(object), typeof(BindableFlyout), new PropertyMetadata(null, (o, args) =>
             {
                 var obj = o as BindableFlyout;
                 obj.Setup(obj);
@@ -58,17 +62,22 @@ namespace BreadPlayer.Extensions
         ));
         private void Setup(BindableFlyout menuFlyout)
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            if (DesignMode.DesignModeEnabled)
+            {
                 return;
+            }
+
             if (menuFlyout.ItemsSource == null)
+            {
                 return;
+            }
 
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
             menuFlyout.Opening += MenuFlyout_Opened;
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
-                var item = new MenuFlyoutItem()
+                var item = new MenuFlyoutItem
                 {
                     Text = menuItem.Text,
                     Command = menuItem.Command
@@ -91,7 +100,7 @@ namespace BreadPlayer.Extensions
             //ItemsSource = oldItems;
             Setup(this);
         }
-        private void ItemsSource_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             Setup(this);
         }
@@ -106,11 +115,11 @@ namespace BreadPlayer.Extensions
             CommandParameter = cmdPara;
         }
 
-        private string text;
+        private string _text;
         public string Text
         {
-            get => text;
-            set => Set(ref text, value);
+            get => _text;
+            set => Set(ref _text, value);
         }
         public ICommand Command
         {
@@ -130,7 +139,7 @@ namespace BreadPlayer.Extensions
         }
 
         public static readonly DependencyProperty TagProperty =
-            DependencyProperty.Register("Tag", typeof(object), typeof(CustomFlyout), new PropertyMetadata(null, (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+            DependencyProperty.Register("Tag", typeof(object), typeof(CustomFlyout), new PropertyMetadata(null, (o, args) =>
             {
                 (o as CustomFlyout).Tag = args.NewValue;
             }
@@ -147,33 +156,37 @@ namespace BreadPlayer.Extensions
             obj.SetValue(MyItemsProperty, value);
         }
 
-        private static SharedLogic core = new SharedLogic();
+        private static SharedLogic _core = new SharedLogic();
         private async static void Setup(MenuFlyout menuFlyout)
         {
             if (menuFlyout != null)
             {
-                await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                    _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                     menuFlyout.Items.Clear();
-                    MenuFlyoutSubItem addTo = new MenuFlyoutSubItem() { Text = "Add to" };
-                    MenuFlyoutItem properties = new MenuFlyoutItem() { Text = "Properties", Command = core.ShowPropertiesCommand, CommandParameter = null };
-                    MenuFlyoutItem openLoc = new MenuFlyoutItem() { Text = "Open Song Location", Command = core.OpenSongLocationCommand, CommandParameter = null };
-                    MenuFlyoutItem changeAlbumArt= new MenuFlyoutItem() { Text = "Change Album Art", Command = core.ChangeAlbumArtCommand, CommandParameter = null };
+                    MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
+                    MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
+                    MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = _core.OpenSongLocationCommand, CommandParameter = null };
+                    MenuFlyoutItem changeAlbumArt= new MenuFlyoutItem { Text = "Change Album Art", Command = _core.ChangeAlbumArtCommand, CommandParameter = null };
 
                     menuFlyout.Items.Add(addTo);
                     menuFlyout.Items.Add(changeAlbumArt);
                     menuFlyout.Items.Add(openLoc);
                     menuFlyout.Items.Add(properties);
-                    foreach (var menuItem in core.OptionItems)
+                    foreach (var menuItem in _core.OptionItems)
                     {
-                        var item = new MenuFlyoutItem()
+                        var item = new MenuFlyoutItem
                         {
                             Text = menuItem.Text,
                             Command = menuItem.Command
                         };
                         item.CommandParameter = menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
-                        if (menuFlyout.GetType() != typeof(CustomFlyout)) item.Tag = "Current";
+                        if (menuFlyout.GetType() != typeof(CustomFlyout))
+                        {
+                            item.Tag = "Current";
+                        }
+
                         if (addTo.Items.Count == 1)
                         {
                             addTo.Items.Add(new MenuFlyoutSeparator());
@@ -231,8 +244,8 @@ namespace BreadPlayer.Extensions
             //parent.Items.Remove(parent.Items.First(t => (t as MenuFlyoutItem).Text == item.Text));
         }
 
-        private static MenuFlyout Menu;
-        private static List<MenuFlyout> fly = new List<MenuFlyout>();
+        private static MenuFlyout _menu;
+        private static List<MenuFlyout> _fly = new List<MenuFlyout>();
         public static readonly DependencyProperty MyItemsProperty =
             DependencyProperty.Register("MyItems",
                 typeof(List<MenuFlyoutItemBase>),
@@ -240,13 +253,13 @@ namespace BreadPlayer.Extensions
                 new PropertyMetadata(new ThreadSafeObservableCollection<ContextMenuCommand>(), (sender, e) =>
                 {
                     var menuFlyout = sender as MenuFlyout;
-                    Menu = menuFlyout;
+                    _menu = menuFlyout;
                     Setup(menuFlyout);
                 }));
 
-        private static void OptionItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private static void OptionItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Setup(Menu);
+            Setup(_menu);
         }
     }
 }

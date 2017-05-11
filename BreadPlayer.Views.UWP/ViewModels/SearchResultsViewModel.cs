@@ -1,30 +1,31 @@
-﻿using BreadPlayer.Database;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
 
 namespace BreadPlayer.ViewModels
 {
     public class SearchResultsViewModel : ViewModelBase
     {
-        private ThreadSafeObservableCollection<Mediafile> querySongs;
+        private ThreadSafeObservableCollection<Mediafile> _querySongs;
         public ThreadSafeObservableCollection<Mediafile> QuerySongs
         {
-            get => querySongs;
-            set => Set(ref querySongs, value);
+            get => _querySongs;
+            set => Set(ref _querySongs, value);
         }
 
-        private ThreadSafeObservableCollection<Album> queryAlbums;
+        private ThreadSafeObservableCollection<Album> _queryAlbums;
         public ThreadSafeObservableCollection<Album> QueryAlbums
         {
-            get => queryAlbums;
-            set => Set(ref queryAlbums, value);
+            get => _queryAlbums;
+            set => Set(ref _queryAlbums, value);
         }
       
         public async Task<IEnumerable<Mediafile>> StartSearch(string query)
         {
-            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
+            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
             return await service.Query(query);
         }
         public async Task GetAlbumsAndTracks(string query)
@@ -41,7 +42,7 @@ namespace BreadPlayer.ViewModels
                     {
                         var albumSongs = queryresults[i].Select(t => t);
                         var firstSong = albumSongs.First() ?? new Mediafile();
-                        Album album = new Album()
+                        Album album = new Album
                         {
                             Artist = firstSong?.LeadArtist,
                             AlbumName = queryresults[i].Key,

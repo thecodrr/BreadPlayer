@@ -1,7 +1,8 @@
 ﻿using System.Linq;
-using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
+using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Objects;
 
 namespace BreadPlayer.ViewModels
@@ -10,29 +11,29 @@ namespace BreadPlayer.ViewModels
     {
         #region Lastfm Configuration
 
-        private RelayCommand lastfmLoginCommand;
-        private string lastfmUsername;
-        private string lastfmPassword;
+        private RelayCommand _lastfmLoginCommand;
+        private string _lastfmUsername;
+        private string _lastfmPassword;
         public string LastfmUsername
         {
-            get => lastfmUsername;
-            set => Set(ref lastfmUsername, value);
+            get => _lastfmUsername;
+            set => Set(ref _lastfmUsername, value);
         }
         public string LastfmPassword
         {
-            get => lastfmPassword;
-            set => Set(ref lastfmPassword, value);
+            get => _lastfmPassword;
+            set => Set(ref _lastfmPassword, value);
         }
 
-        private string loginStatus = "(Not Logged In)";
+        private string _loginStatus = "(Not Logged In)";
         public string LoginStatus
         {
-            get => loginStatus;
-            set => Set(ref loginStatus, value);
+            get => _loginStatus;
+            set => Set(ref _loginStatus, value);
         }
         public ICommand LastfmLoginCommand
         {
-            get { if(lastfmLoginCommand == null) lastfmLoginCommand = new RelayCommand(LastfmLogin); return lastfmLoginCommand; }
+            get { if(_lastfmLoginCommand == null) { _lastfmLoginCommand = new RelayCommand(LastfmLogin); } return _lastfmLoginCommand; }
         }
         private async void LastfmLogin(object para)
         {
@@ -55,7 +56,7 @@ namespace BreadPlayer.ViewModels
             {
                 await lastfm.Login(LastfmUsername, LastfmPassword);
             }
-            Core.SharedLogic.LastfmScrobbler = lastfm;
+            SharedLogic.LastfmScrobbler = lastfm;
 
             if (lastfm.LastfmClient.Auth.Authenticated)
             {
@@ -64,18 +65,20 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("Successfully logged in!");
             }
             else
+            {
                 await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
+            }
         }
         #endregion
         private LastUserSession GetUserSessionFromSettings()
         {
             string token = RoamingSettingsHelper.GetSetting<string>("LastfmSessionToken", "");
-            bool IsSubscriber = RoamingSettingsHelper.GetSetting<bool>("LastfmIsSubscriber", false);
+            bool isSubscriber = RoamingSettingsHelper.GetSetting<bool>("LastfmIsSubscriber", false);
             string username = RoamingSettingsHelper.GetSetting<string>("LastfmSessionUsername", "");
-            return new LastUserSession()
+            return new LastUserSession
             {
                 Token = token,
-                IsSubscriber = IsSubscriber,
+                IsSubscriber = isSubscriber,
                 Username = username
             };
         }

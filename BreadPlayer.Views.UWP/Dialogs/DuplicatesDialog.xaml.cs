@@ -40,7 +40,9 @@ namespace BreadPlayer.Dialogs
                 dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedMobileTemplate"] as DataTemplate;
             }
             else
+            {
                 dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedNarrowTemplate"] as DataTemplate;
+            }
         }));
         public double DialogWidth
         {
@@ -58,9 +60,13 @@ namespace BreadPlayer.Dialogs
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as CheckBox).IsChecked == true)
+            {
                 listView.SelectAll();
+            }
             else
+            {
                 listView.SelectedIndex = -1;
+            }
         }
     }
 }

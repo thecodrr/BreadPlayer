@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Windows.Foundation;
 using Windows.Storage;
 
@@ -10,10 +11,10 @@ namespace BreadPlayer.Controls
 {
     public static class BitmapCache
     {
-        public const int MAXRESOLUTION = 1920;
-        public const int MIDRESOLUTION = 960;
+        public const int Maxresolution = 1920;
+        public const int Midresolution = 960;
 
-        private const string FOLDER_NAME = "ImageCache";
+        private const string FolderName = "ImageCache";
 
         private static Dictionary<string, Task> _concurrentTasks = new Dictionary<string, Task>();
         private static object _lock = new object();
@@ -73,7 +74,7 @@ namespace BreadPlayer.Controls
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("GetImageUriAsync. {0}", ex.Message);
+                Debug.WriteLine("GetImageUriAsync. {0}", ex.Message);
             }
 
             lock (_lock)
@@ -88,7 +89,7 @@ namespace BreadPlayer.Controls
             var cacheFolder = await EnsureCacheFolderAsync();
             if (await cacheFolder.TryGetItemAsync(fileName) != null)
             {
-                return new Uri($"ms-appdata:///temp/{FOLDER_NAME}/{fileName}");
+                return new Uri($"ms-appdata:///temp/{FolderName}/{fileName}");
             }
             return null;
         }
@@ -99,30 +100,30 @@ namespace BreadPlayer.Controls
 
             var cacheFolder = await EnsureCacheFolderAsync();
 
-            string fileName = BuildFileName(uri, MAXRESOLUTION, MAXRESOLUTION);
+            string fileName = BuildFileName(uri, Maxresolution, Maxresolution);
             StorageFile mainFile = await cacheFolder.TryGetItemAsync(fileName) as StorageFile;
             if (await IsFileOutOfDate(mainFile, expirationDate))
             {
                 mainFile = await cacheFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-                if (!await BitmapTools.DownloadImageAsync(mainFile, uri, MAXRESOLUTION, MAXRESOLUTION))
+                if (!await BitmapTools.DownloadImageAsync(mainFile, uri, Maxresolution, Maxresolution))
                 {
                     await mainFile.DeleteAsync();
                     return;
                 }
             }
 
-            fileName = BuildFileName(uri, MIDRESOLUTION, MIDRESOLUTION);
+            fileName = BuildFileName(uri, Midresolution, Midresolution);
             var resizedFile = await cacheFolder.TryGetItemAsync(fileName) as StorageFile;
             if (await IsFileOutOfDate(resizedFile, expirationDate))
             {
                 resizedFile = await cacheFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
                 try
                 {
-                    await BitmapTools.ResizeImageUniformAsync(mainFile, resizedFile, MIDRESOLUTION, MIDRESOLUTION);
+                    await BitmapTools.ResizeImageUniformAsync(mainFile, resizedFile, Midresolution, Midresolution);
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("EnsureFilesAsync. {0}", ex.Message);
+                    Debug.WriteLine("EnsureFilesAsync. {0}", ex.Message);
                     await resizedFile.DeleteAsync();
                 }
             }
@@ -139,7 +140,7 @@ namespace BreadPlayer.Controls
         }
 
         #region GetCacheFolder
-        private static StorageFolder _cacheFolder = null;
+        private static StorageFolder _cacheFolder;
         private static SemaphoreSlim _cacheFolderSemaphore = new SemaphoreSlim(1);
 
         internal static async Task<StorageFolder> EnsureCacheFolderAsync()
@@ -149,10 +150,10 @@ namespace BreadPlayer.Controls
                 await _cacheFolderSemaphore.WaitAsync();
                 try
                 {
-                    _cacheFolder = await ApplicationData.Current.TemporaryFolder.TryGetItemAsync(FOLDER_NAME) as StorageFolder;
+                    _cacheFolder = await ApplicationData.Current.TemporaryFolder.TryGetItemAsync(FolderName) as StorageFolder;
                     if (_cacheFolder == null)
                     {
-                        _cacheFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(FOLDER_NAME);
+                        _cacheFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(FolderName);
                     }
                 }
                 catch { }
@@ -187,7 +188,7 @@ namespace BreadPlayer.Controls
 
         private static UInt64 CreateHash64(string str)
         {
-            byte[] utf8 = System.Text.Encoding.UTF8.GetBytes(str);
+            byte[] utf8 = Encoding.UTF8.GetBytes(str);
 
             ulong value = (ulong)utf8.Length;
             for (int n = 0; n < utf8.Length; n++)
@@ -200,7 +201,7 @@ namespace BreadPlayer.Controls
 
         private static string GetPrefixName(double width, double height)
         {
-            if (width <= MIDRESOLUTION && height <= MIDRESOLUTION)
+            if (width <= Midresolution && height <= Midresolution)
             {
                 return "M";
             }
@@ -213,7 +214,7 @@ namespace BreadPlayer.Controls
         {
             double width = size.Width;
             double height = size.Height;
-            if (width <= MIDRESOLUTION && height <= MIDRESOLUTION)
+            if (width <= Midresolution && height <= Midresolution)
             {
                 return 1;
             }

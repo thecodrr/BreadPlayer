@@ -1,4 +1,5 @@
-﻿using Windows.UI.Composition;
+﻿using System.Numerics;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
@@ -8,36 +9,36 @@ namespace BreadPlayer.Effects
 {
     public class BackDrop : Control
     {
-        private Compositor m_compositor;
-        private SpriteVisual m_blurVisual;
-        private CompositionBrush m_blurBrush;
-        private Visual m_rootVisual;
+        private Compositor _mCompositor;
+        private SpriteVisual _mBlurVisual;
+        private CompositionBrush _mBlurBrush;
+        private Visual _mRootVisual;
 
 #if SDKVERSION_14393
-        private bool m_setUpExpressions;
+        private bool _mSetUpExpressions;
 #endif
 
         public BackDrop()
         { 
-            m_rootVisual = ElementCompositionPreview.GetElementVisual(this as UIElement);
+            _mRootVisual = ElementCompositionPreview.GetElementVisual(this);
 
-            Compositor = m_rootVisual.Compositor;
+            Compositor = _mRootVisual.Compositor;
 
-            m_blurVisual = Compositor.CreateSpriteVisual();
+            _mBlurVisual = Compositor.CreateSpriteVisual();
 
 #if SDKVERSION_14393
 
             CompositionEffectBrush brush = BuildBlurBrush();
-            brush.SetSourceParameter("source", m_compositor.CreateBackdropBrush());
-            m_blurBrush = brush;
-            m_blurVisual.Brush = m_blurBrush;
+            brush.SetSourceParameter("source", _mCompositor.CreateBackdropBrush());
+            _mBlurBrush = brush;
+            _mBlurVisual.Brush = _mBlurBrush;
 
             BlurAmount = 9;
 #else
             m_blurBrush = Compositor.CreateColorBrush(Colors.White);
             m_blurVisual.Brush = m_blurBrush;
 #endif
-            ElementCompositionPreview.SetElementChildVisual(this as UIElement, m_blurVisual);
+            ElementCompositionPreview.SetElementChildVisual(this, _mBlurVisual);
 
             Loading += OnLoading;
             Unloaded += OnUnloaded;
@@ -51,27 +52,27 @@ namespace BreadPlayer.Effects
             {
                 float value = 0;
 #if SDKVERSION_14393
-                m_rootVisual.Properties.TryGetScalar(BlurAmountProperty, out value);
+                _mRootVisual.Properties.TryGetScalar(BlurAmountProperty, out value);
 #endif
                 return value;
             }
             set
             {
 #if SDKVERSION_14393
-                if (!m_setUpExpressions)
+                if (!_mSetUpExpressions)
                 {
-                    m_blurBrush.Properties.InsertScalar("Blur.BlurAmount", (float)value);
+                    _mBlurBrush.Properties.InsertScalar("Blur.BlurAmount", (float)value);
                 }
-                m_rootVisual.Properties.InsertScalar(BlurAmountProperty, (float)value);
+                _mRootVisual.Properties.InsertScalar(BlurAmountProperty, (float)value);
 #endif
             }
         }       
 
         public Compositor Compositor
         {
-            get => m_compositor;
+            get => _mCompositor;
 
-            private set => m_compositor = value;
+            private set => _mCompositor = value;
         }
 
 #pragma warning disable 1998
@@ -89,34 +90,34 @@ namespace BreadPlayer.Effects
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (m_blurVisual != null)
+            if (_mBlurVisual != null)
             {
-                m_blurVisual.Size = new System.Numerics.Vector2((float)ActualWidth, (float)ActualHeight);
+                _mBlurVisual.Size = new Vector2((float)ActualWidth, (float)ActualHeight);
             }
         }
 
 #if SDKVERSION_14393
         private void SetUpPropertySetExpressions()
         {
-            m_setUpExpressions = true;
+            _mSetUpExpressions = true;
 
             var exprAnimation = Compositor.CreateExpressionAnimation();
             exprAnimation.Expression = $"sourceProperties.{BlurAmountProperty}";
-            exprAnimation.SetReferenceParameter("sourceProperties", m_rootVisual.Properties);
+            exprAnimation.SetReferenceParameter("sourceProperties", _mRootVisual.Properties);
 
-            m_blurBrush.Properties.StartAnimation("Blur.BlurAmount", exprAnimation);
+            _mBlurBrush.Properties.StartAnimation("Blur.BlurAmount", exprAnimation);
         }
 
 
         private CompositionEffectBrush BuildBlurBrush()
         {
-            GaussianBlurEffect blurEffect = new GaussianBlurEffect()
+            GaussianBlurEffect blurEffect = new GaussianBlurEffect
             {
                 Name = "Blur",
                 BlurAmount = 0.0f,
                 BorderMode = EffectBorderMode.Hard,
                 Optimization = EffectOptimization.Balanced,
-                Source = new CompositionEffectSourceParameter("source"),
+                Source = new CompositionEffectSourceParameter("source")
             };    
 
             var factory = Compositor.CreateEffectFactory(
@@ -132,11 +133,11 @@ namespace BreadPlayer.Effects
         {
             get
             {
-                if (!m_setUpExpressions)
+                if (!_mSetUpExpressions)
                 {
                     SetUpPropertySetExpressions();
                 }
-                return m_rootVisual.Properties;
+                return _mRootVisual.Properties;
             }
         }
 

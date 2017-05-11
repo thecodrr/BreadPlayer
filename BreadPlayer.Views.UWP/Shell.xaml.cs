@@ -15,11 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Extensions;
-using BreadPlayer.Helpers;
-using BreadPlayer.ViewModels;
+
 using System;
 using System.Collections.Generic;
 using Windows.Storage;
@@ -27,7 +23,14 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.ViewModels;
+using SplitViewMenu;
 
 namespace BreadPlayer
 {
@@ -37,21 +40,21 @@ namespace BreadPlayer
     public sealed partial class Shell : Page
     {
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
-        private ShellViewModel ShellVM;
-        private List<Mediafile> OldFiles = new List<Mediafile>();
+        private ShellViewModel _shellVm;
+        private List<Mediafile> _oldFiles = new List<Mediafile>();
         public Shell()
         {
             InitializeComponent();
             //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             new CoreWindowLogic();
-            ShellVM = DataContext as ShellViewModel;
-            LibraryItem.Shortcuts.Add(new SplitViewMenu.Shortcut()
+            _shellVm = DataContext as ShellViewModel;
+            LibraryItem.Shortcuts.Add(new Shortcut
             {
                 SymbolAsChar = "\uE762",
                 Tooltip = "Enable Multiselection",
-                ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
+                ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
-            NowPlayingItem.Command = ShellVM.NavigateToNowPlayingViewCommand;
+            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
           
         }
            
@@ -76,8 +79,10 @@ namespace BreadPlayer
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)
-                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_EXECUTE_CMD, new List<object> { e.Parameter, 0.0, true, 50.0 });
-            
+            {
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { e.Parameter, 0.0, true, 50.0 });
+            }
+
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -85,11 +90,11 @@ namespace BreadPlayer
             Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
         }
 
-        private bool isPressed;
-        private bool isProgBarPressed = false;
+        private bool _isPressed;
+        private bool _isProgBarPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, ShellVM); }, () => { ShellVM.DontUpdatePosition = true; });
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, _shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
@@ -97,27 +102,27 @@ namespace BreadPlayer
 
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
-            if (isPressed && !positionSlider.IsDragging())
+            if (_isPressed && !positionSlider.IsDragging())
             {
-                positionSlider.UpdatePosition(positionProgressBar, ShellVM, true);
-                isPressed = false;
+                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true);
+                _isPressed = false;
             }
-            else if (isProgBarPressed)
+            else if (_isProgBarPressed)
             {
                 positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight - 4, "Height");
-                isProgBarPressed = false;
-                positionSlider.UpdatePosition(positionProgressBar, ShellVM, true, true);
+                _isProgBarPressed = false;
+                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true, true);
             }
         }
 
         private void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
         {
-            if (isProgBarPressed)
+            if (_isProgBarPressed)
             {
-                double MousePosition = args.CurrentPoint.Position.X;
-                double ratio = MousePosition / positionProgressBar.ActualWidth;
-                double ProgressBarValue = ratio * positionProgressBar.Maximum;
-                positionProgressBar.Value = ProgressBarValue;
+                double mousePosition = args.CurrentPoint.Position.X;
+                double ratio = mousePosition / positionProgressBar.ActualWidth;
+                double progressBarValue = ratio * positionProgressBar.Maximum;
+                positionProgressBar.Value = progressBarValue;
             }
         }
 
@@ -125,14 +130,14 @@ namespace BreadPlayer
         {
             if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
             {
-                isPressed = true;
-                ShellVM.DontUpdatePosition = true;
+                _isPressed = true;
+                _shellVm.DontUpdatePosition = true;
             }
             if (seekRect.GetBoundingRect().Contains(args.CurrentPoint.Position))
             {
                 positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight + 4, "Height");
-                ShellVM.DontUpdatePosition = true;
-                isProgBarPressed = true;
+                _shellVm.DontUpdatePosition = true;
+                _isProgBarPressed = true;
             }
         }           
     }

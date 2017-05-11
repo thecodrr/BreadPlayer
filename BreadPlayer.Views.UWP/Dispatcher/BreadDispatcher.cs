@@ -1,7 +1,7 @@
-﻿using BreadPlayer.Core.Interfaces;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using BreadPlayer.Core.Interfaces;
 
 namespace BreadPlayer.Dispatcher
 {

@@ -1,6 +1,4 @@
-﻿using BreadPlayer.Database;
-using BreadPlayer.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,16 +7,18 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.PlaylistBus
 {
-    internal class PLS : IPlaylist
+    internal class Pls : IPlaylist
     {
         public async Task LoadPlaylist(StorageFile file)
         {
             //Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
             //Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
-            Playlist Playlist = new Playlist() { Name = file.DisplayName };
+            Playlist playlist = new Playlist { Name = file.DisplayName };
             using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 bool hdr = false; //[playlist] header
@@ -29,21 +29,29 @@ namespace BreadPlayer.PlaylistBus
                 int count = 0;
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
-                List<Mediafile> PlaylistSongs = new List<Mediafile>();
+                List<Mediafile> playlistSongs = new List<Mediafile>();
                 PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
-                await service.AddPlaylistAsync(Playlist);
+                await service.AddPlaylistAsync(playlist);
                 while ((line = reader.ReadLine()) != null)
                 {
                     lines.Add(line);
                     nr++;
                     if (line == "[playlist]")
+                    {
                         hdr = true;
+                    }
                     else if (!hdr)
+                    {
                         return;
+                    }
                     else if (line.ToLower().StartsWith("numberofentries="))
+                    {
                         noe = Convert.ToInt32(line.Split('=')[1]);
+                    }
                     else if (line.ToLower().StartsWith("version="))
+                    {
                         version = line.Split('=')[1];
+                    }
                 }
                 string[,] tracks = new string[noe, 3];
                 nr = 0;
@@ -61,13 +69,14 @@ namespace BreadPlayer.PlaylistBus
                         int number = Convert.ToInt32(split[0].Substring(tmp));
 
                         if (number > noe)
+                        {
                             continue;
-                        else
-                            tracks[number - 1, index] = split[1];
+                        }
+
+                        tracks[number - 1, index] = split[1];
                     }
                     else if (!_l.StartsWith("numberofentries") && _l != "[playlist]" && !_l.StartsWith("version="))
                     {
-                        continue;
                     }
                 }
                
@@ -91,8 +100,8 @@ namespace BreadPlayer.PlaylistBus
                             Mediafile mp3File = await SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                             await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
-                            await SharedLogic.NotificationManager.ShowMessageAsync(i.ToString() + " of " + noe.ToString() + " songs added into playlist: " + file.DisplayName);
-                            PlaylistSongs.Add(mp3File);
+                            await SharedLogic.NotificationManager.ShowMessageAsync(i + " of " + noe + " songs added into playlist: " + file.DisplayName);
+                            playlistSongs.Add(mp3File);
                             StorageApplicationPermissions.FutureAccessList.Remove(token);
                         }
                         catch
@@ -100,17 +109,17 @@ namespace BreadPlayer.PlaylistBus
                             failedFiles++;
                         }
                     });
-                    await service.InsertTracksAsync(PlaylistSongs, Playlist);
+                    await service.InsertTracksAsync(playlistSongs, playlist);
                 }
                 string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
                 await SharedLogic.NotificationManager.ShowMessageAsync(message);
             }
         }
 
-        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> Songs)
+        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs)
         {
             FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("M3U Playlists", new List<string>() { ".m3u" });
+            picker.FileTypeChoices.Add("M3U Playlists", new List<string> { ".m3u" });
             picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
             var file = await picker.PickSaveFileAsync();
             using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
@@ -118,7 +127,7 @@ namespace BreadPlayer.PlaylistBus
                 writer.WriteLine("[playlist]");
                 writer.WriteLine("");
                 int i = 0;
-                foreach (var track in Songs)
+                foreach (var track in songs)
                 {
                     i++;
                     writer.WriteLine(string.Format("File{0}={1}", i, track.Path));

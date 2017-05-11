@@ -13,7 +13,7 @@ namespace BreadPlayer.Fmod.Enums
         [SEE_ALSO]
     ]
     */
-    public enum Result : int
+    public enum Result
     {
         Ok,                        /* No errors. */
         ErrBadcommand,            /* Tried to call a function on a data type that does not allow this type of functionality (ie calling Sound::lock on a streaming sound). */
@@ -96,7 +96,7 @@ namespace BreadPlayer.Fmod.Enums
         ErrAlreadyLocked,        /* The specified resource is already locked. */
         ErrNotLocked,            /* The specified resource is not locked, so it can't be unlocked. */
         ErrRecordDisconnected,   /* The specified recording driver has been disconnected. */
-        ErrToomanysamples,        /* The length provided exceed the allowable limit. */
+        ErrToomanysamples        /* The length provided exceed the allowable limit. */
     }
 
 
@@ -115,7 +115,7 @@ namespace BreadPlayer.Fmod.Enums
         ChannelGroup::setCallback
     ]
     */
-    public enum ChannelControlType : int
+    public enum ChannelControlType
     {
         Channel,
         Channelgroup
@@ -154,7 +154,7 @@ namespace BreadPlayer.Fmod.Enums
        FMOD_INITFLAGS
 ]
 */
-    public enum OutputType : int
+    public enum OutputType
     {
         Autodetect,      /* Picks the best output mode for the platform. This is the default. */
 
@@ -180,7 +180,7 @@ namespace BreadPlayer.Fmod.Enums
         Audio3D,         /* PS4                  - Audio3D. */
         Atmos,           /* Win                  - Dolby Atmos (WASAPI). */
 
-        Max,             /* Maximum number of output types supported. */
+        Max             /* Maximum number of output types supported. */
     }
 
     /*
@@ -197,11 +197,11 @@ namespace BreadPlayer.Fmod.Enums
         FMOD_Debug_Initialize
     ]
     */
-    public enum DebugMode : int
+    public enum DebugMode
     {
         Tty,        /* Default log location per platform, i.e. Visual Studio output window, stderr, LogCat, etc */
         File,       /* Write log to specified file path */
-        Callback,   /* Call specified callback with log information */
+        Callback   /* Call specified callback with log information */
     }
 
     /*
@@ -234,7 +234,7 @@ namespace BreadPlayer.Fmod.Enums
 
         DisplayTimestamps = 0x00010000,   /* Display the time stamp of the log message in milliseconds. */
         DisplayLinenumbers = 0x00020000,   /* Display the source code file and line number for where the message originated. */
-        DisplayThread = 0x00040000,   /* Display the thread ID of the calling function that generated the message. */
+        DisplayThread = 0x00040000   /* Display the thread ID of the calling function that generated the message. */
     }
 
     /*
@@ -359,7 +359,7 @@ namespace BreadPlayer.Fmod.Enums
         DSP::setChannelFormat
     ]
     */
-    public enum SpeakerMode : int
+    public enum SpeakerMode
     {
         Default,          /* Default speaker mode based on operating system/output mode.  Windows = control panel setting, Xbox = 5.1, PS3 = 7.1 etc. */
         Raw,              /* There is no specific speakermode.  Sound channels are mapped in order of input to output.  Use FMODSystem::setSoftwareFormat to specify speaker count. See remarks for more information. */
@@ -370,7 +370,7 @@ namespace BreadPlayer.Fmod.Enums
         _5Point1,         /* 5.1 speaker setup.  This includes front left, front right, center, surround left, surround right and an LFE speaker. */
         _7Point1,         /* 7.1 speaker setup.  This includes front left, front right, center, surround left, surround right, back left, back right and an LFE speaker. */
 
-        Max,              /* Maximum number of speaker modes supported. */
+        Max              /* Maximum number of speaker modes supported. */
     }
 
     /*
@@ -386,7 +386,7 @@ namespace BreadPlayer.Fmod.Enums
         FMODSystem::getSpeakerPosition
     ]
     */
-    public enum Speaker : int
+    public enum Speaker
     {
         FrontLeft,
         FrontRight,
@@ -397,7 +397,7 @@ namespace BreadPlayer.Fmod.Enums
         BackLeft,
         BackRight,
 
-        Max,               /* Maximum number of speaker types supported. */
+        Max               /* Maximum number of speaker types supported. */
     }
 
     /*
@@ -458,7 +458,7 @@ namespace BreadPlayer.Fmod.Enums
         FMOD_CREATESOUNDEXINFO
     ]
     */
-    public enum ChannelOrder : int
+    public enum ChannelOrder
     {
         Default,              /* Left, Right, Center, LFE, Surround Left, Surround Right, Back Left, Back Right (see FMOD_SPEAKER enumeration)   */
         Waveformat,           /* Left, Right, Center, LFE, Back Left, Back Right, Surround Left, Surround Right (as per Microsoft .wav WAVEFORMAT structure master order) */
@@ -467,7 +467,7 @@ namespace BreadPlayer.Fmod.Enums
         Allstereo,            /* Left, Right, Left, Right, Left, Right, ... (each pair of channels is treated as stereo all the way up to 32 channels) */
         Alsa,                 /* Left, Right, Surround Left, Surround Right, Center, LFE (as per Linux ALSA channel order) */
 
-        Max,                  /* Maximum number of channel orderings supported. */
+        Max                  /* Maximum number of channel orderings supported. */
     }
 
     /*
@@ -485,13 +485,13 @@ namespace BreadPlayer.Fmod.Enums
         FMODSystem::unloadPlugin
     ]
     */
-    public enum PluginType : int
+    public enum PluginType
     {
         Output,          /* The plugin type is an output module.  BreadPlayer.Fmod mixed audio will play through one of these devices */
         Codec,           /* The plugin type is a file format codec.  BreadPlayer.Fmod will use these codecs to load file formats for playback. */
         Dsp,             /* The plugin type is a DSP unit.  BreadPlayer.Fmod will use these plugins as part of its DSP network to apply effects to output or generate sound in realtime. */
 
-        Max,             /* Maximum number of plugin types supported. */
+        Max             /* Maximum number of plugin types supported. */
     }
     /*
 [DEFINE]
@@ -569,7 +569,7 @@ namespace BreadPlayer.Fmod.Enums
         Mediacodec,      /* Android MediaCodec */
         Fadpcm,          /* BreadPlayer.Fmod Adaptive Differential Pulse Code Modulation */
 
-        Max,             /* Maximum number of sound types supported. */
+        Max             /* Maximum number of sound types supported. */
     }
 
     /*
@@ -586,7 +586,7 @@ namespace BreadPlayer.Fmod.Enums
         Sound::getFormat
     ]
     */
-    public enum SoundFormat : int
+    public enum SoundFormat
     {
         None,       /* Unitialized / unknown */
         Pcm8,       /* 8bit integer PCM data */
@@ -690,7 +690,7 @@ namespace BreadPlayer.Fmod.Enums
         FMOD_MODE
     ]
     */
-    public enum OpenState : int
+    public enum OpenState
     {
         Ready = 0,       /* Opened and ready to play */
         Loading,         /* Initial load in progress */
@@ -701,7 +701,7 @@ namespace BreadPlayer.Fmod.Enums
         Playing,         /* Ready and playing, but not possible to release at this time without stalling the main thread. */
         Setposition,     /* Seeking within a stream to a different position. */
 
-        Max,             /* Maximum number of open state types. */
+        Max             /* Maximum number of open state types. */
     }
 
     /*
@@ -724,13 +724,13 @@ namespace BreadPlayer.Fmod.Enums
         SoundGroup::getMuteFadeSpeed
     ]
     */
-    public enum SoundGroupBehavior : int
+    public enum SoundGroupBehavior
     {
         BehaviorFail,              /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will simply fail during FMODSystem::playSound. */
         BehaviorMute,              /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will be silent, then if another sound in the group stops the sound that was silent before becomes audible again. */
         BehaviorSteallowest,       /* Any sound played that puts the sound count over the SoundGroup::setMaxAudible setting, will steal the quietest / least important sound playing in the group. */
 
-        Max,               /* Maximum number of sound group behaviors. */
+        Max               /* Maximum number of sound group behaviors. */
     }
 
     /*
@@ -752,14 +752,14 @@ namespace BreadPlayer.Fmod.Enums
         FMODSystem::update
     ]
     */
-    public enum ChannelControlCallbackType : int
+    public enum ChannelControlCallbackType
     {
         End,                  /* Called when a sound ends. */
         Virtualvoice,         /* Called when a voice is swapped out or swapped in. */
         Syncpoint,            /* Called when a syncpoint is encountered.  Can be from wav file markers. */
         Occlusion,            /* Called when the channel has its geometry occlusion value calculated.  Can be used to clamp or change the value. */
 
-        Max,                  /* Maximum number of callback types supported. */
+        Max                  /* Maximum number of callback types supported. */
     }
 
     /*
@@ -857,7 +857,7 @@ namespace BreadPlayer.Fmod.Enums
         Preupdate = 0x00000400,  /* Called at start of FMODSystem::update function. */
         Postupdate = 0x00000800,  /* Called at end of FMODSystem::update function. */
         Recordlistchanged = 0x00001000,  /* Called from FMODSystem::update when the enumerated list of recording devices has changed. */
-        All = 0xFFFFFFFF,  /* Pass this mask to FMODSystem::setCallback to receive all callback types.  */
+        All = 0xFFFFFFFF  /* Pass this mask to FMODSystem::setCallback to receive all callback types.  */
     }
 
 
@@ -876,7 +876,7 @@ namespace BreadPlayer.Fmod.Enums
         FMODSystem::getSoftwareFormat
     ]
     */
-    public enum DspResampler : int
+    public enum DspResampler
     {
         Default,         /* Default interpolation method.  Currently equal to FMOD_DSP_RESAMPLER_LINEAR. */
         Nointerp,        /* No interpolation.  High frequency aliasing hiss will be audible depending on the sample rate of the sound. */
@@ -884,7 +884,7 @@ namespace BreadPlayer.Fmod.Enums
         Cubic,           /* Cubic interpolation.  Slower than linear interpolation but better quality. */
         Spline,          /* 5 point spline interpolation.  Slowest resampling method but best quality. */
 
-        Max,             /* Maximum number of resample methods supported. */
+        Max             /* Maximum number of resample methods supported. */
     }
 
     /*
@@ -924,14 +924,14 @@ namespace BreadPlayer.Fmod.Enums
         DSPConnection::getType
     ]
     */
-    public enum DspConnectionType : int
+    public enum DspConnectionType
     {
         Standard,          /* Default connection type.         Audio is mixed from the input to the output DSP's audible buffer.  */
         Sidechain,         /* Sidechain connection type.       Audio is mixed from the input to the output DSP's sidechain buffer.  */
         Send,              /* Send connection type.            Audio is mixed from the input to the output DSP's audible buffer, but the input is NOT executed, only copied from.  A standard connection or sidechain needs to make an input execute to generate data. */
         SendSidechain,    /* Send sidechain connection type.  Audio is mixed from the input to the output DSP's sidechain buffer, but the input is NOT executed, only copied from.  A standard connection or sidechain needs to make an input execute to generate data. */
 
-        Max,               /* Maximum number of DSP connection types supported. */
+        Max               /* Maximum number of DSP connection types supported. */
     }
 
     /*
@@ -946,7 +946,7 @@ namespace BreadPlayer.Fmod.Enums
         Sound::getTag
     ]
     */
-    public enum TagType : int
+    public enum TagType
     {
         Unknown = 0,
         Id3V1,
@@ -976,7 +976,7 @@ namespace BreadPlayer.Fmod.Enums
         Sound::getTag
     ]
     */
-    public enum TagDataType : int
+    public enum TagDataType
     {
         Binary = 0,
         Int,
@@ -1008,7 +1008,7 @@ namespace BreadPlayer.Fmod.Enums
     public enum DriverState : uint
     {
         Connected = 0x00000001, /* Device is currently plugged in. */
-        Default = 0x00000002, /* Device is the users preferred choice. */
+        Default = 0x00000002 /* Device is the users preferred choice. */
     }
 
 }

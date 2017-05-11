@@ -4,14 +4,14 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
     public class AlbumSug : IQueryResult
     {
-        public string albumid { get; set; }
-        public string albumname { get; set; }
-        public string artistname { get; set; }
-        public string artistpic { get; set; }
+        public string Albumid { get; set; }
+        public string Albumname { get; set; }
+        public string Artistname { get; set; }
+        public string Artistpic { get; set; }
       
         public string GetName()
         {
-            return albumname;
+            return Albumname;
         }
         
         public QueryType GetSearchResultType()

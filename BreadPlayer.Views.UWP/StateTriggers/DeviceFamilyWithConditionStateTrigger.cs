@@ -1,22 +1,16 @@
 ﻿using System;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 
 namespace BreadPlayer.StateTriggers
 {
     public class DeviceFamilyWithConditionStateTrigger : StateTriggerBase, ITriggerValue
     {
-        private static string deviceFamily;
+        private static string _deviceFamily;
 
         static DeviceFamilyWithConditionStateTrigger()
         {
-            deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceFamilyStateTrigger"/> class.
-        /// </summary>
-        public DeviceFamilyWithConditionStateTrigger()
-        {
+            _deviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
         }
 
         /// <summary>
@@ -40,8 +34,10 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (DeviceFamilyWithConditionStateTrigger)d;
             var val = (DeviceFamily)e.NewValue;
-            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), deviceFamily.Remove(0,8)) == val)
+            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), _deviceFamily.Remove(0,8)) == val)
+            {
                 obj.IsActive = obj.Condition;
+            }
         }
 
         /// <summary>
@@ -65,8 +61,10 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (DeviceFamilyWithConditionStateTrigger)d;
             var val = (bool)e.NewValue;
-            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), deviceFamily.Remove(0, 8)) == obj.DeviceFamily)
+            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), _deviceFamily.Remove(0, 8)) == obj.DeviceFamily)
+            {
                 obj.IsActive = val;
+            }
             //else if (deviceFamily == "Windows.Desktop")
             //    obj.IsActive = (val == DeviceFamily.Desktop);
             //else if (deviceFamily == "Windows.Team")
@@ -82,7 +80,7 @@ namespace BreadPlayer.StateTriggers
         }
         #region ITriggerValue
 
-        private bool m_IsActive;
+        private bool _mIsActive;
 
         /// <summary>
         /// Gets a value indicating whether this trigger is active.
@@ -90,12 +88,12 @@ namespace BreadPlayer.StateTriggers
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         public bool IsActive
         {
-            get => m_IsActive;
+            get => _mIsActive;
             private set
             {
-                if (m_IsActive != value)
+                if (_mIsActive != value)
                 {
-                    m_IsActive = value;
+                    _mIsActive = value;
                     SetActive(value);
                     IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }

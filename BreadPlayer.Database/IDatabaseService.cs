@@ -8,11 +8,11 @@ namespace BreadPlayer.Database
 	public interface IDatabaseService : IDisposable
     {
         void ChangeTable(string tableName, string textTableName);
-        void CreateDB(string dbPath);
+        void CreateDb(string dbPath);
         Task InsertRecord(IDbRecord record);
         Task InsertRecords(IEnumerable<IDbRecord> records);
         Task<IEnumerable<T>> GetRecords<T>();
-        Task<IEnumerable<T>> GetRecords<T>(long fromID, long toID);
+        Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId);
         Task<T> GetRecordByQueryAsync<T>(string query);
         T GetRecordById<T>(long id);
         Task RemoveRecords(IEnumerable<IDbRecord> records);

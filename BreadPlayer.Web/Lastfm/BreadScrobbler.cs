@@ -1,12 +1,12 @@
-﻿using IF.Lastfm.Core.Api;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Api.Enums;
 using IF.Lastfm.Core.Objects;
 using IF.Lastfm.Core.Scrobblers;
 using LiteDB;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.Lastfm
 {
@@ -23,7 +23,7 @@ namespace BreadPlayer.Web.Lastfm
 
         public override async Task<IEnumerable<Scrobble>> GetCachedAsync()
         {
-            using (var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive }))
+            using (var disk = new FileDiskService(DatabasePath, new FileOptions { FileMode = FileMode.Exclusive }))
             using (var db = new LiteDatabase(disk))
             {
                 return await Task.Run(() =>
@@ -53,12 +53,14 @@ namespace BreadPlayer.Web.Lastfm
 
         private void Cache(IEnumerable<Scrobble> scrobbles)
         {
-            using (var disk = new FileDiskService(DatabasePath, new FileOptions() { FileMode = FileMode.Exclusive }))
+            using (var disk = new FileDiskService(DatabasePath, new FileOptions { FileMode = FileMode.Exclusive }))
             using (var db = new LiteDatabase(disk))
             {
                 var scrobblesCollection = db.GetCollection<Scrobble>("scrobbles");
                 foreach (var scrobble in scrobbles)
+                {
                     scrobblesCollection.Insert(scrobble);
+                }
             }
         }
     }

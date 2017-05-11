@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 
 namespace BreadPlayer.StateTriggers
@@ -11,18 +12,11 @@ namespace BreadPlayer.StateTriggers
     /// </summary>
     public class DeviceFamilyStateTrigger : StateTriggerBase, ITriggerValue
     {
-        private static string deviceFamily;
+        private static string _deviceFamily;
 
         static DeviceFamilyStateTrigger()
         {
-            deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceFamilyStateTrigger"/> class.
-        /// </summary>
-        public DeviceFamilyStateTrigger()
-        {
+            _deviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
         }
 
         /// <summary>
@@ -46,25 +40,39 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (DeviceFamilyStateTrigger)d;
             var val = (DeviceFamily)e.NewValue;
-            if (deviceFamily == "Windows.Mobile")
+            if (_deviceFamily == "Windows.Mobile")
+            {
                 obj.IsActive = (val == DeviceFamily.Mobile);
-            else if (deviceFamily == "Windows.Desktop")
+            }
+            else if (_deviceFamily == "Windows.Desktop")
+            {
                 obj.IsActive = (val == DeviceFamily.Desktop);
-            else if (deviceFamily == "Windows.Team")
+            }
+            else if (_deviceFamily == "Windows.Team")
+            {
                 obj.IsActive = (val == DeviceFamily.Team);
-            else if (deviceFamily == "Windows.IoT")
+            }
+            else if (_deviceFamily == "Windows.IoT")
+            {
                 obj.IsActive = (val == DeviceFamily.IoT);
-            else if (deviceFamily == "Windows.Holographic")
+            }
+            else if (_deviceFamily == "Windows.Holographic")
+            {
                 obj.IsActive = (val == DeviceFamily.Holographic);
-            else if (deviceFamily == "Windows.Xbox")
+            }
+            else if (_deviceFamily == "Windows.Xbox")
+            {
                 obj.IsActive = (val == DeviceFamily.Xbox);
+            }
             else
+            {
                 obj.IsActive = (val == DeviceFamily.Unknown);
+            }
         }
 
         #region ITriggerValue
 
-        private bool m_IsActive;
+        private bool _mIsActive;
 
         /// <summary>
         /// Gets a value indicating whether this trigger is active.
@@ -72,12 +80,12 @@ namespace BreadPlayer.StateTriggers
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         public bool IsActive
         {
-            get => m_IsActive;
+            get => _mIsActive;
             private set
             {
-                if (m_IsActive != value)
+                if (_mIsActive != value)
                 {
-                    m_IsActive = value;
+                    _mIsActive = value;
                     SetActive(value);
                     IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }

@@ -1,29 +1,39 @@
-﻿using BreadPlayer.Extensions;
-using BreadPlayer.Services;
-using BreadPlayer.ViewModels;
-using System;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.UI.Core;
-using Windows.System;
-using SplitViewMenu;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
-using BreadPlayer.NotificationManager;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
-using BreadPlayer.Web.Lastfm;
 using Windows.Storage.Pickers;
-using BreadPlayer.Dialogs;
-using Windows.UI.Xaml.Controls;
-using BreadPlayer.Common;
+using Windows.Storage.Streams;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using BreadPlayer.Common;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.FMODEngine;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
+using BreadPlayer.Dialogs;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.NotificationManager;
+using BreadPlayer.Services;
+using BreadPlayer.ViewModels;
+using BreadPlayer.Web.Lastfm;
+using ColorThiefDotNet;
+using SplitViewMenu;
+using TagLib;
+using Buffer = Windows.Storage.Streams.Buffer;
+using Color = Windows.UI.Color;
+using File = TagLib.File;
 
 namespace BreadPlayer.Core
 {
@@ -31,37 +41,42 @@ namespace BreadPlayer.Core
     {
         public SharedLogic()
         {
-            InitializeCore.Dispatcher = new Dispatcher.BreadDispatcher(Dispatcher);
+            InitializeCore.Dispatcher = new BreadDispatcher(Dispatcher);
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
-            InitializeCore.IsMobile = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
+            InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
-        public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
+        public ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        private static IPlayerEngine player;
+        private static IPlayerEngine _player;
         public static IPlayerEngine Player
         {
             get
             {
-                if (player == null)
-                    player = new FmodPlayerEngine(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
-                return player;
+                if (_player == null)
+                {
+                    _player = new FmodPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                }
+
+                return _player;
             }
         }
-        public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
-        public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-        private static Lastfm lastfmScrobbler;
+        public static CoreDispatcher Dispatcher { get; set; } = CoreApplication.MainView.CoreWindow.Dispatcher;
+        public static SettingsViewModel SettingsVm => GenericService<SettingsViewModel>.Instance.GenericClass;
+        private static Lastfm _lastfmScrobbler;
         public static Lastfm LastfmScrobbler
         {
-            get => lastfmScrobbler;
+            get => _lastfmScrobbler;
             set
             {
-                if (lastfmScrobbler == null)
-                    lastfmScrobbler = value;
+                if (_lastfmScrobbler == null)
+                {
+                    _lastfmScrobbler = value;
+                }
             }
         }
         public static Thickness DynamicMargin
@@ -72,8 +87,7 @@ namespace BreadPlayer.Core
                 {
                     return new Thickness(28, 0, 0, 0);
                 }
-                else
-                    return new Thickness(48, 0, 0, 0);
+                return new Thickness(48, 0, 0, 0);
             }
         }
         public static DataTemplate DynamicAlbumSelectedTemplate
@@ -84,8 +98,7 @@ namespace BreadPlayer.Core
                 {
                     return Application.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
                 }
-                else
-                    return Application.Current.Resources["SelectedTemplate"] as DataTemplate;
+                return Application.Current.Resources["SelectedTemplate"] as DataTemplate;
             }
         }
         #region ICommands
@@ -125,16 +138,19 @@ namespace BreadPlayer.Core
         {
             Mediafile mediaFile = para as Mediafile;
             if (para == null)
+            {
                 mediaFile = Player.CurrentlyPlayingFile;
+            }
+
             FileOpenPicker albumArtPicker = new FileOpenPicker();
             albumArtPicker.FileTypeFilter.Add(".jpg");
             albumArtPicker.FileTypeFilter.Add(".png");
             var albumArt = await albumArtPicker.PickSingleFileAsync();
             if (albumArt != null)
             {
-                TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(await StorageFile.GetFileFromPathAsync(mediaFile.Path)));
-                TagLib.IPicture[] pictures = new TagLib.IPicture[1];
-                pictures[0] = new TagLib.Picture(new SimpleFileAbstraction(albumArt));
+                File tagFile = File.Create(new SimpleFileAbstraction(await StorageFile.GetFileFromPathAsync(mediaFile.Path)));
+                IPicture[] pictures = new IPicture[1];
+                pictures[0] = new Picture(new SimpleFileAbstraction(albumArt));
                 tagFile.Tag.Pictures = pictures;
                 tagFile.Save();
                 var createAlbumArt = AlbumArtFileExists(mediaFile);
@@ -148,7 +164,10 @@ namespace BreadPlayer.Core
             Mediafile file = para is Mediafile ? para as Mediafile : Player.CurrentlyPlayingFile;
             TagDialog tag = new TagDialog(file);
             if (CoreWindow.GetForCurrentThread().Bounds.Width >= 501)
+            {
                 tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
+            }
+
             await tag.ShowAsync();
         }
 
@@ -156,7 +175,10 @@ namespace BreadPlayer.Core
         {
             var mp3File = file as Mediafile;
             if (mp3File == null)
+            {
                 mp3File = Player.CurrentlyPlayingFile;
+            }
+
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(mp3File.Path));
             if (folder != null)
             {
@@ -201,7 +223,7 @@ namespace BreadPlayer.Core
                 {
                     //Create a decoder for the image
                     var decoder = BitmapDecoder.CreateAsync(stream);
-                    var colorThief = new ColorThiefDotNet.ColorThief();
+                    var colorThief = new ColorThief();
                     var qColor = await colorThief.GetColor(await decoder);
 
                     //read the color 
@@ -215,7 +237,7 @@ namespace BreadPlayer.Core
         {
             var albumartFolder = ApplicationData.Current.LocalFolder;
             var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-            if (!File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
+            if (!System.IO.File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
             {
                 //var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
                 return (true, md5Path);
@@ -231,23 +253,32 @@ namespace BreadPlayer.Core
         {
             var albumArt = AlbumArtFileExists(mediafile);
             if (!albumArt.NotExists)
+            {
                 return false;
+            }
 
             try
             {
                 using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
                 {
-                    if (thumbnail == null) return false;
+                    if (thumbnail == null)
+                    {
+                        return false;
+                    }
+
                     switch (thumbnail.Type)
                     {
                         case ThumbnailType.Image:
                             var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-                            Windows.Storage.Streams.IBuffer buf;
-                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
-                            using (Windows.Storage.Streams.IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                            IBuffer buf;
+                            Buffer inputBuffer = new Buffer(1024);
+                            using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                while ((buf = (await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, Windows.Storage.Streams.InputStreamOptions.None))).Length > 0)
+                                while ((buf = (await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None))).Length > 0)
+                                {
                                     await albumstream.WriteAsync(buf);
+                                }
+
                                 return true;
                             }
 
@@ -281,7 +312,10 @@ namespace BreadPlayer.Core
 
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
-            if (file == null) return false;
+            if (file == null)
+            {
+                return false;
+            }
 
             using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
             {
@@ -292,7 +326,10 @@ namespace BreadPlayer.Core
         }
         public static async Task<bool> RemoveMediafile(Mediafile file)
         {
-            if (file == null) return false;
+            if (file == null)
+            {
+                return false;
+            }
 
             using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
             {
@@ -316,9 +353,9 @@ namespace BreadPlayer.Core
             var mediafile = new Mediafile();
             try
             {               
-                if (cache == true)
+                if (cache)
                 {
-                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                    StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
                
                 mediafile.Path = file.Path;
@@ -335,7 +372,7 @@ namespace BreadPlayer.Core
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
-                if (File.Exists(albumartLocation))
+                if (System.IO.File.Exists(albumartLocation))
                 {
                     mediafile.AttachedPicture = albumartLocation;
                 }
@@ -356,40 +393,47 @@ namespace BreadPlayer.Core
         }
         public async Task<bool> ShowPasswordDialog(string hash, string salt)
         {
-            var dialog = new PasswordDialog()
+            var dialog = new PasswordDialog
             {
-                Title = "This is private property. \rPlease enter the correct password to proceed.",
+                Title = "This is private property. \rPlease enter the correct password to proceed."
             };
             if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+            {
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+            }
             else
+            {
                 dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+            }
+
             if (await dialog.ShowAsync() == ContentDialogResult.Primary)
             {
-                if (Common.PasswordStorage.VerifyPassword(dialog.Password, salt, hash))
+                if (PasswordStorage.VerifyPassword(dialog.Password, salt, hash))
+                {
                     return true;
-                else
-                    return await ShowPasswordDialog(hash, salt);
+                }
+
+                return await ShowPasswordDialog(hash, salt);
             }
 
             return false;
         }
     }
 
-    public class SimpleFileAbstraction : TagLib.File.IFileAbstraction
+    public class SimpleFileAbstraction : File.IFileAbstraction
     {
-        private StorageFile file;
+        private StorageFile _file;
 
         public SimpleFileAbstraction(StorageFile file)
         {
-            this.file = file;
+            _file = file;
         }
 
-        public string Name => file.Name;
+        public string Name => _file.Name;
 
-        public Stream ReadStream => file.OpenStreamForReadAsync().Result;
+        public Stream ReadStream => _file.OpenStreamForReadAsync().Result;
 
-        public Stream WriteStream => file.OpenStreamForWriteAsync().Result;
+        public Stream WriteStream => _file.OpenStreamForWriteAsync().Result;
 
         public void CloseStream(Stream stream)
         {

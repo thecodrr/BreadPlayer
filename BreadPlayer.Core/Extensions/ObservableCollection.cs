@@ -35,9 +35,16 @@ namespace BreadPlayer.Core.Extensions
         /// </summary> 
         public void AddRange(IEnumerable<T> collection)
         {
-            if (collection == null) throw new ArgumentNullException("collection");
+            if (collection == null)
+            {
+                throw new ArgumentNullException("collection");
+            }
 
-            foreach (var i in collection) Items.Add(i);
+            foreach (var i in collection)
+            {
+                Items.Add(i);
+            }
+
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
    
@@ -46,9 +53,16 @@ namespace BreadPlayer.Core.Extensions
         /// </summary> 
         public void RemoveRange(IEnumerable<T> collection)
         {
-            if (collection == null) throw new ArgumentNullException("collection");
+            if (collection == null)
+            {
+                throw new ArgumentNullException("collection");
+            }
 
-            foreach (var i in collection) Items.Remove(i);
+            foreach (var i in collection)
+            {
+                Items.Remove(i);
+            }
+
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
@@ -57,7 +71,7 @@ namespace BreadPlayer.Core.Extensions
         /// </summary> 
         public void Replace(T item)
         {
-            ReplaceRange(new T[] { item });
+            ReplaceRange(new[] { item });
         }
 
         /// <summary> 
@@ -65,10 +79,17 @@ namespace BreadPlayer.Core.Extensions
         /// </summary> 
         public void ReplaceRange(IEnumerable<T> collection)
         {
-            if (collection == null) throw new ArgumentNullException("collection");
+            if (collection == null)
+            {
+                throw new ArgumentNullException("collection");
+            }
 
             Items.Clear();
-            foreach (var i in collection) Items.Add(i);
+            foreach (var i in collection)
+            {
+                Items.Add(i);
+            }
+
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
@@ -76,7 +97,7 @@ namespace BreadPlayer.Core.Extensions
         /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class. 
         /// </summary> 
         public ObservableRangeCollection()
-            : base() { }
+        { }
 
         /// <summary> 
         /// Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class that contains elements copied from the specified collection. 

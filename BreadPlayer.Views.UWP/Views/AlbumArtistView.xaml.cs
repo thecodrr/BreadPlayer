@@ -1,8 +1,9 @@
-﻿using BreadPlayer.ViewModels;
-using System;
+﻿using System;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,7 +22,7 @@ namespace BreadPlayer
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
                 (grid.Resources["Source"] as CollectionViewSource).Source = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
                 (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);

@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 
 namespace BreadPlayer.Extensions
@@ -22,9 +23,9 @@ namespace BreadPlayer.Extensions
 	public static class ThreadSafeRandom
     {
         [ThreadStatic]
-        private static Random Local;
+        private static Random _local;
 
-        public static Random ThisThreadsRandom => Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Environment.CurrentManagedThreadId)));
+        public static Random ThisThreadsRandom => _local ?? (_local = new Random(unchecked(Environment.TickCount * 31 + Environment.CurrentManagedThreadId)));
     }
 
     internal static class ObservableCollectionExtensions

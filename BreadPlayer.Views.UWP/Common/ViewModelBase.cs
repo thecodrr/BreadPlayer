@@ -15,42 +15,50 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Core;
+
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System;
 using Windows.UI.Core;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Engines.Interfaces;
+using BreadPlayer.NotificationManager;
 
 namespace BreadPlayer
 {
    public class ViewModelBase : INotifyPropertyChanged
     {
-        private NotificationManager.BreadNotificationManager notificationManager;
-        public NotificationManager.BreadNotificationManager NotificationManager
+        private BreadNotificationManager _notificationManager;
+        public BreadNotificationManager NotificationManager
         {
-            get { if (notificationManager == null) notificationManager = SharedLogic.NotificationManager; return notificationManager; }
+            get { if (_notificationManager == null) { _notificationManager = SharedLogic.NotificationManager; } return _notificationManager; }
         }
 
-        private IPlayerEngine player;
+        private IPlayerEngine _player;
         public IPlayerEngine Player
         {
             get
             {
-                if (player == null)
-                    player = SharedLogic.Player;
-                return player;
+                if (_player == null)
+                {
+                    _player = SharedLogic.Player;
+                }
+
+                return _player;
             }
         }
 
-        private static SharedLogic logic;
+        private static SharedLogic _logic;
         public static SharedLogic SharedLogic
         {
             get
             {
-                if (logic == null)
-                    logic = new SharedLogic();
-                return logic;
+                if (_logic == null)
+                {
+                    _logic = new SharedLogic();
+                }
+
+                return _logic;
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -64,7 +72,10 @@ namespace BreadPlayer
         public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {
             if (Equals(storage, value))
+            {
                 return false;
+            }
+
             storage = value;
             OnPropertyChanged(propertyName);
             return true;

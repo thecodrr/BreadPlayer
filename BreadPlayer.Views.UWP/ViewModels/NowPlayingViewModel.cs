@@ -1,14 +1,16 @@
-﻿using BreadPlayer.Database;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
+using Windows.UI.Core;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Events;
+using BreadPlayer.Database;
 using BreadPlayer.Extensions;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Networking.Connectivity;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Events;
 
 namespace BreadPlayer.ViewModels
 {
@@ -16,38 +18,38 @@ namespace BreadPlayer.ViewModels
     {
         #region Loading Properties
 
-        private bool artistInfoLoading;
-        public bool ArtistInfoLoading { get => artistInfoLoading; set => Set(ref artistInfoLoading, value); }
-        private bool albumInfoLoading;
-        public bool AlbumInfoLoading { get => albumInfoLoading; set => Set(ref albumInfoLoading, value); }
-        private bool artistFetchFailed;
-        public bool ArtistFetchFailed { get => artistFetchFailed; set => Set(ref artistFetchFailed, value); }
-        private bool albumFetchFailed;
-        public bool AlbumFetchFailed { get => albumFetchFailed; set => Set(ref albumFetchFailed, value); }
+        private bool _artistInfoLoading;
+        public bool ArtistInfoLoading { get => _artistInfoLoading; set => Set(ref _artistInfoLoading, value); }
+        private bool _albumInfoLoading;
+        public bool AlbumInfoLoading { get => _albumInfoLoading; set => Set(ref _albumInfoLoading, value); }
+        private bool _artistFetchFailed;
+        public bool ArtistFetchFailed { get => _artistFetchFailed; set => Set(ref _artistFetchFailed, value); }
+        private bool _albumFetchFailed;
+        public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }
         #endregion
 
-        private LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
+        private LibraryService _service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
-        private string artistBio;
+        private string _artistBio;
         public string ArtistBio
         {
-            get => artistBio;
-            set => Set(ref artistBio, value);
+            get => _artistBio;
+            set => Set(ref _artistBio, value);
         }
 
-        private ThreadSafeObservableCollection<LastTrack> albumTracks;
+        private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         public ThreadSafeObservableCollection<LastTrack> AlbumTracks
         {
-            get => albumTracks;
-            set => Set(ref albumTracks, value);
+            get => _albumTracks;
+            set => Set(ref _albumTracks, value);
         }
 
-        private ThreadSafeObservableCollection<LastArtist> similarArtists;
+        private ThreadSafeObservableCollection<LastArtist> _similarArtists;
         public ThreadSafeObservableCollection<LastArtist> SimilarArtists
         {
-            get => similarArtists;
-            set => Set(ref similarArtists, value);
+            get => _similarArtists;
+            set => Set(ref _similarArtists, value);
         }
         public ICommand RetryCommand { get; set; }
         private LastfmClient LastfmClient => new Lastfm().LastfmClient;
@@ -58,9 +60,9 @@ namespace BreadPlayer.ViewModels
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
-            Core.SharedLogic.Player.MediaChanging += (sender, e) =>
+            SharedLogic.Player.MediaChanging += (sender, e) =>
             {
-                Core.SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+                SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
             };
         }
         private async void Retry(object para)
@@ -68,39 +70,45 @@ namespace BreadPlayer.ViewModels
             if(para.ToString() == "Artist")
             {
                 if (string.IsNullOrEmpty(CorrectArtist))
+                {
                     return;
+                }
+
                 await GetArtistInfo(CorrectArtist);
-                Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
+                SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
             }
             else if(para.ToString() == "Album")
             {
                 if (string.IsNullOrEmpty(CorrectAlbum) || string.IsNullOrEmpty(CorrectArtist))
+                {
                     return;
+                }
+
                 await GetAlbumInfo(CorrectArtist, CorrectAlbum);
-                Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
-                Core.SharedLogic.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
+                SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
+                SharedLogic.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
             }
-            await service.UpdateMediafile(Core.SharedLogic.Player.CurrentlyPlayingFile);
+            await _service.UpdateMediafile(SharedLogic.Player.CurrentlyPlayingFile);
         }
         private async void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
             if (e.NewState == PlayerState.Playing)
             {
-                Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
-                await GetInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
+                SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
+                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album);
             }
         }
 
-        private int retries = 0;
+        private int _retries;
         private async Task GetInfo(string artistName, string albumName)
         {
             try
             {
                 //start the tasks on another thread so that the UI doesn't hang.
 
-                ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+                ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
                 
-                if (InternetConnectionProfile != null)
+                if (internetConnectionProfile != null)
                 {
                     //cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
@@ -118,10 +126,10 @@ namespace BreadPlayer.ViewModels
             {
                 //we use this simple logic to avoid too many retries.
                 //MAX_RETRIES = 10;
-                if (retries == 10)
+                if (_retries == 10)
                 {
                     //increase retry count
-                    retries++;
+                    _retries++;
 
                     //retry
                     await GetInfo(artistName, albumName);
@@ -130,7 +138,7 @@ namespace BreadPlayer.ViewModels
         }
         private async Task GetArtistInfo(string artistName)
         {
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 LastfmClient.Artist.HttpClient.CancelPendingRequests();
                 //CheckAndCancelOperation(ArtistInfoOperation, token);
@@ -153,13 +161,16 @@ namespace BreadPlayer.ViewModels
                 //which is the identifier for unknown artists;
                 //just fail.
                 if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]") || ArtistBio.StartsWith("This is not an artist"))
+                {
                     ArtistFetchFailed = true;
+                }
+
                 ArtistInfoLoading = false;
             });
         }
         private async Task GetAlbumInfo(string artistName, string albumName)
         {
-            await Core.SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 LastfmClient.Album.HttpClient.CancelPendingRequests();
                 //CheckAndCancelOperation(AlbumInfoOperation, token);
@@ -178,7 +189,9 @@ namespace BreadPlayer.ViewModels
                     AlbumInfoLoading = false;
                 }
                 if (AlbumTracks?.Any() == false)
+                {
                     AlbumFetchFailed = true;
+                }
 
                 AlbumInfoLoading = false;
             });

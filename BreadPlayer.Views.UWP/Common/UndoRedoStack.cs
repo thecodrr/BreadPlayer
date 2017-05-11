@@ -4,11 +4,11 @@ namespace BreadPlayer.MomentoPattern
 {
 	public class UndoRedoStack<T>
     {
-        private Stack<T> _Undo;
-        private Stack<T> _Redo;
+        private Stack<T> _undo;
+        private Stack<T> _redo;
 
-        public int UndoCount => _Undo.Count;
-        public int RedoCount => _Redo.Count;
+        public int UndoCount => _undo.Count;
+        public int RedoCount => _redo.Count;
 
         public UndoRedoStack()
         {
@@ -16,15 +16,15 @@ namespace BreadPlayer.MomentoPattern
         }
         public void Reset()
         {
-            _Undo = new Stack<T>();
-            _Redo = new Stack<T>();
+            _undo = new Stack<T>();
+            _redo = new Stack<T>();
         }
 	
 	    public T SemiUndo(T input)
         {
-            if (_Undo.Count > 0)
+            if (_undo.Count > 0)
             {
-                T cmd = _Undo.Peek();
+                T cmd = _undo.Peek();
                 T output = cmd;
                 return output;
             }
@@ -34,37 +34,31 @@ namespace BreadPlayer.MomentoPattern
         public T Do(T sub)
         {
             T output = sub;
-            _Undo.Push(sub);
-            _Redo.Clear(); // Once we issue a new command, the redo stack clears
+            _undo.Push(sub);
+            _redo.Clear(); // Once we issue a new command, the redo stack clears
             return output;
         }
         public T Undo(T input)
         {
-            if (_Undo.Count > 0)
+            if (_undo.Count > 0)
             {
-                T cmd = _Undo.Pop();
+                T cmd = _undo.Pop();
                 T output = cmd;
-                _Redo.Push(cmd);
+                _redo.Push(cmd);
                 return output;
             }
-            else
-            {
-                return Redo(input);
-            }
+            return Redo(input);
         }
         public T Redo(T input)
         {
-            if (_Redo.Count > 0)
+            if (_redo.Count > 0)
             {
-                T cmd = _Redo.Pop();
+                T cmd = _redo.Pop();
                 T output = cmd;
-                _Undo.Push(cmd);
+                _undo.Push(cmd);
                 return output;
             }
-            else
-            {
-                return input;
-            }
+            return input;
         }
     }
 }

@@ -34,10 +34,10 @@ namespace BreadPlayer.Database
         {
             return Database.CheckExists(query);
         }
-        public async Task RemovePlaylistAsync(Playlist List)
+        public async Task RemovePlaylistAsync(Playlist list)
         {
             Database.ChangeTable("Playlists", "PlaylistsText");
-            await Database.RemoveRecord(List);
+            await Database.RemoveRecord(list);
         }
         public async Task UpdatePlaylistAsync(Playlist list)
         {

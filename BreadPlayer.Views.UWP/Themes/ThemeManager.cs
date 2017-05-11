@@ -1,19 +1,20 @@
-﻿using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Extensions;
-using System;
+﻿using System;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer.Themes
 {
     public class ThemeManager
     {
-        private static readonly string[] brushKeys = new[]
-        {
+        private static readonly string[] BrushKeys = {
             //wp
             "PhoneAccentBrush",
             // windows
@@ -40,24 +41,31 @@ namespace BreadPlayer.Themes
 
         public static async void SetThemeColor(string albumartPath)
         {
-            await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                if (SharedLogic.SettingsVM.ChangeAccentByAlbumArt == false)
+                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false)
                 {
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVM.ChangeAccentByAlbumArt)
+                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVm.ChangeAccentByAlbumArt)
                 {
                     try
                     {
                         Color color;
                         if (!string.IsNullOrEmpty(albumartPath) && albumartPath != "default")
+                        {
                             color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
+                        }
                         else if (albumartPath == "default" && SharedLogic.Player.CurrentlyPlayingFile != null)
+                        {
                             color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                        }
                         else
+                        {
                             color = GetAccentColor();
+                        }
+
                         ChangeColor(color);
                     }
                     catch (Exception ex)
@@ -68,7 +76,9 @@ namespace BreadPlayer.Themes
                     //ThemeChanged?.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
                 else
+                {
                     ChangeColor(GetAccentColor());
+                }
             });
         }
         private static void ChangeColor(Color color)
@@ -76,9 +86,12 @@ namespace BreadPlayer.Themes
             ChangeTitleBarColor(color);
             var oldColor = GetThemeResource<SolidColorBrush>("PlaybarBrush").Color;
             if (oldColor == color)
+            {
                 return;
+            }
+
             GetThemeResource<SolidColorBrush>("PlaybarBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
-            foreach (var brushKey in brushKeys)
+            foreach (var brushKey in BrushKeys)
             {
                 if (Application.Current.Resources.ContainsKey(brushKey))
                 {
@@ -88,7 +101,7 @@ namespace BreadPlayer.Themes
         }
         private static void ChangeTitleBarColor(Color color)
         {
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
                 var statusBar = StatusBar.GetForCurrentView();
                 statusBar.BackgroundColor = color;

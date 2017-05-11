@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using BreadPlayer.Core.Models;
 using ManagedBass;
@@ -29,10 +30,10 @@ namespace BreadPlayer.Core.Engines.BASSEngine
     {
         #region Fields
 
-        private int _handle = 0;
+        private int _handle;
         private int _fxEq;
-        private float[] _defaultCenterFrequencyList = new float[] { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
-        private float[] _oldEqualizerSettings = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private float[] _defaultCenterFrequencyList = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
+        private float[] _oldEqualizerSettings = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it  
         #endregion
 
@@ -94,7 +95,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             eq.lChannel = FXChannelFlags.All;
             //init equalizer bands
             if (EqualizerBands.Count < 10)
+            {
                 InitializeEqualizerBands(eq);
+            }
         }
         private void LoadEqualizerSettings()
         {
@@ -125,9 +128,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 eq.lBand = i;
                 eq.fCenter = _defaultCenterFrequencyList[i];
                 var res = Bass.FXSetParameters(_fxEq, eq);
-                EqualizerBand band = new EqualizerBand();
-                band.Center = eq.fCenter;
-                band.Gain = eq.fGain;
+                EqualizerBand band = new EqualizerBand()
+                {
+                    Center = eq.fCenter,
+                    Gain = eq.fGain
+                };
                 band.PropertyChanged += Band_PropertyChanged;
                 EqualizerBands.Add(band);
             }
@@ -139,9 +144,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         /// <param name="freq">Gain to set</param>
         private void UpdateEqBand(int band, float freq)
         {
-            PeakEQParameters eq = new PeakEQParameters();
-            // get values of the selected band
-            eq.lBand = band;
+            PeakEQParameters eq = new PeakEQParameters()
+            {
+                // get values of the selected band
+                lBand = band
+            };
             Bass.FXGetParameters(_fxEq, eq);
             eq.fGain = freq;
             Bass.FXSetParameters(_fxEq, eq);
@@ -153,7 +160,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             _handle = coreHandle;
             var version = BassFx.Version;
-            _myDspAddr = new DSPProcedure(SetPreamp);
+            _myDspAddr = SetPreamp;
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
             EnableDisableEqualizer();
         }
@@ -166,7 +173,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 //LoadEqualizerSettings();
             }
             else
+            {
                 DisableEqualizer();
+            }
         }
         public void ResetEqualizer()
         {
@@ -175,7 +184,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         #endregion
 
         #region Events  
-        private void Effects_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Effects_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "EnableEq")
             {
@@ -183,7 +192,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
             SaveEqualizerSettings();
         }
-        private void Band_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Band_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var band = sender as EqualizerBand;
             if (e.PropertyName == "Gain")
@@ -198,13 +207,18 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
             if (_preamp == 1f || length == 0 || buffer == IntPtr.Zero)
+            {
                 return;
+            }
+
             var pointer = (float*)buffer;
 
             var n = length / 4; // float is 4 bytes
 
             for (int i = 0; i < n; ++i)
+            {
                 pointer[i] *= _preamp;
+            }
         }
         #endregion
     }

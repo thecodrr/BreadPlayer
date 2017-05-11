@@ -15,13 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.ViewModels;
-using Windows.ApplicationModel.DataTransfer;
 using BreadPlayer.Core.Models;
+using BreadPlayer.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -60,9 +62,9 @@ namespace BreadPlayer
                 var selectedGroup = e.SourceItem.Item as string;
                 Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;
-                e.DestinationItem = new SemanticZoomLocation()
+                e.DestinationItem = new SemanticZoomLocation
                 {
-                    Bounds = new Windows.Foundation.Rect(0, 0, 1, 1),
+                    Bounds = new Rect(0, 0, 1, 1),
                     Item = myGroup
                 };
             }

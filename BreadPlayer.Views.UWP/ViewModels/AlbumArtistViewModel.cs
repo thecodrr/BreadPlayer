@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
-using BreadPlayer.Messengers;
 using BreadPlayer.Database;
+using BreadPlayer.Messengers;
 
 namespace BreadPlayer.ViewModels
 {
@@ -13,9 +15,9 @@ namespace BreadPlayer.ViewModels
         #region Database Methods
 
         private AlbumService AlbumService { get; set; }
-        public void InitDB()
+        public void InitDb()
         {
-            AlbumService = new AlbumService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Albums", "AlbumsText"));
+            AlbumService = new AlbumService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Albums", "AlbumsText"));
         }       
         #endregion
 
@@ -32,8 +34,8 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public AlbumArtistViewModel()
         {
-            InitDB();
-            Messenger.Instance.Register(MessageTypes.MSG_ADD_ALBUMS, new Action<Message>(HandleAddAlbumMessage));
+            InitDb();
+            Messenger.Instance.Register(MessageTypes.MsgAddAlbums, new Action<Message>(HandleAddAlbumMessage));
         }
 
       
@@ -42,10 +44,12 @@ namespace BreadPlayer.ViewModels
             AlbumCollection.AddRange(await AlbumService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
+            {
                 AlbumsLoaded = false;
+            }
         }
 
-        private void AlbumCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void AlbumCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //Albums are loaded, we can now hide the progress ring.
             if (AlbumCollection.Count > 0)
@@ -53,27 +57,29 @@ namespace BreadPlayer.ViewModels
                 AlbumsLoaded = false;
             }
             else
+            {
                 AlbumsLoaded = true;
+            }
         }
 
-        private bool albumsLoaded = true;
+        private bool _albumsLoaded = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
         public bool AlbumsLoaded
         {
-            get => albumsLoaded;
-            set => Set(ref albumsLoaded, value);
+            get => _albumsLoaded;
+            set => Set(ref _albumsLoaded, value);
         }
 
-        private ThreadSafeObservableCollection<Album> albumcollection;
+        private ThreadSafeObservableCollection<Album> _albumcollection;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
         public ThreadSafeObservableCollection<Album> AlbumCollection
         {
-            get { if (albumcollection == null) albumcollection = new ThreadSafeObservableCollection<Album>(); return albumcollection; }
-            set => Set(ref albumcollection, value);
+            get { if (_albumcollection == null) { _albumcollection = new ThreadSafeObservableCollection<Album>(); } return _albumcollection; }
+            set => Set(ref _albumcollection, value);
         }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
@@ -88,7 +94,7 @@ namespace BreadPlayer.ViewModels
                 foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
                     var firstSong = albumGroup.First() ?? new Mediafile();
-                    Album album = new Album()
+                    Album album = new Album
                     {
                         Artist = firstSong?.LeadArtist,
                         AlbumName = albumGroup.Key,
@@ -96,7 +102,7 @@ namespace BreadPlayer.ViewModels
                     };                           
                     albums.Add(album);
                 }
-            }).ContinueWith(async(task) =>
+            }).ContinueWith(asynctask =>
             {
                 await AlbumService.InsertAlbums(albums);
                 AlbumCollection.AddRange(albums);

@@ -22,21 +22,21 @@ namespace ViewModels
         /// <summary>
         /// Keep a list of any children ViewModels so we can safely remove them when this ViewModel gets closed
         /// </summary>
-        private List<BaseViewModel> childViewModels = new List<BaseViewModel>();
-        public List<BaseViewModel> ChildViewModels => childViewModels;
+        private List<BaseViewModel> _childViewModels = new List<BaseViewModel>();
+        public List<BaseViewModel> ChildViewModels => _childViewModels;
 
         #region Bindable Properties
 
         #region ViewData
-        private BaseViewData viewData;
+        private BaseViewData _viewData;
         public BaseViewData ViewData
         {
-            get => viewData;
+            get => _viewData;
             set
             {
-                if (value != viewData)
+                if (value != _viewData)
                 {
-                    viewData = value;
+                    _viewData = value;
                     RaisePropertyChanged("ViewData");
                 }
 
@@ -46,12 +46,7 @@ namespace ViewModels
         #endregion
       
         #region Constructor
-        /// <summary>
-        /// Parameterless Constructor required for support of DesignTime versions of View Models
-        /// </summary>
-        public BaseViewModel()
-        {
-        }        
+
         #endregion
 
         #region public methods
@@ -63,7 +58,7 @@ namespace ViewModels
         {
            // Controller.Messenger.DeRegister(this);
             ViewModelClosing?.Invoke(dialogResult);
-            foreach (var childViewModel in childViewModels)
+            foreach (var childViewModel in _childViewModels)
             {
                 childViewModel.CloseViewModel(dialogResult);
             }

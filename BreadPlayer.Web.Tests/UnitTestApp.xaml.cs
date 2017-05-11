@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.VisualStudio.TestPlatform.TestExecutor;
 
 namespace BreadPlayer.Web.Tests
 {
@@ -31,7 +33,7 @@ namespace BreadPlayer.Web.Tests
         {
 
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
                 DebugSettings.EnableFrameRateCounter = true;
             }
@@ -57,12 +59,12 @@ namespace BreadPlayer.Web.Tests
                 Window.Current.Content = rootFrame;
             }
             
-            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
+            UnitTestClient.CreateDefaultUI();
 
             // Ensure the current window is active
             Window.Current.Activate();
 
-            Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(e.Arguments);
+            UnitTestClient.Run(e.Arguments);
         }
 
         /// <summary>

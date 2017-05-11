@@ -6,7 +6,7 @@ namespace BreadPlayer.StateTriggers
 {
     public class AdaptiveTriggerWithCondition : StateTriggerBase, ITriggerValue
     {
-        private static double CurrentValue;
+        private static double _currentValue;
         #region Constructors
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace BreadPlayer.StateTriggers
             Window.Current.SizeChanged += MainWindow_SizeChanged;
 
             // Set initial value
-            CurrentValue = GetCurrentValue();
+            _currentValue = GetCurrentValue();
         }
 
         #endregion
@@ -38,7 +38,7 @@ namespace BreadPlayer.StateTriggers
 
         private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs windowSizeChangedEventArgs)
         {
-            CurrentValue = GetCurrentValue();
+            _currentValue = GetCurrentValue();
         }
 
         #endregion
@@ -79,8 +79,10 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (AdaptiveTriggerWithCondition)d;
             var val = (bool)e.NewValue;
-            if (CurrentValue >= obj.MinWindowWidth && CurrentValue < 900)
+            if (_currentValue >= obj.MinWindowWidth && _currentValue < 900)
+            {
                 obj.IsActive = val;
+            }
             //else if (deviceFamily == "Windows.Desktop")
             //    obj.IsActive = (val == DeviceFamily.Desktop);
             //else if (deviceFamily == "Windows.Team")
@@ -97,7 +99,7 @@ namespace BreadPlayer.StateTriggers
 
         #region ITriggerValue
 
-        private bool m_IsActive;
+        private bool _mIsActive;
 
         /// <summary>
         /// Gets a value indicating whether this trigger is active.
@@ -105,12 +107,12 @@ namespace BreadPlayer.StateTriggers
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         public bool IsActive
         {
-            get => m_IsActive;
+            get => _mIsActive;
             private set
             {
-                if (m_IsActive != value)
+                if (_mIsActive != value)
                 {
-                    m_IsActive = value;
+                    _mIsActive = value;
                     SetActive(value);
                     IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }

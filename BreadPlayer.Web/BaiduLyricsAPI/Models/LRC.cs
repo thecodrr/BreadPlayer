@@ -1,8 +1,8 @@
 ﻿namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
-    public class LRC
+    public class Lrc
     {
         public string Title { get; set; }
-        public string LRCContent { get; set; }
+        public string LrcContent { get; set; }
     }
 }

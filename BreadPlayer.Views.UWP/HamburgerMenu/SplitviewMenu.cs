@@ -15,21 +15,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer;
-using BreadPlayer.Services;
-using BreadPlayer.Views;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Services;
+using BreadPlayer.Views;
 
 namespace SplitViewMenu
 {
@@ -74,10 +76,10 @@ namespace SplitViewMenu
         private static NavMenuListView _playlistsMenuListView;
         private static Frame _pageFrame;
         private static SplitView _splitView;
-        private static ToggleButton TogglePaneButton;
+        private static ToggleButton _togglePaneButton;
         private static AutoSuggestBox _searchBox;
         private static TextBlock _headerText;
-        private static ItemsControl shortcuts;
+        private static ItemsControl _shortcuts;
         public SplitViewMenu()
         {
             DefaultStyleKey = typeof(SplitViewMenu);
@@ -126,7 +128,10 @@ namespace SplitViewMenu
         private void OnSplitViewMenuLoaded(object sender, RoutedEventArgs e)
         {
             if (InitialPage == null || _pageFrame == null)
+            {
                 return;
+            }
+
             _pageFrame.Navigate(InitialPage);
         }
 
@@ -134,13 +139,17 @@ namespace SplitViewMenu
         {
             var menu = (SplitViewMenu)d;
             if (_navTopMenuListView != null)
+            {
                 _navTopMenuListView.ItemsSource = e.NewValue;
+            }
         }
         private static void OnBottomNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var menu = (SplitViewMenu)d;
             if (_navBottomMenuListView != null)
+            {
                 _navBottomMenuListView.ItemsSource = e.NewValue;
+            }
         }
         private static void OnPlaylistsItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -162,8 +171,8 @@ namespace SplitViewMenu
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
             _backButton = GetTemplateChild("BackButton") as Button;
             _headerText = GetTemplateChild("headerText") as TextBlock;
-            TogglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
-            shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
+            _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
+            _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemInvoked += OnNavMenuItemInvoked;
@@ -200,13 +209,15 @@ namespace SplitViewMenu
 
         private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if ((sender as AutoSuggestBox).Text.Any())
+            if (sender.Text.Any())
             {
                 UnSelectAll();
-                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query() { QueryWord = (sender as AutoSuggestBox).Text });
+                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query { QueryWord = sender.Text });
             }
             else
+            {
                 NavigationService.Instance.NavigateToHome();
+            }
         }
 
         public static DelegateCommand SearchClickedCommand()
@@ -247,19 +258,21 @@ namespace SplitViewMenu
             return cmd;
         }
 
-        private static INavigationMenuItem LastItem = new SimpleNavMenuItem();
+        private static INavigationMenuItem _lastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_navTopMenuListView.SelectedIndex > -1 || _navBottomMenuListView.SelectedIndex > -1)
             {
                 _navTopMenuListView.SelectedIndex = -1;
                 _navBottomMenuListView.SelectedIndex = -1;
-                LastItem = new SimpleNavMenuItem();
+                _lastItem = new SimpleNavMenuItem();
             }
             else
             {
                 if (e.RemovedItems.Count > 0 && _navTopMenuListView.SelectedIndex == -1)
-                    LastItem = e.RemovedItems[0] as INavigationMenuItem;
+                {
+                    _lastItem = e.RemovedItems[0] as INavigationMenuItem;
+                }
             }
         }
 
@@ -283,9 +296,15 @@ namespace SplitViewMenu
         public void BackRequested(ref bool handled)
         {
             if (_pageFrame == null)
+            {
                 return;
+            }
+
             if (!_pageFrame.CanGoBack || handled)
+            {
                 return;
+            }
+
             handled = true;
             _pageFrame.GoBack();
         }
@@ -316,16 +335,16 @@ namespace SplitViewMenu
             }
             else if(e.Parameter is Album)
             {
-                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
             }
             else if(e.Parameter is Query query)
             {
-                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem() { Label = "Search results for \"" + query.QueryWord + "\"" });
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { Label = "Search results for \"" + query.QueryWord + "\"" });
             }
         }
         public static void UnSelectAll()
         {
-            LastItem = null;
+            _lastItem = null;
             _navBottomMenuListView.SelectedIndex = -1;
             _navTopMenuListView.SelectedIndex = -1;
             _playlistsMenuListView.SelectedIndex = -1;
@@ -336,10 +355,10 @@ namespace SplitViewMenu
         }
         public static void SelectPrevious()
         {
-            if (LastItem.Label != null)
+            if (_lastItem.Label != null)
             {
-                var listView = GetParentListViewFromItem(LastItem);
-                var item = listView.Items.First(t => (t as INavigationMenuItem).Label == LastItem.Label);
+                var listView = GetParentListViewFromItem(_lastItem);
+                var item = listView.Items.First(t => (t as INavigationMenuItem).Label == _lastItem.Label);
                 var index = listView.IndexFromContainer((ListViewItem)listView.ContainerFromItem(item));
                 listView.SelectedIndex = index;
             }
@@ -351,7 +370,7 @@ namespace SplitViewMenu
         }
         public static object GetParameterFromSelectedItem()
         {
-            return LastItem.Arguments;
+            return _lastItem.Arguments;
         }
 
         private INavigationMenuItem GetItemFromList(Type sourcePagetype)
@@ -360,16 +379,15 @@ namespace SplitViewMenu
             {
                 return null;
             }
-            else if (sourcePagetype == typeof(SettingsView))
+            if (sourcePagetype == typeof(SettingsView))
             {
                 return BottomNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
             }
-            else if (sourcePagetype == typeof(AlbumArtistView))
+            if (sourcePagetype == typeof(AlbumArtistView))
             {
                 return TopNavigationItems[2];
             }
-            else
-                return null;
+            return null;
         }
 
         private static NavMenuListView GetParentListViewFromItem(INavigationMenuItem item)
@@ -378,19 +396,19 @@ namespace SplitViewMenu
             {
                 return _navTopMenuListView;
             }
-            else if (item.DestinationPage == typeof(PlaylistView))
+            if (item.DestinationPage == typeof(PlaylistView))
             {
                 return _playlistsMenuListView;
             }
-            else
-            {
-                return _navBottomMenuListView;
-            }
+            return _navBottomMenuListView;
         }
         private async void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
+            {
                 return;
+            }
+
             var item = GetItemFromList(e.SourcePageType);
             if (item == null && _pageFrame.BackStackDepth > 0)
             {
@@ -400,7 +418,9 @@ namespace SplitViewMenu
                     {
                         var para = entry.Parameter; //get previous entry's parameter
                         if (para is Playlist playlist)
+                        {
                             item = PlaylistsItems.SingleOrDefault(p => p.Label == playlist.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                        }
                         else if (para is Album album)
                         {
                             _pageFrame.Navigate(typeof(PlaylistView), album);
@@ -412,13 +432,18 @@ namespace SplitViewMenu
                     {
                         var para = entry.Parameter;
                         if (para != null)
+                        {
                             item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
+                        }
                         else
+                        {
                             item = TopNavigationItems[3];
-
+                        }
                     }
                     if (item != null)
+                    {
                         break;  //if item is successfully got break the loop. We got what we needed.
+                    }
                 }
             }
             if (item != null)
@@ -426,11 +451,16 @@ namespace SplitViewMenu
                 await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
                 var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
                 if (container != null)
+                {
                     container.IsTabStop = false;
+                }
+
                 GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
                 container.IsSelected = true;
                 if (container != null)
+                {
                     container.IsTabStop = true;
+                }
             }
         }
 
@@ -438,11 +468,11 @@ namespace SplitViewMenu
         {
             if (item != null) 
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
                 { 
                 _headerText.DataContext = item;
-                shortcuts.DataContext = item.Shortcuts;
-                shortcuts.ItemsSource = item.Shortcuts;
+                _shortcuts.DataContext = item.Shortcuts;
+                _shortcuts.ItemsSource = item.Shortcuts;
                 });
             }
         }
@@ -463,13 +493,13 @@ namespace SplitViewMenu
                 else
                 {
                     if (item?.DestinationPage != null &&
-                        item.Label != LastItem?.Label)
+                        item.Label != _lastItem?.Label)
                     {
                         _pageFrame.Navigate(item.DestinationPage, item.Arguments);
 
                     }
                 }
-                LastItem = item;
+                _lastItem = item;
             }
             else
             {

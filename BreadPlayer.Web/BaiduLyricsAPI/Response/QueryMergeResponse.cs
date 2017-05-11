@@ -4,6 +4,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     public class QueryMergeResponse : BaseResponse
     {
-        public QueryResult result { get; set; }
+        public QueryResult Result { get; set; }
     }
 }

@@ -2,11 +2,11 @@
 
 public class InitializeFramework
 {
-    private static IDispatcher dispatcher;
+    private static IDispatcher _dispatcher;
     public static IDispatcher Dispatcher
     {
-        get => dispatcher;
-        set => dispatcher = value;
+        get => _dispatcher;
+        set => _dispatcher = value;
     }
     public InitializeFramework(IDispatcher dispatcher)
     {

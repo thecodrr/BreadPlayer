@@ -15,70 +15,69 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer;
+
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BreadPlayer;
 using BreadPlayer.Core.Common;
+using BreadPlayer.Services;
 
 namespace SplitViewMenu
 {
 	public class SimpleNavMenuItem :  ViewModelBase, INavigationMenuItem
     {
-        public SimpleNavMenuItem()
-        {
-
-        }
-
-        private string label;
-        public string Label { get => label;
-            set => Set(ref label, value);
+        private string _label;
+        public string Label { get => _label;
+            set => Set(ref _label, value);
         }
         public Symbol Symbol { get; set; }
         public char SymbolAsChar => (char) Symbol;
         public string FontGlyph { get; set; }
-        private object args;
-        public object Arguments { get => args;
-            set => Set(ref args, value);
+        private object _args;
+        public object Arguments { get => _args;
+            set => Set(ref _args, value);
         }
         public Visibility HeaderVisibility
         {
             get; set;
         } = Visibility.Visible;
 
-        private ElementTheme shortcutTheme;
+        private ElementTheme _shortcutTheme;
         public ElementTheme ShortcutTheme
         {
-            get => shortcutTheme;
-            set => Set(ref shortcutTheme, value);
+            get => _shortcutTheme;
+            set => Set(ref _shortcutTheme, value);
         }
         public ICommand Command { get; set; }
 
-        private List<Shortcut> shortcuts = new List<Shortcut>()
+        private List<Shortcut> _shortcuts = new List<Shortcut>
         {
-            new Shortcut() { SymbolAsChar = "\xE00E", Tooltip = "Go Back",
-                ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.NavigateBack()) },
-            new Shortcut() { SymbolAsChar = "\xE149",
+            new Shortcut
+            { SymbolAsChar = "\xE00E", Tooltip = "Go Back",
+                ShortcutCommand = new DelegateCommand(() => NavigationService.Instance.NavigateBack()) },
+            new Shortcut
+            { SymbolAsChar = "\xE149",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
-                    BreadPlayer.Services.NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
+                    NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
                 }),
-                Tooltip = "Refresh",
+                Tooltip = "Refresh"
             },
             new Shortcut { SymbolAsChar = "\xE80F",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
-                    BreadPlayer.Services.NavigationService.Instance.NavigateToHome();
+                    NavigationService.Instance.NavigateToHome();
                 }),
-                Tooltip = "Go Home",
+                Tooltip = "Go Home"
             },
-            new Shortcut() { SymbolAsChar = "\xE094", Tooltip = "Search Tracks", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
+            new Shortcut { SymbolAsChar = "\xE094", Tooltip = "Search Tracks", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
         };
         public List<Shortcut> Shortcuts
         {
-            get => shortcuts;
-            set => Set(ref shortcuts, value);
+            get => _shortcuts;
+            set => Set(ref _shortcuts, value);
         }
         public string Tooltip { get; set; }
 

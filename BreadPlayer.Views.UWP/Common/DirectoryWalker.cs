@@ -15,12 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Search;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Search;
 using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Common
@@ -29,7 +30,7 @@ namespace BreadPlayer.Common
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new string[] { ".mp3" });
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new[] { ".mp3" });
             options.FileTypeFilter.Add(".wav");
             options.FileTypeFilter.Add(".ogg");
             options.FileTypeFilter.Add(".flac");
@@ -39,20 +40,24 @@ namespace BreadPlayer.Common
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
-            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new string[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
             if(aqsQuery != null)
+            {
                 options.ApplicationSearchFilter += "kind:music " + aqsQuery;
-           
+            }
+
             return options;
         }
-        public static async Task<List<StorageFile>> GetModifiedFiles(IEnumerable<StorageFolder> folderCollection, string TimeModified)
+        public static async Task<List<StorageFile>> GetModifiedFiles(IEnumerable<StorageFolder> folderCollection, string timeModified)
         {
             List<StorageFile> modifiedFiles = new List<StorageFile>();        
             foreach (var folder in folderCollection)
             {
-                StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(GetQueryOptions("datemodified:> " + TimeModified));
+                StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(GetQueryOptions("datemodified:> " + timeModified));
                 if (await modifiedqueryResult.GetItemCountAsync() > 0)
+                {
                     modifiedFiles.AddRange(await modifiedqueryResult.GetFilesAsync());
+                }
             }
             return modifiedFiles;
         }

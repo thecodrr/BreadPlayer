@@ -28,7 +28,7 @@ namespace BreadPlayer.Core.Common
 
         public DelegateCommand(Action action)
         {
-            this._action = action;
+            _action = action;
             _enabled = true;
         }
 

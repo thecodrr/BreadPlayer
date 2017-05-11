@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,11 +39,11 @@ namespace BreadPlayer.Extensions
     {
         public static T FindChildOfType<T>(this DependencyObject root) where T : class
         {
-            var MyQueue = new Queue<DependencyObject>();
-            MyQueue.Enqueue(root);
-            while (MyQueue.Count > 0)
+            var myQueue = new Queue<DependencyObject>();
+            myQueue.Enqueue(root);
+            while (myQueue.Count > 0)
             {
-                DependencyObject current = MyQueue.Dequeue();
+                DependencyObject current = myQueue.Dequeue();
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++)
                 {
                     var child = VisualTreeHelper.GetChild(current, i);
@@ -51,7 +52,7 @@ namespace BreadPlayer.Extensions
                     {
                         return typedChild;
                     }
-                    MyQueue.Enqueue(child);
+                    myQueue.Enqueue(child);
                 }
             }
             return null;

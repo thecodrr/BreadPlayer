@@ -5,12 +5,12 @@
 /* ========================================================================================== */
 
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
+using BreadPlayer.Fmod.CoreDSP;
 using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
 using static BreadPlayer.Fmod.Callbacks;
-using BreadPlayer.Fmod.CoreDSP;
 
 namespace BreadPlayer.Fmod
 {

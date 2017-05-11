@@ -185,7 +185,7 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur}"/>
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVm.EnableBlur}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="backgroundBlur.Visibility" Value="Visible"/>
@@ -193,7 +193,7 @@
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVM.EnableBlur, Converter={StaticResource TrueToFalse}}"/>
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVm.EnableBlur, Converter={StaticResource TrueToFalse}}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="backgroundBlur.Visibility" Value="Collapsed"/>

@@ -1,42 +1,40 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BreadPlayer.Core.Models;
+using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Common
 {
     public class ConfigSaver
     {
         //Config from VLC
-        private Config _rock = new Config()
-        { Name = "Rock", Values = new float[] { 20, 12, 14, -20, -8, 1, 22, 28, 28, 28 } };
+        private Config _rock = new Config { Name = "Rock", Values = new float[] { 20, 12, 14, -20, -8, 1, 22, 28, 28, 28 } };
 
-        private Config _classical = new Config()
+        private Config _classical = new Config
         {
             Name = "Classical",
             Values = new float[] { 0, 0, 0, 0, 0, 0, -18, -18, -18, -24 }
         };
 
-        private Config _club = new Config() { Name = "Club", Values = new float[] { 0, 0, 20, 14, 14, 14, 8, 0, 0, 0 } };
+        private Config _club = new Config { Name = "Club", Values = new float[] { 0, 0, 20, 14, 14, 14, 8, 0, 0, 0 } };
 
-        private Config _dance = new Config()
+        private Config _dance = new Config
         {
             Name = "Dance",
             Values = new float[] { 24, 18, 6, 0, 0, -14, -18, -18, 0, 0 }
         };
 
-        private Config _fullBass = new Config()
+        private Config _fullBass = new Config
         {
             Name = "FullBass",
-            Values = new float[] { -20, 24, 24, 14, -4, -1, -20, -25.75f, -28, -28 }
+            Values = new[] { -20, 24, 24, 14, -4, -1, -20, -25.75f, -28, -28 }
         };
 
-        private Config _fullBassAndTreble = new Config()
+        private Config _fullBassAndTreble = new Config
         {
             Name = "FullBassAndTreble",
-            Values = new float[] { 18, 14, 0, -18, -12, 4, 20, 28, 30, 30 },
+            Values = new float[] { 18, 14, 0, -18, -12, 4, 20, 28, 30, 30 }
         };
-        public static readonly float[][] EqDefaultValues = new[]
-           {
+        public static readonly float[][] EqDefaultValues = {
               new[] {32f, 1f, 0f},
               new[] {64f, 1f, 0f},
               new[] {125f, 1f, 0f},
@@ -57,7 +55,7 @@ namespace BreadPlayer.Core.Common
         public List<EqualizerSettings> GetSettings()
         {
             List<EqualizerSettings> equalizerSettings = new List<EqualizerSettings>();
-            List<Config> listConfigs = new List<Config>() { _rock, _classical, _club, _dance, _fullBass, _fullBassAndTreble };
+            List<Config> listConfigs = new List<Config> { _rock, _classical, _club, _dance, _fullBass, _fullBassAndTreble };
             foreach (var config in listConfigs)
             {
                 Dictionary<string, float> bands = new Dictionary<string, float>();

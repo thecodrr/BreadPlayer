@@ -2,15 +2,15 @@
 {
     public class BitRate
     {
-        public int file_bitrate { get; set; }
-        public string file_link { get; set; }
-        public string file_extension { get; set; }
-        public int original { get; set; }
-        public int file_size { get; set; }
-        public int file_duration { get; set; }
-        public string show_link { get; set; }
-        public int song_file_id { get; set; }
-        public string replay_gain { get; set; }
-        public int free { get; set; }
+        public int FileBitrate { get; set; }
+        public string FileLink { get; set; }
+        public string FileExtension { get; set; }
+        public int Original { get; set; }
+        public int FileSize { get; set; }
+        public int FileDuration { get; set; }
+        public string ShowLink { get; set; }
+        public int SongFileId { get; set; }
+        public string ReplayGain { get; set; }
+        public int Free { get; set; }
     }
 }

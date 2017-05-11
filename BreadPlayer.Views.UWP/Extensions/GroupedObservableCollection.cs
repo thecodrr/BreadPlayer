@@ -15,13 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Extensions
@@ -30,18 +32,18 @@ namespace BreadPlayer.Extensions
         where TKey : IComparable<TKey>
         where TElement : IComparable<TElement>
     {
-        private readonly Func<TElement, TKey> readKey;
+        private readonly Func<TElement, TKey> _readKey;
 
         /// <summary>
         /// This is used as an optimisation for when items are likely to be added in key order and there is a good probability
         /// that when an item is added, then next one will be in the same grouping.
         /// </summary>
-        private Grouping<TKey, TElement> lastEffectedGroup;
+        private Grouping<TKey, TElement> _lastEffectedGroup;
         private bool _isObserving;
 
         public GroupedObservableCollection(Func<TElement, TKey> readKey)
         {
-            this.readKey = readKey;
+            _readKey = readKey;
         }
         public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
             : this(readKey)
@@ -51,7 +53,9 @@ namespace BreadPlayer.Extensions
             Elements.AddRange(items);
             // this.AddRange(items, false);
             foreach (var item in items)
+            {
                 AddItem(item);
+            }
             //foreach (var item in items)
             //{
             //    this.AddItem(item, false);
@@ -68,7 +72,7 @@ namespace BreadPlayer.Extensions
         }
         public bool Contains(TElement item, Func<TElement, TElement, bool> compare)
         {
-            var key = readKey(item);
+            var key = _readKey(item);
             var group = TryFindGroup(key);
             return group != null && group.Any(i => compare(item, i));
         }
@@ -81,9 +85,12 @@ namespace BreadPlayer.Extensions
         {
             try
             {
-                var key = readKey(item);
+                var key = _readKey(item);
                 if (addToElement)
+                {
                     Elements.AddSorted(item);
+                }
+
                 var s = FindOrCreateGroup(key);
                 s.Add(item);
             }
@@ -100,10 +107,15 @@ namespace BreadPlayer.Extensions
             try
             { 
                 // get out if no new items
-                if (range == null || !range.Any()) return;
+                if (range == null || !range.Any())
+                {
+                    return;
+                }
 
                 if (!addkey)
+                {
                     Elements.AddSortedRange(range);
+                }
                 // add the items, making sure no events are fired
                 _isObserving = false;
 
@@ -144,24 +156,29 @@ namespace BreadPlayer.Extensions
             try
             {
                 if (_isObserving)
+                {
                     base.OnCollectionChanged(e);
+                }
             }
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
-                System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+                Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             try
             {
-                if (_isObserving) base.OnPropertyChanged(e);
+                if (_isObserving)
+                {
+                    base.OnPropertyChanged(e);
+                }
             }
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
-                System.Diagnostics.Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
+                Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
         public void RemoveItem(TElement item)
@@ -279,14 +296,14 @@ namespace BreadPlayer.Extensions
         }
         public bool Remove(TElement item)
         {
-            var key = readKey(item);
+            var key = _readKey(item);
             var group = TryFindGroup(key);
             var success = group != null && group.Remove(item);
 
             if (group != null && group.Count == 0)
             {
                 Remove(group);
-                lastEffectedGroup = null;
+                _lastEffectedGroup = null;
             }
 
             return success;
@@ -294,14 +311,14 @@ namespace BreadPlayer.Extensions
 
         private Grouping<TKey, TElement> TryFindGroup(TKey key)
         {
-            if (lastEffectedGroup != null && lastEffectedGroup.Key.Equals(key))
+            if (_lastEffectedGroup != null && _lastEffectedGroup.Key.Equals(key))
             {
-                return lastEffectedGroup;
+                return _lastEffectedGroup;
             }
 
             var group = this.FirstOrDefault(i => i.Key.Equals(key));
 
-            lastEffectedGroup = group;
+            _lastEffectedGroup = group;
 
             return group;
         }
@@ -309,9 +326,9 @@ namespace BreadPlayer.Extensions
         private Grouping<TKey, TElement> FindOrCreateGroup(TKey key)
         {
             Grouping<TKey, TElement> result = null;
-            if (lastEffectedGroup != null && lastEffectedGroup.Key.Equals(key))
+            if (_lastEffectedGroup != null && _lastEffectedGroup.Key.Equals(key))
             {
-                return lastEffectedGroup;
+                return _lastEffectedGroup;
             }
 
             try
@@ -339,7 +356,7 @@ namespace BreadPlayer.Extensions
                     result = match.group;
                 }
 
-                lastEffectedGroup = result;
+                _lastEffectedGroup = result;
             }
             catch (Exception ex)
             {

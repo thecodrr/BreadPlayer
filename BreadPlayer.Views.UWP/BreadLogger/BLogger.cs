@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using XLog.Formatters;
-using XLog;
-using System.IO;
 using Windows.Storage;
+using Windows.Storage.Search;
+using BreadPlayer.Common;
 using BreadPlayer.Targets;
+using XLog;
+using XLog.Formatters;
 
 public class BLogger
 {
-    private static Logger logger;
+    private static Logger _logger;
     public static Logger Logger
     {
-        get => logger;
-        set => logger = value;
+        get => _logger;
+        set => _logger = value;
     }
     public static void InitLogger()
     {
@@ -32,17 +34,19 @@ public class BLogger
         {
             await logFile.CopyAsync(ApplicationData.Current.TemporaryFolder, "breadplayer.log", NameCollisionOption.GenerateUniqueName);
         }
-        if (BreadPlayer.Common.RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true))
+        if (RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true))
         {
             int totalErrorCount = 0;
             var logfiles = new List<StorageFile>();
 
-            foreach (var lf in await ApplicationData.Current.TemporaryFolder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.DefaultQuery))
+            foreach (var lf in await ApplicationData.Current.TemporaryFolder.GetFilesAsync(CommonFileQuery.DefaultQuery))
             {
                 int exceptionCount = GetExceptionCount(await new StreamReader(await lf.OpenStreamForReadAsync()).ReadToEndAsync());
                 totalErrorCount += exceptionCount;
                 if (exceptionCount > 0)
+                {
                     logfiles.Add(lf);
+                }
             }
             if (logfiles.Count > 0 && totalErrorCount > 0)
             {
@@ -53,16 +57,22 @@ public class BLogger
 
     private static int GetExceptionCount(string text)
     {
-        char[] delimiters = new char[] { ' ', '\r', '\n', '|', ',', '.' };
+        char[] delimiters = { ' ', '\r', '\n', '|', ',', '.' };
         Dictionary<string, int> count =
      text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
      .GroupBy(s => s)
      .ToDictionary(g => g.Key, g => g.Count());
         int errorCount = 0;
         if (count.ContainsKey("Error".ToUpper()))
+        {
             errorCount += count["Error".ToUpper()];
+        }
+
         if (count.ContainsKey("Fatal".ToUpper()))
+        {
             errorCount += count["Fatal".ToUpper()];
+        }
+
         return errorCount;
     }
     //static async Task MailLogFileAsync(IReadOnlyList<StorageFile> logFiles, int exceptionCount)

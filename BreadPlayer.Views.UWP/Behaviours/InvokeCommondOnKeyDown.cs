@@ -15,13 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using Microsoft.Xaml.Interactivity;
+
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using Microsoft.Xaml.Interactivity;
 
 namespace BreadPlayer.Behaviours
 {

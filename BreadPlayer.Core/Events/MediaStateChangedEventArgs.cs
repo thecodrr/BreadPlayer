@@ -25,9 +25,9 @@ namespace BreadPlayer.Core.Events
 	public class MediaStateChangedEventArgs : EventArgs
     {
         private PlayerState _newState;
-        public MediaStateChangedEventArgs(PlayerState NewState)
+        public MediaStateChangedEventArgs(PlayerState newState)
         {
-            _newState = NewState;
+            _newState = newState;
         } // eo ctor
 
         public PlayerState NewState => _newState;

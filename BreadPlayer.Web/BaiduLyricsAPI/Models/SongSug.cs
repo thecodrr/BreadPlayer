@@ -1,23 +1,23 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI.Interface;
-using System;
+﻿using System;
+using BreadPlayer.Web.BaiduLyricsAPI.Interface;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
     public class SongSug : AbstractMusic, IQueryResult
     {
-        public string songid;
-        public string songname;
-        public string encrypted_songid;
-        public string has_mv;
-        public string yyr_artist;
-        public string artistname;
-        public string control;
+        public string Songid;
+        public string Songname;
+        public string EncryptedSongid;
+        public string HasMv;
+        public string YyrArtist;
+        public string Artistname;
+        public string Control;
 
-        public BitRate bitrate;
-        public SongInfo songInfo;
+        public BitRate Bitrate;
+        public SongInfo SongInfo;
         public string GetName()
         {
-            return songname;
+            return Songname;
         }
         
         public QueryType GetSearchResultType()
@@ -27,13 +27,13 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
         
         public override Uri GetDataSoure()
         {
-            string url = bitrate != null ? bitrate.file_link : Util.Util.GetDownloadUrlBySongId(songid);
+            string url = Bitrate != null ? Bitrate.FileLink : Util.Util.GetDownloadUrlBySongId(Songid);
             return new Uri(url);
         }
         
         public override Int32 GetDuration()
         {
-            return bitrate != null ? bitrate.file_duration * 1000 : 0;
+            return Bitrate != null ? Bitrate.FileDuration * 1000 : 0;
         }
         
         public override MusicType GetMusicType()
@@ -43,24 +43,24 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
         
         public override string GetTitle()
         {
-            return songname;
+            return Songname;
         }
         
         public override string GetArtist()
         {
-            return artistname;
+            return Artistname;
         }
 
         //返回""加载默认的图片
         public string GetArtPic()
         {
-            return songInfo != null ? songInfo.pic_small : "";
+            return SongInfo != null ? SongInfo.PicSmall : "";
         }
         
-        public override void LoadArtPic(OnLoadListener loadListener)
+        public override void LoadArtPic(IOnLoadListener loadListener)
         {
         }
-        public override void LoadArtPic(PicSizeType picSizeType, OnLoadListener loadListener)
+        public override void LoadArtPic(PicSizeType picSizeType, IOnLoadListener loadListener)
         {
 
         }

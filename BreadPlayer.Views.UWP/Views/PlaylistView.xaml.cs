@@ -15,11 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.ViewModels;
-using BreadPlayer.Extensions;
+
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Extensions;
+using BreadPlayer.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,33 +32,33 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class PlaylistView
     {
-        private double MaxFontSize;
-        private double MinFontSize;
+        private double _maxFontSize;
+        private double _minFontSize;
         public PlaylistView()
         {
             InitializeComponent();
             Window.Current.SizeChanged += Current_SizeChanged;
-            MaxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
-            MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            MaxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
-            MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
-        private PlaylistViewModel PlaylistVM;
+        private PlaylistViewModel _playlistVm;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            PlaylistVM = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
-            PlaylistVM.Init(e.Parameter);
-            DataContext = PlaylistVM;
+            _playlistVm = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
+            _playlistVm.Init(e.Parameter);
+            DataContext = _playlistVm;
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            PlaylistVM.Songs.Clear();
+            _playlistVm.Songs.Clear();
             base.OnNavigatedFrom(e);
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)
@@ -72,7 +74,7 @@ namespace BreadPlayer
                 {
                    art.ZoomAnimate(264, 354, "Height");
                 }
-                if (headerText.FontSize < MaxFontSize)
+                if (headerText.FontSize < _maxFontSize)
                 {
                     headerText.FontSize = headerText.FontSize + 2;
                     headerDesc.FontSize++;
@@ -84,7 +86,7 @@ namespace BreadPlayer
                 {
                     art.ZoomAnimate(354, 264, "Height");
                 }
-                if (headerText.FontSize > MinFontSize)
+                if (headerText.FontSize > _minFontSize)
                 {
                     headerText.FontSize = headerText.FontSize - 2;
                     headerDesc.FontSize--;

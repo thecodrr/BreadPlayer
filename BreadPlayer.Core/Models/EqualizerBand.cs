@@ -5,7 +5,10 @@
         private string FormatNumber(float num)
         {
             if (num >= 100000)
+            {
                 return FormatNumber(num / 1000) + "K";
+            }
+
             if (num >= 1000)
             {
                 return (num / 1000D).ToString("0.#") + "K";

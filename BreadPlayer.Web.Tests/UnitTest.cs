@@ -1,16 +1,16 @@
-﻿using Xunit;
-using BreadPlayer.Web.Lastfm;
-using System.Threading.Tasks;
-using BreadPlayer.Web._123music;
+﻿using System.Threading.Tasks;
 using BreadPlayer.Web.BaiduLyricsAPI;
+using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Web.TagParser;
+using BreadPlayer.Web._123music;
 using IF.Lastfm.Core.Api.Helpers;
+using Xunit;
 
 namespace MyFirstUWPTests
 {
     public class UnitTest
     {
-        private InitializeLastfm init = new InitializeLastfm();
+        private InitializeLastfm _init = new InitializeLastfm();
         [Theory]
         [InlineData("","")]
         [InlineData("", "")]
@@ -39,28 +39,28 @@ namespace MyFirstUWPTests
         [InlineData("Collage")]
         public async void _123MusicAPISearchTest(string term)
         {
-            Assert.True(await new API().SearchSongs(term));
+            Assert.True(await new Api().SearchSongs(term));
         }
         [Theory]
-        [InlineData(DataType._new)]
-        [InlineData(DataType._hot)]
+        [InlineData(DataType.New)]
+        [InlineData(DataType.Hot)]
         public async void SongsListTest(DataType term)
         {
-            Assert.True(await new API().GetSongsList(term));
+            Assert.True(await new Api().GetSongsList(term));
         }
         [Theory]
-        [InlineData(DataType._new)]
-        [InlineData(DataType._hot)]
+        [InlineData(DataType.New)]
+        [InlineData(DataType.Hot)]
         public async void ArtistsListTest(DataType term)
         {
-            Assert.True(await new API().GetArtistsList(term));
+            Assert.True(await new Api().GetArtistsList(term));
         }
         [Theory]
-        [InlineData(DataType._new)]
-        [InlineData(DataType._hot)]
+        [InlineData(DataType.New)]
+        [InlineData(DataType.Hot)]
         public async void AlbumsListTest(DataType term)
         {
-            Assert.True(await new API().GetAlbumsList(term));
+            Assert.True(await new Api().GetAlbumsList(term));
         }
         [Theory]
         [InlineData("172072")]
@@ -92,14 +92,14 @@ namespace MyFirstUWPTests
 
         private async Task<LastResponse> HasScrobbled(params string[] mediaFile)
         {
-            await init.Login("thecodrr", "Allatonce1.1");
-            Lastfm last = new Lastfm(init.Auth.Auth);
+            await _init.Login("thecodrr", "Allatonce1.1");
+            Lastfm last = new Lastfm(_init.Auth.Auth);
             return await last.Scrobble(mediaFile);
         }
 
         private async Task<bool> IsLoggedIn(string user, string pass)
         {
-            return await init.Login(user, pass);
+            return await _init.Login(user, pass);
         }
     }
 }

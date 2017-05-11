@@ -4,7 +4,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     public class SongPlayResponse : BaseResponse
     {
-        public BitRate bitrate { get; set; }
-        public SongInfo songinfo { get; set; }
+        public BitRate Bitrate { get; set; }
+        public SongInfo Songinfo { get; set; }
     }
 }

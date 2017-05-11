@@ -1,8 +1,7 @@
-﻿using BreadPlayer.Fmod.Enums;
-using System;
-
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using BreadPlayer.Fmod.Enums;
 using static BreadPlayer.Fmod.Callbacks;
 
 namespace BreadPlayer.Fmod.Structs
@@ -209,7 +208,7 @@ namespace BreadPlayer.Fmod.Structs
         Modorder = 0x00000100,  /* MOD/S3M/XM/IT.  Order in a sequenced module format.  Use Sound::getFormat to determine the format. */
         Modrow = 0x00000200,  /* MOD/S3M/XM/IT.  Current row in a sequenced module format.  Sound::getLength will return the number if rows in the currently playing or seeked to pattern. */
         Modpattern = 0x00000400,  /* MOD/S3M/XM/IT.  Current pattern in a sequenced module format.  Sound::getLength will return the number of patterns in the song and Channel::getPosition will return the currently playing pattern. */
-        Buffered = 0x10000000,  /* Time value as seen by buffered stream.  This is always ahead of audible time, and is only used for processing. */
+        Buffered = 0x10000000  /* Time value as seen by buffered stream.  This is always ahead of audible time, and is only used for processing. */
     }
     /*
        [DEFINE]
@@ -437,10 +436,7 @@ namespace BreadPlayer.Fmod.Structs
                 Marshal.Copy(fstring.nativeUtf8Ptr, bytes, 0, strlen);
                 return Encoding.UTF8.GetString(bytes, 0, strlen);
             }
-            else
-            {
-                return "";
-            }
+            return "";
         }
     }
     #endregion

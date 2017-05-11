@@ -71,9 +71,11 @@ namespace BreadPlayer.Messengers
 	    private void Register(MessageTypes message, Delegate callback, Type parameterType)
 		{
 			if (callback == null)
-				throw new ArgumentNullException("callback");
+            {
+                throw new ArgumentNullException("callback");
+            }
 
-			VerifyParameterType(message, parameterType);
+            VerifyParameterType(message, parameterType);
 
 			_messageToActionsMap.AddAction(message, callback.Target, callback.GetMethodInfo(), parameterType);
 		}
@@ -110,12 +112,14 @@ namespace BreadPlayer.Messengers
 				if (previouslyRegisteredParameterType != null && parameterType != null)
 				{
 					if (!previouslyRegisteredParameterType.Equals(parameterType))
-						throw new InvalidOperationException(string.Format(
+                    {
+                        throw new InvalidOperationException(string.Format(
 							"The registered action's parameter type is inconsistent with the previously registered actions for message '{0}'.\nExpected: {1}\nAdding: {2}",
 							message,
 							previouslyRegisteredParameterType.FullName,
 							parameterType.FullName));
-				}
+                    }
+                }
 				else
 				{
 					// One, or both, of previouslyRegisteredParameterType or callbackParameterType are null.
@@ -148,8 +152,10 @@ namespace BreadPlayer.Messengers
 			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
 			{
 				if (registeredParameterType == null)
-					throw new TargetParameterCountException(string.Format("Cannot pass a parameter with message '{0}'. Registered action(s) expect no parameter.", messageType));
-			}
+                {
+                    throw new TargetParameterCountException(string.Format("Cannot pass a parameter with message '{0}'. Registered action(s) expect no parameter.", messageType));
+                }
+            }
 
 			var actions = _messageToActionsMap.GetActions(messageType);
 			if (actions != null)
@@ -200,8 +206,10 @@ namespace BreadPlayer.Messengers
 			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
 			{
 				if (registeredParameterType != null)
-					throw new TargetParameterCountException(string.Format("Must pass a parameter of type {0} with this message. Registered action(s) expect it.", registeredParameterType.FullName));
-			}
+                {
+                    throw new TargetParameterCountException(string.Format("Must pass a parameter of type {0} with this message. Registered action(s) expect it.", registeredParameterType.FullName));
+                }
+            }
 
 			var actions = _messageToActionsMap.GetActions(messageType);
 			if (actions != null)
@@ -226,11 +234,7 @@ namespace BreadPlayer.Messengers
 		{
 			#region Constructor
 
-			internal MessageToActionsMap()
-			{
-			}
-
-			#endregion // Constructor
+		    #endregion // Constructor
 
 			#region AddAction
 
@@ -247,14 +251,18 @@ namespace BreadPlayer.Messengers
 				//    throw new ArgumentNullException("message");
 
 				if (method == null)
-					throw new ArgumentNullException("method");
+                {
+                    throw new ArgumentNullException("method");
+                }
 
-				lock (_map)
+                lock (_map)
 				{
 					if (!_map.ContainsKey(message))
-						_map[message] = new List<WeakAction>();
+                    {
+                        _map[message] = new List<WeakAction>();
+                    }
 
-					_map[message].Add(new WeakAction(target, method, actionType));
+                    _map[message].Add(new WeakAction(target, method, actionType));
 				}
 			}
 
@@ -274,8 +282,10 @@ namespace BreadPlayer.Messengers
 						wr.RemoveAll(wa => target == wa.TargetRef.Target && method == wa.Method);
 
 						if (wr.Count == 0)
-							_map.Remove(message);
-					}
+                        {
+                            _map.Remove(message);
+                        }
+                    }
 				}
 			}
 
@@ -313,17 +323,21 @@ namespace BreadPlayer.Messengers
 				lock (_map)
 				{
 					if (!_map.ContainsKey(message))
-						return null;
+                    {
+                        return null;
+                    }
 
-					List<WeakAction> weakActions = _map[message];
+                    List<WeakAction> weakActions = _map[message];
 					actions = new List<Delegate>(weakActions.Count);
 					for (int i = weakActions.Count - 1; i > -1; --i)
 					{
 						WeakAction weakAction = weakActions[i];
 						if (weakAction == null)
-							continue;
+                        {
+                            continue;
+                        }
 
-						Delegate action = weakAction.CreateAction();
+                        Delegate action = weakAction.CreateAction();
 						if (action != null)
 						{
 							actions.Add(action);
@@ -337,8 +351,10 @@ namespace BreadPlayer.Messengers
 
 					// Delete the list from the map if it is now empty.
 					if (weakActions.Count == 0)
-						_map.Remove(message);
-				}
+                    {
+                        _map.Remove(message);
+                    }
+                }
 
 				// Reverse the list to ensure the callbacks are invoked in the order they were registered.
 				actions.Reverse();
@@ -371,8 +387,10 @@ namespace BreadPlayer.Messengers
 				lock (_map)
 				{
 					if (!_map.TryGetValue(message, out weakActions) || weakActions.Count == 0)
-						return false;
-				}
+                    {
+                        return false;
+                    }
+                }
 				parameterType = weakActions[0].ParameterType;
 				return true;
 			}
@@ -443,20 +461,19 @@ namespace BreadPlayer.Messengers
 				{
 					return _method.CreateDelegate(_delegateType);
 				}
-				else
-				{
-					try
-					{
-						object target = _targetRef.Target;
-						if (target != null)
-							return _method.CreateDelegate(_delegateType, target);
-					}
-					catch
-					{
-					}
-				}
+			    try
+			    {
+			        object target = _targetRef.Target;
+			        if (target != null)
+                    {
+                        return _method.CreateDelegate(_delegateType, target);
+                    }
+                }
+			    catch
+			    {
+			    }
 
-				return null;
+			    return null;
 			}
 
 			#endregion // CreateAction

@@ -1,8 +1,7 @@
-﻿using BreadPlayer.Fmod.Enums;
-using BreadPlayer.Fmod.Structs;
-using System;
-
+﻿using System;
 using System.Runtime.InteropServices;
+using BreadPlayer.Fmod.Enums;
+using BreadPlayer.Fmod.Structs;
 using static BreadPlayer.Fmod.Callbacks;
 using static BreadPlayer.Fmod.CoreDSP.Callbacks;
 

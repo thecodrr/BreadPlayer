@@ -15,13 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using Windows.UI.Xaml;
-using Microsoft.Xaml.Interactivity;
-using Windows.UI.Xaml.Controls;
-using BreadPlayer.Extensions;
-using SplitViewMenu;
-using Windows.UI.Xaml.Input;
+
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using BreadPlayer.Extensions;
+using Microsoft.Xaml.Interactivity;
+using SplitViewMenu;
 
 namespace BreadPlayer.Behaviours
 {
@@ -42,12 +44,11 @@ namespace BreadPlayer.Behaviours
         {
             if (parameter is RightTappedRoutedEventArgs eventArgs)
             {
-                if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
                     return null;
                 }
-                else
-                    OpenMenu(sender, eventArgs.GetPosition(sender as FrameworkElement));
+                OpenMenu(sender, eventArgs.GetPosition(sender as FrameworkElement));
             }
             else
             {
@@ -74,12 +75,19 @@ namespace BreadPlayer.Behaviours
 
                     // if (item != null) item.IsSelected = true;
                     ListViewItem listItem = senderElement.Tag is ContentPresenter contentPresenter ? contentPresenter.Tag as ListViewItem : null;
-                    if (listItem != null) listItem.IsSelected = true;
+                    if (listItem != null)
+                    {
+                        listItem.IsSelected = true;
+                    }
                     //var items = //((Parameter as Binding).Path as ListViewItem);
                     if (Parameter is BindableFlyout bindableFlyout)
                     {
                         if (listView?.SelectedItems.Count == 1) { listView.SelectedIndex = -1; }
-                        if (item != null) item.IsSelected = true;
+                        if (item != null)
+                        {
+                            item.IsSelected = true;
+                        }
+
                         bindableFlyout.ShowAt(senderElement);
                     }
                     else if (Parameter.ToString() == "Playlist")
@@ -95,15 +103,25 @@ namespace BreadPlayer.Behaviours
                         if (listView != null && listView.SelectedItems.Count < 2)
                         {
                             listView.SelectedIndex = -1;
-                            if (item != null) item.IsSelected = true;
+                            if (item != null)
+                            {
+                                item.IsSelected = true;
+                            }
                         }
                         var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
                         if (flyout.Items[0] is MenuFlyoutItem menuFlyout)
+                        {
                             menuFlyout.CommandParameter = item.Content;
+                        }
+
                         if (position.HasValue && position != null)
+                        {
                             flyout.ShowAt(senderElement, position.Value);
+                        }
                         else
+                        {
                             flyout.ShowAt(senderElement);
+                        }
                     }
                 }
             }

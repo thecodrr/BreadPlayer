@@ -9,13 +9,17 @@ namespace BreadPlayer.Extensions
     {
         public static void FadeInOutBrush(this SolidColorBrush oldBrush, Color newColor, double to)
         {
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(5);
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromMilliseconds(5)
+            };
             timer.Start();
             timer.Tick += (sender, e) =>
             {
                 if (oldBrush.Opacity > to)
+                {
                     oldBrush.Opacity -= 0.01;
+                }
                 else if (oldBrush.Opacity <= to)
                 {
                     timer.Stop();
@@ -32,7 +36,9 @@ namespace BreadPlayer.Extensions
             timer.Tick += (sender, e) =>
             {
                 if (brush.Opacity < 1)
+                {
                     brush.Opacity += 0.01;
+                }
                 else if (brush.Opacity >= to)
                 {
                     timer.Stop();

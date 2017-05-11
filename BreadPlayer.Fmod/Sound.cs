@@ -4,11 +4,11 @@
 /*                                                                                            */
 /* ========================================================================================== */
 
-using BreadPlayer.Fmod.Enums;
-using BreadPlayer.Fmod.Structs;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using BreadPlayer.Fmod.Enums;
+using BreadPlayer.Fmod.Structs;
 
 namespace BreadPlayer.Fmod
 {

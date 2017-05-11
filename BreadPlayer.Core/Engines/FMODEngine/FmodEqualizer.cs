@@ -3,8 +3,8 @@ using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Fmod;
-using BreadPlayer.Fmod.CoreDSP;
 using BreadPlayer.Fmod.Enums;
+using BreadPlayer.Fmod.CoreDSP;
 
 namespace BreadPlayer.Core.Engines.FMODEngine
 {
@@ -59,12 +59,15 @@ namespace BreadPlayer.Core.Engines.FMODEngine
             {
                 var band = GetEqualizerBand(IsEnabled, value[0], value[1], value[2]);
 
-                if (band == null) continue;
-
-                ((FmodEqualizerBand) band).PropertyChanged += (sender, e) =>
+                if (band == null)
+                {
+                    continue;
+                } ((FmodEqualizerBand) band).PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == "Gain")
+                    {
                         SaveEqualizerSettings();
+                    }
                 };
 
                 if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))

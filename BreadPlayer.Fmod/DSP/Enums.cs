@@ -33,7 +33,7 @@
     public enum DspPanSurroundFlags
     {
         Default = 0,
-        RotationNotBiased = 1,
+        RotationNotBiased = 1
     }
     
     /*
@@ -49,7 +49,7 @@
         FMODSystem::createDSPByType
     ]
     */
-    public enum DspType : int
+    public enum DspType
     {
         Unknown,            /* This unit was created via a non BreadPlayer.Fmod plugin so has an unknown purpose. */
         Mixer,              /* This unit does nothing but take inputs and mix them together then feed the result to the soundcard unit. */
@@ -86,7 +86,7 @@
         Convolutionreverb,  /* This unit implements convolution reverb. */
         Channelmix,         /* This unit provides per signal channel gain, and output channel mapping to allow 1 multichannel signal made up of many groups of signals to map to a single output signal. */
         Transceiver,        /* This unit 'sends' and 'receives' from a selection of up to 32 different slots.  It is like a send/return but it uses global slots rather than returns as the destination.  It also has other features.  Multiple transceivers can receive from a single channel, or multiple transceivers can send to a single channel, or a combination of both. */
-        Objectpan,          /* This unit sends the signal to a 3d object encoder like Dolby Atmos. */
+        Objectpan          /* This unit sends the signal to a 3d object encoder like Dolby Atmos. */
     }
 
 
@@ -107,7 +107,7 @@
         Float = 0,
         Int,
         Bool,
-        Data,
+        Data
     }
 
 
@@ -128,7 +128,7 @@
     {
         DspParameterFloatMappingTypeLinear = 0,          /* Values mapped linearly across range. */
         DspParameterFloatMappingTypeAuto,                /* A mapping is automatically chosen based on range and units.  See remarks. */
-        DspParameterFloatMappingTypePiecewiseLinear,    /* Values mapped in a piecewise linear fashion defined by FMOD_DSP_PARAMETER_DESC_FLOAT::mapping.piecewiselinearmapping. */
+        DspParameterFloatMappingTypePiecewiseLinear    /* Values mapped in a piecewise linear fashion defined by FMOD_DSP_PARAMETER_DESC_FLOAT::mapping.piecewiselinearmapping. */
     }
     
     /*
@@ -151,10 +151,10 @@
     {
         DspParameterDataTypeUser = 0,              /* The default data type.  All user data types should be 0 or above. */
         DspParameterDataTypeOverallgain = -1,      /* The data type for FMOD_DSP_PARAMETER_OVERALLGAIN parameters.  There should a maximum of one per DSP. */
-        DspParameterDataType_3Dattributes = -2,     /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES parameters.  There should a maximum of one per DSP. */
+        DspParameterDataType3Dattributes = -2,     /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES parameters.  There should a maximum of one per DSP. */
         DspParameterDataTypeSidechain = -3,        /* The data type for FMOD_DSP_PARAMETER_SIDECHAIN parameters.  There should a maximum of one per DSP. */
         DspParameterDataTypeFft = -4,              /* The data type for FMOD_DSP_PARAMETER_FFT parameters.  There should a maximum of one per DSP. */
-        DspParameterDataType_3DattributesMulti = -5, /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI parameters.  There should a maximum of one per DSP. */
+        DspParameterDataType3DattributesMulti = -5 /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI parameters.  There should a maximum of one per DSP. */
     }
     /*
        [ENUM]
@@ -315,7 +315,7 @@
         Ch13,     /* Channel #13 Delay in ms.  0  to 10000.  Default = 0.  */
         Ch14,     /* Channel #14 Delay in ms.  0  to 10000.  Default = 0.  */
         Ch15,     /* Channel #15 Delay in ms.  0  to 10000.  Default = 0.  */
-        Maxdelay, /* Maximum delay in ms.      0  to 1000.   Default = 10. */
+        Maxdelay /* Maximum delay in ms.      0  to 1000.   Default = 10. */
     }
 
 
@@ -445,7 +445,7 @@
         Releasetime,   /* (Type:float) - Time to ramp the silence to full in ms.  1.0 to 1000.0. Default = 10.0. */
         Ceiling,       /* (Type:float) - Maximum level of the output signal in dB.  -12.0 to 0.0.  Default = 0.0. */
         Maximizergain, /* (Type:float) - Maximum amplification allowed in dB.  0.0 to 12.0.  Default = 0.0. 0.0 = no amplifaction, higher values allow more boost. */
-        Mode,          /* (Type:float) - Channel processing mode. 0 or 1. Default = 0. 0 = Independent (limiter per channel), 1 = Linked. */
+        Mode          /* (Type:float) - Channel processing mode. 0 or 1. Default = 0. 0 = Independent (limiter per channel), 1 = Linked. */
     }
 
     /*
@@ -535,7 +535,7 @@
     {
         Mix,      /* (Type:float) - Volume of original signal to pass to output.  0.0 to 100.0. Default = 50.0. */
         Rate,     /* (Type:float) - Chorus modulation rate in Hz.  0.0 to 20.0.  Default = 0.8 Hz. */
-        Depth,    /* (Type:float) - Chorus modulation depth.  0.0 to 100.0.  Default = 3.0. */
+        Depth    /* (Type:float) - Chorus modulation depth.  0.0 to 100.0.  Default = 3.0. */
     }
 
 
@@ -683,7 +683,7 @@
     public enum DspSend
     {
         Returnid,     /* (Type:int) - ID of the Return DSP this send is connected to (integer values only). -1 indicates no connected Return DSP. Default = -1. */
-        Level,        /* (Type:float) - Send level. 0.0 to 1.0. Default = 1.0 */
+        Level        /* (Type:float) - Send level. 0.0 to 1.0. Default = 1.0 */
     }
 
 
@@ -1150,7 +1150,7 @@
         Auto = -1,     /* A transmitter will use whatever signal channel count coming in to the transmitter, to determine which speaker mode is allocated for the transceiver channel. */
         Mono = 0,      /* A transmitter will always downmix to a mono channel buffer. */
         Stereo,        /* A transmitter will always upmix or downmix to a stereo channel buffer. */
-        Surround,      /* A transmitter will always upmix or downmix to a surround channel buffer.   Surround is the speaker mode of the system above stereo, so could be quad/surround/5.1/7.1. */
+        Surround      /* A transmitter will always upmix or downmix to a surround channel buffer.   Surround is the speaker mode of the system above stereo, so could be quad/surround/5.1/7.1. */
     }
 
 

@@ -5,8 +5,8 @@
 /* ========================================================================================== */
 
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 using BreadPlayer.Fmod.Enums;
 
 namespace BreadPlayer.Fmod

@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Linq;
 using Windows.System;
@@ -50,7 +51,10 @@ namespace SplitViewMenu
             }
 
             if (parent == null)
+            {
                 return;
+            }
+
             _splitViewHost = (SplitView)parent;
 
             _splitViewHost.RegisterPropertyChangedCallback(SplitView.IsPaneOpenProperty,
@@ -74,7 +78,10 @@ namespace SplitViewMenu
         public void SetSelectedItem(ListViewItem item)
         {
             if (Items == null)
+            {
                 return;
+            }
+
             foreach (
                 var cont in
                     Items.Select(i => (ListViewItem) ContainerFromItem(i)).Where(cont => cont != null && cont != item))
@@ -82,7 +89,9 @@ namespace SplitViewMenu
                 cont.IsSelected = false;
             }
             if (item != null)
+            {
                 item.IsSelected = true;
+            }
         }
 
         public event EventHandler<ListViewItem> ItemInvoked;
@@ -170,7 +179,10 @@ namespace SplitViewMenu
             if (!_splitViewHost.IsPaneOpen ||
                 (_splitViewHost.DisplayMode != SplitViewDisplayMode.CompactOverlay &&
                  _splitViewHost.DisplayMode != SplitViewDisplayMode.Overlay))
+            {
                 return;
+            }
+
             _splitViewHost.IsPaneOpen = false;
             item?.Focus(FocusState.Programmatic);
         }
@@ -178,7 +190,10 @@ namespace SplitViewMenu
         private void OnPaneToggled()
         {
             if (ItemsPanelRoot == null)
+            {
                 return;
+            }
+
             if (_splitViewHost.IsPaneOpen)
             {
                 ItemsPanelRoot.ClearValue(WidthProperty);

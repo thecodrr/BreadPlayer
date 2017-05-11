@@ -1,14 +1,14 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BreadPlayer.Web.BaiduLyricsAPI.Models;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     public class ArtistAlbumListResponse : BaseResponse
     {
-        public List<Album> albumlist { get; set; }
-        public int albumnums { get; set; }
-        public int havemore { get; set; }
+        public List<Album> Albumlist { get; set; }
+        public int Albumnums { get; set; }
+        public int Havemore { get; set; }
 
-        public bool HasMore => havemore == 1;
+        public bool HasMore => Havemore == 1;
     }
 }

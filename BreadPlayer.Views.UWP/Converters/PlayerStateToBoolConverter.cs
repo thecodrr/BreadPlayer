@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
@@ -30,7 +31,7 @@ namespace BreadPlayer.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            return (bool)value == true ? "Playing" : "Stopped";
+            return (bool)value ? "Playing" : "Stopped";
         }
     }
     public class PlayerStateToVisibilityConverter : IValueConverter

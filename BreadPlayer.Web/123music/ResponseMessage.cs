@@ -2,7 +2,7 @@
 {
     public class ResponseMessage
     {
-        public string status { get; set; }
-        public string html { get; set; }
+        public string Status { get; set; }
+        public string Html { get; set; }
     }
 }

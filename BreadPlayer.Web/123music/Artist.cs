@@ -2,18 +2,18 @@
 {
     public class Artist
     {
-        public string ArtistID
+        public string ArtistId
         {
             get; set;
         }
         public string ArtistName { get; set; }
         public string ArtistPhoto { get; set; }
 
-        public Artist(string artistName, string artistPhoto, string artistID)
+        public Artist(string artistName, string artistPhoto, string artistId)
         {
             ArtistName = artistName;
             ArtistPhoto = artistPhoto;
-            ArtistID = artistID;
+            ArtistId = artistId;
         }
     }
 }

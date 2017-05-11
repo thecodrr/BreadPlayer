@@ -1,6 +1,6 @@
-﻿using BreadPlayer.Fmod.Enums;
+﻿using System;
+using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
-using System;
 
 namespace BreadPlayer.Fmod
 {

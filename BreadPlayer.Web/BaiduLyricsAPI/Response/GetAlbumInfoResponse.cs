@@ -1,23 +1,23 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BreadPlayer.Web.BaiduLyricsAPI.Models;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     internal class GetAlbumInfoResponse
     {
-        private AlbumInfo albumInfo;
-        private List<SongInfo> songlist;
+        private AlbumInfo _albumInfo;
+        private List<SongInfo> _songlist;
 
         public AlbumInfo AlbumInfo
         {
-            get => albumInfo;
-            set => albumInfo = value;
+            get => _albumInfo;
+            set => _albumInfo = value;
         }        
 
         public List<SongInfo> Songlist
         {
-            get => songlist;
-            set => songlist = value;
+            get => _songlist;
+            set => _songlist = value;
         }        
     }
 }

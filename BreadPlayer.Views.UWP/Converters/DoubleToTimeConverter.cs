@@ -15,9 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
-using Windows.UI.Xaml.Data;
 using Windows.Foundation.Metadata;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
@@ -25,12 +27,12 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            string FormattedTime = "00:00";
+            string formattedTime = "00:00";
             if (value is double time)
             {
-                FormattedTime = TimeSpan.FromSeconds(time).ToString(@"mm\:ss");                
+                formattedTime = TimeSpan.FromSeconds(time).ToString(@"mm\:ss");                
             }
-            return FormattedTime;
+            return formattedTime;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
@@ -46,17 +48,17 @@ namespace BreadPlayer.Converters
             if (value is double)
             {
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                    return width;
-                else
                 {
-                    if (Windows.UI.Core.CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
-                    {
-                        // tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
-                        //tag.ItemWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
-                        return width;
-                    }
-                    return (width / 2) - 20;
+                    return width;
                 }
+
+                if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
+                {
+                    // tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
+                    //tag.ItemWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                    return width;
+                }
+                return (width / 2) - 20;
             }
             return width;
         }

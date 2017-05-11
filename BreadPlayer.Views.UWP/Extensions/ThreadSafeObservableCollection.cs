@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 /// <summary>
@@ -41,10 +43,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     //private readonly int _capacity = MAX_CAPACITY;
     //public int Capacity { get { return _capacity; } }
     private CoreDispatcher _dispatcher;
-    internal ReaderWriterLockSlim sync = new ReaderWriterLockSlim();
+    internal ReaderWriterLockSlim Sync = new ReaderWriterLockSlim();
     public ThreadSafeObservableCollection()
     {
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
     }
     public ThreadSafeObservableCollection(IEnumerable<T> collection = null)
     {
@@ -53,32 +55,47 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         {
             AddRange(collection);
         }
-        _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
     }
 
     public async new void Add(T item)
     {
-        if (_dispatcher == null) _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        if (_dispatcher == null)
+        {
+            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+        }
+
         if (_dispatcher.HasThreadAccess)
+        {
             DoAdd(item);
+        }
         else
+        {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
+        }
     }
 
     private void DoAdd(T item)
     {
-        if (!sync.IsWriteLockHeld)
-            sync.EnterWriteLock();
+        if (!Sync.IsWriteLockHeld)
+        {
+            Sync.EnterWriteLock();
+        }
+
         base.Add(item);
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
     }
 
     public async new void Clear()
     {
         if (_dispatcher.HasThreadAccess)
+        {
             DoClear();
+        }
         else
+        {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
+        }
     }
 
     protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
@@ -88,7 +105,9 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             try
             {
                 if (_isObserving)
+                {
                     base.OnCollectionChanged(e);
+                }
             }
             catch (Exception ex)
             {
@@ -98,7 +117,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     }
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        if (_isObserving) base.OnPropertyChanged(e);
+        if (_isObserving)
+        {
+            base.OnPropertyChanged(e);
+        }
     }
 
     /// <summary> 
@@ -109,7 +131,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         try
         {
             // get out if no new items
-            if (range == null || !range.Any()) return;            
+            if (range == null || !range.Any())
+            {
+                return;
+            }
 
             _isObserving = false;
             var objectArray = range.ToArray();
@@ -140,7 +165,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     public void RemoveRange(IEnumerable<T> collection)
     {
         // get out if no new items
-        if (collection == null || !collection.Any()) return;
+        if (collection == null || !collection.Any())
+        {
+            return;
+        }
 
         // add the items, making sure no events are fired
         _isObserving = false;
@@ -164,7 +192,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// </summary> 
     public void Replace(T item)
     {
-        ReplaceRange(new T[] { item });
+        ReplaceRange(new[] { item });
     }
 
     /// <summary> 
@@ -172,47 +200,66 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// </summary> 
     public void ReplaceRange(IEnumerable<T> collection)
     {
-        if (collection == null) throw new ArgumentNullException("collection");
-        sync.EnterWriteLock();
+        if (collection == null)
+        {
+            throw new ArgumentNullException("collection");
+        }
+
+        Sync.EnterWriteLock();
         Clear();
         foreach (var i in collection)
+        {
             Insert(base.Count - 1, i);
-        sync.ExitWriteLock();
+        }
+
+        Sync.ExitWriteLock();
     }
 
     private void DoClear()
     {
-        if (!sync.IsWriteLockHeld)
-            sync.EnterWriteLock();
+        if (!Sync.IsWriteLockHeld)
+        {
+            Sync.EnterWriteLock();
+        }
+
         base.Clear();
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
     }
 
     public new bool Contains(T item)
     {
-        if (!sync.IsReadLockHeld)
-            sync.EnterReadLock();
+        if (!Sync.IsReadLockHeld)
+        {
+            Sync.EnterReadLock();
+        }
+
         var result = base.Contains(item);
-        sync.ExitReadLock();
+        Sync.ExitReadLock();
         return result;
     }
 
     public new void CopyTo(T[] array, int arrayIndex)
     {
-        sync.EnterWriteLock();
+        Sync.EnterWriteLock();
         base.CopyTo(array, arrayIndex);
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
     }
 
     public new int Count
     {
         get
         {
-            if (!sync.IsWriteLockHeld)
-                sync.EnterReadLock();
+            if (!Sync.IsWriteLockHeld)
+            {
+                Sync.EnterReadLock();
+            }
+
             var result = base.Count;
-            if (sync.IsReadLockHeld)
-                sync.ExitReadLock();
+            if (Sync.IsReadLockHeld)
+            {
+                Sync.ExitReadLock();
+            }
+
             return result;
         }
     }
@@ -223,42 +270,47 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     public new bool Remove(T item)
     {
         if (_dispatcher.HasThreadAccess)
-            return DoRemove(item);
-        else
         {
-            bool? op = null;
-            var removeTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                op = DoRemove(item);
-            });
-            removeTask.AsTask().Wait();
-            if (op == null)
-                return false;
-            return op.Value;
+            return DoRemove(item);
         }
+
+        bool? op = null;
+        var removeTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        {
+            op = DoRemove(item);
+        });
+        removeTask.AsTask().Wait();
+        if (op == null)
+        {
+            return false;
+        }
+
+        return op.Value;
     }
 
     private bool DoRemove(T item)
     {
-        sync.EnterWriteLock();
+        Sync.EnterWriteLock();
         var result = base.Remove(item);
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
         return result;
     }
 
 
     public new int IndexOf(T item)
     {
-        sync.EnterReadLock();
+        Sync.EnterReadLock();
         var result = base.IndexOf(item);
-        sync.ExitReadLock();
+        Sync.ExitReadLock();
         return result;
     }
 
     public new async void Insert(int index, T item)
     {
         if (_dispatcher.HasThreadAccess)
+        {
             DoInsert(index, item);
+        }
         else
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoInsert(index, item));
@@ -267,52 +319,59 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private void DoInsert(int index, T item)
     {
-        if (!sync.IsWriteLockHeld)
-            sync.EnterWriteLock();
+        if (!Sync.IsWriteLockHeld)
+        {
+            Sync.EnterWriteLock();
+        }
+
         base.Insert(index, item);
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
     }
 
     public new async void RemoveAt(int index)
     {
         if (_dispatcher.HasThreadAccess)
+        {
             DoRemoveAt(index);
+        }
         else
+        {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoRemoveAt(index));
+        }
     }
 
     private void DoRemoveAt(int index)
     {
-        sync.EnterWriteLock();
+        Sync.EnterWriteLock();
         if (base.Count == 0 || base.Count <= index)
         {
-            sync.ExitWriteLock();
+            Sync.ExitWriteLock();
             return;
         }
 
         base.RemoveAt(index);
-        sync.ExitWriteLock();
+        Sync.ExitWriteLock();
     }
 
     public new T this[int index]
     {
         get
         {
-            sync.EnterReadLock();
+            Sync.EnterReadLock();
             var result = base[index];
-            sync.ExitReadLock();
+            Sync.ExitReadLock();
             return result;
         }
         set
         {
-            sync.EnterWriteLock();
+            Sync.EnterWriteLock();
             if (base.Count == 0 || base.Count <= index)
             {
-                sync.ExitWriteLock();
+                Sync.ExitWriteLock();
                 return;
             }
             base[index] = value;
-            sync.ExitWriteLock();
+            Sync.ExitWriteLock();
         }
     }
 
@@ -324,20 +383,20 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
 public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
 {
-    private readonly ThreadSafeObservableCollection<T> m_Inner;
+    private readonly ThreadSafeObservableCollection<T> _mInner;
 
 
     public ThreadSafeObservableCollectionEnumerableWrapper(ThreadSafeObservableCollection<T> observable)
     {
 
-        m_Inner = observable;
+        _mInner = observable;
     }
 
     #region Implementation of IEnumerable
 
     public IEnumerator<T> GetEnumerator()
     {
-        return new SafeReaderWriterEnumerator<T>(m_Inner, m_Inner.sync);
+        return new SafeReaderWriterEnumerator<T>(_mInner, _mInner.Sync);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -357,16 +416,16 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
 {
     // this is the (thread-unsafe)
     // enumerator of the underlying collection
-    private readonly IEnumerator<T> m_Inner;
+    private readonly IEnumerator<T> _mInner;
     // this is the object we shall lock on. 
-    private ReaderWriterLockSlim m_lock;
+    private ReaderWriterLockSlim _mLock;
 
     public SafeReaderWriterEnumerator(ThreadSafeObservableCollection<T> inner, ReaderWriterLockSlim @lock)
     {
-        m_lock = @lock;
+        _mLock = @lock;
         // entering lock in constructor
-        m_lock.EnterReadLock();
-        m_Inner = inner.GetEnumerator();
+        _mLock.EnterReadLock();
+        _mInner = inner.GetEnumerator();
 
     }
 
@@ -376,8 +435,8 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
     {
         // .. and exiting lock on Dispose()
         // This will be called when foreach loop finishes
-        m_lock.ExitReadLock();
-        m_Inner.Dispose();
+        _mLock.ExitReadLock();
+        _mInner.Dispose();
     }
 
     #endregion
@@ -390,18 +449,18 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
 
     public bool MoveNext()
     {
-        return m_Inner.MoveNext();
+        return _mInner.MoveNext();
     }
 
     public void Reset()
     {
-        m_Inner.Reset();
+        _mInner.Reset();
     }
 
-    public T Current => m_Inner.Current;
+    public T Current => _mInner.Current;
 
 
-    object IEnumerator.Current => m_Inner.Current;
+    object IEnumerator.Current => _mInner.Current;
 
     #endregion
 }

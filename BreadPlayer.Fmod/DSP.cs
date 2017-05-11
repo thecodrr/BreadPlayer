@@ -5,10 +5,10 @@
 /* ========================================================================================== */
 
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
-using BreadPlayer.Fmod.Enums;
+using System.Text;
 using BreadPlayer.Fmod.CoreDSP;
+using BreadPlayer.Fmod.Enums;
 
 namespace BreadPlayer.Fmod
 {
@@ -178,7 +178,7 @@ namespace BreadPlayer.Fmod
             Result result = FMOD_DSP_GetParameterInfo(RawPtr, index, out descPtr);
             if (result == Result.Ok)
             {
-                desc = (DspParameterDesc)Marshal.PtrToStructure<DspParameterDesc>(descPtr);
+                desc = Marshal.PtrToStructure<DspParameterDesc>(descPtr);
             }
             else
             {

@@ -1,11 +1,11 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BreadPlayer.Web.BaiduLyricsAPI.Models;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     public class AlbumDetailResponse : BaseResponse
     {
-        public AlbumInfo albumInfo { get; set; }
-        public List<Song> songlist { get; set; }
+        public AlbumInfo AlbumInfo { get; set; }
+        public List<Song> Songlist { get; set; }
     }
 }

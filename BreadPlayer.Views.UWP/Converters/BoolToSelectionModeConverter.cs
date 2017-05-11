@@ -11,9 +11,11 @@ namespace BreadPlayer.Converters
             if (value is bool mode)
             {
                 if (mode)
+                {
                     return ListViewSelectionMode.Multiple;
-                else
-                    return ListViewSelectionMode.Extended;                
+                }
+
+                return ListViewSelectionMode.Extended;
             }
             return ListViewSelectionMode.Extended;
         }

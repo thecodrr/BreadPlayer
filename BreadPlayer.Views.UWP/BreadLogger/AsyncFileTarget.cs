@@ -11,7 +11,7 @@ namespace BreadPlayer.Targets
     {
         private readonly object _syncRoot = new object();
         private readonly string _logFilePath;
-        private static StorageFile File;
+        private static StorageFile _file;
         public AsyncFileTarget(string logFilePath)
             : this(null, logFilePath)
         {
@@ -32,13 +32,13 @@ namespace BreadPlayer.Targets
         private async void CreateFile(string filename)
         {
             StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
-            File =  await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+            _file =  await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
         }
         public async override void Write(string content)
         {
             try
             {
-                await FileIO.AppendTextAsync(File, content);
+                await FileIO.AppendTextAsync(_file, content);
             }
             catch { }
         }
@@ -51,7 +51,7 @@ namespace BreadPlayer.Targets
             {
                 try
                 {
-                    return ReadFileContentsAsync(File).Result;
+                    return ReadFileContentsAsync(_file).Result;
                 }
                 catch (IOException)
                 {
@@ -64,14 +64,14 @@ namespace BreadPlayer.Targets
         private async static Task<string> ReadFileContentsAsync(StorageFile f)
         {
             string copyName = f.DisplayName + ".copy";
-            var copiedFile = await File.CopyAsync(ApplicationData.Current.LocalFolder, copyName);
+            var copiedFile = await _file.CopyAsync(ApplicationData.Current.LocalFolder, copyName);
             try
             {
                 return await FileIO.ReadTextAsync(copiedFile);
             }
             finally
             {
-                await File.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                await _file.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
         }
 
@@ -79,13 +79,13 @@ namespace BreadPlayer.Targets
         {
             try
             {
-                File = null;
+                _file = null;
             }
             catch (IOException)
             {
                 // If log file cannot be flushed - we shouldn't crash. 
                 // Supressing finalization to avoid crash in finalizer
-                GC.SuppressFinalize(File);
+                GC.SuppressFinalize(_file);
             }
         }
     }

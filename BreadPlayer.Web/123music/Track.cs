@@ -2,18 +2,18 @@
 {
     public class Track
     {
-        public string SongID { get; set; }
+        public string SongId { get; set; }
         public string Title { get; set; }
         public string Artist { get; set; }
-        public string ArtistID { get; set; }
+        public string ArtistId { get; set; }
         public int ListenCount { get; set; }
 
-        public Track(string songID, string title, string artist, string artistID, int listenCount)
+        public Track(string songId, string title, string artist, string artistId, int listenCount)
         {
-            SongID = songID;
+            SongId = songId;
             Title = title;
             Artist = artist;
-            ArtistID = artistID;
+            ArtistId = artistId;
             ListenCount = listenCount;
         }
     }

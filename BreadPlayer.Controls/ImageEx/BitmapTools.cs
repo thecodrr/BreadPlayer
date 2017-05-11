@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Windows.Storage;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
 using Windows.Web.Http;
-
 using BreadPlayer.Controls.Extensions;
 
 namespace BreadPlayer.Controls
@@ -58,7 +57,7 @@ namespace BreadPlayer.Controls
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("DownloadImageAsync. {0}", ex.Message);
+                    Debug.WriteLine("DownloadImageAsync. {0}", ex.Message);
                 }
             }
         }

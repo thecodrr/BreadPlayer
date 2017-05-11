@@ -1,10 +1,10 @@
-﻿using BreadPlayer.Extensions;
-using BreadPlayer.Helpers;
-using BreadPlayer.ViewModels;
-using Windows.UI.ViewManagement;
+﻿using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -15,28 +15,28 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class NowPlayingView : Page
     {
-        private bool isPressed;
-        private ShellViewModel ShellVM;
+        private bool _isPressed;
+        private ShellViewModel _shellVm;
         public NowPlayingView()
         {
             InitializeComponent();
-            ShellVM = (extrasPanel.DataContext as ShellViewModel);
+            _shellVm = (extrasPanel.DataContext as ShellViewModel);
 
             //events for providing seeking ability to the positon slider.
             Window.Current.CoreWindow.PointerPressed += (sender, e) =>
             {
                 if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
                 {
-                    isPressed = true;
-                    ShellVM.DontUpdatePosition = true;
+                    _isPressed = true;
+                    _shellVm.DontUpdatePosition = true;
                 }
             };
             Window.Current.CoreWindow.PointerReleased += (sender, e) => 
             {
-                if (isPressed && !positionSlider.IsDragging())
+                if (_isPressed && !positionSlider.IsDragging())
                 {
-                    positionSlider.UpdatePosition(null, ShellVM, true);
-                    isPressed = false;
+                    positionSlider.UpdatePosition(null, _shellVm, true);
+                    _isPressed = false;
                 }
             };
         }
@@ -46,14 +46,17 @@ namespace BreadPlayer
             SplitViewMenu.SplitViewMenu.SelectPrevious();
             //we don't want to exit fullscreen mode in mobile phones
             if(!InitializeCore.IsMobile)
+            {
                 ApplicationView.GetForCurrentView().ExitFullScreenMode();
-            ShellVM.IsPlaybarHidden = false;
+            }
+
+            _shellVm.IsPlaybarHidden = false;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             //initialize tap to seek ability in positionSlider.
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(null, ShellVM); }, () => { ShellVM.DontUpdatePosition = true; });
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(null, _shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
             Window.Current.SizeChanged += (evnt, args) =>
             {
                 if (InitializeCore.IsMobile && NowPlayingGrid.Children.Contains(NowPlayingList))

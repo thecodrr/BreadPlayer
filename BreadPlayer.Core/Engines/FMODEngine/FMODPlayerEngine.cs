@@ -6,9 +6,9 @@ using BreadPlayer.Core.Engines.BASSEngine;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Fmod.Enums;
 using static BreadPlayer.Fmod.Callbacks;
 using BreadPlayer.Fmod;
-using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
 
 namespace BreadPlayer.Core.Engines.FMODEngine
@@ -77,10 +77,14 @@ namespace BreadPlayer.Core.Engines.FMODEngine
 
                 //load equalizer
                 if (Equalizer == null)
+                {
                     Equalizer = new FmodEqualizer(_fmodSys, _fmodChannel);
+                }
                 else
-                    (Equalizer as FmodEqualizer).ReInit(_fmodSys, _fmodChannel); 
-                
+                {
+                    (Equalizer as FmodEqualizer).ReInit(_fmodSys, _fmodChannel);
+                }
+
                 //get and update length of the track.
                 Length = TimeSpan.FromMilliseconds(_fmodSound.LengthInMilliseconds).TotalSeconds;
 
@@ -107,17 +111,14 @@ namespace BreadPlayer.Core.Engines.FMODEngine
                 //check if all was successful
                 return loadResult == Result.Ok;
             }
+            string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+            if (IgnoreErrors)
+            {
+                await InitializeCore.NotificationManager.ShowMessageAsync(error);
+            }
             else
             {
-                string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-                if (IgnoreErrors)
-                {
-                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
-                }
-                else
-                {
-                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
-                }
+                await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
             }
             return false;
         }
@@ -202,7 +203,7 @@ namespace BreadPlayer.Core.Engines.FMODEngine
                 }
                 else if (_position >= _last15Offset && _position < last5Offset)
                 {
-                    MediaAboutToEnd?.Invoke(this, new Events.MediaAboutToEndEventArgs(CurrentlyPlayingFile));
+                    MediaAboutToEnd?.Invoke(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
                 }
             }
             return Result.Ok;
@@ -241,12 +242,14 @@ namespace BreadPlayer.Core.Engines.FMODEngine
             {
                 Set(ref _volume, value);
                 if (_fmodChannel != null)
+                {
                     _fmodChannel.Volume = (float)(_volume / 100);
+                }
             }
         }
 
-        private double _seek = 0;
-        private uint _position = 0;
+        private double _seek;
+        private uint _position;
         public double Position
         {
             get
@@ -269,7 +272,10 @@ namespace BreadPlayer.Core.Engines.FMODEngine
             get
             {
                 if (_length <= 0)
+                {
                     _length = 1;
+                }
+
                 return _length <= 0 ? 1 : _length;
             }
             set => Set(ref _length, value);
@@ -286,7 +292,7 @@ namespace BreadPlayer.Core.Engines.FMODEngine
             set => Set(ref _currentPlayingFile, value);
         }
 
-        private bool _ignoreErrors = false;
+        private bool _ignoreErrors;
         public bool IgnoreErrors
         {
             get => _ignoreErrors;
@@ -302,7 +308,7 @@ namespace BreadPlayer.Core.Engines.FMODEngine
         #endregion
         
         #region IDisposable Support
-        private bool _disposedValue = false; // To detect redundant calls
+        private bool _disposedValue; // To detect redundant calls
 
         private void Dispose(bool disposing)
         {

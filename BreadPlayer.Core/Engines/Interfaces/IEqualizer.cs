@@ -9,8 +9,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
         // Center: Frequency center. 20.0 to 22000.0. Default = 8000.0
         // Bandwith: Octave range around the center frequency to filter. 0.2 to 5.0. Default = 1.0
         // Gain: Frequency Gain. -30 to +30. Default = 0
-        public static readonly float[][] EqDefaultValues = new[]
-        {
+        public static readonly float[][] EqDefaultValues = {
               new[] {32f, 1f, 0f},
               new[] {64f, 1f, 0f},
               new[] {125f, 1f, 0f},
@@ -32,7 +31,10 @@ namespace BreadPlayer.Core.Engines.Interfaces
             {
                 _selectedPreset = value;
                 if (_selectedPreset == -1)
+                {
                     return;
+                }
+
                 var preset = Presets[_selectedPreset];
                 EqualizerSettings = preset;
                 DeInit();

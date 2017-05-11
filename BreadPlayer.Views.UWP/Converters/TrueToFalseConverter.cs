@@ -15,7 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
@@ -24,18 +27,18 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is Windows.UI.Xaml.Controls.SplitViewDisplayMode mode)
+            if(value is SplitViewDisplayMode mode)
             { 
-                return mode == Windows.UI.Xaml.Controls.SplitViewDisplayMode.CompactOverlay;
+                return mode == SplitViewDisplayMode.CompactOverlay;
             }
-            else if (value is bool boolValue)
+            if (value is bool boolValue)
             {
                 if (parameter == null)
                 {
                     return boolValue != true;
                 }
             }
-           
+
             return false;
         }
         public object ConvertBack(object value, Type targetType,
@@ -49,7 +52,7 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            Windows.UI.Xaml.Visibility mode = (Windows.UI.Xaml.Visibility)value;
+            Visibility mode = (Visibility)value;
 
             return mode.ToString();
         }

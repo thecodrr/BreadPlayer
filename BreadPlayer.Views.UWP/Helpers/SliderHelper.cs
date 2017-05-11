@@ -1,18 +1,18 @@
-﻿using BreadPlayer.Extensions;
-using BreadPlayer.ViewModels;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using BreadPlayer.Extensions;
+using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Helpers
 {
     public static class SliderHelper
     {
-        private static bool isDragging;
+        private static bool _isDragging;
         public static bool IsDragging(this Slider slider)
         {
-            return isDragging;
+            return _isDragging;
         }
         public static void InitEvents(this Slider slider, Action actionOnComplete, Action actionOnStart)
         {
@@ -22,26 +22,34 @@ namespace BreadPlayer.Helpers
                 volSliderThumb.DragCompleted += (sender, e)=> 
                 {
                     actionOnComplete.Invoke();
-                    isDragging = false;
+                    _isDragging = false;
                 };
                 volSliderThumb.DragStarted += (sender, e) => 
                 {
                     actionOnStart.Invoke();
-                    isDragging = true;
+                    _isDragging = true;
                 };
             }
         }
-        public static async void UpdatePosition(this Slider slider, ProgressBar positionProgressBar, ShellViewModel ShellVM, bool wait = false, bool progressBar = false)
+        public static async void UpdatePosition(this Slider slider, ProgressBar positionProgressBar, ShellViewModel shellVm, bool wait = false, bool progressBar = false)
         {
-            if (ShellVM != null)
+            if (shellVm != null)
             {
                 if (!progressBar)
-                    ShellVM.CurrentPosition = slider.Value < slider.Maximum ? slider.Value : slider.Value - 1;
+                {
+                    shellVm.CurrentPosition = slider.Value < slider.Maximum ? slider.Value : slider.Value - 1;
+                }
                 else
-                    ShellVM.CurrentPosition = positionProgressBar.Value < positionProgressBar.Maximum ? positionProgressBar.Value : positionProgressBar.Value - 1;
+                {
+                    shellVm.CurrentPosition = positionProgressBar.Value < positionProgressBar.Maximum ? positionProgressBar.Value : positionProgressBar.Value - 1;
+                }
             }
-            if (wait) await Task.Delay(500);
-            ShellVM.DontUpdatePosition = false;
+            if (wait)
+            {
+                await Task.Delay(500);
+            }
+
+            shellVm.DontUpdatePosition = false;
         }
     }
 }

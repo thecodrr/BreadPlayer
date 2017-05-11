@@ -1,5 +1,5 @@
-﻿using BreadPlayer.Fmod.Enums;
-using System;
+﻿using System;
+using BreadPlayer.Fmod.Enums;
 
 namespace BreadPlayer.Fmod.CoreDSP
 {

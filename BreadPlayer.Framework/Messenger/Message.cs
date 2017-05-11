@@ -14,8 +14,8 @@
         /// <summary>
         /// What type of message is this
         /// </summary>
-        private MessageTypes messageType;
-        public MessageTypes MessageType => messageType;
+        private MessageTypes _messageType;
+        public MessageTypes MessageType => _messageType;
 
         /// <summary>
         /// The payload for the message 
@@ -30,7 +30,7 @@
         #region Constructor
         public Message(MessageTypes messageType)
         {
-            this.messageType = messageType;
+            _messageType = messageType;
         }
         #endregion
     }

@@ -63,9 +63,14 @@ namespace BreadPlayer.Web.TagParser
 
             /* catch trivial cases */
             if (l1 == 0)
+            {
                 return l2;
+            }
+
             if (l2 == 0)
+            {
                 return l1;
+            }
 
             /* make the inner cycle (i.e. string2) the longer one */
             if (l1 > l2)
@@ -83,11 +88,12 @@ namespace BreadPlayer.Web.TagParser
             {
                 //throw new NotImplementedException();
                 if (xcost > 0)
+                {
                     //return l2 + 1 - 2*(memchr(s2, *s1, l2) != NULL);
-                    return l2 + 1 - 2 * memchrRPLC(s2, *s1, l2);
-                else
-                    //return l2 - (memchr(s2, *s1, l2) != NULL);
-                    return l2 - memchrRPLC(s2, *s1, l2);
+                    return l2 + 1 - 2 * MemchrRplc(s2, *s1, l2);
+                }
+
+                return l2 - MemchrRplc(s2, *s1, l2);
             }
 
             l1++;
@@ -98,11 +104,16 @@ namespace BreadPlayer.Web.TagParser
             //row = (int*)malloc(l2*sizeof(int));
             int* row = stackalloc int[l2];
             if (l2 < 0)
+            {
                 //if (!row)
-                return (int)(-1);
+                return -1;
+            }
+
             end = row + l2 - 1;
             for (i = 0; i < l2 - (xcost > 0 ? 0 : half); i++)
+            {
                 row[i] = i;
+            }
 
             /* go through the matrix and compute the costs.  yes, this is an extremely
              * obfuscated version, but also extremely memory-conservative and
@@ -114,19 +125,27 @@ namespace BreadPlayer.Web.TagParser
                 {
                     int* p = row + 1;
                     char char1 = s1[i - 1];
-                    char* char2p = s2;
-                    int D = i;
+                    char* char2P = s2;
+                    int d = i;
                     int x = i;
                     while (p <= end)
                     {
-                        if (char1 == *(char2p++))
-                            x = --D;
+                        if (char1 == *(char2P++))
+                        {
+                            x = --d;
+                        }
                         else
+                        {
                             x++;
-                        D = *p;
-                        D++;
-                        if (x > D)
-                            x = D;
+                        }
+
+                        d = *p;
+                        d++;
+                        if (x > d)
+                        {
+                            x = d;
+                        }
+
                         *(p++) = x;
                     }
                 }
@@ -142,53 +161,67 @@ namespace BreadPlayer.Web.TagParser
                 {
                     int* p;
                     char char1 = s1[i - 1];
-                    char* char2p;
-                    int D, x;
+                    char* char2P;
+                    int d, x;
                     /* skip the upper triangle */
                     if (i >= l1 - half)
                     {
                         int offset = i - (l1 - half);
                         int c3;
 
-                        char2p = s2 + offset;
+                        char2P = s2 + offset;
                         p = row + offset;
-                        c3 = *(p++) + ((char1 != *(char2p++)) ? 1 : 0);
+                        c3 = *(p++) + ((char1 != *(char2P++)) ? 1 : 0);
                         x = *p;
                         x++;
-                        D = x;
+                        d = x;
                         if (x > c3)
+                        {
                             x = c3;
+                        }
+
                         *(p++) = x;
                     }
                     else
                     {
                         p = row + 1;
-                        char2p = s2;
-                        D = x = i;
+                        char2P = s2;
+                        d = x = i;
                     }
                     /* skip the lower triangle */
                     if (i <= half + 1)
+                    {
                         end = row + l2 + i - half - 2;
+                    }
                     /* main */
                     while (p <= end)
                     {
-                        int c3 = --D + ((char1 != *(char2p++)) ? 1 : 0);
+                        int c3 = --d + ((char1 != *(char2P++)) ? 1 : 0);
                         x++;
                         if (x > c3)
+                        {
                             x = c3;
-                        D = *p;
-                        D++;
-                        if (x > D)
-                            x = D;
+                        }
+
+                        d = *p;
+                        d++;
+                        if (x > d)
+                        {
+                            x = d;
+                        }
+
                         *(p++) = x;
                     }
                     /* lower triangle sentinel */
                     if (i <= half)
                     {
-                        int c3 = --D + ((char1 != *char2p) ? 1 : 0);
+                        int c3 = --d + ((char1 != *char2P) ? 1 : 0);
                         x++;
                         if (x > c3)
+                        {
                             x = c3;
+                        }
+
                         *p = x;
                     }
                 }
@@ -198,14 +231,16 @@ namespace BreadPlayer.Web.TagParser
             return i;
         }
 
-        private static unsafe int memchrRPLC(char* buffer, char c, int count)
+        private static unsafe int MemchrRplc(char* buffer, char c, int count)
         {
             char* p = buffer;
             char* e = buffer + count;
             while (p++ < e)
             {
                 if (*p == c)
+                {
                     return 1;
+                }
             }
             return 0;
         }

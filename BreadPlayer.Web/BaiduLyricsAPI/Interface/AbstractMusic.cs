@@ -4,12 +4,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
 {
     public abstract class AbstractMusic
     {
-
-        public AbstractMusic()
-        {
-            //给CREATOR赋值
-        }
-
         public abstract Uri GetDataSoure();
 
         public abstract Int32 GetDuration();
@@ -34,10 +28,10 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
          *
          * @param loadListener
          */
-        public abstract void LoadArtPic(OnLoadListener loadListener);
+        public abstract void LoadArtPic(IOnLoadListener loadListener);
 
 
-        public abstract void LoadArtPic(PicSizeType picSizeType, OnLoadListener loadListener);
+        public abstract void LoadArtPic(PicSizeType picSizeType, IOnLoadListener loadListener);
 
         /**
          * 专辑图片高斯模糊值
@@ -66,7 +60,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
             Local, Online
         }
 
-        public interface OnLoadListener
+        public interface IOnLoadListener
         {
             //void OnSuccessLoad(Bitmap bitmap);
         }
@@ -76,7 +70,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
          */
         public enum PicSizeType
         {
-            SMALL, BIG, PREIUM, HUGE
+            Small, Big, Preium, Huge
         }
     }
 }

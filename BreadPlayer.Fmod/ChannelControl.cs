@@ -4,10 +4,10 @@
 /*                                                                                            */
 /* ========================================================================================== */
 
-using BreadPlayer.Fmod.Enums;
-using BreadPlayer.Fmod.Structs;
 using System;
 using System.Runtime.InteropServices;
+using BreadPlayer.Fmod.Enums;
+using BreadPlayer.Fmod.Structs;
 using static BreadPlayer.Fmod.Callbacks;
 
 namespace BreadPlayer.Fmod
@@ -52,7 +52,9 @@ namespace BreadPlayer.Fmod
             set
             {
                 if(RawPtr != null)
+                {
                     FMOD_ChannelGroup_SetVolume(RawPtr, value);
+                }
             }
         }
        

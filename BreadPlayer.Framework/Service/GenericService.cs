@@ -20,16 +20,18 @@ namespace BreadPlayer.Services
 {
 	public class GenericService<T> where T : new()
     {
-        private static GenericService<T> instance;
+        private static GenericService<T> _instance;
 
         public static GenericService<T> Instance
         {
             get
             {
-                if (instance == null)
-                    instance = new GenericService<T>();
+                if (_instance == null)
+                {
+                    _instance = new GenericService<T>();
+                }
 
-                return instance;
+                return _instance;
             }
         }
 

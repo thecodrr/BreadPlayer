@@ -2,7 +2,7 @@
 {
     public enum DataType
     {
-        _hot = 0,
-        _new = 1,
+        Hot = 0,
+        New = 1
     }
 }

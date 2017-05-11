@@ -1,13 +1,15 @@
-﻿using BreadPlayer.Common;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System.UserProfile;
+using Windows.UI.Core;
 using Windows.UI.Popups;
+using BreadPlayer.Common;
 using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Helpers
@@ -22,12 +24,12 @@ namespace BreadPlayer.Helpers
                 DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
                 return true;
             }
-            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
             {
                 if (DefaultImage == null)
                 {
                     bool success = false;
-                    await Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                    await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                     {
                         MessageDialog dialog = new MessageDialog("To enable this feature you must set a default lockscreen wallpaper.\rPress OK to continue or cancel to cancel.", "Choose a default lockscreen wallpaper");
                         dialog.Commands.Add(new UICommand("OK"));
@@ -35,8 +37,10 @@ namespace BreadPlayer.Helpers
                         var response = await dialog.ShowAsync();
                         if (response.Label == "OK")
                         {
-                            FileOpenPicker defaultLockScreenImageDialog = new FileOpenPicker();
-                            defaultLockScreenImageDialog.CommitButtonText = "Set default lockscreen image.";
+                            FileOpenPicker defaultLockScreenImageDialog = new FileOpenPicker()
+                            {
+                                CommitButtonText = "Set default lockscreen image."
+                            };
                             defaultLockScreenImageDialog.FileTypeFilter.Add(".jpg");
                             defaultLockScreenImageDialog.FileTypeFilter.Add(".png");
                             var image = await defaultLockScreenImageDialog.PickSingleFileAsync();
@@ -86,7 +90,7 @@ namespace BreadPlayer.Helpers
         {
             if (DefaultImage != null)
             {
-                if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
                     await UserProfilePersonalizationSettings.Current.TrySetLockScreenImageAsync(DefaultImage);
                 }

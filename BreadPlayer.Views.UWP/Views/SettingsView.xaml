@@ -21,7 +21,7 @@
         </DataTemplate>
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
-    <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVM}">
+    <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -148,7 +148,7 @@
                             <LineBreak/>
                             <Run x:Uid="fontCapsHelpText" FontSize="11" Text="" Foreground="Gray"/>
                         </TextBlock>
-                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UITextType, Mode=TwoWay}">
+                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UiTextType, Mode=TwoWay}">
                             <x:String x:Uid="fontCapsOptionFirst"></x:String>
                             <x:String x:Uid="fontCapsOptionSecond"></x:String>
                         </ComboBox>

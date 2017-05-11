@@ -2,11 +2,11 @@
 {
     public class Album
     {
-        public string AlbumID
+        public string AlbumId
         {
             get; set;
         }
-        public string ArtistID
+        public string ArtistId
         {
             get; set;
         }
@@ -14,13 +14,13 @@
         public string AlbumName { get; set; }
         public string AlbumArt { get; set; }
 
-        public Album(string albumName, string albumID, string albumArt, string artistName, string artistID)
+        public Album(string albumName, string albumId, string albumArt, string artistName, string artistId)
         {
             AlbumName = albumName;
-            AlbumID = albumID;
+            AlbumId = albumId;
             AlbumArt = albumArt;
             ArtistName = artistName;
-            ArtistID = artistID;
+            ArtistId = artistId;
         }
     }
 }

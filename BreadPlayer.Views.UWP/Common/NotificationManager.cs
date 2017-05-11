@@ -1,48 +1,51 @@
-﻿using BreadPlayer.Core.Common;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.NotificationManager
 {
 	public class BreadNotificationManager : ObservableObject, INotificationManager  
     {
-        private DispatcherTimer hideTimer;
-        private string status = "Nothing Baking";
+        private DispatcherTimer _hideTimer;
+        private string _status = "Nothing Baking";
         public string Status
         {
-            get => status;
-            set => Set(ref status, value);
+            get => _status;
+            set => Set(ref _status, value);
         }
 
-        private bool show;
+        private bool _show;
         public bool Show
         {
-            get => show;
-            set => Set(ref show, value);
+            get => _show;
+            set => Set(ref _show, value);
         }
         public async Task ShowMessageAsync(string status, int duration = 10)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Status = status;
                 Show = true;
                 if (duration > 0)
                 {
-                    hideTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(duration) };
-                    hideTimer.Start();
-                    hideTimer.Tick += HideTimer_Tick;
+                    _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(duration) };
+                    _hideTimer.Start();
+                    _hideTimer.Tick += HideTimer_Tick;
                 }
             });
         }
         public async Task ShowMessageBoxAsync(string message, string title)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var dialog = new Windows.UI.Popups.MessageDialog(message, title);
+                var dialog = new MessageDialog(message, title);
                 await dialog.ShowAsync();
             });
         }
@@ -71,7 +74,7 @@ namespace BreadPlayer.NotificationManager
         {
             Status = "Nothing Baking!";
             Show = false;
-            hideTimer.Stop();
+            _hideTimer.Stop();
         }
     }
 }

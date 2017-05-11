@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 namespace BreadPlayer.Extensions
@@ -10,7 +11,7 @@ namespace BreadPlayer.Extensions
     public class SortedObservableCollection<T, TKey>
         : ThreadSafeObservableCollection<T>
     {
-        private CoreDispatcher _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+        private CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
 
         /// <summary>
 		/// Creates a new SortedObservableCollection instance.
@@ -18,12 +19,12 @@ namespace BreadPlayer.Extensions
 		/// <param name="keySelector">The function to select the sorting key.</param>
 		public SortedObservableCollection(Func<T, TKey> keySelector)
         {
-            this.keySelector = keySelector;
-            comparer = Comparer<TKey>.Default;
+            _keySelector = keySelector;
+            _comparer = Comparer<TKey>.Default;
         }
 
-        private Func<T, TKey> keySelector;
-        private IComparer<TKey> comparer;
+        private Func<T, TKey> _keySelector;
+        private IComparer<TKey> _comparer;
 
         /// <summary>
         /// Adds an item to a sorted collection.
@@ -38,11 +39,17 @@ namespace BreadPlayer.Extensions
                 while (i <= j)
                 {
                     int n = (i + j) / 2;
-                    int c = comparer.Compare(keySelector(item), keySelector(this[n]));
+                    int c = _comparer.Compare(_keySelector(item), _keySelector(this[n]));
 
                     if (c == 0) { i = n; break; }
-                    if (c > 0) i = n + 1;
-                    else j = n - 1;
+                    if (c > 0)
+                    {
+                        i = n + 1;
+                    }
+                    else
+                    {
+                        j = n - 1;
+                    }
                 }
 
                 Insert(i, item);
@@ -55,8 +62,11 @@ namespace BreadPlayer.Extensions
             try
             {
                 // get out if no new items
-                if (range == null || !range.Any()) return;
-                
+                if (range == null || !range.Any())
+                {
+                    return;
+                }
+
                 // add the items, making sure no events are fired
 
                 _isObserving = false;
@@ -87,8 +97,10 @@ namespace BreadPlayer.Extensions
             try
                 {
                     if (_isObserving)
-                        base.OnCollectionChanged(e);
+                {
+                    base.OnCollectionChanged(e);
                 }
+            }
                 catch (Exception ex)
                 {
                     BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
@@ -96,7 +108,10 @@ namespace BreadPlayer.Extensions
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            if (_isObserving) base.OnPropertyChanged(e);
+            if (_isObserving)
+            {
+                base.OnPropertyChanged(e);
+            }
         }
     }
 }

@@ -1,36 +1,36 @@
-﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BreadPlayer.Web.BaiduLyricsAPI.Models;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 {
     public class SongInfoResponse : BaseResponse
     {
-        private UrlList songUrl;
-        private SongInfo songInfo;
+        private UrlList _songUrl;
+        private SongInfo _songInfo;
         [DataMember(Name = "songurl")]
         public UrlList SongUrl
         {
-            get => songUrl;
-            set => songUrl = value;
+            get => _songUrl;
+            set => _songUrl = value;
         }
 
         [DataMember(Name = "songinfo")]
         public SongInfo SongInfo
         {
-            get => songInfo;
-            set => songInfo = value;
+            get => _songInfo;
+            set => _songInfo = value;
         }
     }
 
     public class UrlList
     {
-        private List<SongUrl> url;
+        private List<SongUrl> _url;
 
         public List<SongUrl> Url
         {
-            get => url;
-            set => url = value;
+            get => _url;
+            set => _url = value;
         }
     }
 }
