@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
+﻿namespace BreadPlayer.Web.BaiduLyricsAPI.Interface
 {    public enum QueryType
     {
         None, Song, Album, Artist

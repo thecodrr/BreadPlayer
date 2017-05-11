@@ -1,4 +1,4 @@
-﻿namespace BreadPlayer
+﻿namespace BreadPlayer.Core.Common
 {
     public interface ICommand : System.Windows.Input.ICommand
     {

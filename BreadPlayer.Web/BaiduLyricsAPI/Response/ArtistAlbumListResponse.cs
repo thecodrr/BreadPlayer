@@ -9,12 +9,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
         public int albumnums { get; set; }
         public int havemore { get; set; }
 
-        public bool HasMore
-        {
-            get
-            {
-                return havemore == 1;
-            }
-        }
+        public bool HasMore => havemore == 1;
     }
 }

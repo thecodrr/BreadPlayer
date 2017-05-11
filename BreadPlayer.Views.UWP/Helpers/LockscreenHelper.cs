@@ -1,18 +1,14 @@
 ﻿using BreadPlayer.Common;
-using BreadPlayer.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System.UserProfile;
 using Windows.UI.Popups;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Helpers
 {
@@ -23,7 +19,7 @@ namespace BreadPlayer.Helpers
         {
             if (RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", "") != "")
             {
-                Helpers.LockscreenHelper.DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
+                DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
                 return true;
             }
             if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
@@ -65,7 +61,7 @@ namespace BreadPlayer.Helpers
                     await reader.LoadAsync((uint)imageStream.Size);
                     var buffer = new byte[(int)imageStream.Size];
                     reader.ReadBytes(buffer);
-                    await Windows.Storage.FileIO.WriteBytesAsync(lockscreenFile, buffer);
+                    await FileIO.WriteBytesAsync(lockscreenFile, buffer);
                     DefaultImage = lockscreenFile;
                     StorageApplicationPermissions.FutureAccessList.Add(DefaultImage);
                 }

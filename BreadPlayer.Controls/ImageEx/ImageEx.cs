@@ -10,16 +10,16 @@ namespace BreadPlayer.Controls
     {
         public ImageEx()
         {
-            this.DefaultStyleKey = typeof(ImageEx);
-            this.HorizontalContentAlignment = HorizontalAlignment.Center;
-            this.VerticalContentAlignment = VerticalAlignment.Center;
+            DefaultStyleKey = typeof(ImageEx);
+            HorizontalContentAlignment = HorizontalAlignment.Center;
+            VerticalContentAlignment = VerticalAlignment.Center;
         }
 
         private Size _currentSize = new Size(BitmapCache.MIDRESOLUTION, BitmapCache.MIDRESOLUTION);
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var progress = this.Progress;
+            var progress = Progress;
             if (progress != null)
             {
                 if (!Double.IsInfinity(availableSize.Width))

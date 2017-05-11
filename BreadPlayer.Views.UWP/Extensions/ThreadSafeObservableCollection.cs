@@ -33,13 +33,15 @@ using Windows.UI.Core;
 public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotifyCollectionChanged
 {
     protected volatile bool _isObserving = true;
-    public bool IsObserving { get { return _isObserving; } set { _isObserving = value; } }
+    public bool IsObserving { get => _isObserving;
+        set => _isObserving = value;
+    }
 
     //public static readonly int MAX_CAPACITY = int.MaxValue - 1; // MS limit
     //private readonly int _capacity = MAX_CAPACITY;
     //public int Capacity { get { return _capacity; } }
     private CoreDispatcher _dispatcher;
-    internal ReaderWriterLockSlim sync = new System.Threading.ReaderWriterLockSlim();
+    internal ReaderWriterLockSlim sync = new ReaderWriterLockSlim();
     public ThreadSafeObservableCollection()
     {
         _dispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
@@ -172,9 +174,9 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         if (collection == null) throw new ArgumentNullException("collection");
         sync.EnterWriteLock();
-        this.Clear();
+        Clear();
         foreach (var i in collection)
-            this.Insert(base.Count - 1, i);
+            Insert(base.Count - 1, i);
         sync.ExitWriteLock();
     }
 
@@ -396,13 +398,10 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
         m_Inner.Reset();
     }
 
-    public T Current { get { return m_Inner.Current; } }
+    public T Current => m_Inner.Current;
 
 
-    object IEnumerator.Current
-    {
-        get { return m_Inner.Current; }
-    }
+    object IEnumerator.Current => m_Inner.Current;
 
     #endregion
 }

@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-    class SortSettingToFormattedStringConverter : IValueConverter
+    internal class SortSettingToFormattedStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

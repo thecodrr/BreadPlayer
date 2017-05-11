@@ -1,11 +1,8 @@
-﻿using BreadPlayer.Database;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
-using System;
+﻿using BreadPlayer.Core.Common;
 
-namespace BreadPlayer.Models
+namespace BreadPlayer.Core.Models
 {
-    public class Album : IDBRecord
+    public class Album : IDbRecord
     {
         public long Id { get; set; }
         public string AlbumName { get; set; }

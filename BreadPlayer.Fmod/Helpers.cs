@@ -1,30 +1,27 @@
 ﻿using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Fmod
 {
     public static class Helpers
     {
-        public static Result SetFadePoint(this Channel FMODChannel, float fromVolume, float toVolume, ulong sampleRange)
+        public static Result SetFadePoint(this Channel fmodChannel, float fromVolume, float toVolume, ulong sampleRange)
         {
             Result result;
-            result = FMODChannel.getDSPClock(out ulong clockDSP, out ulong parentclock);
-            result = FMODChannel.addFadePoint(parentclock, fromVolume);
-            result = FMODChannel.addFadePoint(parentclock + sampleRange, toVolume);
+            result = fmodChannel.GetDspClock(out ulong clockDsp, out ulong parentclock);
+            result = fmodChannel.AddFadePoint(parentclock, fromVolume);
+            result = fmodChannel.AddFadePoint(parentclock + sampleRange, toVolume);
             return result;
         }
-        public static uint GetTotalSamplesLeft(this Channel FMODChannel, Sound FMODSound)
+        public static uint GetTotalSamplesLeft(this Channel fmodChannel, Sound fmodSound)
         {
-            FMODChannel.getPosition(out uint currentPosition, TimeUnit.PCM);
-            FMODSound.getLength(out uint pcmLength, TimeUnit.PCM);
+            fmodChannel.GetPosition(out uint currentPosition, TimeUnit.Pcm);
+            fmodSound.GetLength(out uint pcmLength, TimeUnit.Pcm);
             return pcmLength - currentPosition;
         }
-        public static ulong ConvertSecondsToPCM(this Sound FMODSound, double seconds)
+        public static ulong ConvertSecondsToPcm(this Sound fmodSound, double seconds)
         {
-            FMODSound.getDefaults(out float frequency, out int priority);
+            fmodSound.GetDefaults(out float frequency, out int priority);
             return (ulong)(frequency * seconds);
         }
     }

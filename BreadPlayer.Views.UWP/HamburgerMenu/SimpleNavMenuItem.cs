@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BreadPlayer.Core.Common;
 
 namespace SplitViewMenu
 {
@@ -29,26 +30,32 @@ namespace SplitViewMenu
         {
 
         }
-        string label;
-        public string Label { get { return label; } set { Set(ref label, value); } }
+
+        private string label;
+        public string Label { get => label;
+            set => Set(ref label, value);
+        }
         public Symbol Symbol { get; set; }
         public char SymbolAsChar => (char) Symbol;
         public string FontGlyph { get; set; }
-        object args;
-        public object Arguments { get { return args; } set { Set(ref args, value); } }
+        private object args;
+        public object Arguments { get => args;
+            set => Set(ref args, value);
+        }
         public Visibility HeaderVisibility
         {
             get; set;
         } = Visibility.Visible;
-       
-        ElementTheme shortcutTheme;
+
+        private ElementTheme shortcutTheme;
         public ElementTheme ShortcutTheme
         {
-            get { return shortcutTheme; }
-            set { Set(ref shortcutTheme, value); }
+            get => shortcutTheme;
+            set => Set(ref shortcutTheme, value);
         }
         public ICommand Command { get; set; }
-        List<Shortcut> shortcuts = new List<Shortcut>()
+
+        private List<Shortcut> shortcuts = new List<Shortcut>()
         {
             new Shortcut() { SymbolAsChar = "\xE00E", Tooltip = "Go Back",
                 ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.NavigateBack()) },
@@ -70,16 +77,13 @@ namespace SplitViewMenu
         };
         public List<Shortcut> Shortcuts
         {
-            get { return shortcuts; }
-            set
-            {
-                Set(ref shortcuts, value);
-            }
+            get => shortcuts;
+            set => Set(ref shortcuts, value);
         }
         public string Tooltip { get; set; }
 
         public Type DestinationPage { get; set; }
 
-        void Select(object param) { }
+        private void Select(object param) { }
     }
 }

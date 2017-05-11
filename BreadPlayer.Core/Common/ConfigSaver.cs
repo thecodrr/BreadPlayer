@@ -1,38 +1,36 @@
-﻿using BreadPlayer.Core.PlayerEngines;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core.Common
 {
     public class ConfigSaver
     {
         //Config from VLC
-        Config Rock = new Config()
+        private Config _rock = new Config()
         { Name = "Rock", Values = new float[] { 20, 12, 14, -20, -8, 1, 22, 28, 28, 28 } };
 
-        Config Classical = new Config()
+        private Config _classical = new Config()
         {
             Name = "Classical",
             Values = new float[] { 0, 0, 0, 0, 0, 0, -18, -18, -18, -24 }
         };
-        Config Club = new Config() { Name = "Club", Values = new float[] { 0, 0, 20, 14, 14, 14, 8, 0, 0, 0 } };
-        Config Dance = new Config()
+
+        private Config _club = new Config() { Name = "Club", Values = new float[] { 0, 0, 20, 14, 14, 14, 8, 0, 0, 0 } };
+
+        private Config _dance = new Config()
         {
             Name = "Dance",
             Values = new float[] { 24, 18, 6, 0, 0, -14, -18, -18, 0, 0 }
         };
-        Config FullBass = new Config()
+
+        private Config _fullBass = new Config()
         {
             Name = "FullBass",
             Values = new float[] { -20, 24, 24, 14, -4, -1, -20, -25.75f, -28, -28 }
         };
-        Config FullBassAndTreble = new Config()
+
+        private Config _fullBassAndTreble = new Config()
         {
             Name = "FullBassAndTreble",
             Values = new float[] { 18, 14, 0, -18, -12, 4, 20, 28, 30, 30 },
@@ -50,28 +48,28 @@ namespace BreadPlayer.Core.Common
               new[] {8000f, 1f, 0f},
               new[] {16000f, 1f, 0f }
         };
-        public EqualizerSettings MakeSetting(string name, Dictionary<string, float> Bands)
+        public EqualizerSettings MakeSetting(string name, Dictionary<string, float> bands)
         {
             var equalizerSettings = new EqualizerSettings { Name = name };
-            equalizerSettings.GainValues = Bands;
+            equalizerSettings.GainValues = bands;
             return equalizerSettings;
         }
         public List<EqualizerSettings> GetSettings()
         {
-            List<EqualizerSettings> EqualizerSettings = new List<PlayerEngines.EqualizerSettings>();
-            List<Config> ListConfigs = new List<Config>() { Rock, Classical, Club, Dance, FullBass, FullBassAndTreble };
-            foreach (var config in ListConfigs)
+            List<EqualizerSettings> equalizerSettings = new List<EqualizerSettings>();
+            List<Config> listConfigs = new List<Config>() { _rock, _classical, _club, _dance, _fullBass, _fullBassAndTreble };
+            foreach (var config in listConfigs)
             {
-                Dictionary<string, float> Bands = new Dictionary<string, float>();
+                Dictionary<string, float> bands = new Dictionary<string, float>();
                 for (int i = 0; i < EqDefaultValues.Length; i++)
                 {
-                    string BandCaption = EqDefaultValues[i][0] >= 1000 ? EqDefaultValues[i][0] / 1000 + "KHz" : EqDefaultValues[i][0] + "Hz";
+                    string bandCaption = EqDefaultValues[i][0] >= 1000 ? EqDefaultValues[i][0] / 1000 + "KHz" : EqDefaultValues[i][0] + "Hz";
                     float gain = (config.Values[i] / 100) * 14;
-                    Bands.Add(BandCaption, gain);
+                    bands.Add(bandCaption, gain);
                 }
-                EqualizerSettings.Add(MakeSetting(config.Name, Bands));
+                equalizerSettings.Add(MakeSetting(config.Name, bands));
             }
-            return EqualizerSettings;
+            return equalizerSettings;
         }
         public string SaveSettings()
         {           

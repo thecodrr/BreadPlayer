@@ -1,8 +1,7 @@
 ﻿using BreadPlayer.Core.Common;
-using BreadPlayer.Core.PlayerEngines;
 using Newtonsoft.Json;
-using System.IO;
 using Windows.Storage;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Common
 {
@@ -27,7 +26,7 @@ namespace BreadPlayer.Common
 
         public void SaveEqualizerSettings(EqualizerSettings settings, float PreAMP)
         {
-            var eqJson = Newtonsoft.Json.JsonConvert.SerializeObject(settings);
+            var eqJson = JsonConvert.SerializeObject(settings);
             SaveSetting(settings.Name, eqJson);
             SaveSetting("PreAMP", PreAMP);
         }

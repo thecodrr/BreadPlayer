@@ -1,59 +1,57 @@
 ﻿using BreadPlayer.Database;
 using BreadPlayer.Extensions;
-using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
-using IF.Lastfm.Core.Api.Helpers;
 using IF.Lastfm.Core.Objects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Networking.Connectivity;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Events;
 
 namespace BreadPlayer.ViewModels
 {
     public class NowPlayingViewModel : ViewModelBase
     {
         #region Loading Properties
-        bool artistInfoLoading;
+
+        private bool artistInfoLoading;
         public bool ArtistInfoLoading { get => artistInfoLoading; set => Set(ref artistInfoLoading, value); }
-        bool albumInfoLoading;
+        private bool albumInfoLoading;
         public bool AlbumInfoLoading { get => albumInfoLoading; set => Set(ref albumInfoLoading, value); }
-        bool artistFetchFailed;
+        private bool artistFetchFailed;
         public bool ArtistFetchFailed { get => artistFetchFailed; set => Set(ref artistFetchFailed, value); }
-        bool albumFetchFailed;
+        private bool albumFetchFailed;
         public bool AlbumFetchFailed { get => albumFetchFailed; set => Set(ref albumFetchFailed, value); }
         #endregion
-        LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
+
+        private LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
-        string artistBio;
+        private string artistBio;
         public string ArtistBio
         {
             get => artistBio;
             set => Set(ref artistBio, value);
         }
-        ThreadSafeObservableCollection<LastTrack> albumTracks;
+
+        private ThreadSafeObservableCollection<LastTrack> albumTracks;
         public ThreadSafeObservableCollection<LastTrack> AlbumTracks
         {
             get => albumTracks;
             set => Set(ref albumTracks, value);
         }
-        ThreadSafeObservableCollection<LastArtist> similarArtists;
+
+        private ThreadSafeObservableCollection<LastArtist> similarArtists;
         public ThreadSafeObservableCollection<LastArtist> SimilarArtists
         {
             get => similarArtists;
             set => Set(ref similarArtists, value);
         }
         public ICommand RetryCommand { get; set; }
-        private LastfmClient LastfmClient
-        {
-            get => new Lastfm().LastfmClient;
-        }
+        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
+
         public NowPlayingViewModel()
         {
             RetryCommand = new RelayCommand(Retry);
@@ -84,16 +82,16 @@ namespace BreadPlayer.ViewModels
             }
             await service.UpdateMediafile(Core.SharedLogic.Player.CurrentlyPlayingFile);
         }
-        private async void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
+        private async void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
-            if (e.NewState == Core.PlayerState.Playing)
+            if (e.NewState == PlayerState.Playing)
             {
                 Core.SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
                 await GetInfo(Core.SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, Core.SharedLogic.Player.CurrentlyPlayingFile.Album);
             }
         }
-        
-        int retries = 0;
+
+        private int retries = 0;
         private async Task GetInfo(string artistName, string albumName)
         {
             try

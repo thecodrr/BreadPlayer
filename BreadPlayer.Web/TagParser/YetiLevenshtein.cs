@@ -198,7 +198,7 @@ namespace BreadPlayer.Web.TagParser
             return i;
         }
 
-        static unsafe int memchrRPLC(char* buffer, char c, int count)
+        private static unsafe int memchrRPLC(char* buffer, char c, int count)
         {
             char* p = buffer;
             char* e = buffer + count;

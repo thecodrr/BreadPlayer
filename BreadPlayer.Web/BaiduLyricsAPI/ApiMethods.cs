@@ -7,7 +7,7 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
 {
     public class ApiMethods
     {
-        Helpers helpers = new Helpers();
+        private Helpers helpers = new Helpers();
         public async Task<SongListResponse> RequestSongListFromArtist(string artistId)
         {
             var url = helpers.GetCallURL(Endpoints.METHOD_GET_ARTISTSONGLIST, helpers.GetAlbumByArtistParameterString(artistId));

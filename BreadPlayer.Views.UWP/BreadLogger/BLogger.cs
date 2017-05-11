@@ -7,18 +7,14 @@ using XLog;
 using System.IO;
 using Windows.Storage;
 using BreadPlayer.Targets;
-using Windows.ApplicationModel.Email;
 
 public class BLogger
 {
-    static Logger logger;
+    private static Logger logger;
     public static Logger Logger
     {
-        get
-        {
-            return logger;
-        }
-        set { logger = value; }
+        get => logger;
+        set => logger = value;
     }
     public static void InitLogger()
     {
@@ -54,7 +50,8 @@ public class BLogger
             }
         }
     }
-    static int GetExceptionCount(string text)
+
+    private static int GetExceptionCount(string text)
     {
         char[] delimiters = new char[] { ' ', '\r', '\n', '|', ',', '.' };
         Dictionary<string, int> count =

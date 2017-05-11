@@ -1,23 +1,21 @@
-﻿using BreadPlayer.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Services;
-using System;
+﻿using BreadPlayer.Database;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.ViewModels
 {
     public class SearchResultsViewModel : ViewModelBase
     {
-        ThreadSafeObservableCollection<Mediafile> querySongs;
+        private ThreadSafeObservableCollection<Mediafile> querySongs;
         public ThreadSafeObservableCollection<Mediafile> QuerySongs
         {
             get => querySongs;
             set => Set(ref querySongs, value);
         }
-        ThreadSafeObservableCollection<Album> queryAlbums;
+
+        private ThreadSafeObservableCollection<Album> queryAlbums;
         public ThreadSafeObservableCollection<Album> QueryAlbums
         {
             get => queryAlbums;

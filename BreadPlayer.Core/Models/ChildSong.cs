@@ -1,13 +1,8 @@
-﻿using BreadPlayer.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BreadPlayer.Core.Common;
 
-namespace BreadPlayer.Models
+namespace BreadPlayer.Core.Models
 {
-    public class ChildSong : IDBRecord
+    public class ChildSong : IDbRecord
     {
         public long Id { get; set; }
         public long SongId { get; set; }

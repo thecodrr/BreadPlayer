@@ -16,95 +16,95 @@ namespace BreadPlayer.Fmod
         */
     public class ChannelGroup : ChannelControl
     {
-        public Result release                ()
+        public Result Release                ()
         {
-            Result result = FMOD_ChannelGroup_Release(getRaw());
-            if (result == Result.OK)
+            Result result = FMOD_ChannelGroup_Release(GetRaw());
+            if (result == Result.Ok)
             {
-                rawPtr = IntPtr.Zero;
+                RawPtr = IntPtr.Zero;
             }
             return result;
         }
 
         // Nested channel groups.
-        public Result addGroup               (ChannelGroup group, bool propagatedspclock, out DSPConnection connection)
+        public Result AddGroup               (ChannelGroup group, bool propagatedspclock, out DspConnection connection)
         {
 			connection = null;
 			
 			IntPtr connectionRaw;
-            Result result = FMOD_ChannelGroup_AddGroup(getRaw(), group.getRaw(), propagatedspclock, out connectionRaw);
-			connection = new DSPConnection(connectionRaw);
+            Result result = FMOD_ChannelGroup_AddGroup(GetRaw(), group.GetRaw(), propagatedspclock, out connectionRaw);
+			connection = new DspConnection(connectionRaw);
 			
 			return result;
         }
-        public Result getNumGroups           (out int numgroups)
+        public Result GetNumGroups           (out int numgroups)
         {
-            return FMOD_ChannelGroup_GetNumGroups(getRaw(), out numgroups);
+            return FMOD_ChannelGroup_GetNumGroups(GetRaw(), out numgroups);
         }
-        public Result getGroup               (int index, out ChannelGroup group)
+        public Result GetGroup               (int index, out ChannelGroup group)
         {
             group = null;
 
             IntPtr groupraw;
-            Result result = FMOD_ChannelGroup_GetGroup(getRaw(), index, out groupraw);
+            Result result = FMOD_ChannelGroup_GetGroup(GetRaw(), index, out groupraw);
             group = new ChannelGroup(groupraw);
 
             return result;
         }
-        public Result getParentGroup         (out ChannelGroup group)
+        public Result GetParentGroup         (out ChannelGroup group)
         {
             group = null;
 
             IntPtr groupraw;
-            Result result = FMOD_ChannelGroup_GetParentGroup(getRaw(), out groupraw);
+            Result result = FMOD_ChannelGroup_GetParentGroup(GetRaw(), out groupraw);
             group = new ChannelGroup(groupraw);
 
             return result;
         }
 
         // Information only functions.
-        public Result getName                (StringBuilder name, int namelen)
+        public Result GetName                (StringBuilder name, int namelen)
         {
             IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
 
-            Result result = FMOD_ChannelGroup_GetName(getRaw(), stringMem, namelen);
+            Result result = FMOD_ChannelGroup_GetName(GetRaw(), stringMem, namelen);
 
             StringMarshalHelper.NativeToBuilder(name, stringMem);
             Marshal.FreeHGlobal(stringMem);
 
             return result;
         }
-        public Result getNumChannels         (out int numchannels)
+        public Result GetNumChannels         (out int numchannels)
         {
-            return FMOD_ChannelGroup_GetNumChannels(getRaw(), out numchannels);
+            return FMOD_ChannelGroup_GetNumChannels(GetRaw(), out numchannels);
         }
-        public Result getChannel             (int index, out Channel channel)
+        public Result GetChannel             (int index, out Channel channel)
         {
             channel = null;
 
             IntPtr channelraw;
-            Result result = FMOD_ChannelGroup_GetChannel(getRaw(), index, out channelraw);
+            Result result = FMOD_ChannelGroup_GetChannel(GetRaw(), index, out channelraw);
             channel = new Channel(channelraw);
 
             return result;
         }
 
         #region importfunctions
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_Release          (IntPtr channelgroup);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_AddGroup         (IntPtr channelgroup, IntPtr group, bool propagatedspclock, out IntPtr connection);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetNumGroups     (IntPtr channelgroup, out int numgroups);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetGroup         (IntPtr channelgroup, int index, out IntPtr group);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetParentGroup   (IntPtr channelgroup, out IntPtr group);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetName          (IntPtr channelgroup, IntPtr name, int namelen);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetNumChannels   (IntPtr channelgroup, out int numchannels);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_ChannelGroup_GetChannel       (IntPtr channelgroup, int index, out IntPtr channel);
         #endregion
 

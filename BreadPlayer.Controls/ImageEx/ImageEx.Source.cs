@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -17,8 +15,8 @@ namespace BreadPlayer.Controls
         #region Source
         public object Source
         {
-            get { return (object)GetValue(SourceProperty); }
-            set { SetValue(SourceProperty, value); }
+            get => (object)GetValue(SourceProperty);
+            set => SetValue(SourceProperty, value);
         }
 
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -117,7 +115,7 @@ namespace BreadPlayer.Controls
                             }
                         }
                     }
-                    this.SetImage(new BitmapImage(cachedUri));
+                    SetImage(new BitmapImage(cachedUri));
                     
                 }
                 else
@@ -143,7 +141,7 @@ namespace BreadPlayer.Controls
                 }
                 if (uri != null)
                 {
-                    this.SetImage(new BitmapImage(uri));
+                    SetImage(new BitmapImage(uri));
                 }
             }
             catch (Exception ex)
@@ -157,7 +155,7 @@ namespace BreadPlayer.Controls
 
         private void SetProgress()
         {
-            if (this.Progress != null)
+            if (Progress != null)
             {
                 return;
             }
@@ -179,9 +177,9 @@ namespace BreadPlayer.Controls
                 {
                     IsActive = true
                 };
-                progress.SetBinding(ProgressRing.BackgroundProperty, new Binding { Source = this, Path = new PropertyPath("Background") });
-                progress.SetBinding(ProgressRing.ForegroundProperty, new Binding { Source = this, Path = new PropertyPath("Foreground") });
-                this.Content = progress;
+                progress.SetBinding(BackgroundProperty, new Binding { Source = this, Path = new PropertyPath("Background") });
+                progress.SetBinding(ForegroundProperty, new Binding { Source = this, Path = new PropertyPath("Foreground") });
+                Content = progress;
             }
         }
 
@@ -189,15 +187,15 @@ namespace BreadPlayer.Controls
         {
             ClearProgress();
 
-            var image = this.Image;
+            var image = Image;
             if (image == null)
             {
                 image = new Image();
                 image.SetBinding(Image.StretchProperty, new Binding { Source = this, Path = new PropertyPath("Stretch") });
-                image.SetBinding(Image.HorizontalAlignmentProperty, new Binding { Source = this, Path = new PropertyPath("HorizontalAlignment") });
-                image.SetBinding(Image.VerticalAlignmentProperty, new Binding { Source = this, Path = new PropertyPath("VerticalAlignment") });
+                image.SetBinding(HorizontalAlignmentProperty, new Binding { Source = this, Path = new PropertyPath("HorizontalAlignment") });
+                image.SetBinding(VerticalAlignmentProperty, new Binding { Source = this, Path = new PropertyPath("VerticalAlignment") });
                 image.SetBinding(Image.NineGridProperty, new Binding { Source = this, Path = new PropertyPath("NineGrid") });
-                this.Content = image;
+                Content = image;
             }
             if (imageSource != null)
             {
@@ -220,19 +218,20 @@ namespace BreadPlayer.Controls
             opacityAnimation.To = to;
             opacityAnimation.Duration = TimeSpan.FromSeconds(seconds);
             opacityAnimation.From = from;
-            Storyboard.SetTarget(opacityAnimation, this.Image);
+            Storyboard.SetTarget(opacityAnimation, Image);
             Storyboard.SetTargetProperty(opacityAnimation, "Opacity");
             animationBoard.Children.Add(opacityAnimation);
             animationBoard.Begin();
             return animationBoard;
         }
-        ImageSource oldImageSource;
+
+        private ImageSource oldImageSource;
         private void ClearProgress()
         {
-            if (this.Progress != null)
+            if (Progress != null)
             {
-                this.Progress.IsActive = false;
-                this.Content = null;
+                Progress.IsActive = false;
+                Content = null;
                 lock (_progressCountLock)
                 {
                     _progressCount--;
@@ -242,10 +241,10 @@ namespace BreadPlayer.Controls
 
         private void ClearImage()
         {
-            if (this.Image != null)
+            if (Image != null)
             {
-                this.Image.Source = null;
-                this.Content = null;
+                Image.Source = null;
+                Content = null;
             }
         }      
     }

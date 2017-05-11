@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BreadPlayer.Models;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
@@ -31,55 +30,55 @@ using System.IO;
 using Windows.Storage;
 using BreadPlayer.Database;
 using System.Threading.Tasks;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.ViewModels
 {
 	public class PlaylistViewModel : ViewModelBase
     {
-        ThreadSafeObservableCollection<Mediafile> songs;
-        public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set { Set(ref songs, value); } }
-        Playlist playlist;
-        public Playlist Playlist { get { return playlist; } set { Set(ref playlist, value); } }
+        private ThreadSafeObservableCollection<Mediafile> songs;
+        public ThreadSafeObservableCollection<Mediafile> Songs { get { if (songs == null) { songs = new ThreadSafeObservableCollection<Mediafile>(); } return songs; } set => Set(ref songs, value);
+        }
+
+        private Playlist playlist;
+        public Playlist Playlist { get => playlist;
+            set => Set(ref playlist, value);
+        }
         private PlaylistService PlaylistService { get; set; }
-        string totalSongs;
+        private string totalSongs;
         public string TotalSongs
         {
-            get
-            {              
-                return totalSongs;
-            }
+            get => totalSongs;
             set
             {
                 totalSongs = "0";
                 Set(ref totalSongs, value);
             }
         }
-        string totalMinutes;
+
+        private string totalMinutes;
         public string TotalMinutes
         {
-            get
-            {
-                return totalMinutes;
-            }
+            get => totalMinutes;
             set
             {
                 totalMinutes = "0";
                 Set(ref totalMinutes, value);
             }
         }
-        bool isMenuVisible = true;
+
+        private bool isMenuVisible = true;
         public bool IsMenuVisible
         {
-            get { return isMenuVisible; }
-            set { Set(ref isMenuVisible, value); }
+            get => isMenuVisible;
+            set => Set(ref isMenuVisible, value);
         }
-        ImageSource playlistArt;
+
+        private ImageSource playlistArt;
         public ImageSource PlaylistArt
         {
-            get
-            {
-                return playlistArt;
-            }
+            get => playlistArt;
             set
             {
                 if (Songs.Any())
@@ -87,17 +86,18 @@ namespace BreadPlayer.ViewModels
                 Set(ref playlistArt, value);
             }
         }
-        RelayCommand _deleteCommand;
+
+        private RelayCommand _deleteCommand;
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand DeleteCommand
         {
             get
-            { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => this.Delete(param)); } return _deleteCommand; }
+            { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => Delete(param)); } return _deleteCommand; }
         }
 
-        async void Delete(object para)
+        private async void Delete(object para)
         {
             try
             {
@@ -139,26 +139,28 @@ namespace BreadPlayer.ViewModels
                 }
             });
         }
-        RelayCommand _renamePlaylistCommand;
+
+        private RelayCommand _renamePlaylistCommand;
         /// <summary>
         /// Gets command for playlist rename. This calls the <see cref="RenamePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand RenamePlaylistCommand
         {
             get
-            { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => this.RenamePlaylist(param)); } return _renamePlaylistCommand; }
+            { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => RenamePlaylist(param)); } return _renamePlaylistCommand; }
         }
 
-        RelayCommand _deletePlaylistCommand;
+        private RelayCommand _deletePlaylistCommand;
         /// <summary>
         /// Gets command for playlist delete. This calls the <see cref="DeletePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand DeletePlaylistCommand
         {
             get
-            { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => this.DeletePlaylist(param)); } return _deletePlaylistCommand; }
+            { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => DeletePlaylist(param)); } return _deletePlaylistCommand; }
         }
-        async void DeletePlaylist(object playlist)
+
+        private async void DeletePlaylist(object playlist)
         {
             try
             {
@@ -167,8 +169,8 @@ namespace BreadPlayer.ViewModels
                 if (selectedPlaylist != null && await SharedLogic.AskForPassword(selectedPlaylist))
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
-                    dia.Commands.Add(new Windows.UI.Popups.UICommand("Yes") { Id = 0 });
-                    dia.Commands.Add(new Windows.UI.Popups.UICommand("No") { Id = 1 });
+                    dia.Commands.Add(new UICommand("Yes") { Id = 0 });
+                    dia.Commands.Add(new UICommand("No") { Id = 1 });
                     dia.DefaultCommandIndex = 0;
                     dia.CancelCommandIndex = 1;
                     var result = await dia.ShowAsync();
@@ -191,7 +193,7 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        async void RenamePlaylist(object playlist)
+        private async void RenamePlaylist(object playlist)
         {
             try
             {
@@ -226,7 +228,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
-            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "", ""));
+            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
         }
         public void Init(object data)
         {
@@ -243,15 +245,17 @@ namespace BreadPlayer.ViewModels
                 LoadAlbumSongs(album);               
             }
         }
-        async void LoadAlbumSongs(Album album)
+
+        private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
+            Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
             await Refresh().ContinueWith((task) =>
             {
                 Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MSG_PLAYLIST_LOADED, Songs);
             });
         }
-        async void LoadDB()
+
+        private async void LoadDB()
         {
             if (await SharedLogic.AskForPassword(playlist))
             {
@@ -268,8 +272,10 @@ namespace BreadPlayer.ViewModels
         }
         
         public ListView PlaylistSongsListBox;
-        bool _isPageLoaded;
-        public bool IsPageLoaded { get { return _isPageLoaded; } set { Set(ref _isPageLoaded, value); } }
+        private bool _isPageLoaded;
+        public bool IsPageLoaded { get => _isPageLoaded;
+            set => Set(ref _isPageLoaded, value);
+        }
         
         
         public void Reset()

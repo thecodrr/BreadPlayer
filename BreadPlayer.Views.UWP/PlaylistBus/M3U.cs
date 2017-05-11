@@ -1,5 +1,4 @@
-﻿using BreadPlayer.Models;
-using BreadPlayer.Database;
+﻿using BreadPlayer.Database;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using BreadPlayer.Core;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -49,11 +49,11 @@ namespace BreadPlayer.PlaylistBus
                                 }
 
                                 var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                                var token = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(accessFile);
+                                var token = StorageApplicationPermissions.FutureAccessList.Add(accessFile);
 
-                                Mediafile mp3File = await Core.SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+                                Mediafile mp3File = await SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
-                                await Core.SharedLogic.NotificationManager.ShowMessageAsync(index.ToString() + " songs sucessfully added into playlist: " + file.DisplayName);
+                                await SharedLogic.NotificationManager.ShowMessageAsync(index.ToString() + " songs sucessfully added into playlist: " + file.DisplayName);
                                 PlaylistSongs.Add(mp3File);
                                 StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
@@ -66,7 +66,7 @@ namespace BreadPlayer.PlaylistBus
                     await service.InsertTracksAsync(PlaylistSongs, Playlist);
 
                     string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", index, failedFiles, index - failedFiles, file.DisplayName);
-                    await Core.SharedLogic.NotificationManager.ShowMessageAsync(message);
+                    await SharedLogic.NotificationManager.ShowMessageAsync(message);
                 }
             }
         }

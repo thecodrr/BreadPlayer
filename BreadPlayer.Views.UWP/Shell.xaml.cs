@@ -17,24 +17,17 @@
 */
 using BreadPlayer.Common;
 using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
-using BreadPlayer.Models;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer
 {
@@ -44,11 +37,11 @@ namespace BreadPlayer
     public sealed partial class Shell : Page
     {
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
-        ShellViewModel ShellVM;
-        List<Mediafile> OldFiles = new List<Mediafile>();
+        private ShellViewModel ShellVM;
+        private List<Mediafile> OldFiles = new List<Mediafile>();
         public Shell()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             new CoreWindowLogic();
             ShellVM = DataContext as ShellViewModel;
@@ -56,7 +49,7 @@ namespace BreadPlayer
             {
                 SymbolAsChar = "\uE762",
                 Tooltip = "Enable Multiselection",
-                ShortcutCommand = (App.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
+                ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand,
             });
             NowPlayingItem.Command = ShellVM.NavigateToNowPlayingViewCommand;
           
@@ -91,8 +84,9 @@ namespace BreadPlayer
         {
             Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
         }
-        bool isPressed;
-        bool isProgBarPressed = false;
+
+        private bool isPressed;
+        private bool isProgBarPressed = false;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, ShellVM); }, () => { ShellVM.DontUpdatePosition = true; });

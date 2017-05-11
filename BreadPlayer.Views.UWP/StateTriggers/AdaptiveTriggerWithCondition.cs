@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
@@ -52,8 +48,8 @@ namespace BreadPlayer.StateTriggers
         /// <value>The device family.</value>
         public double MinWindowWidth
         {
-            get { return (double)GetValue(MinWindowWidthProperty); }
-            set { SetValue(MinWindowWidthProperty, value); }
+            get => (double)GetValue(MinWindowWidthProperty);
+            set => SetValue(MinWindowWidthProperty, value);
         }
 
         /// <summary>
@@ -68,8 +64,8 @@ namespace BreadPlayer.StateTriggers
         /// <value>The device family.</value>
         public bool Condition
         {
-            get { return (bool)GetValue(ConditionProperty); }
-            set { SetValue(ConditionProperty, value); }
+            get => (bool)GetValue(ConditionProperty);
+            set => SetValue(ConditionProperty, value);
         }
 
         /// <summary>
@@ -109,13 +105,13 @@ namespace BreadPlayer.StateTriggers
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         public bool IsActive
         {
-            get { return m_IsActive; }
+            get => m_IsActive;
             private set
             {
                 if (m_IsActive != value)
                 {
                     m_IsActive = value;
-                    base.SetActive(value);
+                    SetActive(value);
                     IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }
             }

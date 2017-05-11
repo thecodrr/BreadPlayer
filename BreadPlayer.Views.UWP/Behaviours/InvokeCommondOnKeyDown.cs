@@ -19,8 +19,9 @@ using Microsoft.Xaml.Interactivity;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Behaviours
 {
@@ -29,16 +30,16 @@ namespace BreadPlayer.Behaviours
     {
         public ICommand Command
         {
-            get { return (ICommand)this.GetValue(CommandProperty); }
-            set { this.SetValue(CommandProperty, value); }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command", typeof(ICommand), typeof(InvokeCommandByKeyDown), new PropertyMetadata(null));
         public object CommandParameter
         {
-            get { return this.GetValue(CommandParameterProperty); }
-            set { this.SetValue(CommandParameterProperty, value); }
+            get => GetValue(CommandParameterProperty);
+            set => SetValue(CommandParameterProperty, value);
         }
 
         public static readonly DependencyProperty CommandParameterProperty =
@@ -46,24 +47,24 @@ namespace BreadPlayer.Behaviours
 
         public VirtualKey PressedKey
         {
-            get { return (VirtualKey)this.GetValue(PressedKeyProperty); }
-            set { this.SetValue(PressedKeyProperty, value); }
+            get => (VirtualKey)GetValue(PressedKeyProperty);
+            set => SetValue(PressedKeyProperty, value);
         }
 
         public static readonly DependencyProperty PressedKeyProperty =
             DependencyProperty.Register("PressedKey", typeof(VirtualKey), typeof(InvokeCommandByKeyDown), new PropertyMetadata(VirtualKey.None));
         public int PressedKeyCode
         {
-            get { return (int)this.GetValue(PressedKeyCodeProperty); }
-            set { this.SetValue(PressedKeyCodeProperty, value); }
+            get => (int)GetValue(PressedKeyCodeProperty);
+            set => SetValue(PressedKeyCodeProperty, value);
         }
 
         public static readonly DependencyProperty PressedKeyCodeProperty =
             DependencyProperty.Register("PressedKeyCode", typeof(int), typeof(InvokeCommandByKeyDown), new PropertyMetadata(0));
         public bool DoubleKeyCommand
         {
-            get { return (bool)this.GetValue(DoubleKeyCommandProperty); }
-            set { this.SetValue(DoubleKeyCommandProperty, value); }
+            get => (bool)GetValue(DoubleKeyCommandProperty);
+            set => SetValue(DoubleKeyCommandProperty, value);
         }
 
         public static readonly DependencyProperty DoubleKeyCommandProperty =
@@ -86,16 +87,16 @@ namespace BreadPlayer.Behaviours
         private void InvokeCommand(VirtualKey paramKey)
         {
             var code = (int)paramKey;
-            if (!this.DoubleKeyCommand && (int)paramKey == (PressedKeyCode == 0 ? (int)this.PressedKey : PressedKeyCode))
+            if (!DoubleKeyCommand && (int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
             {
-                var p = this.CommandParameter;
-                this.Command.Execute(p);
+                var p = CommandParameter;
+                Command.Execute(p);
             }
             else if (DoubleKeyCommand && IsControlPressed()
-                && (int)paramKey == (PressedKeyCode == 0 ? (int)this.PressedKey : PressedKeyCode))
+                && (int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
             {
-                var p = this.CommandParameter as BreadPlayer.Models.Mediafile;
-                this.Command.Execute(p);
+                var p = CommandParameter as Mediafile;
+                Command.Execute(p);
             }
         }
         private bool IsControlPressed()

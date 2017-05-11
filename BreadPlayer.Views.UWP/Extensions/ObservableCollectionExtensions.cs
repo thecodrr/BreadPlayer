@@ -24,13 +24,10 @@ namespace BreadPlayer.Extensions
         [ThreadStatic]
         private static Random Local;
 
-        public static Random ThisThreadsRandom
-        {
-            get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Environment.CurrentManagedThreadId))); }
-        }
+        public static Random ThisThreadsRandom => Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Environment.CurrentManagedThreadId)));
     }
 
-    static class ObservableCollectionExtensions
+    internal static class ObservableCollectionExtensions
     {      
         public static void Shuffle<T>(this ThreadSafeObservableCollection<T> list)
         {

@@ -1,4 +1,4 @@
-﻿using BreadPlayer.Models;
+﻿using BreadPlayer.Core.Common;
 using DBreeze;
 using DBreeze.Objects;
 using DBreeze.Utils;
@@ -13,7 +13,7 @@ namespace BreadPlayer.Database
     public class StaticKeyValueDatabase
     {
         private static string DbPath { get; set; }
-        static DBreezeEngine db;
+        private static DBreezeEngine db;
         public static bool IsDisposed { get; set; }
         public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
@@ -40,7 +40,7 @@ namespace BreadPlayer.Database
     public class KeyValueStoreDatabaseService : IDatabaseService
     {
         private string DbPath;
-        DBreezeEngine engine = null;
+        private DBreezeEngine engine = null;
         private string TextTableName;
         private string TableName;
         public KeyValueStoreDatabaseService(string dbPath, string tableName, string textTableName)
@@ -54,8 +54,8 @@ namespace BreadPlayer.Database
         {
             DbPath = dbPath;
             engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
-            DBreeze.Utils.CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
-            DBreeze.Utils.CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };
+            CustomSerializator.ByteArraySerializator = (object o) => { return JsonConvert.SerializeObject(o).To_UTF8Bytes(); };
+            CustomSerializator.ByteArrayDeSerializator = (byte[] bt, Type t) => { return JsonConvert.DeserializeObject(bt.UTF8_GetString(), t); };
         }
         public void ChangeTable(string tableName, string textTableName)
         {
@@ -135,7 +135,7 @@ namespace BreadPlayer.Database
             }
         }
 
-        public async Task InsertRecord(IDBRecord record)
+        public async Task InsertRecord(IDbRecord record)
         {
             await Task.Run(() =>
           {
@@ -144,7 +144,7 @@ namespace BreadPlayer.Database
               {
                   tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                   record.Id = tran.ObjectGetNewIdentity<long>(TableName);
-                  var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
+                  var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDbRecord>
                   {
                       Indexes = new List<DBreezeIndex>() { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
                       NewEntity = true,
@@ -162,7 +162,7 @@ namespace BreadPlayer.Database
             if (StaticKeyValueDatabase.IsDisposed || engine == null)
                 engine = StaticKeyValueDatabase.GetDatabaseEngine(DbPath);
         }
-        public async Task InsertRecords(IEnumerable<IDBRecord> records)
+        public async Task InsertRecords(IEnumerable<IDbRecord> records)
         {
             await Task.Run(() =>
             {
@@ -176,7 +176,7 @@ namespace BreadPlayer.Database
                         foreach (var record in records.ToList())
                         {
                             record.Id = tran.ObjectGetNewIdentity<long>(TableName);
-                            var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDBRecord>
+                            var ir = tran.ObjectInsert(TableName, new DBreezeObject<IDbRecord>
                             {
                                 Indexes = new List<DBreezeIndex>
                         {
@@ -238,14 +238,14 @@ namespace BreadPlayer.Database
             });
         }
 
-        public void UpdateRecords(IEnumerable<IDBRecord> records)
+        public void UpdateRecords(IEnumerable<IDbRecord> records)
         {
             using (var tran = engine.GetTransaction())
             {
                 tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                 foreach (var data in records)
                 {
-                    var ord = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(data.Id)).ObjectGet<IDBRecord>();
+                    var ord = tran.Select<byte[], byte[]>(TableName, 1.ToIndex(data.Id)).ObjectGet<IDbRecord>();
                     ord.Entity = data;
                     ord.NewEntity = false;
                     ord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
@@ -255,7 +255,7 @@ namespace BreadPlayer.Database
             }
         }
 
-        public async Task RemoveRecord(IDBRecord record)
+        public async Task RemoveRecord(IDbRecord record)
         {
             await Task.Run(() =>
             {
@@ -270,7 +270,7 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task RemoveRecords(IEnumerable<IDBRecord> records)
+        public async Task RemoveRecords(IEnumerable<IDbRecord> records)
         {
             await Task.Run(() =>
             {

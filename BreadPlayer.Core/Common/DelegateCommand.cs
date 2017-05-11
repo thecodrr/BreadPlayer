@@ -15,30 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Diagnostics;
 
-namespace BreadPlayer
+namespace BreadPlayer.Core.Common
 {
     public class DelegateCommand : ICommand
     {
-        private readonly Action action;
-        private bool enabled;
+        private readonly Action _action;
+        private bool _enabled;
 
         public DelegateCommand(Action action)
         {
-            this.action = action;
-            this.enabled = true;
+            this._action = action;
+            _enabled = true;
         }
 
         public bool IsEnabled
         {
-            get { return enabled; }
+            get => _enabled;
             set
             {
-                if (enabled != value)
+                if (_enabled != value)
                 {
-                    enabled = value;
+                    _enabled = value;
                     OnCanExecuteChanged();
                 }
             }
@@ -46,12 +47,12 @@ namespace BreadPlayer
 
         public bool CanExecute(object parameter)
         {
-            return enabled;
+            return _enabled;
         }
 
         public void Execute(object parameter)
         {
-            action();
+            _action();
         }
 
         public event EventHandler CanExecuteChanged;
@@ -64,19 +65,19 @@ namespace BreadPlayer
     public class RelayCommand : ICommand
     {
         #region Fields 
-        private bool enabled;
-        readonly Action<object> _execute;
-        readonly Predicate<object> _canExecute;
+        private bool _enabled;
+        private readonly Action<object> _execute;
+        private readonly Predicate<object> _canExecute;
         #endregion
 
         public bool IsEnabled
         {
-            get { return enabled; }
+            get => _enabled;
             set
             {
-                if (enabled != value)
+                if (_enabled != value)
                 {
-                    enabled = value;
+                    _enabled = value;
                     RaiseCanExecuteChanged();
                 }
             }
@@ -84,11 +85,11 @@ namespace BreadPlayer
         #region Constructors 
         public RelayCommand(Action<object> execute) : this(execute, null)
         {
-            enabled = true;
+            _enabled = true;
         }
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            enabled = true;
+            _enabled = true;
             _execute = execute ?? throw new ArgumentNullException("execute");
             _canExecute = canExecute;
         }
@@ -97,7 +98,7 @@ namespace BreadPlayer
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return enabled; //_canExecute == null ? true : _canExecute(parameter);
+            return _enabled; //_canExecute == null ? true : _canExecute(parameter);
         }
         public event EventHandler CanExecuteChanged;
         public void RaiseCanExecuteChanged()

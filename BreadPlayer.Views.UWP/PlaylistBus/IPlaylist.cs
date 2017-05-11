@@ -1,11 +1,11 @@
-﻿using BreadPlayer.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.PlaylistBus
 {
-	interface IPlaylist
+    internal interface IPlaylist
     {
         Task LoadPlaylist(StorageFile file);
         Task<bool> SavePlaylist(IEnumerable<Mediafile> songs);

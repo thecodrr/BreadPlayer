@@ -1,15 +1,14 @@
-﻿using BreadPlayer.Models;
-using System;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
     public class ChildSongsService
     {
-        string tablename, texttablename;
+        private string tablename, texttablename;
         private IDatabaseService Database
         {
             get; set;
@@ -20,7 +19,7 @@ namespace BreadPlayer.Database
             tablename = tableName;
             texttablename = textTableName;
         }
-        public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, IDBRecord pList)
+        public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, IDbRecord pList)
         {
             List<ChildSong> PlaylistSongs = new List<ChildSong>();
             foreach (var file in fileCol)

@@ -1,27 +1,28 @@
 ﻿using BreadPlayer.Core.Common;
-using BreadPlayer.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.NotificationManager
 {
 	public class BreadNotificationManager : ObservableObject, INotificationManager  
     {
-        DispatcherTimer hideTimer;
-        string status = "Nothing Baking";
+        private DispatcherTimer hideTimer;
+        private string status = "Nothing Baking";
         public string Status
         {
-            get { return status; }
-            set { Set(ref status, value);}
+            get => status;
+            set => Set(ref status, value);
         }
-        bool show;
+
+        private bool show;
         public bool Show
         {
-            get { return show; }
-            set { Set(ref show, value); }
+            get => show;
+            set => Set(ref show, value);
         }
         public async Task ShowMessageAsync(string status, int duration = 10)
         {

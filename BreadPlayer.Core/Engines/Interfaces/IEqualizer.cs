@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BreadPlayer.Core.Models;
 
-namespace BreadPlayer.Core.PlayerEngines
+namespace BreadPlayer.Core.Engines.Interfaces
 {
-    public abstract class IEqualizer : ObservableObject
+    public abstract class Equalizer : ObservableObject
     {
         // Center: Frequency center. 20.0 to 22000.0. Default = 8000.0
         // Bandwith: Octave range around the center frequency to filter. 0.2 to 5.0. Default = 1.0
@@ -27,36 +24,36 @@ namespace BreadPlayer.Core.PlayerEngines
         };
         public EqualizerSettings EqualizerSettings { get; set; }
         public ObservableCollection<EqualizerSettings> Presets { get; set; }
-        int selectedPreset = -1;
+        private int _selectedPreset = -1;
         public int SelectedPreset
         {
-            get { return selectedPreset; }
+            get => _selectedPreset;
             set
             {
-                selectedPreset = value;
-                if (selectedPreset == -1)
+                _selectedPreset = value;
+                if (_selectedPreset == -1)
                     return;
-                var preset = Presets[selectedPreset];
+                var preset = Presets[_selectedPreset];
                 EqualizerSettings = preset;
                 DeInit();
                 Init();
             }
         }
         public ObservableCollection<IEqualizerBand> Bands { get; set; }
-        bool isEnabled;
+        private bool _isEnabled;
         public bool IsEnabled
         {
-            get { return this.isEnabled; }
+            get => _isEnabled;
             set
             {
-                Set(ref isEnabled, value);
+                Set(ref _isEnabled, value);
                 if (value)
                 {
-                    this.Init();
+                    Init();
                 }
                 else
                 {                    
-                    this.DeInit();
+                    DeInit();
                 }
             }
         }
@@ -68,20 +65,20 @@ namespace BreadPlayer.Core.PlayerEngines
         public abstract void Dispose();
         public void SaveEqualizerSettings()
         {
-            var equalizerSettings = this.EqualizerSettings;
+            var equalizerSettings = EqualizerSettings;
             if (equalizerSettings == null || equalizerSettings.Name == null)
             {
-                equalizerSettings = new EqualizerSettings { Name = this.Name };
-                this.EqualizerSettings = equalizerSettings;
+                equalizerSettings = new EqualizerSettings { Name = Name };
+                EqualizerSettings = equalizerSettings;
             }
-            equalizerSettings.GainValues = this.Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
-            equalizerSettings.IsEnabled = this.IsEnabled;
+            equalizerSettings.GainValues = Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
+            equalizerSettings.IsEnabled = IsEnabled;
             InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
         }
         public void SetToDefault()
         {
-            this.DeInit();
-            this.Init();
+            DeInit();
+            Init();
         }
         public abstract IEqualizerBand GetEqualizerBand(bool isActive, float centerValue, float bandwithValue, float gainValue);
     }

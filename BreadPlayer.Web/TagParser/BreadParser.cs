@@ -4,9 +4,9 @@ namespace BreadPlayer.Web.TagParser
 {
     public class BreadParser
     {
-        List<string> TLDList = new List<string>();
-        List<string> SeperatorList = new List<string>() {" - "};
-        List<char> GarbageCharList = new List<char>() { };
+        private List<string> TLDList = new List<string>();
+        private List<string> SeperatorList = new List<string>() {" - "};
+        private List<char> GarbageCharList = new List<char>() { };
         public int Compare2Strings(string a, string b)
         {
             List<string> list = new List<string>() {"eminem", "justin", "justin bieber", "the way I am eminem", "nothing like us justin bieber" };

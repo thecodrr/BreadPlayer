@@ -30,11 +30,11 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class PlaylistView
     {
-        double MaxFontSize;
-        double MinFontSize;
+        private double MaxFontSize;
+        private double MinFontSize;
         public PlaylistView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             Window.Current.SizeChanged += Current_SizeChanged;
             MaxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
             MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
@@ -46,12 +46,12 @@ namespace BreadPlayer
             MinFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
-        PlaylistViewModel PlaylistVM;
+        private PlaylistViewModel PlaylistVM;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            PlaylistVM = App.Current.Resources["PlaylistVM"] as PlaylistViewModel;
+            PlaylistVM = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
             PlaylistVM.Init(e.Parameter);
-            this.DataContext = PlaylistVM;
+            DataContext = PlaylistVM;
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)

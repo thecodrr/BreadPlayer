@@ -1,11 +1,10 @@
-﻿using BreadPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Engines.BASSEngine;
+using BreadPlayer.Core.Models;
 
-namespace BreadPlayer.Core.PlayerEngines
+namespace BreadPlayer.Core.Engines.Interfaces
 {
     public interface IPlayerEngine : IDisposable
     {
@@ -19,7 +18,7 @@ namespace BreadPlayer.Core.PlayerEngines
         //PROPERTIES
         bool IsVolumeMuted { get; set; }
         Effects Effect { get; set; }
-        IEqualizer Equalizer { get; set; }
+        Equalizer Equalizer { get; set; }
         double Volume { get; set; }
         double Position { get; set; }
         double Length { get; set; }

@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
-using BreadPlayer.Models;
+using BreadPlayer.Core.Models;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,8 +34,8 @@ namespace BreadPlayer
     {
         public LibraryView()
         {
-            this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
+            InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
         
         private void fileBox_DragOver(object sender, DragEventArgs e)

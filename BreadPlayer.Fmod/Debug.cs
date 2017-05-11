@@ -12,7 +12,7 @@ namespace BreadPlayer.Fmod
 {
     public class Debug
     {
-        public static Result Initialize(DebugFlags flags, DebugMode mode, DEBUG_CALLBACK callback, string filename)
+        public static Result Initialize(DebugFlags flags, DebugMode mode, DebugCallback callback, string filename)
         {
             return FMOD_Debug_Initialize(flags, mode, callback, filename);
         }
@@ -20,8 +20,8 @@ namespace BreadPlayer.Fmod
 
         #region importfunctions
 
-        [DllImport(FMODVersion.DLL)]
-        private static extern Result FMOD_Debug_Initialize(DebugFlags flags, DebugMode mode, DEBUG_CALLBACK callback, string filename);
+        [DllImport(FmodVersion.Dll)]
+        private static extern Result FMOD_Debug_Initialize(DebugFlags flags, DebugMode mode, DebugCallback callback, string filename);
 
         #endregion
     }

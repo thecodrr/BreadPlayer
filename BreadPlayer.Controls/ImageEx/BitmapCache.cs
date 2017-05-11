@@ -13,7 +13,7 @@ namespace BreadPlayer.Controls
         public const int MAXRESOLUTION = 1920;
         public const int MIDRESOLUTION = 960;
 
-        const string FOLDER_NAME = "ImageCache";
+        private const string FOLDER_NAME = "ImageCache";
 
         private static Dictionary<string, Task> _concurrentTasks = new Dictionary<string, Task>();
         private static object _lock = new object();

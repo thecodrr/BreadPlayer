@@ -43,9 +43,9 @@ namespace BreadPlayer.Extensions
             while (MyQueue.Count > 0)
             {
                 DependencyObject current = MyQueue.Dequeue();
-                for (int i = 0; i < Windows.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(current); i++)
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++)
                 {
-                    var child = Windows.UI.Xaml.Media.VisualTreeHelper.GetChild(current, i);
+                    var child = VisualTreeHelper.GetChild(current, i);
                     var typedChild = child as T;
                     if (typedChild != null)
                     {

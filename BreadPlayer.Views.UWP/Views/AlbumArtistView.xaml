@@ -2,8 +2,7 @@
     x:Class="BreadPlayer.AlbumArtistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer" 
-    xmlns:Models="using:BreadPlayer.Models"
+    xmlns:local="using:BreadPlayer"
     xmlns:Converters="using:BreadPlayer.Converters"    
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
@@ -11,9 +10,10 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BreadPlayer.Core.Models"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:DataType="Models:Album" x:Key="MobileItemTemplate">
+        <DataTemplate x:DataType="models:Album" x:Key="MobileItemTemplate">
             <Grid Width="130" Height="200" Margin="5">
                 <StackPanel>
                     <Grid>
@@ -80,7 +80,7 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="Models:Album">
+                <DataTemplate x:DataType="models:Album">
                     <Grid MaxWidth="200" Height="290" Margin="5">
                         <StackPanel>
                             <Grid>

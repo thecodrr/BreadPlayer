@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using BreadPlayer.Models;
 using System.Threading.Tasks;
-using BreadPlayer.Common;
 using System;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Database
 {

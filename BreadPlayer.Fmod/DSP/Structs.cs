@@ -3,7 +3,6 @@ using BreadPlayer.Fmod.Structs;
 using System;
 
 using System.Runtime.InteropServices;
-using System.Text;
 using static BreadPlayer.Fmod.Callbacks;
 using static BreadPlayer.Fmod.CoreDSP.Callbacks;
 
@@ -386,7 +385,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
         private IntPtr[] spectrum_internal;                           /* [r] Per channel spectrum arrays.  See remarks for more. */
 
-        public float[][] spectrum
+        public float[][] Spectrum
         {
             get
             {
@@ -454,29 +453,29 @@ namespace BreadPlayer.Fmod.CoreDSP
         public uint version;            /* [w] Plugin writer's version number. */
         public int numinputbuffers;    /* [w] Number of input buffers to process.  Use 0 for DSPs that only generate sound and 1 for effects that process incoming sound. */
         public int numoutputbuffers;   /* [w] Number of audio output buffers.  Only one output buffer is currently supported. */
-        public DSP_CREATECALLBACK create;             /* [w] Create callback.  This is called when DSP unit is created.  Can be null. */
-        public DSP_RELEASECALLBACK release;            /* [w] Release callback.  This is called just before the unit is freed so the user can do any cleanup needed for the unit.  Can be null. */
-        public DSP_RESETCALLBACK reset;              /* [w] Reset callback.  This is called by the user to reset any history buffers that may need resetting for a filter, when it is to be used or re-used for the first time to its initial clean state.  Use to avoid clicks or artifacts. */
-        public DSP_READCALLBACK read;               /* [w] Read callback.  Processing is done here.  Can be null. */
-        public DSP_PROCESS_CALLBACK process;            /* [w] Process callback.  Can be specified instead of the read callback if any channel format changes occur between input and output.  This also replaces shouldiprocess and should return an error if the effect is to be bypassed.  Can be null. */
-        public DSP_SETPOSITIONCALLBACK setposition;        /* [w] Setposition callback.  This is called if the unit wants to update its position info but not process data.  Can be null. */
+        public DspCreatecallback create;             /* [w] Create callback.  This is called when DSP unit is created.  Can be null. */
+        public DspReleasecallback release;            /* [w] Release callback.  This is called just before the unit is freed so the user can do any cleanup needed for the unit.  Can be null. */
+        public DspResetcallback reset;              /* [w] Reset callback.  This is called by the user to reset any history buffers that may need resetting for a filter, when it is to be used or re-used for the first time to its initial clean state.  Use to avoid clicks or artifacts. */
+        public DspReadcallback read;               /* [w] Read callback.  Processing is done here.  Can be null. */
+        public DspProcessCallback process;            /* [w] Process callback.  Can be specified instead of the read callback if any channel format changes occur between input and output.  This also replaces shouldiprocess and should return an error if the effect is to be bypassed.  Can be null. */
+        public DspSetpositioncallback setposition;        /* [w] Setposition callback.  This is called if the unit wants to update its position info but not process data.  Can be null. */
 
         public int numparameters;      /* [w] Number of parameters used in this filter.  The user finds this with DSP::getNumParameters */
         public IntPtr paramdesc;          /* [w] Variable number of parameter structures. */
-        public DSP_SETPARAM_FLOAT_CALLBACK setparameterfloat;  /* [w] This is called when the user calls DSP.setParameterFloat. Can be null. */
-        public DSP_SETPARAM_INT_CALLBACK setparameterint;    /* [w] This is called when the user calls DSP.setParameterInt.   Can be null. */
-        public DSP_SETPARAM_BOOL_CALLBACK setparameterbool;   /* [w] This is called when the user calls DSP.setParameterBool.  Can be null. */
-        public DSP_SETPARAM_DATA_CALLBACK setparameterdata;   /* [w] This is called when the user calls DSP.setParameterData.  Can be null. */
-        public DSP_GETPARAM_FLOAT_CALLBACK getparameterfloat;  /* [w] This is called when the user calls DSP.getParameterFloat. Can be null. */
-        public DSP_GETPARAM_INT_CALLBACK getparameterint;    /* [w] This is called when the user calls DSP.getParameterInt.   Can be null. */
-        public DSP_GETPARAM_BOOL_CALLBACK getparameterbool;   /* [w] This is called when the user calls DSP.getParameterBool.  Can be null. */
-        public DSP_GETPARAM_DATA_CALLBACK getparameterdata;   /* [w] This is called when the user calls DSP.getParameterData.  Can be null. */
-        public DSP_SHOULDIPROCESS_CALLBACK shouldiprocess;     /* [w] This is called before processing.  You can detect if inputs are idle and return FMOD_OK to process, or any other error code to avoid processing the effect.  Use a count down timer to allow effect tails to process before idling! */
+        public DspSetparamFloatCallback setparameterfloat;  /* [w] This is called when the user calls DSP.setParameterFloat. Can be null. */
+        public DspSetparamIntCallback setparameterint;    /* [w] This is called when the user calls DSP.setParameterInt.   Can be null. */
+        public DspSetparamBoolCallback setparameterbool;   /* [w] This is called when the user calls DSP.setParameterBool.  Can be null. */
+        public DspSetparamDataCallback setparameterdata;   /* [w] This is called when the user calls DSP.setParameterData.  Can be null. */
+        public DspGetparamFloatCallback getparameterfloat;  /* [w] This is called when the user calls DSP.getParameterFloat. Can be null. */
+        public DspGetparamIntCallback getparameterint;    /* [w] This is called when the user calls DSP.getParameterInt.   Can be null. */
+        public DspGetparamBoolCallback getparameterbool;   /* [w] This is called when the user calls DSP.getParameterBool.  Can be null. */
+        public DspGetparamDataCallback getparameterdata;   /* [w] This is called when the user calls DSP.getParameterData.  Can be null. */
+        public DspShouldiprocessCallback shouldiprocess;     /* [w] This is called before processing.  You can detect if inputs are idle and return FMOD_OK to process, or any other error code to avoid processing the effect.  Use a count down timer to allow effect tails to process before idling! */
         public IntPtr userdata;           /* [w] Optional. Specify 0 to ignore. This is user data to be attached to the DSP unit during creation.  Access via DSP::getUserData. */
 
-        public DSP_SYSTEM_REGISTER_CALLBACK sys_register;       /* [w] Register callback.  This is called when DSP unit is loaded/registered.  Useful for 'global'/per system object init for plugin.  Can be null. */
-        public DSP_SYSTEM_DEREGISTER_CALLBACK sys_deregister;     /* [w] Deregister callback.  This is called when DSP unit is unloaded/deregistered.  Useful as 'global'/per system object shutdown for plugin.  Can be null. */
-        public DSP_SYSTEM_MIX_CALLBACK sys_mix;            /* [w] FMODSystem mix stage callback.  This is called when the mixer starts to execute or is just finishing executing.  Useful for 'global'/per system object once a mix update calls for a plugin.  Can be null. */
+        public DspSystemRegisterCallback sys_register;       /* [w] Register callback.  This is called when DSP unit is loaded/registered.  Useful for 'global'/per system object init for plugin.  Can be null. */
+        public DspSystemDeregisterCallback sys_deregister;     /* [w] Deregister callback.  This is called when DSP unit is unloaded/deregistered.  Useful as 'global'/per system object shutdown for plugin.  Can be null. */
+        public DspSystemMixCallback sys_mix;            /* [w] FMODSystem mix stage callback.  This is called when the mixer starts to execute or is just finishing executing.  Useful for 'global'/per system object once a mix update calls for a plugin.  Can be null. */
     }
 
     /*
@@ -496,8 +495,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     [StructLayout(LayoutKind.Sequential)]
     public struct DspStateDftcallbacks
     {
-        public DSP_DFT_FFTREAL fftreal;        /* [r] Callback for performing an FFT on a real signal. */
-        public DSP_DFT_IFFTREAL inversefftreal; /* [r] Callback for performing an inverse FFT to get a real signal. */
+        public DspDftFftreal fftreal;        /* [r] Callback for performing an FFT on a real signal. */
+        public DspDftIfftreal inversefftreal; /* [r] Callback for performing an inverse FFT to get a real signal. */
     }
 
     /*
@@ -517,12 +516,12 @@ namespace BreadPlayer.Fmod.CoreDSP
     [StructLayout(LayoutKind.Sequential)]
     public struct DspStatePanCallbacks
     {
-        public DSP_PAN_SUM_MONO_MATRIX summonomatrix;
-        public DSP_PAN_SUM_STEREO_MATRIX sumstereomatrix;
-        public DSP_PAN_SUM_SURROUND_MATRIX sumsurroundmatrix;
-        public DSP_PAN_SUM_MONO_TO_SURROUND_MATRIX summonotosurroundmatrix;
-        public DSP_PAN_SUM_STEREO_TO_SURROUND_MATRIX sumstereotosurroundmatrix;
-        public DSP_PAN_3D_GET_ROLLOFF_GAIN getrolloffgain;
+        public DspPanSumMonoMatrix summonomatrix;
+        public DspPanSumStereoMatrix sumstereomatrix;
+        public DspPanSumSurroundMatrix sumsurroundmatrix;
+        public DspPanSumMonoToSurroundMatrix summonotosurroundmatrix;
+        public DspPanSumStereoToSurroundMatrix sumstereotosurroundmatrix;
+        public DspPan_3DGetRolloffGain getrolloffgain;
     }
 
     /*
@@ -544,15 +543,15 @@ namespace BreadPlayer.Fmod.CoreDSP
     [StructLayout(LayoutKind.Sequential)]
     public struct DspStateSystemcallbacks
     {
-        MEMORY_ALLOC_CALLBACK alloc;          /* [r] Memory allocation callback. Use this for all dynamic memory allocation within the plugin. */
-        MEMORY_REALLOC_CALLBACK realloc;        /* [r] Memory reallocation callback. */
-        MEMORY_FREE_CALLBACK free;           /* [r] Memory free callback. */
-        DSP_SYSTEM_GETSAMPLERATE getsamplerate;  /* [r] Callback for getting the system samplerate. */
-        DSP_SYSTEM_GETBLOCKSIZE getblocksize;   /* [r] Callback for getting the system's block size.  DSPs will be requested to process blocks of varying length up to this size.*/
-        IntPtr dft;            /* [r] Struct containing callbacks for performing FFTs and inverse FFTs. */
-        IntPtr pancallbacks;   /* [r] Pointer to a structure of callbacks for calculating pan, up-mix and down-mix matrices. */
-        DSP_SYSTEM_GETSPEAKERMODE getspeakermode; /* [r] Callback for getting the system's speaker modes.  One is the mixer's default speaker mode, the other is the output mode the system is downmixing or upmixing to.*/
-        FMOD_DSP_STATE_GETCLOCK getclock;       /* [r] Callback for getting the clock of the current DSP, as well as the subset of the input buffer that contains the signal */
+        private MemoryAllocCallback alloc;          /* [r] Memory allocation callback. Use this for all dynamic memory allocation within the plugin. */
+        private MemoryReallocCallback realloc;        /* [r] Memory reallocation callback. */
+        private MemoryFreeCallback free;           /* [r] Memory free callback. */
+        private DspSystemGetsamplerate getsamplerate;  /* [r] Callback for getting the system samplerate. */
+        private DspSystemGetblocksize getblocksize;   /* [r] Callback for getting the system's block size.  DSPs will be requested to process blocks of varying length up to this size.*/
+        private IntPtr dft;            /* [r] Struct containing callbacks for performing FFTs and inverse FFTs. */
+        private IntPtr pancallbacks;   /* [r] Pointer to a structure of callbacks for calculating pan, up-mix and down-mix matrices. */
+        private DspSystemGetspeakermode getspeakermode; /* [r] Callback for getting the system's speaker modes.  One is the mixer's default speaker mode, the other is the output mode the system is downmixing or upmixing to.*/
+        private FmodDspStateGetclock getclock;       /* [r] Callback for getting the clock of the current DSP, as well as the subset of the input buffer that contains the signal */
     }
 
     /*

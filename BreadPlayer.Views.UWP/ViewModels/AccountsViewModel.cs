@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Common;
+using BreadPlayer.Core.Common;
 using IF.Lastfm.Core.Objects;
 
 namespace BreadPlayer.ViewModels
@@ -8,26 +9,22 @@ namespace BreadPlayer.ViewModels
     public class AccountsViewModel : ViewModelBase
     {
         #region Lastfm Configuration
-        RelayCommand lastfmLoginCommand;
-        string lastfmUsername;
-        string lastfmPassword;
+
+        private RelayCommand lastfmLoginCommand;
+        private string lastfmUsername;
+        private string lastfmPassword;
         public string LastfmUsername
         {
-            get { return lastfmUsername; }
-            set
-            {
-                Set(ref lastfmUsername, value);
-            }
+            get => lastfmUsername;
+            set => Set(ref lastfmUsername, value);
         }
         public string LastfmPassword
         {
-            get { return lastfmPassword; }
-            set
-            {
-                Set(ref lastfmPassword, value);               
-            }
+            get => lastfmPassword;
+            set => Set(ref lastfmPassword, value);
         }
-        string loginStatus = "(Not Logged In)";
+
+        private string loginStatus = "(Not Logged In)";
         public string LoginStatus
         {
             get => loginStatus;

@@ -1,46 +1,41 @@
-﻿using BreadPlayer.Fmod;
+﻿using BreadPlayer.Core.Engines.Interfaces;
+using BreadPlayer.Fmod;
 using BreadPlayer.Fmod.CoreDSP;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BreadPlayer.Core.PlayerEngines
+namespace BreadPlayer.Core.Engines.FMODEngine
 {
     public class FmodEqualizerBand : ObservableObject, IEqualizerBand
     {
-        private DSP dspEQ;
-        private float gain;
-        private bool isActive;
-        private Channel FChannel;
+        private Dsp _dspEq;
+        private float _gain;
+        private bool _isActive;
+        private Channel _fChannel;
 
-        public FmodEqualizerBand(Channel fmodChannel, DSP dspParamEq, float centerValue, float gainValue, bool active)
+        public FmodEqualizerBand(Channel fmodChannel, Dsp dspParamEq, float centerValue, float gainValue, bool active)
         {
-            FChannel = fmodChannel;
-            this.dspEQ = dspParamEq;
+            _fChannel = fmodChannel;
+            _dspEq = dspParamEq;
             if (centerValue >= 1000)
             {
-                this.BandCaption = string.Format("{0}KHz", (centerValue / 1000));
+                BandCaption = string.Format("{0}KHz", (centerValue / 1000));
             }
             else
             {
-                this.BandCaption = centerValue + "Hz";
+                BandCaption = centerValue + "Hz";
             }
-            this.gain = gainValue;
-            this.IsActive = active;
+            _gain = gainValue;
+            IsActive = active;
         }  
 
         public void Remove()
         {
-            if (this.dspEQ != null)
+            if (_dspEq != null)
             {
-                var result = FChannel?.removeDSP(dspEQ);
-                result = this.dspEQ.release();                
-                this.dspEQ = null;
+                var result = _fChannel?.RemoveDsp(_dspEq);
+                result = _dspEq.Release();                
+                _dspEq = null;
             }
-            this.IsActive = false;
+            IsActive = false;
         }
 
         public string BandCaption { get; set; }
@@ -50,28 +45,25 @@ namespace BreadPlayer.Core.PlayerEngines
         /// </summary>
         public float Gain
         {
-            get { return this.gain; }
+            get => _gain;
             set
             {
-                Set(ref gain, value);
-                if (this.dspEQ != null)
+                Set(ref _gain, value);
+                if (_dspEq != null)
                 {
-                    var result = this.dspEQ.setActive(false);
+                    var result = _dspEq.SetActive(false);
 
-                    result = this.dspEQ.setParameterFloat((int)DspParamEQ.GAIN, value);
+                    result = _dspEq.SetParameterFloat((int)DspParamEq.Gain, value);
 
-                    result = this.dspEQ.setActive(true);
+                    result = _dspEq.SetActive(true);
                 }
             }
         }
 
         public bool IsActive
         {
-            get { return this.isActive; }
-            set
-            {
-                Set(ref isActive, value);
-            }
+            get => _isActive;
+            set => Set(ref _isActive, value);
         }
     }
 }

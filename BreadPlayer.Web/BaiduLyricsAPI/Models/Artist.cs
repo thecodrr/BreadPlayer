@@ -2,7 +2,7 @@
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
-    class Artist : IQueryResult
+    internal class Artist : IQueryResult
     {
         private string author;
         public string GetName()

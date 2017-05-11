@@ -25,7 +25,7 @@ using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Common
 {
-    class DirectoryWalker
+    internal class DirectoryWalker
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {

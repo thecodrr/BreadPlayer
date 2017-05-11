@@ -1,22 +1,20 @@
-﻿using Windows.UI;
-using Windows.UI.Composition;
+﻿using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Microsoft.Graphics.Canvas.Effects;
-using System;
 
 namespace BreadPlayer.Effects
 {
     public class BackDrop : Control
     {
-        Compositor m_compositor;
-        SpriteVisual m_blurVisual;
-        CompositionBrush m_blurBrush;
-        Visual m_rootVisual;
+        private Compositor m_compositor;
+        private SpriteVisual m_blurVisual;
+        private CompositionBrush m_blurBrush;
+        private Visual m_rootVisual;
 
 #if SDKVERSION_14393
-        bool m_setUpExpressions;
+        private bool m_setUpExpressions;
 #endif
 
         public BackDrop()
@@ -41,8 +39,8 @@ namespace BreadPlayer.Effects
 #endif
             ElementCompositionPreview.SetElementChildVisual(this as UIElement, m_blurVisual);
 
-            this.Loading += OnLoading;
-            this.Unloaded += OnUnloaded;
+            Loading += OnLoading;
+            Unloaded += OnUnloaded;
         }
 
         public const string BlurAmountProperty = nameof(BlurAmount);
@@ -71,35 +69,29 @@ namespace BreadPlayer.Effects
 
         public Compositor Compositor
         {
-            get
-            {
-                return m_compositor;
-            }
+            get => m_compositor;
 
-            private set
-            {
-                m_compositor = value;
-            }
+            private set => m_compositor = value;
         }
 
 #pragma warning disable 1998
         private async void OnLoading(FrameworkElement sender, object args)
         {
-            this.SizeChanged += OnSizeChanged;
+            SizeChanged += OnSizeChanged;
             OnSizeChanged(this, null);
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            this.SizeChanged -= OnSizeChanged;
+            SizeChanged -= OnSizeChanged;
         }
 
 
-        private void OnSizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (m_blurVisual != null)
             {
-                m_blurVisual.Size = new System.Numerics.Vector2((float)this.ActualWidth, (float)this.ActualHeight);
+                m_blurVisual.Size = new System.Numerics.Vector2((float)ActualWidth, (float)ActualHeight);
             }
         }
 

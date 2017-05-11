@@ -1,8 +1,4 @@
-﻿using System;
-
-using System.Text;
-
-namespace BreadPlayer.Fmod.CoreDSP
+﻿namespace BreadPlayer.Fmod.CoreDSP
 {
     /*
      [ENUM]
@@ -18,8 +14,8 @@ namespace BreadPlayer.Fmod.CoreDSP
      */
     public enum DspProcessOperation
     {
-        PROCESS_PERFORM = 0,               /* Process the incoming audio in 'inbufferarray' and output to 'outbufferarray'. */
-        PROCESS_QUERY                      /* The DSP is being queried for the expected output format and whether it needs to process audio or should be bypassed.  The function should return any value other than FMOD_OK if audio can pass through unprocessed. If audio is to be processed, 'outbufferarray' must be filled with the expected output format, channel count and mask. */
+        ProcessPerform = 0,               /* Process the incoming audio in 'inbufferarray' and output to 'outbufferarray'. */
+        ProcessQuery                      /* The DSP is being queried for the expected output format and whether it needs to process audio or should be bypassed.  The function should return any value other than FMOD_OK if audio can pass through unprocessed. If audio is to be processed, 'outbufferarray' must be filled with the expected output format, channel count and mask. */
     }
     /*
         [ENUM]
@@ -36,8 +32,8 @@ namespace BreadPlayer.Fmod.CoreDSP
         */
     public enum DspPanSurroundFlags
     {
-        DEFAULT = 0,
-        ROTATION_NOT_BIASED = 1,
+        Default = 0,
+        RotationNotBiased = 1,
     }
     
     /*
@@ -55,42 +51,42 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspType : int
     {
-        UNKNOWN,            /* This unit was created via a non BreadPlayer.Fmod plugin so has an unknown purpose. */
-        MIXER,              /* This unit does nothing but take inputs and mix them together then feed the result to the soundcard unit. */
-        OSCILLATOR,         /* This unit generates sine/square/saw/triangle or noise tones. */
-        LOWPASS,            /* This unit filters sound using a high quality, resonant lowpass filter algorithm but consumes more CPU time. */
-        ITLOWPASS,          /* This unit filters sound using a resonant lowpass filter algorithm that is used in Impulse Tracker, but with limited cutoff range (0 to 8060hz). */
-        HIGHPASS,           /* This unit filters sound using a resonant highpass filter algorithm. */
-        ECHO,               /* This unit produces an echo on the sound and fades out at the desired rate. */
-        FADER,              /* This unit pans and scales the volume of a unit. */
-        FLANGE,             /* This unit produces a flange effect on the sound. */
-        DISTORTION,         /* This unit distorts the sound. */
-        NORMALIZE,          /* This unit normalizes or amplifies the sound to a certain level. */
-        LIMITER,            /* This unit limits the sound to a certain level. */
-        PARAMEQ,            /* This unit attenuates or amplifies a selected frequency range. */
-        PITCHSHIFT,         /* This unit bends the pitch of a sound without changing the speed of playback. */
-        CHORUS,             /* This unit produces a chorus effect on the sound. */
-        VSTPLUGIN,          /* This unit allows the use of Steinberg VST plugins */
-        WINAMPPLUGIN,       /* This unit allows the use of Nullsoft Winamp plugins */
-        ITECHO,             /* This unit produces an echo on the sound and fades out at the desired rate as is used in Impulse Tracker. */
-        COMPRESSOR,         /* This unit implements dynamic compression (linked multichannel, wideband) */
-        SFXREVERB,          /* This unit implements SFX reverb */
-        LOWPASS_SIMPLE,     /* This unit filters sound using a simple lowpass with no resonance, but has flexible cutoff and is fast. */
-        DELAY,              /* This unit produces different delays on individual channels of the sound. */
-        TREMOLO,            /* This unit produces a tremolo / chopper effect on the sound. */
-        LADSPAPLUGIN,       /* This unit allows the use of LADSPA standard plugins. */
-        SEND,               /* This unit sends a copy of the signal to a return DSP anywhere in the DSP tree. */
-        RETURN,             /* This unit receives signals from a number of send DSPs. */
-        HIGHPASS_SIMPLE,    /* This unit filters sound using a simple highpass with no resonance, but has flexible cutoff and is fast. */
-        PAN,                /* This unit pans the signal, possibly upmixing or downmixing as well. */
-        THREE_EQ,           /* This unit is a three-band equalizer. */
-        FFT,                /* This unit simply analyzes the signal and provides spectrum information back through getParameter. */
-        LOUDNESS_METER,     /* This unit analyzes the loudness and true peak of the signal. */
-        ENVELOPEFOLLOWER,   /* This unit tracks the envelope of the input/sidechain signal */
-        CONVOLUTIONREVERB,  /* This unit implements convolution reverb. */
-        CHANNELMIX,         /* This unit provides per signal channel gain, and output channel mapping to allow 1 multichannel signal made up of many groups of signals to map to a single output signal. */
-        TRANSCEIVER,        /* This unit 'sends' and 'receives' from a selection of up to 32 different slots.  It is like a send/return but it uses global slots rather than returns as the destination.  It also has other features.  Multiple transceivers can receive from a single channel, or multiple transceivers can send to a single channel, or a combination of both. */
-        OBJECTPAN,          /* This unit sends the signal to a 3d object encoder like Dolby Atmos. */
+        Unknown,            /* This unit was created via a non BreadPlayer.Fmod plugin so has an unknown purpose. */
+        Mixer,              /* This unit does nothing but take inputs and mix them together then feed the result to the soundcard unit. */
+        Oscillator,         /* This unit generates sine/square/saw/triangle or noise tones. */
+        Lowpass,            /* This unit filters sound using a high quality, resonant lowpass filter algorithm but consumes more CPU time. */
+        Itlowpass,          /* This unit filters sound using a resonant lowpass filter algorithm that is used in Impulse Tracker, but with limited cutoff range (0 to 8060hz). */
+        Highpass,           /* This unit filters sound using a resonant highpass filter algorithm. */
+        Echo,               /* This unit produces an echo on the sound and fades out at the desired rate. */
+        Fader,              /* This unit pans and scales the volume of a unit. */
+        Flange,             /* This unit produces a flange effect on the sound. */
+        Distortion,         /* This unit distorts the sound. */
+        Normalize,          /* This unit normalizes or amplifies the sound to a certain level. */
+        Limiter,            /* This unit limits the sound to a certain level. */
+        Parameq,            /* This unit attenuates or amplifies a selected frequency range. */
+        Pitchshift,         /* This unit bends the pitch of a sound without changing the speed of playback. */
+        Chorus,             /* This unit produces a chorus effect on the sound. */
+        Vstplugin,          /* This unit allows the use of Steinberg VST plugins */
+        Winampplugin,       /* This unit allows the use of Nullsoft Winamp plugins */
+        Itecho,             /* This unit produces an echo on the sound and fades out at the desired rate as is used in Impulse Tracker. */
+        Compressor,         /* This unit implements dynamic compression (linked multichannel, wideband) */
+        Sfxreverb,          /* This unit implements SFX reverb */
+        LowpassSimple,     /* This unit filters sound using a simple lowpass with no resonance, but has flexible cutoff and is fast. */
+        Delay,              /* This unit produces different delays on individual channels of the sound. */
+        Tremolo,            /* This unit produces a tremolo / chopper effect on the sound. */
+        Ladspaplugin,       /* This unit allows the use of LADSPA standard plugins. */
+        Send,               /* This unit sends a copy of the signal to a return DSP anywhere in the DSP tree. */
+        Return,             /* This unit receives signals from a number of send DSPs. */
+        HighpassSimple,    /* This unit filters sound using a simple highpass with no resonance, but has flexible cutoff and is fast. */
+        Pan,                /* This unit pans the signal, possibly upmixing or downmixing as well. */
+        ThreeEq,           /* This unit is a three-band equalizer. */
+        Fft,                /* This unit simply analyzes the signal and provides spectrum information back through getParameter. */
+        LoudnessMeter,     /* This unit analyzes the loudness and true peak of the signal. */
+        Envelopefollower,   /* This unit tracks the envelope of the input/sidechain signal */
+        Convolutionreverb,  /* This unit implements convolution reverb. */
+        Channelmix,         /* This unit provides per signal channel gain, and output channel mapping to allow 1 multichannel signal made up of many groups of signals to map to a single output signal. */
+        Transceiver,        /* This unit 'sends' and 'receives' from a selection of up to 32 different slots.  It is like a send/return but it uses global slots rather than returns as the destination.  It also has other features.  Multiple transceivers can receive from a single channel, or multiple transceivers can send to a single channel, or a combination of both. */
+        Objectpan,          /* This unit sends the signal to a 3d object encoder like Dolby Atmos. */
     }
 
 
@@ -108,10 +104,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspParameterType
     {
-        FLOAT = 0,
-        INT,
-        BOOL,
-        DATA,
+        Float = 0,
+        Int,
+        Bool,
+        Data,
     }
 
 
@@ -130,9 +126,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspParameterFloatMappingType
     {
-        DSP_PARAMETER_FLOAT_MAPPING_TYPE_LINEAR = 0,          /* Values mapped linearly across range. */
-        DSP_PARAMETER_FLOAT_MAPPING_TYPE_AUTO,                /* A mapping is automatically chosen based on range and units.  See remarks. */
-        DSP_PARAMETER_FLOAT_MAPPING_TYPE_PIECEWISE_LINEAR,    /* Values mapped in a piecewise linear fashion defined by FMOD_DSP_PARAMETER_DESC_FLOAT::mapping.piecewiselinearmapping. */
+        DspParameterFloatMappingTypeLinear = 0,          /* Values mapped linearly across range. */
+        DspParameterFloatMappingTypeAuto,                /* A mapping is automatically chosen based on range and units.  See remarks. */
+        DspParameterFloatMappingTypePiecewiseLinear,    /* Values mapped in a piecewise linear fashion defined by FMOD_DSP_PARAMETER_DESC_FLOAT::mapping.piecewiselinearmapping. */
     }
     
     /*
@@ -153,12 +149,12 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspParameterDataType
     {
-        DSP_PARAMETER_DATA_TYPE_USER = 0,              /* The default data type.  All user data types should be 0 or above. */
-        DSP_PARAMETER_DATA_TYPE_OVERALLGAIN = -1,      /* The data type for FMOD_DSP_PARAMETER_OVERALLGAIN parameters.  There should a maximum of one per DSP. */
-        DSP_PARAMETER_DATA_TYPE_3DATTRIBUTES = -2,     /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES parameters.  There should a maximum of one per DSP. */
-        DSP_PARAMETER_DATA_TYPE_SIDECHAIN = -3,        /* The data type for FMOD_DSP_PARAMETER_SIDECHAIN parameters.  There should a maximum of one per DSP. */
-        DSP_PARAMETER_DATA_TYPE_FFT = -4,              /* The data type for FMOD_DSP_PARAMETER_FFT parameters.  There should a maximum of one per DSP. */
-        DSP_PARAMETER_DATA_TYPE_3DATTRIBUTES_MULTI = -5, /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI parameters.  There should a maximum of one per DSP. */
+        DspParameterDataTypeUser = 0,              /* The default data type.  All user data types should be 0 or above. */
+        DspParameterDataTypeOverallgain = -1,      /* The data type for FMOD_DSP_PARAMETER_OVERALLGAIN parameters.  There should a maximum of one per DSP. */
+        DspParameterDataType_3Dattributes = -2,     /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES parameters.  There should a maximum of one per DSP. */
+        DspParameterDataTypeSidechain = -3,        /* The data type for FMOD_DSP_PARAMETER_SIDECHAIN parameters.  There should a maximum of one per DSP. */
+        DspParameterDataTypeFft = -4,              /* The data type for FMOD_DSP_PARAMETER_FFT parameters.  There should a maximum of one per DSP. */
+        DspParameterDataType_3DattributesMulti = -5, /* The data type for FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI parameters.  There should a maximum of one per DSP. */
     }
     /*
        [ENUM]
@@ -184,8 +180,8 @@ namespace BreadPlayer.Fmod.CoreDSP
  */
     public enum DspOscillator
     {
-        TYPE,   /* Waveform type.  0 = sine.  1 = square. 2 = sawup. 3 = sawdown. 4 = triangle. 5 = noise.  */
-        RATE    /* Frequency of the sinewave in hz.  1.0 to 22000.0.  Default = 220.0. */
+        Type,   /* Waveform type.  0 = sine.  1 = square. 2 = sawup. 3 = sawdown. 4 = triangle. 5 = noise.  */
+        Rate    /* Frequency of the sinewave in hz.  1.0 to 22000.0.  Default = 220.0. */
     }
 
 
@@ -205,8 +201,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspLowpass
     {
-        CUTOFF,    /* Lowpass cutoff frequency in hz.   1.0 to 22000.0.  Default = 5000.0. */
-        RESONANCE  /* Lowpass resonance Q value. 1.0 to 10.0.  Default = 1.0. */
+        Cutoff,    /* Lowpass cutoff frequency in hz.   1.0 to 22000.0.  Default = 5000.0. */
+        Resonance  /* Lowpass resonance Q value. 1.0 to 10.0.  Default = 1.0. */
     }
 
 
@@ -233,8 +229,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspITlowpass
     {
-        CUTOFF,    /* Lowpass cutoff frequency in hz.  1.0 to 22000.0.  Default = 5000.0/ */
-        RESONANCE  /* Lowpass resonance Q value.  0.0 to 127.0.  Default = 1.0. */
+        Cutoff,    /* Lowpass cutoff frequency in hz.  1.0 to 22000.0.  Default = 5000.0/ */
+        Resonance  /* Lowpass resonance Q value.  0.0 to 127.0.  Default = 1.0. */
     }
 
 
@@ -254,8 +250,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspHighpass
     {
-        CUTOFF,    /* (Type:float) - Highpass cutoff frequency in hz.  1.0 to output 22000.0.  Default = 5000.0. */
-        RESONANCE  /* (Type:float) - Highpass resonance Q value.  1.0 to 10.0.  Default = 1.0. */
+        Cutoff,    /* (Type:float) - Highpass cutoff frequency in hz.  1.0 to output 22000.0.  Default = 5000.0. */
+        Resonance  /* (Type:float) - Highpass resonance Q value.  1.0 to 10.0.  Default = 1.0. */
     }
 
 
@@ -277,10 +273,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspEcho
     {
-        DELAY,       /* (Type:float) - Echo delay in ms.  10  to 5000.  Default = 500. */
-        FEEDBACK,    /* (Type:float) - Echo decay per delay.  0 to 100.  100.0 = No decay, 0.0 = total decay (ie simple 1 line delay).  Default = 50.0. */
-        DRYLEVEL,    /* (Type:float) - Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
-        WETLEVEL     /* (Type:float) - Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
+        Delay,       /* (Type:float) - Echo delay in ms.  10  to 5000.  Default = 500. */
+        Feedback,    /* (Type:float) - Echo decay per delay.  0 to 100.  100.0 = No decay, 0.0 = total decay (ie simple 1 line delay).  Default = 50.0. */
+        Drylevel,    /* (Type:float) - Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
+        Wetlevel     /* (Type:float) - Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
     }
 
 
@@ -303,23 +299,23 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspDelay
     {
-        CH0,      /* Channel #0 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH1,      /* Channel #1 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH2,      /* Channel #2 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH3,      /* Channel #3 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH4,      /* Channel #4 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH5,      /* Channel #5 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH6,      /* Channel #6 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH7,      /* Channel #7 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH8,      /* Channel #8 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH9,      /* Channel #9 Delay in ms.   0  to 10000.  Default = 0.  */
-        CH10,     /* Channel #10 Delay in ms.  0  to 10000.  Default = 0.  */
-        CH11,     /* Channel #11 Delay in ms.  0  to 10000.  Default = 0.  */
-        CH12,     /* Channel #12 Delay in ms.  0  to 10000.  Default = 0.  */
-        CH13,     /* Channel #13 Delay in ms.  0  to 10000.  Default = 0.  */
-        CH14,     /* Channel #14 Delay in ms.  0  to 10000.  Default = 0.  */
-        CH15,     /* Channel #15 Delay in ms.  0  to 10000.  Default = 0.  */
-        MAXDELAY, /* Maximum delay in ms.      0  to 1000.   Default = 10. */
+        Ch0,      /* Channel #0 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch1,      /* Channel #1 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch2,      /* Channel #2 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch3,      /* Channel #3 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch4,      /* Channel #4 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch5,      /* Channel #5 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch6,      /* Channel #6 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch7,      /* Channel #7 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch8,      /* Channel #8 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch9,      /* Channel #9 Delay in ms.   0  to 10000.  Default = 0.  */
+        Ch10,     /* Channel #10 Delay in ms.  0  to 10000.  Default = 0.  */
+        Ch11,     /* Channel #11 Delay in ms.  0  to 10000.  Default = 0.  */
+        Ch12,     /* Channel #12 Delay in ms.  0  to 10000.  Default = 0.  */
+        Ch13,     /* Channel #13 Delay in ms.  0  to 10000.  Default = 0.  */
+        Ch14,     /* Channel #14 Delay in ms.  0  to 10000.  Default = 0.  */
+        Ch15,     /* Channel #15 Delay in ms.  0  to 10000.  Default = 0.  */
+        Maxdelay, /* Maximum delay in ms.      0  to 1000.   Default = 10. */
     }
 
 
@@ -343,9 +339,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspFlange
     {
-        MIX,         /* (Type:float) - Percentage of wet signal in mix.  0 to 100. Default = 50. */
-        DEPTH,       /* (Type:float) - Flange depth (percentage of 40ms delay).  0.01 to 1.0.  Default = 1.0. */
-        RATE         /* (Type:float) - Flange speed in hz.  0.0 to 20.0.  Default = 0.1. */
+        Mix,         /* (Type:float) - Percentage of wet signal in mix.  0 to 100. Default = 50. */
+        Depth,       /* (Type:float) - Flange depth (percentage of 40ms delay).  0.01 to 1.0.  Default = 1.0. */
+        Rate         /* (Type:float) - Flange speed in hz.  0.0 to 20.0.  Default = 0.1. */
     }
 
 
@@ -371,14 +367,14 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspTremolo
     {
-        FREQUENCY,     /* LFO frequency in Hz.  0.1 to 20.  Default = 4. */
-        DEPTH,         /* Tremolo depth.  0 to 1.  Default = 0. */
-        SHAPE,         /* LFO shape morph between triangle and sine.  0 to 1.  Default = 0. */
-        SKEW,          /* Time-skewing of LFO cycle.  -1 to 1.  Default = 0. */
-        DUTY,          /* LFO on-time.  0 to 1.  Default = 0.5. */
-        SQUARE,        /* Flatness of the LFO shape.  0 to 1.  Default = 0. */
-        PHASE,         /* Instantaneous LFO phase.  0 to 1.  Default = 0. */
-        SPREAD         /* Rotation / auto-pan effect.  -1 to 1.  Default = 0. */
+        Frequency,     /* LFO frequency in Hz.  0.1 to 20.  Default = 4. */
+        Depth,         /* Tremolo depth.  0 to 1.  Default = 0. */
+        Shape,         /* LFO shape morph between triangle and sine.  0 to 1.  Default = 0. */
+        Skew,          /* Time-skewing of LFO cycle.  -1 to 1.  Default = 0. */
+        Duty,          /* LFO on-time.  0 to 1.  Default = 0.5. */
+        Square,        /* Flatness of the LFO shape.  0 to 1.  Default = 0. */
+        Phase,         /* Instantaneous LFO phase.  0 to 1.  Default = 0. */
+        Spread         /* Rotation / auto-pan effect.  -1 to 1.  Default = 0. */
     }
 
 
@@ -398,7 +394,7 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspDistortion
     {
-        LEVEL    /* Distortion value.  0.0 to 1.0.  Default = 0.5. */
+        Level    /* Distortion value.  0.0 to 1.0.  Default = 0.5. */
     }
 
 
@@ -424,9 +420,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspNormalize
     {
-        FADETIME,    /* Time to ramp the silence to full in ms.  0.0 to 20000.0. Default = 5000.0. */
-        THRESHHOLD,  /* Lower volume range threshold to ignore.  0.0 to 1.0.  Default = 0.1.  Raise higher to stop amplification of very quiet signals. */
-        MAXAMP       /* Maximum amplification allowed.  1.0 to 100000.0.  Default = 20.0.  1.0 = no amplifaction, higher values allow more boost. */
+        Fadetime,    /* Time to ramp the silence to full in ms.  0.0 to 20000.0. Default = 5000.0. */
+        Threshhold,  /* Lower volume range threshold to ignore.  0.0 to 1.0.  Default = 0.1.  Raise higher to stop amplification of very quiet signals. */
+        Maxamp       /* Maximum amplification allowed.  1.0 to 100000.0.  Default = 20.0.  1.0 = no amplifaction, higher values allow more boost. */
     }
 
 
@@ -446,9 +442,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspLimiter
     {
-        RELEASETIME,   /* (Type:float) - Time to ramp the silence to full in ms.  1.0 to 1000.0. Default = 10.0. */
-        CEILING,       /* (Type:float) - Maximum level of the output signal in dB.  -12.0 to 0.0.  Default = 0.0. */
-        MAXIMIZERGAIN, /* (Type:float) - Maximum amplification allowed in dB.  0.0 to 12.0.  Default = 0.0. 0.0 = no amplifaction, higher values allow more boost. */
+        Releasetime,   /* (Type:float) - Time to ramp the silence to full in ms.  1.0 to 1000.0. Default = 10.0. */
+        Ceiling,       /* (Type:float) - Maximum level of the output signal in dB.  -12.0 to 0.0.  Default = 0.0. */
+        Maximizergain, /* (Type:float) - Maximum amplification allowed in dB.  0.0 to 12.0.  Default = 0.0. 0.0 = no amplifaction, higher values allow more boost. */
         Mode,          /* (Type:float) - Channel processing mode. 0 or 1. Default = 0. 0 = Independent (limiter per channel), 1 = Linked. */
     }
 
@@ -471,11 +467,11 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_DSP_TYPE
     ]
     */
-    public enum DspParamEQ
+    public enum DspParamEq
     {
-        CENTER,     /* Frequency center.  20.0 to 22000.0.  Default = 8000.0. */
-        BANDWIDTH,  /* Octave range around the center frequency to filter.  0.2 to 5.0.  Default = 1.0. */
-        GAIN        /* Frequency Gain.  0.05 to 3.0.  Default = 1.0.  */
+        Center,     /* Frequency center.  20.0 to 22000.0.  Default = 8000.0. */
+        Bandwidth,  /* Octave range around the center frequency to filter.  0.2 to 5.0.  Default = 1.0. */
+        Gain        /* Frequency Gain.  0.05 to 3.0.  Default = 1.0.  */
     }
 
 
@@ -510,10 +506,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspPitchShift
     {
-        PITCH,       /* Pitch value.  0.5 to 2.0.  Default = 1.0. 0.5 = one octave down, 2.0 = one octave up.  1.0 does not change the pitch. */
-        FFTSIZE,     /* FFT window size.  256, 512, 1024, 2048, 4096.  Default = 1024.  Increase this to reduce 'smearing'.  This effect is a warbling sound similar to when an mp3 is encoded at very low bitrates. */
-        OVERLAP,     /* Window overlap.  1 to 32.  Default = 4.  Increase this to reduce 'tremolo' effect.  Increasing it by a factor of 2 doubles the CPU usage. */
-        MAXCHANNELS  /* Maximum channels supported.  0 to 16.  0 = same as fmod's default output polyphony, 1 = mono, 2 = stereo etc.  See remarks for more.  Default = 0.  It is suggested to leave at 0! */
+        Pitch,       /* Pitch value.  0.5 to 2.0.  Default = 1.0. 0.5 = one octave down, 2.0 = one octave up.  1.0 does not change the pitch. */
+        Fftsize,     /* FFT window size.  256, 512, 1024, 2048, 4096.  Default = 1024.  Increase this to reduce 'smearing'.  This effect is a warbling sound similar to when an mp3 is encoded at very low bitrates. */
+        Overlap,     /* Window overlap.  1 to 32.  Default = 4.  Increase this to reduce 'tremolo' effect.  Increasing it by a factor of 2 doubles the CPU usage. */
+        Maxchannels  /* Maximum channels supported.  0 to 16.  0 = same as fmod's default output polyphony, 1 = mono, 2 = stereo etc.  See remarks for more.  Default = 0.  It is suggested to leave at 0! */
     }
 
 
@@ -537,9 +533,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspChorus
     {
-        MIX,      /* (Type:float) - Volume of original signal to pass to output.  0.0 to 100.0. Default = 50.0. */
-        RATE,     /* (Type:float) - Chorus modulation rate in Hz.  0.0 to 20.0.  Default = 0.8 Hz. */
-        DEPTH,    /* (Type:float) - Chorus modulation depth.  0.0 to 100.0.  Default = 3.0. */
+        Mix,      /* (Type:float) - Volume of original signal to pass to output.  0.0 to 100.0. Default = 50.0. */
+        Rate,     /* (Type:float) - Chorus modulation rate in Hz.  0.0 to 20.0.  Default = 0.8 Hz. */
+        Depth,    /* (Type:float) - Chorus modulation depth.  0.0 to 100.0.  Default = 3.0. */
     }
 
 
@@ -567,11 +563,11 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspITecho
     {
-        WETDRYMIX,      /* (Type:float) - Ratio of wet (processed) signal to dry (unprocessed) signal. Must be in the range from 0.0 through 100.0 (all wet).  Default = 50. */
-        FEEDBACK,       /* (Type:float) - Percentage of output fed back into input, in the range from 0.0 through 100.0.  Default = 50. */
-        LEFTDELAY,      /* (Type:float) - Delay for left channel, in milliseconds, in the range from 1.0 through 2000.0.  Default = 500 ms. */
-        RIGHTDELAY,     /* (Type:float) - Delay for right channel, in milliseconds, in the range from 1.0 through 2000.0.  Default = 500 ms. */
-        PANDELAY        /* (Type:float) - Value that specifies whether to swap left and right delays with each successive echo.  Ranges from 0.0 (equivalent to FALSE) to 1.0 (equivalent to TRUE), meaning no swap.  Default = 0.  CURRENTLY NOT SUPPORTED. */
+        Wetdrymix,      /* (Type:float) - Ratio of wet (processed) signal to dry (unprocessed) signal. Must be in the range from 0.0 through 100.0 (all wet).  Default = 50. */
+        Feedback,       /* (Type:float) - Percentage of output fed back into input, in the range from 0.0 through 100.0.  Default = 50. */
+        Leftdelay,      /* (Type:float) - Delay for left channel, in milliseconds, in the range from 1.0 through 2000.0.  Default = 500 ms. */
+        Rightdelay,     /* (Type:float) - Delay for right channel, in milliseconds, in the range from 1.0 through 2000.0.  Default = 500 ms. */
+        Pandelay        /* (Type:float) - Value that specifies whether to swap left and right delays with each successive echo.  Ranges from 0.0 (equivalent to FALSE) to 1.0 (equivalent to TRUE), meaning no swap.  Default = 0.  CURRENTLY NOT SUPPORTED. */
     }
 
 
@@ -600,13 +596,13 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspCompressor
     {
-        THRESHOLD,   /* (Type:float) - Threshold level (dB) in the range from -80 through 0. The default value is 0. */
-        RATIO,       /* (Type:float) - Compression Ratio (dB/dB) in the range from 1 to 50. The default value is 2.5. */
-        ATTACK,      /* (Type:float) - Attack time (milliseconds), in the range from 0.1 through 1000. The default value is 20. */
-        RELEASE,     /* (Type:float) - Release time (milliseconds), in the range from 10 through 5000. The default value is 100 */
-        GAINMAKEUP,  /* (Type:float) - Make-up gain (dB) applied after limiting, in the range from 0 through 30. The default value is 0. */
-        USESIDECHAIN,/* (Type:bool)  - Whether to analyse the sidechain signal instead of the input signal. The default value is false */
-        LINKED       /* (Type:bool)  - FALSE = Independent (compressor per channel), TRUE = Linked.  The default value is TRUE. */
+        Threshold,   /* (Type:float) - Threshold level (dB) in the range from -80 through 0. The default value is 0. */
+        Ratio,       /* (Type:float) - Compression Ratio (dB/dB) in the range from 1 to 50. The default value is 2.5. */
+        Attack,      /* (Type:float) - Attack time (milliseconds), in the range from 0.1 through 1000. The default value is 20. */
+        Release,     /* (Type:float) - Release time (milliseconds), in the range from 10 through 5000. The default value is 100 */
+        Gainmakeup,  /* (Type:float) - Make-up gain (dB) applied after limiting, in the range from 0 through 30. The default value is 0. */
+        Usesidechain,/* (Type:bool)  - Whether to analyse the sidechain signal instead of the input signal. The default value is false */
+        Linked       /* (Type:bool)  - FALSE = Independent (compressor per channel), TRUE = Linked.  The default value is TRUE. */
     }
 
 
@@ -629,21 +625,21 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_REVERB_PRESETS
     ]
     */
-    public enum DspSFXreverb
+    public enum DspSfXreverb
     {
-        DECAYTIME,           /* (Type:float) - Decay Time       : Reverberation decay time at low-frequencies in milliseconds.  Ranges from 100.0 to 20000.0. Default is 1500. */
-        EARLYDELAY,          /* (Type:float) - Early Delay      : Delay time of first reflection in milliseconds.  Ranges from 0.0 to 300.0.  Default is 20. */
-        LATEDELAY,           /* (Type:float) - Reverb Delay     : Late reverberation delay time relative to first reflection in milliseconds.  Ranges from 0.0 to 100.0.  Default is 40. */
-        HFREFERENCE,         /* (Type:float) - HF Reference     : Reference frequency for high-frequency decay in Hz.  Ranges from 20.0 to 20000.0. Default is 5000. */
-        HFDECAYRATIO,        /* (Type:float) - Decay HF Ratio   : High-frequency decay time relative to decay time in percent.  Ranges from 10.0 to 100.0. Default is 50. */
-        DIFFUSION,           /* (Type:float) - Diffusion        : Reverberation diffusion (echo density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
-        DENSITY,             /* (Type:float) - Density          : Reverberation density (modal density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
-        LOWSHELFFREQUENCY,   /* (Type:float) - Low Shelf Frequency : Transition frequency of low-shelf filter in Hz.  Ranges from 20.0 to 1000.0. Default is 250. */
-        LOWSHELFGAIN,        /* (Type:float) - Low Shelf Gain   : Gain of low-shelf filter in dB.  Ranges from -36.0 to 12.0.  Default is 0. */
-        HIGHCUT,             /* (Type:float) - High Cut         : Cutoff frequency of low-pass filter in Hz.  Ranges from 20.0 to 20000.0. Default is 20000. */
-        EARLYLATEMIX,        /* (Type:float) - Early/Late Mix   : Blend ratio of late reverb to early reflections in percent.  Ranges from 0.0 to 100.0.  Default is 50. */
-        WETLEVEL,            /* (Type:float) - Wet Level        : Reverb signal level in dB.  Ranges from -80.0 to 20.0.  Default is -6. */
-        DRYLEVEL             /* (Type:float) - Dry Level        : Dry signal level in dB.  Ranges from -80.0 to 20.0.  Default is 0. */
+        Decaytime,           /* (Type:float) - Decay Time       : Reverberation decay time at low-frequencies in milliseconds.  Ranges from 100.0 to 20000.0. Default is 1500. */
+        Earlydelay,          /* (Type:float) - Early Delay      : Delay time of first reflection in milliseconds.  Ranges from 0.0 to 300.0.  Default is 20. */
+        Latedelay,           /* (Type:float) - Reverb Delay     : Late reverberation delay time relative to first reflection in milliseconds.  Ranges from 0.0 to 100.0.  Default is 40. */
+        Hfreference,         /* (Type:float) - HF Reference     : Reference frequency for high-frequency decay in Hz.  Ranges from 20.0 to 20000.0. Default is 5000. */
+        Hfdecayratio,        /* (Type:float) - Decay HF Ratio   : High-frequency decay time relative to decay time in percent.  Ranges from 10.0 to 100.0. Default is 50. */
+        Diffusion,           /* (Type:float) - Diffusion        : Reverberation diffusion (echo density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
+        Density,             /* (Type:float) - Density          : Reverberation density (modal density) in percent.  Ranges from 0.0 to 100.0.  Default is 100. */
+        Lowshelffrequency,   /* (Type:float) - Low Shelf Frequency : Transition frequency of low-shelf filter in Hz.  Ranges from 20.0 to 1000.0. Default is 250. */
+        Lowshelfgain,        /* (Type:float) - Low Shelf Gain   : Gain of low-shelf filter in dB.  Ranges from -36.0 to 12.0.  Default is 0. */
+        Highcut,             /* (Type:float) - High Cut         : Cutoff frequency of low-pass filter in Hz.  Ranges from 20.0 to 20000.0. Default is 20000. */
+        Earlylatemix,        /* (Type:float) - Early/Late Mix   : Blend ratio of late reverb to early reflections in percent.  Ranges from 0.0 to 100.0.  Default is 50. */
+        Wetlevel,            /* (Type:float) - Wet Level        : Reverb signal level in dB.  Ranges from -80.0 to 20.0.  Default is -6. */
+        Drylevel             /* (Type:float) - Dry Level        : Dry signal level in dB.  Ranges from -80.0 to 20.0.  Default is 0. */
     }
 
     /*
@@ -664,7 +660,7 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspLowpassSimple
     {
-        CUTOFF     /* Lowpass cutoff frequency in hz.  10.0 to 22000.0.  Default = 5000.0 */
+        Cutoff     /* Lowpass cutoff frequency in hz.  10.0 to 22000.0.  Default = 5000.0 */
     }
 
 
@@ -686,8 +682,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspSend
     {
-        RETURNID,     /* (Type:int) - ID of the Return DSP this send is connected to (integer values only). -1 indicates no connected Return DSP. Default = -1. */
-        LEVEL,        /* (Type:float) - Send level. 0.0 to 1.0. Default = 1.0 */
+        Returnid,     /* (Type:int) - ID of the Return DSP this send is connected to (integer values only). -1 indicates no connected Return DSP. Default = -1. */
+        Level,        /* (Type:float) - Send level. 0.0 to 1.0. Default = 1.0 */
     }
 
 
@@ -707,8 +703,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspReturn
     {
-        ID,                 /* (Type:int) - ID of this Return DSP. Read-only.  Default = -1. */
-        INPUT_SPEAKER_MODE  /* (Type:int) - Input speaker mode of this return.  Default = FMOD_SPEAKERMODE_DEFAULT. */
+        Id,                 /* (Type:int) - ID of this Return DSP. Read-only.  Default = -1. */
+        InputSpeakerMode  /* (Type:int) - Input speaker mode of this return.  Default = FMOD_SPEAKERMODE_DEFAULT. */
     }
 
 
@@ -730,7 +726,7 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspHighpassSimple
     {
-        CUTOFF     /* (Type:float) - Highpass cutoff frequency in hz.  10.0 to 22000.0.  Default = 1000.0 */
+        Cutoff     /* (Type:float) - Highpass cutoff frequency in hz.  10.0 to 22000.0.  Default = 1000.0 */
     }
 
 
@@ -748,8 +744,8 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspPanSurroundFromStereoModeType
     {
-        DISTRIBUTED,
-        DISCRETE
+        Distributed,
+        Discrete
     }
 
 
@@ -767,9 +763,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspPanModeType
     {
-        MONO,
-        STEREO,
-        SURROUND
+        Mono,
+        Stereo,
+        Surround
     }
 
 
@@ -787,11 +783,11 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspPan3DRollOffType
     {
-        LINEARSQUARED,
-        LINEAR,
-        INVERSE,
-        INVERSETAPERED,
-        CUSTOM
+        Linearsquared,
+        Linear,
+        Inverse,
+        Inversetapered,
+        Custom
     }
 
 
@@ -809,9 +805,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspPan3DExtentModeType
     {
-        AUTO,
-        USER,
-        OFF
+        Auto,
+        User,
+        Off
     }
 
 
@@ -836,26 +832,26 @@ namespace BreadPlayer.Fmod.CoreDSP
     public enum DspPan
     {
         Mode,                           /* (Type:int)   - Panner mode.              FMOD_DSP_PAN_MODE_MONO for mono down-mix, FMOD_DSP_PAN_MODE_STEREO for stereo panning or FMOD_DSP_PAN_MODE_SURROUND for surround panning.  Default = FMOD_DSP_PAN_MODE_SURROUND */
-        STEREO_POSITION,                /* (Type:float) - Stereo pan position       STEREO_POSITION_MIN to STEREO_POSITION_MAX.  Default = 0.0. */
-        SURROUND_DIRECTION,             /* (Type:float) - Surround pan direction    ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
-        SURROUND_EXTENT,                /* (Type:float) - Surround pan extent       EXTENT_MIN to EXTENT_MAX.  Default = 360.0. */
-        SURROUND_ROTATION,              /* (Type:float) - Surround pan rotation     ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
-        SURROUND_LFE_LEVEL,             /* (Type:float) - Surround pan LFE level    SURROUND_LFE_LEVEL_MIN to SURROUND_LFE_LEVEL_MAX.  Default = 0.0. */
-        SURROUND_FROM_STEREO_MODE,      /* (Type:int)   - Stereo-To-Surround Mode   FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISTRIBUTED to FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISCRETE.  Default = FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISCRETE. */
-        SURROUND_STEREO_SEPARATION,     /* (Type:float) - Stereo-To-Surround Stereo Separation. ROTATION_MIN to ROTATION_MAX.  Default = 60.0. */
-        SURROUND_STEREO_AXIS,           /* (Type:float) - Stereo-To-Surround Stereo Axis. ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
-        ENABLED_SURROUND_SPEAKERS,      /* (Type:int)   - Surround Speakers Enabled. 0 to 0xFFF.  Default = 0xFFF.  */
-        _3D_POSITION,                   /* (Type:data)  - 3D Position               data of type FMOD_DSP_PARAMETER_DATA_TYPE_3DPOS */
-        _3D_ROLLOFF,                    /* (Type:int)   - 3D Rolloff                FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED to FMOD_DSP_PAN_3D_ROLLOFF_CUSTOM.  Default = FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED. */
-        _3D_MIN_DISTANCE,               /* (Type:float) - 3D Min Distance           0.0 to GAME_UNITS_MAX.  Default = 1.0. */
-        _3D_MAX_DISTANCE,               /* (Type:float) - 3D Max Distance           0.0 to GAME_UNITS_MAX.  Default = 20.0. */
-        _3D_EXTENT_MODE,                /* (Type:int)   - 3D Extent Mode            FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO to FMOD_DSP_PAN_3D_EXTENT_MODE_OFF.  Default = FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO. */
-        _3D_SOUND_SIZE,                 /* (Type:float) - 3D Sound Size             0.0 to GAME_UNITS_MAX.  Default = 0.0. */
-        _3D_MIN_EXTENT,                 /* (Type:float) - 3D Min Extent             EXTENT_MIN to EXTENT_MAX.  Default = 0.0. */
-        _3D_PAN_BLEND,                  /* (Type:float) - 3D Pan Blend              PAN_BLEND_MIN to PAN_BLEND_MAX.  Default = 0.0. */
-        LFE_UPMIX_ENABLED,              /* (Type:int)   - LFE Upmix Enabled         0 to 1.  Default = 0. */
-        OVERALL_GAIN,                   /* (Type:data)  - Overall gain.             For information only, not set by user.  Data of type FMOD_DSP_PARAMETER_DATA_TYPE_OVERALLGAIN to provide to BreadPlayer.Fmod, to allow BreadPlayer.Fmod to know the DSP is scaling the signal for virtualization purposes. */
-        SURROUND_SPEAKER_MODE           /* (Type:int)   - Surround speaker mode.    Target speaker mode for surround panning.  Default = FMOD_SPEAKERMODE_DEFAULT. */
+        StereoPosition,                /* (Type:float) - Stereo pan position       STEREO_POSITION_MIN to STEREO_POSITION_MAX.  Default = 0.0. */
+        SurroundDirection,             /* (Type:float) - Surround pan direction    ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
+        SurroundExtent,                /* (Type:float) - Surround pan extent       EXTENT_MIN to EXTENT_MAX.  Default = 360.0. */
+        SurroundRotation,              /* (Type:float) - Surround pan rotation     ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
+        SurroundLfeLevel,             /* (Type:float) - Surround pan LFE level    SURROUND_LFE_LEVEL_MIN to SURROUND_LFE_LEVEL_MAX.  Default = 0.0. */
+        SurroundFromStereoMode,      /* (Type:int)   - Stereo-To-Surround Mode   FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISTRIBUTED to FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISCRETE.  Default = FMOD_DSP_PAN_SURROUND_FROM_STEREO_MODE_DISCRETE. */
+        SurroundStereoSeparation,     /* (Type:float) - Stereo-To-Surround Stereo Separation. ROTATION_MIN to ROTATION_MAX.  Default = 60.0. */
+        SurroundStereoAxis,           /* (Type:float) - Stereo-To-Surround Stereo Axis. ROTATION_MIN to ROTATION_MAX.  Default = 0.0. */
+        EnabledSurroundSpeakers,      /* (Type:int)   - Surround Speakers Enabled. 0 to 0xFFF.  Default = 0xFFF.  */
+        _3DPosition,                   /* (Type:data)  - 3D Position               data of type FMOD_DSP_PARAMETER_DATA_TYPE_3DPOS */
+        _3DRolloff,                    /* (Type:int)   - 3D Rolloff                FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED to FMOD_DSP_PAN_3D_ROLLOFF_CUSTOM.  Default = FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED. */
+        _3DMinDistance,               /* (Type:float) - 3D Min Distance           0.0 to GAME_UNITS_MAX.  Default = 1.0. */
+        _3DMaxDistance,               /* (Type:float) - 3D Max Distance           0.0 to GAME_UNITS_MAX.  Default = 20.0. */
+        _3DExtentMode,                /* (Type:int)   - 3D Extent Mode            FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO to FMOD_DSP_PAN_3D_EXTENT_MODE_OFF.  Default = FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO. */
+        _3DSoundSize,                 /* (Type:float) - 3D Sound Size             0.0 to GAME_UNITS_MAX.  Default = 0.0. */
+        _3DMinExtent,                 /* (Type:float) - 3D Min Extent             EXTENT_MIN to EXTENT_MAX.  Default = 0.0. */
+        _3DPanBlend,                  /* (Type:float) - 3D Pan Blend              PAN_BLEND_MIN to PAN_BLEND_MAX.  Default = 0.0. */
+        LfeUpmixEnabled,              /* (Type:int)   - LFE Upmix Enabled         0 to 1.  Default = 0. */
+        OverallGain,                   /* (Type:data)  - Overall gain.             For information only, not set by user.  Data of type FMOD_DSP_PARAMETER_DATA_TYPE_OVERALLGAIN to provide to BreadPlayer.Fmod, to allow BreadPlayer.Fmod to know the DSP is scaling the signal for virtualization purposes. */
+        SurroundSpeakerMode           /* (Type:int)   - Surround speaker mode.    Target speaker mode for surround panning.  Default = FMOD_SPEAKERMODE_DEFAULT. */
     }
 
 
@@ -871,7 +867,7 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_DSP_THREE_EQ
     ]
     */
-    public enum DspThreeEQCrossoverSlopeType
+    public enum DspThreeEqCrossoverSlopeType
     {
         _12DB,
         _24DB,
@@ -896,14 +892,14 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_DSP_THREE_EQ_CROSSOVERSLOPE_TYPE
     ]
     */
-    public enum DspThreeEQ
+    public enum DspThreeEq
     {
-        LOWGAIN,       /* (Type:float) - Low frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
-        MIDGAIN,       /* (Type:float) - Mid frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
-        HIGHGAIN,      /* (Type:float) - High frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
-        LOWCROSSOVER,  /* (Type:float) - Low-to-mid crossover frequency in Hz.  10.0 to 22000.0.  Default = 400.0. */
-        HIGHCROSSOVER, /* (Type:float) - Mid-to-high crossover frequency in Hz.  10.0 to 22000.0.  Default = 4000.0. */
-        CROSSOVERSLOPE /* (Type:int)   - Crossover Slope.  0 = 12dB/Octave, 1 = 24dB/Octave, 2 = 48dB/Octave.  Default = 1 (24dB/Octave). */
+        Lowgain,       /* (Type:float) - Low frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
+        Midgain,       /* (Type:float) - Mid frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
+        Highgain,      /* (Type:float) - High frequency gain in dB.  -80.0 to 10.0.  Default = 0. */
+        Lowcrossover,  /* (Type:float) - Low-to-mid crossover frequency in Hz.  10.0 to 22000.0.  Default = 400.0. */
+        Highcrossover, /* (Type:float) - Mid-to-high crossover frequency in Hz.  10.0 to 22000.0.  Default = 4000.0. */
+        Crossoverslope /* (Type:int)   - Crossover Slope.  0 = 12dB/Octave, 1 = 24dB/Octave, 2 = 48dB/Octave.  Default = 1 (24dB/Octave). */
     }
 
 
@@ -943,14 +939,14 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_DSP_FFT
     ]
     */
-    public enum DspFFTWindow
+    public enum DspFftWindow
     {
-        RECT,            /* w[n] = 1.0                                                                                            */
-        TRIANGLE,        /* w[n] = TRI(2n/N)                                                                                      */
-        HAMMING,         /* w[n] = 0.54 - (0.46 * COS(n/N) )                                                                      */
-        HANNING,         /* w[n] = 0.5 *  (1.0  - COS(n/N) )                                                                      */
-        BLACKMAN,        /* w[n] = 0.42 - (0.5  * COS(n/N) ) + (0.08 * COS(2.0 * n/N) )                                           */
-        BLACKMANHARRIS   /* w[n] = 0.35875 - (0.48829 * COS(1.0 * n/N)) + (0.14128 * COS(2.0 * n/N)) - (0.01168 * COS(3.0 * n/N)) */
+        Rect,            /* w[n] = 1.0                                                                                            */
+        Triangle,        /* w[n] = TRI(2n/N)                                                                                      */
+        Hamming,         /* w[n] = 0.54 - (0.46 * COS(n/N) )                                                                      */
+        Hanning,         /* w[n] = 0.5 *  (1.0  - COS(n/N) )                                                                      */
+        Blackman,        /* w[n] = 0.42 - (0.5  * COS(n/N) ) + (0.08 * COS(2.0 * n/N) )                                           */
+        Blackmanharris   /* w[n] = 0.35875 - (0.48829 * COS(1.0 * n/N)) + (0.14128 * COS(2.0 * n/N)) - (0.01168 * COS(3.0 * n/N)) */
     }
 
 
@@ -975,12 +971,12 @@ namespace BreadPlayer.Fmod.CoreDSP
         FMOD_DSP_FFT_WINDOW
     ]
     */
-    public enum DspFFT
+    public enum DspFft
     {
-        WINDOWSIZE,            /*  (Type:int)   - [r/w] Must be a power of 2 between 128 and 16384.  128, 256, 512, 1024, 2048, 4096, 8192, 16384 are accepted.  Default = 2048. */
-        WINDOWTYPE,            /*  (Type:int)   - [r/w] Refer to FMOD_DSP_FFT_WINDOW enumeration.  Default = FMOD_DSP_FFT_WINDOW_HAMMING. */
-        SPECTRUMDATA,          /*  (Type:data)  - [r]   Returns the current spectrum values between 0 and 1 for each 'fft bin'.  Cast data to FMOD_DSP_PARAMETER_DATA_TYPE_FFT.  Divide the niquist rate by the window size to get the hz value per entry. */
-        DOMINANT_FREQ          /*  (Type:float) - [r]   Returns the dominant frequencies for each channel. */
+        Windowsize,            /*  (Type:int)   - [r/w] Must be a power of 2 between 128 and 16384.  128, 256, 512, 1024, 2048, 4096, 8192, 16384 are accepted.  Default = 2048. */
+        Windowtype,            /*  (Type:int)   - [r/w] Refer to FMOD_DSP_FFT_WINDOW enumeration.  Default = FMOD_DSP_FFT_WINDOW_HAMMING. */
+        Spectrumdata,          /*  (Type:data)  - [r]   Returns the current spectrum values between 0 and 1 for each 'fft bin'.  Cast data to FMOD_DSP_PARAMETER_DATA_TYPE_FFT.  Divide the niquist rate by the window size to get the hz value per entry. */
+        DominantFreq          /*  (Type:float) - [r]   Returns the dominant frequencies for each channel. */
     }
 
 
@@ -1004,10 +1000,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspEnvelopeFollower
     {
-        ATTACK,      /* (Type:float) - Attack time (milliseconds), in the range from 0.1 through 1000. The default value is 20. */
-        RELEASE,     /* (Type:float) - Release time (milliseconds), in the range from 10 through 5000. The default value is 100 */
-        ENVELOPE,    /* (Type:float) - Current value of the envelope, in the range 0 to 1. Read-only. */
-        USESIDECHAIN /* (Type:bool)  - Whether to analyse the sidechain signal instead of the input signal. The default value is false */
+        Attack,      /* (Type:float) - Attack time (milliseconds), in the range from 0.1 through 1000. The default value is 20. */
+        Release,     /* (Type:float) - Release time (milliseconds), in the range from 10 through 5000. The default value is 100 */
+        Envelope,    /* (Type:float) - Current value of the envelope, in the range 0 to 1. Read-only. */
+        Usesidechain /* (Type:bool)  - Whether to analyse the sidechain signal instead of the input signal. The default value is false */
     }
 
 
@@ -1030,9 +1026,9 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspConvolutionReverb
     {
-        IR,       /* (Type:data)  - [w]   16-bit reverb IR (short*) with an extra sample prepended to the start which specifies the number of channels. */
-        WET,      /* (Type:float) - [r/w] Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
-        DRY       /* (Type:float) - [r/w] Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
+        Ir,       /* (Type:data)  - [w]   16-bit reverb IR (short*) with an extra sample prepended to the start which specifies the number of channels. */
+        Wet,      /* (Type:float) - [r/w] Volume of echo signal to pass to output in dB.  -80.0 to 10.0.  Default = 0. */
+        Dry       /* (Type:float) - [r/w] Original sound volume in dB.  -80.0 to 10.0.  Default = 0. */
     }
 
 
@@ -1052,13 +1048,13 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspChannelMixOutput
     {
-        DEFAULT,      /*  Output channel count = input channel count.  Mapping: See FMOD_SPEAKER enumeration. */
-        ALLMONO,      /*  Output channel count = 1.  Mapping: Mono, Mono, Mono, Mono, Mono, Mono, ... (each channel all the way up to FMOD_MAX_CHANNEL_WIDTH channels are treated as if they were mono) */
-        ALLSTEREO,    /*  Output channel count = 2.  Mapping: Left, Right, Left, Right, Left, Right, ... (each pair of channels is treated as stereo all the way up to FMOD_MAX_CHANNEL_WIDTH channels) */
-        ALLQUAD,      /*  Output channel count = 4.  Mapping: Repeating pattern of Front Left, Front Right, Surround Left, Surround Right. */
-        ALL5POINT1,   /*  Output channel count = 6.  Mapping: Repeating pattern of Front Left, Front Right, Center, LFE, Surround Left, Surround Right. */
-        ALL7POINT1,   /*  Output channel count = 8.  Mapping: Repeating pattern of Front Left, Front Right, Center, LFE, Surround Left, Surround Right, Back Left, Back Right.  */
-        ALLLFE        /*  Output channel count = 6.  Mapping: Repeating pattern of LFE in a 5.1 output signal.  */
+        Default,      /*  Output channel count = input channel count.  Mapping: See FMOD_SPEAKER enumeration. */
+        Allmono,      /*  Output channel count = 1.  Mapping: Mono, Mono, Mono, Mono, Mono, Mono, ... (each channel all the way up to FMOD_MAX_CHANNEL_WIDTH channels are treated as if they were mono) */
+        Allstereo,    /*  Output channel count = 2.  Mapping: Left, Right, Left, Right, Left, Right, ... (each pair of channels is treated as stereo all the way up to FMOD_MAX_CHANNEL_WIDTH channels) */
+        Allquad,      /*  Output channel count = 4.  Mapping: Repeating pattern of Front Left, Front Right, Surround Left, Surround Right. */
+        All5Point1,   /*  Output channel count = 6.  Mapping: Repeating pattern of Front Left, Front Right, Center, LFE, Surround Left, Surround Right. */
+        All7Point1,   /*  Output channel count = 8.  Mapping: Repeating pattern of Front Left, Front Right, Center, LFE, Surround Left, Surround Right, Back Left, Back Right.  */
+        Alllfe        /*  Output channel count = 6.  Mapping: Repeating pattern of LFE in a 5.1 output signal.  */
     }
 
 
@@ -1090,39 +1086,39 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspChannelMix
     {
-        OUTPUTGROUPING,     /* (Type:int)   - Refer to FMOD_DSP_CHANNELMIX_OUTPUT enumeration.  Default = FMOD_DSP_CHANNELMIX_OUTPUT_DEFAULT.  See remarks. */
-        GAIN_CH0,           /* (Type:float) - Channel  #0 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH1,           /* (Type:float) - Channel  #1 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH2,           /* (Type:float) - Channel  #2 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH3,           /* (Type:float) - Channel  #3 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH4,           /* (Type:float) - Channel  #4 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH5,           /* (Type:float) - Channel  #5 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH6,           /* (Type:float) - Channel  #6 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH7,           /* (Type:float) - Channel  #7 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH8,           /* (Type:float) - Channel  #8 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH9,           /* (Type:float) - Channel  #9 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH10,          /* (Type:float) - Channel #10 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH11,          /* (Type:float) - Channel #11 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH12,          /* (Type:float) - Channel #12 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH13,          /* (Type:float) - Channel #13 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH14,          /* (Type:float) - Channel #14 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH15,          /* (Type:float) - Channel #15 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH16,          /* (Type:float) - Channel #16 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH17,          /* (Type:float) - Channel #17 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH18,          /* (Type:float) - Channel #18 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH19,          /* (Type:float) - Channel #19 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH20,          /* (Type:float) - Channel #20 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH21,          /* (Type:float) - Channel #21 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH22,          /* (Type:float) - Channel #22 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH23,          /* (Type:float) - Channel #23 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH24,          /* (Type:float) - Channel #24 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH25,          /* (Type:float) - Channel #25 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH26,          /* (Type:float) - Channel #26 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH27,          /* (Type:float) - Channel #27 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH28,          /* (Type:float) - Channel #28 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH29,          /* (Type:float) - Channel #29 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH30,          /* (Type:float) - Channel #30 gain in dB.  -80.0 to 10.0.  Default = 0. */
-        GAIN_CH31           /* (Type:float) - Channel #31 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        Outputgrouping,     /* (Type:int)   - Refer to FMOD_DSP_CHANNELMIX_OUTPUT enumeration.  Default = FMOD_DSP_CHANNELMIX_OUTPUT_DEFAULT.  See remarks. */
+        GainCh0,           /* (Type:float) - Channel  #0 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh1,           /* (Type:float) - Channel  #1 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh2,           /* (Type:float) - Channel  #2 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh3,           /* (Type:float) - Channel  #3 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh4,           /* (Type:float) - Channel  #4 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh5,           /* (Type:float) - Channel  #5 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh6,           /* (Type:float) - Channel  #6 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh7,           /* (Type:float) - Channel  #7 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh8,           /* (Type:float) - Channel  #8 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh9,           /* (Type:float) - Channel  #9 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh10,          /* (Type:float) - Channel #10 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh11,          /* (Type:float) - Channel #11 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh12,          /* (Type:float) - Channel #12 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh13,          /* (Type:float) - Channel #13 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh14,          /* (Type:float) - Channel #14 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh15,          /* (Type:float) - Channel #15 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh16,          /* (Type:float) - Channel #16 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh17,          /* (Type:float) - Channel #17 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh18,          /* (Type:float) - Channel #18 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh19,          /* (Type:float) - Channel #19 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh20,          /* (Type:float) - Channel #20 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh21,          /* (Type:float) - Channel #21 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh22,          /* (Type:float) - Channel #22 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh23,          /* (Type:float) - Channel #23 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh24,          /* (Type:float) - Channel #24 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh25,          /* (Type:float) - Channel #25 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh26,          /* (Type:float) - Channel #26 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh27,          /* (Type:float) - Channel #27 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh28,          /* (Type:float) - Channel #28 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh29,          /* (Type:float) - Channel #29 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh30,          /* (Type:float) - Channel #30 gain in dB.  -80.0 to 10.0.  Default = 0. */
+        GainCh31           /* (Type:float) - Channel #31 gain in dB.  -80.0 to 10.0.  Default = 0. */
     }
 
 
@@ -1151,10 +1147,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspTransceiverSpeakerMode
     {
-        AUTO = -1,     /* A transmitter will use whatever signal channel count coming in to the transmitter, to determine which speaker mode is allocated for the transceiver channel. */
-        MONO = 0,      /* A transmitter will always downmix to a mono channel buffer. */
-        STEREO,        /* A transmitter will always upmix or downmix to a stereo channel buffer. */
-        SURROUND,      /* A transmitter will always upmix or downmix to a surround channel buffer.   Surround is the speaker mode of the system above stereo, so could be quad/surround/5.1/7.1. */
+        Auto = -1,     /* A transmitter will use whatever signal channel count coming in to the transmitter, to determine which speaker mode is allocated for the transceiver channel. */
+        Mono = 0,      /* A transmitter will always downmix to a mono channel buffer. */
+        Stereo,        /* A transmitter will always upmix or downmix to a stereo channel buffer. */
+        Surround,      /* A transmitter will always upmix or downmix to a surround channel buffer.   Surround is the speaker mode of the system above stereo, so could be quad/surround/5.1/7.1. */
     }
 
 
@@ -1189,10 +1185,10 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspTransceiver
     {
-        TRANSMIT,            /* (Type:bool)  - [r/w] - FALSE = Transceiver is a 'receiver' (like a return) and accepts data from a channel.  TRUE = Transceiver is a 'transmitter' (like a send).  Default = FALSE. */
-        GAIN,                /* (Type:float) - [r/w] - Gain to receive or transmit at in dB.  -80.0 to 10.0.  Default = 0. */
-        CHANNEL,             /* (Type:int)   - [r/w] - Integer to select current global slot, shared by all Transceivers, that can be transmitted to or received from.  0 to 31.  Default = 0.*/
-        TRANSMITSPEAKERMODE  /* (Type:int)   - [r/w] - Speaker mode (transmitter mode only).  Specifies either 0 (Auto) Default = 0.*/
+        Transmit,            /* (Type:bool)  - [r/w] - FALSE = Transceiver is a 'receiver' (like a return) and accepts data from a channel.  TRUE = Transceiver is a 'transmitter' (like a send).  Default = FALSE. */
+        Gain,                /* (Type:float) - [r/w] - Gain to receive or transmit at in dB.  -80.0 to 10.0.  Default = 0. */
+        Channel,             /* (Type:int)   - [r/w] - Integer to select current global slot, shared by all Transceivers, that can be transmitted to or received from.  0 to 31.  Default = 0.*/
+        Transmitspeakermode  /* (Type:int)   - [r/w] - Speaker mode (transmitter mode only).  Specifies either 0 (Auto) Default = 0.*/
     }
 
 
@@ -1217,14 +1213,14 @@ namespace BreadPlayer.Fmod.CoreDSP
     */
     public enum DspObjectPan
     {
-        _3D_POSITION,        /* (Type:data)  - 3D Position.               data of type FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI */
-        _3D_ROLLOFF,         /* (Type:int)   - 3D Rolloff.                FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED to FMOD_DSP_PAN_3D_ROLLOFF_CUSTOM.  Default = FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED. */
-        _3D_MIN_DISTANCE,    /* (Type:float) - 3D Min Distance.           0.0 to 1e+19f.  Default = 1.0. */
-        _3D_MAX_DISTANCE,    /* (Type:float) - 3D Max Distance.           0.0 to 1e+19f.  Default = 20.0. */
-        _3D_EXTENT_MODE,     /* (Type:int)   - 3D Extent Mode.            FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO to FMOD_DSP_PAN_3D_EXTENT_MODE_OFF.  Default = FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO. */
-        _3D_SOUND_SIZE,      /* (Type:float) - 3D Sound Size.             0.0 to 1e+19f.  Default = 0.0. */
-        _3D_MIN_EXTENT,      /* (Type:float) - 3D Min Extent.             0.0 (degrees) to 360.0 (degrees).  Default = 0.0. */
-        OVERALL_GAIN,        /* (Type:data)  - Overall gain.              For information only, not set by user.  Data of type FMOD_DSP_PARAMETER_DATA_TYPE_OVERALLGAIN to provide to BreadPlayer.Fmod, to allow BreadPlayer.Fmod to know the DSP is scaling the signal for virtualization purposes. */
-        OUTPUTGAIN           /* (Type:float) - Output gain level.         0.0 to 1.0 linear scale.  For the user to scale the output of the object panner's signal. */
+        _3DPosition,        /* (Type:data)  - 3D Position.               data of type FMOD_DSP_PARAMETER_3DATTRIBUTES_MULTI */
+        _3DRolloff,         /* (Type:int)   - 3D Rolloff.                FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED to FMOD_DSP_PAN_3D_ROLLOFF_CUSTOM.  Default = FMOD_DSP_PAN_3D_ROLLOFF_LINEARSQUARED. */
+        _3DMinDistance,    /* (Type:float) - 3D Min Distance.           0.0 to 1e+19f.  Default = 1.0. */
+        _3DMaxDistance,    /* (Type:float) - 3D Max Distance.           0.0 to 1e+19f.  Default = 20.0. */
+        _3DExtentMode,     /* (Type:int)   - 3D Extent Mode.            FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO to FMOD_DSP_PAN_3D_EXTENT_MODE_OFF.  Default = FMOD_DSP_PAN_3D_EXTENT_MODE_AUTO. */
+        _3DSoundSize,      /* (Type:float) - 3D Sound Size.             0.0 to 1e+19f.  Default = 0.0. */
+        _3DMinExtent,      /* (Type:float) - 3D Min Extent.             0.0 (degrees) to 360.0 (degrees).  Default = 0.0. */
+        OverallGain,        /* (Type:data)  - Overall gain.              For information only, not set by user.  Data of type FMOD_DSP_PARAMETER_DATA_TYPE_OVERALLGAIN to provide to BreadPlayer.Fmod, to allow BreadPlayer.Fmod to know the DSP is scaling the signal for virtualization purposes. */
+        Outputgain           /* (Type:float) - Output gain level.         0.0 to 1.0 linear scale.  For the user to scale the output of the object panner's signal. */
     }
 }

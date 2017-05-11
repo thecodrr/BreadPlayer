@@ -7,11 +7,11 @@ using XLog.Formatters;
 
 namespace BreadPlayer.Targets
 {
-    class AsyncFileTarget : Target, ILogStorage
+    internal class AsyncFileTarget : Target, ILogStorage
     {
         private readonly object _syncRoot = new object();
         private readonly string _logFilePath;
-        static StorageFile File;
+        private static StorageFile File;
         public AsyncFileTarget(string logFilePath)
             : this(null, logFilePath)
         {

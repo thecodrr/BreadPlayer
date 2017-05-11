@@ -1,7 +1,6 @@
-﻿using BreadPlayer.Models;
+﻿using BreadPlayer.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
@@ -10,7 +9,7 @@ namespace BreadPlayer.Database
     {
         private IDatabaseService Database
         {
-            get; set;
+            get;
         }
         public AlbumService(IDatabaseService database)
         {

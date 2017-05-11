@@ -11,7 +11,7 @@ namespace BreadPlayer
     {
         public AccountsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

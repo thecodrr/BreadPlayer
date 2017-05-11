@@ -1,6 +1,6 @@
 ﻿namespace BreadPlayer.Web._123music
 {
-    class Endpoints
+    internal class Endpoints
     {
         public const string BaseURL = "https://123music.to/";
         public const string SearchEndpoint = BaseURL + "search/{0}/{1}/{2}"; // {0} must be either 'songs', 'albums' or 'artists'. {1} is the search keyword. {2} is the page no. if required + .html.

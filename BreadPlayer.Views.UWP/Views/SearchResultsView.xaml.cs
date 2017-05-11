@@ -1,7 +1,7 @@
-﻿using BreadPlayer.Models;
-using BreadPlayer.ViewModels;
+﻿using BreadPlayer.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Core.Models;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -14,14 +14,14 @@ namespace BreadPlayer.Views
     {
         public SearchResultsView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             SearchResultsViewModel ViewModel = new SearchResultsViewModel();
             await ViewModel.GetAlbumsAndTracks((e.Parameter as Query).QueryWord);
-            this.DataContext = ViewModel;
+            DataContext = ViewModel;
         }
     }
 }

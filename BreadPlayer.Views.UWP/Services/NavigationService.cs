@@ -41,11 +41,11 @@ namespace BreadPlayer.Services
             //setting the instance to the static instance field.
             Instance = this;
             //setting the frame reference.
-            this.Frame = frame;
+            Frame = frame;
             //setting the homepage
-            this.HomePage = homePage;
+            HomePage = homePage;
             //initializing the stack.
-            this.PageStack = new Stack<Type>();
+            PageStack = new Stack<Type>();
 
             //Hooking up the events for BackRequest both for Big Windows and for Phone.
 
@@ -90,16 +90,17 @@ namespace BreadPlayer.Services
         }        
         public bool Reload(object param)
         {
-            Type type = this.Frame.CurrentSourcePageType;
+            Type type = Frame.CurrentSourcePageType;
             
-            try { return this.Frame.Navigate(type, param); }
-            finally { this.Frame.BackStack.Remove(this.Frame.BackStack.Last()); }
+            try { return Frame.Navigate(type, param); }
+            finally { Frame.BackStack.Remove(Frame.BackStack.Last()); }
         }
         #endregion
 
 
         #region BackButtonVisibilty Region
-        void UpdateBackButtonVisibility()
+
+        private void UpdateBackButtonVisibility()
         {
                 SystemNavigationManager.GetForCurrentView().
                     AppViewBackButtonVisibility = Frame.CanGoBack ?

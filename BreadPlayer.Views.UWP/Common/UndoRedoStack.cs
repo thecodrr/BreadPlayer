@@ -7,20 +7,8 @@ namespace BreadPlayer.MomentoPattern
         private Stack<T> _Undo;
         private Stack<T> _Redo;
 
-        public int UndoCount
-        {
-            get
-            {
-                return _Undo.Count;
-            }
-        }
-        public int RedoCount
-        {
-            get
-            {
-                return _Redo.Count;
-            }
-        }
+        public int UndoCount => _Undo.Count;
+        public int RedoCount => _Redo.Count;
 
         public UndoRedoStack()
         {

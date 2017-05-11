@@ -1,107 +1,89 @@
-﻿using BreadPlayer.Core.Interfaces;
-using System;
+﻿using System;
 using System.Threading;
+using BreadPlayer.Core.Interfaces;
 
-namespace BreadPlayer.Core
+namespace BreadPlayer.Core.PortableAPIs
 {
     public class DispatcherTimer
     {
-        IDispatcher target_dispatcher;
-        long interval;
-        EventHandler callback;
-        Timer timer;
-        object tag;
+        private IDispatcher _targetDispatcher;
+        private long _interval;
+        private EventHandler _callback;
+        private Timer _timer;
+        private object _tag;
 
         public DispatcherTimer(IDispatcher dispatcher)
         {
-            target_dispatcher = dispatcher;
+            _targetDispatcher = dispatcher;
         }
 
         public void Start()
         {
-            if (timer == null)
+            if (_timer == null)
             {
-                long repeat_interval = interval;
-                if (repeat_interval == 0)
-                    repeat_interval = 1;
-                timer = new Timer(new TimerCallback(timer_tick),
-                            null, new TimeSpan(interval),
-                            new TimeSpan(repeat_interval));
+                long repeatInterval = _interval;
+                if (repeatInterval == 0)
+                    repeatInterval = 1;
+                _timer = new Timer(new TimerCallback(timer_tick),
+                            null, new TimeSpan(_interval),
+                            new TimeSpan(repeatInterval));
             }
         }
 
-        void timer_tick(object state)
+        private void timer_tick(object state)
         {
-            target_dispatcher.RunAsync(() => { 
+            _targetDispatcher.RunAsync(() => { 
                 Tick?.Invoke(this, EventArgs.Empty);
-                callback?.Invoke(this, EventArgs.Empty);
+                _callback?.Invoke(this, EventArgs.Empty);
             });
         }
 
         public void Stop()
         {
-            if (timer == null)
+            if (_timer == null)
                 return;
 
-            timer.Dispose();
-            timer = null;
+            _timer.Dispose();
+            _timer = null;
         }
 
-        public IDispatcher Dispatcher
-        {
-            get
-            {
-                return target_dispatcher;
-            }
-        }
+        public IDispatcher Dispatcher => _targetDispatcher;
 
         public TimeSpan Interval
         {
-            get
-            {
-                return new TimeSpan(interval);
-            }
+            get => new TimeSpan(_interval);
 
             set
             {
-                if (interval == value.Ticks)
+                if (_interval == value.Ticks)
                     return;
 
-                interval = value.Ticks;
+                _interval = value.Ticks;
 
-                if (timer != null)
-                    timer.Change(new TimeSpan(interval),
-                            new TimeSpan(interval));
+                if (_timer != null)
+                    _timer.Change(new TimeSpan(_interval),
+                            new TimeSpan(_interval));
             }
         }
 
         public bool IsEnabled
         {
-            get
-            {
-                return timer != null;
-            }
+            get => _timer != null;
 
             set
             {
-                if (value && timer == null)
+                if (value && _timer == null)
                     Start();
-                if (value == false && timer != null)
+                if (value == false && _timer != null)
                     Stop();
             }
         }
 
         public object Tag
         {
-            get
-            {
-                return tag;
-            }
+            get => _tag;
 
-            set
-            {
-                tag = value;
-            }
+            set => _tag = value;
         }
         public event EventHandler Tick;
     }

@@ -10,7 +10,7 @@ namespace MyFirstUWPTests
 {
     public class UnitTest
     {
-        InitializeLastfm init = new InitializeLastfm();
+        private InitializeLastfm init = new InitializeLastfm();
         [Theory]
         [InlineData("","")]
         [InlineData("", "")]
@@ -39,7 +39,7 @@ namespace MyFirstUWPTests
         [InlineData("Collage")]
         public async void _123MusicAPISearchTest(string term)
         {
-            Assert.True(await new BreadPlayer.Web._123music.API().SearchSongs(term));
+            Assert.True(await new API().SearchSongs(term));
         }
         [Theory]
         [InlineData(DataType._new)]
@@ -89,13 +89,15 @@ namespace MyFirstUWPTests
         {
             Assert.NotNull(new BreadParser().Compare2Strings(a, b));
         }
-        async Task<LastResponse> HasScrobbled(params string[] mediaFile)
+
+        private async Task<LastResponse> HasScrobbled(params string[] mediaFile)
         {
             await init.Login("thecodrr", "Allatonce1.1");
             Lastfm last = new Lastfm(init.Auth.Auth);
             return await last.Scrobble(mediaFile);
         }
-        async Task<bool> IsLoggedIn(string user, string pass)
+
+        private async Task<bool> IsLoggedIn(string user, string pass)
         {
             return await init.Login(user, pass);
         }

@@ -28,7 +28,7 @@ namespace BreadPlayer.Messengers
 	/// </summary>
 	public class Messenger
 	{
-		static readonly Messenger instance = new Messenger();
+	    private static readonly Messenger instance = new Messenger();
 
 		#region Constructor
 
@@ -42,14 +42,9 @@ namespace BreadPlayer.Messengers
 		#endregion // Constructor
 
 		#region Public Properties
-		public static Messenger Instance
-		{
-			get
-			{
-				return instance;
-			}
-		}
-		#endregion // Public Properties
+		public static Messenger Instance => instance;
+
+	    #endregion // Public Properties
 
 		#region Register
 
@@ -60,7 +55,7 @@ namespace BreadPlayer.Messengers
 		/// <param name="callback">The call-back to be called when this message is broadcasted.</param>
 		public void Register(MessageTypes message, Action callback)
 		{
-			this.Register(message, callback, null);
+			Register(message, callback, null);
 		}
 
 		/// <summary>
@@ -70,15 +65,15 @@ namespace BreadPlayer.Messengers
 		/// <param name="callback">The call-back to be called when this message is broadcasted.</param>
 		public void Register<T>(MessageTypes message, Action<T> callback)
 		{
-			this.Register(message, callback, typeof(T));
+			Register(message, callback, typeof(T));
 		}
 
-		void Register(MessageTypes message, Delegate callback, Type parameterType)
+	    private void Register(MessageTypes message, Delegate callback, Type parameterType)
 		{
 			if (callback == null)
 				throw new ArgumentNullException("callback");
 
-			this.VerifyParameterType(message, parameterType);
+			VerifyParameterType(message, parameterType);
 
 			_messageToActionsMap.AddAction(message, callback.Target, callback.GetMethodInfo(), parameterType);
 		}
@@ -107,7 +102,7 @@ namespace BreadPlayer.Messengers
 		}
 
 		[Conditional("DEBUG")]
-		void VerifyParameterType(MessageTypes message, Type parameterType)
+		private void VerifyParameterType(MessageTypes message, Type parameterType)
 		{
 			Type previouslyRegisteredParameterType = null;
 			if (_messageToActionsMap.TryGetParameterType(message, out previouslyRegisteredParameterType))
@@ -387,7 +382,7 @@ namespace BreadPlayer.Messengers
 			#region Fields
 
 			// Stores a hash where the key is the message and the value is the list of callbacks to invoke.
-			readonly Dictionary<MessageTypes, List<WeakAction>> _map = new Dictionary<MessageTypes, List<WeakAction>>();
+		    private readonly Dictionary<MessageTypes, List<WeakAction>> _map = new Dictionary<MessageTypes, List<WeakAction>>();
 
 			#endregion // Fields
 		}
@@ -422,7 +417,7 @@ namespace BreadPlayer.Messengers
 
 				_method = method;
 
-				this.ParameterType = parameterType;
+				ParameterType = parameterType;
 
 				if (parameterType == null)
 				{
@@ -470,32 +465,19 @@ namespace BreadPlayer.Messengers
 
 			internal readonly Type ParameterType;
 
-			readonly Type _delegateType;
-			readonly MethodInfo _method;
-			readonly WeakReference _targetRef;
+		    private readonly Type _delegateType;
+		    private readonly MethodInfo _method;
+		    private readonly WeakReference _targetRef;
 
 			#endregion // Fields
-			public WeakReference TargetRef
-			{
-				get
-				{
-					return _targetRef;
-				}
-			}
-			public MethodInfo Method
-			{
-				get
-				{
-					return _method;
-				}
-			}
-
+			public WeakReference TargetRef => _targetRef;
+		    public MethodInfo Method => _method;
 		}
 		#endregion // WeakAction [nested class]
 
 		#region Fields
 
-		readonly MessageToActionsMap _messageToActionsMap = new MessageToActionsMap();
+	    private readonly MessageToActionsMap _messageToActionsMap = new MessageToActionsMap();
 
 		#endregion // Fields
 

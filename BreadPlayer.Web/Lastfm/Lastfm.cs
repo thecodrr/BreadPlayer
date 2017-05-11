@@ -3,7 +3,6 @@ using System;
 using System.Threading.Tasks;
 using PCLStorage;
 using IF.Lastfm.Core.Api;
-using IF.Lastfm.Core.Objects;
 
 namespace BreadPlayer.Web.Lastfm
 {
@@ -23,7 +22,8 @@ namespace BreadPlayer.Web.Lastfm
             Auth = LastfmClient.Auth;
             return LastfmClient.Auth.Authenticated;
         }
-        ILastAuth Auth { get; set; }       
+
+        private ILastAuth Auth { get; set; }       
         public async Task<ScrobbleResponse> Scrobble(params string[] data)
         {
             try

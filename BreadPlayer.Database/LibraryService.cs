@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using BreadPlayer.Models;
+﻿using BreadPlayer.Core.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BreadPlayer.Common;
-using DBreeze.Objects;
-using BreadPlayer.Database;
 
 namespace BreadPlayer.Database
 {
@@ -69,10 +66,8 @@ namespace BreadPlayer.Database
         {
             return Database.CheckExists(id);
         }
-        public int SongCount
-        {
-            get { return Database.GetRecordsCount(); }
-        }
+        public int SongCount => Database.GetRecordsCount();
+
         #endregion
 
         #region IDisposable

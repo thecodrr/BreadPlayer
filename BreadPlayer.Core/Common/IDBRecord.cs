@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BreadPlayer.Database
+﻿namespace BreadPlayer.Core.Common
 {
-    public interface IDBRecord
+    public interface IDbRecord
     {
         long Id { get; set; }
         string GetTextSearchKey();

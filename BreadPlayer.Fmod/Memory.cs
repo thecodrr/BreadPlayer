@@ -13,7 +13,7 @@ namespace BreadPlayer.Fmod
 {
     public class Memory
     {
-        public static Result Initialize(IntPtr poolmem, int poollen, MEMORY_ALLOC_CALLBACK useralloc, MEMORY_REALLOC_CALLBACK userrealloc, MEMORY_FREE_CALLBACK userfree, MemoryType memtypeflags)
+        public static Result Initialize(IntPtr poolmem, int poollen, MemoryAllocCallback useralloc, MemoryReallocCallback userrealloc, MemoryFreeCallback userfree, MemoryType memtypeflags)
         {
             return FMOD_Memory_Initialize(poolmem, poollen, useralloc, userrealloc, userfree, memtypeflags);
         }
@@ -31,9 +31,9 @@ namespace BreadPlayer.Fmod
 
         #region importfunctions
 
-        [DllImport(FMODVersion.DLL)]
-        private static extern Result FMOD_Memory_Initialize(IntPtr poolmem, int poollen, MEMORY_ALLOC_CALLBACK useralloc, MEMORY_REALLOC_CALLBACK userrealloc, MEMORY_FREE_CALLBACK userfree, MemoryType memtypeflags);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
+        private static extern Result FMOD_Memory_Initialize(IntPtr poolmem, int poollen, MemoryAllocCallback useralloc, MemoryReallocCallback userrealloc, MemoryFreeCallback userfree, MemoryType memtypeflags);
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Memory_GetStats(out int currentalloced, out int maxalloced, bool blocking);
 
         #endregion

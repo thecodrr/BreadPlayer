@@ -63,7 +63,7 @@ namespace BreadPlayer.Themes
                     catch (Exception ex)
                     {
                         BLogger.Logger.Error("Failed to update accent.", ex);
-                        await Core.SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
+                        await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
                     }
                     //ThemeChanged?.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
@@ -82,7 +82,7 @@ namespace BreadPlayer.Themes
             {
                 if (Application.Current.Resources.ContainsKey(brushKey))
                 {
-                    ((SolidColorBrush)App.Current.Resources[brushKey]).Color = color;
+                    ((SolidColorBrush)Application.Current.Resources[brushKey]).Color = color;
                 }
             }
         }
@@ -105,11 +105,11 @@ namespace BreadPlayer.Themes
         }
         private static Color GetAccentColor()
         {
-            return ((Color)App.Current.Resources["SystemAccentColor"]);
+            return ((Color)Application.Current.Resources["SystemAccentColor"]);
         }
         private static T GetThemeResource<T>(string key)
         {
-            return ((T)App.Current.Resources[key]);
+            return ((T)Application.Current.Resources[key]);
         }
 
         // public static event OnThemeChanged ThemeChanged;

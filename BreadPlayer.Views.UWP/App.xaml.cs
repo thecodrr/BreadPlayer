@@ -17,7 +17,6 @@
 */
 using BreadPlayer.Common;
 using BreadPlayer.Services;
-using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,15 +45,15 @@ namespace BreadPlayer
         /// </summary>
         public App()
         {           
-            this.InitializeComponent();
+            InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
             BLogger.InitLogger();
             BLogger.Logger.Info("Logger initialized. Progressing in app constructor.");
-            this.Suspending += OnSuspending;
-            this.EnteredBackground += App_EnteredBackground;
-            this.LeavingBackground += App_LeavingBackground;
-            this.UnhandledException += App_UnhandledException;
+            Suspending += OnSuspending;
+            EnteredBackground += App_EnteredBackground;
+            LeavingBackground += App_LeavingBackground;
+            UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             BLogger.Logger.Info("Events initialized. Progressing in app constructor.");
         }
@@ -73,7 +72,7 @@ namespace BreadPlayer
         {
             var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
             var theme = Enum.Parse(typeof(ApplicationTheme), value.ToString());
-            this.RequestedTheme = (ApplicationTheme)theme;
+            RequestedTheme = (ApplicationTheme)theme;
         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -91,7 +90,8 @@ namespace BreadPlayer
             BLogger.Logger.Info("App has entered background...");
             deferral.Complete();
         }
-        Stopwatch SessionWatch;
+
+        private Stopwatch SessionWatch;
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -102,9 +102,9 @@ namespace BreadPlayer
             SessionWatch = Stopwatch.StartNew();
             BLogger.Logger?.Info("App launched and session started...");
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
             if (e.PreviousExecutionState != ApplicationExecutionState.Running)
@@ -116,7 +116,7 @@ namespace BreadPlayer
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             BLogger.Logger.Error("Navigation failed while navigating to: " + e.SourcePageType.FullName, e.Exception);
             //throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
@@ -156,7 +156,7 @@ namespace BreadPlayer
             }
         }
 
-        void LoadFrame(IActivatedEventArgs args, object arguments)
+        private void LoadFrame(IActivatedEventArgs args, object arguments)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace BreadPlayer
             }
         }
 
-        void ReInitialize()
+        private void ReInitialize()
         {
             if (Window.Current.Content == null)
             {

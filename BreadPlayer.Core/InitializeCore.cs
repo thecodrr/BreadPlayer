@@ -1,29 +1,34 @@
 ﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Interfaces;
 
-public class InitializeCore
+namespace BreadPlayer.Core
 {
-    public static bool IsMobile { get; set; }
-    static INotificationManager notificationManager;
-    public static INotificationManager NotificationManager
+    public class InitializeCore
     {
-        get { return notificationManager; }
-        set { notificationManager = value; }
-    }
-    static IEqualizerSettingsHelper equalizerSettingsHelper;
-    public static IEqualizerSettingsHelper EqualizerSettingsHelper
-    {
-        get => equalizerSettingsHelper;
-        set => equalizerSettingsHelper = value;
-    }
-    static IDispatcher dispatcher;
-    public static IDispatcher Dispatcher
-    {
-        get { return dispatcher; }
-        set
+        public static bool IsMobile { get; set; }
+        private static INotificationManager _notificationManager;
+        public static INotificationManager NotificationManager
         {
-            dispatcher = value;
-            InitializeFramework.Dispatcher = dispatcher;
+            get => _notificationManager;
+            set => _notificationManager = value;
+        }
+
+        private static IEqualizerSettingsHelper _equalizerSettingsHelper;
+        public static IEqualizerSettingsHelper EqualizerSettingsHelper
+        {
+            get => _equalizerSettingsHelper;
+            set => _equalizerSettingsHelper = value;
+        }
+
+        private static IDispatcher _dispatcher;
+        public static IDispatcher Dispatcher
+        {
+            get => _dispatcher;
+            set
+            {
+                _dispatcher = value;
+                InitializeFramework.Dispatcher = _dispatcher;
+            }
         }
     }
 }

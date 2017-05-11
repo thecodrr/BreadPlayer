@@ -24,40 +24,40 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using BreadPlayer.Core;
 using Windows.Storage.AccessCache;
-using BreadPlayer.Models;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Extensions;
 using Windows.Storage.Search;
 using BreadPlayer.Messengers;
 using BreadPlayer.Database;
 using BreadPlayer.Common;
-using System.Diagnostics;
 using Windows.UI.Core;
 using BreadPlayer.Dialogs;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.System.Display;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Extensions;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
-        bool enableBlur;
+
+        private bool enableBlur;
         public bool EnableBlur
         {
-            get { return enableBlur; }
+            get => enableBlur;
             set
             {
                 Set(ref enableBlur, value);
                 RoamingSettingsHelper.SaveSetting("EnableBlur", value);
             }
         }
-        bool preventScreenFromLocking;
+
+        private bool preventScreenFromLocking;
         public bool PreventScreenFromLocking
         {
-            get { return preventScreenFromLocking; }
+            get => preventScreenFromLocking;
             set
             {
                 Set(ref preventScreenFromLocking, value);
@@ -67,20 +67,22 @@ namespace BreadPlayer.ViewModels
                     ReleaseDisplayRequest();
             }
         }
-        bool replaceLockscreenWithAlbumArt;
+
+        private bool replaceLockscreenWithAlbumArt;
         public bool ReplaceLockscreenWithAlbumArt
         {
-            get { return replaceLockscreenWithAlbumArt; }
+            get => replaceLockscreenWithAlbumArt;
             set
             {
                 Set(ref replaceLockscreenWithAlbumArt, value);
                 RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
             }
         }
-        string uiTextType;
+
+        private string uiTextType;
         public string UITextType
         {
-            get { return uiTextType; }
+            get => uiTextType;
             set
             {
                 Set(ref uiTextType, value);
@@ -88,13 +90,10 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        bool _isThemeDark;
+        private bool _isThemeDark;
         public bool IsThemeDark
         {
-            get
-            {
-                return _isThemeDark;
-            }
+            get => _isThemeDark;
             set
             {
                 Set(ref _isThemeDark, value);
@@ -114,33 +113,36 @@ namespace BreadPlayer.ViewModels
                 }
                 return _LibraryFoldersCollection;
             }
-            set { Set(ref _LibraryFoldersCollection, value); }
+            set => Set(ref _LibraryFoldersCollection, value);
         }
         public static GroupedObservableCollection<string, Mediafile> TracksCollection
         { get; set; }
-        string timeClosed;
+
+        private string timeClosed;
         public string TimeClosed
         {
-            get { return timeClosed; }
-            set { Set(ref timeClosed, value); }
-        }
-        string timeOpened;
-        public string TimeOpened
-        {
-            get { return timeOpened; }
-            set { Set(ref timeOpened, value); }
-        }
-        List<StorageFile> modifiedFiles = new List<StorageFile>();
-        public List<StorageFile> ModifiedFiles
-        {
-            get { return modifiedFiles; }
-            set { Set(ref modifiedFiles, value); }
+            get => timeClosed;
+            set => Set(ref timeClosed, value);
         }
 
-        bool changeAccentByAlbumart;
+        private string timeOpened;
+        public string TimeOpened
+        {
+            get => timeOpened;
+            set => Set(ref timeOpened, value);
+        }
+
+        private List<StorageFile> modifiedFiles = new List<StorageFile>();
+        public List<StorageFile> ModifiedFiles
+        {
+            get => modifiedFiles;
+            set => Set(ref modifiedFiles, value);
+        }
+
+        private bool changeAccentByAlbumart;
         public bool ChangeAccentByAlbumArt
         {
-            get { return changeAccentByAlbumart; }
+            get => changeAccentByAlbumart;
             set
             {
                 Set(ref changeAccentByAlbumart, value);
@@ -176,39 +178,41 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
-            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Tracks", "TracksText"));
-            this.PropertyChanged += SettingsViewModel_PropertyChanged;
+            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
+            PropertyChanged += SettingsViewModel_PropertyChanged;
             changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             uiTextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
             _isThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
             enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             replaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("replaceLockscreenWithAlbumArt", false);
-            Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
+            Messenger.Instance.Register(MessageTypes.MSG_LIBRARY_LOADED, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion
 
         #region Commands
 
         #region Definitions   
-        RelayCommand navigateCommand;
+
+        private RelayCommand navigateCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public RelayCommand NavigateCommand { get { if (navigateCommand == null) { navigateCommand = new RelayCommand(Navigate); } return navigateCommand; } }
-        DelegateCommand _loadCommand;
+
+        private DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand LoadCommand { get { if (_loadCommand == null) { _loadCommand = new DelegateCommand(Load); } return _loadCommand; } }
 
-        DelegateCommand _importPlaylistCommand;
+        private DelegateCommand _importPlaylistCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand ImportPlaylistCommand { get { if (_importPlaylistCommand == null) { _importPlaylistCommand = new DelegateCommand(ImportPlaylists); } return _importPlaylistCommand; } }
 
-        DelegateCommand _resetCommand;
+        private DelegateCommand _resetCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
@@ -298,7 +302,7 @@ namespace BreadPlayer.ViewModels
 
         #region General Settings Methods
 
-        DisplayRequest displayRequest;
+        private DisplayRequest displayRequest;
         private void KeepScreenActive()
         {
             if (displayRequest == null)
@@ -352,7 +356,7 @@ namespace BreadPlayer.ViewModels
         private async Task AddModifiedFilesAsync()
         {
             TimeClosed = RoamingSettingsHelper.GetSetting<string>("timeclosed", "0");
-            ModifiedFiles = await Common.DirectoryWalker.GetModifiedFiles(LibraryFoldersCollection, TimeClosed);
+            ModifiedFiles = await DirectoryWalker.GetModifiedFiles(LibraryFoldersCollection, TimeClosed);
             if (ModifiedFiles.Any())
                 RenameAddOrDeleteFiles(ModifiedFiles);
         }
@@ -395,7 +399,7 @@ namespace BreadPlayer.ViewModels
             LibraryFoldersCollection.Add(folder);
             StorageApplicationPermissions.FutureAccessList.Add(folder);
             //Get query options with which we search for files in the specified folder
-            var options = Common.DirectoryWalker.GetQueryOptions();
+            var options = DirectoryWalker.GetQueryOptions();
             //this is the query result which we recieve after querying in the folder
             StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
             //the event for files changed
@@ -500,7 +504,8 @@ namespace BreadPlayer.ViewModels
                 });
             }
         }
-        async Task DeleteDuplicates(IEnumerable<Mediafile> source)
+
+        private async Task DeleteDuplicates(IEnumerable<Mediafile> source)
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
@@ -539,7 +544,8 @@ namespace BreadPlayer.ViewModels
                 }
             });
         }
-        async Task ShowMessageBox(Action<IEnumerable<Mediafile>> action, IEnumerable<Mediafile> Duplicates)
+
+        private async Task ShowMessageBox(Action<IEnumerable<Mediafile>> action, IEnumerable<Mediafile> Duplicates)
         {
             try
             {
@@ -648,7 +654,7 @@ namespace BreadPlayer.ViewModels
 
         public async static Task PerformWatcherWorkAsync(StorageFolder folder)
         {
-            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions("datemodified:>" + SharedLogic.SettingsVM.TimeOpened));
+            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions("datemodified:>" + SharedLogic.SettingsVM.TimeOpened));
             var files = await modifiedqueryResult.GetFilesAsync();
             if (await modifiedqueryResult.GetItemCountAsync() > 0)
             {
@@ -658,7 +664,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(Common.DirectoryWalker.GetQueryOptions());
+                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
                 files = await queryResult.GetFilesAsync();
                 RenameAddOrDeleteFiles(files);
             }
@@ -682,7 +688,7 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        bool isLibraryLoading;
+        private bool isLibraryLoading;
         private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
             if (!isLibraryLoading)

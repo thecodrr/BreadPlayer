@@ -13,83 +13,83 @@ namespace BreadPlayer.Fmod
     /*
             'DSPConnection' API
         */
-    public class DSPConnection : HandleBase
+    public class DspConnection : HandleBase
     {
-        public Result getInput              (out DSP input)
+        public Result GetInput              (out Dsp input)
         {
             input = null;
 
             IntPtr dspraw;
-            Result result = FMOD_DSPConnection_GetInput(rawPtr, out dspraw);
-            input = new DSP(dspraw);
+            Result result = FMOD_DSPConnection_GetInput(RawPtr, out dspraw);
+            input = new Dsp(dspraw);
 
             return result;
         }
-        public Result getOutput             (out DSP output)
+        public Result GetOutput             (out Dsp output)
         {
             output = null;
 
             IntPtr dspraw;
-            Result result = FMOD_DSPConnection_GetOutput(rawPtr, out dspraw);
-            output = new DSP(dspraw);
+            Result result = FMOD_DSPConnection_GetOutput(RawPtr, out dspraw);
+            output = new Dsp(dspraw);
 
             return result;
         }
-        public Result setMix                (float volume)
+        public Result SetMix                (float volume)
         {
-            return FMOD_DSPConnection_SetMix(rawPtr, volume);
+            return FMOD_DSPConnection_SetMix(RawPtr, volume);
         }
-        public Result getMix                (out float volume)
+        public Result GetMix                (out float volume)
         {
-            return FMOD_DSPConnection_GetMix(rawPtr, out volume);
+            return FMOD_DSPConnection_GetMix(RawPtr, out volume);
         }
-        public Result setMixMatrix(float[] matrix, int outchannels, int inchannels, int inchannel_hop)
+        public Result SetMixMatrix(float[] matrix, int outchannels, int inchannels, int inchannelHop)
         {
-            return FMOD_DSPConnection_SetMixMatrix(rawPtr, matrix, outchannels, inchannels, inchannel_hop);
+            return FMOD_DSPConnection_SetMixMatrix(RawPtr, matrix, outchannels, inchannels, inchannelHop);
         }
-        public Result getMixMatrix(float[] matrix, out int outchannels, out int inchannels, int inchannel_hop)
+        public Result GetMixMatrix(float[] matrix, out int outchannels, out int inchannels, int inchannelHop)
         {
-            return FMOD_DSPConnection_GetMixMatrix(rawPtr, matrix, out outchannels, out inchannels, inchannel_hop);
+            return FMOD_DSPConnection_GetMixMatrix(RawPtr, matrix, out outchannels, out inchannels, inchannelHop);
         }
         public Result getType(out DspConnectionType type)
         {
-            return FMOD_DSPConnection_GetType(rawPtr, out type);
+            return FMOD_DSPConnection_GetType(RawPtr, out type);
         }
 
         // Userdata set/get.
-        public Result setUserData(IntPtr userdata)
+        public Result SetUserData(IntPtr userdata)
         {
-            return FMOD_DSPConnection_SetUserData(rawPtr, userdata);
+            return FMOD_DSPConnection_SetUserData(RawPtr, userdata);
         }
-        public Result getUserData(out IntPtr userdata)
+        public Result GetUserData(out IntPtr userdata)
         {
-            return FMOD_DSPConnection_GetUserData(rawPtr, out userdata);
+            return FMOD_DSPConnection_GetUserData(RawPtr, out userdata);
         }
 
         #region importfunctions
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_GetInput        (IntPtr dspconnection, out IntPtr input);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_GetOutput       (IntPtr dspconnection, out IntPtr output);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_SetMix          (IntPtr dspconnection, float volume);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_GetMix          (IntPtr dspconnection, out float volume);
-        [DllImport(FMODVersion.DLL)]
-        private static extern Result FMOD_DSPConnection_SetMixMatrix    (IntPtr dspconnection, float[] matrix, int outchannels, int inchannels, int inchannel_hop);
-        [DllImport(FMODVersion.DLL)]
-        private static extern Result FMOD_DSPConnection_GetMixMatrix    (IntPtr dspconnection, float[] matrix, out int outchannels, out int inchannels, int inchannel_hop);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
+        private static extern Result FMOD_DSPConnection_SetMixMatrix    (IntPtr dspconnection, float[] matrix, int outchannels, int inchannels, int inchannelHop);
+        [DllImport(FmodVersion.Dll)]
+        private static extern Result FMOD_DSPConnection_GetMixMatrix    (IntPtr dspconnection, float[] matrix, out int outchannels, out int inchannels, int inchannelHop);
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_GetType         (IntPtr dspconnection, out DspConnectionType type);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_SetUserData     (IntPtr dspconnection, IntPtr userdata);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_DSPConnection_GetUserData     (IntPtr dspconnection, out IntPtr userdata);
         #endregion
 
         #region wrapperinternal
 
-        public DSPConnection(IntPtr raw)
+        public DspConnection(IntPtr raw)
             : base(raw)
         {
         }

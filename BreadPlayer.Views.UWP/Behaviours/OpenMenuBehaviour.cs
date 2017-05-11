@@ -29,8 +29,8 @@ namespace BreadPlayer.Behaviours
     {
         public object Parameter
         {
-            get { return this.GetValue(ParameterProperty); }
-            set { this.SetValue(ParameterProperty, value); }
+            get => GetValue(ParameterProperty);
+            set => SetValue(ParameterProperty, value);
         }
 
         public static readonly DependencyProperty ParameterProperty =

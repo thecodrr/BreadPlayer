@@ -15,7 +15,7 @@ namespace BreadPlayer
     {
         public AlbumArtistView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             grid.DataContext = new AlbumArtistViewModel();
         }
 

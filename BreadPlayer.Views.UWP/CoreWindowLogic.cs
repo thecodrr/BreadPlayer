@@ -28,10 +28,11 @@ using Windows.Foundation.Metadata;
 using Windows.Media.Core;
 using BreadPlayer.Common;
 using Windows.Data.Xml.Dom;
-using BreadPlayer.Models;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
-using System.IO;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Events;
+using BreadPlayer.Core.Models;
 using BreadPlayer.ViewModels;
 
 namespace BreadPlayer
@@ -44,8 +45,8 @@ namespace BreadPlayer
         private const string volKey = "volume";
         private const string foldersKey = "folders";
         private const string timeclosedKey = "timeclosed";
-        static SystemMediaTransportControls _smtc;
-        static string path = "";
+        private static SystemMediaTransportControls _smtc;
+        private static string path = "";
         #endregion
 
         #region Load/Save Logic
@@ -99,7 +100,8 @@ namespace BreadPlayer
         #endregion
 
         #region SystemMediaTransportControls Methods/Events
-        static MediaPlayer player;
+
+        private static MediaPlayer player;
         public async static void InitSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
@@ -177,7 +179,7 @@ namespace BreadPlayer
                 }
             });
         }
-        private static void Player_MediaStateChanged(object sender, Events.MediaStateChangedEventArgs e)
+        private static void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
             if (_smtc == null)
                 return;
@@ -261,7 +263,7 @@ namespace BreadPlayer
             InitSmtc();
             SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
             Window.Current.SizeChanged += Current_SizeChanged;
-            var vm = (App.Current.Resources["AccountsVM"] as AccountsViewModel);
+            var vm = (Application.Current.Resources["AccountsVM"] as AccountsViewModel);
         }
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)

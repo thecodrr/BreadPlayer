@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace BreadPlayer.Fmod
 {
-    class StringMarshalHelper
+    internal class StringMarshalHelper
     {
         static internal void NativeToBuilder(StringBuilder builder, IntPtr nativeMem)
         {

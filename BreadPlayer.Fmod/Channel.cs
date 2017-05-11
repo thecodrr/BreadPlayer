@@ -17,120 +17,120 @@ namespace BreadPlayer.Fmod
     public class Channel : ChannelControl
     {
         // Channel specific control functionality.
-        public Result setFrequency          (float frequency)
+        public Result SetFrequency          (float frequency)
         {
-            return FMOD_Channel_SetFrequency(getRaw(), frequency);
+            return FMOD_Channel_SetFrequency(GetRaw(), frequency);
         }
-        public Result getFrequency          (out float frequency)
+        public Result GetFrequency          (out float frequency)
         {
-            return FMOD_Channel_GetFrequency(getRaw(), out frequency);
+            return FMOD_Channel_GetFrequency(GetRaw(), out frequency);
         }
-        public Result setPriority           (int priority)
+        public Result SetPriority           (int priority)
         {
-            return FMOD_Channel_SetPriority(getRaw(), priority);
+            return FMOD_Channel_SetPriority(GetRaw(), priority);
         }
-        public Result getPriority           (out int priority)
+        public Result GetPriority           (out int priority)
         {
-            return FMOD_Channel_GetPriority(getRaw(), out priority);
+            return FMOD_Channel_GetPriority(GetRaw(), out priority);
         }
-        public Result setPosition           (uint position, TimeUnit postype)
+        public Result SetPosition           (uint position, TimeUnit postype)
         {
-            return FMOD_Channel_SetPosition(getRaw(), position, postype);
+            return FMOD_Channel_SetPosition(GetRaw(), position, postype);
         }
-        public Result getPosition           (out uint position, TimeUnit postype)
+        public Result GetPosition           (out uint position, TimeUnit postype)
         {
-            return FMOD_Channel_GetPosition(getRaw(), out position, postype);
+            return FMOD_Channel_GetPosition(GetRaw(), out position, postype);
         }
-        public Result setChannelGroup       (ChannelGroup channelgroup)
+        public Result SetChannelGroup       (ChannelGroup channelgroup)
         {
-            return FMOD_Channel_SetChannelGroup(getRaw(), channelgroup.getRaw());
+            return FMOD_Channel_SetChannelGroup(GetRaw(), channelgroup.GetRaw());
         }
-        public Result getChannelGroup       (out ChannelGroup channelgroup)
+        public Result GetChannelGroup       (out ChannelGroup channelgroup)
         {
             channelgroup = null;
 
             IntPtr channelgroupraw;
-            Result result = FMOD_Channel_GetChannelGroup(getRaw(), out channelgroupraw);
+            Result result = FMOD_Channel_GetChannelGroup(GetRaw(), out channelgroupraw);
             channelgroup = new ChannelGroup(channelgroupraw);
 
             return result;
         }
-        public Result setLoopCount(int loopcount)
+        public Result SetLoopCount(int loopcount)
         {
-            return FMOD_Channel_SetLoopCount(getRaw(), loopcount);
+            return FMOD_Channel_SetLoopCount(GetRaw(), loopcount);
         }
-        public Result getLoopCount(out int loopcount)
+        public Result GetLoopCount(out int loopcount)
         {
-            return FMOD_Channel_GetLoopCount(getRaw(), out loopcount);
+            return FMOD_Channel_GetLoopCount(GetRaw(), out loopcount);
         }
-        public Result setLoopPoints(uint loopstart, TimeUnit loopstarttype, uint loopend, TimeUnit loopendtype)
+        public Result SetLoopPoints(uint loopstart, TimeUnit loopstarttype, uint loopend, TimeUnit loopendtype)
         {
-            return FMOD_Channel_SetLoopPoints(getRaw(), loopstart, loopstarttype, loopend, loopendtype);
+            return FMOD_Channel_SetLoopPoints(GetRaw(), loopstart, loopstarttype, loopend, loopendtype);
         }
-        public Result getLoopPoints(out uint loopstart, TimeUnit loopstarttype, out uint loopend, TimeUnit loopendtype)
+        public Result GetLoopPoints(out uint loopstart, TimeUnit loopstarttype, out uint loopend, TimeUnit loopendtype)
         {
-            return FMOD_Channel_GetLoopPoints(getRaw(), out loopstart, loopstarttype, out loopend, loopendtype);
+            return FMOD_Channel_GetLoopPoints(GetRaw(), out loopstart, loopstarttype, out loopend, loopendtype);
         }
 
         // Information only functions.
-        public Result isVirtual             (out bool isvirtual)
+        public Result IsVirtual             (out bool isvirtual)
         {
-            return FMOD_Channel_IsVirtual(getRaw(), out isvirtual);
+            return FMOD_Channel_IsVirtual(GetRaw(), out isvirtual);
         }
-        public Result getCurrentSound       (out Sound sound)
+        public Result GetCurrentSound       (out Sound sound)
         {
             sound = null;
 
             IntPtr soundraw;
-            Result result = FMOD_Channel_GetCurrentSound(getRaw(), out soundraw);
+            Result result = FMOD_Channel_GetCurrentSound(GetRaw(), out soundraw);
             sound = new Sound(soundraw);
 
             return result;
         }
-        public Result getIndex              (out int index)
+        public Result GetIndex              (out int index)
         {
-            return FMOD_Channel_GetIndex(getRaw(), out index);
+            return FMOD_Channel_GetIndex(GetRaw(), out index);
         }
 
         #region importfunctions
 
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetFrequency          (IntPtr channel, float frequency);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetFrequency          (IntPtr channel, out float frequency);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetPriority           (IntPtr channel, int priority);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetPriority           (IntPtr channel, out int priority);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetChannelGroup       (IntPtr channel, IntPtr channelgroup);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetChannelGroup       (IntPtr channel, out IntPtr channelgroup);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_IsVirtual             (IntPtr channel, out bool isvirtual);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetCurrentSound       (IntPtr channel, out IntPtr sound);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetIndex              (IntPtr channel, out int index);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetPosition           (IntPtr channel, uint position, TimeUnit postype);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetPosition           (IntPtr channel, out uint position, TimeUnit postype);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetMode               (IntPtr channel, Mode mode);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetMode               (IntPtr channel, out Mode mode);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetLoopCount          (IntPtr channel, int loopcount);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetLoopCount          (IntPtr channel, out int loopcount);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetLoopPoints         (IntPtr channel, uint  loopstart, TimeUnit loopstarttype, uint  loopend, TimeUnit loopendtype);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetLoopPoints         (IntPtr channel, out uint loopstart, TimeUnit loopstarttype, out uint loopend, TimeUnit loopendtype);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_SetUserData           (IntPtr channel, IntPtr userdata);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Channel_GetUserData           (IntPtr channel, out IntPtr userdata);
         #endregion
 

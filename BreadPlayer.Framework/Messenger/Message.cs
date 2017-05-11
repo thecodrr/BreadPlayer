@@ -15,13 +15,8 @@
         /// What type of message is this
         /// </summary>
         private MessageTypes messageType;
-        public MessageTypes MessageType
-        {
-            get
-            {
-                return messageType;
-            }
-        }
+        public MessageTypes MessageType => messageType;
+
         /// <summary>
         /// The payload for the message 
         /// </summary>

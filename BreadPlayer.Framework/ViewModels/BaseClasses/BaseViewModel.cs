@@ -23,10 +23,7 @@ namespace ViewModels
         /// Keep a list of any children ViewModels so we can safely remove them when this ViewModel gets closed
         /// </summary>
         private List<BaseViewModel> childViewModels = new List<BaseViewModel>();
-        public List<BaseViewModel> ChildViewModels
-        {
-            get { return childViewModels; }
-        }
+        public List<BaseViewModel> ChildViewModels => childViewModels;
 
         #region Bindable Properties
 
@@ -34,16 +31,13 @@ namespace ViewModels
         private BaseViewData viewData;
         public BaseViewData ViewData
         {
-            get
-            {
-                return viewData;
-            }
+            get => viewData;
             set
             {
                 if (value != viewData)
                 {
                     viewData = value;
-                    base.RaisePropertyChanged("ViewData");
+                    RaisePropertyChanged("ViewData");
                 }
 
             }

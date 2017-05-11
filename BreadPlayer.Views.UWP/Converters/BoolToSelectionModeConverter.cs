@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-    class BoolToSelectionModeConverter : IValueConverter
+    internal class BoolToSelectionModeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

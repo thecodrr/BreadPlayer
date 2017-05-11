@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using BreadPlayer;
-using BreadPlayer.Models;
 using BreadPlayer.Services;
 using BreadPlayer.Views;
 using System;
@@ -29,6 +28,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 
 namespace SplitViewMenu
 {
@@ -85,42 +86,42 @@ namespace SplitViewMenu
 
         public DataTemplateSelector MenuItemDataTemplateSelector
         {
-            get { return (DataTemplateSelector)GetValue(MenuItemDataTemplateSelectorProperty); }
-            set { SetValue(MenuItemDataTemplateSelectorProperty, value); }
+            get => (DataTemplateSelector)GetValue(MenuItemDataTemplateSelectorProperty);
+            set => SetValue(MenuItemDataTemplateSelectorProperty, value);
         }
 
         public DataTemplate NavMenuItemTemplate
         {
-            get { return (DataTemplate)GetValue(NavMenuItemTemplateProperty); }
-            set { SetValue(NavMenuItemTemplateProperty, value); }
+            get => (DataTemplate)GetValue(NavMenuItemTemplateProperty);
+            set => SetValue(NavMenuItemTemplateProperty, value);
         }
 
         public Style NavMenuItemContainerStyle
         {
-            get { return (Style)GetValue(NavMenuItemContainerStyleProperty); }
-            set { SetValue(NavMenuItemContainerStyleProperty, value); }
+            get => (Style)GetValue(NavMenuItemContainerStyleProperty);
+            set => SetValue(NavMenuItemContainerStyleProperty, value);
         }
 
         public Type InitialPage
         {
-            get { return (Type)GetValue(InitialPageProperty); }
-            set { SetValue(InitialPageProperty, value); }
+            get => (Type)GetValue(InitialPageProperty);
+            set => SetValue(InitialPageProperty, value);
         }
         public static bool IsSearchBarVisible { get; set; }
         public List<INavigationMenuItem> TopNavigationItems
         {
-            get { return (List<INavigationMenuItem>)GetValue(TopNavigationItemsProperty); }
-            set { SetValue(TopNavigationItemsProperty, value); }
+            get => (List<INavigationMenuItem>)GetValue(TopNavigationItemsProperty);
+            set => SetValue(TopNavigationItemsProperty, value);
         }
         public List<INavigationMenuItem> BottomNavigationItems
         {
-            get { return (List<INavigationMenuItem>)GetValue(BottomNavigationItemsProperty); }
-            set { SetValue(BottomNavigationItemsProperty, value); }
+            get => (List<INavigationMenuItem>)GetValue(BottomNavigationItemsProperty);
+            set => SetValue(BottomNavigationItemsProperty, value);
         }
         public List<INavigationMenuItem> PlaylistsItems
         {
-            get { return (List<INavigationMenuItem>)GetValue(PlaylistsItemsProperty); }
-            set { SetValue(PlaylistsItemsProperty, value); }
+            get => (List<INavigationMenuItem>)GetValue(PlaylistsItemsProperty);
+            set => SetValue(PlaylistsItemsProperty, value);
         }
         private void OnSplitViewMenuLoaded(object sender, RoutedEventArgs e)
         {
@@ -244,9 +245,9 @@ namespace SplitViewMenu
                 }
             });
             return cmd;
-        }    
+        }
 
-        static INavigationMenuItem LastItem = new SimpleNavMenuItem();
+        private static INavigationMenuItem LastItem = new SimpleNavMenuItem();
         private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_navTopMenuListView.SelectedIndex > -1 || _navBottomMenuListView.SelectedIndex > -1)
@@ -352,7 +353,8 @@ namespace SplitViewMenu
         {
             return LastItem.Arguments;
         }
-        INavigationMenuItem GetItemFromList(Type sourcePagetype)
+
+        private INavigationMenuItem GetItemFromList(Type sourcePagetype)
         {
             if (sourcePagetype == typeof(LibraryView) || sourcePagetype == typeof(PlaylistView))
             {
@@ -369,7 +371,8 @@ namespace SplitViewMenu
             else
                 return null;
         }
-        static NavMenuListView GetParentListViewFromItem(INavigationMenuItem item)
+
+        private static NavMenuListView GetParentListViewFromItem(INavigationMenuItem item)
         {
             if (item.DestinationPage == typeof(LibraryView) || item.DestinationPage == typeof(AlbumArtistView))
             {
@@ -430,7 +433,8 @@ namespace SplitViewMenu
                     container.IsTabStop = true;
             }
         }
-        async Task UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
+
+        private async Task UpdateHeaderAndShortCuts(SimpleNavMenuItem item)
         {
             if (item != null) 
             {

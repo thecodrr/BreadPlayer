@@ -4,6 +4,7 @@ using BreadPlayer.ViewModels;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BreadPlayer.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -14,11 +15,11 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class NowPlayingView : Page
     {
-        bool isPressed;
-        ShellViewModel ShellVM;
+        private bool isPressed;
+        private ShellViewModel ShellVM;
         public NowPlayingView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             ShellVM = (extrasPanel.DataContext as ShellViewModel);
 
             //events for providing seeking ability to the positon slider.
@@ -40,7 +41,7 @@ namespace BreadPlayer
             };
         }
 
-        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             SplitViewMenu.SplitViewMenu.SelectPrevious();
             //we don't want to exit fullscreen mode in mobile phones
@@ -65,7 +66,7 @@ namespace BreadPlayer
                     RootGrid.Children.Remove(NowPlayingList);
                     NowPlayingGrid.Children.Add(NowPlayingList);
                 }
-                NowPlayingList.ItemTemplate = (this.Resources["NowPlayingListItemTemplate"] as DataTemplate);
+                NowPlayingList.ItemTemplate = (Resources["NowPlayingListItemTemplate"] as DataTemplate);
             };
         }
 
@@ -75,7 +76,7 @@ namespace BreadPlayer
             {
                 NowPlayingGrid.Children.Remove(NowPlayingList);
                 RootGrid.Children.Insert(RootGrid.Children.Count - 2, NowPlayingList);
-                NowPlayingList.ItemTemplate = (this.Resources["NowPlayingListItemTemplate"] as DataTemplate);
+                NowPlayingList.ItemTemplate = (Resources["NowPlayingListItemTemplate"] as DataTemplate);
             }
         }
     }

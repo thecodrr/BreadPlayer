@@ -18,11 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BreadPlayer.Models;
 using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Extensions
 {
@@ -31,8 +31,8 @@ namespace BreadPlayer.Extensions
         
         public ThreadSafeObservableCollection<ContextMenuCommand> ItemsSource
         {
-            get { return (ThreadSafeObservableCollection<ContextMenuCommand>)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
+            get => (ThreadSafeObservableCollection<ContextMenuCommand>)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
@@ -45,8 +45,8 @@ namespace BreadPlayer.Extensions
 
         public object DataContext
         {
-            get { return GetValue(DataContextProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
+            get => GetValue(DataContextProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public static readonly DependencyProperty DataContextProperty =
@@ -105,10 +105,12 @@ namespace BreadPlayer.Extensions
             Text = text;
             CommandParameter = cmdPara;
         }
-        string text;
+
+        private string text;
         public string Text
         {
-            get { return text; } set { Set(ref text, value); }
+            get => text;
+            set => Set(ref text, value);
         }
         public ICommand Command
         {
@@ -123,8 +125,8 @@ namespace BreadPlayer.Extensions
     {
         public object Tag
         {
-            get { return GetValue(TagProperty); }
-            set { SetValue(TagProperty, value); }
+            get => GetValue(TagProperty);
+            set => SetValue(TagProperty, value);
         }
 
         public static readonly DependencyProperty TagProperty =
@@ -144,7 +146,8 @@ namespace BreadPlayer.Extensions
         {
             obj.SetValue(MyItemsProperty, value);
         }
-        static SharedLogic core = new Core.SharedLogic();
+
+        private static SharedLogic core = new SharedLogic();
         private async static void Setup(MenuFlyout menuFlyout)
         {
             if (menuFlyout != null)
@@ -193,7 +196,7 @@ namespace BreadPlayer.Extensions
         /// <summary>
         /// Fix this later. Not very essential right now.
         /// </summary>
-        static void Refresh()
+        private static void Refresh()
         {
             //MenuFlyoutSubItem removeFrom = new MenuFlyoutSubItem() { Text = "Remove from" };
             //if (Menu != null && Menu.Items.Any() && Menu.GetType() != typeof(CustomFlyout))
@@ -228,8 +231,8 @@ namespace BreadPlayer.Extensions
             //parent.Items.Remove(parent.Items.First(t => (t as MenuFlyoutItem).Text == item.Text));
         }
 
-        static MenuFlyout Menu;
-        static List<MenuFlyout> fly = new List<MenuFlyout>();
+        private static MenuFlyout Menu;
+        private static List<MenuFlyout> fly = new List<MenuFlyout>();
         public static readonly DependencyProperty MyItemsProperty =
             DependencyProperty.Register("MyItems",
                 typeof(List<MenuFlyoutItemBase>),

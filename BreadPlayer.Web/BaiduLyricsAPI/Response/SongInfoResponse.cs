@@ -11,27 +11,15 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
         [DataMember(Name = "songurl")]
         public UrlList SongUrl
         {
-            get
-            {
-                return songUrl;
-            }
-            set
-            {
-                songUrl = value;
-            }
+            get => songUrl;
+            set => songUrl = value;
         }
 
         [DataMember(Name = "songinfo")]
         public SongInfo SongInfo
         {
-            get
-            {
-                return songInfo;
-            }
-            set
-            {
-                songInfo = value;
-            }
+            get => songInfo;
+            set => songInfo = value;
         }
     }
 
@@ -41,14 +29,8 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
 
         public List<SongUrl> Url
         {
-            get
-            {
-                return url;
-            }
-            set
-            {
-                url = value;
-            }
+            get => url;
+            set => url = value;
         }
     }
 }

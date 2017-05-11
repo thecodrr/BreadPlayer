@@ -26,7 +26,7 @@ namespace BreadPlayer.Extensions
             };
         }
 
-        static void FadeInBrush(this SolidColorBrush brush, DispatcherTimer timer, double to)
+        private static void FadeInBrush(this SolidColorBrush brush, DispatcherTimer timer, double to)
         {
             timer.Start();
             timer.Tick += (sender, e) =>

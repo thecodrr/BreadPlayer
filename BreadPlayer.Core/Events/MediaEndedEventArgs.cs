@@ -15,19 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using BreadPlayer.Core;
 
-namespace BreadPlayer.Events
+using System;
+using BreadPlayer.Core.Common;
+
+namespace BreadPlayer.Core.Events
 {
 	public class MediaEndedEventArgs : EventArgs
     {
-        private PlayerState state;
-        public MediaEndedEventArgs(PlayerState PlayerState)
+        private PlayerState _state;
+        public MediaEndedEventArgs(PlayerState playerState)
         {
-            state = PlayerState;
+            _state = playerState;
         }
 
-        public PlayerState PlayerState { get { return state; } }
+        public PlayerState PlayerState => _state;
     }
 }

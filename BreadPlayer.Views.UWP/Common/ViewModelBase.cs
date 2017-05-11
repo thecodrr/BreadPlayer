@@ -20,18 +20,19 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using Windows.UI.Core;
-using BreadPlayer.Core.PlayerEngines;
+using BreadPlayer.Core.Engines.Interfaces;
 
 namespace BreadPlayer
 {
    public class ViewModelBase : INotifyPropertyChanged
     {
-        NotificationManager.BreadNotificationManager notificationManager;
+        private NotificationManager.BreadNotificationManager notificationManager;
         public NotificationManager.BreadNotificationManager NotificationManager
         {
             get { if (notificationManager == null) notificationManager = SharedLogic.NotificationManager; return notificationManager; }
         }
-        IPlayerEngine player;
+
+        private IPlayerEngine player;
         public IPlayerEngine Player
         {
             get
@@ -41,7 +42,8 @@ namespace BreadPlayer
                 return player;
             }
         }
-        static SharedLogic logic;
+
+        private static SharedLogic logic;
         public static SharedLogic SharedLogic
         {
             get
@@ -61,7 +63,7 @@ namespace BreadPlayer
         }
         public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {
-            if (object.Equals(storage, value))
+            if (Equals(storage, value))
                 return false;
             storage = value;
             OnPropertyChanged(propertyName);

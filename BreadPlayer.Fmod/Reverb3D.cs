@@ -16,70 +16,70 @@ namespace BreadPlayer.Fmod
         */
     public class Reverb3D : HandleBase
     {
-        public Result release()
+        public Result Release()
         {
-            Result result = FMOD_Reverb3D_Release(getRaw());
-            if (result == Result.OK)
+            Result result = FMOD_Reverb3D_Release(GetRaw());
+            if (result == Result.Ok)
             {
-                rawPtr = IntPtr.Zero;
+                RawPtr = IntPtr.Zero;
             }
             return result;
         }
 
         // Reverb manipulation.
-        public Result set3DAttributes(ref Vector position, float mindistance, float maxdistance)
+        public Result Set3DAttributes(ref Vector position, float mindistance, float maxdistance)
         {
-            return FMOD_Reverb3D_Set3DAttributes(rawPtr, ref position, mindistance, maxdistance);
+            return FMOD_Reverb3D_Set3DAttributes(RawPtr, ref position, mindistance, maxdistance);
         }
-        public Result get3DAttributes(ref Vector position, ref float mindistance, ref float maxdistance)
+        public Result Get3DAttributes(ref Vector position, ref float mindistance, ref float maxdistance)
         {
-            return FMOD_Reverb3D_Get3DAttributes(rawPtr, ref position, ref mindistance, ref maxdistance);
+            return FMOD_Reverb3D_Get3DAttributes(RawPtr, ref position, ref mindistance, ref maxdistance);
         }
-        public Result setProperties(ref ReverbProperties properties)
+        public Result SetProperties(ref ReverbProperties properties)
         {
-            return FMOD_Reverb3D_SetProperties(rawPtr, ref properties);
+            return FMOD_Reverb3D_SetProperties(RawPtr, ref properties);
         }
-        public Result getProperties(ref ReverbProperties properties)
+        public Result GetProperties(ref ReverbProperties properties)
         {
-            return FMOD_Reverb3D_GetProperties(rawPtr, ref properties);
+            return FMOD_Reverb3D_GetProperties(RawPtr, ref properties);
         }
-        public Result setActive(bool active)
+        public Result SetActive(bool active)
         {
-            return FMOD_Reverb3D_SetActive(rawPtr, active);
+            return FMOD_Reverb3D_SetActive(RawPtr, active);
         }
-        public Result getActive(out bool active)
+        public Result GetActive(out bool active)
         {
-            return FMOD_Reverb3D_GetActive(rawPtr, out active);
+            return FMOD_Reverb3D_GetActive(RawPtr, out active);
         }
 
         // Userdata set/get.
-        public Result setUserData(IntPtr userdata)
+        public Result SetUserData(IntPtr userdata)
         {
-            return FMOD_Reverb3D_SetUserData(rawPtr, userdata);
+            return FMOD_Reverb3D_SetUserData(RawPtr, userdata);
         }
-        public Result getUserData(out IntPtr userdata)
+        public Result GetUserData(out IntPtr userdata)
         {
-            return FMOD_Reverb3D_GetUserData(rawPtr, out userdata);
+            return FMOD_Reverb3D_GetUserData(RawPtr, out userdata);
         }
 
         #region importfunctions
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_Release(IntPtr reverb);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_Set3DAttributes(IntPtr reverb, ref Vector position, float mindistance, float maxdistance);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_Get3DAttributes(IntPtr reverb, ref Vector position, ref float mindistance, ref float maxdistance);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_SetProperties(IntPtr reverb, ref ReverbProperties properties);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_GetProperties(IntPtr reverb, ref ReverbProperties properties);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_SetActive(IntPtr reverb, bool active);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_GetActive(IntPtr reverb, out bool active);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_SetUserData(IntPtr reverb, IntPtr userdata);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_Reverb3D_GetUserData(IntPtr reverb, out IntPtr userdata);
         #endregion
 

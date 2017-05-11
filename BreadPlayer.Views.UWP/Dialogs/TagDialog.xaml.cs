@@ -1,19 +1,6 @@
-﻿using BreadPlayer.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Core.Models;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,19 +12,19 @@ namespace BreadPlayer.Dialogs
              "Mediafile", typeof(Mediafile), typeof(TagDialog), new PropertyMetadata(null));
         public Mediafile Mediafile
         {
-            get { return (Mediafile)GetValue(MediafileProperty); }
-            set { SetValue(MediafileProperty, value); }
+            get => (Mediafile)GetValue(MediafileProperty);
+            set => SetValue(MediafileProperty, value);
         }
         public static readonly DependencyProperty ItemWidthProperty = DependencyProperty.Register(
             "ItemWidth", typeof(double), typeof(TagDialog), new PropertyMetadata(null));
         public double ItemWidth
         {
-            get { return (double)GetValue(ItemWidthProperty); }
-            set { SetValue(ItemWidthProperty, value); }
+            get => (double)GetValue(ItemWidthProperty);
+            set => SetValue(ItemWidthProperty, value);
         }
         public TagDialog()
         {
-           this.InitializeComponent();
+           InitializeComponent();
         }
         public TagDialog(Mediafile file)
         {

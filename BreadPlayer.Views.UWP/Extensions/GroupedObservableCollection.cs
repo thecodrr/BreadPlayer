@@ -20,10 +20,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Core;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using BreadPlayer.Models;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Extensions
 {
@@ -52,7 +51,7 @@ namespace BreadPlayer.Extensions
             Elements.AddRange(items);
             // this.AddRange(items, false);
             foreach (var item in items)
-                this.AddItem(item);
+                AddItem(item);
             //foreach (var item in items)
             //{
             //    this.AddItem(item, false);
@@ -60,7 +59,7 @@ namespace BreadPlayer.Extensions
         }
         public bool Contains(TElement item)
         {
-            return this.Contains(item, (a, b) => a.Equals(b));
+            return Contains(item, (a, b) => a.Equals(b));
         }
         public new void Clear()
         {
@@ -69,8 +68,8 @@ namespace BreadPlayer.Extensions
         }
         public bool Contains(TElement item, Func<TElement, TElement, bool> compare)
         {
-            var key = this.readKey(item);
-            var group = this.TryFindGroup(key);
+            var key = readKey(item);
+            var group = TryFindGroup(key);
             return group != null && group.Any(i => compare(item, i));
         }
 
@@ -82,7 +81,7 @@ namespace BreadPlayer.Extensions
         {
             try
             {
-                var key = this.readKey(item);
+                var key = readKey(item);
                 if (addToElement)
                     Elements.AddSorted(item);
                 var s = FindOrCreateGroup(key);
@@ -167,7 +166,7 @@ namespace BreadPlayer.Extensions
         }
         public void RemoveItem(TElement item)
         {
-            this.Remove(item);
+            Remove(item);
             Elements.Remove(item);
         }
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
@@ -176,9 +175,9 @@ namespace BreadPlayer.Extensions
         {
             // First make sure that the top level group containers match
             var replacementKeys = replacementCollection.Keys.ToList();
-            var currentKeys = new HashSet<TKey>(this.Keys);
-            this.RemoveGroups(currentKeys.Except(replacementKeys));
-            this.EnsureGroupsExist(replacementKeys);
+            var currentKeys = new HashSet<TKey>(Keys);
+            RemoveGroups(currentKeys.Except(replacementKeys));
+            EnsureGroupsExist(replacementKeys);
 
             // Debug.Assert(this.Keys.SequenceEqual(replacementCollection.Keys), "Expected this collection to have exactly the same keys in the same order at this point");
 
@@ -248,7 +247,7 @@ namespace BreadPlayer.Extensions
         {
             //  Debug.Assert(new HashSet<TKey>(this.Keys).IsSubsetOf(requiredKeys), "Expected this collection to contain no additional keys than the new collection at this point");
 
-            if (this.Count == requiredKeys.Count)
+            if (Count == requiredKeys.Count)
             {
                 // Nothing to do.
                 return;
@@ -256,9 +255,9 @@ namespace BreadPlayer.Extensions
 
             for (var i = 0; i < requiredKeys.Count; i++)
             {
-                if (this.Count <= i || !this[i].Key.Equals(requiredKeys[i]))
+                if (Count <= i || !this[i].Key.Equals(requiredKeys[i]))
                 {
-                    this.Insert(i, new Grouping<TKey, TElement>(requiredKeys[i]));
+                    Insert(i, new Grouping<TKey, TElement>(requiredKeys[i]));
                 }
             }
         }
@@ -266,28 +265,28 @@ namespace BreadPlayer.Extensions
         private void RemoveGroups(IEnumerable<TKey> keys)
         {
             var keySet = new HashSet<TKey>(keys);
-            for (var i = this.Count - 1; i >= 0; i--)
+            for (var i = Count - 1; i >= 0; i--)
             {
                 if (keySet.Contains(this[i].Key))
                 {
-                    this.RemoveAt(i);
+                    RemoveAt(i);
                 }
             }
         }
         public void RemoveGroup(TKey key)
         {
-            this.RemoveAt(this.IndexOf(this.First(t => t.Key.ToString() == key.ToString())));
+            RemoveAt(IndexOf(this.First(t => t.Key.ToString() == key.ToString())));
         }
         public bool Remove(TElement item)
         {
-            var key = this.readKey(item);
-            var group = this.TryFindGroup(key);
+            var key = readKey(item);
+            var group = TryFindGroup(key);
             var success = group != null && group.Remove(item);
 
             if (group != null && group.Count == 0)
             {
-                this.Remove(group);
-                this.lastEffectedGroup = null;
+                Remove(group);
+                lastEffectedGroup = null;
             }
 
             return success;
@@ -295,14 +294,14 @@ namespace BreadPlayer.Extensions
 
         private Grouping<TKey, TElement> TryFindGroup(TKey key)
         {
-            if (this.lastEffectedGroup != null && this.lastEffectedGroup.Key.Equals(key))
+            if (lastEffectedGroup != null && lastEffectedGroup.Key.Equals(key))
             {
-                return this.lastEffectedGroup;
+                return lastEffectedGroup;
             }
 
             var group = this.FirstOrDefault(i => i.Key.Equals(key));
 
-            this.lastEffectedGroup = group;
+            lastEffectedGroup = group;
 
             return group;
         }
@@ -310,9 +309,9 @@ namespace BreadPlayer.Extensions
         private Grouping<TKey, TElement> FindOrCreateGroup(TKey key)
         {
             Grouping<TKey, TElement> result = null;
-            if (this.lastEffectedGroup != null && this.lastEffectedGroup.Key.Equals(key))
+            if (lastEffectedGroup != null && lastEffectedGroup.Key.Equals(key))
             {
-                return this.lastEffectedGroup;
+                return lastEffectedGroup;
             }
 
             try
@@ -324,7 +323,7 @@ namespace BreadPlayer.Extensions
                     //_isObserving = true;
                     // Group doesn't exist and the new group needs to go at the end
                     result = new Grouping<TKey, TElement>(key);
-                    this.Add(result);
+                    Add(result);
 
                 }
                 else if (!match.group.Key.Equals(key))
@@ -332,7 +331,7 @@ namespace BreadPlayer.Extensions
                     //_isObserving = true;
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
-                    this.Insert(match.index, result);
+                    Insert(match.index, result);
 
                 }
                 else
@@ -340,7 +339,7 @@ namespace BreadPlayer.Extensions
                     result = match.group;
                 }
 
-                this.lastEffectedGroup = result;
+                lastEffectedGroup = result;
             }
             catch (Exception ex)
             {
@@ -356,7 +355,7 @@ public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>
 {
     public Grouping(TKey key)
     {
-        this.Key = key;
+        Key = key;
     }
 
     public Grouping(TKey key, IEnumerable<TElement> items)

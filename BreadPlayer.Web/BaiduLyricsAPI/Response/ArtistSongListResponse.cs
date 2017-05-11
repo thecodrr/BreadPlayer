@@ -1,5 +1,4 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Models;
-using System;
 using System.Collections.Generic;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Response
@@ -10,12 +9,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Response
         public string songnums { get; set; }
         public int havemore { get; set; }
 
-        public bool HasMore
-        {
-            get
-            {
-                return havemore == 1;
-            }
-        }
+        public bool HasMore => havemore == 1;
     }
 }

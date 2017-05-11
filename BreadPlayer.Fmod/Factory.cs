@@ -15,20 +15,20 @@ namespace BreadPlayer.Fmod
         */
     public class Factory
     {
-        public static Result SystemCreate(out FMODSystem system)
+        public static Result SystemCreate(out FmodSystem system)
         {
             system = null;
 
-            Result result   = Result.OK;
+            Result result   = Result.Ok;
             IntPtr rawPtr   = new IntPtr();
 
             result = FMOD_System_Create(out rawPtr);
-            if (result != Result.OK)
+            if (result != Result.Ok)
             {
                 return result;
             }
 
-            system = new FMODSystem(rawPtr);
+            system = new FmodSystem(rawPtr);
 
             return result;
         }
@@ -36,7 +36,7 @@ namespace BreadPlayer.Fmod
 
         #region importfunctions
         
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_System_Create                      (out IntPtr system);
 
         #endregion

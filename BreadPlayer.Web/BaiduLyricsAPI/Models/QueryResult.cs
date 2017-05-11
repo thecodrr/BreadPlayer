@@ -1,5 +1,4 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Group;
-using System;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {

@@ -1,35 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BreadPlayer.Models;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Engines.BASSEngine;
+using BreadPlayer.Core.Engines.Interfaces;
+using BreadPlayer.Core.Events;
+using BreadPlayer.Core.Models;
+using static BreadPlayer.Fmod.Callbacks;
 using BreadPlayer.Fmod;
-using BreadPlayer.Events;
 using BreadPlayer.Fmod.Enums;
 using BreadPlayer.Fmod.Structs;
-using static BreadPlayer.Fmod.Callbacks;
 
-namespace BreadPlayer.Core.PlayerEngines
+namespace BreadPlayer.Core.Engines.FMODEngine
 {
-    public class FMODPlayerEngine : ObservableObject, IPlayerEngine
+    public sealed class FmodPlayerEngine : ObservableObject, IPlayerEngine
     {
         #region Fields
-        FMODSystem FMODSys;
-        Sound FMODSound;
-        Channel FMODChannel;
-        private CHANNEL_CALLBACK channelEndCallback;
-        IntPtr EndSyncPoint;
-        IntPtr Last5SyncPoint;
-        IntPtr Last15SyncPoint;
-        uint Last15Offset;
-        bool isMobile;
+
+        private FmodSystem _fmodSys;
+        private Sound _fmodSound;
+        private Channel _fmodChannel;
+        private ChannelCallback _channelEndCallback;
+        private IntPtr _endSyncPoint;
+        private IntPtr _last5SyncPoint;
+        private IntPtr _last15SyncPoint;
+        private uint _last15Offset;
+        private bool _isMobile;
         #endregion
 
-        public FMODPlayerEngine(bool IsMobile)
+        public FmodPlayerEngine(bool isMobile)
         {
-            isMobile = IsMobile;
-            Init(IsMobile);
+            _isMobile = isMobile;
+            Init(isMobile);
         }
 
         #region Methods
@@ -37,9 +39,9 @@ namespace BreadPlayer.Core.PlayerEngines
         {
             await Task.Run(() =>
             {
-                Factory.SystemCreate(out FMODSys);
-                FMODSys.Init(1, InitFlags.NORMAL, IntPtr.Zero);
-                channelEndCallback = new CHANNEL_CALLBACK(ChannelEndCallback);
+                Factory.SystemCreate(out _fmodSys);
+                _fmodSys.Init(1, InitFlags.Normal, IntPtr.Zero);
+                _channelEndCallback = new ChannelCallback(ChannelEndCallback);
             });
         }
         public async Task<bool> Load(Mediafile mediaFile)
@@ -53,10 +55,10 @@ namespace BreadPlayer.Core.PlayerEngines
                 await Stop();
 
                 //create a stream of the new track
-                Result loadResult = FMODSys.CreateStream(mediaFile.Path, isMobile ? Mode.LOWMEM & Mode.IGNORETAGS : Mode.DEFAULT, out FMODSound);
+                Result loadResult = _fmodSys.CreateStream(mediaFile.Path, _isMobile ? Mode.LowMem & Mode.IgnoreTags : Mode.Default, out _fmodSound);
 
                 //load the stream into the channel but don't play it yet.
-                loadResult = FMODSys.PlaySound(FMODSound, null, true, out FMODChannel);
+                loadResult = _fmodSys.PlaySound(_fmodSound, null, true, out _fmodChannel);
 
                 //this checks if looping is enabled and then sets the loop
                 SetLoop();
@@ -75,35 +77,35 @@ namespace BreadPlayer.Core.PlayerEngines
 
                 //load equalizer
                 if (Equalizer == null)
-                    Equalizer = new FmodEqualizer(FMODSys, FMODChannel);
+                    Equalizer = new FmodEqualizer(_fmodSys, _fmodChannel);
                 else
-                    (Equalizer as FmodEqualizer).ReInit(FMODSys, FMODChannel); 
+                    (Equalizer as FmodEqualizer).ReInit(_fmodSys, _fmodChannel); 
                 
                 //get and update length of the track.
-                Length = TimeSpan.FromMilliseconds(FMODSound.LengthInMilliseconds).TotalSeconds;
+                Length = TimeSpan.FromMilliseconds(_fmodSound.LengthInMilliseconds).TotalSeconds;
 
                 //set the channel callback for all the syncpoints
-                loadResult = FMODChannel.setCallback(channelEndCallback);
+                loadResult = _fmodChannel.SetCallback(_channelEndCallback);
 
                 //add all the sync points
                 //1. when song ends
-                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds, TimeUnit.MS, "songended", out EndSyncPoint);
+                loadResult = _fmodSound.AddSyncPoint(_fmodSound.LengthInMilliseconds, TimeUnit.Ms, "songended", out _endSyncPoint);
 
                 //2. when song has reached the last 15 seconds
-                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds - 15000, TimeUnit.MS, "songabouttoended", out Last15SyncPoint);
+                loadResult = _fmodSound.AddSyncPoint(_fmodSound.LengthInMilliseconds - 15000, TimeUnit.Ms, "songabouttoended", out _last15SyncPoint);
 
                 //3. when song has reached the last 5 seconds
-                loadResult = FMODSound.addSyncPoint(FMODSound.LengthInMilliseconds - 5000, TimeUnit.MS, "fade", out Last5SyncPoint);
+                loadResult = _fmodSound.AddSyncPoint(_fmodSound.LengthInMilliseconds - 5000, TimeUnit.Ms, "fade", out _last5SyncPoint);
 
                 //update the system once here so that 
                 //all the sync points and callbacks are saved and updated.
-                loadResult = FMODSys.Update();
+                loadResult = _fmodSys.Update();
 
                 PlayerState = PlayerState.Stopped;
                 CurrentlyPlayingFile = mediaFile;
 
                 //check if all was successful
-                return loadResult == Result.OK;
+                return loadResult == Result.Ok;
             }
             else
             {
@@ -131,13 +133,13 @@ namespace BreadPlayer.Core.PlayerEngines
 
                 //set fade points to first 3 seconds of the track.
                 //we simply slide the volume from default value to 0 in the next 0.5 second.
-                FMODChannel.SetFadePoint(FMODChannel.Volume, 0f, FMODSound.ConvertSecondsToPCM(0.5));
+                _fmodChannel.SetFadePoint(_fmodChannel.Volume, 0f, _fmodSound.ConvertSecondsToPcm(0.5));
 
                 //wait for the fade to over.
                 await Task.Delay(500);
 
                 //set paused to true
-                FMODChannel.SetPaused(true);
+                _fmodChannel.SetPaused(true);
             });
         }
 
@@ -147,7 +149,7 @@ namespace BreadPlayer.Core.PlayerEngines
             return Task.Run(() =>
             {
                 //set paused to false
-                FMODChannel.SetPaused(false);
+                _fmodChannel.SetPaused(false);
 
                 //update volume.
                 Volume = Volume;
@@ -155,7 +157,7 @@ namespace BreadPlayer.Core.PlayerEngines
                 //set fade points to first 3 seconds of the track.
                 //we simply slide the volume from 0 to the default value
                 //in the next 1 second.
-                FMODChannel.SetFadePoint(0f, FMODChannel.Volume, FMODSound.ConvertSecondsToPCM(1));
+                _fmodChannel.SetFadePoint(0f, _fmodChannel.Volume, _fmodSound.ConvertSecondsToPcm(1));
 
                 PlayerState = PlayerState.Playing;
             });
@@ -166,8 +168,8 @@ namespace BreadPlayer.Core.PlayerEngines
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
             return Task.Run(() =>
             {
-                FMODChannel?.Stop();
-                FMODSound?.release();
+                _fmodChannel?.Stop();
+                _fmodSound?.Release();
                 Length = 0;
                 Position = -1;
                 CurrentlyPlayingFile = null;
@@ -176,88 +178,92 @@ namespace BreadPlayer.Core.PlayerEngines
         }
         private void SetLoop()
         {
-            FMODChannel.setMode(isLoopingEnabled ? Mode.LOOP_NORMAL : Mode.LOOP_OFF);
-            FMODChannel.setLoopCount(isLoopingEnabled ? -1 : 0);
+            _fmodChannel.SetMode(_isLoopingEnabled ? Mode.LoopNormal : Mode.LoopOff);
+            _fmodChannel.SetLoopCount(_isLoopingEnabled ? -1 : 0);
         }
         #endregion
 
         #region Callbacks
         private Result ChannelEndCallback(IntPtr channelraw, ChannelControlType controltype, ChannelControlCallbackType type, IntPtr commanddata1, IntPtr commanddata2)
         {
-            if (type == ChannelControlCallbackType.SYNCPOINT)
+            if (type == ChannelControlCallbackType.Syncpoint)
             {
-                FMODSound?.getSyncPointInfo(Last15SyncPoint, new StringBuilder("songabouttoend"), 0, out Last15Offset, TimeUnit.MS);
-                uint Last5Offset = 0;
-                FMODSound?.getSyncPointInfo(Last5SyncPoint, new StringBuilder("fade"), 0, out Last5Offset, TimeUnit.MS);
+                _fmodSound?.GetSyncPointInfo(_last15SyncPoint, new StringBuilder("songabouttoend"), 0, out _last15Offset, TimeUnit.Ms);
+                uint last5Offset = 0;
+                _fmodSound?.GetSyncPointInfo(_last5SyncPoint, new StringBuilder("fade"), 0, out last5Offset, TimeUnit.Ms);
 
-                if (position >= FMODSound?.LengthInMilliseconds)
+                if (_position >= _fmodSound?.LengthInMilliseconds)
                 {
                     MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
                 }
-                else if (position >= Last5Offset)
+                else if (_position >= last5Offset)
                 {
-                    FMODChannel.SetFadePoint(FMODChannel.Volume, 0f, FMODChannel.GetTotalSamplesLeft(FMODSound));
+                    _fmodChannel.SetFadePoint(_fmodChannel.Volume, 0f, _fmodChannel.GetTotalSamplesLeft(_fmodSound));
                 }
-                else if (position >= Last15Offset && position < Last5Offset)
+                else if (_position >= _last15Offset && _position < last5Offset)
                 {
                     MediaAboutToEnd?.Invoke(this, new Events.MediaAboutToEndEventArgs(CurrentlyPlayingFile));
                 }
             }
-            return Result.OK;
+            return Result.Ok;
         }
         #endregion
 
         #region Properties
-        bool isLoopingEnabled;
+
+        private bool _isLoopingEnabled;
         public bool IsLoopingEnabled
         {
-            get { return isLoopingEnabled; }
+            get => _isLoopingEnabled;
             set
             {
-                Set(ref isLoopingEnabled, value);
+                Set(ref _isLoopingEnabled, value);
                 SetLoop();
             }
         }
-        bool isVolumeMuted;
+
+        private bool _isVolumeMuted;
         public bool IsVolumeMuted
         {
-            get { return isVolumeMuted; }
+            get => _isVolumeMuted;
             set
             {
-                Set(ref isVolumeMuted, value);
-                FMODChannel.setMute(isVolumeMuted);
+                Set(ref _isVolumeMuted, value);
+                _fmodChannel.SetMute(_isVolumeMuted);
             }
         }
         public Effects Effect { get; set; }
-        double _volume = 50;
+        private double _volume = 50;
         public double Volume
         {
-            get { return _volume; }
+            get => _volume;
             set
             {
                 Set(ref _volume, value);
-                if (FMODChannel != null)
-                    FMODChannel.Volume = (float)(_volume / 100);
+                if (_fmodChannel != null)
+                    _fmodChannel.Volume = (float)(_volume / 100);
             }
         }
-        double _seek = 0;
-        uint position = 0;
+
+        private double _seek = 0;
+        private uint _position = 0;
         public double Position
         {
             get
             {
 
-                FMODChannel?.getPosition(out position, TimeUnit.MS);
-                FMODSys?.Update();
-                return TimeSpan.FromMilliseconds(position).TotalSeconds;
+                _fmodChannel?.GetPosition(out _position, TimeUnit.Ms);
+                _fmodSys?.Update();
+                return TimeSpan.FromMilliseconds(_position).TotalSeconds;
             }
             set
             {
                 Set(ref _seek, value);
-                FMODChannel?.setPosition(Convert.ToUInt32(TimeSpan.FromSeconds(value < 0 ? 0 : value).TotalMilliseconds), TimeUnit.MS);
+                _fmodChannel?.SetPosition(Convert.ToUInt32(TimeSpan.FromSeconds(value < 0 ? 0 : value).TotalMilliseconds), TimeUnit.Ms);
             }
         }
-        double _length;
+
+        private double _length;
         public double Length
         {
             get
@@ -266,47 +272,41 @@ namespace BreadPlayer.Core.PlayerEngines
                     _length = 1;
                 return _length <= 0 ? 1 : _length;
             }
-            set
-            {
-                Set(ref _length, value);
-            }
+            set => Set(ref _length, value);
         }
         public PlayerState PlayerState
         {
             get; set;
         }
-        Mediafile _currentPlayingFile;
+
+        private Mediafile _currentPlayingFile;
         public Mediafile CurrentlyPlayingFile
         {
-            get { return _currentPlayingFile; }
-            set
-            {
-                Set(ref _currentPlayingFile, value);
-            }
+            get => _currentPlayingFile;
+            set => Set(ref _currentPlayingFile, value);
         }
-        bool _ignoreErrors = false;
+
+        private bool _ignoreErrors = false;
         public bool IgnoreErrors
         {
-            get { return _ignoreErrors; }
-            set { Set(ref _ignoreErrors, value); }
+            get => _ignoreErrors;
+            set => Set(ref _ignoreErrors, value);
         }
-        IEqualizer fmodEqualizer;
-        public IEqualizer Equalizer
+
+        private Equalizer _fmodEqualizer;
+        public Equalizer Equalizer
         {
-            get { return fmodEqualizer; }
-            set
-            {
-                Set(ref fmodEqualizer, value);
-            }
+            get => _fmodEqualizer;
+            set => Set(ref _fmodEqualizer, value);
         }
         #endregion
         
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -316,7 +316,7 @@ namespace BreadPlayer.Core.PlayerEngines
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

@@ -7,7 +7,7 @@ namespace BreadPlayer.Core.Common
     public class PasswordStorage
     {
         // These constants may be changed without breaking existing hashes.
-        private const int SALT_BYTES = 64;
+        private const int SaltBytes = 64;
 
         /// <summary>
         /// Returns the salt and the hash
@@ -17,7 +17,7 @@ namespace BreadPlayer.Core.Common
         public static (string Salt, string Hash) CreateHash(string password)
         {
             // Generate a random salt
-            byte[] salt = new byte[SALT_BYTES];
+            byte[] salt = new byte[SaltBytes];
 
             using (RandomNumberGenerator csprng = RandomNumberGenerator.Create())
             {
@@ -25,7 +25,7 @@ namespace BreadPlayer.Core.Common
             }
 
             return (Convert.ToBase64String(salt),
-                Convert.ToBase64String(ComputeSHA512(password, Convert.ToBase64String(salt))));
+                Convert.ToBase64String(ComputeSha512(password, Convert.ToBase64String(salt))));
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace BreadPlayer.Core.Common
         /// <returns>Returns true is the password matches the hash</returns>
         public static bool VerifyPassword(string password, string salt, string hash)
         {
-            return SlowEquals(ComputeSHA512(password, salt), Convert.FromBase64String(hash));
+            return SlowEquals(ComputeSha512(password, salt), Convert.FromBase64String(hash));
         }
 
         private static bool SlowEquals(byte[] a, byte[] b)
@@ -50,7 +50,7 @@ namespace BreadPlayer.Core.Common
             return diff == 0;
         }
 
-        private static byte[] ComputeSHA512(string password, string salt)
+        private static byte[] ComputeSha512(string password, string salt)
         {
             using (SHA512 sha512 = SHA512.Create())
             {

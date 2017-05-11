@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace BreadPlayer.Converters
 {
-    class PathToImageSourceConverter : IValueConverter
+    internal class PathToImageSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -30,7 +30,8 @@ namespace BreadPlayer.Converters
             throw new NotImplementedException();
         }
     }
-    class ColorToBrushConverter : IValueConverter
+
+    internal class ColorToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

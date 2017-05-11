@@ -1,15 +1,15 @@
-﻿using BreadPlayer.Models;
+﻿using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core.Events
 {
     public class MediaAboutToEndEventArgs
     {
-        private Mediafile mediaFile;
+        private Mediafile _mediaFile;
         public MediaAboutToEndEventArgs(Mediafile mediafile)
         {
-            this.mediaFile = mediafile;
+            _mediaFile = mediafile;
         } // eo ctor
 
-        public Mediafile MediaFile { get { return mediaFile; } }
+        public Mediafile MediaFile => _mediaFile;
     }
 }

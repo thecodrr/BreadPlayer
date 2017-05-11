@@ -58,10 +58,10 @@ namespace BreadPlayer.Fmod.Structs
     [StructLayout(LayoutKind.Sequential)]
     public struct _3DAttributes
     {
-        Vector position;
-        Vector velocity;
-        Vector forward;
-        Vector up;
+        private Vector position;
+        private Vector velocity;
+        private Vector forward;
+        private Vector up;
     }
 
     /*
@@ -99,7 +99,7 @@ namespace BreadPlayer.Fmod.Structs
         public IntPtr userdata;                   /* [r] User data pointer. */
         public IntPtr buffer;                     /* [w] Buffer to read file data into. */
         public uint bytesread;                  /* [w] Fill this in before setting result code to tell BreadPlayer.Fmod how many bytes were read. */
-        public ASYNCREADINFO_DONE_CALLBACK done;  /* [r] BreadPlayer.Fmod file system wake up function.  Call this when user file read is finished.  Pass result of file read as a parameter. */
+        public AsyncreadinfoDoneCallback done;  /* [r] BreadPlayer.Fmod file system wake up function.  Call this when user file read is finished.  Pass result of file read as a parameter. */
     }
 
     /*
@@ -122,8 +122,8 @@ namespace BreadPlayer.Fmod.Structs
     [StructLayout(LayoutKind.Sequential)]
     public struct PluginList
     {
-        PluginType type;
-        IntPtr description;
+        private PluginType type;
+        private IntPtr description;
     }
 
     /*
@@ -148,8 +148,8 @@ namespace BreadPlayer.Fmod.Structs
         private IntPtr functionname_internal;      /* Function that the error occurred on */
         private IntPtr functionparams_internal;    /* Function parameters that the error ocurred on */
 
-        public string functionname { get { return Marshal.PtrToStringAnsi(functionname_internal); } }
-        public string functionparams { get { return Marshal.PtrToStringAnsi(functionparams_internal); } }
+        public string Functionname => Marshal.PtrToStringAnsi(functionname_internal);
+        public string Functionparams => Marshal.PtrToStringAnsi(functionparams_internal);
     }
 
     /*
@@ -178,7 +178,7 @@ namespace BreadPlayer.Fmod.Structs
         public uint datalen;      /* [r] Length of the data contained in this tag */
         public bool updated;      /* [r] True if this tag has been updated since last being accessed with Sound::getTag */
 
-        public string name { get { return Marshal.PtrToStringAnsi(name_internal); } }
+        public string Name => Marshal.PtrToStringAnsi(name_internal);
     }
     /*
     [DEFINE]
@@ -201,15 +201,15 @@ namespace BreadPlayer.Fmod.Structs
     [Flags]
     public enum TimeUnit : uint
     {
-        MS = 0x00000001,  /* Milliseconds. */
-        PCM = 0x00000002,  /* PCM Samples, related to milliseconds * samplerate / 1000. */
-        PCMBYTES = 0x00000004,  /* Bytes, related to PCM samples * channels * datawidth (ie 16bit = 2 bytes). */
-        RAWBYTES = 0x00000008,  /* Raw file bytes of (compressed) sound data (does not include headers).  Only used by Sound::getLength and Channel::getPosition. */
-        PCMFRACTION = 0x00000010,  /* Fractions of 1 PCM sample.  Unsigned int range 0 to 0xFFFFFFFF.  Used for sub-sample granularity for DSP purposes. */
-        MODORDER = 0x00000100,  /* MOD/S3M/XM/IT.  Order in a sequenced module format.  Use Sound::getFormat to determine the format. */
-        MODROW = 0x00000200,  /* MOD/S3M/XM/IT.  Current row in a sequenced module format.  Sound::getLength will return the number if rows in the currently playing or seeked to pattern. */
-        MODPATTERN = 0x00000400,  /* MOD/S3M/XM/IT.  Current pattern in a sequenced module format.  Sound::getLength will return the number of patterns in the song and Channel::getPosition will return the currently playing pattern. */
-        BUFFERED = 0x10000000,  /* Time value as seen by buffered stream.  This is always ahead of audible time, and is only used for processing. */
+        Ms = 0x00000001,  /* Milliseconds. */
+        Pcm = 0x00000002,  /* PCM Samples, related to milliseconds * samplerate / 1000. */
+        Pcmbytes = 0x00000004,  /* Bytes, related to PCM samples * channels * datawidth (ie 16bit = 2 bytes). */
+        Rawbytes = 0x00000008,  /* Raw file bytes of (compressed) sound data (does not include headers).  Only used by Sound::getLength and Channel::getPosition. */
+        Pcmfraction = 0x00000010,  /* Fractions of 1 PCM sample.  Unsigned int range 0 to 0xFFFFFFFF.  Used for sub-sample granularity for DSP purposes. */
+        Modorder = 0x00000100,  /* MOD/S3M/XM/IT.  Order in a sequenced module format.  Use Sound::getFormat to determine the format. */
+        Modrow = 0x00000200,  /* MOD/S3M/XM/IT.  Current row in a sequenced module format.  Sound::getLength will return the number if rows in the currently playing or seeked to pattern. */
+        Modpattern = 0x00000400,  /* MOD/S3M/XM/IT.  Current pattern in a sequenced module format.  Sound::getLength will return the number of patterns in the song and Channel::getPosition will return the currently playing pattern. */
+        Buffered = 0x10000000,  /* Time value as seen by buffered stream.  This is always ahead of audible time, and is only used for processing. */
     }
     /*
        [DEFINE]
@@ -227,7 +227,7 @@ namespace BreadPlayer.Fmod.Structs
        */
     public struct PortIndex
     {
-        public const ulong NONE = 0xFFFFFFFFFFFFFFFF;
+        public const ulong None = 0xFFFFFFFFFFFFFFFF;
     }
 
     /*
@@ -320,20 +320,20 @@ namespace BreadPlayer.Fmod.Structs
         public int numsubsounds;           /* [w]   Optional. Specify 0 to ignore or have no subsounds.  In a user created multi-sample sound, specify the number of subsounds within the sound that are accessable with Sound::getSubSound / SoundGetSubSound. */
         public IntPtr inclusionlist;          /* [w]   Optional. Specify 0 to ignore. In a multi-sample format such as .FSB/.DLS/.SF2 it may be desirable to specify only a subset of sounds to be loaded out of the whole file.  This is an array of subsound indicies to load into memory when created. */
         public int inclusionlistnum;       /* [w]   Optional. Specify 0 to ignore. This is the number of integers contained within the */
-        public SOUND_PCMREADCALLBACK pcmreadcallback;        /* [w]   Optional. Specify 0 to ignore. Callback to 'piggyback' on BreadPlayer.Fmod's read functions and accept or even write PCM data while BreadPlayer.Fmod is opening the sound.  Used for user sounds created with OPENUSER or for capturing decoded data as BreadPlayer.Fmod reads it. */
-        public SOUND_PCMSETPOSCALLBACK pcmsetposcallback;      /* [w]   Optional. Specify 0 to ignore. Callback for when the user calls a seeking function such as Channel::setPosition within a multi-sample sound, and for when it is opened.*/
-        public SOUND_NONBLOCKCALLBACK nonblockcallback;       /* [w]   Optional. Specify 0 to ignore. Callback for successful completion, or error while loading a sound that used the FMOD_NONBLOCKING flag.*/
+        public SoundPcmreadcallback pcmreadcallback;        /* [w]   Optional. Specify 0 to ignore. Callback to 'piggyback' on BreadPlayer.Fmod's read functions and accept or even write PCM data while BreadPlayer.Fmod is opening the sound.  Used for user sounds created with OPENUSER or for capturing decoded data as BreadPlayer.Fmod reads it. */
+        public SoundPcmsetposcallback pcmsetposcallback;      /* [w]   Optional. Specify 0 to ignore. Callback for when the user calls a seeking function such as Channel::setPosition within a multi-sample sound, and for when it is opened.*/
+        public SoundNonblockcallback nonblockcallback;       /* [w]   Optional. Specify 0 to ignore. Callback for successful completion, or error while loading a sound that used the FMOD_NONBLOCKING flag.*/
         public IntPtr dlsname;                /* [w]   Optional. Specify 0 to ignore. Filename for a DLS or SF2 sample set when loading a MIDI file.   If not specified, on windows it will attempt to open /windows/system32/drivers/gm.dls, otherwise the MIDI will fail to open.  */
         public IntPtr encryptionkey;          /* [w]   Optional. Specify 0 to ignore. Key for encrypted FSB file.  Without this key an encrypted FSB file will not load. */
         public int maxpolyphony;           /* [w]   Optional. Specify 0 to ingore. For sequenced formats with dynamic channel allocation such as .MID and .IT, this specifies the maximum voice count allowed while playing.  .IT defaults to 64.  .MID defaults to 32. */
         public IntPtr userdata;               /* [w]   Optional. Specify 0 to ignore. This is user data to be attached to the sound during creation.  Access via Sound::getUserData. */
         public SoundType suggestedsoundtype;     /* [w]   Optional. Specify 0 or FMOD_SOUND_TYPE_UNKNOWN to ignore.  Instead of scanning all codec types, use this to speed up loading by making it jump straight to this codec. */
-        public FILE_OPENCALLBACK fileuseropen;           /* [w]   Optional. Specify 0 to ignore. Callback for opening this file. */
-        public FILE_CLOSECALLBACK fileuserclose;          /* [w]   Optional. Specify 0 to ignore. Callback for closing this file. */
-        public FILE_READCALLBACK fileuserread;           /* [w]   Optional. Specify 0 to ignore. Callback for reading from this file. */
-        public FILE_SEEKCALLBACK fileuserseek;           /* [w]   Optional. Specify 0 to ignore. Callback for seeking within this file. */
-        public FILE_ASYNCREADCALLBACK fileuserasyncread;      /* [w]   Optional. Specify 0 to ignore. Callback for asyncronously reading from this file. */
-        public FILE_ASYNCCANCELCALLBACK fileuserasynccancel;    /* [w]   Optional. Specify 0 to ignore. Callback for cancelling an asyncronous read. */
+        public FileOpencallback fileuseropen;           /* [w]   Optional. Specify 0 to ignore. Callback for opening this file. */
+        public FileClosecallback fileuserclose;          /* [w]   Optional. Specify 0 to ignore. Callback for closing this file. */
+        public FileReadcallback fileuserread;           /* [w]   Optional. Specify 0 to ignore. Callback for reading from this file. */
+        public FileSeekcallback fileuserseek;           /* [w]   Optional. Specify 0 to ignore. Callback for seeking within this file. */
+        public FileAsyncreadcallback fileuserasyncread;      /* [w]   Optional. Specify 0 to ignore. Callback for asyncronously reading from this file. */
+        public FileAsynccancelcallback fileuserasynccancel;    /* [w]   Optional. Specify 0 to ignore. Callback for cancelling an asyncronous read. */
         public IntPtr fileuserdata;           /* [w]   Optional. Specify 0 to ignore. User data to be passed into the file callbacks. */
         public int filebuffersize;         /* [w]   Optional. Specify 0 to ignore. Buffer size for reading the file, -1 to disable buffering, or 0 for system default. */
         public ChannelOrder channelorder;           /* [w]   Optional. Specify 0 to ignore. Use this to differ the way fmod maps multichannel sounds to speakers.  See FMOD_CHANNELORDER for more. */
@@ -417,7 +417,7 @@ namespace BreadPlayer.Fmod.Structs
     [StructLayout(LayoutKind.Sequential)]
     public struct StringWrapper
     {
-        IntPtr nativeUtf8Ptr;
+        private IntPtr nativeUtf8Ptr;
 
         public static implicit operator string(StringWrapper fstring)
         {

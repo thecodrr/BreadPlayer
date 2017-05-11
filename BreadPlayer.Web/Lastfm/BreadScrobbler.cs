@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.Lastfm
 {
-    class BreadScrobbler : ScrobblerBase
+    internal class BreadScrobbler : ScrobblerBase
     {
         public string DatabasePath { get; private set; }
 

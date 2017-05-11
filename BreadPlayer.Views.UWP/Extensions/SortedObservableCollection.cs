@@ -19,11 +19,11 @@ namespace BreadPlayer.Extensions
 		public SortedObservableCollection(Func<T, TKey> keySelector)
         {
             this.keySelector = keySelector;
-            this.comparer = Comparer<TKey>.Default;
+            comparer = Comparer<TKey>.Default;
         }
 
-        Func<T, TKey> keySelector;
-        IComparer<TKey> comparer;
+        private Func<T, TKey> keySelector;
+        private IComparer<TKey> comparer;
 
         /// <summary>
         /// Adds an item to a sorted collection.

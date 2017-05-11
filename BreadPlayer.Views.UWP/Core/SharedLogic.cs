@@ -1,5 +1,4 @@
 ﻿using BreadPlayer.Extensions;
-using BreadPlayer.Models;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using System;
@@ -20,8 +19,11 @@ using BreadPlayer.Dialogs;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Common;
 using Windows.UI.Xaml;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Engines.FMODEngine;
+using BreadPlayer.Core.Engines.Interfaces;
+using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
-using BreadPlayer.Core.PlayerEngines;
 
 namespace BreadPlayer.Core
 {
@@ -36,45 +38,42 @@ namespace BreadPlayer.Core
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
-        public static string DatabasePath { get => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB"); }
+        public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
         public System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<System.Collections.ObjectModel.ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
-        static IPlayerEngine player;
+        private static IPlayerEngine player;
         public static IPlayerEngine Player
         {
             get
             {
                 if (player == null)
-                    player = new FMODPlayerEngine(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                    player = new FmodPlayerEngine(Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
                 return player;
             }
         }
         public static CoreDispatcher Dispatcher { get; set; } = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVM => GenericService<SettingsViewModel>.Instance.GenericClass;
-        static Lastfm lastfmScrobbler;
+        private static Lastfm lastfmScrobbler;
         public static Lastfm LastfmScrobbler
         {
-            get
-            {
-                return lastfmScrobbler;
-            }
+            get => lastfmScrobbler;
             set
             {
                 if (lastfmScrobbler == null)
                     lastfmScrobbler = value;
             }
         }
-        public static Windows.UI.Xaml.Thickness DynamicMargin
+        public static Thickness DynamicMargin
         {
             get
             {
                 if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
                 {
-                    return new Windows.UI.Xaml.Thickness(28, 0, 0, 0);
+                    return new Thickness(28, 0, 0, 0);
                 }
                 else
-                    return new Windows.UI.Xaml.Thickness(48, 0, 0, 0);
+                    return new Thickness(48, 0, 0, 0);
             }
         }
         public static DataTemplate DynamicAlbumSelectedTemplate
@@ -83,25 +82,26 @@ namespace BreadPlayer.Core
             {
                 if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
                 {
-                    return App.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
+                    return Application.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
                 }
                 else
-                    return App.Current.Resources["SelectedTemplate"] as DataTemplate;
+                    return Application.Current.Resources["SelectedTemplate"] as DataTemplate;
             }
         }
         #region ICommands
 
         #region Definitions
-        RelayCommand _changeAlbumArtCommand;
-        RelayCommand _showPropertiesCommand;
-        RelayCommand _opensonglocationCommand;
+
+        private RelayCommand _changeAlbumArtCommand;
+        private RelayCommand _showPropertiesCommand;
+        private RelayCommand _opensonglocationCommand;
         /// <summary>
         /// Gets command for showing properties of a mediafile. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand ShowPropertiesCommand
         {
             get
-            { if (_showPropertiesCommand == null) { _showPropertiesCommand = new RelayCommand(param => this.ShowProperties(param)); } return _showPropertiesCommand; }
+            { if (_showPropertiesCommand == null) { _showPropertiesCommand = new RelayCommand(param => ShowProperties(param)); } return _showPropertiesCommand; }
         }
         /// <summary>
         /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
@@ -109,14 +109,14 @@ namespace BreadPlayer.Core
         public ICommand OpenSongLocationCommand
         {
             get
-            { if (_opensonglocationCommand == null) { _opensonglocationCommand = new RelayCommand(param => this.OpenSongLocation(param)); } return _opensonglocationCommand; }
+            { if (_opensonglocationCommand == null) { _opensonglocationCommand = new RelayCommand(param => OpenSongLocation(param)); } return _opensonglocationCommand; }
         }/// <summary>
          /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
          /// </summary>
         public ICommand ChangeAlbumArtCommand
         {
             get
-            { if (_changeAlbumArtCommand == null) { _changeAlbumArtCommand = new RelayCommand(param => this.ChangeAlbumArt(param)); } return _changeAlbumArtCommand; }
+            { if (_changeAlbumArtCommand == null) { _changeAlbumArtCommand = new RelayCommand(param => ChangeAlbumArt(param)); } return _changeAlbumArtCommand; }
         }
         #endregion
 
@@ -142,20 +142,22 @@ namespace BreadPlayer.Core
                 mediaFile.AttachedPicture = ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\" + createAlbumArt.FileName + Path.GetExtension(albumArt.Path);
             }         
         }
-        async void ShowProperties(object para)
+
+        private async void ShowProperties(object para)
         {
             Mediafile file = para is Mediafile ? para as Mediafile : Player.CurrentlyPlayingFile;
-            BreadPlayer.Dialogs.TagDialog tag = new BreadPlayer.Dialogs.TagDialog(file);
+            TagDialog tag = new TagDialog(file);
             if (CoreWindow.GetForCurrentThread().Bounds.Width >= 501)
                 tag.MaxWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 10;
             await tag.ShowAsync();
         }
-        async void OpenSongLocation(object file)
+
+        private async void OpenSongLocation(object file)
         {
             var mp3File = file as Mediafile;
             if (mp3File == null)
                 mp3File = Player.CurrentlyPlayingFile;
-            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(System.IO.Path.GetDirectoryName(mp3File.Path));
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(mp3File.Path));
             if (folder != null)
             {
                 var storageFile = StorageFile.GetFileFromPathAsync(mp3File.Path);
@@ -165,13 +167,14 @@ namespace BreadPlayer.Core
             }
         }
 
-        RelayCommand _navigateCommand;
+        private RelayCommand _navigateCommand;
         public ICommand NavigateToAlbumPageCommand
         {
             get
-            { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => this.NavigateToAlbumPage(param)); } return _navigateCommand; }
+            { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
         }
-        void NavigateToAlbumPage(object para)
+
+        private void NavigateToAlbumPage(object para)
         {
             if (para is Album album)
             {
@@ -204,7 +207,7 @@ namespace BreadPlayer.Core
                     //read the color 
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
                 }
-                catch { return (App.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
+                catch { return (Application.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
             }
         }
         
@@ -321,7 +324,7 @@ namespace BreadPlayer.Core
                 mediafile.Path = file.Path;
                 mediafile.OrginalFilename = file.DisplayName;
                 var properties = await file.Properties.GetMusicPropertiesAsync(); //(await file.Properties.RetrievePropertiesAsync(new List<string>() { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" }));//.GetMusicPropertiesAsync();
-                mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, System.IO.Path.GetFileNameWithoutExtension(file.Path));
+                mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, Path.GetFileNameWithoutExtension(file.Path));
                 mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
                 mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
                 mediafile.Genre = string.Join(",", properties.Genre);
@@ -382,22 +385,13 @@ namespace BreadPlayer.Core
             this.file = file;
         }
 
-        public string Name
-        {
-            get { return file.Name; }
-        }
+        public string Name => file.Name;
 
-        public System.IO.Stream ReadStream
-        {
-            get { return file.OpenStreamForReadAsync().Result; }
-        }
+        public Stream ReadStream => file.OpenStreamForReadAsync().Result;
 
-        public System.IO.Stream WriteStream
-        {
-            get { return file.OpenStreamForWriteAsync().Result; }
-        }
+        public Stream WriteStream => file.OpenStreamForWriteAsync().Result;
 
-        public void CloseStream(System.IO.Stream stream)
+        public void CloseStream(Stream stream)
         {
             stream.Position = 0;
         }

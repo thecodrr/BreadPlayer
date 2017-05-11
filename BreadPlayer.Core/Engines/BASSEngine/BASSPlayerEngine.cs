@@ -15,26 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Threading.Tasks;
-using ManagedBass;
-using BreadPlayer.Events;
-using BreadPlayer.Models;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Events;
-using BreadPlayer.Core.PlayerEngines;
+using BreadPlayer.Core.Models;
+using ManagedBass;
 
-namespace BreadPlayer.Core
+namespace BreadPlayer.Core.Engines.BASSEngine
 {
-    public sealed class BASSPlayerEngine : ObservableObject, IPlayerEngine
+    public sealed class BassPlayerEngine : ObservableObject, IPlayerEngine
     {
         #region Fields
-        int handle = 0;
+
+        private int _handle = 0;
         private SyncProcedure _sync;
         private SyncProcedure _posSync;
         #endregion
 
         #region Constructor
-        public BASSPlayerEngine(bool isMobile)
+        public BassPlayerEngine(bool isMobile)
         {
             Init(isMobile);
             _sync = new SyncProcedure(EndSync);
@@ -58,7 +60,7 @@ namespace BreadPlayer.Core
                     //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
                     //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
                     if (isMobile)
-                       NativeMethods.BASS_SetConfig(NativeMethods.BASS_CONFIG_DEV_BUFFER, 230);
+                       NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
                         
                     Bass.Init();
                     Effect = new Effects();
@@ -80,11 +82,11 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {                
-                Bass.ChannelStop(handle); // Stop Playback.
+                Bass.ChannelStop(_handle); // Stop Playback.
                 Bass.Stop();
-                Bass.MusicFree(handle); // Free the Stream.
+                Bass.MusicFree(_handle); // Free the Stream.
                 Bass.Free(); // Frees everything (will have to call init again to play audio)              
-                handle = 0;
+                _handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
             });
@@ -106,15 +108,15 @@ namespace BreadPlayer.Core
                     await Stop();
                     await Task.Run(() =>
                     {
-                        handle = ManagedBass.Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                        _handle = Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                         PlayerState = PlayerState.Stopped;
                         Length = 0;
-                        Length = Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetLength(handle));
+                        Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
                         Bass.FloatingPointDSP = true;
-                        Effect.UpdateHandle(handle);
-                        Bass.ChannelSetSync(handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                        Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 5), _posSync);
-                        Bass.ChannelSetSync(handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(handle, Length - 15), _posSync);
+                        Effect.UpdateHandle(_handle);
+                        Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
                        
                         CurrentlyPlayingFile = mediaFile;
                     });
@@ -153,9 +155,9 @@ namespace BreadPlayer.Core
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Paused));
             await Task.Run(async () =>
             {
-                Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 700);
+                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, 0, 700);
                 await Task.Delay(700);
-                Bass.ChannelPause(handle);
+                Bass.ChannelPause(_handle);
                 //var vol = (float)Volume / 100f;
                 //Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, vol);
             });
@@ -169,10 +171,10 @@ namespace BreadPlayer.Core
         {
             await Task.Run(() =>
             {
-                Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, 0f);
-                ManagedBass.Bass.ChannelPlay(handle);
+                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, 0f);
+                Bass.ChannelPlay(_handle);
                 var vol = (float)Volume / 100f;
-                Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, vol, 3000);
+                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 3000);
                 PlayerState = PlayerState.Playing;
             });
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
@@ -187,10 +189,10 @@ namespace BreadPlayer.Core
             {
                 Length = 0;
                 Position = -1;
-                Bass.StreamFree(handle);
-                Bass.ChannelStop(handle); // Stop Playback.
-                Bass.MusicFree(handle);                
-                handle = 0;
+                Bass.StreamFree(_handle);
+                Bass.ChannelStop(_handle); // Stop Playback.
+                Bass.MusicFree(_handle);                
+                _handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
             });
@@ -199,50 +201,54 @@ namespace BreadPlayer.Core
         #endregion
 
         #region Properties
-        bool isVolumeMuted;
+
+        private bool _isVolumeMuted;
         public bool IsVolumeMuted
         {
-            get { return isVolumeMuted; }
+            get => _isVolumeMuted;
             set
             {
-                Set(ref isVolumeMuted, value);
+                Set(ref _isVolumeMuted, value);
                 if (value == true)
                     Bass.Volume = 0;
                 else
                     Bass.Volume = 1;
             }
         }
-        Effects effect;
+
+        private Effects _effect;
         public Effects Effect
         {
-            get { return effect; }
-            set { Set(ref effect, value); }
+            get => _effect;
+            set => Set(ref _effect, value);
         }
-        double _volume = 50;
+
+        private double _volume = 50;
         public double Volume
         {
-            get { return _volume; }
+            get => _volume;
             set {
                 Set(ref _volume, value);
-                Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, _volume / 100);               
+                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, _volume / 100);               
             }
         }
-     
 
-        double _seek = 0;
+
+        private double _seek = 0;
         public double Position
         {
-            get { return Bass.ChannelBytes2Seconds(handle, Bass.ChannelGetPosition(handle)); }
+            get => Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetPosition(_handle));
             set
             {
                 Task.Run(() =>
                 {
                     Set(ref _seek, value);
-                    Bass.ChannelSetPosition(handle, ManagedBass.Bass.ChannelSeconds2Bytes(handle, _seek));
+                    Bass.ChannelSetPosition(_handle, Bass.ChannelSeconds2Bytes(_handle, _seek));
                 });
             }            
         }
-        double _length;
+
+        private double _length;
         public double Length
         {
             get {
@@ -250,33 +256,29 @@ namespace BreadPlayer.Core
                     _length = 1;
                 return _length;
             }
-            set
-            {
-                Set(ref _length, value);
-            }
+            set => Set(ref _length, value);
         }      
 
         public PlayerState PlayerState
         {
             get; set;
         }
-        Mediafile _currentPlayingFile;
+
+        private Mediafile _currentPlayingFile;
         public Mediafile CurrentlyPlayingFile
         {
-            get { return _currentPlayingFile; }
-            set
-            {
-                Set(ref _currentPlayingFile, value);
-            }
-        }
-        bool _ignoreErrors = false;
-        public bool IgnoreErrors
-        {
-            get { return _ignoreErrors; }
-            set { Set(ref _ignoreErrors, value); }
+            get => _currentPlayingFile;
+            set => Set(ref _currentPlayingFile, value);
         }
 
-        public IEqualizer Equalizer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private bool _ignoreErrors = false;
+        public bool IgnoreErrors
+        {
+            get => _ignoreErrors;
+            set => Set(ref _ignoreErrors, value);
+        }
+
+        public Equalizer Equalizer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool IsLoopingEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #endregion

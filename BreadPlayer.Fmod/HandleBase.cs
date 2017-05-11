@@ -12,20 +12,20 @@ namespace BreadPlayer.Fmod
     {
         public HandleBase(IntPtr newPtr)
         {
-            rawPtr = newPtr;
+            RawPtr = newPtr;
         }
 
-        public bool isValid()
+        public bool IsValid()
         {
-            return rawPtr != IntPtr.Zero;
+            return RawPtr != IntPtr.Zero;
         }
 
-        public IntPtr getRaw()
+        public IntPtr GetRaw()
         {
-            return rawPtr;
+            return RawPtr;
         }
 
-        protected IntPtr rawPtr;
+        protected IntPtr RawPtr;
 
         #region equality
 
@@ -36,16 +36,16 @@ namespace BreadPlayer.Fmod
         public bool Equals(HandleBase p)
         {
             // Equals if p not null and handle is the same
-            return ((object)p != null && rawPtr == p.rawPtr);
+            return ((object)p != null && RawPtr == p.RawPtr);
         }
         public override int GetHashCode()
         {
-            return rawPtr.ToInt32();
+            return RawPtr.ToInt32();
         }
         public static bool operator ==(HandleBase a, HandleBase b)
         {
             // If both are null, or both are same instance, return true.
-            if (Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -55,7 +55,7 @@ namespace BreadPlayer.Fmod
                 return false;
             }
             // Return true if the handle matches
-            return (a.rawPtr == b.rawPtr);
+            return (a.RawPtr == b.RawPtr);
         }
         public static bool operator !=(HandleBase a, HandleBase b)
         {

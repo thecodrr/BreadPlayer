@@ -7,7 +7,7 @@ namespace BreadPlayer.Dispatcher
 {
     public class BreadDispatcher : IDispatcher
     {
-        CoreDispatcher _dispatcher;
+        private CoreDispatcher _dispatcher;
         public BreadDispatcher(CoreDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
@@ -16,9 +16,6 @@ namespace BreadPlayer.Dispatcher
         {
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
-        public bool HasThreadAccess
-        {
-            get { return _dispatcher.HasThreadAccess; }
-        }
+        public bool HasThreadAccess => _dispatcher.HasThreadAccess;
     }
 }

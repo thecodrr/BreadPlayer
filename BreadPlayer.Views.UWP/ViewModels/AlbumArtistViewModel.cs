@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BreadPlayer.Models;
-using Windows.Storage;
+using BreadPlayer.Core.Models;
 using BreadPlayer.Messengers;
-using BreadPlayer.Services;
 using BreadPlayer.Database;
 
 namespace BreadPlayer.ViewModels
@@ -13,13 +11,15 @@ namespace BreadPlayer.ViewModels
     public class AlbumArtistViewModel : ViewModelBase
     {
         #region Database Methods
-        AlbumService AlbumService { get; set; }
+
+        private AlbumService AlbumService { get; set; }
         public void InitDB()
         {
             AlbumService = new AlbumService(new KeyValueStoreDatabaseService(Core.SharedLogic.DatabasePath, "Albums", "AlbumsText"));
         }       
         #endregion
-        async void HandleAddAlbumMessage(Message message)
+
+        private async void HandleAddAlbumMessage(Message message)
         {
             if (message != null)
             {
@@ -55,24 +55,25 @@ namespace BreadPlayer.ViewModels
             else
                 AlbumsLoaded = true;
         }
-       
-        bool albumsLoaded = true;
+
+        private bool albumsLoaded = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
         public bool AlbumsLoaded
         {
-            get { return albumsLoaded; }
-            set { Set(ref albumsLoaded, value); }
+            get => albumsLoaded;
+            set => Set(ref albumsLoaded, value);
         }
-        ThreadSafeObservableCollection<Album> albumcollection;
+
+        private ThreadSafeObservableCollection<Album> albumcollection;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
         public ThreadSafeObservableCollection<Album> AlbumCollection
         {
             get { if (albumcollection == null) albumcollection = new ThreadSafeObservableCollection<Album>(); return albumcollection; }
-            set { Set(ref albumcollection, value); }
+            set => Set(ref albumcollection, value);
         }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.

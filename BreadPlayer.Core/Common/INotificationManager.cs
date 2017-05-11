@@ -1,5 +1,5 @@
-﻿using BreadPlayer.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core.Common
 {

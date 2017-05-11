@@ -8,20 +8,8 @@
         public int errorCode;
 
 
-        public int ErrorCode
-        {
-            get
-            {
-                return error_code != 0 ? error_code : errorCode;
-            }
-        }
+        public int ErrorCode => error_code != 0 ? error_code : errorCode;
 
-        public bool IsValid
-        {
-            get
-            {
-                return error_code == 0 || error_code == ERROR_CODE_OK;
-            }
-        }
+        public bool IsValid => error_code == 0 || error_code == ERROR_CODE_OK;
     }
 }

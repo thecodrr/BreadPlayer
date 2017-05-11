@@ -16,140 +16,140 @@ namespace BreadPlayer.Fmod
         */
     public class SoundGroup : HandleBase
     {
-        public Result release                ()
+        public Result Release                ()
         {
-            Result result = FMOD_SoundGroup_Release(getRaw());
-            if (result == Result.OK)
+            Result result = FMOD_SoundGroup_Release(GetRaw());
+            if (result == Result.Ok)
             {
-                rawPtr = IntPtr.Zero;
+                RawPtr = IntPtr.Zero;
             }
             return result;
         }
 
-        public Result getSystemObject        (out FMODSystem system)
+        public Result GetSystemObject        (out FmodSystem system)
         {
             system = null;
 
             IntPtr systemraw;
-            Result result = FMOD_SoundGroup_GetSystemObject(rawPtr, out systemraw);
-            system = new FMODSystem(systemraw);
+            Result result = FMOD_SoundGroup_GetSystemObject(RawPtr, out systemraw);
+            system = new FmodSystem(systemraw);
 
             return result;
         }
 
         // SoundGroup control functions.
-        public Result setMaxAudible          (int maxaudible)
+        public Result SetMaxAudible          (int maxaudible)
         {
-            return FMOD_SoundGroup_SetMaxAudible(rawPtr, maxaudible);
+            return FMOD_SoundGroup_SetMaxAudible(RawPtr, maxaudible);
         }
-        public Result getMaxAudible          (out int maxaudible)
+        public Result GetMaxAudible          (out int maxaudible)
         {
-            return FMOD_SoundGroup_GetMaxAudible(rawPtr, out maxaudible);
+            return FMOD_SoundGroup_GetMaxAudible(RawPtr, out maxaudible);
         }
-        public Result setMaxAudibleBehavior  (SoundGroupBehavior behavior)
+        public Result SetMaxAudibleBehavior  (SoundGroupBehavior behavior)
         {
-            return FMOD_SoundGroup_SetMaxAudibleBehavior(rawPtr, behavior);
+            return FMOD_SoundGroup_SetMaxAudibleBehavior(RawPtr, behavior);
         }
-        public Result getMaxAudibleBehavior  (out SoundGroupBehavior behavior)
+        public Result GetMaxAudibleBehavior  (out SoundGroupBehavior behavior)
         {
-            return FMOD_SoundGroup_GetMaxAudibleBehavior(rawPtr, out behavior);
+            return FMOD_SoundGroup_GetMaxAudibleBehavior(RawPtr, out behavior);
         }
-        public Result setMuteFadeSpeed       (float speed)
+        public Result SetMuteFadeSpeed       (float speed)
         {
-            return FMOD_SoundGroup_SetMuteFadeSpeed(rawPtr, speed);
+            return FMOD_SoundGroup_SetMuteFadeSpeed(RawPtr, speed);
         }
-        public Result getMuteFadeSpeed       (out float speed)
+        public Result GetMuteFadeSpeed       (out float speed)
         {
-            return FMOD_SoundGroup_GetMuteFadeSpeed(rawPtr, out speed);
+            return FMOD_SoundGroup_GetMuteFadeSpeed(RawPtr, out speed);
         }
-        public Result setVolume       (float volume)
+        public Result SetVolume       (float volume)
         {
-            return FMOD_SoundGroup_SetVolume(rawPtr, volume);
+            return FMOD_SoundGroup_SetVolume(RawPtr, volume);
         }
-        public Result getVolume       (out float volume)
+        public Result GetVolume       (out float volume)
         {
-            return FMOD_SoundGroup_GetVolume(rawPtr, out volume);
+            return FMOD_SoundGroup_GetVolume(RawPtr, out volume);
         }
-        public Result stop       ()
+        public Result Stop       ()
         {
-            return FMOD_SoundGroup_Stop(rawPtr);
+            return FMOD_SoundGroup_Stop(RawPtr);
         }
 
         // Information only functions.
-        public Result getName                (StringBuilder name, int namelen)
+        public Result GetName                (StringBuilder name, int namelen)
         {
             IntPtr stringMem = Marshal.AllocHGlobal(name.Capacity);
 
-            Result result = FMOD_SoundGroup_GetName(rawPtr, stringMem, namelen);
+            Result result = FMOD_SoundGroup_GetName(RawPtr, stringMem, namelen);
 
             StringMarshalHelper.NativeToBuilder(name, stringMem);
             Marshal.FreeHGlobal(stringMem);
 
             return result;
         }
-        public Result getNumSounds           (out int numsounds)
+        public Result GetNumSounds           (out int numsounds)
         {
-            return FMOD_SoundGroup_GetNumSounds(rawPtr, out numsounds);
+            return FMOD_SoundGroup_GetNumSounds(RawPtr, out numsounds);
         }
-        public Result getSound               (int index, out Sound sound)
+        public Result GetSound               (int index, out Sound sound)
         {
             sound = null;
 
             IntPtr soundraw;
-            Result result = FMOD_SoundGroup_GetSound(rawPtr, index, out soundraw);
+            Result result = FMOD_SoundGroup_GetSound(RawPtr, index, out soundraw);
             sound = new Sound(soundraw);
 
             return result;
         }
-        public Result getNumPlaying          (out int numplaying)
+        public Result GetNumPlaying          (out int numplaying)
         {
-            return FMOD_SoundGroup_GetNumPlaying(rawPtr, out numplaying);
+            return FMOD_SoundGroup_GetNumPlaying(RawPtr, out numplaying);
         }
 
         // Userdata set/get.
-        public Result setUserData            (IntPtr userdata)
+        public Result SetUserData            (IntPtr userdata)
         {
-            return FMOD_SoundGroup_SetUserData(rawPtr, userdata);
+            return FMOD_SoundGroup_SetUserData(RawPtr, userdata);
         }
-        public Result getUserData            (out IntPtr userdata)
+        public Result GetUserData            (out IntPtr userdata)
         {
-            return FMOD_SoundGroup_GetUserData(rawPtr, out userdata);
+            return FMOD_SoundGroup_GetUserData(RawPtr, out userdata);
         }
 
         #region importfunctions
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_Release            (IntPtr soundgroup);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetSystemObject    (IntPtr soundgroup, out IntPtr system);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_SetMaxAudible      (IntPtr soundgroup, int maxaudible);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetMaxAudible      (IntPtr soundgroup, out int maxaudible);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_SetMaxAudibleBehavior(IntPtr soundgroup, SoundGroupBehavior behavior);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetMaxAudibleBehavior(IntPtr soundgroup, out SoundGroupBehavior behavior);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_SetMuteFadeSpeed   (IntPtr soundgroup, float speed);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetMuteFadeSpeed   (IntPtr soundgroup, out float speed);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_SetVolume          (IntPtr soundgroup, float volume);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetVolume          (IntPtr soundgroup, out float volume);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_Stop               (IntPtr soundgroup);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetName            (IntPtr soundgroup, IntPtr name, int namelen);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetNumSounds       (IntPtr soundgroup, out int numsounds);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetSound           (IntPtr soundgroup, int index, out IntPtr sound);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetNumPlaying      (IntPtr soundgroup, out int numplaying);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_SetUserData        (IntPtr soundgroup, IntPtr userdata);
-        [DllImport(FMODVersion.DLL)]
+        [DllImport(FmodVersion.Dll)]
         private static extern Result FMOD_SoundGroup_GetUserData        (IntPtr soundgroup, out IntPtr userdata);
         #endregion
 

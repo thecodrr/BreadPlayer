@@ -15,112 +15,112 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-using BreadPlayer.Core;
-using BreadPlayer.Database;
-using Newtonsoft.Json;
-using System;
 
-namespace BreadPlayer.Models
+using System;
+using BreadPlayer.Core.Common;
+using Newtonsoft.Json;
+
+namespace BreadPlayer.Core.Models
 {
-    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDBRecord
+    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord
     {
         #region Fields
-        private PlayerState state = PlayerState.Stopped;
-        private string path;
-        private string encrypted_meta_file;
-        private string attached_picture;
-        private string comment;
-        private string folderPath;
-        private string synchronized_lyric;
-        private string album;
-        private string beatsperminutes;
-        private string composer;
-        private string genre;
-        private string copyright_message;
-        private string date;
-        private string encoded_by;
-        private string lyric;
-        private string content_group_description;
-        private string title;
-        private string subtitle;
-        private string length;
-        private string orginal_filename;
-        private string lead_artist;
-        private string publisher;
-        private string track_number;
-        private string size;
-        private string year;
-        private string NaN = "NaN";
-        private int playCount;
+        private PlayerState _state = PlayerState.Stopped;
+        private string _path;
+        private string _encryptedMetaFile;
+        private string _attachedPicture;
+        private string _comment;
+        private string _folderPath;
+        private string _synchronizedLyric;
+        private string _album;
+        private string _beatsperminutes;
+        private string _composer;
+        private string _genre;
+        private string _copyrightMessage;
+        private string _date;
+        private string _encodedBy;
+        private string _lyric;
+        private string _contentGroupDescription;
+        private string _title;
+        private string _subtitle;
+        private string _length;
+        private string _orginalFilename;
+        private string _leadArtist;
+        private string _publisher;
+        private string _trackNumber;
+        private string _size;
+        private string _year;
+        private string _naN = "NaN";
+        private int _playCount;
         #endregion
 
         #region Properties
         public long Id { get; set; }
-        string lastPlayed;
-        public string LastPlayed { get => lastPlayed; set => Set(ref lastPlayed, value); }
+        private string _lastPlayed;
+        public string LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
 
-        string addedDate;
-        public string AddedDate { get => addedDate; set => Set(ref addedDate, value); }
-        bool isFavorite;
+        private string _addedDate;
+        public string AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
+        private bool _isFavorite;
         public bool IsFavorite
         {
-            get => isFavorite;
-            set => Set(ref isFavorite, value);
+            get => _isFavorite;
+            set => Set(ref _isFavorite, value);
         }
-        public int PlayCount { get => playCount; set => Set(ref playCount, value); }
-        public string Path { get => path; set => Set(ref path, value); }
+        public int PlayCount { get => _playCount; set => Set(ref _playCount, value); }
+        public string Path { get => _path; set => Set(ref _path, value); }
         //public long Id { get => id; set => Set(ref id, value); }
-        public string AttachedPicture { get => attached_picture; set => Set(ref attached_picture, value); }
-        public string FolderPath { get => folderPath; set => folderPath = string.IsNullOrEmpty(value) ? folderPath = "" : value; }
-        public string Album { get => album; set => album = string.IsNullOrEmpty(value) ? album = "Unknown Album" : value; }
-        public string Genre { get => genre; set => genre = string.IsNullOrEmpty(value) ? genre = "Other" : value; }
-        public string Title { get => title; set => title = string.IsNullOrEmpty(value) ? title = System.IO.Path.GetFileNameWithoutExtension(path) : value; }
-        public string TrackNumber { get => track_number; set => track_number = string.IsNullOrEmpty(value) ? track_number = NaN : value; }
-        public string Year { get => year; set => year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
-        public string LeadArtist { get => lead_artist; set => lead_artist = string.IsNullOrEmpty(value) ? lead_artist = NaN : value; }
-        public string OrginalFilename { get => orginal_filename; set => orginal_filename = string.IsNullOrEmpty(value) ? orginal_filename = NaN : value; }
-        public string Length { get => length; set => length = string.IsNullOrEmpty(value) ? length = NaN : value; }
+        public string AttachedPicture { get => _attachedPicture; set => Set(ref _attachedPicture, value); }
+        public string FolderPath { get => _folderPath; set => _folderPath = string.IsNullOrEmpty(value) ? _folderPath = "" : value; }
+        public string Album { get => _album; set => _album = string.IsNullOrEmpty(value) ? _album = "Unknown Album" : value; }
+        public string Genre { get => _genre; set => _genre = string.IsNullOrEmpty(value) ? _genre = "Other" : value; }
+        public string Title { get => _title; set => _title = string.IsNullOrEmpty(value) ? _title = System.IO.Path.GetFileNameWithoutExtension(_path) : value; }
+        public string TrackNumber { get => _trackNumber; set => _trackNumber = string.IsNullOrEmpty(value) ? _trackNumber = _naN : value; }
+        public string Year { get => _year; set => _year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
+        public string LeadArtist { get => _leadArtist; set => _leadArtist = string.IsNullOrEmpty(value) ? _leadArtist = _naN : value; }
+        public string OrginalFilename { get => _orginalFilename; set => _orginalFilename = string.IsNullOrEmpty(value) ? _orginalFilename = _naN : value; }
+        public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
 
         #region JsonIgnore Properties
         [JsonIgnore]
-        public string Comment { get => comment; set => comment = string.IsNullOrEmpty(value) ? comment = NaN : value; }
+        public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }
         [JsonIgnore]
         public string SynchronizedLyric
         {
-            get => synchronized_lyric; set => synchronized_lyric = string.IsNullOrEmpty(value) ? synchronized_lyric = NaN : value;
+            get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
         }
         [JsonIgnore]
-        public PlayerState State { get => state; set => Set(ref state, value); }
+        public PlayerState State { get => _state; set => Set(ref _state, value); }
         [JsonIgnore]
-        public string EncryptedMetaFile { get => encrypted_meta_file; set => encrypted_meta_file = string.IsNullOrEmpty(value) ? encrypted_meta_file = NaN : value; }
+        public string EncryptedMetaFile { get => _encryptedMetaFile; set => _encryptedMetaFile = string.IsNullOrEmpty(value) ? _encryptedMetaFile = _naN : value; }
         [JsonIgnore]
-        public string Size { get => size; set => size = string.IsNullOrEmpty(value) ? size = NaN : value; }
+        public string Size { get => _size; set => _size = string.IsNullOrEmpty(value) ? _size = _naN : value; }
 
         [JsonIgnore]
-        public string Publisher { get => publisher; set => publisher = string.IsNullOrEmpty(value) ? publisher = NaN : value; }
+        public string Publisher { get => _publisher; set => _publisher = string.IsNullOrEmpty(value) ? _publisher = _naN : value; }
         [JsonIgnore]
-        public string Subtitle { get => subtitle; set => subtitle = string.IsNullOrEmpty(value) ? subtitle = NaN : value; }
+        public string Subtitle { get => _subtitle; set => _subtitle = string.IsNullOrEmpty(value) ? _subtitle = _naN : value; }
         [JsonIgnore]
-        public string CopyrightMessage { get => copyright_message; set => copyright_message = string.IsNullOrEmpty(value) ? copyright_message = NaN : value; }
+        public string CopyrightMessage { get => _copyrightMessage; set => _copyrightMessage = string.IsNullOrEmpty(value) ? _copyrightMessage = _naN : value; }
         [JsonIgnore]
-        public string Date { get => date; set => date = string.IsNullOrEmpty(value) ? date = NaN : value; }
+        public string Date { get => _date; set => _date = string.IsNullOrEmpty(value) ? _date = _naN : value; }
         [JsonIgnore]
-        public string EncodedBy { get => encoded_by; set => encoded_by = string.IsNullOrEmpty(value) ? encoded_by = NaN : value; }
+        public string EncodedBy { get => _encodedBy; set => _encodedBy = string.IsNullOrEmpty(value) ? _encodedBy = _naN : value; }
         [JsonIgnore]
-        public string Lyric { get => lyric; set => lyric = string.IsNullOrEmpty(value) ? lyric = NaN : value; }
+        public string Lyric { get => _lyric; set => _lyric = string.IsNullOrEmpty(value) ? _lyric = _naN : value; }
         [JsonIgnore]
-        public string ContentGroupDescription { get => content_group_description; set => content_group_description = string.IsNullOrEmpty(value) ? content_group_description = NaN : value; }
+        public string ContentGroupDescription { get => _contentGroupDescription; set => _contentGroupDescription = string.IsNullOrEmpty(value) ? _contentGroupDescription = _naN : value; }
         [JsonIgnore]
-        public string BeatsPerMinutes { get => beatsperminutes; set => beatsperminutes = string.IsNullOrEmpty(value) ? beatsperminutes = NaN : value; }
+        public string BeatsPerMinutes { get => _beatsperminutes; set => _beatsperminutes = string.IsNullOrEmpty(value) ? _beatsperminutes = _naN : value; }
         [JsonIgnore]
-        public string Composer { get => composer; set => composer = string.IsNullOrEmpty(value) ? composer = NaN : value; }
+        public string Composer { get => _composer; set => _composer = string.IsNullOrEmpty(value) ? _composer = _naN : value; }
         #endregion
 
         #endregion
 
         public int CompareTo(Mediafile compareTo)
         {
-            return this.Title.CompareTo(compareTo.Title);
+            return Title.CompareTo(compareTo.Title);
         }
 
         public string GetTextSearchKey()

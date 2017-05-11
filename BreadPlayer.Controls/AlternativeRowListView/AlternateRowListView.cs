@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Windows.UI;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Controls
@@ -19,17 +15,17 @@ namespace BreadPlayer.Controls
         public Brush OddRowBackground
 
         {
-            get { return (Brush)GetValue(OddRowBackgroundProperty); }
+            get => (Brush)GetValue(OddRowBackgroundProperty);
 
-            set { SetValue(OddRowBackgroundProperty, value); }
+            set => SetValue(OddRowBackgroundProperty, value);
         }
 
         public Brush EvenRowBackground
 
         {
-            get { return (Brush)GetValue(EvenRowBackgroundProperty); }
+            get => (Brush)GetValue(EvenRowBackgroundProperty);
 
-            set { SetValue(EvenRowBackgroundProperty, value); }
+            set => SetValue(EvenRowBackgroundProperty, value);
         }
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)

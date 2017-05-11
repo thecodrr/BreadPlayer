@@ -1,10 +1,10 @@
-﻿using System.Windows.Input;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using BreadPlayer.Core.Common;
 
 namespace BreadPlayer.Behaviours
 {
-    class ItemClickCommand
+    internal class ItemClickCommand
     {
         public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand),
             typeof(ItemClickCommand), new PropertyMetadata(null, OnCommandPropertyChanged));

@@ -11,7 +11,7 @@ namespace BreadPlayer.Events
             oldColor = old;
             newColor = newClr;
         }
-        public Color NewColor { get { return newColor; } }
-        public Color OldColor { get { return oldColor; } }
+        public Color NewColor => newColor;
+        public Color OldColor => oldColor;
     }
 }

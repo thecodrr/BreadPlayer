@@ -16,25 +16,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
+using BreadPlayer.Core.Common;
 
-namespace BreadPlayer.Models
+namespace BreadPlayer.Core.Models
 {
-    public class Playlist : ObservableObject, Database.IDBRecord
+    public class Playlist : ObservableObject, IDbRecord
     {
-        private long id;
-        public long Id { get { return id; } set { Set(ref id, value); } }
-        string name;
-        public string Name { get { return name; } set { Set(ref name, value); } }
-        bool isPrivate;
-        public bool IsPrivate { get { return isPrivate; } set { Set(ref isPrivate, value); } }
-        string description;
-        public string Description { get { return description; } set { Set(ref description, value); } }
-        string hash;
-        public string Hash { get { return hash; } set { Set(ref hash, value); } }
-        string salt;
-        public string Salt { get { return salt; } set { Set(ref salt, value); } }
+        private long _id;
+        public long Id { get => _id;
+            set => Set(ref _id, value);
+        }
+        private string _name;
+        public string Name { get => _name;
+            set => Set(ref _name, value);
+        }
+        private bool _isPrivate;
+        public bool IsPrivate { get => _isPrivate;
+            set => Set(ref _isPrivate, value);
+        }
+        private string _description;
+        public string Description { get => _description;
+            set => Set(ref _description, value);
+        }
+        private string _hash;
+        public string Hash { get => _hash;
+            set => Set(ref _hash, value);
+        }
+        private string _salt;
+        public string Salt { get => _salt;
+            set => Set(ref _salt, value);
+        }
         public List<long> SongsIds { get; set; } = new List<long>();
 
         public string GetTextSearchKey()

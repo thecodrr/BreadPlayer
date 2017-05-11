@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 
 namespace BreadPlayer.StateTriggers
@@ -32,8 +31,8 @@ namespace BreadPlayer.StateTriggers
         /// <value>The device family.</value>
         public DeviceFamily DeviceFamily
         {
-            get { return (DeviceFamily)GetValue(DeviceFamilyProperty); }
-            set { SetValue(DeviceFamilyProperty, value); }
+            get => (DeviceFamily)GetValue(DeviceFamilyProperty);
+            set => SetValue(DeviceFamilyProperty, value);
         }
 
         /// <summary>
@@ -73,13 +72,13 @@ namespace BreadPlayer.StateTriggers
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         public bool IsActive
         {
-            get { return m_IsActive; }
+            get => m_IsActive;
             private set
             {
                 if (m_IsActive != value)
                 {
                     m_IsActive = value;
-                    base.SetActive(value);
+                    SetActive(value);
                     IsActiveChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
