@@ -102,7 +102,7 @@ namespace BreadPlayer.ViewModels
                     };                           
                     albums.Add(album);
                 }
-            }).ContinueWith(asynctask =>
+            }).ContinueWith(async (task) =>
             {
                 await AlbumService.InsertAlbums(albums);
                 AlbumCollection.AddRange(albums);
