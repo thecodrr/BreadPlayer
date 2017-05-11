@@ -67,6 +67,12 @@ namespace BreadPlayer.Core.Models
             get => _isFavorite;
             set => Set(ref _isFavorite, value);
         }
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => Set(ref _isSelected, value);
+        }
         public int PlayCount { get => _playCount; set => Set(ref _playCount, value); }
         public string Path { get => _path; set => Set(ref _path, value); }
         //public long Id { get => id; set => Set(ref id, value); }

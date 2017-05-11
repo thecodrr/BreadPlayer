@@ -5,28 +5,37 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:Behaviours="using:BreadPlayer.Behaviours"
+      xmlns:BPControls="using:BreadPlayer.Controls"
       xmlns:Converter="using:BreadPlayer.Converters"
+      xmlns:Extensions="using:BreadPlayer.Extensions"
+      xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
       xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
-      xmlns:BPControls="using:BreadPlayer.Controls"
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
       mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
     <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Themes/ListView.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Converter:BoolToSelectionModeConverter x:Key="BoolToSelectionMode"/>
+    
 
-        <Converter:BoolToSelectionModeConverter x:Key="BoolToSelectionMode"/>
-
-        <DataTemplate x:Key="MobileJumpListItemTemplate">
-            <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
-                        <Core:EventTriggerBehavior.Actions>
-                            <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>
-                            <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
-                        </Core:EventTriggerBehavior.Actions>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </Button>
-        </DataTemplate>
+            <!-- Style for Windows.UI.Xaml.Controls.ListViewItem -->
+           
+            <!--<DataTemplate x:Key="MobileJumpListItemTemplate">
+                <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
+                            <Core:EventTriggerBehavior.Actions>
+                                <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}"/>
+                                <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"/>
+                            </Core:EventTriggerBehavior.Actions>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Button>
+            </DataTemplate>-->
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid x:Name="Grid" DataContext="{Binding Source={StaticResource LibVM}}">
@@ -37,42 +46,14 @@
             <ColumnDefinition Width="187*"/>
             <ColumnDefinition Width="173*"/>
         </Grid.ColumnDefinitions>
-        <VisualStateManager.VisualStateGroups>
-          <VisualStateGroup>
-            <VisualState>
-              <VisualState.StateTriggers>
-                <AdaptiveTrigger MinWindowWidth="0"/>
-              </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
-
-                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
-                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            <VisualState>
-              <VisualState.StateTriggers>
-                <AdaptiveTrigger MinWindowWidth="600"/>
-              </VisualState.StateTriggers>
-              <VisualState.Setters>
-                <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>
-              </VisualState.Setters>
-            </VisualState>
-            <VisualState>
-              <VisualState.StateTriggers>
-                <AdaptiveTrigger MinWindowWidth="1200"/>
-              </VisualState.StateTriggers>
-              <VisualState.Setters>
-                <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
-              </VisualState.Setters>
-            </VisualState>
-          </VisualStateGroup>
+        <VisualStateManager.VisualStateGroups>        
           <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
+                        <AdaptiveTrigger MinWindowWidth="1200"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -80,6 +61,7 @@
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedNarrowTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -87,6 +69,10 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
+                        
+                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
+                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
@@ -107,9 +93,9 @@
             <RowDefinition Height="57*"/>
         </Grid.RowDefinitions>
        
-        <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
-            <SemanticZoom.ZoomedInView>
-                <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" ReorderMode="Enabled" OddRowBackground="{ThemeResource OddRowBackground}" EvenRowBackground="{ThemeResource EvenRowBackground}"  AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" ScrollViewer.IsScrollInertiaEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
+        <!--<SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
+            <SemanticZoom.ZoomedInView>-->
+                <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" ReorderMode="Enabled" OddRowBackground="{ThemeResource OddRowBackground}" EvenRowBackground="{ThemeResource EvenRowBackground}"  AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="50" IncrementalLoadingTrigger="Edge" DataFetchSize="50" ScrollViewer.IsScrollInertiaEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto"  ItemContainerStyle="{StaticResource ListViewItemExpanded}" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
                     <BPControls:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">
@@ -174,7 +160,7 @@
                         </GroupStyle>
                     </BPControls:AlternatingRowListView.GroupStyle>
                 </BPControls:AlternatingRowListView>
-            </SemanticZoom.ZoomedInView>
+            <!--</SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
                 <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
                     <GridView.ItemTemplate>
@@ -193,7 +179,7 @@
                     </GridView.ItemTemplate>                  
                 </GridView>
             </SemanticZoom.ZoomedOutView>
-        </SemanticZoom>
+        </SemanticZoom>-->
 
         <Button x:Uid="backBtn" x:Name="backBtn" ToolTipService.ToolTip="" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Style="{StaticResource HyperlinkBtn}">
             <Interactivity:Interaction.Behaviors>

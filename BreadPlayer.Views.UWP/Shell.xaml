@@ -16,16 +16,33 @@
     xmlns:BPControls="using:BreadPlayer.Controls"
     mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{StaticResource ShellVM}">
     <Page.Resources>
-       
-        <Storyboard x:Name="ImageTransition">
-            <DoubleAnimation Storyboard.TargetName="infoBar" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.8"></DoubleAnimation>
-        </Storyboard>
-        <DataTemplate x:Key="MobileEqualizerSliderTemplate">
-            <StackPanel>
-                <Slider Height="100" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Background="#FFC5C5C5" Style="{StaticResource CircleSlider}" Minimum="-14" Maximum="14" Margin="0,20,0,0" Orientation="Vertical" Value="{Binding Path=Gain, Mode=TwoWay}"/>
-                <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="9" Text="{Binding Path=CenterTitle}"/>
-            </StackPanel>
-        </DataTemplate>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/HamburgerMenu.xaml"/>
+            </ResourceDictionary.MergedDictionaries>-->
+            <Style TargetType="BPControls:ImageEx">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="#444" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="BPControls:ImageEx">
+                            <Grid Background="{TemplateBinding Background}">
+                                <ContentPresenter />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Storyboard x:Name="ImageTransition">
+                <DoubleAnimation Storyboard.TargetName="infoBar" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.8"></DoubleAnimation>
+            </Storyboard>
+            <DataTemplate x:Key="MobileEqualizerSliderTemplate">
+                <StackPanel>
+                    <Slider Height="100" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Background="#FFC5C5C5" Style="{StaticResource CircleSlider}" Minimum="-14" Maximum="14" Margin="0,20,0,0" Orientation="Vertical" Value="{Binding Path=Gain, Mode=TwoWay}"/>
+                    <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" FontSize="9" Text="{Binding Path=CenterTitle}"/>
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>       
     </Page.Resources>
     <Grid>
         <VisualStateManager.VisualStateGroups>
@@ -38,7 +55,7 @@
                         <Setter Target="sliderGrid.Visibility" Value="Visible" />
                         <Setter Target="showMoreBtn.IsChecked" Value="False" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
-                        <Setter Target="ValueIndicatorText.FontSize" Value="11"/>
+                        <!--<Setter Target="ValueIndicatorText.FontSize" Value="11"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -49,7 +66,7 @@
                         <Setter Target="sliderGrid.Visibility" Value="Collapsed" />
                         <Setter Target="shuffleBtn.Visibility" Value="Visible" />
                         <Setter Target="showMoreBtn.IsChecked" Value="False" />
-                        <Setter Target="ValueIndicatorText.FontSize" Value="11"/>
+                        <!--<Setter Target="ValueIndicatorText.FontSize" Value="11"/>-->
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="2"/>
                         <Setter Target="positionProgressBar.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -80,27 +97,27 @@
                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="EqualizerGrid.Visibility" Value="Visible"/>
+                        <!--<Setter Target="EqualizerGrid.Visibility" Value="Visible"/>
                         <Setter Target="EqualizerGrid.Height" Value="220"/>
                         <Setter Target="BandStackPanel.Margin" Value="20,0,0,-10"/>
                         <Setter Target="BandStackPanel.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="ValueIndicatorGrid.Margin" Value="0,15,-10,75"/>
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
-                        <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
+                        <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>-->
                         <Setter Target="backgroundBorder.BlurAmount" Value="5"/>
                         <Setter Target="backgroundBlur.Opacity" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            <VisualStateGroup>
+            <!--<VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, UpdateSourceTrigger=PropertyChanged}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MainBackgroundImage.Margin" Value="0"/>
-                        <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
+                        --><!--<Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>--><!--
                         <Setter Target="EqualizerGrid.Margin" Value="0,0,0,140"/>
                     </VisualState.Setters>
                     <VisualState.Storyboard>
@@ -124,8 +141,8 @@
                     <VisualState.Setters>
                         <Setter Target="MainBackgroundImage.Margin" Value="0,0,0,70"/>
                         <Setter Target="ShellGrid.Visibility" Value="Visible"/>
-                        <Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>
-                        <Setter Target="EqualizerGrid.Margin" Value="0,0,0,70"/>
+                        --><!--<Setter Target="NowPlayingFrame.Visibility" Value="Visible"/>-->
+                        <!--<Setter Target="EqualizerGrid.Margin" Value="0,0,0,70"/>--><!--
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
@@ -141,7 +158,7 @@
                         </Storyboard>
                     </VisualState.Storyboard>
                 </VisualState>
-            </VisualStateGroup>            
+            </VisualStateGroup>-->            
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -162,7 +179,7 @@
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
-            <VisualStateGroup>
+            <!--<VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{Binding Path=IsEqualizerVisible}"/>
@@ -181,7 +198,7 @@
                         <DoubleAnimation Storyboard.TargetName="EqualizerGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" SpeedRatio="4" From="0" To="620" Duration="0:0:1"/>
                     </Storyboard>
                 </VisualState>
-            </VisualStateGroup>
+            </VisualStateGroup>-->
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -340,12 +357,12 @@
                 </Grid>
             </StackPanel>
         </Grid>
-        <Frame x:Name="NowPlayingFrame" Visibility="Collapsed" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
+        <!--<Frame x:Name="NowPlayingFrame" Visibility="Collapsed" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
             <Frame.RenderTransform>
                 <CompositeTransform TranslateY="-1000"/>
             </Frame.RenderTransform>
-        </Frame>
-        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        </Frame>-->
+        <!--<Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="300"/>
             </Grid.RenderTransform>
@@ -353,12 +370,12 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            --><!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBox Header="Config Name:"/>
                 <Button Content="Save" Margin="10,0,0,0"/>
-            </StackPanel>-->
+            </StackPanel>--><!--
             <ComboBox HorizontalAlignment="Right" ItemsSource="{Binding Path=Player.Equalizer.Presets}" SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" DisplayMemberPath="Name" VerticalAlignment="Center" Margin="0,0,20,0"/>
-            <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
+            --><!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>--><!--
             <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
                     <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-7dB" FontSize="11"/>
@@ -409,7 +426,7 @@
             </StackPanel>
             <TextBlock Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" VerticalAlignment="Bottom" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
 
-        </Grid>
+        </Grid>-->
         <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding Source={StaticResource ShellVM}, Path=IsVolumeSliderVisible}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

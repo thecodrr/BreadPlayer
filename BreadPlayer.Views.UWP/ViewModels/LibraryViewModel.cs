@@ -1111,14 +1111,19 @@ namespace BreadPlayer.ViewModels
         {
             if (selectionEvent.RemovedItems.Count > 0)
             {
-                foreach (var toRemove in selectionEvent.RemovedItems.Cast<Mediafile>())
+                foreach (Mediafile toRemove in selectionEvent.RemovedItems)
                 {
+                    toRemove.IsSelected = false;
                     SelectedItems.Remove(toRemove);
                 }
             }
             if (selectionEvent.AddedItems.Count > 0)
             {
-                SelectedItems.AddRange(selectionEvent.AddedItems.Cast<Mediafile>().ToList());
+                foreach (Mediafile item in selectionEvent.AddedItems)
+                {
+                    item.IsSelected = true;
+                    SelectedItems.Add(item);
+                }
             }
         }
         #endregion

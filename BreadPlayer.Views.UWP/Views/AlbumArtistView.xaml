@@ -13,18 +13,24 @@
     xmlns:models="using:BreadPlayer.Core.Models"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:DataType="models:Album" x:Key="MobileItemTemplate">
-            <Grid Width="130" Height="200" Margin="5">
-                <StackPanel>
-                    <Grid>
-                        <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
-                    <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
-            </Grid>
-            <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknown Album'}" HorizontalAlignment="Center"/>
-                    <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Themes/ListView.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Themes/GridView.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:DataType="models:Album" x:Key="MobileItemTemplate">
+                <Grid Width="130" Height="200" Margin="5">
+                    <StackPanel>
+                        <Grid>
+                            <Image Width="130" x:Name="AlbumArt" Height="130" HorizontalAlignment="Center" x:Phase="2" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}"></Image>
+                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{Binding ElementName=AlbumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                        </Grid>
+                        <TextBlock TextAlignment="Center" Margin="5,5,5,0" FontSize="14" x:Phase="0" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue='Unknown Album'}" HorizontalAlignment="Center"/>
+                        <TextBlock TextAlignment="Center" Margin="5,5,5,0" x:Phase="1" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue='Unknown Artist'}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
     </Page.Resources>
     <Grid x:Name="grid" Margin="0,20,0,0">
         <Grid.Resources>

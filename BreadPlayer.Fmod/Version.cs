@@ -15,11 +15,11 @@ namespace BreadPlayer.Fmod
     {
         public const int    Number = 0x00010807;
 #if CPU_X64
-        public const string DLL    = "fmod_X64";
+        public const string Dll    = "fmod_X64";
 #elif CPU_X86
         public const string Dll    = "fmod_X86";
 #else
-        public const string DLL = "fmod_ARM";
+        public const string Dll = "fmod_ARM";
 #endif
     }
 }
