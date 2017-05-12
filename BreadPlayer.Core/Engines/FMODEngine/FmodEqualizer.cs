@@ -62,7 +62,8 @@ namespace BreadPlayer.Core.Engines.FMODEngine
                 if (band == null)
                 {
                     continue;
-                } ((FmodEqualizerBand) band).PropertyChanged += (sender, e) =>
+                }
+                ((FmodEqualizerBand)band).PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == "Gain")
                     {

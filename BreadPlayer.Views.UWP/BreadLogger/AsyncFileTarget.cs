@@ -32,7 +32,7 @@ namespace BreadPlayer.Targets
         private async void CreateFile(string filename)
         {
             StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
-            _file =  await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+            _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
         }
         public async override void Write(string content)
         {

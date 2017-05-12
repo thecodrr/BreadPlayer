@@ -59,9 +59,9 @@ public class BLogger
     {
         char[] delimiters = { ' ', '\r', '\n', '|', ',', '.' };
         Dictionary<string, int> count =
-     text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
-     .GroupBy(s => s)
-     .ToDictionary(g => g.Key, g => g.Count());
+            text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+                .GroupBy(s => s)
+                .ToDictionary(g => g.Key, g => g.Count());
         int errorCount = 0;
         if (count.ContainsKey("Error".ToUpper()))
         {
@@ -105,5 +105,4 @@ public class BLogger
     //        if (x == SmtpResult.OK)
     //            await ApplicationData.Current.TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
     //    }
-    }
-
+}

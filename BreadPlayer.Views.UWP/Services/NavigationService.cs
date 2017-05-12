@@ -52,10 +52,8 @@ namespace BreadPlayer.Services
             //SystemNavigationManager.GetForCurrentView().BackRequested +=
             //                NavigationService_BackRequested;
 
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-
-            }
+            //if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            //{ }
         }
 
         #endregion
@@ -78,7 +76,7 @@ namespace BreadPlayer.Services
             if (Frame.CanGoBack)
             {
                 Frame.GoBack();
-               // PageStack.Pop();
+                // PageStack.Pop();
                 UpdateBackButtonVisibility();
             }
         }

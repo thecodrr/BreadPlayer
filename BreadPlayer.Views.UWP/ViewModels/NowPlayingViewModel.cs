@@ -67,19 +67,19 @@ namespace BreadPlayer.ViewModels
         }
         private async void Retry(object para)
         {
-            if(para.ToString() == "Artist")
+            if (string.IsNullOrEmpty(CorrectArtist))
             {
-                if (string.IsNullOrEmpty(CorrectArtist))
-                {
-                    return;
-                }
+                return;
+            }
 
+            if (para.ToString() == "Artist")
+            {
                 await GetArtistInfo(CorrectArtist);
                 SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
             }
-            else if(para.ToString() == "Album")
+            else if (para.ToString() == "Album")
             {
-                if (string.IsNullOrEmpty(CorrectAlbum) || string.IsNullOrEmpty(CorrectArtist))
+                if (string.IsNullOrEmpty(CorrectAlbum))
                 {
                     return;
                 }

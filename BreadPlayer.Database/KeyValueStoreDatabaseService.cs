@@ -146,24 +146,24 @@ namespace BreadPlayer.Database
         public async Task InsertRecord(IDbRecord record)
         {
             await Task.Run(() =>
-          {
-              ReinitEngine();
-              using (var tran = _engine.GetTransaction())
-              {
-                  tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
-                  record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
-                  tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
-                      {
-                          Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
-                          NewEntity = true,
-                          //Changes Select-Insert pattern to Insert (speeds up insert process)
-                          Entity = record //Entity itself
-                      },
-                      true);
-                  tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                  tran.Commit();
-              }
-          });
+            {
+                ReinitEngine();
+                using (var tran = _engine.GetTransaction())
+                {
+                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                    record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
+                    tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
+                    {
+                        Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
+                        NewEntity = true,
+                        //Changes Select-Insert pattern to Insert (speeds up insert process)
+                        Entity = record //Entity itself
+                    },
+                        true);
+                    tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
+                    tran.Commit();
+                }
+            });
         }
         private void ReinitEngine()
         {

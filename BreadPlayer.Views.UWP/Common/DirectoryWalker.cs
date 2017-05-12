@@ -16,13 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
-using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Common
 {
@@ -30,13 +25,8 @@ namespace BreadPlayer.Common
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName, new[] { ".mp3" });
-            options.FileTypeFilter.Add(".wav");
-            options.FileTypeFilter.Add(".ogg");
-            options.FileTypeFilter.Add(".flac");
-            options.FileTypeFilter.Add(".m4a");
-            options.FileTypeFilter.Add(".aif");
-            options.FileTypeFilter.Add(".wma");
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
+                new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;

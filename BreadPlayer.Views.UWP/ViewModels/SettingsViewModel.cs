@@ -274,7 +274,6 @@ namespace BreadPlayer.ViewModels
         }
         private async void ImportPlaylists()
         {
-            var picker = new FileOpenPicker();
             FileOpenPicker openPicker = new FileOpenPicker()
             {
                 ViewMode = PickerViewMode.Thumbnail,
@@ -602,7 +601,7 @@ namespace BreadPlayer.ViewModels
 
         private static async Task SaveMultipleAlbumArtsAsync(IEnumerable<Mediafile> files)
         {
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 await SaveSingleFileAlbumArtAsync(file);
             }

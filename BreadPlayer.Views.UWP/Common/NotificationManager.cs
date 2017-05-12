@@ -67,7 +67,7 @@ namespace BreadPlayer.NotificationManager
                 };
                 ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
 
-                var hello = ToastNotificationManager.History.GetHistory().ToList();
+                //var hello = ToastNotificationManager.History.GetHistory().ToList();
             }
         }
         private void HideTimer_Tick(object sender, object e)

@@ -449,7 +449,6 @@ namespace BreadPlayer.ViewModels
 
         private async void Open(object para)
         {
-            var picker = new FileOpenPicker();
             FileOpenPicker openPicker = new FileOpenPicker
             {
                 ViewMode = PickerViewMode.Thumbnail,

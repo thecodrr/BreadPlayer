@@ -2,11 +2,11 @@
   "dependencies": {
     "ksemenenko.ColorThief": "1.1.0.3",
     "ManagedBass": "1.0.2",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
     "Microsoft.Toolkit.Uwp.Notifications": "1.4.1",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "PCLStorage": "1.0.2",
-    "System.ValueTuple": "4.3.0",
+    "System.ValueTuple": "4.3.1",
     "TagLib.Portable": "1.0.4",
     "Win2D.uwp": "1.20.0"
   },
@@ -21,5 +21,4 @@
     "win10-x64": {},
     "win10-x64-aot": {}
   }
- 
-  }
+}

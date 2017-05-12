@@ -31,12 +31,9 @@ namespace BreadPlayer.Converters
             { 
                 return mode == SplitViewDisplayMode.CompactOverlay;
             }
-            if (value is bool boolValue)
+            else if (value is bool boolValue && parameter == null)
             {
-                if (parameter == null)
-                {
-                    return boolValue != true;
-                }
+                return boolValue != true;
             }
 
             return false;

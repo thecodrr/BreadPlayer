@@ -301,7 +301,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             {
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             }
-            //MediaEnded(this, new MediaEndedEventArgs(PlayerState.Ended));
+            //MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
         private void EndSync(int handle, int channel, int data, IntPtr user)
         {

@@ -22,8 +22,7 @@ namespace BreadPlayer.Behaviours
 
         private static void OnCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as GridView;
-            if (control != null)
+            if (d is GridView control)
             {
                 control.ItemClick += OnItemClick;
             }
