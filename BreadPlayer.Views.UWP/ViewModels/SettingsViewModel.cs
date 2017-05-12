@@ -606,63 +606,64 @@ namespace BreadPlayer.ViewModels
 
         private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
         {
+            //tell the reader that we accept the changes
+            //so that the same files are not served to us again.
             await (sender as StorageLibraryChangeTracker).GetChangeReader().AcceptChangesAsync();
 
+            //check if there are any updated items.
             if (e.UpdatedItems != null && e.UpdatedItems.Any())
             {
                 foreach (var item in e.UpdatedItems)
                 {
+                    //sometimes, the breadplayer log is also included in updated files,
+                    //this is to avoid accidently causing a crash.
                     if (Path.GetExtension(item.Path) == ".log")
                     {
                         return;
                     }
                     switch (item.ChangeType)
                     {
+                        //file has been created
+                        //NOTE: sometimes a altered file also has this ChangeType, so we check for both.
                         case StorageLibraryChangeType.Created:
-                            if (IsItemInLibrary(item, out Mediafile createdItem))
-                            {
-                                var id = createdItem.Id;
-                                createdItem = await SharedLogic.CreateMediafile((StorageFile)await item.GetStorageItemAsync());
-                                createdItem.Id = id;
-                                if (await LibraryService.UpdateMediafile(createdItem))
-                                {
-                                   await NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. Filename: {0}", createdItem.Title), 5);
-                                }
-                            }
+                            await item.UpdateChangedItem(TracksCollection.Elements, LibraryService);
                             break;
+                        //file has been deleted.
+                        //NOTE: ChangeType for a file replaced is also this.
+                        //TODO: Add logic for a file that is replaced.
                         case StorageLibraryChangeType.Deleted:
+                            await item.RemoveItem(TracksCollection.Elements);
                             break;
+                            //file was moved or renamed.
+                            //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
                         case StorageLibraryChangeType.MovedOrRenamed:
                             if (item.IsOfType(StorageItemTypes.File))
                             {
-                                if (IsItemInLibrary(item, out Mediafile renamedItem))
+                                if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
                                 {
                                     renamedItem.Path = item.Path;
                                     await LibraryService.UpdateMediafile(renamedItem);
                                 }
                             }
                             break;
+                            //this is almost never invoked but just in case,
+                            //we implement RemoveItem logic here.
                         case StorageLibraryChangeType.MovedOutOfLibrary:
+                            await item.RemoveItem(TracksCollection.Elements);
                             break;
+                            //this is also never invoked but just in case,
+                            //we implement AddNewItem logic here.
                         case StorageLibraryChangeType.MovedIntoLibrary:
+                            await item.AddNewItem();
                             break;
+                            //file's content was changed in some manner. Can be a tag change.
                         case StorageLibraryChangeType.ContentsChanged:
-                            if (item.IsOfType(StorageItemTypes.File))
-                            {
-                                if (IsItemInLibrary(item, out Mediafile changedItem))
-                                {
-                                    var id = changedItem.Id;
-                                    changedItem = await SharedLogic.CreateMediafile((StorageFile)await item.GetStorageItemAsync());
-                                    changedItem.Id = id;
-                                    if (await LibraryService.UpdateMediafile(changedItem))
-                                    {
-                                        await NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. Filename: {0}", changedItem.Title), 5);
-                                    }
-                                }
-                            }
+                            await item.UpdateChangedItem(TracksCollection.Elements, LibraryService);
                             break;
+                            //TODO: Find a way to invoke this and then implement logic accordingly.
                         case StorageLibraryChangeType.ContentsReplaced:
                             break;
+                            //Change was lost. According to the docs, we should Reset the Tracker here.
                         case StorageLibraryChangeType.ChangeTrackingLost:
                             (sender as StorageLibraryChangeTracker).Reset();
                             break;
@@ -670,16 +671,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        private bool IsItemInLibrary(StorageLibraryChange change, out Mediafile file)
-        {
-            if (TracksCollection.Elements.Any(t => t.Path == (string.IsNullOrEmpty(change.PreviousPath) ? change.Path : change.PreviousPath)))
-            {
-                file = TracksCollection.Elements.First(t => t.Path == (string.IsNullOrEmpty(change.PreviousPath) ? change.Path : change.PreviousPath));
-                return true;
-            }
-            file = null;
-            return false;
-        }
+       
         #endregion
 
     }

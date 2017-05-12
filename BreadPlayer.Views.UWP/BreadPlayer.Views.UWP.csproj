@@ -162,6 +162,7 @@
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\SortedObservableCollection.cs" />
+    <Compile Include="Extensions\StorageExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
