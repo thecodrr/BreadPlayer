@@ -23,5 +23,17 @@ namespace BreadPlayer.Views
             await viewModel.GetAlbumsAndTracks((e.Parameter as Query).QueryWord);
             DataContext = viewModel;
         }
+
+        private void AlbumsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (Album album in e.RemovedItems)
+            {
+                album.IsSelected = false;
+            }
+            foreach (Album album in e.AddedItems)
+            {
+                album.IsSelected = true;
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BreadPlayer.Core.Models"
-     xmlns:Extensions="using:BreadPlayer.Extensions"
+      xmlns:Extensions="using:BreadPlayer.Extensions"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>                
@@ -77,6 +77,7 @@
                     </Grid>
                 </Grid>
             </DataTemplate>
+            
             <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
 
             <DataTemplate x:Key="SelectedTemplate" x:DataType="models:Album">
@@ -86,7 +87,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                     <Image x:Name="AlbumArt" x:Phase="2" Width="200" Opacity="0" Height="200" HorizontalAlignment="Stretch" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
+                    <Image x:Name="AlbumArt" x:Phase="2" Width="200" Opacity="0" Height="200" HorizontalAlignment="Stretch" Stretch="Uniform" Source="{x:Bind AlbumArt, Converter={StaticResource PathToImage}}">
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="ImageOpened">
                                 <Media:ControlStoryboardAction>
