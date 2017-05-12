@@ -42,6 +42,7 @@ using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Themes;
+using BreadPlayer.Services;
 
 namespace BreadPlayer.ViewModels
 {
@@ -195,6 +196,7 @@ namespace BreadPlayer.ViewModels
         }
         #endregion
 
+        private StorageLibraryService StorageLibraryService { get; set; }
         #region Ctor  
         public SettingsViewModel()
         {
@@ -207,8 +209,10 @@ namespace BreadPlayer.ViewModels
             _enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             _replaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("replaceLockscreenWithAlbumArt", false);
             _timeOpened = DateTime.Now.ToString();
-            LoadFolders();
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
+            StorageLibraryService = new StorageLibraryService();
+            StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
+            LoadFolders();
         }
         #endregion
 
@@ -305,23 +309,8 @@ namespace BreadPlayer.ViewModels
         public async void Load()
         {
             try
-            {  //LibVM.Database.RemoveFolder(LibraryFoldersCollection[0].Path);
-                FolderPicker picker = new FolderPicker();
-                picker.FileTypeFilter.Add(".mp3");
-                picker.FileTypeFilter.Add(".wav");
-                picker.FileTypeFilter.Add(".ogg");
-                picker.FileTypeFilter.Add(".flac");
-                picker.FileTypeFilter.Add(".m4a");
-                picker.FileTypeFilter.Add(".aif");
-                picker.FileTypeFilter.Add(".wma");
-                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-                picker.ViewMode = PickerViewMode.List;
-                picker.CommitButtonText = "Import";
-                StorageFolder folder = await picker.PickSingleFolderAsync();
-                if (folder != null)
-                {
-                    await LoadFolderAsync(folder);
-                }
+            {
+                await LoadFolderAsync(await StorageLibraryService.AddFolderToLibraryAsync());
             }
             catch (UnauthorizedAccessException)
             {
@@ -381,10 +370,11 @@ namespace BreadPlayer.ViewModels
                     }
                 }
 
-                if (string.IsNullOrEmpty(folderPaths))
+                if (string.IsNullOrEmpty(folderPaths) || folderPaths.All(t => t == '|'))
                 {
                     LibraryFoldersCollection.Add(KnownFolders.MusicLibrary);
                 }
+                StorageLibraryService.SetupDirectoryWatcher(LibraryFoldersCollection);
             }
         }
         #endregion
@@ -425,17 +415,13 @@ namespace BreadPlayer.ViewModels
         #region Load Methods
         private async Task LoadFolderAsync(StorageFolder folder)
         {
+            if (folder == null)
+                return;
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, (short)2);
             LibraryFoldersCollection.Add(folder);
-            StorageApplicationPermissions.FutureAccessList.Add(folder);
-            //Get query options with which we search for files in the specified folder
-            var options = DirectoryWalker.GetQueryOptions();
-            //this is the query result which we recieve after querying in the folder
-            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
-            //the event for files changed
-           // queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            await AddFolderToLibraryAsync(queryResult);
+            await AddFolderToLibraryAsync(await StorageLibraryService.GetStorageFilesInFolderAsync(folder));
         }
+
         /// <summary>
         /// Auto loads the User's Music Libary on first load.
         /// </summary>
@@ -456,31 +442,21 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(StorageFileQueryResult queryResult)
+        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> files)
         {
-            if (queryResult != null)
+            if (files != null)
             {
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
 
-                //'count' is for total files got after querying.
-                var count = await queryResult.GetItemCountAsync().AsTask().ConfigureAwait(false);
-                if (count == 0)
-                {
-                    string error = "No songs found!";
-                    BLogger.Logger.Error("No songs were found!");
-                    await NotificationManager.ShowMessageAsync(error);
-                    return;
-                }
-
                 int failedCount = 0;
-
-                short i = 0;
+                var count = files.Count();
+                short i = 2;
                 await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     try
                     {
-                        foreach (StorageFile file in await queryResult.GetFilesAsync())
+                        foreach (StorageFile file in files)
                         {
                             try
                             {
@@ -586,7 +562,7 @@ namespace BreadPlayer.ViewModels
 
                     if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
                     {
-                        bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3File);                       
+                        bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3File);
                         mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
                     }
                     file = null;
@@ -607,7 +583,7 @@ namespace BreadPlayer.ViewModels
             }
         }
         #endregion
-        
+
 
         #endregion
 
@@ -626,7 +602,77 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
+
+        private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
+        {
+            //tell the reader that we accept the changes
+            //so that the same files are not served to us again.
+            await (sender as StorageLibraryChangeTracker).GetChangeReader().AcceptChangesAsync();
+
+            //check if there are any updated items.
+            if (e.UpdatedItems != null && e.UpdatedItems.Any())
+            {
+                foreach (var item in e.UpdatedItems)
+                {
+                    //sometimes, the breadplayer log is also included in updated files,
+                    //this is to avoid accidently causing a crash.
+                    if (Path.GetExtension(item.Path) == ".log")
+                    {
+                        return;
+                    }
+                    switch (item.ChangeType)
+                    {
+                        //file has been created
+                        //NOTE: sometimes a altered file also has this ChangeType, so we check for both.
+                        case StorageLibraryChangeType.Created:
+                            await item.UpdateChangedItem(TracksCollection.Elements, LibraryService);
+                            break;
+                        //file has been deleted.
+                        //NOTE: ChangeType for a file replaced is also this.
+                        //TODO: Add logic for a file that is replaced.
+                        case StorageLibraryChangeType.Deleted:
+                            await item.RemoveItem(TracksCollection.Elements);
+                            break;
+                            //file was moved or renamed.
+                            //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
+                        case StorageLibraryChangeType.MovedOrRenamed:
+                            if (item.IsOfType(StorageItemTypes.File))
+                            {
+                                if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
+                                {
+                                    renamedItem.Path = item.Path;
+                                    await LibraryService.UpdateMediafile(renamedItem);
+                                }
+                            }
+                            break;
+                            //this is almost never invoked but just in case,
+                            //we implement RemoveItem logic here.
+                        case StorageLibraryChangeType.MovedOutOfLibrary:
+                            await item.RemoveItem(TracksCollection.Elements);
+                            break;
+                            //this is also never invoked but just in case,
+                            //we implement AddNewItem logic here.
+                        case StorageLibraryChangeType.MovedIntoLibrary:
+                            await item.AddNewItem();
+                            break;
+                            //file's content was changed in some manner. Can be a tag change.
+                        case StorageLibraryChangeType.ContentsChanged:
+                            await item.UpdateChangedItem(TracksCollection.Elements, LibraryService);
+                            break;
+                            //TODO: Find a way to invoke this and then implement logic accordingly.
+                        case StorageLibraryChangeType.ContentsReplaced:
+                            break;
+                            //Change was lost. According to the docs, we should Reset the Tracker here.
+                        case StorageLibraryChangeType.ChangeTrackingLost:
+                            (sender as StorageLibraryChangeTracker).Reset();
+                            break;
+                    }
+                }
+            }
+        }
+       
         #endregion
 
     }
 }
+
