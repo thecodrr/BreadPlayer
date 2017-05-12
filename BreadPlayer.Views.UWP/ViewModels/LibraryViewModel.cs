@@ -1052,8 +1052,6 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Info("Library successfully loaded!");
                 await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
-                await Task.Delay(10000);
-                DirectoryWalker.SetupDirectoryWatcher(SharedLogic.SettingsVm.LibraryFoldersCollection);
             }
         }
         private async void Elements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

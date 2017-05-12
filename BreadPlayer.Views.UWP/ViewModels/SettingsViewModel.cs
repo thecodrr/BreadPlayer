@@ -132,7 +132,11 @@ namespace BreadPlayer.ViewModels
         public string TimeClosed
         {
             get => _timeClosed;
-            set => Set(ref _timeClosed, value);
+            set
+            {
+                Set(ref _timeClosed, value);
+                RoamingSettingsHelper.SaveSetting("timeclosed", _timeClosed);
+            }
         }
 
         private string _timeOpened;
@@ -187,6 +191,7 @@ namespace BreadPlayer.ViewModels
                     message.HandledStatus = MessageHandledStatus.HandledContinue;
                 }
             }
+            Messenger.Instance.DeRegister(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion
 
@@ -201,6 +206,8 @@ namespace BreadPlayer.ViewModels
             _isThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
             _enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             _replaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("replaceLockscreenWithAlbumArt", false);
+            _timeOpened = DateTime.Now.ToString();
+            LoadFolders();
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
         }
         #endregion
@@ -317,7 +324,7 @@ namespace BreadPlayer.ViewModels
                     await LoadFolderAsync(folder);
                 }
             }
-            catch(UnauthorizedAccessException)
+            catch (UnauthorizedAccessException)
             {
                 await NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
             }
@@ -374,23 +381,16 @@ namespace BreadPlayer.ViewModels
                         }
                     }
                 }
+
+                if (string.IsNullOrEmpty(folderPaths))
+                {
+                    LibraryFoldersCollection.Add(KnownFolders.MusicLibrary);
+                }
             }
         }
         #endregion
-       
-        #region Add Methods
-        /// <summary>
-        /// Adds modified files got from querying in the <see cref="LibraryFoldersCollection"/>. The query parameters include time range from <see cref="TimeClosed"/> to <seealso cref="TimeOpened"/>.
-        /// </summary>
-        private async Task AddModifiedFilesAsync()
-        {
-            TimeClosed = RoamingSettingsHelper.GetSetting<string>("timeclosed", "0");
-            ModifiedFiles = await DirectoryWalker.GetModifiedFiles(LibraryFoldersCollection, TimeClosed);
-            if (ModifiedFiles.Any())
-            {
-                RenameAddOrDeleteFiles(ModifiedFiles);
-            }
-        }
+
+        #region Add Methods        
         /// <summary>
         /// Adds storage files into library.
         /// </summary>
@@ -434,7 +434,7 @@ namespace BreadPlayer.ViewModels
             //this is the query result which we recieve after querying in the folder
             StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
             //the event for files changed
-            queryResult.ContentsChanged += QueryResult_ContentsChanged;
+           // queryResult.ContentsChanged += QueryResult_ContentsChanged;
             await AddFolderToLibraryAsync(queryResult);
         }
         /// <summary>
@@ -461,9 +461,6 @@ namespace BreadPlayer.ViewModels
         {
             if (queryResult != null)
             {
-                //so that no new event is raised. We want to focus on loading.
-                _isLibraryLoading = true;
-
                 //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
                 var tempList = new List<Mediafile>();
 
@@ -515,18 +512,19 @@ namespace BreadPlayer.ViewModels
                         string message1 = ex.Message + "||" + ex.InnerException;
                         await NotificationManager.ShowMessageAsync(message1);
                     }
-                    await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
 
-                    await LibraryService.AddMediafiles(tempList);
-                    await TracksCollection.AddRange(tempList).ConfigureAwait(false);
-                    await DeleteDuplicates(tempList).ConfigureAwait(false);
+                    var uniqueFiles = DeleteDuplicates(tempList);
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
+                    await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
+                    await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
+                    await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                    await LibraryService.AddMediafiles(uniqueFiles);
 
                     AlbumArtistViewModel vm = new AlbumArtistViewModel();
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, TracksCollection.Elements);
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
                     vm = null;
 
-                    _isLibraryLoading = false;
                     string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
                     BLogger.Logger.Info(message);
@@ -536,76 +534,39 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private async Task DeleteDuplicates(IEnumerable<Mediafile> source)
+        private List<Mediafile> DeleteDuplicates(List<Mediafile> sourceList)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                var sourceList = source.ToList();
-                var duplicateFiles = sourceList.Where(s => sourceList.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
-                if (duplicateFiles.Count() > 0)
-                {
-                    await ShowMessageBox(async selectedDuplicates =>
-                    {
-                        if (selectedDuplicates.Any())
-                        {
-                            try
-                            {
-                                foreach (var duplicate in selectedDuplicates)
-                                {
-                                    var duplicateIndex = 0;
-                                    var duplicateCount = TracksCollection.Elements.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
-                                    if (duplicateCount > 2)
-                                    {
-                                        for (int i = 0; i < duplicateCount - 1; i++)
-                                        {
-                                            duplicateIndex = TracksCollection.Elements.IndexOf(TracksCollection.Elements.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                                            if (duplicateIndex > -1)
-                                            {
-                                                await SharedLogic.RemoveMediafile(TracksCollection.Elements.ElementAt(duplicateIndex)).ConfigureAwait(false);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        await SharedLogic.RemoveMediafile(duplicate).ConfigureAwait(false);
-                                    }
-                                }
-                            }
-                            catch(Exception ex)
-                            {
-                                BLogger.Logger.Error("Error while deleting duplicates.", ex);
-                            }
-                        }
-                    }, duplicateFiles).ConfigureAwait(false);
-                }
-            });
-        }
-
-        private async Task ShowMessageBox(Action<IEnumerable<Mediafile>> action, IEnumerable<Mediafile> duplicates)
-        {
+            var source = sourceList.ToList();
+            var duplicateFiles = sourceList.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
             try
             {
-                DuplicatesDialog dialog = new DuplicatesDialog()
+                foreach (var duplicate in duplicateFiles)
                 {
-                    Duplicates = duplicates.DistinctBy(t => t.OrginalFilename),
-                    Title = string.Format("Please choose the duplicates you would like to delete. Total duplicates: {0} duplicate songs?", duplicates.Count())
-                };
-                if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
-                {
-                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
+                    var duplicateIndex = 0;
+                    var duplicateCount = source.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
+                    if (duplicateCount >= 2)
+                    {
+                        for (int i = 0; i < duplicateCount; i++)
+                        {
+                            duplicateIndex = source.IndexOf(source.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
+                            if (duplicateIndex > -1)
+                            {
+                                source.RemoveAt(duplicateIndex);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        source.Remove(duplicate);
+                    }
                 }
-                else
-                {
-                    dialog.DialogWidth = 600;
-                }
-
-                var result = await dialog.ShowAsync();
-                if (result == ContentDialogResult.Primary)
-                {
-                    action?.Invoke(dialog.SelectedDuplicates);
-                }
+                return source;
             }
-            catch (UnauthorizedAccessException) { }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error while deleting duplicates.", ex);
+            }
+            return null;
         }
         #endregion
 
@@ -647,80 +608,7 @@ namespace BreadPlayer.ViewModels
             }
         }
         #endregion
-
-        #region Folder Watecher Methods
-        /// <summary>
-        /// This is still experimental. As you can see, there are more lines of code then necessary.
-        /// </summary>
-        /// <param name="files"></param>
-        public static async void RenameAddOrDeleteFiles(IEnumerable<StorageFile> files)
-        {
-            try
-            {
-                string folder = "";
-                foreach (var file in files)
-                {
-                    var props = await file.Properties.GetMusicPropertiesAsync();
-                    folder = Path.GetDirectoryName(file.Path);
-                    //FOR RENAMING (we check all the tracks to see if we have a track that is the same as the changed file except for its path)
-                    if (TracksCollection.Elements.ToArray().Any(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss")))
-                    {
-                        var mp3File = TracksCollection.Elements.FirstOrDefault(t => t.Path != file.Path && t.Title == props.Title && t.LeadArtist == props.Artist && t.Album == props.Album && t.Length == props.Duration.ToString(@"mm\:ss"));
-                        mp3File.Path = file.Path;
-                    }
-                    //FOR ADDITION (we check all the files to see if we already have the file or not)
-                    if (TracksCollection.Elements.ToArray().All(t => t.Path != file.Path))
-                    {
-                        var mediafile = await SharedLogic.CreateMediafile(file, false);
-                        SharedLogic.AddMediafile(mediafile);
-                        await SaveSingleFileAlbumArtAsync(mediafile);
-                    }
-                }
-                //FOR DELETE (we only want to iterate through songs which are in the changed folder)
-                var deletedFiles = new List<Mediafile>();
-                foreach (var file in TracksCollection.Elements.ToArray().Where(t => t.FolderPath == folder))
-                {
-                    if (!File.Exists(file.Path))
-                    {
-                        deletedFiles.Add(TracksCollection.Elements.FirstOrDefault(t => t.Path == file.Path));
-                    }
-                }
-                if (deletedFiles.Any())
-                {
-                    foreach (var deletedFile in deletedFiles)
-                    {
-                        TracksCollection.Elements.Remove(deletedFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Some error occured while renaming, deleting or editting the modified files.", ex);
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
-            }
-        }
-
-        public async static Task PerformWatcherWorkAsync(StorageFolder folder)
-        {
-            StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions("datemodified:>" + SharedLogic.SettingsVm.TimeOpened));
-            var files = await modifiedqueryResult.GetFilesAsync();
-            if (await modifiedqueryResult.GetItemCountAsync() > 0)
-            {
-                await AddStorageFilesToLibraryAsync(await modifiedqueryResult.GetFilesAsync());
-            }
-            //since there were no modifed files returned yet the event was raised, this means that some file was renamed or deleted. To acknowledge that change we need to reload everything in the modified folder
-            else
-            {
-                //this is the query result which we recieve after querying in the folder
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
-                files = await queryResult.GetFilesAsync();
-                RenameAddOrDeleteFiles(files);
-            }
-        }
-
-
-
-        #endregion
+        
 
         #endregion
 
@@ -737,15 +625,6 @@ namespace BreadPlayer.ViewModels
                 {
                     await LockscreenHelper.ResetLockscreenImage();
                 }
-            }
-        }
-
-        private bool _isLibraryLoading;
-        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
-        {
-            if (!_isLibraryLoading)
-            {
-                await PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
             }
         }
         #endregion

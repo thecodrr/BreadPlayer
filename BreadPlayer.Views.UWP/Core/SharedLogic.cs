@@ -317,12 +317,11 @@ namespace BreadPlayer.Core
                 return false;
             }
 
-            using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
-            {
-                SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
-                service.AddMediafile(file);
-                return true;
-            }
+            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText"));
+
+            SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
+            service.AddMediafile(file);
+            return true;
         }
         public static async Task<bool> RemoveMediafile(Mediafile file)
         {
@@ -330,13 +329,10 @@ namespace BreadPlayer.Core
             {
                 return false;
             }
-
-            using (var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText")))
-            {
-                SettingsViewModel.TracksCollection.Elements.Remove(file);
-                await service.RemoveMediafile(file);
-                return true;
-            }
+            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText"));
+            SettingsViewModel.TracksCollection.Elements.Remove(file);
+            await service.RemoveMediafile(file);
+            return true;
         }
         public static bool VerifyFileExists(string path, int timeout)
         {

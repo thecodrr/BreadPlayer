@@ -48,32 +48,5 @@ namespace BreadPlayer.Common
 
             return options;
         }
-        public static async Task<List<StorageFile>> GetModifiedFiles(IEnumerable<StorageFolder> folderCollection, string timeModified)
-        {
-            List<StorageFile> modifiedFiles = new List<StorageFile>();        
-            foreach (var folder in folderCollection)
-            {
-                StorageFileQueryResult modifiedqueryResult = folder.CreateFileQueryWithOptions(GetQueryOptions("datemodified:> " + timeModified));
-                if (await modifiedqueryResult.GetItemCountAsync() > 0)
-                {
-                    modifiedFiles.AddRange(await modifiedqueryResult.GetFilesAsync());
-                }
-            }
-            return modifiedFiles;
-        }
-        public async static void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
-        {
-            foreach (var folder in folderCollection)
-            {
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(GetQueryOptions());
-                var files = await queryResult.GetItemCountAsync();
-                queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
-            }
-        }
-
-        private async static void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
-        {
-            await SettingsViewModel.PerformWatcherWorkAsync(sender.Folder).ConfigureAwait(false);
-        }
     }
 }
