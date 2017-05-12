@@ -12,19 +12,12 @@
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
     MinWidth="{Binding ElementName=DuplicatesDialog1, Path=DialogWidth, UpdateSourceTrigger=Explicit}">
-    <ContentDialog.Resources>
-        <ResourceDictionary>         
-            <Style TargetType="ListViewItem" x:Key="CenterAlignedStyle">
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            </Style>
-        </ResourceDictionary>
-    </ContentDialog.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <CheckBox Content="Select All" HorizontalAlignment="Right" Click="CheckBox_Click"/>
-        <ListView x:Name="listView" Grid.Row="1" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Center" IsMultiSelectCheckBoxEnabled="True" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}"/>
+        <ListView x:Name="listView" Grid.Row="1" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Center" IsMultiSelectCheckBoxEnabled="True" SelectionMode="Multiple" Margin="10,0" ItemsSource="{Binding ElementName=DuplicatesDialog1, Path=Duplicates}" DisplayMemberPath="Title" />
     </Grid>
 </ContentDialog>

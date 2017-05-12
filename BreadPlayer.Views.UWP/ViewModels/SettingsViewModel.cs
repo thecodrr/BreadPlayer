@@ -519,7 +519,7 @@ namespace BreadPlayer.ViewModels
 
                     await LibraryService.AddMediafiles(tempList);
                     await TracksCollection.AddRange(tempList).ConfigureAwait(false);
-                    //await DeleteDuplicates(tempList).ConfigureAwait(false);
+                    await DeleteDuplicates(tempList).ConfigureAwait(false);
 
                     AlbumArtistViewModel vm = new AlbumArtistViewModel();
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
@@ -540,7 +540,8 @@ namespace BreadPlayer.ViewModels
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var duplicateFiles = source.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
+                var sourceList = source.ToList();
+                var duplicateFiles = sourceList.Where(s => sourceList.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
                 if (duplicateFiles.Count() > 0)
                 {
                     await ShowMessageBox(async selectedDuplicates =>
@@ -595,7 +596,7 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 100;
+                    dialog.DialogWidth = 600;
                 }
 
                 var result = await dialog.ShowAsync();

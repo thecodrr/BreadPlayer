@@ -25,6 +25,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.Extensions
 {
@@ -151,13 +152,13 @@ namespace BreadPlayer.Extensions
                 BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
             }
         }
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             try
             {
                 if (_isObserving)
                 {
-                    base.OnCollectionChanged(e);
+                    await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () => base.OnCollectionChanged(e));
                 }
             }
             catch (Exception ex)
@@ -166,13 +167,13 @@ namespace BreadPlayer.Extensions
                 Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             try
             {
                 if (_isObserving)
                 {
-                    base.OnPropertyChanged(e);
+                    await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () => base.OnPropertyChanged(e));
                 }
             }
             catch (Exception ex)

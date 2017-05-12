@@ -137,7 +137,6 @@ namespace SplitViewMenu
 
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var menu = (SplitViewMenu)d;
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemsSource = e.NewValue;
@@ -145,7 +144,6 @@ namespace SplitViewMenu
         }
         private static void OnBottomNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var menu = (SplitViewMenu)d;
             if (_navBottomMenuListView != null)
             {
                 _navBottomMenuListView.ItemsSource = e.NewValue;
@@ -153,7 +151,6 @@ namespace SplitViewMenu
         }
         private static void OnPlaylistsItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var menu = (SplitViewMenu)d;
             if (_playlistsMenuListView != null)
             {
                 _playlistsMenuListView.ItemsSource = e.NewValue;
@@ -173,6 +170,7 @@ namespace SplitViewMenu
             _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
+            await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemInvoked += OnNavMenuItemInvoked;
@@ -190,11 +188,7 @@ namespace SplitViewMenu
                 _playlistsMenuListView.ItemInvoked += OnNavMenuItemInvoked;
                 _playlistsMenuListView.ContainerContentChanging += OnContainerContextChanging;
                 _playlistsMenuListView.SelectionChanged += _playlistsMenuListView_SelectionChanged; ;
-            }
-            if (_backButton != null)
-            {
-                _backButton.Click += OnBackButtonClick;
-            }
+            }        
             if (_searchBox != null)
             {
                 _searchBox.TextChanged += _searchBox_TextChanged;
@@ -204,7 +198,6 @@ namespace SplitViewMenu
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
-            await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
         }
 
         private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

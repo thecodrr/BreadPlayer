@@ -14,10 +14,7 @@
      xmlns:Extensions="using:BreadPlayer.Extensions"
     mc:Ignorable="d">
     <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Themes/GridView.xaml"/>
-            </ResourceDictionary.MergedDictionaries>           
+        <ResourceDictionary>                
             <DataTemplate x:Key="MobileSelectedTemplate" x:DataType="models:Album">
                 <Grid x:Name="LayoutRoot" Width="130" Height="200"  Background="Transparent">
                     <Grid.RowDefinitions>

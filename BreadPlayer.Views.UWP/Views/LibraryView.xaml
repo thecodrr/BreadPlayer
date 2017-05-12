@@ -187,8 +187,6 @@
                             </Core:EventTriggerBehavior>
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <Core:EventTriggerBehavior.Actions>
-                                    <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-                                    Command="{Binding Path=PlayCommand}"/>
                                     <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
                                 </Core:EventTriggerBehavior.Actions>
                             </Core:EventTriggerBehavior>
@@ -228,7 +226,7 @@
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
                     </ToggleButton>
-                    <StackPanel x:Name="ButtonsStack" Grid.Column="1" Width="100" HorizontalAlignment="Right" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Height="50" VerticalAlignment="Stretch" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
+                    <StackPanel x:Name="ButtonsStack" Grid.Column="1" Width="100" HorizontalAlignment="Right" Visibility="Collapsed" Height="50" VerticalAlignment="Stretch" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
                         <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
                                           Width="50" Visibility="Visible"
                                           VerticalAlignment="Stretch" Background="Transparent"
@@ -300,8 +298,6 @@
                             </Core:EventTriggerBehavior>
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <Core:EventTriggerBehavior.Actions>
-                                    <Core:InvokeCommandAction  CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-                                    Command="{Binding Path=PlayCommand}"/>
                                     <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
                                 </Core:EventTriggerBehavior.Actions>
                             </Core:EventTriggerBehavior>
@@ -406,8 +402,8 @@
                     <VisualState.Setters>
                         <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
                         
-                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
-                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>
+                        <!--<Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
+                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>-->
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>
@@ -430,7 +426,19 @@
        
         <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
-                <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" ReorderMode="Enabled" OddRowBackground="{ThemeResource OddRowBackground}" EvenRowBackground="{ThemeResource EvenRowBackground}"  AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True" Behaviours:ListViewService.FocusBeforeSelect="True" SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IncrementalLoadingThreshold="20" IncrementalLoadingTrigger="Edge" DataFetchSize="20" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
+                <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" 
+                                                   ReorderMode="Enabled" OddRowBackground="{ThemeResource OddRowBackground}" 
+                                                   EvenRowBackground="{ThemeResource EvenRowBackground}"  
+                                                   AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True"
+                                                   Behaviours:ListViewService.FocusBeforeSelect="True" 
+                                                   SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" 
+                                                   SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                   IncrementalLoadingThreshold="10" 
+                                                   IncrementalLoadingTrigger="Edge" 
+                                                   DataFetchSize="10" 
+                                                   ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                                   ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" 
+                                                   Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
                     <BPControls:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">

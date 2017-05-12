@@ -31,18 +31,7 @@ namespace BreadPlayer.Dialogs
         }
         public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
         "DialogWidth", typeof(double), typeof(DuplicatesDialog), new PropertyMetadata(null, (sender, e) => 
-        {
-            var dialog = sender as DuplicatesDialog;
-            var width = (double)e.NewValue;
-            if (width < 501)
-            {
-                dialog.listView.ItemContainerStyle = dialog.Resources["CenterAlignedStyle"] as Style;
-                dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedMobileTemplate"] as DataTemplate;
-            }
-            else
-            {
-                dialog.listView.ItemTemplate = Application.Current.Resources["MediafileUnselectedTemplate"] as DataTemplate;
-            }
+        {            
         }));
         public double DialogWidth
         {
