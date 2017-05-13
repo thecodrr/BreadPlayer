@@ -150,7 +150,8 @@ namespace BreadPlayer.Database
               ReinitEngine();
               using (var tran = _engine.GetTransaction())
               {
-                  tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                  tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
+
                   record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
                   tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
                       {
@@ -181,7 +182,8 @@ namespace BreadPlayer.Database
                 {
                     if (records.Any())
                     {
-                        tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
+                       
+                        tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
 
                         foreach (var record in records.ToList())
                         {
@@ -229,7 +231,6 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                     var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id));
                     if (row.Exists)
                     {
@@ -252,8 +253,7 @@ namespace BreadPlayer.Database
         {
             using (var tran = _engine.GetTransaction())
             {
-                tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
-                foreach (var data in records)
+               foreach (var data in records)
                 {
                     var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id));
                     if (row.Exists)
@@ -275,7 +275,6 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                     tran.ObjectRemove(_tableName, 1.ToIndex(record.Id));
                     //remove from text engine too
                     tran.TextRemove(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
@@ -290,8 +289,7 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
-
+                    
                     foreach (var data in records)
                     {
                         tran.ObjectRemove(_tableName, 1.ToIndex(data.Id));
@@ -314,7 +312,7 @@ namespace BreadPlayer.Database
                 var recordList = new List<T>();
                 using (var tran = _engine.GetTransaction())
                 {
-                    foreach (var record in tran.SelectForwardFromTo<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true, 1.ToIndex(toId), true))
+                    foreach (var record in tran.SelectForwardStartFrom<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true))
                     {
                         recordList.Add(record.ObjectGet<T>().Entity);
                     }
