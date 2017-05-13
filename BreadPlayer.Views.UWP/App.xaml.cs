@@ -34,6 +34,7 @@ using BreadPlayer.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
+using BreadPlayer.Core;
 
 namespace BreadPlayer
 {
@@ -81,16 +82,19 @@ namespace BreadPlayer
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
+            BLogger.Logger.Debug("Volume: " + SharedLogic.Player.Volume);
+            BLogger.Logger.Debug("PlayerState: " + SharedLogic.Player.PlayerState);
+            BLogger.Logger.Debug("MuteState: " + SharedLogic.Player.IsVolumeMuted);
             BLogger.Logger.Info("App left background and is now in foreground...");
             deferral.Complete();
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {
+        {           
             var deferral = e.GetDeferral();
+            BLogger.Logger.Info("App has entered background...");
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc();
-            BLogger.Logger.Info("App has entered background...");
             deferral.Complete();
         }
 
@@ -137,12 +141,15 @@ namespace BreadPlayer
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            await LockscreenHelper.ResetLockscreenImage();
-            _sessionWatch?.Stop();
-            CoreWindowLogic.DisposeObjects();
-            BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
-            CoreWindowLogic.SaveSettings();
-            await Task.Delay(500);
+            BLogger.Logger.Debug(sender.ToString());
+           // CoreWindowLogic.KeepState();
+           // //await LockscreenHelper.ResetLockscreenImage();
+           // _sessionWatch?.Stop();         
+           // //CoreWindowLogic.DisposeObjects();
+           // BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
+           //// CoreWindowLogic.KeepState();
+           // CoreWindowLogic.SaveSettings();
+           // await Task.Delay(500);
             deferral.Complete();
         }
 
@@ -174,11 +181,11 @@ namespace BreadPlayer
                     // Create a Frame to act as the navigation context
                     rootFrame = new Frame();
                   //  BLogger.Logger.Info("New frame created.");
-                    if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
-                    {
-                        //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
-                        //TODO: Load state from previously suspended application
-                    }
+                    //if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
+                    //{
+                    //    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
+                    //    //TODO: Load state from previously suspended application
+                    //}
                   
                     
                     rootFrame.NavigationFailed += OnNavigationFailed;

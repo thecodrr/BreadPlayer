@@ -118,6 +118,8 @@ namespace BreadPlayer
                 _player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
                 _player.CommandManager.IsEnabled = false;
                 _player.IsLoopingEnabled = true;
+                _player.SystemMediaTransportControls.IsEnabled = true;
+                _player.SystemMediaTransportControls.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
                 _player.Source = MediaSource.CreateFromStorageFile(file);
                 _player.Play();
             }
@@ -156,7 +158,7 @@ namespace BreadPlayer
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             _smtc.DisplayUpdater.ClearAll();
             if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {              
+            {               
                 musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
                 musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
@@ -166,6 +168,17 @@ namespace BreadPlayer
                 }
             }
             _smtc.DisplayUpdater.Update();
+            BLogger.Logger.Debug("Volume: " + SharedLogic.Player.Volume);
+            BLogger.Logger.Debug("PlayerState: " + SharedLogic.Player.PlayerState);
+            BLogger.Logger.Debug("MuteState: " + SharedLogic.Player.IsVolumeMuted);
+        }
+        public static void KeepState()
+        {
+            _player.Pause();
+            _player.Play();
+            SharedLogic.Player.Pause();
+            SharedLogic.Player.Play();
+            BLogger.Logger?.Info("state has been kept.");
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {

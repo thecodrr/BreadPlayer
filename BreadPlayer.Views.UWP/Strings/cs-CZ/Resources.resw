@@ -1,0 +1,599 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aboutPivot.Header" xml:space="preserve">
+    <value>O aplikaci</value>
+  </data>
+  <data name="addSomeSongsBtn.Content" xml:space="preserve">
+    <value>Přidat písně</value>
+  </data>
+  <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vložit písně z knihovny</value>
+  </data>
+  <data name="albumsHeader.Text" xml:space="preserve">
+    <value>Chleby</value>
+  </data>
+  <data name="appearenceHeader.Text" xml:space="preserve">
+    <value>Vzhled</value>
+  </data>
+  <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>vrátit se do seznamu</value>
+  </data>
+  <data name="byEmailHeader.Text" xml:space="preserve">
+    <value>Emailem:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byGithubHeader.Text" xml:space="preserve">
+    <value>Podle Github:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byStoreHeader.Text" xml:space="preserve">
+    <value>Pomocí Store:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="changeAccentCheckBox.Content" xml:space="preserve">
+    <value>Změna barvy akcentu podle alba</value>
+  </data>
+  <data name="changeAccentHelpText.Text" xml:space="preserve">
+    <value>Povolením tohoto nastavení je přehrávač schopen přizpůsobit barvu podle alba aktuálně přehrávané skladby.</value>
+  </data>
+  <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
+    <value>Změnit Album Art</value>
+  </data>
+  <data name="contactUsHereHeader.Text" xml:space="preserve">
+    <value>Kontaktujte nás zde:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="contributorsHeader.Text" xml:space="preserve">
+    <value>Přispěvatelé</value>
+  </data>
+  <data name="creditsHeader.Text" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
+    <value>Smazat z playlist</value>
+  </data>
+  <data name="deletePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Smazat playlist</value>
+  </data>
+  <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Zakázání vícenásobného výběru</value>
+  </data>
+  <data name="enableBlurCheckBox.Content" xml:space="preserve">
+    <value>Aktivovat Blur</value>
+  </data>
+  <data name="enableBlurHelpText.Text" xml:space="preserve">
+    <value>Blur je náročný na výkon a proto jej nedoporučujeme na méně výkonných zařízeních.</value>
+  </data>
+  <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
+    <value>Equalizer vypnut</value>
+  </data>
+  <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
+    <value>Equalizer zapnut</value>
+  </data>
+  <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Povolit výběr více položek</value>
+  </data>
+  <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknutím přejdete na naši Facebook stránku.</value>
+  </data>
+  <data name="favoritesMenuItem.Label" xml:space="preserve">
+    <value>Oblínené Toasty</value>
+  </data>
+  <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejděte na své oblíbené toasty.</value>
+  </data>
+  <data name="fontCapsHelpText.Text" xml:space="preserve">
+    <value>Tímhle se změní velikost textu v uživatelském rozhraní.</value>
+  </data>
+  <data name="fontCapsOptionFirst" xml:space="preserve">
+    <value>Normální</value>
+  </data>
+  <data name="fontCapsOptionSecond" xml:space="preserve">
+    <value>Vše velkými písmy</value>
+  </data>
+  <data name="fontCapsText.Text" xml:space="preserve">
+    <value>Výběr písma:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="generalPivot.Header" xml:space="preserve">
+    <value>Všeobecné</value>
+  </data>
+  <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klepnutím přejdete na naši stránku na github.</value>
+  </data>
+  <data name="importFolderBtn.Content" xml:space="preserve">
+    <value>Importovat složky do knihovny</value>
+  </data>
+  <data name="importHelpText.Text" xml:space="preserve">
+    <value>Podporované soubory jsou: MP3, WAV, OGG, FLAC, M4A, AIF, WMA</value>
+  </data>
+  <data name="importPlaylistBtn.Content" xml:space="preserve">
+    <value>Importovat PlayList</value>
+  </data>
+  <data name="importPlaylistHelpText.Text" xml:space="preserve">
+    <value>Podporované PlayListy jsou M3U and PLS.</value>
+  </data>
+  <data name="importShowMoreLabel.Text" xml:space="preserve">
+    <value>Zobrazit více</value>
+  </data>
+  <data name="importToastsHeader.Text" xml:space="preserve">
+    <value>Importovat Toasty</value>
+  </data>
+  <data name="lastfmCredit.Text" xml:space="preserve">
+    <value>Last.fm pro umělce &amp;amp; album info.</value>
+  </data>
+  <data name="lastfmLoginBtn.Content" xml:space="preserve">
+    <value>Přihlášení</value>
+  </data>
+  <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Přihlaste se k účtu Last.fm</value>
+  </data>
+  <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Zadejte své heslo k Last.fm zde...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmPasswordTextBlock.Text" xml:space="preserve">
+    <value>Heslo:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Zadejte své uživatelské jméno z Last.fm Zde...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.Text" xml:space="preserve">
+    <value>Uživatelské jméno:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="leaveReviewBtn.Content" xml:space="preserve">
+    <value>Zanechat recenzi</value>
+  </data>
+  <data name="libraryPivot.Header" xml:space="preserve">
+    <value>Knihovna</value>
+  </data>
+  <data name="licenseHeader.Text" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="licenseText" xml:space="preserve">
+    <value>This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</value>
+    <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
+  </data>
+  <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Přidejte tento přípitek do seznamu skladeb nebo do fronty </value>
+  </data>
+  <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Přehrát Toasty</value>
+  </data>
+  <data name="lockscreenHeader.Text" xml:space="preserve">
+    <value>Lockscreen</value>
+  </data>
+  <data name="loggedInStatus" xml:space="preserve">
+    <value>Přihlášen</value>
+  </data>
+  <data name="loggedOutStatus" xml:space="preserve">
+    <value>Odhlášen</value>
+  </data>
+  <data name="lonelyTextBlock.Text" xml:space="preserve">
+    <value>Nic zde není :(</value>
+  </data>
+  <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klepnutím  pošlete e-mail.</value>
+  </data>
+  <data name="mostEatenMenuItem.Label" xml:space="preserve">
+    <value>Nejvíce Jezené</value>
+  </data>
+  <data name="mostEatenMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejít na nejvíce jezené toasty.</value>
+  </data>
+  <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ZTLUMIT</value>
+  </data>
+  <data name="myBakeriesMenuItem.Label" xml:space="preserve">
+    <value>Moje pekárna</value>
+  </data>
+  <data name="myBakeriesMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejít do pekárny(SoundCloud, Last.fm etc.).</value>
+  </data>
+  <data name="myBreadsMenuItem.Label" xml:space="preserve">
+    <value>Můj Chleba</value>
+  </data>
+  <data name="myBreadsMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejděte k vašim chlébům breads.</value>
+  </data>
+  <data name="nowBakingMenuItem.Label" xml:space="preserve">
+    <value>nyní se peče</value>
+  </data>
+  <data name="nowBakingMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejít k právě pečeným toastům.</value>
+  </data>
+  <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otevřete soubor, který chcete přehrát</value>
+  </data>
+  <data name="openSongLocationMenuItem.Text" xml:space="preserve">
+    <value>Otevřít polohu toastu</value>
+  </data>
+  <data name="personalizationPivot.Header" xml:space="preserve">
+    <value>Přizpůsobení</value>
+  </data>
+  <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zobrazit více možností.</value>
+  </data>
+  <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Přehrát všechny toasty v tomhle PlayListu</value>
+  </data>
+  <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
+    <value> Přehrát vše</value>
+    <comment>(Respect the whitespace at the beginning.)</comment>
+  </data>
+  <data name="playMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="preventScreenLockingCheckBox.Content" xml:space="preserve">
+    <value>Zabránit uzamčení obrazovky.</value>
+  </data>
+  <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
+    <value>Tato funkce je extrémně náročná na spotřebu energie.</value>
+  </data>
+  <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
+    <value>Aktivace této funkce zabrání uzamčení obrazovky po pravidelných intervalech.</value>
+  </data>
+  <data name="propertiesMenuItem.Text" xml:space="preserve">
+    <value>Vlastnosti</value>
+  </data>
+  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
+    <value>Nedávno přidané</value>
+  </data>
+  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejděte k nově přidaným toastům.</value>
+  </data>
+  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
+    <value>Nedávno jedené</value>
+  </data>
+  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejít na nedávno přehrané skladby.</value>
+  </data>
+  <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknutím přejdete do našeho reddit profilu.</value>
+  </data>
+  <data name="relocateSongMenuItem.Text" xml:space="preserve">
+    <value>přemístit</value>
+  </data>
+  <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Přejmenovat playlist.</value>
+  </data>
+  <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
+    <value>Nahradit Lockscreen obrázkem alba.</value>
+  </data>
+  <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
+    <value>Ujistěte se, že pozadí Lockscreen bude automaticky resetován po ukončení aplikace.</value>
+  </data>
+  <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
+    <value>Nahradit pozadí LockScreen aktuálně přehrávaným albem.</value>
+  </data>
+  <data name="reportIssueBtn.Content" xml:space="preserve">
+    <value>Nahlásit problém</value>
+  </data>
+  <data name="requestFeatureBtn.Content" xml:space="preserve">
+    <value>Požádejte o funkci</value>
+  </data>
+  <data name="resetEverythingBtn.Content" xml:space="preserve">
+    <value>Obnov vše</value>
+  </data>
+  <data name="resetEverythingHelpText.Text" xml:space="preserve">
+    <value>Tím se obnoví knihovna, seznamy skladeb, nastavení, historie přehrávání atd.</value>
+  </data>
+  <data name="resetHeader.Text" xml:space="preserve">
+    <value>Restart aplikace BreadPlayer</value>
+  </data>
+  <data name="sendFeedbackBtn.Content" xml:space="preserve">
+    <value>Poslat feedback</value>
+  </data>
+  <data name="settingsMenuItem.Label" xml:space="preserve">
+    <value>Nastavení</value>
+  </data>
+  <data name="settingsMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejděte do nastavení.</value>
+  </data>
+  <data name="showEqualizerBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ukázat Equalizer</value>
+  </data>
+  <data name="showMoreBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zobrazit více možností nastavení</value>
+  </data>
+  <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zamíchat</value>
+  </data>
+  <data name="songsHeader.Text" xml:space="preserve">
+    <value>Toasty</value>
+  </data>
+  <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
+    <value>Přestát hrát až tohle skončí</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Tmavý</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Světlý</value>
+  </data>
+  <data name="themeHelpText.Text" xml:space="preserve">
+    <value>Změna tématu vyžaduje reset aplikace.</value>
+  </data>
+  <data name="themeText.Text" xml:space="preserve">
+    <value>Téma:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
+    <value>Kolekce</value>
+  </data>
+  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
+    <value>Přejděte do kolekce.</value>
+  </data>
+  <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknutím vstopíte na náš Tweeter.</value>
+  </data>
+  <data name="version.Text" xml:space="preserve">
+    <value>v2.3.0-beta</value>
+    <comment>Představujeme aktuální verzi přehrávače</comment>
+  </data>
+  <data name="versionHeader.Text" xml:space="preserve">
+    <value>Version</value>
+    <comment>Představuje záhlaví verze</comment>
+  </data>
+  <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hlasitost</value>
+  </data>
+  <data name="albumRetryText.Text" xml:space="preserve">
+    <value>Načítání se nepovedlo. Zkuste to prosím znovu.</value>
+  </data>
+  <data name="albumTracksPivot.Header" xml:space="preserve">
+    <value>Toustový chléb</value>
+  </data>
+  <data name="artistBioPivot.Header" xml:space="preserve">
+    <value>Biografie</value>
+  </data>
+  <data name="artistRetryText.Text" xml:space="preserve">
+    <value>Nepodařilo se načíst biografii. Prosím, opakujte.</value>
+  </data>
+  <data name="correctAlbumTextBox.PlaceholderText" xml:space="preserve">
+    <value>Zadejte správné skladby...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="correctArtistNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Zadejte správného pekaře...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="goBackBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zpět na předchozí stránku.</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="lyricsText.Text" xml:space="preserve">
+    <value>Podpora synchronizovaných textů brzy!</value>
+  </data>
+  <data name="nowPlayingPivot.Header" xml:space="preserve">
+    <value>Nyní pečeme</value>
+  </data>
+  <data name="retryBtn.Content" xml:space="preserve">
+    <value>znovu</value>
+  </data>
+  <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ukázat pečicících toastů.</value>
+  </data>
+  <data name="addToFavCmd.Text" xml:space="preserve">
+    <value>Přidat do oblíbených</value>
+  </data>
+  <data name="basicCommandsHeader.Text" xml:space="preserve">
+    <value>Základní příkazy</value>
+  </data>
+  <data name="basicCommandsInfo.Text" xml:space="preserve">
+    <value>Tyto příkazy budou fungovat všude.</value>
+  </data>
+  <data name="commandsHeader.Text" xml:space="preserve">
+    <value>Příkazy</value>
+  </data>
+  <data name="contactUsPivot.Header" xml:space="preserve">
+    <value>Kontaktuj nás</value>
+  </data>
+  <data name="deleteSongCmd.Text" xml:space="preserve">
+    <value>Smazat toast</value>
+  </data>
+  <data name="helpfulLinksHeader.Text" xml:space="preserve">
+    <value>Užitečné odkazy</value>
+  </data>
+  <data name="keyBindingsHeader.Text" xml:space="preserve">
+    <value>Klíčové vázání</value>
+  </data>
+  <data name="keyBindingsPivot.Header" xml:space="preserve">
+    <value>Klíčové vázání</value>
+  </data>
+  <data name="muteCmd.Text" xml:space="preserve">
+    <value>Ztlumit</value>
+  </data>
+  <data name="nextCmd.Text" xml:space="preserve">
+    <value>Další</value>
+  </data>
+  <data name="openFileCmd.Text" xml:space="preserve">
+    <value>Otevřít složku</value>
+  </data>
+  <data name="playPauseCmd.Text" xml:space="preserve">
+    <value>Play/Pauza</value>
+  </data>
+  <data name="playSongCmd.Text" xml:space="preserve">
+    <value>Přehrát píseň</value>
+  </data>
+  <data name="prevCmd.Text" xml:space="preserve">
+    <value>Předchozí</value>
+  </data>
+  <data name="repeatCmd.Text" xml:space="preserve">
+    <value>Opakovat</value>
+  </data>
+  <data name="seekBackwardCmd.Text" xml:space="preserve">
+    <value>Vyhledejte dozadu</value>
+  </data>
+  <data name="seekForwardCmd.Text" xml:space="preserve">
+    <value>Vyhledejte dopředu</value>
+  </data>
+  <data name="showEQCmd.Text" xml:space="preserve">
+    <value>Zobrazit Equalizer</value>
+  </data>
+  <data name="showPropsCmd.Text" xml:space="preserve">
+    <value>Zobrazit Vlastnosti</value>
+  </data>
+  <data name="showTagsCmd.Text" xml:space="preserve">
+    <value>Zobrazit Tagy</value>
+  </data>
+  <data name="shuffleCmd.Text" xml:space="preserve">
+    <value>Zymíchat</value>
+  </data>
+  <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
+    <value>Příkazy knihovny</value>
+  </data>
+  <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
+    <value>Tyto příkazy budou fungovat pouze při soustředění toastu.</value>
+  </data>
+  <data name="volDownCmd.Text" xml:space="preserve">
+    <value>Snížit hlasitost</value>
+  </data>
+  <data name="volUpCmd.Text" xml:space="preserve">
+    <value>Zvýšit hlasitost</value>
+  </data>
+  <data name="contributeCodeBtn.Content" xml:space="preserve">
+    <value>Contribute Code</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="contributePivot.Header" xml:space="preserve">
+    <value>Contribute</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="helpTranslateBtn.Content" xml:space="preserve">
+    <value>Help Us Translate</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="testForUsBtn.Content" xml:space="preserve">
+    <value>Become A Beta Tester</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+</root>
