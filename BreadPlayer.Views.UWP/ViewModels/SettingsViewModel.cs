@@ -650,24 +650,30 @@ namespace BreadPlayer.ViewModels
                                 }
                             }
                             else
-                            {
+                            {                                
                                 int successCount = 0;
                                 List<Mediafile> ChangedMediafiles = new List<Mediafile>();
                                 //if it's a folder, get all elements in that folder and change their directory
                                 foreach (var mediaFile in await LibraryService.Query(item.PreviousPath))
                                 {
                                     var libraryMediafile = TracksCollection.Elements.First(t => t.Path == mediaFile.Path);
-                                    mediaFile.FolderPath = item.Path;
-                                    mediaFile.Path = Path.Combine(item.Path, mediaFile.OrginalFilename);
+                                    //if the mediaFile is in a subfolder
+
+                                    //change the subfolder path.
+                                    mediaFile.FolderPath = mediaFile.FolderPath.Replace(item.PreviousPath, item.Path);
+                                    mediaFile.Path = mediaFile.Path.Replace(item.PreviousPath, item.Path);
+
+                                    //verify that the new path exists before updating.
                                     if (SharedLogic.VerifyFileExists(mediaFile.Path, 200))
                                     {
-                                        successCount++;                                                                              
+                                        successCount++;
 
                                         //add to the list so we can update in bulk (it's faster that way.)
                                         ChangedMediafiles.Add(mediaFile);
-                                    
+
                                         libraryMediafile.Path = mediaFile.Path;
                                     }
+
                                 }
                                 if(successCount > 0)
                                 {
@@ -703,7 +709,10 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-       
+        private bool IsDirectDescendant(string folderPath, string filePath)
+        {
+            return Path.GetDirectoryName(filePath) == folderPath;
+        }
         #endregion
 
     }
