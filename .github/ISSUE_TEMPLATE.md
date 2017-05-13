@@ -16,7 +16,6 @@ _[Write in detail what you were expecting from BreadPlayer when the problem occu
 1. 
 2. 
 3.
-...
 
 ### General Information:
 1. Bread Player Version:
