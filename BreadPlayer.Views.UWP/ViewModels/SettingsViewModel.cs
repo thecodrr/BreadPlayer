@@ -633,11 +633,11 @@ namespace BreadPlayer.ViewModels
                         //NOTE: ChangeType for a file replaced is also this.
                         //TODO: Add logic for a file that is replaced.
                         case StorageLibraryChangeType.Deleted:
-                            await item.RemoveItem(TracksCollection.Elements);
+                            await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
                             //file was moved or renamed.
                             //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
-                        case StorageLibraryChangeType.MovedOrRenamed:
+                            case StorageLibraryChangeType.MovedOrRenamed:
                             if (item.IsOfType(StorageItemTypes.File))
                             {
                                 if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
@@ -650,44 +650,14 @@ namespace BreadPlayer.ViewModels
                                 }
                             }
                             else
-                            {                                
-                                int successCount = 0;
-                                List<Mediafile> ChangedMediafiles = new List<Mediafile>();
-                                //if it's a folder, get all elements in that folder and change their directory
-                                foreach (var mediaFile in await LibraryService.Query(item.PreviousPath))
-                                {
-                                    var libraryMediafile = TracksCollection.Elements.First(t => t.Path == mediaFile.Path);
-                                    //if the mediaFile is in a subfolder
-
-                                    //change the subfolder path.
-                                    mediaFile.FolderPath = mediaFile.FolderPath.Replace(item.PreviousPath, item.Path);
-                                    mediaFile.Path = mediaFile.Path.Replace(item.PreviousPath, item.Path);
-
-                                    //verify that the new path exists before updating.
-                                    if (SharedLogic.VerifyFileExists(mediaFile.Path, 200))
-                                    {
-                                        successCount++;
-
-                                        //add to the list so we can update in bulk (it's faster that way.)
-                                        ChangedMediafiles.Add(mediaFile);
-
-                                        libraryMediafile.Path = mediaFile.Path;
-                                    }
-
-                                }
-                                if(successCount > 0)
-                                {
-                                    //update in bulk.
-                                    LibraryService.UpdateMediafiles<Mediafile>(ChangedMediafiles);
-
-                                    await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
-                                }
+                            {
+                                await item.RenameFolder(TracksCollection.Elements, LibraryService);
                             }
                             break;
                             //this is almost never invoked but just in case,
                             //we implement RemoveItem logic here.
                         case StorageLibraryChangeType.MovedOutOfLibrary:
-                            await item.RemoveItem(TracksCollection.Elements);
+                            await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
                             //this is also never invoked but just in case,
                             //we implement AddNewItem logic here.
