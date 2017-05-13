@@ -248,18 +248,22 @@ namespace BreadPlayer.Database
             });
         }
 
-        public void UpdateRecords(IEnumerable<IDbRecord> records)
+        public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
         {
             using (var tran = _engine.GetTransaction())
             {
                 tran.SynchronizeTables("Tracks", "TracksText", "Playlists", "Albums", "AlbumsText", "PlaylistsText", "PlaylistSongs", "PlaylistSongsText");
                 foreach (var data in records)
                 {
-                    var ord = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id)).ObjectGet<IDbRecord>();
-                    ord.Entity = data;
-                    ord.NewEntity = false;
-                    ord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
-                    tran.ObjectInsert(_tableName, ord, true);
+                    var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id));
+                    if (row.Exists)
+                    {
+                        var getRecord = row.ObjectGet<T>();
+                        getRecord.Entity = (T)data;
+                        getRecord.NewEntity = false;
+                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
+                        tran.ObjectInsert(_tableName, getRecord, true);                        
+                    }
                 }
                 tran.Commit();
             }

@@ -605,7 +605,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
-        {
+        {  
             //tell the reader that we accept the changes
             //so that the same files are not served to us again.
             await (sender as StorageLibraryChangeTracker).GetChangeReader().AcceptChangesAsync();
@@ -613,6 +613,7 @@ namespace BreadPlayer.ViewModels
             //check if there are any updated items.
             if (e.UpdatedItems != null && e.UpdatedItems.Any())
             {
+              
                 foreach (var item in e.UpdatedItems)
                 {
                     //sometimes, the breadplayer log is also included in updated files,
@@ -642,7 +643,38 @@ namespace BreadPlayer.ViewModels
                                 if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
                                 {
                                     renamedItem.Path = item.Path;
-                                    await LibraryService.UpdateMediafile(renamedItem);
+                                    if(await LibraryService.UpdateMediafile(renamedItem))
+                                    {
+                                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", renamedItem.Path), 5);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                int successCount = 0;
+                                List<Mediafile> ChangedMediafiles = new List<Mediafile>();
+                                //if it's a folder, get all elements in that folder and change their directory
+                                foreach (var mediaFile in await LibraryService.Query(item.PreviousPath))
+                                {
+                                    var libraryMediafile = TracksCollection.Elements.First(t => t.Path == mediaFile.Path);
+                                    mediaFile.FolderPath = item.Path;
+                                    mediaFile.Path = Path.Combine(item.Path, mediaFile.OrginalFilename);
+                                    if (SharedLogic.VerifyFileExists(mediaFile.Path, 200))
+                                    {
+                                        successCount++;                                                                              
+
+                                        //add to the list so we can update in bulk (it's faster that way.)
+                                        ChangedMediafiles.Add(mediaFile);
+                                    
+                                        libraryMediafile.Path = mediaFile.Path;
+                                    }
+                                }
+                                if(successCount > 0)
+                                {
+                                    //update in bulk.
+                                    LibraryService.UpdateMediafiles<Mediafile>(ChangedMediafiles);
+
+                                    await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
                                 }
                             }
                             break;

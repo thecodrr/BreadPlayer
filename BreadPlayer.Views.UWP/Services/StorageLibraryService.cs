@@ -28,7 +28,7 @@ namespace BreadPlayer.Services
 
             //run a timer every five seconds to check for updated files
             _updateTimer = new DispatcherTimer();
-            _updateTimer.Interval = TimeSpan.FromMinutes(1);
+            _updateTimer.Interval = TimeSpan.FromSeconds(5);
             _updateTimer.Start();
             _updateTimer.Tick += _updateTimer_Tick;
         }

@@ -41,9 +41,9 @@ namespace BreadPlayer.Database
         {
             return await Database.UpdateRecordAsync(data, data.Id);
         }
-        public void UpdateMediafiles(IEnumerable<Mediafile> data)
+        public void UpdateMediafiles<T>(IEnumerable<Mediafile> data)
         {
-            Database.UpdateRecords(data);
+            Database.UpdateRecords<T>(data);
         }
         public void RemoveFolder(string folderPath)
         {

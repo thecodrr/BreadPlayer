@@ -45,6 +45,8 @@ namespace BreadPlayer.Extensions
         {
             if (change.IsOfType(StorageItemTypes.File))
             {
+                if (await change.GetStorageItemAsync() == null)
+                    return;
                 if (IsItemPotentialMediafile(await change.GetStorageItemAsync()))
                 {
                     var newFile = await SharedLogic.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
