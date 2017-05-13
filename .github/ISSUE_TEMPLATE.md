@@ -1,10 +1,3 @@
-
-#### General Information:
-1. Bread Player Version:
-2. Device Type:
-3. OS Version:
-4. Device Model:
-
 ### Actual Behaviour:
 
 #### What Happened?
@@ -23,6 +16,13 @@
 1. First Step here
 2. Second step here
 3. and so on...
+
+
+### General Information:
+1. Bread Player Version:
+2. Device Type:
+3. OS Version:
+4. Device Model:
 
 ### Additional Comments:
 [Any additional information to help us hunt down and fix the bug?]
