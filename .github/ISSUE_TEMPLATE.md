@@ -1,22 +1,22 @@
 ### Actual Behaviour:
 
 #### What Happened?
-[Write detailed explaination of what actually happened. Did the app crash? Did the app hang? etc.]
+_[Write detailed explaination of what actually happened. Did the app crash? Did the app hang? etc.]_
 
 #### How it happened?
-[Write detailed explaination of how the problem occured. What were you doing? When did it happen? etc.]
+_[Write detailed explaination of how the problem occured. What were you doing? When did it happen? etc.]_
 
 ### Expected Behaviour:
 
 #### What were you expecting?
-[Write in detail what you were expecting from BreadPlayer when the problem occured.]
+_[Write in detail what you were expecting from BreadPlayer when the problem occured.]_
 
 ### Steps to reproduce the bug:
 
-1. First Step here
-2. Second step here
-3. and so on...
-
+1. 
+2. 
+3.
+...
 
 ### General Information:
 1. Bread Player Version:
@@ -25,4 +25,4 @@
 4. Device Model:
 
 ### Additional Comments:
-[Any additional information to help us hunt down and fix the bug?]
+_[Any additional information to help us hunt down and fix the bug?]_
