@@ -679,10 +679,6 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        private bool IsDirectDescendant(string folderPath, string filePath)
-        {
-            return Path.GetDirectoryName(filePath) == folderPath;
-        }
         #endregion
 
     }
