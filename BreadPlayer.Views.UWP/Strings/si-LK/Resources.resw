@@ -160,10 +160,10 @@
     <value>ඔබට මෙහිදීද අප හා සම්බන්ධ විය හැකිය:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="contributorsHeader" xml:space="preserve">
+  <data name="contributorsHeader.Text" xml:space="preserve">
     <value>දායක වූවෝ</value>
   </data>
-  <data name="creditsHeader" xml:space="preserve">
+  <data name="creditsHeader.Text" xml:space="preserve">
     <value>ස්තුතිය.</value>
   </data>
   <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
@@ -236,7 +236,7 @@
   <data name="importToastsHeader.Text" xml:space="preserve">
     <value>ටෝස්ට් ආයාත කරන්න.</value>
   </data>
-  <data name="lastfmCredit" xml:space="preserve">
+  <data name="lastfmCredit.Text" xml:space="preserve">
     <value>කලාකරුවා සහ ඇල්බමය තොරතුරු සඳහා - Last.fm</value>
   </data>
   <data name="lastfmLoginBtn.Content" xml:space="preserve">
@@ -267,10 +267,10 @@
   <data name="libraryPivot.Header" xml:space="preserve">
     <value>ගීත ගොනු ගබඩාව.</value>
   </data>
-  <data name="licenseHeader" xml:space="preserve">
+  <data name="licenseHeader.Text" xml:space="preserve">
     <value>බලපත්රය</value>
   </data>
-  <data name="licenseText" xml:space="preserve">
+  <data name="licenseText.Text" xml:space="preserve">
     <value>This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -457,7 +457,7 @@
     <value>v2.3.0-බීටා</value>
     <comment>represents current version of Bread Player</comment>
   </data>
-  <data name="versionHeader" xml:space="preserve">
+  <data name="versionHeader.Text" xml:space="preserve">
     <value>පිටපත</value>
     <comment>represents the version header</comment>
   </data>
@@ -580,5 +580,21 @@
   </data>
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>ශබ්දය වැඩි කරන්න</value>
+  </data>
+  <data name="contributeCodeBtn.Content" xml:space="preserve">
+    <value>ප්‍රභවය කේතනය කිරීමට දායක වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="contributePivot.Header" xml:space="preserve">
+    <value>දායක වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="helpTranslateBtn.Content" xml:space="preserve">
+    <value>පරිවර්තනයට සහය වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="testForUsBtn.Content" xml:space="preserve">
+    <value>බීටා තත්ව පරීක්ෂකයෙක් වන්න</value>
+    <comment>!!!NEW!!!</comment>
   </data>
 </root>
