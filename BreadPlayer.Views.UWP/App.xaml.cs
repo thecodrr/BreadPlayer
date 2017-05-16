@@ -143,6 +143,7 @@ namespace BreadPlayer
             _sessionWatch?.Stop();
             BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
+            CoreWindowLogic.DisposeObjects();
             await Task.Delay(500);
             deferral.Complete();
         }

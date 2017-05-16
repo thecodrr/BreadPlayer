@@ -15,50 +15,54 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Storage;
-using BreadPlayer.Core;
-using Windows.Media;
-using Windows.UI.Notifications;
-using Windows.Storage.AccessCache;
-using Windows.Media.Playback;
-using Windows.Foundation.Metadata;
-using Windows.Media.Core;
-using BreadPlayer.Common;
+using System.Net;
+using Windows.ApplicationModel;
 using Windows.Data.Xml.Dom;
+using Windows.Foundation.Metadata;
+using Windows.Media;
+using Windows.Media.Core;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
-using System.IO;
-using BreadPlayer.ViewModels;
+using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Messengers;
+using BreadPlayer.ViewModels;
 
 namespace BreadPlayer
 {
     public class CoreWindowLogic
     {
         #region Fields
-        private const string pathKey = "path";
-        private const string posKey = "position";
-        private const string volKey = "volume";
-        private const string foldersKey = "folders";
-        private const string timeclosedKey = "timeclosed";
-        static SystemMediaTransportControls _smtc;
-        static string path = "";
+        private const string PathKey = "path";
+        private const string PosKey = "position";
+        private const string VolKey = "volume";
+        private const string FoldersKey = "folders";
+        private const string TimeclosedKey = "timeclosed";
+        private static SystemMediaTransportControls _smtc;
+        private static string _path = "";
         #endregion
 
         #region Load/Save Logic
         public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            var volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
+            var volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                path = RoamingSettingsHelper.GetSetting<string>(pathKey, "");
-                string folders = RoamingSettingsHelper.GetSetting<string>(foldersKey, "");
-                folders.Split('|').ToList().ForEach(async (str) =>
+                _path = RoamingSettingsHelper.GetSetting<string>(PathKey, "");
+                string folders = RoamingSettingsHelper.GetSetting<string>(FoldersKey, "");
+                folders.Split('|').ToList().ForEach(async str =>
                 {
                     if (!string.IsNullOrEmpty(str))
                     {
@@ -67,14 +71,14 @@ namespace BreadPlayer
                     }
                 });
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-                if (path != "" && SharedLogic.VerifyFileExists(path, 300))
+                if (_path != "" && SharedLogic.VerifyFileExists(_path, 300))
                 {
-                    double position = RoamingSettingsHelper.GetSetting<double>(posKey, 0);
+                    double position = RoamingSettingsHelper.GetSetting<double>(PosKey, 0);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
                     try
                     {
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgExecuteCmd,
-                            new List<object> { await StorageFile.GetFileFromPathAsync(path), position, play, volume });
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
+                            new List<object> { await StorageFile.GetFileFromPathAsync(_path), position, play, volume });
                     }
                     catch (UnauthorizedAccessException ex)
                     {
@@ -88,25 +92,35 @@ namespace BreadPlayer
         {
             if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
             {
-                ApplicationData.Current.RoamingSettings.Values[pathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
-                ApplicationData.Current.RoamingSettings.Values[posKey] = SharedLogic.Player.Position;
+                ApplicationData.Current.RoamingSettings.Values[PathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
+                ApplicationData.Current.RoamingSettings.Values[PosKey] = SharedLogic.Player.Position;
             }
-            ApplicationData.Current.RoamingSettings.Values[volKey] = SharedLogic.Player.Volume;
-            ApplicationData.Current.RoamingSettings.Values[timeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            ApplicationData.Current.RoamingSettings.Values[VolKey] = SharedLogic.Player.Volume;
+            ApplicationData.Current.RoamingSettings.Values[TimeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
             string folderPaths = "";
-            SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-            if (!string.IsNullOrEmpty(folderPaths))
-                ApplicationData.Current.RoamingSettings.Values[foldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+            SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
+            if(!string.IsNullOrEmpty(folderPaths))
+            {
+                ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+            }
         }
         #endregion
 
         #region SystemMediaTransportControls Methods/Events
-        static MediaPlayer player;
-        public static void InitSmtc()
+
+        private static MediaPlayer _player;
+        public async static void InitSmtc()
         {
-            player = new MediaPlayer();
-            player.CommandManager.IsEnabled = false;
-            //player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                var file = await (await Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                _player = new MediaPlayer();
+                _player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
+                _player.CommandManager.IsEnabled = false;
+                _player.IsLoopingEnabled = true;
+                _player.Source = MediaSource.CreateFromStorageFile(file);
+                _player.Play();
+            }
             _smtc = SystemMediaTransportControls.GetForCurrentView();
             _smtc.ButtonPressed += _smtc_ButtonPressed;
             _smtc.IsEnabled = true;
@@ -117,64 +131,65 @@ namespace BreadPlayer
             _smtc.IsPreviousEnabled = true;
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
+
+
             SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (sender.PlaybackState == MediaPlaybackState.Paused)
                 {
-                    Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgExecuteCmd, "PlayPause");
+                    BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                 }
             });
         }
 
         public async static void UpdateSmtc()
         {
-            if (_smtc == null) return;
+            if (_smtc == null)
+            {
+                return;
+            }
 
             _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             _smtc.DisplayUpdater.ClearAll();
             if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {
-                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                {
-                    var oldVol =SharedLogic.Player.Volume;
-                    var file = await (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
-                    player.IsLoopingEnabled = true;
-                    player.Source = MediaSource.CreateFromStorageFile(file);
-                    player.Play();
-                    player.Volume = 0;
-                    SharedLogic.Player.Volume = 50;
-                }
+            {               
                 musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
                 musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
                 if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+                {
                     _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
-                else
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/albumart.png"));
+                }
             }
             _smtc.DisplayUpdater.Update();
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            //we do not want to pause the background player.
+            //pausing may cause stutter, that's why.
+            _player.Play();
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 switch (args.Button)
                 {
                     case SystemMediaTransportControlsButton.Play:
                     case SystemMediaTransportControlsButton.Pause:
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgExecuteCmd, "PlayPause");
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                         break;
                     case SystemMediaTransportControlsButton.Next:
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgExecuteCmd, "PlayNext");
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayNext");
                         break;
                     case SystemMediaTransportControlsButton.Previous:
-                        Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgExecuteCmd, "PlayPrevious");
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPrevious");
                         break;
                     default:
                         break;
@@ -184,26 +199,22 @@ namespace BreadPlayer
         private static void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
             if (_smtc == null)
+            {
                 return;
+            }
 
             switch (e.NewState)
             {
                 case PlayerState.Playing:
+                    _player?.Play();
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                    //if (_smtc.IsEnabled == false)
-                    //{
-                    //    if (update)
-                    //    {
-                    //        UpdateSmtc(true);
-                    //        update = false;
-                    //        player.Pause();
-                    //    }
-                    //}
                     break;
                 case PlayerState.Paused:
+                    BLogger.Logger?.Info("state has been changed to paused.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                     break;
                 case PlayerState.Stopped:
+                    BLogger.Logger?.Info("state has been changed to stopped.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                     break;
                 default:
@@ -213,9 +224,14 @@ namespace BreadPlayer
         #endregion
 
         #region CoreWindow Dispose Methods
-        public void DisposeObjects()
+        public static void DisposeObjects()
         {
+            //SharedLogic.SettingsVm.TimeClosed = DateTime.Now.ToString();
             SharedLogic.Player.Dispose();
+            BLogger.Logger.Info("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
+            BLogger.Logger.Info("Application is being suspended, disposing everything.");
+            _player?.Dispose();
+            Messenger.Instance.NotifyColleagues(MessageTypes.MsgDispose);
         }
         #endregion
 
@@ -240,18 +256,18 @@ namespace BreadPlayer
         {
             try
             {
-                string title = System.Net.WebUtility.HtmlEncode(mediaFile.Title);
-                string artist = System.Net.WebUtility.HtmlEncode(mediaFile.LeadArtist);
-                string album = System.Net.WebUtility.HtmlEncode(mediaFile.Album);
+                string title = WebUtility.HtmlEncode(mediaFile.Title);
+                string artist = WebUtility.HtmlEncode(mediaFile.LeadArtist);
+                string album = WebUtility.HtmlEncode(mediaFile.Album);
                 string albumart = string.IsNullOrEmpty(mediaFile.AttachedPicture) ? "Assets/Square44x44Logo.scale-400.png" : mediaFile.AttachedPicture;
                 string xml = "<tile> <visual displayName=\"Now Playing\" branding=\"nameAndLogo\">" +
                     "<binding template=\"TileSmall\"> <image placement=\"background\" src=\"" + albumart + "\"/> </binding>" +
                     "<binding template=\"TileMedium\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"50\"/> <text hint-style=\"body\" hint-wrap=\"true\">{0}</text> <text hint-style=\"caption\">{1}</text> <text hint-style=\"captionSubtle\">{2}</text> </binding>" +
                     "<binding template=\"TileWide\" hint-textStacking=\"center\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"70\"/> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text></binding>" +
                     "<binding template=\"TileLarge\"> <image placement=\"background\" src=\"" + mediaFile.AttachedPicture + "\" hint-overlay=\"80\"/> <group> <subgroup hint-weight=\"1\"/> <subgroup hint-weight=\"2\"> <image src=\"" + mediaFile.AttachedPicture + "\" hint-crop=\"circle\"/> </subgroup> <subgroup hint-weight=\"1\"/> </group> <text hint-style=\"subtitle\" hint-align=\"center\">{0}</text> <text hint-style=\"body\" hint-align=\"center\">{1}</text> <text hint-style=\"caption\" hint-align=\"center\">{2}</text> </binding> </visual> </tile>";
-                var formattedXML = string.Format(xml, title, artist, album);
+                var formattedXml = string.Format(xml, title, artist, album);
                 XmlDocument doc = new XmlDocument();
-                doc.LoadXml(formattedXML);
+                doc.LoadXml(formattedXml);
                 var notification = new TileNotification(doc);
                 TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
             }
@@ -265,14 +281,17 @@ namespace BreadPlayer
         public CoreWindowLogic()
         {
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
+            {
                 StorageApplicationPermissions.FutureAccessList.Clear();
+            }
+
             InitSmtc();
-            SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(volKey, 50.0);
+            SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
             Window.Current.SizeChanged += Current_SizeChanged;
-            var vm = (App.Current.Resources["AccountsVM"] as AccountsViewModel);
+            var vm = (Application.Current.Resources["AccountsVM"] as AccountsViewModel);
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             InitializeCore.IsMobile = e.Size.Width <= 600;
         }

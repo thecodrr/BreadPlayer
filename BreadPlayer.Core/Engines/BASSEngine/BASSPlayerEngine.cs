@@ -57,13 +57,14 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 {
                     Bass.UpdatePeriod = 230;
                     Bass.Start();
-                    //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
-                    //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
+
                     if (isMobile)
                     {
+                        //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
+                        //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
                         NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
-                    }
-
+                    }                   
+                    Bass.Configure(Configuration.IncludeDefaultDevice, true);
                     Bass.Init();
                     //Effect = new Effects();
                 }
@@ -164,8 +165,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Paused));
             await Task.Run(async () =>
             {
-                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, 0, 700);
-                await Task.Delay(700);
+                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, 0, 500);
+                await Task.Delay(500);
                 Bass.ChannelPause(_handle);
                 //var vol = (float)Volume / 100f;
                 //Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, vol);
@@ -183,7 +184,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, 0f);
                 Bass.ChannelPlay(_handle);
                 var vol = (float)Volume / 100f;
-                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 3000);
+                Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 1000);
                 PlayerState = PlayerState.Playing;
             });
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));

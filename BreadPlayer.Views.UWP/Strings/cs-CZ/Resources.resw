@@ -581,19 +581,19 @@
     <value>Zvýšit hlasitost</value>
   </data>
   <data name="contributeCodeBtn.Content" xml:space="preserve">
-    <value>Contribute Code</value>
+    <value>Pomoc s programováním</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="contributePivot.Header" xml:space="preserve">
-    <value>Contribute</value>
+    <value>Přispět</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="helpTranslateBtn.Content" xml:space="preserve">
-    <value>Help Us Translate</value>
+    <value>Pomoz s překladem</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="testForUsBtn.Content" xml:space="preserve">
-    <value>Become A Beta Tester</value>
+    <value>Staň se beta testerem</value>
     <comment>!!!NEW!!!</comment>
   </data>
 </root>
