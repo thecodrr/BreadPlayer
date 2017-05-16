@@ -1,0 +1,600 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aboutPivot.Header" xml:space="preserve">
+    <value>පිළිබඳ.</value>
+  </data>
+  <data name="addSomeSongsBtn.Content" xml:space="preserve">
+    <value>ගීත එකතු කරන්න.</value>
+  </data>
+  <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ඔබගේ ගීත ගබඩාවට ගීත ආයාත කරන්න.</value>
+  </data>
+  <data name="albumsHeader.Text" xml:space="preserve">
+    <value>බ්‍රෙඩ්ස්.</value>
+  </data>
+  <data name="appearenceHeader.Text" xml:space="preserve">
+    <value>පෙනුම.</value>
+  </data>
+  <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ටෝස්ට් ලැයිස්තුව වෙත ආපසු යන්න.</value>
+  </data>
+  <data name="byEmailHeader.Text" xml:space="preserve">
+    <value>ඊ-මේල් මගින්:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byGithubHeader.Text" xml:space="preserve">
+    <value>ගිට් හබ්  මගින්:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="byStoreHeader.Text" xml:space="preserve">
+    <value>ගබඩාව මගින්:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="changeAccentCheckBox.Content" xml:space="preserve">
+    <value>ඇල්බම් චිත්‍රය අනුව වර්ණ පැහැය වෙනස් කිරීම </value>
+  </data>
+  <data name="changeAccentHelpText.Text" xml:space="preserve">
+    <value>මෙය සක්රිය කිරීමෙන් දැනට වාදනය වන ගීතයේ ඇල්බමයේ චිත්‍රය අනුව ප්ලේයරයේ වර්ණ පැහැ අනුවර්තනය කරයි.</value>
+  </data>
+  <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
+    <value>ඇල්බම් චිත්‍රය වෙනස් කිරීම</value>
+  </data>
+  <data name="contactUsHereHeader.Text" xml:space="preserve">
+    <value>ඔබට මෙහිදීද අප හා සම්බන්ධ විය හැකිය:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="contributorsHeader.Text" xml:space="preserve">
+    <value>දායක වූවෝ</value>
+  </data>
+  <data name="creditsHeader.Text" xml:space="preserve">
+    <value>ස්තුතිය.</value>
+  </data>
+  <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
+    <value>ගීත ධාවන ලැයිස්තුවෙන් මකන්න.</value>
+  </data>
+  <data name="deletePlaylistMenuItem.Text" xml:space="preserve">
+    <value>ගීත ධාවන ලැයිස්තුව මකන්න.</value>
+  </data>
+  <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>බහු තේරීම් අක්රීය කරන්න.</value>
+  </data>
+  <data name="enableBlurCheckBox.Content" xml:space="preserve">
+    <value>බ්ලර් සක්රිය කරන්න.</value>
+  </data>
+  <data name="enableBlurHelpText.Text" xml:space="preserve">
+    <value>බ්ලර් අධිකව ක්‍රියාත්මක වේ. එය අඩු ශක්ති උපකරණ මත පාවිච්චිය අනුමත නොකරයි. ප්රවේශමෙන් භාවිතා කරන්න.</value>
+  </data>
+  <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
+    <value>සුසර කරවනය ක්‍රියාවිරහිතයි.</value>
+  </data>
+  <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
+    <value>සුසර කරවනය ක්‍රියාත්මකයි.</value>
+  </data>
+  <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>බහු තේරීම් සක්‍රිය කරන්න.</value>
+  </data>
+  <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>අපගේ ෆේස්බුක් පිටුව වෙත යන්න ක්ලික් කරන්න.</value>
+  </data>
+  <data name="favoritesMenuItem.Label" xml:space="preserve">
+    <value>ප්‍රියතම ටෝස්ට්.</value>
+  </data>
+  <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
+    <value>ඔබගේ ප්‍රියතම ටෝස්ට් වෙත යොමු වන්න.</value>
+  </data>
+  <data name="fontCapsHelpText.Text" xml:space="preserve">
+    <value>මෙය පරිශීලක අතුරු මුහුණතේ අකුරු මහප්‍රාණ කරන්න.</value>
+  </data>
+  <data name="fontCapsOptionFirst" xml:space="preserve">
+    <value>සාමාන්ය.</value>
+  </data>
+  <data name="fontCapsOptionSecond" xml:space="preserve">
+    <value>සියල්ල මහප්‍රාණ.</value>
+  </data>
+  <data name="fontCapsText.Text" xml:space="preserve">
+    <value>අකුරු මහප්‍රාණ කිරීම:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="generalPivot.Header" xml:space="preserve">
+    <value>පොදු</value>
+  </data>
+  <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>අපගේ ගිට් හබ් ව්යාපෘති පිටුව යන්න ක්ලික් කරන්න.</value>
+  </data>
+  <data name="importFolderBtn.Content" xml:space="preserve">
+    <value>ෆොල්ඩර් ගීත ගොනුවට ආයාත කිරීම.</value>
+  </data>
+  <data name="importHelpText.Text" xml:space="preserve">
+    <value>ආයාත කල ෆයිල් වර්ග: MP3, WAV, OGG, FLAC, M4A, AIF, WMA</value>
+  </data>
+  <data name="importPlaylistBtn.Content" xml:space="preserve">
+    <value>ගීත ධාවන ලැයිස්තු ආයාත කිරීම.</value>
+  </data>
+  <data name="importPlaylistHelpText.Text" xml:space="preserve">
+    <value>සහාය ධාවන ලැයිස්තුව M3U හා PLS.</value>
+  </data>
+  <data name="importShowMoreLabel.Text" xml:space="preserve">
+    <value>තව පෙන්වන්න</value>
+  </data>
+  <data name="importToastsHeader.Text" xml:space="preserve">
+    <value>ටෝස්ට් ආයාත කරන්න.</value>
+  </data>
+  <data name="lastfmCredit.Text" xml:space="preserve">
+    <value>කලාකරුවා සහ ඇල්බමය තොරතුරු සඳහා - Last.fm</value>
+  </data>
+  <data name="lastfmLoginBtn.Content" xml:space="preserve">
+    <value>ඇතුල් වන්න</value>
+  </data>
+  <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Last.fm ගිණුමට ඇතුල් වන්න</value>
+  </data>
+  <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ඔබේ Last.fm මුරපදය ඇතුල් කරන්න...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmPasswordTextBlock.Text" xml:space="preserve">
+    <value>මුරපදය:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ඔබේ Last.fm පරිශීලක නාමය ඇතුල් කරන්න...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.Text" xml:space="preserve">
+    <value>පරිශීලක නාමය:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="leaveReviewBtn.Content" xml:space="preserve">
+    <value>සමාලෝචනයක් තබන්න.</value>
+  </data>
+  <data name="libraryPivot.Header" xml:space="preserve">
+    <value>ගීත ගොනු ගබඩාව.</value>
+  </data>
+  <data name="licenseHeader.Text" xml:space="preserve">
+    <value>බලපත්රය</value>
+  </data>
+  <data name="licenseText.Text" xml:space="preserve">
+    <value>This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</value>
+    <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
+  </data>
+  <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>මෙම ටෝස්ටය ගීත ගොනුවට හෝ බේකින් පේලියට එක් කරන්න.</value>
+  </data>
+  <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ටෝස්ටය වාදනය කරන්න</value>
+  </data>
+  <data name="lockscreenHeader.Text" xml:space="preserve">
+    <value>තිරය අගුලු දමන්න.</value>
+  </data>
+  <data name="loggedInStatus" xml:space="preserve">
+    <value>ලොගින් වී සිටී.</value>
+  </data>
+  <data name="loggedOutStatus" xml:space="preserve">
+    <value>ලොග්ඩ් අවුට් වී සිටී.</value>
+  </data>
+  <data name="lonelyTextBlock.Text" xml:space="preserve">
+    <value>මෙහි පාළුයි :(</value>
+  </data>
+  <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>අපට තැපැල් කිරීමට ක්ලික් කරන්න.</value>
+  </data>
+  <data name="mostEatenMenuItem.Label" xml:space="preserve">
+    <value>බොහෝ අනුභවයට ගත් දේ.</value>
+  </data>
+  <data name="mostEatenMenuItem.Tooltip" xml:space="preserve">
+    <value>ඔබ වඩාත්ම අනුභවයට ගත් ටෝස්ට.</value>
+  </data>
+  <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ශබ්දය වසන්න</value>
+  </data>
+  <data name="myBakeriesMenuItem.Label" xml:space="preserve">
+    <value>මාගේ බේකරි.</value>
+  </data>
+  <data name="myBakeriesMenuItem.Tooltip" xml:space="preserve">
+    <value>මාගේ බේකරි සඳහා යොමු වන්න. (SoundCloud, Last.fm ....).</value>
+  </data>
+  <data name="myBreadsMenuItem.Label" xml:space="preserve">
+    <value>මාගේ බ්‍රෙඩ්ස්.</value>
+  </data>
+  <data name="myBreadsMenuItem.Tooltip" xml:space="preserve">
+    <value>මාගේ බ්‍රෙඩ්ස් සඳහා යොමු වන්න.</value>
+  </data>
+  <data name="nowBakingMenuItem.Label" xml:space="preserve">
+    <value>දැන් බේක් වන</value>
+  </data>
+  <data name="nowBakingMenuItem.Tooltip" xml:space="preserve">
+    <value>දැන් බේක් වන සඳහා දේ සඳහා යොමු  වන්න.</value>
+  </data>
+  <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>වාදනය සඳහා ගොනුව විවෘත කරන්න.</value>
+  </data>
+  <data name="openSongLocationMenuItem.Text" xml:space="preserve">
+    <value>ටෝස්ට ඇති ස්ථානය විවෘත කරන්න.</value>
+  </data>
+  <data name="personalizationPivot.Header" xml:space="preserve">
+    <value>පුද්ගලාරෝපණය.</value>
+  </data>
+  <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
+    <value>වඩා විකල්ප පෙන්වන්න.</value>
+  </data>
+  <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>මෙම ලැයිස්තුවේ ඇති සියල්ල එකට වාදනය කරන්න.</value>
+  </data>
+  <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
+    <value>සියල්ල එකට වාදනය කරන්න.</value>
+    <comment>(Respect the whitespace at the beginning.)</comment>
+  </data>
+  <data name="playMenuItem.Text" xml:space="preserve">
+    <value>වාදනය කරන්න.</value>
+  </data>
+  <data name="preventScreenLockingCheckBox.Content" xml:space="preserve">
+    <value>තිරය වැසීම වැළැක්වීම.</value>
+  </data>
+  <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
+    <value>මෙම ලක්ෂණය ඉතා බැටරි පරිභෝජනය වන නිසා වැඩසටහන් හරහා දිගින් දිගටම කිරීම සුදුසු නැත..</value>
+  </data>
+  <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
+    <value>මෙය සක්රිය කිරීමෙන් ක්රමවත් කාල අන්තරයකට පසු මෙහෙයුම් පද්ධතිය මගින් තිරය අගුලු වැටීම වළක්වා ඇත.</value>
+  </data>
+  <data name="propertiesMenuItem.Text" xml:space="preserve">
+    <value>ප්‍රොපර්ටීස්</value>
+  </data>
+  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
+    <value>මෑතකදී එකතු කරන ලද</value>
+  </data>
+  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
+    <value>මෑතකදී එකතු කරන ලද ඒවාට යොමු වන්න.</value>
+  </data>
+  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
+    <value>මෑතකදී අනුභව කරන ලද</value>
+  </data>
+  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
+    <value>මෑතකදී වාදනය කරන ලද ගීත වලට යොමු වන්න.</value>
+  </data>
+  <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>අපගේ Reddit ගිණුම වෙත යන්න ක්ලික් කරන්න.</value>
+  </data>
+  <data name="relocateSongMenuItem.Text" xml:space="preserve">
+    <value>ටෝස්ට නැවත ස්ථානගත කිරීම.</value>
+  </data>
+  <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
+    <value>ගීතධාවන ලැයිස්තුව නැවත නම් කරන්න.</value>
+  </data>
+  <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
+    <value>ඇල්බම් චිත්‍රය සමඟ අගුලු තිරය වෝල් පේපර් එක ආදේශ කරන්න.</value>
+  </data>
+  <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
+    <value>ඔබේ අගුලු තිරය වෝල් පේපර් ස්වයංක්රීයව නැවත සකස් කරන බව සහතික වන්න..</value>
+  </data>
+  <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
+    <value>මෙය දැනට වාදනය කරන ඇල්බමයේ චිත්‍රය සමඟ අගුලු තිරය වෝල් පේපරය වෙනස් වනු ඇත.</value>
+  </data>
+  <data name="reportIssueBtn.Content" xml:space="preserve">
+    <value>ප්රශ්නයක් වාර්තා කරන්න.</value>
+  </data>
+  <data name="requestFeatureBtn.Content" xml:space="preserve">
+    <value>විශේෂාංග ඉල්ලා සිටින්න.</value>
+  </data>
+  <data name="resetEverythingBtn.Content" xml:space="preserve">
+    <value>හැම දෙයක්ම යළි පිහිටුවන්න.</value>
+  </data>
+  <data name="resetEverythingHelpText.Text" xml:space="preserve">
+    <value>මෙම ඔබේ පුස්තකාලයේ, ගීත ධාවන ලැයිස්තුව, සැකසුම්, ගීත ධාවන ඉතිහාසය නැවත සකස් කරනු ඇත</value>
+  </data>
+  <data name="resetHeader.Text" xml:space="preserve">
+    <value>BreadPlayer යළි පිහිටුවන්න</value>
+  </data>
+  <data name="sendFeedbackBtn.Content" xml:space="preserve">
+    <value>අදහස් යවන්න.</value>
+  </data>
+  <data name="settingsMenuItem.Label" xml:space="preserve">
+    <value>සැකසුම්</value>
+  </data>
+  <data name="settingsMenuItem.Tooltip" xml:space="preserve">
+    <value>ඔබගේ BreadPlayer සැකසීම් වෙත යොමු වන්න.</value>
+  </data>
+  <data name="showEqualizerBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>සුසර කරවනය පෙන්වන්න.</value>
+  </data>
+  <data name="showMoreBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>තවත් විකල්ප පෙන්වන්න.</value>
+  </data>
+  <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>කලවම් කරන්න</value>
+  </data>
+  <data name="songsHeader.Text" xml:space="preserve">
+    <value>ටෝස්ට</value>
+  </data>
+  <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
+    <value>මෙම ටෝස්ටයෙන් පසු වාදනය නතර කරන්න.</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
+    <value>අඳුරු</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OnContent" xml:space="preserve">
+    <value>ආලෝකමත්</value>
+  </data>
+  <data name="themeHelpText.Text" xml:space="preserve">
+    <value>තේමාව වෙනස් කිරීම පරිගණකය වසා දැමීම අවශ්ය වේ.</value>
+  </data>
+  <data name="themeText.Text" xml:space="preserve">
+    <value>තේමාව:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
+    <value>ටෝස්ට එකතුව.</value>
+  </data>
+  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
+    <value>ටෝස්ට එකතුව වෙත යොමුවන්න.</value>
+  </data>
+  <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>අපගේ ට්විටර් ගිණුම වෙත යන්න ක්ලික් කරන්න.</value>
+  </data>
+  <data name="version.Text" xml:space="preserve">
+    <value>v2.3.0-බීටා</value>
+    <comment>represents current version of Bread Player</comment>
+  </data>
+  <data name="versionHeader.Text" xml:space="preserve">
+    <value>පිටපත</value>
+    <comment>represents the version header</comment>
+  </data>
+  <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ශබ්දය</value>
+  </data>
+  <data name="albumRetryText.Text" xml:space="preserve">
+    <value>බ්‍රෙඩ් ටෝස්ට් ලබා ගැනීමට අසමත් විය. නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="albumTracksPivot.Header" xml:space="preserve">
+    <value>බ්‍රෙඩ් ටෝස්ට්.</value>
+  </data>
+  <data name="artistBioPivot.Header" xml:space="preserve">
+    <value>බේකර් චරිතාපදානය.</value>
+  </data>
+  <data name="artistRetryText.Text" xml:space="preserve">
+    <value>බේකර් චරිතාපදානය ලබා ගැනීමට අසමත් විය. නැවත උත්සාහ කරන්න.</value>
+  </data>
+  <data name="correctAlbumTextBox.PlaceholderText" xml:space="preserve">
+    <value>මෙහි නිවැරදි ගීත ඇල්බමය ඇතුලත් කරන්න...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="correctArtistNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>මෙහි නිවැරදි ටෝස්ට් බේකරය ඇතුලත් කරන්න...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="goBackBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>නැවත පෙර පිටුවට යන්න.</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>ගී පද</value>
+  </data>
+  <data name="lyricsText.Text" xml:space="preserve">
+    <value>ළඟදීම සමමුහුර්ත පද රචනය සඳහා සහයෝගය! භුක්ති විඳින්න.</value>
+  </data>
+  <data name="nowPlayingPivot.Header" xml:space="preserve">
+    <value>දැන් බේක් වන</value>
+  </data>
+  <data name="retryBtn.Content" xml:space="preserve">
+    <value>නැවත උත්සාහ කරන්න</value>
+  </data>
+  <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>දැන් බේක් වන ටෝස්ට ලැයිස්තුව පෙන්වන්න.</value>
+  </data>
+  <data name="addToFavCmd.Text" xml:space="preserve">
+    <value>ප්‍රියතමයන්ට එකතු කරන්න.</value>
+  </data>
+  <data name="basicCommandsHeader.Text" xml:space="preserve">
+    <value>මූලික විධාන.</value>
+  </data>
+  <data name="basicCommandsInfo.Text" xml:space="preserve">
+    <value>මෙම විධානයන් සෑම තැනකම සිට වැඩ කරනු ඇත.</value>
+  </data>
+  <data name="commandsHeader.Text" xml:space="preserve">
+    <value>විධානයන්</value>
+  </data>
+  <data name="contactUsPivot.Header" xml:space="preserve">
+    <value>අප හා සම්බන්ධ වන්න</value>
+  </data>
+  <data name="deleteSongCmd.Text" xml:space="preserve">
+    <value>ගීතය මකන්න.</value>
+  </data>
+  <data name="helpfulLinksHeader.Text" xml:space="preserve">
+    <value>උපකාරවත් වෙබ් අඩවි.</value>
+  </data>
+  <data name="keyBindingsHeader.Text" xml:space="preserve">
+    <value>යතුරු සන්යෝජන</value>
+  </data>
+  <data name="keyBindingsPivot.Header" xml:space="preserve">
+    <value>යතුරු සන්යෝජන</value>
+  </data>
+  <data name="muteCmd.Text" xml:space="preserve">
+    <value>වසන්න</value>
+  </data>
+  <data name="nextCmd.Text" xml:space="preserve">
+    <value>ඊලඟ</value>
+  </data>
+  <data name="openFileCmd.Text" xml:space="preserve">
+    <value>ගොනුව විවෘත කරන්න.</value>
+  </data>
+  <data name="playPauseCmd.Text" xml:space="preserve">
+    <value>වාදනය කරන්න/
+විරාමයක්</value>
+  </data>
+  <data name="playSongCmd.Text" xml:space="preserve">
+    <value>ගීතයක් වාදනය කරන්න.</value>
+  </data>
+  <data name="prevCmd.Text" xml:space="preserve">
+    <value>පෙර</value>
+  </data>
+  <data name="repeatCmd.Text" xml:space="preserve">
+    <value>නැවත කිරීම</value>
+  </data>
+  <data name="seekBackwardCmd.Text" xml:space="preserve">
+    <value>පිටුපසට අන්වේෂණය කරන්න.</value>
+  </data>
+  <data name="seekForwardCmd.Text" xml:space="preserve">
+    <value>ඉදිරිපසට අන්වේෂණය කරන්න.</value>
+  </data>
+  <data name="showEQCmd.Text" xml:space="preserve">
+    <value>සුසර කරවනය පෙන්වන්න.</value>
+  </data>
+  <data name="showPropsCmd.Text" xml:space="preserve">
+    <value>ප්‍රොපර්ටීස් පෙන්වන්න</value>
+  </data>
+  <data name="showTagsCmd.Text" xml:space="preserve">
+    <value>ටැග පෙන්වන්න</value>
+  </data>
+  <data name="shuffleCmd.Text" xml:space="preserve">
+    <value>කලවම් කරන්න</value>
+  </data>
+  <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
+    <value>ටෝස්ට ගොනු විධානයන්.</value>
+  </data>
+  <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
+    <value>මෙම විධානයන් වැඩ කරනු ඇත්තේ ටෝස්ට අවධානය වූ විට පමණි.</value>
+  </data>
+  <data name="volDownCmd.Text" xml:space="preserve">
+    <value>ශබ්දය අඩු කරන්න</value>
+  </data>
+  <data name="volUpCmd.Text" xml:space="preserve">
+    <value>ශබ්දය වැඩි කරන්න</value>
+  </data>
+  <data name="contributeCodeBtn.Content" xml:space="preserve">
+    <value>ප්‍රභවය කේතනය කිරීමට දායක වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="contributePivot.Header" xml:space="preserve">
+    <value>දායක වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="helpTranslateBtn.Content" xml:space="preserve">
+    <value>පරිවර්තනයට සහය වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="testForUsBtn.Content" xml:space="preserve">
+    <value>බීටා තත්ව පරීක්ෂකයෙක් වන්න</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+</root>
