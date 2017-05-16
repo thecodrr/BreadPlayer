@@ -58,8 +58,8 @@
                         <Interactivity:Interaction.Behaviors>
                             <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}" ComparisonCondition="Equal" Value="True">
                                 <Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=ButtonsStack}" Value="Visible"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource SystemAccentForeground}"/>
+                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource SystemAccentForeground}"/>
                                 <Media:ControlStoryboardAction>
                                     <Media:ControlStoryboardAction.Storyboard>
                                         <Storyboard>
@@ -123,8 +123,8 @@
                         <Interactivity:Interaction.Behaviors>
                             <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}" ComparisonCondition="Equal" Value="True">
                                 <Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=ButtonsStack}" Value="Visible"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource SystemControlBackgroundAccentBrush}"/>
+                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource SystemAccentForeground}"/>
+                                <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource SystemAccentForeground}"/>
                                 <Media:ControlStoryboardAction>
                                     <Media:ControlStoryboardAction.Storyboard>
                                         <Storyboard>
@@ -166,7 +166,7 @@
                         <!--<Setter Target="albumListView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />-->
                         <Setter Target="albumListView.ItemTemplate" Value="{StaticResource MobileSelectedTemplate}" />
                        
-                        <Setter Target="grid.Margin" Value="0,0,0,0" />
+                        <Setter Target="grid.Margin" Value="0,40,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
