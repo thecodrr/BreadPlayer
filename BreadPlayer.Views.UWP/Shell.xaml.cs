@@ -83,6 +83,7 @@ namespace BreadPlayer
                     "NEW THINGS:\r\n\r\n" +
                     "Added new Keyboard Shortcuts ('Keybindings' section in Settings).\n" + 
                     "Added full translation support.\n" +
+                    "Added ability to export playlist (only to .m3u & .pls for now).\n" +
                     "Added silent upcoming song notifications.\n" + 
                     "Added translations for Czech and Sinhala languages.\n" +
                     "Added equalizer presets (experimental).\n" +
@@ -90,7 +91,7 @@ namespace BreadPlayer
                     "Added 'Contribute' section in settings to help in contributing.\n" +
                     "Added auto playback stop in BreadPlayer when a song is played in Groove Player.\n" +
                     "Added navigate to now playing screen when song is played on mobile.\n" +
-                    "Added auto removal of duplicates when importing songs."+
+                    "Added auto removal of duplicates when importing songs.\n"+
                     "Added navigate to now playing screen when song's tags are clicked in mini player.\r\n\r\n" +
                     "IMPROVEMENTS:\r\n\r\n" +
                     "Improved hamburger menu list item response on tap/click.\n" +
