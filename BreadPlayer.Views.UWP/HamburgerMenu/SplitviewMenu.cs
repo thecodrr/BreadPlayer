@@ -348,7 +348,7 @@ namespace SplitViewMenu
         }
         public static void SelectPrevious()
         {
-            if (_lastItem.Label != null)
+            if (_lastItem?.Label != null)
             {
                 var listView = GetParentListViewFromItem(_lastItem);
                 var item = listView.Items.First(t => (t as INavigationMenuItem).Label == _lastItem.Label);

@@ -39,7 +39,7 @@
                     <TextBlock x:Name="albumTitle" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,5,5,0" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
                     <TextBlock x:Name="albumArtist" x:Phase="1" Grid.Row="2" TextAlignment="Center" Margin="5,5,5,0" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
 
-                    <Grid Grid.Row="0" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Bottom" Visibility="Collapsed" x:DeferLoadStrategy="Lazy" HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="40">
+                    <Grid Grid.Row="0" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Bottom" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -155,6 +155,7 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="albumListView.ItemTemplate" Value="{StaticResource SelectedTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -162,7 +163,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumListView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
+                        <!--<Setter Target="albumListView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />-->
                         <Setter Target="albumListView.ItemTemplate" Value="{StaticResource MobileSelectedTemplate}" />
                        
                         <Setter Target="grid.Margin" Value="0,0,0,0" />
