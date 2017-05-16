@@ -249,7 +249,7 @@
     <value>ඔබේ Last.fm මුරපදය ඇතුල් කරන්න...</value>
     <comment>(Respect the ellipsis at the end.)</comment>
   </data>
-  <data name="lastfmPasswordTextBlock.Text" xml:space="preserve">
+  <data name="lastfmPasswordTextBlock.Header" xml:space="preserve">
     <value>මුරපදය:</value>
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>
@@ -257,7 +257,7 @@
     <value>ඔබේ Last.fm පරිශීලක නාමය ඇතුල් කරන්න...</value>
     <comment>(Respect the ellipsis at the end.)</comment>
   </data>
-  <data name="lastfmUsernameTextBlock.Text" xml:space="preserve">
+  <data name="lastfmUsernameTextBlock.Header" xml:space="preserve">
     <value>පරිශීලක නාමය:</value>
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>

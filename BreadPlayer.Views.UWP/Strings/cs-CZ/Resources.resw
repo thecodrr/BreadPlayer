@@ -249,7 +249,7 @@
     <value>Zadejte své heslo k Last.fm zde...</value>
     <comment>(Respect the ellipsis at the end.)</comment>
   </data>
-  <data name="lastfmPasswordTextBlock.Text" xml:space="preserve">
+  <data name="lastfmPasswordTextBlock.Header" xml:space="preserve">
     <value>Heslo:</value>
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>
@@ -257,7 +257,7 @@
     <value>Zadejte své uživatelské jméno z Last.fm Zde...</value>
     <comment>(Respect the ellipsis at the end.)</comment>
   </data>
-  <data name="lastfmUsernameTextBlock.Text" xml:space="preserve">
+  <data name="lastfmUsernameTextBlock.Header" xml:space="preserve">
     <value>Uživatelské jméno:</value>
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>
@@ -270,7 +270,7 @@
   <data name="licenseHeader.Text" xml:space="preserve">
     <value>Licence</value>
   </data>
-  <data name="licenseText" xml:space="preserve">
+  <data name="licenseText.Text" xml:space="preserve">
     <value>This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
