@@ -54,7 +54,8 @@ namespace BreadPlayer.Core.Engines.Interfaces
                     Init();
                 }
                 else
-                {                    
+                {
+                    SaveEqualizerSettings();
                     DeInit();
                 }
             }
