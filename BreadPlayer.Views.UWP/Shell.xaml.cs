@@ -83,6 +83,7 @@ namespace BreadPlayer
                     "NEW THINGS:\r\n\r\n" +
                     "Added new Keyboard Shortcuts ('Keybindings' section in Settings).\n" + 
                     "Added full translation support.\n" +
+                    "Added silent upcoming song notifications.\n" + 
                     "Added translations for Czech and Sinhala languages.\n" +
                     "Added equalizer presets (experimental).\n" +
                     "Added real-time music library updates when filesystem changes (only works when app is running).\n" +
@@ -98,7 +99,7 @@ namespace BreadPlayer
                     "Improved library import.\n" + 
                     "Improved overall UI and increased readability.\n" +
                     "Improved startup performance by 50% (only PC).\r\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.3.0");
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.3.0 (after 120+ commits)");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)
