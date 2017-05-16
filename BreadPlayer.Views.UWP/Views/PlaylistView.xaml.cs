@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Extensions;
 using BreadPlayer.ViewModels;
+using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -59,6 +60,9 @@ namespace BreadPlayer
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _playlistVm.Songs.Clear();
+            _playlistVm.Reset();
+            _playlistVm = null;
+            GC.Collect();
             base.OnNavigatedFrom(e);
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)

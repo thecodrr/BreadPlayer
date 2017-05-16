@@ -210,17 +210,14 @@
                         </Interactivity:Interaction.Behaviors>
                     </ToggleButton>
                     <StackPanel x:Name="ButtonsStack" Grid.Column="0" Width="50" VerticalAlignment="Stretch" HorizontalAlignment="Right" Visibility="Collapsed" Height="80" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
-                        <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
-            IsDoubleTapEnabled="False" FontSize="18"
-            Visibility="Visible" ToolTipService.ToolTip="Add this song to playlist."
-            Height="80"  VerticalAlignment="Center" Background="Transparent"
-            Width="50" Style="{StaticResource HyperlinkBtn}"
-            FontFamily="Segoe MDL2 Assets">
-
+                        <Button x:Uid="listItemDeleteBtn" Grid.Column="2" x:Name="button2" Content="&#xE74D;"
+                                    IsDoubleTapEnabled="False" FontSize="18"
+                                    Visibility="Visible" ToolTipService.ToolTip=""
+                                    Height="80"  VerticalAlignment="Stretch"  Background="Transparent"
+                                    Width="50" Style="{StaticResource HyperlinkBtn}"
+                                                 Command="{Binding Source={StaticResource PlaylistVM}, Path=DeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
+                                    FontFamily="Segoe MDL2 Assets">
                             <Interactivity:Interaction.Behaviors>
-                                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
-                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>
-                                </Core:EventTriggerBehavior>
                                 <Core:EventTriggerBehavior EventName="PointerEntered">
                                     <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
                                 </Core:EventTriggerBehavior>
@@ -353,5 +350,6 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </ListView>
+        <ProgressRing Grid.Row="1" IsActive="{Binding Path=IsPlaylistLoading}" Width="40" Height="40"/>
     </Grid>
 </Page>

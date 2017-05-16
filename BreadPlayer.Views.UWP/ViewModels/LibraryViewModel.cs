@@ -1024,7 +1024,7 @@ namespace BreadPlayer.ViewModels
                 }
                 if (addsongs)
                 {
-                    await AddSongsToPlaylist(plist, songs);
+                    await AddSongsToPlaylist(plist, songs.ToList());
                 }
             });
         }

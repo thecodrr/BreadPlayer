@@ -60,7 +60,15 @@ namespace BreadPlayer.ViewModels
                 Set(ref _totalSongs, value);
             }
         }
-
+        private bool _isPlaylistLoading;
+        public bool IsPlaylistLoading
+        {
+            get => _isPlaylistLoading;
+            set
+            {
+                Set(ref _isPlaylistLoading, value);
+            }
+        }
         private string _totalMinutes;
         public string TotalMinutes
         {
@@ -254,6 +262,7 @@ namespace BreadPlayer.ViewModels
         }
         public void Init(object data)
         {
+            IsPlaylistLoading = true;
             if (data is Playlist playlist)
             {
                 Playlist = playlist;
@@ -274,6 +283,7 @@ namespace BreadPlayer.ViewModels
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
+                IsPlaylistLoading = false;
             });
         }
 
@@ -285,6 +295,7 @@ namespace BreadPlayer.ViewModels
                 await Refresh().ContinueWith(task =>
                 {
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
+                    IsPlaylistLoading = false;
                 });
             }
             else
@@ -301,7 +312,7 @@ namespace BreadPlayer.ViewModels
         
         
         public void Reset()
-        {            
+        {
             PlaylistArt = null;
             TotalSongs = "0";
             TotalMinutes = "0";
