@@ -34,6 +34,7 @@ using TagLib;
 using Buffer = Windows.Storage.Streams.Buffer;
 using Color = Windows.UI.Color;
 using File = TagLib.File;
+using BreadPlayer.Core.Engines.BASSEngine;
 
 namespace BreadPlayer.Core
 {
@@ -59,7 +60,7 @@ namespace BreadPlayer.Core
             {
                 if (_player == null)
                 {
-                    _player = new FmodPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
                 }
 
                 return _player;

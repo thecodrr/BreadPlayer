@@ -65,7 +65,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     }
 
                     Bass.Init();
-                    Effect = new Effects();
+                    //Effect = new Effects();
                 }
                 catch(Exception)
                 {
@@ -115,13 +115,20 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         Length = 0;
                         Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
                         Bass.FloatingPointDSP = true;
-                        Effect.UpdateHandle(_handle);
                         Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
                         Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
                         Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
                        
                         CurrentlyPlayingFile = mediaFile;
                     });
+                    if (Equalizer == null)
+                    {
+                        Equalizer = new BassEqualizer(_handle);
+                    }
+                    else
+                    {
+                        (Equalizer as BassEqualizer).ReInit(_handle);
+                    }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
 
                     return true;
@@ -287,9 +294,22 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             set => Set(ref _ignoreErrors, value);
         }
 
-        public Equalizer Equalizer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool IsLoopingEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+        private Equalizer _fmodEqualizer;
+        public Equalizer Equalizer
+        {
+            get => _fmodEqualizer;
+            set => Set(ref _fmodEqualizer, value);
+        }
+        private bool _isLoopingEnabled;
+        public bool IsLoopingEnabled
+        {
+            get => _isLoopingEnabled;
+            set
+            {
+                Set(ref _isLoopingEnabled, value);
+                //SetLoop();
+            }
+        }
         #endregion
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {

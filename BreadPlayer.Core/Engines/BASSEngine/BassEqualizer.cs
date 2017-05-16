@@ -37,29 +37,24 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             var version = BassFx.Version;
             _myDspAddr = SetPreamp;
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
-            //EnableDisableEqualizer();
             Init();
         }
         public override void DeInit()
         {
-            throw new NotImplementedException();
+            Bass.ChannelRemoveFX(_handle, _fxEq);
         }
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
+            DeInit();
+            Bands.Clear();
+            _handle = -1;
+            _fxEq = -1;
         }
 
         public override IEqualizerBand GetEqualizerBand(bool isActive, float centerValue, float bandwithValue, float gainValue)
         {
-            _eq.lBand = i;
-            _eq.fCenter = centerValue;
-            var res = Bass.FXSetParameters(_fxEq, _eq);
-            EqualizerBand band = new EqualizerBand()
-            {
-                Center = _eq.fCenter,
-                Gain = _eq.fGain
-            };
+            return null;
         }
 
         public override void Init(bool setToDefaultValues = false)
@@ -75,15 +70,18 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             Bands.Clear();
 
             var gainValues = !setToDefaultValues && EqualizerSettings != null ? EqualizerSettings.GainValues : null;
-            foreach (var value in EqDefaultValues)
+            for(int i =0;i < EqDefaultValues.Length; i++)
             {
-                var band = GetEqualizerBand(IsEnabled, value[0], value[1], value[2]);
+                _eq.lBand = i;
+                _eq.fCenter = EqDefaultValues[i][0];
+                var res = Bass.FXSetParameters(_fxEq, _eq);
+                var band = new BassEqualizerBand(_fxEq, i, EqDefaultValues[i][0], EqDefaultValues[i][1], IsEnabled);
 
                 if (band == null)
                 {
                     continue;
                 }
-                ((BassEqualizerBand)band).PropertyChanged += (sender, e) =>
+                band.PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == "Gain")
                     {
@@ -102,7 +100,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         #region unsafe Methods            
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
-            if (_preamp == 1f || length == 0 || buffer == IntPtr.Zero)
+            if (Preamp == 1f || length == 0 || buffer == IntPtr.Zero)
             {
                 return;
             }
@@ -113,7 +111,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
             for (int i = 0; i < n; ++i)
             {
-                pointer[i] *= _preamp;
+                pointer[i] *= Preamp;
             }
         }
         #endregion

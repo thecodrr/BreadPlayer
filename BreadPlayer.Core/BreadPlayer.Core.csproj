@@ -110,6 +110,8 @@
     <Compile Include="Common\INotificationManager.cs" />
     <Compile Include="Common\IEqualizerSettingsHelper.cs" />
     <Compile Include="Common\PasswordStorage.cs" />
+    <Compile Include="Engines\BASSEngine\BassEqualizer.cs" />
+    <Compile Include="Engines\BASSEngine\BassEqualizerBand.cs" />
     <Compile Include="Events\MediaAboutToEndEventArgs.cs" />
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />

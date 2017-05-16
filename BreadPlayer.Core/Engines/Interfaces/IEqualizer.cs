@@ -59,6 +59,12 @@ namespace BreadPlayer.Core.Engines.Interfaces
                 }
             }
         }
+        private float _preamp = 1f;
+        public float Preamp
+        {
+            get => _preamp;
+            set => _preamp = value;
+        }
         public bool IsPreampAvailable { get; set; }
         public string Name { get; set; }
        

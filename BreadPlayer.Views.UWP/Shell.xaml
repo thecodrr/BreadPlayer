@@ -174,7 +174,7 @@
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
-            <!--<VisualStateGroup>
+            <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{Binding Path=IsEqualizerVisible}"/>
@@ -193,7 +193,7 @@
                         <DoubleAnimation Storyboard.TargetName="EqualizerGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" SpeedRatio="4" From="0" To="620" Duration="0:0:1"/>
                     </Storyboard>
                 </VisualState>
-            </VisualStateGroup>-->
+            </VisualStateGroup>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -363,20 +363,16 @@
                 <CompositeTransform TranslateY="-1000"/>
             </Frame.RenderTransform>
         </Frame>-->
-        <!--<Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+        <Grid Name="EqualizerGrid" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="300"/>
             </Grid.RenderTransform>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-            </Grid.RowDefinitions>
-            --><!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBox Header="Config Name:"/>
-                <Button Content="Save" Margin="10,0,0,0"/>
-            </StackPanel>--><!--
+            </Grid.RowDefinitions>           
             <ComboBox HorizontalAlignment="Right" ItemsSource="{Binding Path=Player.Equalizer.Presets}" SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" DisplayMemberPath="Name" VerticalAlignment="Center" Margin="0,0,20,0"/>
-            --><!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>--><!--
+            <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
             <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
                     <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-7dB" FontSize="11"/>
@@ -392,8 +388,8 @@
                                     BorderBrush="{x:Null}" 
                                     Background="#FFC5C5C5"
                                     Style="{StaticResource CircleSlider}" 
-                                    Minimum="-7"
-        							Maximum="7"
+                                    Minimum="-14"
+        							Maximum="14"
         							LargeChange="0.2"
         							SmallChange="0.1"
                                     SnapsTo="Ticks"
@@ -422,12 +418,12 @@
             </StackPanel>
             <StackPanel Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" Orientation="Horizontal" HorizontalAlignment="Center" >
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Text="0dB" FontSize="11"/>
-                <Slider Width="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5"  Minimum="0" Maximum="12" Style="{StaticResource CircleSlider}" Orientation="Horizontal" Value="{Binding Path=Player.Effect.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Slider Width="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5"  Minimum="0" Maximum="12" Style="{StaticResource CircleSlider}" Orientation="Horizontal" Value="{Binding Path=Player.Equalizer.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Text="+12dB" FontSize="11"/>
             </StackPanel>
             <TextBlock Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" VerticalAlignment="Bottom" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
 
-        </Grid>-->
+        </Grid>
         <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding Source={StaticResource ShellVM}, Path=IsVolumeSliderVisible}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
