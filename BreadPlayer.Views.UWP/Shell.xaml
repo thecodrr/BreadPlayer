@@ -100,12 +100,12 @@
                         <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75"/>
                         <Setter Target="ValueIndicatorText.FontSize" Value="9"/>
                         <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}"/>
-                        <Setter Target="backgroundBorder.BlurAmount" Value="5"/>
-                        <Setter Target="backgroundBlur.Opacity" Value="1"/>
+                        <Setter Target="backgroundBlur.BlurAmount" Value="5"/>
+                        <Setter Target="backgroundBorder.Opacity" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            <VisualStateGroup>
+            <VisualStateGroup CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
                 <VisualState>
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, UpdateSourceTrigger=PropertyChanged}"/>

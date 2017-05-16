@@ -462,7 +462,7 @@
                             <TextBlock TextAlignment="Center" Typography.Capitals="AllSmallCaps" Text="{Binding Path=Album}" FontSize="{Binding ElementName=metadataText, Path=FontSize}" FontWeight="ExtraLight"/>
                         </StackPanel>
                     </Grid>
-                    <ListView x:Name="NowPlayingList" ItemTemplate="{StaticResource NowPlayingListItemTemplate}" Foreground="{ThemeResource ThemeForeground}" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
+                    <ListView x:Name="NowPlayingList" CanReorderItems="True" ReorderMode="Enabled" ItemTemplate="{StaticResource NowPlayingListItemTemplate}" Foreground="{ThemeResource ThemeForeground}" Grid.Row="1" Margin="100,100" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" DataContext="{StaticResource ShellVM}" ItemsSource="{Binding Path=NowPlayingQueue, UpdateSourceTrigger=Explicit}" RenderTransformOrigin="0.5,0.5">
                         <ListView.RenderTransform>
                             <CompositeTransform TranslateX="0"/>
                         </ListView.RenderTransform>

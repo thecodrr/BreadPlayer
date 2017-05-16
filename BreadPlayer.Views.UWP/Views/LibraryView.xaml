@@ -175,7 +175,7 @@
                 <Run Text="&#x2022;"/>
                 <Run Text="{x:Bind Path=Album}"/>
                     </TextBlock>
-                    <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="80" Grid.ColumnSpan="9">
+                    <Border Background="Transparent" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="80" Grid.ColumnSpan="9">
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="DoubleTapped">
                                 <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
@@ -286,8 +286,8 @@
                     <VisualState.Setters>
                         <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
                         
-                        <!--<Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
-                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>-->
+                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}"/>
+                        <Setter Target="alphabetList.Margin" Value="0,60,0,0"/>
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="lonelyTxt.FontSize" Value="44"/>

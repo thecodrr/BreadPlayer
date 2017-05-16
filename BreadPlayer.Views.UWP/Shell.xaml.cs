@@ -58,13 +58,15 @@ namespace BreadPlayer
             });
             NowPlayingItem.Command = new DelegateCommand(() => 
             {
-                if(NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
-                    NowPlayingFrame.Navigate(typeof(NowPlayingView));
                 _shellVm.IsPlaybarHidden = true;
                 ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
             });          
         }
-           
+        private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            if (NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
+                NowPlayingFrame.Navigate(typeof(NowPlayingView));
+        }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
@@ -146,6 +148,8 @@ namespace BreadPlayer
                 _shellVm.DontUpdatePosition = true;
                 _isProgBarPressed = true;
             }
-        }           
+        }
+
+      
     }
 }
