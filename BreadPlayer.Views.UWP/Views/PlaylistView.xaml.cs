@@ -38,13 +38,13 @@ namespace BreadPlayer
         {
             InitializeComponent();
             Window.Current.SizeChanged += Current_SizeChanged;
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
             _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
             _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 

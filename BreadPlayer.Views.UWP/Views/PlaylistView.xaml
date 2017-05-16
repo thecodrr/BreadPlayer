@@ -285,7 +285,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="headerText.TextAlignment" Value="Center" />
-                        <Setter Target="headerText.FontSize" Value="44" />
+                        <Setter Target="headerText.FontSize" Value="34" />
                         <Setter Target="headerText.Margin" Value="0" />
                         <Setter Target="headerStack.Margin" Value="0,60,0,0" />
                         <Setter Target="headerDesc.Margin" Value="0" />
@@ -317,7 +317,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Column="0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Column="0">
                             <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
                             <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
                             <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
