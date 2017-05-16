@@ -127,9 +127,6 @@
     <Compile Include="Engines\BASSEngine\BASSPlayerEngine.cs" />
     <Compile Include="Engines\BASSEngine\Effects.cs" />
     <Compile Include="Models\EqualizerSettings.cs" />
-    <Compile Include="Engines\FMODEngine\FmodEqualizer.cs" />
-    <Compile Include="Engines\FMODEngine\FmodEqualizerBand.cs" />
-    <Compile Include="Engines\FMODEngine\FMODPlayerEngine.cs" />
     <Compile Include="Engines\Interfaces\IEqualizer.cs" />
     <Compile Include="Engines\Interfaces\IEqualizerBand.cs" />
     <Compile Include="Engines\Interfaces\IPlayerEngine.cs" />
@@ -138,10 +135,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BreadPlayer.Fmod\BreadPlayer.Fmod.csproj">
-      <Project>{0de10841-6932-42f3-ad1c-4e17052b68da}</Project>
-      <Name>BreadPlayer.Fmod</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
       <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
       <Name>BreadPlayer.Framework</Name>
