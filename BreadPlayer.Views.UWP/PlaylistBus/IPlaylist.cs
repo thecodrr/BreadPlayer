@@ -7,7 +7,7 @@ namespace BreadPlayer.PlaylistBus
 {
     internal interface IPlaylist
     {
-        Task LoadPlaylist(StorageFile file);
+        Task<IEnumerable<Mediafile>> LoadPlaylist(StorageFile file);
         Task<bool> SavePlaylist(IEnumerable<Mediafile> songs);
     }
 }

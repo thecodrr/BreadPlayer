@@ -36,6 +36,7 @@ using BreadPlayer.Dialogs;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using BreadPlayer.Themes;
+using BreadPlayer.PlaylistBus;
 
 namespace BreadPlayer.ViewModels
 {
@@ -180,7 +181,35 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => DeletePlaylist(param)); } return _deletePlaylistCommand; }
         }
-
+        private RelayCommand _exportPlaylistCommand;
+        /// <summary>
+        /// Gets command for playlist delete. This calls the <see cref="DeletePlaylist(object)"/> method. <seealso cref="ICommand"/>
+        /// </summary>
+        public ICommand ExportPlaylistCommand
+        {
+            get
+            { if (_exportPlaylistCommand == null) { _exportPlaylistCommand = new RelayCommand(param => ExportPlaylist(param)); } return _exportPlaylistCommand; }
+        }
+        private async void ExportPlaylist(object para)
+        {
+            var menu = para as MenuFlyoutItem;
+            var playlist = (Playlist)menu.Tag;
+            if (playlist == null)
+                return;
+            var songs = new List<Mediafile>();
+            if (playlist.IsExternal)
+            {
+                IPlaylist extPlaylist = Path.GetExtension(playlist.Path) == ".m3u" ? new M3U() : (IPlaylist)new Pls();
+                songs.AddRange(await extPlaylist.LoadPlaylist(await StorageFile.GetFileFromPathAsync(playlist.Path)));
+            }
+            else
+            {
+                var service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
+                songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
+            }
+            var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
+            await toExportPlaylist.SavePlaylist(songs);
+        }
         private async void DeletePlaylist(object playlist)
         {
             try
@@ -291,7 +320,13 @@ namespace BreadPlayer.ViewModels
         {
             if (await SharedLogic.AskForPassword(_playlist))
             {
-                Songs.AddRange(await PlaylistService.GetTracksAsync(_playlist.Id));
+                if (_playlist.IsExternal)
+                {
+                    IPlaylist extPlaylist = Path.GetExtension(_playlist.Path) == ".m3u" ? (IPlaylist)new M3U() : (IPlaylist)new Pls();
+                    Songs.AddRange(await extPlaylist.LoadPlaylist(await StorageFile.GetFileFromPathAsync(_playlist.Path)));
+                }
+                else
+                    Songs.AddRange(await PlaylistService.GetTracksAsync(_playlist.Id));
                 await Refresh().ContinueWith(task =>
                 {
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);

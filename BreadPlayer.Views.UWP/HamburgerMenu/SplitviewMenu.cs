@@ -356,6 +356,7 @@ namespace SplitViewMenu
                 listView.SelectedIndex = index;
             }
         }
+      
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
             ((Page)sender).Focus(FocusState.Programmatic);

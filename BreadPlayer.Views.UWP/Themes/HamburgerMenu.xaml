@@ -383,6 +383,10 @@
                                 <!--<MenuFlyoutItem Text="Add to"/>-->
                                 <MenuFlyoutItem Text="Delete Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
                                 <MenuFlyoutItem Text="Rename Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}"/>
+                                <MenuFlyoutSubItem Text="Export Playlist">
+                                    <MenuFlyoutItem Text="As M3U" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" DataContext="{StaticResource PlaylistVM}" Command="{Binding ExportPlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                                    <MenuFlyoutItem Text="As PLS" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" DataContext="{StaticResource PlaylistVM}" Command="{Binding ExportPlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+                                </MenuFlyoutSubItem>
                             </MenuFlyout>
                         </Grid.Resources>
                         <Interactivity:Interaction.Behaviors>

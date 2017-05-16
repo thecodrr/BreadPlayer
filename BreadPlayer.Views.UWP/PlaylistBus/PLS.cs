@@ -14,11 +14,8 @@ namespace BreadPlayer.PlaylistBus
 {
     internal class Pls : IPlaylist
     {
-        public async Task LoadPlaylist(StorageFile file)
+        public async Task<IEnumerable<Mediafile>> LoadPlaylist(StorageFile file)
         {
-            //Core.CoreMethods.LibVM.Database.CreatePlaylistDB(file.DisplayName);
-            //Dictionary<Playlist, IEnumerable<Mediafile>> PlaylistDict = new Dictionary<Models.Playlist, IEnumerable<Mediafile>>();
-            Playlist playlist = new Playlist { Name = file.DisplayName };
             using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 bool hdr = false; //[playlist] header
@@ -30,8 +27,7 @@ namespace BreadPlayer.PlaylistBus
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
                 List<Mediafile> playlistSongs = new List<Mediafile>();
-                PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
-                await service.AddPlaylistAsync(playlist);
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     lines.Add(line);
@@ -42,7 +38,7 @@ namespace BreadPlayer.PlaylistBus
                     }
                     else if (!hdr)
                     {
-                        return;
+                        return null;
                     }
                     else if (line.ToLower().StartsWith("numberofentries="))
                     {
@@ -100,7 +96,6 @@ namespace BreadPlayer.PlaylistBus
                             Mediafile mp3File = await SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
                             await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
 
-                            await SharedLogic.NotificationManager.ShowMessageAsync(i + " of " + noe + " songs added into playlist: " + file.DisplayName);
                             playlistSongs.Add(mp3File);
                             StorageApplicationPermissions.FutureAccessList.Remove(token);
                         }
@@ -109,17 +104,16 @@ namespace BreadPlayer.PlaylistBus
                             failedFiles++;
                         }
                     });
-                    await service.InsertTracksAsync(playlistSongs, playlist);
+                   
                 }
-                string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", count, failedFiles, count - failedFiles, file.DisplayName);
-                await SharedLogic.NotificationManager.ShowMessageAsync(message);
+                return playlistSongs;
             }
         }
 
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs)
         {
             FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("M3U Playlists", new List<string> { ".m3u" });
+            picker.FileTypeChoices.Add("PLS Playlists", new List<string> { ".pls" });
             picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
             var file = await picker.PickSaveFileAsync();
             using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))

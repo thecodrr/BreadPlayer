@@ -166,6 +166,7 @@ namespace BreadPlayer.Database
               }
           });
         }
+
         private void ReinitEngine()
         {
             if (StaticKeyValueDatabase.IsDisposed || _engine == null)

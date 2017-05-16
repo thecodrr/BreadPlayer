@@ -289,6 +289,8 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
+                StorageApplicationPermissions.FutureAccessList.Add(file);
+
                 IPlaylist playlist = null;
                 if (Path.GetExtension(file.Path) == ".m3u")
                 {
@@ -299,9 +301,8 @@ namespace BreadPlayer.ViewModels
                     playlist = new Pls();
                 }
 
-                var plist = new Playlist { Name = file.DisplayName };
+                var plist = new Playlist { Name = file.DisplayName, IsExternal = true, Path = file.Path};
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddPlaylist, plist);
-                await playlist.LoadPlaylist(file).ConfigureAwait(false);
             }
         }
         /// <summary>
