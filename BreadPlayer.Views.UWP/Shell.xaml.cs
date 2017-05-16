@@ -78,7 +78,7 @@ namespace BreadPlayer
                     "Fixed NowPlayingList loses its ItemTemplate when window size is changed.\n" +
                     "Fixed crash after library load.\n" +
                     "Fixed playlist import.\n" +
-                    "Fixed audio stutter when minimizing to background (only mobile)."+
+                    "Fixed audio stutter when minimizing to background (only mobile).\n"+
                     "Fixed crash when deleting duplicates.\r\n\r\n" + 
                     "NEW THINGS:\r\n\r\n" +
                     "Added new Keyboard Shortcuts ('Keybindings' section in Settings).\n" + 
