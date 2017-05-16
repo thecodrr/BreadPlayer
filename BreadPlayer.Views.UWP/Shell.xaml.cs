@@ -31,6 +31,8 @@ using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.ViewModels;
 using SplitViewMenu;
+using BreadPlayer.Core.Common;
+using Windows.UI.ViewManagement;
 
 namespace BreadPlayer
 {
@@ -54,8 +56,13 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
-            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
-          
+            NowPlayingItem.Command = new DelegateCommand(() => 
+            {
+                if(NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
+                    NowPlayingFrame.Navigate(typeof(NowPlayingView));
+                _shellVm.IsPlaybarHidden = true;
+                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            });          
         }
            
         protected async override void OnNavigatedTo(NavigationEventArgs e)
