@@ -286,8 +286,8 @@
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding TracksCollection.Elements}"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="187*"/>
-            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <VisualStateManager.VisualStateGroups>        
           <VisualStateGroup>                
@@ -321,17 +321,18 @@
                 <EntranceThemeTransition IsStaggeringEnabled="True"
                             FromHorizontalOffset="200"/>
             </TransitionCollection>
-        </Grid.Transitions>      
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="47"/>
-            <RowDefinition Height="13" MinHeight="13"/>
-            <RowDefinition Height="57*"/>
-        </Grid.RowDefinitions>
-       
-        <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" Grid.Row="2" Grid.ColumnSpan="2" ScrollViewer.ZoomMode="Enabled">
+        </Grid.Transitions>
+        <Pivot Grid.ColumnSpan="2" Margin="30,0,30,0">
+            <Pivot.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontWeight="Bold"/>
+                </DataTemplate>
+            </Pivot.HeaderTemplate>
+            <PivotItem Header="Toasts">
+                <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" ScrollViewer.ZoomMode="Enabled">
             <SemanticZoom.ZoomedInView>
                 <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" 
-                                                   ReorderMode="Enabled" OddRowBackground="{ThemeResource OddRowBackground}" 
+                                                   ReorderMode="Enabled" 
                                                    EvenRowBackground="{ThemeResource EvenRowBackground}"  
                                                    AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True"
                                                    Behaviours:ListViewService.FocusBeforeSelect="True" 
@@ -342,7 +343,7 @@
                                                    DataFetchSize="10" 
                                                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
                                                    ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" 
-                                                   Grid.Row="2" Grid.ColumnSpan="2" DragOver="fileBox_DragOver">
+                                                   DragOver="fileBox_DragOver">
                     <BPControls:AlternatingRowListView.ItemsPanel>
                         <ItemsPanelTemplate >
                             <ItemsStackPanel Orientation="Vertical">
@@ -435,7 +436,11 @@
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
-
+            </PivotItem>
+            <PivotItem Header="Breads"/>
+            <PivotItem Header="Bakers"/>
+            <PivotItem Header="Playlists"/>
+        </Pivot>
         <Button x:Uid="backBtn" x:Name="backBtn" ToolTipService.ToolTip="" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Style="{StaticResource HyperlinkBtn}">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">

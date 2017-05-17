@@ -522,7 +522,7 @@
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
                                         <Setter Target="toggleButton.Visibility" Value="Collapsed"/>
-                                        <Setter Target="headerText.Margin" Value="35,35,0,0"/>
+                                        <Setter Target="headerText.Margin" Value="35,60,0,0"/>
                                         <Setter Target="searchBox.Margin" Value="35,10,20,0"/>
 
                                     </VisualState.Setters>
@@ -654,7 +654,7 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                                <Frame x:Name="PageFrame"  Margin="0,155,0,0">
+                                <Frame x:Name="PageFrame"  Margin="0,135,0,0">
                                     <Frame.ContentTransitions>
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
@@ -665,8 +665,8 @@
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>
-                                <StackPanel VerticalAlignment="Top" Margin="0,70,0,0" Name="MainStackPanel">
-                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0" Name="ShortcutsPanel">
+                                <StackPanel VerticalAlignment="Top" Margin="0,0,0,0" Name="MainStackPanel">
+                                    <!--<StackPanel Orientation="Horizontal" Margin="20,0,0,0" Name="ShortcutsPanel">
                                         <ToggleButton x:Name="toggleButton" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Background="Transparent" Margin="0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                         <ItemsControl x:Name="Shortcuts" Grid.Column="1" Background="Transparent" Margin="0">
                                             <ItemsControl.ItemTemplate>
@@ -687,15 +687,15 @@
                                                 </ControlTemplate>
                                             </ItemsControl.Template>
                                         </ItemsControl>
-                                    </StackPanel>
-                                    <AutoSuggestBox x:Name="searchBox" Margin="25,10,20,0" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    </StackPanel>-->
+                                    <!--<AutoSuggestBox x:Name="searchBox" Margin="25,10,20,0" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
                                         <AutoSuggestBox.RenderTransform>
                                             <TranslateTransform X="0"/>
                                         </AutoSuggestBox.RenderTransform>
                                         <AutoSuggestBox.QueryIcon>
                                             <FontIcon Glyph="&#xe721;"/>
                                         </AutoSuggestBox.QueryIcon>
-                                    </AutoSuggestBox>
+                                    </AutoSuggestBox>-->
                                     <TextBlock x:Name="headerText" Tag="Heading" Margin="25,10,0,0" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}"/>
 
                                     <!--<StackPanel >
