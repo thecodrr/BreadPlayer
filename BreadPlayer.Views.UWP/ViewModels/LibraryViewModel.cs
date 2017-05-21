@@ -91,8 +91,11 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                await CreateGenreMenu().ConfigureAwait(false);
                 IsLibraryLoading = false;
+                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
+                });
             }
         }
 
@@ -1026,7 +1029,7 @@ namespace BreadPlayer.ViewModels
                 }
                 if (addsongs)
                 {
-                    await AddSongsToPlaylist(plist, songs);
+                    await AddSongsToPlaylist(plist, songs.ToList());
                 }
             });
         }

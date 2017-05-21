@@ -34,6 +34,8 @@ using BreadPlayer.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
+using BreadPlayer.Core;
+using Windows.ApplicationModel.ExtendedExecution;
 
 namespace BreadPlayer
 {
@@ -86,11 +88,11 @@ namespace BreadPlayer
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {
+        {           
             var deferral = e.GetDeferral();
+            BLogger.Logger.Info("App has entered background...");
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateSmtc();
-            BLogger.Logger.Info("App has entered background...");
             deferral.Complete();
         }
 
@@ -139,12 +141,13 @@ namespace BreadPlayer
             var deferral = e.SuspendingOperation.GetDeferral();
             await LockscreenHelper.ResetLockscreenImage();
             _sessionWatch?.Stop();
-            CoreWindowLogic.DisposeObjects();
             BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
+            CoreWindowLogic.DisposeObjects();
             await Task.Delay(500);
             deferral.Complete();
         }
+
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
@@ -176,10 +179,9 @@ namespace BreadPlayer
                     // BLogger.Logger.Info("New frame created.");
                     //if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
                     //{
-                        //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
-                        //TODO: Load state from previously suspended application
+                    //    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
+                    //    //TODO: Load state from previously suspended application
                     //}
-                  
                     
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
@@ -218,41 +220,6 @@ namespace BreadPlayer
             {
                 BLogger.Logger?.Info("Exception occured in LoadFrame Method", ex);
             }
-        }
-
-        private void ReInitialize()
-        {
-            if (Window.Current.Content == null)
-            {
-                var frame = new Frame();
-                frame.Navigate(typeof(Shell));
-                Window.Current.Content = frame;
-            }
-        }
-        public void ReduceMemoryUsage()
-        {
-            // If the app has caches or other memory it can free, it should do so now.
-            // << App can release memory here >>
-
-            // Additionally, if the application is currently
-            // in background mode and still has a view with content
-            // then the view can be released to save memory and
-            // can be recreated again later when leaving the background.
-            if (Window.Current.Content != null)
-            {
-                // Some apps may wish to use this helper to explicitly disconnect
-                // child references.
-                VisualTreeHelper.DisconnectChildrenRecursive(Window.Current.Content);
-                NavigationService.Instance = null;
-                // Clear the view content. Note that views should rely on
-                // events like Page.Unloaded to further release resources.
-                // Release event handlers in views since references can
-                // prevent objects from being collected.
-                Window.Current.Content = null;
-            }
-
-            // Run the GC to collect released resources.
-            GC.Collect();
         }
     }
 }

@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Extensions;
 using BreadPlayer.ViewModels;
+using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,13 +39,13 @@ namespace BreadPlayer
         {
             InitializeComponent();
             Window.Current.SizeChanged += Current_SizeChanged;
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
             _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 44 : 60;
+            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
             _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
 
@@ -59,6 +60,9 @@ namespace BreadPlayer
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _playlistVm.Songs.Clear();
+            _playlistVm.Reset();
+            _playlistVm = null;
+            GC.Collect();
             base.OnNavigatedFrom(e);
         }
         private void fileBox_Loaded(object sender, RoutedEventArgs e)
@@ -93,5 +97,6 @@ namespace BreadPlayer
                 }
             }
         }
+        
     }
 }

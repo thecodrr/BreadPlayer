@@ -296,7 +296,7 @@
                 <Run Text="&#x2022;"/>
                 <Run Text="{x:Bind Path=Album}"/>
                     </TextBlock>
-                    <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="80" Grid.ColumnSpan="9">
+                    <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Height="80" Grid.ColumnSpan="9">
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="DoubleTapped">
                                 <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
@@ -386,10 +386,10 @@
                         <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
                         <Setter Target="AlbumsList.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                         <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MobileSelectedTemplate}" />
-                        <Setter Target="SongsHeader.Margin" Value="25,15,0,0" />
-                        <Setter Target="SongsHeader.FontSize" Value="18" />
-                        <Setter Target="AlbumsHeader.Margin" Value="25,15,0,0" />
-                        <Setter Target="AlbumsHeader.FontSize" Value="18" />
+                        <Setter Target="songsHeader.Margin" Value="25,15,0,0" />
+                        <Setter Target="songsHeader.FontSize" Value="18" />
+                        <Setter Target="albumsHeader.Margin" Value="25,15,0,0" />
+                        <Setter Target="albumsHeader.FontSize" Value="18" />
                         <Setter Target="MainGrid.Margin" Value="0,35,0,0" />
                     </VisualState.Setters>
                 </VisualState>

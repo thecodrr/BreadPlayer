@@ -123,10 +123,13 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
-    <Content Include="Assets\Noise.jpg" />
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\cs-CZ\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\si-LK\Resources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
@@ -240,15 +243,6 @@
     <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <!--<Content Include="Assets\lib\ARM\bass.dll" />
-    <Content Include="Assets\lib\ARM\bassmix.dll" />
-    <Content Include="Assets\lib\ARM\bass_fx.dll" />
-    <Content Include="Assets\lib\x64\bass.dll" />
-    <Content Include="Assets\lib\x64\bassmix.dll" />
-    <Content Include="Assets\lib\x64\bass_fx.dll" />
-    <Content Include="Assets\lib\x86\bass.dll" />
-    <Content Include="Assets\lib\x86\bassmix.dll" />
-    <Content Include="Assets\lib\x86\bass_fx.dll" />-->
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -306,10 +300,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x86\fmod_X86.dll">
+    <!--<Content Include="Assets\lib\x86\fmod_X86.dll">
       <Link>fmod_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Content>-->
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'x64'">
     <Content Include="Assets\lib\x64\bass.dll">
@@ -320,10 +314,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\x64\fmod_X64.dll">
+    <!--<Content Include="Assets\lib\x64\fmod_X64.dll">
       <Link>fmod_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Content>-->
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'ARM'">
     <Content Include="Assets\lib\ARM\bass.dll">
@@ -334,10 +328,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\lib\ARM\fmod_ARM.dll">
+    <!--<Content Include="Assets\lib\ARM\fmod_ARM.dll">
       <Link>fmod_ARM.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Content>-->
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

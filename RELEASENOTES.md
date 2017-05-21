@@ -1,4 +1,36 @@
 # Release Notes for Bread Player.
+## Version 2.3-beta
+### What's Fixed:
+- Fixed issue with output device not changing when headphones are connected.
+- Fixed NowPlayingList loses its ItemTemplate when window size is changed.
+- Fixed crash after library load.
+- Fixed playlist import.
+- Fixed audio stutter when minimizing to background (only mobile).
+- Fixed crash when deleting duplicates. 
+- And many more bugs were also fixed (which I do not remember yet). :D
+
+### What's New:
+- Added new Keyboard Shortcuts ('Keybindings' section in Settings). 
+- Added full translation support.
+- Added ability to export playlist (only to .m3u & .pls for now).
+- Added silent upcoming song notifications. 
+- Added translations for Czech and Sinhala languages.
+- Added equalizer presets (experimental).
+- Added real-time music library updates when filesystem changes (only works when app is running).
+- Added 'Contribute' section in settings to help in contributing.
+- Added auto playback stop in BreadPlayer when a song is played in Groove Player.
+- Added navigate to now playing screen when song is played on mobile.
+- Added auto removal of duplicates when importing songs.
+- Added navigate to now playing screen when song's tags are clicked in mini player.
+
+### What's Improved:
+- Improved hamburger menu list item response on tap/click.
+- Improved all animations and transitions.
+- Improved navigation performance.
+- Improved library import. 
+- Improved overall UI and increased readability.
+- Improved startup performance by 50% (only PC).
+
 ## Version 2.1-beta
 ### What's improved:
 1. 50% performance improvements in mobile

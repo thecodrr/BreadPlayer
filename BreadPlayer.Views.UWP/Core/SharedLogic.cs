@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using BreadPlayer.Common;
 using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Engines.FMODEngine;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
@@ -34,6 +33,7 @@ using TagLib;
 using Buffer = Windows.Storage.Streams.Buffer;
 using Color = Windows.UI.Color;
 using File = TagLib.File;
+using BreadPlayer.Core.Engines.BASSEngine;
 
 namespace BreadPlayer.Core
 {
@@ -59,7 +59,7 @@ namespace BreadPlayer.Core
             {
                 if (_player == null)
                 {
-                    _player = new FmodPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
                 }
 
                 return _player;

@@ -118,7 +118,7 @@ namespace BreadPlayer
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
-                var file = await(await Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
+                var file = await (await Package.Current.InstalledLocation.GetFolderAsync(@"Assets\")).GetFileAsync("5minsilence.mp3");
                 _player = new MediaPlayer();
                 _player.PlaybackSession.PlaybackStateChanged += PlaybackSession_PlaybackStateChanged;
                 _player.CommandManager.IsEnabled = false;
@@ -136,15 +136,20 @@ namespace BreadPlayer
             _smtc.IsPreviousEnabled = true;
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
+
+
             SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
+            BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (sender.PlaybackState == MediaPlaybackState.Paused)
                 {
+                    BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                 }
             });
@@ -161,7 +166,7 @@ namespace BreadPlayer
             var musicProps = _smtc.DisplayUpdater.MusicProperties;
             _smtc.DisplayUpdater.ClearAll();
             if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {              
+            {               
                 musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
                 musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
                 musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
@@ -210,9 +215,11 @@ namespace BreadPlayer
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
                 case PlayerState.Paused:
+                    BLogger.Logger?.Info("state has been changed to paused.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                     break;
                 case PlayerState.Stopped:
+                    BLogger.Logger?.Info("state has been changed to stopped.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                     break;
                 default:

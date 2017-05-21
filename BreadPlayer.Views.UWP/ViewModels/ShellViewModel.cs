@@ -511,15 +511,15 @@ namespace BreadPlayer.ViewModels
             {
                 await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    //DontUpdatePosition = true;
-                    //CurrentPosition = 0;
-                    //Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
+                    DontUpdatePosition = true;
+                    CurrentPosition = 0;
+                    Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
                     if (Repeat == "No Repeat" && GetPlayingCollection() != null && GetPlayingCollection().Any())
                     {
                         PlayNext();
                     }
-                    //else
-                    //    PlayPause();
+                    else
+                        PlayPause();
                 });
             }
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>

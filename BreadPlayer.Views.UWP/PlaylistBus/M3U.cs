@@ -9,18 +9,16 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.ViewModels;
+using BreadPlayer.Messengers;
 
 namespace BreadPlayer.PlaylistBus
 {
     public class M3U : IPlaylist
     {
-        public async Task LoadPlaylist(StorageFile file)
+        public async Task<IEnumerable<Mediafile>> LoadPlaylist(StorageFile file)
         {
-            Playlist playlist = new Playlist { Name = file.DisplayName };
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                PlaylistService service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
-                await service.AddPlaylistAsync(playlist);
                 List<Mediafile> playlistSongs = new List<Mediafile>();
                 string line;
                 int index = 0;
@@ -58,8 +56,8 @@ namespace BreadPlayer.PlaylistBus
                                 var token = StorageApplicationPermissions.FutureAccessList.Add(accessFile);
 
                                 Mediafile mp3File = await SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
-                                await SharedLogic.NotificationManager.ShowMessageAsync(index + " songs sucessfully added into playlist: " + file.DisplayName);
                                 playlistSongs.Add(mp3File);
                                 StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
@@ -68,12 +66,9 @@ namespace BreadPlayer.PlaylistBus
                                 failedFiles++;
                             }
                         });
-                    }
-                    await service.InsertTracksAsync(playlistSongs, playlist);
-
-                    string message = string.Format("Playlist \"{3}\" successfully imported! Total Songs: {0} Failed: {1} Succeeded: {2}", index, failedFiles, index - failedFiles, file.DisplayName);
-                    await SharedLogic.NotificationManager.ShowMessageAsync(message);
+                    }                    
                 }
+                 return playlistSongs;
             }
         }
 

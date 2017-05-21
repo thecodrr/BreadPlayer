@@ -18,7 +18,7 @@ namespace BreadPlayer.Database
         ///</summary>
         ///<param name="?"></param>
         Task<bool> UpdateMediafile(Mediafile data);
-        void UpdateMediafiles(IEnumerable<Mediafile> data);
+        void UpdateMediafiles<T>(IEnumerable<Mediafile> data);
         void AddMediafile(Mediafile data);
         Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);

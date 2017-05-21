@@ -45,9 +45,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             LoadEqualizerSettings();
             PropertyChanged += Effects_PropertyChanged;
         }
-
-      
-       
         #endregion
 
         #region Properties

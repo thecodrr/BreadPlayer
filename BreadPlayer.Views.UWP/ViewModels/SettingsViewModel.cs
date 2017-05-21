@@ -288,6 +288,8 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
+                StorageApplicationPermissions.FutureAccessList.Add(file);
+
                 IPlaylist playlist = null;
                 if (Path.GetExtension(file.Path) == ".m3u")
                 {
@@ -298,9 +300,8 @@ namespace BreadPlayer.ViewModels
                     playlist = new Pls();
                 }
 
-                var plist = new Playlist { Name = file.DisplayName };
+                var plist = new Playlist { Name = file.DisplayName, IsExternal = true, Path = file.Path};
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddPlaylist, plist);
-                await playlist.LoadPlaylist(file).ConfigureAwait(false);
             }
         }
         /// <summary>
@@ -609,7 +610,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
-        {
+        {  
             //tell the reader that we accept the changes
             //so that the same files are not served to us again.
             await (sender as StorageLibraryChangeTracker).GetChangeReader().AcceptChangesAsync();
@@ -617,6 +618,7 @@ namespace BreadPlayer.ViewModels
             //check if there are any updated items.
             if (e.UpdatedItems != null && e.UpdatedItems.Any())
             {
+              
                 foreach (var item in e.UpdatedItems)
                 {
                     //sometimes, the breadplayer log is also included in updated files,
@@ -636,24 +638,31 @@ namespace BreadPlayer.ViewModels
                         //NOTE: ChangeType for a file replaced is also this.
                         //TODO: Add logic for a file that is replaced.
                         case StorageLibraryChangeType.Deleted:
-                            await item.RemoveItem(TracksCollection.Elements);
+                            await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
                             //file was moved or renamed.
                             //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
-                        case StorageLibraryChangeType.MovedOrRenamed:
+                            case StorageLibraryChangeType.MovedOrRenamed:
                             if (item.IsOfType(StorageItemTypes.File))
                             {
                                 if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
                                 {
                                     renamedItem.Path = item.Path;
-                                    await LibraryService.UpdateMediafile(renamedItem);
+                                    if(await LibraryService.UpdateMediafile(renamedItem))
+                                    {
+                                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", renamedItem.Path), 5);
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                await item.RenameFolder(TracksCollection.Elements, LibraryService);
                             }
                             break;
                             //this is almost never invoked but just in case,
                             //we implement RemoveItem logic here.
                         case StorageLibraryChangeType.MovedOutOfLibrary:
-                            await item.RemoveItem(TracksCollection.Elements);
+                            await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
                             //this is also never invoked but just in case,
                             //we implement AddNewItem logic here.
@@ -675,7 +684,6 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-       
         #endregion
 
     }

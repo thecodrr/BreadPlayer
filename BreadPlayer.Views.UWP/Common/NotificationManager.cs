@@ -8,6 +8,8 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Windows.Data.Xml.Dom;
 
 namespace BreadPlayer.NotificationManager
 {
@@ -55,6 +57,12 @@ namespace BreadPlayer.NotificationManager
             {
                 ToastNotificationManager.History.Clear();
                 var notificationXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText04);
+                IXmlNode toastNode = notificationXml.SelectSingleNode("/toast");
+                ((XmlElement)toastNode).SetAttribute("launch", "NowPlaying.xaml");
+
+                XmlElement audio = notificationXml.CreateElement("audio");
+                audio.SetAttribute("silent", "True");  //Here
+                toastNode.AppendChild(audio);
                 var toeastElement = notificationXml.GetElementsByTagName("text");
                 toeastElement[0].AppendChild(notificationXml.CreateTextNode("Upcoming Song"));
                 toeastElement[1].AppendChild(notificationXml.CreateTextNode(mediaFile.Title));
@@ -65,9 +73,8 @@ namespace BreadPlayer.NotificationManager
                 {
                     Group = "upcoming-song"
                 };
+                
                 ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
-
-                //var hello = ToastNotificationManager.History.GetHistory().ToList();
             }
         }
         private void HideTimer_Tick(object sender, object e)

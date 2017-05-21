@@ -321,9 +321,16 @@
                     </Grid>
                 </StackPanel>
             </PivotItem>
-
+            <PivotItem x:Uid="contributePivot" Header="">
+                <StackPanel>
+                    <Button x:Uid="helpTranslateBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/I-Want-To-Translate!" Padding="38,14" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
+                    <Button x:Uid="contributeCodeBtn" Margin="0,5,0,0" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/How-To-Build-Bread-Player" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="40,14" Style="{StaticResource RoundedIconButtonStyle}"/>
+                    <Button x:Uid="testForUsBtn" Margin="0,5,0,0" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/Guide-For-Testers" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,14" Style="{StaticResource RoundedIconButtonStyle}"/>
+                </StackPanel>
+            </PivotItem>
             <PivotItem x:Uid="aboutPivot" Header="">
-                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <StackPanel MaxWidth="700" HorizontalAlignment="Left">
                     <TextBlock x:Uid="versionHeader" Text="" FontSize="18" FontWeight="Bold"/>
                     <TextBlock x:Uid="version" Text=""/>
                     <TextBlock x:Uid="contributorsHeader" Text="" FontSize="18" FontWeight="Bold"/>
@@ -346,16 +353,10 @@
                     <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
                     <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
                     <TextBlock x:Uid="licenseHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
-                         This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version. This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-                    </TextBlock>
+                        <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
+                        </TextBlock>
                 </StackPanel>
+                </ScrollViewer>
             </PivotItem>
         
         </Pivot>
