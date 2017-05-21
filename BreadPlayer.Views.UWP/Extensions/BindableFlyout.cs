@@ -159,44 +159,42 @@ namespace BreadPlayer.Extensions
         private static SharedLogic _core = new SharedLogic();
         private async static void Setup(MenuFlyout menuFlyout)
         {
-            if (menuFlyout != null)
+            if (menuFlyout == null) return;
+
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                menuFlyout.Items.Clear();
+                MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
+                MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
+                MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = _core.OpenSongLocationCommand, CommandParameter = null };
+                MenuFlyoutItem changeAlbumArt = new MenuFlyoutItem { Text = "Change Album Art", Command = _core.ChangeAlbumArtCommand, CommandParameter = null };
+
+                menuFlyout.Items.Add(addTo);
+                menuFlyout.Items.Add(changeAlbumArt);
+                menuFlyout.Items.Add(openLoc);
+                menuFlyout.Items.Add(properties);
+                foreach (var menuItem in _core.OptionItems)
                 {
-                    _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
-                    menuFlyout.Items.Clear();
-                    MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
-                    MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
-                    MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = _core.OpenSongLocationCommand, CommandParameter = null };
-                    MenuFlyoutItem changeAlbumArt= new MenuFlyoutItem { Text = "Change Album Art", Command = _core.ChangeAlbumArtCommand, CommandParameter = null };
-
-                    menuFlyout.Items.Add(addTo);
-                    menuFlyout.Items.Add(changeAlbumArt);
-                    menuFlyout.Items.Add(openLoc);
-                    menuFlyout.Items.Add(properties);
-                    foreach (var menuItem in _core.OptionItems)
+                    var item = new MenuFlyoutItem
                     {
-                        var item = new MenuFlyoutItem
-                        {
-                            Text = menuItem.Text,
-                            Command = menuItem.Command
-                        };
-                        item.CommandParameter = menuItem.CommandParameter ?? item;
-                        if (menuFlyout.GetType() != typeof(CustomFlyout))
-                        {
-                            item.Tag = "Current";
-                        }
-
-                        if (addTo.Items.Count == 1)
-                        {
-                            addTo.Items.Add(new MenuFlyoutSeparator());
-                        }
-                        addTo.Items.Add(item);
+                        Text = menuItem.Text,
+                        Command = menuItem.Command
+                    };
+                    item.CommandParameter = menuItem.CommandParameter ?? item;
+                    if (menuFlyout.GetType() != typeof(CustomFlyout))
+                    {
+                        item.Tag = "Current";
                     }
-                });               
-                //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
-            }
 
+                    if (addTo.Items.Count == 1)
+                    {
+                        addTo.Items.Add(new MenuFlyoutSeparator());
+                    }
+                    addTo.Items.Add(item);
+                }
+            });
+            //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
         }
 
         private static void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)

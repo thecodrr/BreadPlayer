@@ -364,8 +364,13 @@ namespace BreadPlayer.ViewModels
                     {
                         if (!string.IsNullOrEmpty(folder))
                         {
-                            var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
-                            LibraryFoldersCollection.Add(storageFolder);
+                            try
+                            {
+                                var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
+                                LibraryFoldersCollection.Add(storageFolder);
+                            }
+                            catch(FileNotFoundException)
+                            {}
                         }
                     }
                 }

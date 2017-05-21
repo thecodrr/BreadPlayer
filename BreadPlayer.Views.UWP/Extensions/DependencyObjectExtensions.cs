@@ -23,24 +23,20 @@ namespace BreadPlayer.Extensions
         }
         public static void ZoomAnimate(this DependencyObject obj, int from, int to, string targetPath)
         {
-            Storyboard board = null;
-            if (board == null)
+            Storyboard board = new Storyboard();
+            var zoomAnimate = new DoubleAnimation
             {
-                board = new Storyboard();
-                var zoomAnimate = new DoubleAnimation
-                {
-                    From = from,
-                    To = to,
-                    Duration = TimeSpan.FromMilliseconds(200),
-                    FillBehavior = FillBehavior.HoldEnd,
-                    EnableDependentAnimation = true
-                };
-                Storyboard.SetTarget(zoomAnimate, obj);// (SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]);
-                Storyboard.SetTargetProperty(zoomAnimate, targetPath);// "(SolidColorBrush.Color)");
-                board.Children.Add(zoomAnimate);
-                board.Begin();
-                board.Completed += (send, eventArgs) => { board = null; };
-            }
+                From = from,
+                To = to,
+                Duration = TimeSpan.FromMilliseconds(200),
+                FillBehavior = FillBehavior.HoldEnd,
+                EnableDependentAnimation = true
+            };
+            Storyboard.SetTarget(zoomAnimate, obj);// (SolidColorBrush)App.Current.Resources["SystemControlBackgroundAccentBrush"]);
+            Storyboard.SetTargetProperty(zoomAnimate, targetPath);// "(SolidColorBrush.Color)");
+            board.Children.Add(zoomAnimate);
+            board.Begin();
+            board.Completed += (send, eventArgs) => { board = null; };
         }
     }
 }

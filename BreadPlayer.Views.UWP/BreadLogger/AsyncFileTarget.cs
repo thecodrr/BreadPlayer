@@ -38,7 +38,10 @@ namespace BreadPlayer.Targets
         {
             try
             {
-                await FileIO.AppendTextAsync(_file, content);
+                if (_file != null)
+                {
+                    await FileIO.AppendTextAsync(_file, content);
+                }
             }
             catch { }
         }

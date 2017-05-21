@@ -173,12 +173,12 @@ namespace BreadPlayer
                 {
                     // Create a Frame to act as the navigation context
                     rootFrame = new Frame();
-                  //  BLogger.Logger.Info("New frame created.");
-                    if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
-                    {
+                    // BLogger.Logger.Info("New frame created.");
+                    //if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
+                    //{
                         //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                         //TODO: Load state from previously suspended application
-                    }
+                    //}
                   
                     
                     rootFrame.NavigationFailed += OnNavigationFailed;
@@ -196,13 +196,13 @@ namespace BreadPlayer
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
                 
-                 var view = ApplicationView.GetForCurrentView();
-                 view.SetPreferredMinSize(new Size(360, 100));
+                var view = ApplicationView.GetForCurrentView();
+                view.SetPreferredMinSize(new Size(360, 100));
                 if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
                     BLogger.Logger.Info("Trying to maximize to full screen.");
-                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-                    BLogger.Logger.Info("Maximized to full screen.");
+                    if (ApplicationView.GetForCurrentView().TryEnterFullScreenMode())
+                        BLogger.Logger.Info("Maximized to full screen.");
                 }
                 if (args.Kind != ActivationKind.File)
                 {
