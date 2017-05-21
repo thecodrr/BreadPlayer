@@ -21,15 +21,13 @@ namespace BreadPlayer.Database
         }
         public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, IDbRecord pList)
         {
-            List<ChildSong> playlistSongs = new List<ChildSong>();
-            foreach (var file in fileCol)
-            {
-                playlistSongs.Add(new ChildSong
+            IEnumerable<ChildSong> playlistSongs
+                = fileCol.Select(x => new ChildSong()
                 {
-                    SongId = file.Id,
-                    PlaylistId = pList.Id
+                    SongId = x.Id,
+                    PlaylistId = x.Id
                 });
-            }
+
             Database.ChangeTable(_tablename, _texttablename);
             await Database.InsertRecords(playlistSongs);
         }
@@ -49,19 +47,15 @@ namespace BreadPlayer.Database
             Database.ChangeTable(_tablename, _texttablename);
             return Database.CheckExists(id);
         }
-        public async Task<IEnumerable<Mediafile>> GetTracksAsync(long parentId)
+        public Task<IEnumerable<Mediafile>> GetTracksAsync(long parentId)
         {
-            return await Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 Database.ChangeTable(_tablename, _texttablename);
                 var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId))).Select(t => t.SongId);
                 Database.ChangeTable("Tracks", "TracksText");
-                List<Mediafile> tracks = new List<Mediafile>();
-                foreach (var id in trackIds)
-                {
-                    tracks.Add(Database.GetRecordById<Mediafile>(id));
-                }
-                return tracks;
+
+                return trackIds.Select(x => Database.GetRecordById<Mediafile>(x));
             });
         }
     }

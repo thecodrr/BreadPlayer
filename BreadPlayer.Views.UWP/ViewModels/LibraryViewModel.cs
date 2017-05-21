@@ -530,9 +530,9 @@ namespace BreadPlayer.ViewModels
             return null;
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 MostEatenSongsCollection.AddRange(
                     TracksCollection.Elements.Where(t => t.PlayCount > 1 &&
@@ -541,9 +541,9 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 RecentlyPlayedCollection.AddRange(
                     TracksCollection.Elements.Where(t => t.LastPlayed != null
@@ -555,17 +555,17 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
                 return FavoriteSongsCollection;
             });
         }
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.All(t => t.Path == item.Path)));
                 return RecentlyAddedSongsCollection;
@@ -838,7 +838,7 @@ namespace BreadPlayer.ViewModels
                 else
                 {
                     var path = item.Path;
-                    var tempList = new List<Mediafile>();
+                    //var tempList = new List<Mediafile>();
                     if (!TracksCollection.Elements.All(t => t.Path != path)) continue;
                     try
                     {
@@ -897,7 +897,7 @@ namespace BreadPlayer.ViewModels
             SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             await LoadPlaylists();
             UpdateJumplist("Title");
-        }     
+        }
       
         #endregion
 
@@ -945,7 +945,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var pList = await ShowAddPlaylistDialogAsync();
-                if(pList != null)
+                if (pList != null)
                 {
                     await AddPlaylistAsync(pList, false);
                 }
@@ -1018,7 +1018,7 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
+        private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {

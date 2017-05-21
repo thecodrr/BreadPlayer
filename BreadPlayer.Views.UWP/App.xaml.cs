@@ -28,14 +28,10 @@ using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
-using BreadPlayer.Services;
-using BreadPlayer.Core;
-using Windows.ApplicationModel.ExtendedExecution;
 
 namespace BreadPlayer
 {

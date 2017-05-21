@@ -1,5 +1,4 @@
-﻿
-using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core.Common
 {

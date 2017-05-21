@@ -146,29 +146,28 @@ namespace BreadPlayer.ViewModels
 
         private async void HandleExecuteCmdMessage(Message message)
         {
-            if (message.Payload != null)
-            {
-                if (message.Payload is List<object> list)
-                {
-                    double volume = 0;
-                    if ((double)list[3] == 50.0)
-                    {
-                        volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
-                    }
-                    else
-                    {
-                        volume = (double)list[3];
-                    }
+            if (message.Payload == null) return;
 
-                    await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
+            if (message.Payload is List<object> list)
+            {
+                double volume = 0;
+                if ((double)list[3] == 50.0)
+                {
+                    volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
                 }
                 else
                 {
-                    GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
+                    volume = (double)list[3];
                 }
 
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
             }
+            else
+            {
+                GetType().GetTypeInfo().GetDeclaredMethod(message.Payload as string)?.Invoke(this, new object[] { });
+            }
+
+            message.HandledStatus = MessageHandledStatus.HandledCompleted;
         }
 
         private async void HandleDisposeMessage()
@@ -233,7 +232,7 @@ namespace BreadPlayer.ViewModels
         }
         private void IncreaseVolume()
         {
-            if(Player.Volume < 100)
+            if (Player.Volume < 100)
             {
                 Player.Volume++;
             }
@@ -474,7 +473,6 @@ namespace BreadPlayer.ViewModels
                     await Load(mp3File, true);
                 }
             }
-
         }
         #endregion
 
@@ -756,7 +754,9 @@ namespace BreadPlayer.ViewModels
         }
         private bool IsSongToStopAfter()
         {
-            if (_songToStopAfter != null && (_songToStopAfter.CompareTo(PreviousSong) == 0 || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile) == 0))
+            if (_songToStopAfter != null
+                && (_songToStopAfter.CompareTo(PreviousSong) == 0
+                || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile) == 0))
             {
                 PlayPause();
                 _songToStopAfter = null;
@@ -781,51 +781,51 @@ namespace BreadPlayer.ViewModels
         public async Task Load(Mediafile mp3File, bool play = false, double currentPos = 0, double vol = 50)
         {
             ClearPlayerState();
-            if (mp3File != null)
-            {
-                if (IsSongToStopAfter())
-                {
-                    return;
-                }
 
+            if (mp3File == null) return;
+
+            if (IsSongToStopAfter())
+            {
+                return;
+            }
+
+            if (play)
+            {
+                Player.IgnoreErrors = true;
+            }
+
+            mp3File.State = PlayerState.Playing;
+            Player.Volume = Player.Volume == 50 ? vol : Player.Volume;
+            if (await Player.Load(mp3File))
+            {
+                PlayPauseCommand.IsEnabled = true;
                 if (play)
                 {
-                    Player.IgnoreErrors = true;
-                }
+                    PlayPauseCommand.Execute(null);
 
-                mp3File.State = PlayerState.Playing;
-                Player.Volume = Player.Volume == 50 ? vol : Player.Volume;
-                if (await Player.Load(mp3File))
-                {
-                    PlayPauseCommand.IsEnabled = true;
-                    if (play)
+                    //navigate to now playing view automatically if on mobile.
+                    if (InitializeCore.IsMobile)
                     {
-                        PlayPauseCommand.Execute(null);
-
-                        //navigate to now playing view automatically if on mobile.
-                        if (InitializeCore.IsMobile)
-                        {
-                            NavigateToNowPlayingView();
-                        }
-                    }
-                    else
-                    {
-                        DontUpdatePosition = true;
-                        CurrentPosition = currentPos;
+                        NavigateToNowPlayingView();
                     }
                 }
                 else
                 {
-                    BLogger.Logger.Error("Failed to load file. Loading next file...");
-                    var playingCollection = GetPlayingCollection();
-                    int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
-                    Player.IgnoreErrors = false;
-                    await Load(await GetUpcomingSong(), true);
+                    DontUpdatePosition = true;
+                    CurrentPosition = currentPos;
                 }
-
-                await UpdateUi(mp3File);
             }
-        }       
+            else
+            {
+                BLogger.Logger.Error("Failed to load file. Loading next file...");
+                var playingCollection = GetPlayingCollection();
+                int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
+                Player.IgnoreErrors = false;
+                await Load(await GetUpcomingSong(), true);
+            }
+
+            await UpdateUi(mp3File);
+        }
         #endregion
 
     }

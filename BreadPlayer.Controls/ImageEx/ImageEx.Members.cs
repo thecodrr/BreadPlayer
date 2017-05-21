@@ -31,13 +31,6 @@ namespace BreadPlayer.Controls
 
         public Image Image => Content as Image;
 
-        public CastingSource GetAsCastingSource()
-        {
-            if (Image != null)
-            {
-                return Image.GetAsCastingSource();
-            }
-            return null;
-        }
+        public CastingSource GetAsCastingSource() => Image?.GetAsCastingSource();
     }
 }

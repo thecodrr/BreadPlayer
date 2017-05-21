@@ -68,7 +68,7 @@ namespace BreadPlayer.PlaylistBus
                         });
                     }                    
                 }
-                 return playlistSongs;
+                return playlistSongs;
             }
         }
 

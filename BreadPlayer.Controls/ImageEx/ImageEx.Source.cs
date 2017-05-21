@@ -34,38 +34,27 @@ namespace BreadPlayer.Controls
         private void SetSource(object source)
         {
             _isHttpSource = false;
-            if (source != null)
+
+            if (source == null) return;
+
+            switch (source)
             {
-                string url = source as String;
-                if (url != null)
-                {
+                case string url:
                     SetSourceString(url);
-                }
-                else if(source is BitmapImage bitmap)
-                {
+                    break;
+                case BitmapImage bitmap:
                     SetImage(bitmap);
-                }
-                else
-                {
-                    Uri uri = source as Uri;
-                    if (uri != null)
-                    {
-                        SetSourceUri(uri);
-                    }
-                    else
-                    {
-                        ImageSource imageSource = source as ImageSource;
-                        if (imageSource != null)
-                        {
-                            SetImage(imageSource);
-                        }
-                        else
-                        {
-                            ClearImage();
-                        }
-                    }
-                }
-            }           
+                    break;
+                case Uri uri:
+                    SetSourceUri(uri);
+                    break;
+                case ImageSource imageSource:
+                    SetImage(imageSource);
+                    break;
+                default:
+                    ClearImage();
+                    break;
+            }
         }
 
         private void SetSourceString(string url)
@@ -75,16 +64,10 @@ namespace BreadPlayer.Controls
             {
                 SetSourceUri(uri);
             }
-            else if (Uri.IsWellFormedUriString(url, UriKind.Relative))
+            else if (Uri.IsWellFormedUriString(url, UriKind.Relative)
+                && Uri.TryCreate("ms-appx:///" + url.TrimStart('/'), UriKind.Absolute, out uri))
             {
-                if (Uri.TryCreate("ms-appx:///" + url.TrimStart('/'), UriKind.Absolute, out uri))
-                {
-                    SetSourceUri(uri);
-                }
-                else
-                {
-                    ClearImage();
-                }
+                SetSourceUri(uri);
             }
             else
             {
@@ -118,7 +101,6 @@ namespace BreadPlayer.Controls
                         }
                     }
                     SetImage(new BitmapImage(cachedUri));
-                    
                 }
                 else
                 {

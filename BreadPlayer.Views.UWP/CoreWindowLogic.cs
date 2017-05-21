@@ -73,6 +73,8 @@ namespace BreadPlayer
                         }
                         catch (System.IO.FileNotFoundException)
                         { }
+                        catch (UnauthorizedAccessException)
+                        { }
                     }
                 });
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));

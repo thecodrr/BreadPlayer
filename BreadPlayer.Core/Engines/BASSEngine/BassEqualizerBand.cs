@@ -1,11 +1,6 @@
 ﻿using BreadPlayer.Core.Engines.Interfaces;
 using ManagedBass;
 using ManagedBass.Fx;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
 {

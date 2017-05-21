@@ -21,7 +21,7 @@ using Windows.Storage.Search;
 
 namespace BreadPlayer.Common
 {
-    internal class DirectoryWalker
+    internal static class DirectoryWalker
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
