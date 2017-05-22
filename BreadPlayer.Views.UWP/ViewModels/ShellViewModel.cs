@@ -110,7 +110,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var listObject = message.Payload as List<object>;
-                TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
+                TracksCollection = listObject[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
                 IsSourceGrouped = (bool)listObject[1];
                 _songCount = _service.SongCount;
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
@@ -585,7 +585,7 @@ namespace BreadPlayer.ViewModels
             get => _isSourceGrouped;
             set => Set(ref _isSourceGrouped, value);
         }
-        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
         public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }

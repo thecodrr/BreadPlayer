@@ -235,14 +235,14 @@ namespace BreadPlayer.ViewModels
         private ThreadSafeObservableCollection<Mediafile> RecentlyPlayedCollection => 
             _recentlyPlayedCollection ?? (_recentlyPlayedCollection = new ThreadSafeObservableCollection<Mediafile>());
 
-        private GroupedObservableCollection<string, Mediafile> _tracksCollection;
+        private GroupedObservableCollection<IGroupKey, Mediafile> _tracksCollection;
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
         /// </summary>
-        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         {
             get => _tracksCollection ?? (_tracksCollection =
-                       new GroupedObservableCollection<string, Mediafile>(GetSortFunction("FolderPath")));
+                       new GroupedObservableCollection<IGroupKey, Mediafile>(GetSortFunction("FolderPath")));
             private set
             {
                 Set(ref _tracksCollection, value);
@@ -609,12 +609,12 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
+        private async Task LoadCollectionAsync(Func<Mediafile, IGroupKey> sortFunc, bool group)
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 _grouped = group;
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
+                TracksCollection = new GroupedObservableCollection<IGroupKey, Mediafile>(sortFunc);
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
 
                 SongCount = LibraryService.SongCount;
@@ -626,7 +626,7 @@ namespace BreadPlayer.ViewModels
                 {
                     ViewSource.Source = TracksCollection.Elements;
                 }
-
+             
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
                 await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
@@ -651,12 +651,13 @@ namespace BreadPlayer.ViewModels
                         }
 
                         _grouped = true;
-                        TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
+                        TracksCollection = new GroupedObservableCollection<IGroupKey, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
                         await TracksCollection.AddRange(_files, true, false);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
+
                     });
                 }
                 else
@@ -696,13 +697,27 @@ namespace BreadPlayer.ViewModels
                     UpdateJumplist(Sort);
                     ViewSource.IsSourceGrouped = false;
                     ViewSource.IsSourceGrouped = true;
+                    FillKeys();
                 }
             });
         }
-
-        private static Func<Mediafile, string> GetSortFunction(string propName)
+        private void FillKeys()
         {
-            Func<Mediafile, string> f;
+            foreach(var group in TracksCollection)
+            {
+                if (group.Key is TitleGroupKey titleGroupKey)
+                {
+                    titleGroupKey.TotalAlbums = group.GroupBy(t => t.Album).Count();
+                    titleGroupKey.TotalArtists = group.GroupBy(t => t.LeadArtist).Count();
+                    titleGroupKey.TotalPlays = group.Sum(t => t.PlayCount);
+                }
+                else
+                    return;
+            }
+        }
+        private static Func<Mediafile, IGroupKey> GetSortFunction(string propName)
+        {
+            Func<Mediafile, IGroupKey> f = null;
             switch (propName)
             {
                 case "Title":
@@ -711,41 +726,47 @@ namespace BreadPlayer.ViewModels
                     {
                         if (t.Title.StartsWithLetter())
                         {
-                            return t.Title[0].ToString().ToUpper();
+                            return new TitleGroupKey() { Key = t.Title[0].ToString().ToUpper() };
                         }
 
                         if (t.Title.StartsWithNumber())
                         {
-                            return "#";
+                            return new TitleGroupKey() { Key = "#" };
                         }
 
                         if (t.Title.StartsWithSymbol())
                         {
-                            return "&";
+                            return new TitleGroupKey() { Key = "&" };
                         }
 
-                        return t.Title;
+                        return new TitleGroupKey() { Key = t.Title };
                     };
                     break;
                 case "Year":
-                    f = t => string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year };
                     break;
                 case "Length":
                     string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" };
-                    f = t => string.IsNullOrEmpty(t.Length) || t.Length == "0:00" 
+                    f = t => new TitleGroupKey()
+                    {
+                        Key = string.IsNullOrEmpty(t.Length) || t.Length == "0:00"
                     ? "Unknown Length"
-                    : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes";
+                    : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes"
+                    };
                     break;
                 case "TrackNumber":
-                    f = t => string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber };
                     break;
                 case "FolderPath":
-                    f = t => string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName };
                     break;
-                default:
-                    f = t => GetPropValue(t, propName) as string; 
+                case "Album":
+                    f = t => new AlbumGroupKey() { Key = t.Album, FirstElement = t}; 
                     break;
-            }          
+                case "LeadArtist":
+                    f = t => new ArtistGroupKey() { Key = t.LeadArtist };
+                    break;
+            }
             return f;
         }
         private async void UpdateJumplist(string propName)
@@ -756,13 +777,13 @@ namespace BreadPlayer.ViewModels
                 {
                     case "Year":
                     case "TrackNumber":
-                        AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+                        AlphabetList = TracksCollection.Keys.DistinctBy(t => t.Key).Select(t => t.Key).ToList();
                         break;
                     case "Length":
-                        AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+                        AlphabetList = TracksCollection.Keys.Select(t => t.Key.Replace(" minutes", "")).DistinctBy(a => a).ToList();
                         break;
                     case "FolderPath":
-                        AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
+                        AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t.Key).Name.Remove(1)).DistinctBy(t => t).ToList();
                         break;
                     default:
                         AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();

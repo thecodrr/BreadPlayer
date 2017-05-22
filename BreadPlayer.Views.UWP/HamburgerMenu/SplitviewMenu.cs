@@ -462,11 +462,11 @@ namespace SplitViewMenu
         {
             if (item != null) 
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
-                { 
-                _headerText.DataContext = item;
-                _shortcuts.DataContext = item.Shortcuts;
-                _shortcuts.ItemsSource = item.Shortcuts;
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    _headerText.DataContext = item;
+                    _shortcuts.DataContext = item.Shortcuts;
+                    _shortcuts.ItemsSource = item.Shortcuts;
                 });
             }
         }

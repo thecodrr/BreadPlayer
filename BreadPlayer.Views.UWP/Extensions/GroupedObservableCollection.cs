@@ -327,6 +327,7 @@ namespace BreadPlayer.Extensions
         private Grouping<TKey, TElement> FindOrCreateGroup(TKey key)
         {
             Grouping<TKey, TElement> result = null;
+
             if (_lastEffectedGroup != null && _lastEffectedGroup.Key.Equals(key))
             {
                 return _lastEffectedGroup;
