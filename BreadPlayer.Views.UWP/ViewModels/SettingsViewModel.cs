@@ -183,7 +183,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is List<object> list)
             {
                 TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (LibraryService.SongCount <= 0)
+                if (LibraryService.SongCount <= 0 && TracksCollection.Elements.Count <= 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
@@ -326,6 +326,7 @@ namespace BreadPlayer.ViewModels
                 StorageFolder folder = await picker.PickSingleFolderAsync();
                 if (folder != null)
                 {
+                    StorageApplicationPermissions.FutureAccessList.Add(folder);
                     await LoadFolderAsync(folder);
                 }
             }

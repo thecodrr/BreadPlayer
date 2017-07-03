@@ -73,7 +73,8 @@ namespace BreadPlayer
             GlobalPageKeyDown?.Invoke(sender, args);
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
-                string releaseNotes = "FIXES:\r\n\r\n" +                    
+                string releaseNotes = "FIXES:\r\n\r\n" + 
+                    "Fix play on tap for all touch devices.\n"+
                     "Fixed all crashes.\r\n\r\n" + 
                     "NEW THINGS:\r\n\r\n" +
                     "Removed enter to full screen on startup.\n" + 

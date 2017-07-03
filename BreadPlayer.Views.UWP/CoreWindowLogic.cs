@@ -66,8 +66,15 @@ namespace BreadPlayer
                 {
                     if (!string.IsNullOrEmpty(str))
                     {
-                        var folder = await StorageFolder.GetFolderFromPathAsync(str);
-                        SharedLogic.SettingsVm.LibraryFoldersCollection.Add(folder);
+                        try
+                        {
+                            var folder = await StorageFolder.GetFolderFromPathAsync(str);
+                            SharedLogic.SettingsVm.LibraryFoldersCollection.Add(folder);
+                        }
+                        catch (UnauthorizedAccessException ex)
+                        {
+                            BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
+                        }
                     }
                 });
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
