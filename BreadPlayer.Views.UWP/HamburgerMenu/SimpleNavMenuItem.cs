@@ -54,17 +54,6 @@ namespace SplitViewMenu
 
         private List<Shortcut> _shortcuts = new List<Shortcut>
         {
-            new Shortcut
-            { SymbolAsChar = "\xE00E", Tooltip = "Go Back",
-                ShortcutCommand = new DelegateCommand(() => NavigationService.Instance.NavigateBack()) },
-            new Shortcut
-            { SymbolAsChar = "\xE149",
-                ShortcutCommand = new DelegateCommand(() =>
-                {
-                    NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
-                }),
-                Tooltip = "Refresh"
-            },
             new Shortcut { SymbolAsChar = "\xE80F",
                 ShortcutCommand = new DelegateCommand(() =>
                 {
@@ -72,6 +61,16 @@ namespace SplitViewMenu
                 }),
                 Tooltip = "Go Home"
             },
+            new Shortcut
+            {
+                SymbolAsChar = "\xE149",
+                ShortcutCommand = new DelegateCommand(() =>
+                {
+                    NavigationService.Instance.Reload(SplitViewMenu.GetParameterFromSelectedItem());
+                }),
+                Tooltip = "Refresh"
+            },
+           
             new Shortcut { SymbolAsChar = "\xE094", Tooltip = "Search Tracks", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
         };
         public List<Shortcut> Shortcuts
