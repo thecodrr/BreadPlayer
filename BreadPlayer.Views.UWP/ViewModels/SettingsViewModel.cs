@@ -471,15 +471,16 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> files)
+        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> storageFiles)
         {
-            if (files == null) return;
+            if (storageFiles == null) return;
+            var files = storageFiles.ToList();
 
             //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
             var tempList = new List<Mediafile>();
 
             int failedCount = 0;
-            var count = files.Count();
+            var count = files.Count;
             short i = 2;
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
@@ -514,7 +515,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
 
-                var uniqueFiles = DeleteDuplicates(tempList);
+                var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
@@ -534,40 +535,6 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private List<Mediafile> DeleteDuplicates(List<Mediafile> sourceList)
-        {
-            var source = sourceList;
-            var duplicateFiles = sourceList.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
-            try
-            {
-                foreach (var duplicate in duplicateFiles)
-                {
-                    var duplicateIndex = 0;
-                    var duplicateCount = source.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
-                    if (duplicateCount >= 2)
-                    {
-                        for (int i = 0; i < duplicateCount; i++)
-                        {
-                            duplicateIndex = source.IndexOf(source.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                            if (duplicateIndex > -1)
-                            {
-                                source.RemoveAt(duplicateIndex);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        source.Remove(duplicate);
-                    }
-                }
-                return source;
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error while deleting duplicates.", ex);
-            }
-            return null;
-        }
         #endregion
 
         #region AlbumArt Methods
