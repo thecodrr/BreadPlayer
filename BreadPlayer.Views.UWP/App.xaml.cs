@@ -139,7 +139,7 @@ namespace BreadPlayer
             _sessionWatch?.Stop();
             BLogger.Logger?.Info("App suspended and session terminated. Session length: " + _sessionWatch.Elapsed.TotalMinutes);
             CoreWindowLogic.SaveSettings();
-            CoreWindowLogic.DisposeObjects();
+            //CoreWindowLogic.DisposeObjects();
             await Task.Delay(500);
             deferral.Complete();
         }
@@ -160,7 +160,7 @@ namespace BreadPlayer
             }
         }
 
-        private void LoadFrame(IActivatedEventArgs args, object arguments)
+        private async void LoadFrame(IActivatedEventArgs args, object arguments)
         {
             try
             {
@@ -198,9 +198,9 @@ namespace BreadPlayer
                 view.SetPreferredMinSize(new Size(360, 100));
                 if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
-                    BLogger.Logger.Info("Trying to maximize to full screen.");
-                    if (ApplicationView.GetForCurrentView().TryEnterFullScreenMode())
-                        BLogger.Logger.Info("Maximized to full screen.");
+                    BLogger.Logger.Info("Trying to hide status bar.");
+                    await StatusBar.GetForCurrentView().HideAsync();
+                    BLogger.Logger.Info("Status bar hidden.");
                 }
                 if (args.Kind != ActivationKind.File)
                 {

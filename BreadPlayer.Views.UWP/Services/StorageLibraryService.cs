@@ -20,23 +20,32 @@ namespace BreadPlayer.Services
         }
         private async void Initialize()
         {
-            MusicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            MusicLibrary.ChangeTracker.Enable();
-            MusicLibraryParentFolder = KnownFolders.MusicLibrary;
+            try
+            {
+                //MusicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+                //MusicLibrary.ChangeTracker.Enable();
+                MusicLibraryParentFolder = KnownFolders.MusicLibrary;
 
-            //run a timer every five seconds to check for updated files
-            _updateTimer = new DispatcherTimer();
-            _updateTimer.Interval = TimeSpan.FromSeconds(5);
-            _updateTimer.Start();
-            _updateTimer.Tick += _updateTimer_Tick;
+                ////run a timer every five seconds to check for updated files
+                //_updateTimer = new DispatcherTimer();
+                //_updateTimer.Interval = TimeSpan.FromSeconds(5);
+                //_updateTimer.Start();
+                //_updateTimer.Tick += _updateTimer_Tick;
+            }
+            catch
+            {
+                await SharedLogic.NotificationManager.ShowMessageAsync("Failed to initialize file system watcher.");
+                BLogger.Logger.Error("Failed to initialize file system watcher");
+            }
         }
 
         private async void _updateTimer_Tick(object sender, object e)
         {
-            StorageItemsUpdated.Invoke(
-                 MusicLibrary.ChangeTracker,
-                 new StorageItemsUpdatedEventArgs(
-                     await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
+            if (MusicLibrary != null && MusicLibraryParentFolder != null)
+                StorageItemsUpdated.Invoke(
+                     MusicLibrary.ChangeTracker,
+                     new StorageItemsUpdatedEventArgs(
+                         await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
 
         public Task<IEnumerable<StorageFile>> GetStorageFilesInLibraryAsync()
@@ -75,26 +84,29 @@ namespace BreadPlayer.Services
 
             return await queryResult.GetFilesAsync();
         }
-        public async void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
+        public void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
         {
-            await Task.Delay(10000);
-            foreach (var folder in folderCollection)
-            {
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
-                //uint files = await queryResult.GetItemCountAsync();
-                queryResult.ContentsChanged += QueryResult_ContentsChanged;
-            }
+            //await Task.Delay(10000);
+            //foreach (var folder in folderCollection)
+            //{
+            //    StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
+            //    var files = await queryResult.GetItemCountAsync();
+            //    queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
+            //}
         }
         public async Task<StorageFolder> AddFolderToLibraryAsync()
         {
-            return await MusicLibrary.RequestAddFolderAsync();
+            if (MusicLibrary != null)
+                return await MusicLibrary.RequestAddFolderAsync();
+            return null;
         }
-        private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
+        private void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
-            StorageItemsUpdated.Invoke(
-                MusicLibrary.ChangeTracker, 
-                new StorageItemsUpdatedEventArgs(
-                    await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
+            //if (MusicLibrary != null)
+            //    StorageItemsUpdated.Invoke(
+            //    MusicLibrary.ChangeTracker,
+            //    new StorageItemsUpdatedEventArgs(
+            //        await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
         public event OnStorageItemsUpdatedEventHandler StorageItemsUpdated;
     }

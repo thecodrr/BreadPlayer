@@ -72,9 +72,10 @@ namespace BreadPlayer
                             SharedLogic.SettingsVm.LibraryFoldersCollection.Add(folder);
                         }
                         catch (System.IO.FileNotFoundException)
-                        { }
+                        { BLogger.Logger.Error("Could not find library folder."); }
                         catch (UnauthorizedAccessException)
-                        { }
+                        { BLogger.Logger.Error("Access denied while trying to load library folders on startup."); }
+
                     }
                 });
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
@@ -145,13 +146,13 @@ namespace BreadPlayer
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+           // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
 
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (sender.PlaybackState == MediaPlaybackState.Paused)
                 {
-                    BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+                   // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                 }
             });
@@ -217,11 +218,11 @@ namespace BreadPlayer
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
                 case PlayerState.Paused:
-                    BLogger.Logger?.Info("state has been changed to paused.");
+                   // BLogger.Logger?.Info("state has been changed to paused.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                     break;
                 case PlayerState.Stopped:
-                    BLogger.Logger?.Info("state has been changed to stopped.");
+                   // BLogger.Logger?.Info("state has been changed to stopped.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                     break;
                 default:

@@ -183,7 +183,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is List<object> list)
             {
                 TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (LibraryService.SongCount <= 0)
+                if (LibraryService.SongCount <= 0 && TracksCollection.Elements.Count <= 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
@@ -311,7 +311,23 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                await LoadFolderAsync(await StorageLibraryService.AddFolderToLibraryAsync());
+                FolderPicker picker = new FolderPicker();
+                picker.FileTypeFilter.Add(".mp3");
+                picker.FileTypeFilter.Add(".wav");
+                picker.FileTypeFilter.Add(".ogg");
+                picker.FileTypeFilter.Add(".flac");
+                picker.FileTypeFilter.Add(".m4a");
+                picker.FileTypeFilter.Add(".aif");
+                picker.FileTypeFilter.Add(".wma");
+                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+                picker.ViewMode = PickerViewMode.List;
+                picker.CommitButtonText = "Import";
+                StorageFolder folder = await picker.PickSingleFolderAsync();
+                if (folder != null)
+                {
+                    StorageApplicationPermissions.FutureAccessList.Add(folder);
+                    await LoadFolderAsync(folder);
+                }
             }
             catch (UnauthorizedAccessException)
             {
