@@ -515,7 +515,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
 
-                var uniqueFiles = DeleteDuplicates(tempList);
+                var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
@@ -535,40 +535,6 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private List<Mediafile> DeleteDuplicates(List<Mediafile> sourceList)
-        {
-            var source = sourceList;
-            var duplicateFiles = sourceList.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
-            try
-            {
-                foreach (var duplicate in duplicateFiles)
-                {
-                    var duplicateIndex = 0;
-                    var duplicateCount = source.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
-                    if (duplicateCount >= 2)
-                    {
-                        for (int i = 0; i < duplicateCount; i++)
-                        {
-                            duplicateIndex = source.IndexOf(source.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                            if (duplicateIndex > -1)
-                            {
-                                source.RemoveAt(duplicateIndex);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        source.Remove(duplicate);
-                    }
-                }
-                return source;
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error while deleting duplicates.", ex);
-            }
-            return null;
-        }
         #endregion
 
         #region AlbumArt Methods
