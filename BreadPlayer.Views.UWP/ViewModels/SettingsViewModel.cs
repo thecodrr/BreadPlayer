@@ -471,15 +471,16 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> files)
+        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> storageFiles)
         {
-            if (files == null) return;
+            if (storageFiles == null) return;
+            var files = storageFiles.ToList();
 
             //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
             var tempList = new List<Mediafile>();
 
             int failedCount = 0;
-            var count = files.Count();
+            var count = files.Count;
             short i = 2;
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
