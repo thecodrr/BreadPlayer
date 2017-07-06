@@ -87,17 +87,18 @@ namespace BreadPlayer.Behaviours
         }
         private void InvokeCommand(VirtualKey paramKey)
         {
-            var code = (int)paramKey;
-            if (!DoubleKeyCommand && (int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
+            if ((int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
             {
-                var p = CommandParameter;
-                Command.Execute(p);
-            }
-            else if (DoubleKeyCommand && IsControlPressed()
-                && (int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
-            {
-                var p = CommandParameter as Mediafile;
-                Command.Execute(p);
+                if (!DoubleKeyCommand)
+                {
+                    var p = CommandParameter;
+                    Command.Execute(p);
+                }
+                else if (DoubleKeyCommand && IsControlPressed())
+                {
+                    var p = CommandParameter as Mediafile;
+                    Command.Execute(p);
+                }
             }
         }
         private bool IsControlPressed()

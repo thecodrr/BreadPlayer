@@ -32,9 +32,7 @@ namespace BreadPlayer.Controls
         {
             base.PrepareContainerForItemOverride(element, item);
 
-            var listViewItem = element as ListViewItem;
-
-            if (listViewItem != null)
+            if (element is ListViewItem listViewItem)
 
             {
                 var index = IndexFromContainer(element);

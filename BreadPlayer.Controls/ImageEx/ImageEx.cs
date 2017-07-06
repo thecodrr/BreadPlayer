@@ -21,11 +21,11 @@ namespace BreadPlayer.Controls
             var progress = Progress;
             if (progress != null)
             {
-                if (!Double.IsInfinity(availableSize.Width))
+                if (!double.IsInfinity(availableSize.Width))
                 {
                     progress.Width = Math.Min(96, Math.Max(8, availableSize.Width * 0.5));
                 }
-                if (!Double.IsInfinity(availableSize.Height))
+                if (!double.IsInfinity(availableSize.Height))
                 {
                     progress.Height = Math.Min(96, Math.Max(8, availableSize.Height * 0.5));
                 }

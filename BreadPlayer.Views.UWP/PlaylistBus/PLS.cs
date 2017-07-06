@@ -23,7 +23,7 @@ namespace BreadPlayer.PlaylistBus
                 int noe = 0; //numberofentries at the end.
                 int nr = 0;
                 int failedFiles = 0;
-                int count = 0;
+                //int count = 0;
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
                 List<Mediafile> playlistSongs = new List<Mediafile>();
@@ -71,9 +71,9 @@ namespace BreadPlayer.PlaylistBus
 
                         tracks[number - 1, index] = split[1];
                     }
-                    else if (!_l.StartsWith("numberofentries") && _l != "[playlist]" && !_l.StartsWith("version="))
-                    {
-                    }
+                    //else if (!_l.StartsWith("numberofentries") && _l != "[playlist]" && !_l.StartsWith("version="))
+                    //{
+                    //}
                 }
                
                 for (int i = 0; i < noe; i++)
@@ -82,7 +82,6 @@ namespace BreadPlayer.PlaylistBus
                     {
                         try
                         {
-                          
                             string trackPath = tracks[i, 0];
                             FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
                             string path = trackPath;

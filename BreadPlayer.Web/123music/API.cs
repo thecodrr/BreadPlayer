@@ -34,13 +34,13 @@ namespace BreadPlayer.Web._123music
             }
             return true;
         }
-        public async Task<bool> GetSongsList(DataType type)
+        public Task<bool> GetSongsList(DataType type)
         {
-            return await GetItemLists<Track>(string.Format(Endpoints.SongsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
+            return GetItemLists<Track>(string.Format(Endpoints.SongsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
         }
-        public async Task<bool> GetArtistsList(DataType type)
+        public Task<bool> GetArtistsList(DataType type)
         {
-            return await GetItemLists<Artist>(string.Format(Endpoints.ArtistsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
+            return GetItemLists<Artist>(string.Format(Endpoints.ArtistsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
         }
         private async Task<bool> GetItemLists<T>(string url, bool isJson)
         {           
@@ -71,9 +71,9 @@ namespace BreadPlayer.Web._123music
 
             return null;
         }
-        public async Task<bool> GetAlbumsList(DataType type)
+        public Task<bool> GetAlbumsList(DataType type)
         {
-            return await GetItemLists<Album>(string.Format(Endpoints.AlbumsListEndpoint, type.ToString().Remove(0,1)), type == DataType.New ? true : false);
+            return GetItemLists<Album>(string.Format(Endpoints.AlbumsListEndpoint, type.ToString().Remove(0,1)), type == DataType.New ? true : false);
         }       
         private async Task<IHtmlDocument> GetJsonResponseDocumentAsync(string url)
         {

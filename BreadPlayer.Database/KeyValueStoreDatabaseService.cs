@@ -86,7 +86,7 @@ namespace BreadPlayer.Database
             StaticKeyValueDatabase.IsDisposed = true;
             StaticKeyValueDatabase.DisposeDatabaseEngine();
             _engine = null;
-       }
+        }
 
         public T GetRecordById<T>(long id)
         {
@@ -94,7 +94,7 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    var entity= tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id)).ObjectGet<T>();
+                    var entity = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id)).ObjectGet<T>();
                     if (entity != null)
                     {
                         return entity.Entity;
@@ -109,9 +109,9 @@ namespace BreadPlayer.Database
             }
         }
 
-        public async Task<T> GetRecordByQueryAsync<T>(string query)
+        public Task<T> GetRecordByQueryAsync<T>(string query)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 using (var tran = _engine.GetTransaction())
                 {
@@ -146,25 +146,25 @@ namespace BreadPlayer.Database
         public async Task InsertRecord(IDbRecord record)
         {
             await Task.Run(() =>
-          {
-              ReinitEngine();
-              using (var tran = _engine.GetTransaction())
-              {
-                  tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
+            {
+                ReinitEngine();
+                using (var tran = _engine.GetTransaction())
+                {
+                    tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
 
-                  record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
-                  tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
-                      {
-                          Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
-                          NewEntity = true,
-                          //Changes Select-Insert pattern to Insert (speeds up insert process)
-                          Entity = record //Entity itself
-                      },
-                      true);
-                  tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                  tran.Commit();
-              }
-          });
+                    record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
+                    tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
+                    {
+                        Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, record.Id) { PrimaryIndex = true } },
+                        NewEntity = true,
+                        //Changes Select-Insert pattern to Insert (speeds up insert process)
+                        Entity = record //Entity itself
+                    },
+                        true);
+                    tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
+                    tran.Commit();
+                }
+            });
         }
 
         private void ReinitEngine()
@@ -183,7 +183,7 @@ namespace BreadPlayer.Database
                 {
                     if (records.Any())
                     {
-                       
+
                         tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
 
                         foreach (var record in records.ToList())
@@ -192,8 +192,9 @@ namespace BreadPlayer.Database
                             var ir = tran.ObjectInsert(_tableName, new DBreezeObject<IDbRecord>
                             {
                                 Indexes = new List<DBreezeIndex>
-                        {
-                        new DBreezeIndex(1, record.Id) {PrimaryIndex = true } },
+                                        {
+                                            new DBreezeIndex(1, record.Id) {PrimaryIndex = true }
+                                        },
                                 NewEntity = true,
                                 //Changes Select-Insert pattern to Insert (speeds up insert process)
                                 Entity = record //Entity itself
@@ -204,7 +205,7 @@ namespace BreadPlayer.Database
                         }
 
                         tran.Commit();
-                    }                    
+                    }
                 }
             });
         }
@@ -226,9 +227,9 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<bool> UpdateRecordAsync<T>(T record, long id)
+        public Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 using (var tran = _engine.GetTransaction())
                 {
@@ -254,7 +255,7 @@ namespace BreadPlayer.Database
         {
             using (var tran = _engine.GetTransaction())
             {
-               foreach (var data in records)
+                foreach (var data in records)
                 {
                     var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id));
                     if (row.Exists)
@@ -263,7 +264,7 @@ namespace BreadPlayer.Database
                         getRecord.Entity = (T)data;
                         getRecord.NewEntity = false;
                         getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
-                        tran.ObjectInsert(_tableName, getRecord, true);                        
+                        tran.ObjectInsert(_tableName, getRecord, true);
                     }
                 }
                 tran.Commit();
@@ -290,7 +291,7 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    
+
                     foreach (var data in records)
                     {
                         tran.ObjectRemove(_tableName, 1.ToIndex(data.Id));
@@ -301,22 +302,20 @@ namespace BreadPlayer.Database
                 }
             });
         }
-        public async Task<IEnumerable<T>> GetRecords<T>()
+        public Task<IEnumerable<T>> GetRecords<T>()
         {
-            return await GetRecords<T>(long.MinValue, long.MaxValue);
+            return GetRecords<T>(long.MinValue, long.MaxValue);
         }
 
-        public async Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId)
+        public Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
-                var recordList = new List<T>();
+                IEnumerable<T> recordList;
                 using (var tran = _engine.GetTransaction())
                 {
-                    foreach (var record in tran.SelectForwardStartFrom<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true))
-                    {
-                        recordList.Add(record.ObjectGet<T>().Entity);
-                    }
+                    recordList = tran.SelectForwardStartFrom<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true)
+                            .Select(x => x.ObjectGet<T>().Entity).ToList().AsReadOnly();
                 }
                 return recordList;
             });

@@ -226,7 +226,7 @@ namespace BreadPlayer.ViewModels
                     var result = await dia.ShowAsync();
                     if (result.Label == "Yes")
                     {
-                        if(NavigationService.Instance.Frame.CurrentSourcePageType != NavigationService.Instance.HomePage.GetType())
+                        if (NavigationService.Instance.Frame.CurrentSourcePageType != NavigationService.Instance.HomePage.GetType())
                         {
                             NavigationService.Instance.NavigateToHome();
                         }

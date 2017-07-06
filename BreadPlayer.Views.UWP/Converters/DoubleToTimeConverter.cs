@@ -44,8 +44,7 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            double width = (double)value;
-            if (value is double)
+            if (value is double width)
             {
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
@@ -60,7 +59,7 @@ namespace BreadPlayer.Converters
                 }
                 return (width / 2) - 20;
             }
-            return width;
+            return value;
         }
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)

@@ -87,10 +87,10 @@ namespace BreadPlayer.ViewModels
         public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
         {
             List<Album> albums = new List<Album>();
-            List<ChildSong> childsongs = new List<ChildSong>();
+            //List<ChildSong> childsongs = new List<ChildSong>();
             await Task.Run(() =>
             {
-                Random albumRandom = new Random();
+                //Random albumRandom = new Random();
                 foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
                 {
                     var firstSong = albumGroup.First() ?? new Mediafile();

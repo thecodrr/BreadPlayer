@@ -23,10 +23,10 @@ namespace BreadPlayer.ViewModels
             set => Set(ref _queryAlbums, value);
         }
       
-        public async Task<IEnumerable<Mediafile>> StartSearch(string query)
+        public Task<IEnumerable<Mediafile>> StartSearch(string query)
         {
             LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
-            return await service.Query(query);
+            return service.Query(query);
         }
         public async Task GetAlbumsAndTracks(string query)
         {
