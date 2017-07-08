@@ -106,8 +106,7 @@ namespace BreadPlayer.Messengers
 		[Conditional("DEBUG")]
 		private void VerifyParameterType(MessageTypes message, Type parameterType)
 		{
-			Type previouslyRegisteredParameterType = null;
-			if (_messageToActionsMap.TryGetParameterType(message, out previouslyRegisteredParameterType))
+			if (_messageToActionsMap.TryGetParameterType(message, out Type previouslyRegisteredParameterType))
 			{
 				if (previouslyRegisteredParameterType != null && parameterType != null)
 				{
@@ -149,12 +148,10 @@ namespace BreadPlayer.Messengers
 			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
 
-			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
+			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType)
+                && registeredParameterType == null)
 			{
-				if (registeredParameterType == null)
-                {
-                    throw new TargetParameterCountException(string.Format("Cannot pass a parameter with message '{0}'. Registered action(s) expect no parameter.", messageType));
-                }
+                throw new TargetParameterCountException(string.Format("Cannot pass a parameter with message '{0}'. Registered action(s) expect no parameter.", messageType));
             }
 
 			var actions = _messageToActionsMap.GetActions(messageType);
@@ -203,15 +200,13 @@ namespace BreadPlayer.Messengers
 			//if (string.IsNullOrEmpty(message))
 			//    throw new ArgumentException("'message' cannot be null or empty.");
 
-			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType))
-			{
-				if (registeredParameterType != null)
-                {
-                    throw new TargetParameterCountException(string.Format("Must pass a parameter of type {0} with this message. Registered action(s) expect it.", registeredParameterType.FullName));
-                }
+			if (_messageToActionsMap.TryGetParameterType(messageType, out Type registeredParameterType)
+                && registeredParameterType != null)
+            {
+                throw new TargetParameterCountException(string.Format("Must pass a parameter of type {0} with this message. Registered action(s) expect it.", registeredParameterType.FullName));
             }
 
-			var actions = _messageToActionsMap.GetActions(messageType);
+            var actions = _messageToActionsMap.GetActions(messageType);
 			if (actions != null)
 			{
 				// actions.ForEach(action => action.DynamicInvoke());

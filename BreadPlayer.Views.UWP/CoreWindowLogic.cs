@@ -71,10 +71,11 @@ namespace BreadPlayer
                             var folder = await StorageFolder.GetFolderFromPathAsync(str);
                             SharedLogic.SettingsVm.LibraryFoldersCollection.Add(folder);
                         }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
-                        }
+                        catch (System.IO.FileNotFoundException)
+                        { BLogger.Logger.Error("Could not find library folder."); }
+                        catch (UnauthorizedAccessException)
+                        { BLogger.Logger.Error("Access denied while trying to load library folders on startup."); }
+
                     }
                 });
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));

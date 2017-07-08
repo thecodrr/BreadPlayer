@@ -20,10 +20,10 @@ namespace BreadPlayer.Database
             Database.ChangeTable("Albums", "AlbumsText");
             await Database.InsertRecords(albums);
         }
-        public async Task<IEnumerable<Album>> GetAlbumsAsync()
+        public Task<IEnumerable<Album>> GetAlbumsAsync()
         {
             Database.ChangeTable("Albums", "AlbumsText");                  
-            return await Database.GetRecords<Album>();
+            return Database.GetRecords<Album>();
         }
         public void Dispose()
         {

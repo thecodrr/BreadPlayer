@@ -144,7 +144,5 @@ namespace BreadPlayer
                 _isProgBarPressed = true;
             }
         }
-
-      
     }
 }

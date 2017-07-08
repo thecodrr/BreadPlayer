@@ -2,8 +2,6 @@
 using BreadPlayer.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -50,27 +48,28 @@ namespace BreadPlayer.Services
                          await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
 
-        public async Task<IEnumerable<StorageFile>> GetStorageFilesInLibraryAsync()
+        public Task<IEnumerable<StorageFile>> GetStorageFilesInLibraryAsync()
         {
-            return await  GetStorageFilesInFolderAsync(MusicLibraryParentFolder);
+            return GetStorageFilesInFolderAsync(MusicLibraryParentFolder);
         }
         public async Task<IEnumerable<StorageFile>> GetStorageFilesInFolderAsync(StorageFolder folder)
         {
             //Get query options with which we search for files in the specified folder
             var options = DirectoryWalker.GetQueryOptions();
+            /*
             options.FileTypeFilter.Add(".mp3");
             options.FileTypeFilter.Add(".wav");
             options.FileTypeFilter.Add(".ogg");
             options.FileTypeFilter.Add(".flac");
             options.FileTypeFilter.Add(".m4a");
             options.FileTypeFilter.Add(".aif");
-            options.FileTypeFilter.Add(".wma");
+            options.FileTypeFilter.Add(".wma");*/
 
             //this is the query result which we recieve after querying in the folder
             StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(options);
 
             //'count' is for total files got after querying.
-            var count = await queryResult.GetItemCountAsync();
+            uint count = await queryResult.GetItemCountAsync();
 
             //the event for files changed
             queryResult.ContentsChanged += QueryResult_ContentsChanged;

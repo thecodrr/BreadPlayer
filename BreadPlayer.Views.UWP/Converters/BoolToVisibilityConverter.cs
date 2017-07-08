@@ -29,34 +29,30 @@ namespace BreadPlayer.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             bool flag = false;
-            if (value is bool boolValue)
+            switch (value)
             {
-                flag = boolValue;
+                case bool boolValue:
+                    flag = boolValue;
+                    break;
+                case int intValue:
+                    flag = (Int16)intValue <= 1;
+                    break;
+                case double doubleValue:
+                    flag = (Int16)doubleValue > 1;
+                    break;
+                case ImageSource imageSource:
+                    flag = ((BitmapImage)imageSource).UriSource == null;
+                    break;
+                case string stringValue:
+                    flag = stringValue.Length < 0;
+                    break;
+                case null:
+                    flag = true;
+                    break;
+                default:
+                    break;
             }
-            else if (value is bool?)
-            {
-                flag = (bool?)value ?? false;
-            }
-            else if (value is int)
-            {
-                flag = System.Convert.ToInt16(value) <= 1;
-            }
-            else if (value is double)
-            {
-                flag = System.Convert.ToInt16(value) > 1;
-            }
-            else if (value is ImageSource imageSource)
-            {
-                flag = ((BitmapImage)imageSource).UriSource == null;
-            }
-            else if(value is string stringValue)
-            {
-                flag = stringValue.Length < 0;
-            }
-            else if(value is null)
-            {
-                flag = true;
-            }
+
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
         public object ConvertBack(object value, Type targetType,

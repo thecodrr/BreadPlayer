@@ -28,14 +28,10 @@ using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
-using BreadPlayer.Services;
-using BreadPlayer.Core;
-using Windows.ApplicationModel.ExtendedExecution;
 
 namespace BreadPlayer
 {
@@ -177,13 +173,12 @@ namespace BreadPlayer
                 {
                     // Create a Frame to act as the navigation context
                     rootFrame = new Frame();
-                  //  BLogger.Logger.Info("New frame created.");
+                    // BLogger.Logger.Info("New frame created.");
                     //if (args.PreviousExecutionState == ApplicationExecutionState.Suspended)
                     //{
                     //    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                     //    //TODO: Load state from previously suspended application
                     //}
-                  
                     
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
@@ -200,8 +195,8 @@ namespace BreadPlayer
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
                 
-                 var view = ApplicationView.GetForCurrentView();
-                 view.SetPreferredMinSize(new Size(360, 100));
+                var view = ApplicationView.GetForCurrentView();
+                view.SetPreferredMinSize(new Size(360, 100));
                 if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
                 {
                     BLogger.Logger.Info("Trying to hide status bar.");

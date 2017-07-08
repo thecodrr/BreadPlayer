@@ -132,9 +132,7 @@ namespace BreadPlayer.Extensions
 
             var queue = new Queue<DependencyObject>();
 
-            var popup = start as Popup;
-
-            if (popup != null)
+            if (start is Popup popup)
             {
                 if (popup.Child != null)
                 {
@@ -226,9 +224,8 @@ namespace BreadPlayer.Extensions
                 yield break;
             }
 
-            var popup = parent as Popup;
 
-            if (popup?.Child != null)
+            if (parent is Popup popup && popup.Child != null)
             {
                 yield return popup.Child;
                 yield break;

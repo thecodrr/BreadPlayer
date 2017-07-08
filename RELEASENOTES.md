@@ -1,4 +1,14 @@
 # Release Notes for Bread Player.
+
+## Version 2.4-beta
+### What's Fixed:
+- Fixed player startup crashes.
+- Fixed tap to play for tablets and touch monitors.
+
+### What's New:
+- Removed auto expand to full-screen in mobiles.
+- Removed some shortcuts from the app.
+
 ## Version 2.3-beta
 ### What's Fixed:
 - Fixed issue with output device not changing when headphones are connected.

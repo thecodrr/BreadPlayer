@@ -101,22 +101,22 @@ namespace BreadPlayer.ViewModels
 
         private async void HandleAddPlaylistMessage(Message message)
         {
-            Playlist plist = message.Payload as Playlist;
+            if (message.Payload is Playlist plist)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
 
-            if (plist == null) return;
-
-            message.HandledStatus = MessageHandledStatus.HandledCompleted;
-
-            await AddPlaylistAsync(plist, false);
+                await AddPlaylistAsync(plist, false);
+            }
         }
 
         private void HandlePlaySongMessage(Message message)
         {
-            if (!(message.Payload is Mediafile song)) return;
+            if (message.Payload is Mediafile song)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
 
-            message.HandledStatus = MessageHandledStatus.HandledCompleted;
-
-            PlayCommand.Execute(song);
+                PlayCommand.Execute(song);
+            }
         }
         #endregion
 
@@ -356,11 +356,10 @@ namespace BreadPlayer.ViewModels
         #region Implementations 
         private async void AddToFavorites(object para)
         {
-            var mediaFile = para as Mediafile;
-            if (mediaFile != null)
+            if (para is Mediafile mediafile)
             {
-                mediaFile.IsFavorite = true;
-                await LibraryService.UpdateMediafile(mediaFile);
+                mediafile.IsFavorite = true;
+                await LibraryService.UpdateMediafile(mediafile);
             }
         }
         /// <summary>
@@ -375,7 +374,7 @@ namespace BreadPlayer.ViewModels
                 {
                     CommitButtonText = "Relocate Song"
                 };
-                foreach (var extenstion in new List<string> { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" })
+                foreach (var extenstion in new string[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" })
                 {
                     openPicker.FileTypeFilter.Add(extenstion);
                 }
@@ -457,7 +456,7 @@ namespace BreadPlayer.ViewModels
         /// <param name="path"><see cref="Mediafile"/> to play.</param>
         private async void Play(object path)
         {
-            var mediaFile =  await GetMediafileFromParameterAsync(path, true);
+            var mediaFile = await GetMediafileFromParameterAsync(path, true);
             if (mediaFile != null)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mediaFile, true, _isPlayingFromPlaylist });
@@ -475,13 +474,16 @@ namespace BreadPlayer.ViewModels
 
             await RefreshSourceAsync().ConfigureAwait(false);
 
-            if (_source == null && Sort != "Unsorted")
+            if (_source == null)
             {
-                await LoadCollectionAsync(GetSortFunction(Sort), true).ConfigureAwait(false);
-            }
-            else if (_source == null && Sort == "Unsorted")
-            {
-                await LoadCollectionAsync(GetSortFunction("FolderPath"), false).ConfigureAwait(false);
+                if (Sort != "Unsorted")
+                {
+                    await LoadCollectionAsync(GetSortFunction(Sort), true).ConfigureAwait(false);
+                }
+                else
+                {
+                    await LoadCollectionAsync(GetSortFunction("FolderPath"), false).ConfigureAwait(false);
+                }
             }
         }
         #endregion
@@ -504,22 +506,22 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile mediaFile)
             {
                 _isPlayingFromPlaylist = false;
-               // SendLibraryLoadedMessage(TracksCollection.Elements, true);
+                // SendLibraryLoadedMessage(TracksCollection.Elements, true);
                 return mediaFile;
             }
-            if (path is IEnumerable<Mediafile> tmediaFile)
+            else if (path is IEnumerable<Mediafile> tmediaFile)
             {
                 var col = new ThreadSafeObservableCollection<Mediafile>(tmediaFile);
                 SendLibraryLoadedMessage(col, sendUpdateMessage);
                 return col[0];
             }
-            if (path is Playlist playlist)
+            else if (path is Playlist playlist)
             { 
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
             }
-            if(path is Album album)
+            else if (path is Album album)
             {
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query(album.AlbumName + " " + album.Artist));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
@@ -528,9 +530,9 @@ namespace BreadPlayer.ViewModels
             return null;
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 MostEatenSongsCollection.AddRange(
                     TracksCollection.Elements.Where(t => t.PlayCount > 1 &&
@@ -539,9 +541,9 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 RecentlyPlayedCollection.AddRange(
                     TracksCollection.Elements.Where(t => t.LastPlayed != null
@@ -553,17 +555,17 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
                 return FavoriteSongsCollection;
             });
         }
-        private async Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
+        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.All(t => t.Path == item.Path)));
                 return RecentlyAddedSongsCollection;
@@ -836,7 +838,7 @@ namespace BreadPlayer.ViewModels
                 else
                 {
                     var path = item.Path;
-                    var tempList = new List<Mediafile>();
+                    //var tempList = new List<Mediafile>();
                     if (!TracksCollection.Elements.All(t => t.Path != path)) continue;
                     try
                     {
@@ -895,7 +897,7 @@ namespace BreadPlayer.ViewModels
             SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
             await LoadPlaylists();
             UpdateJumplist("Title");
-        }     
+        }
       
         #endregion
 
@@ -943,7 +945,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var pList = await ShowAddPlaylistDialogAsync();
-                if(pList != null)
+                if (pList != null)
                 {
                     await AddPlaylistAsync(pList, false);
                 }
@@ -1016,7 +1018,7 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task AddPlaylistAsync(Playlist plist, bool addsongs, List<Mediafile> songs = null)
+        private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {

@@ -95,16 +95,16 @@ namespace BreadPlayer.Extensions
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             try
-                {
-                    if (_isObserving)
+            {
+                if (_isObserving)
                 {
                     base.OnCollectionChanged(e);
                 }
             }
-                catch (Exception ex)
-                {
-                    BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
-                }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+            }
         }
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {

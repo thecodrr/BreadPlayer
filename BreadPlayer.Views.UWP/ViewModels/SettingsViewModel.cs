@@ -278,7 +278,6 @@ namespace BreadPlayer.ViewModels
         }
         private async void ImportPlaylists()
         {
-            var picker = new FileOpenPicker();
             FileOpenPicker openPicker = new FileOpenPicker()
             {
                 ViewMode = PickerViewMode.Thumbnail,
@@ -382,13 +381,22 @@ namespace BreadPlayer.ViewModels
                     {
                         if (!string.IsNullOrEmpty(folder))
                         {
-                            var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
-                            LibraryFoldersCollection.Add(storageFolder);
+                            try
+                            {
+                                var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
+                                LibraryFoldersCollection.Add(storageFolder);
+                            }
+                            catch(FileNotFoundException)
+                            {}
+                            catch (UnauthorizedAccessException)
+                            { }
                         }
                     }
                 }
 
-                if (string.IsNullOrEmpty(folderPaths) || folderPaths.All(t => t == '|'))
+                if (string.IsNullOrEmpty(folderPaths)
+                    || folderPaths.All(t => t == '|')
+                    && !string.IsNullOrEmpty(KnownFolders.MusicLibrary.Path))
                 {
                     LibraryFoldersCollection.Add(KnownFolders.MusicLibrary);
                 }
@@ -447,7 +455,10 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                await LoadFolderAsync(KnownFolders.MusicLibrary);
+                if (!string.IsNullOrEmpty(KnownFolders.MusicLibrary.Path))
+                {
+                    await LoadFolderAsync(KnownFolders.MusicLibrary);
+                }
             }
             catch (Exception ex)
             {
@@ -460,136 +471,98 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> files)
+        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> storageFiles)
         {
-            if (files != null)
+            if (storageFiles == null) return;
+            var files = storageFiles.ToList();
+
+            //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
+            var tempList = new List<Mediafile>();
+
+            int failedCount = 0;
+            var count = files.Count;
+            short i = 2;
+            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
-                var tempList = new List<Mediafile>();
-
-                int failedCount = 0;
-                var count = files.Count();
-                short i = 2;
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                try
                 {
-                    try
+                    foreach (StorageFile file in files)
                     {
-                        foreach (StorageFile file in files)
+                        try
                         {
-                            try
-                            {
-                                Mediafile mp3File = null;
-                                i++;
-                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
-                                mp3File = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
-                                mp3File.FolderPath = Path.GetDirectoryName(file.Path);
-                                await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
+                            i++;
+                            Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
+                            Mediafile mp3File = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
+                            mp3File.FolderPath = Path.GetDirectoryName(file.Path);
+                            await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
 
-                                await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
+                            await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
 
-                                tempList.Add(mp3File);
-                                mp3File = null;
-                            }
-                            catch (Exception ex)
-                            {
-                                BLogger.Logger.Error("Loading of a song in folder failed.", ex);
-                                //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
-                                failedCount++;
-                            }
+                            tempList.Add(mp3File);
                         }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        string message1 = ex.Message + "||" + ex.InnerException;
-                        await NotificationManager.ShowMessageAsync(message1);
-                    }
-
-                    var uniqueFiles = DeleteDuplicates(tempList);
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
-                    await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
-                    await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
-                    await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
-                    await LibraryService.AddMediafiles(uniqueFiles);
-
-                    AlbumArtistViewModel vm = new AlbumArtistViewModel();
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
-                    vm = null;
-
-                    string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
-
-                    BLogger.Logger.Info(message);
-                    await NotificationManager.ShowMessageAsync(message);
-                    tempList.Clear();
-                });
-            }
-        }
-
-        private List<Mediafile> DeleteDuplicates(List<Mediafile> sourceList)
-        {
-            var source = sourceList.ToList();
-            var duplicateFiles = sourceList.Where(s => source.Count(x => x.OrginalFilename == s.OrginalFilename) > 1);
-            try
-            {
-                foreach (var duplicate in duplicateFiles)
-                {
-                    var duplicateIndex = 0;
-                    var duplicateCount = source.Count(t => t.OrginalFilename == duplicate.OrginalFilename);
-                    if (duplicateCount >= 2)
-                    {
-                        for (int i = 0; i < duplicateCount; i++)
+                        catch (Exception ex)
                         {
-                            duplicateIndex = source.IndexOf(source.FirstOrDefault(t => t.OrginalFilename == duplicate.OrginalFilename));
-                            if (duplicateIndex > -1)
-                            {
-                                source.RemoveAt(duplicateIndex);
-                            }
+                            BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                            //we catch and report any exception without distrubing the 'foreach flow'.
+                            await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                            failedCount++;
                         }
-                    }
-                    else
-                    {
-                        source.Remove(duplicate);
                     }
                 }
-                return source;
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Error("Error while deleting duplicates.", ex);
-            }
-            return null;
+                catch (Exception ex)
+                {
+                    string message1 = ex.Message + "||" + ex.InnerException;
+                    await NotificationManager.ShowMessageAsync(message1);
+                }
+
+                var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
+                await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
+                await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
+                await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                await LibraryService.AddMediafiles(uniqueFiles);
+
+                //AlbumArtistViewModel vm = new AlbumArtistViewModel();
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
+                //vm = null;
+
+                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
+
+                BLogger.Logger.Info(message);
+                await NotificationManager.ShowMessageAsync(message);
+                tempList.Clear();
+            });
         }
+
         #endregion
 
         #region AlbumArt Methods
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
         {
-            if (mp3File != null)
+            if (mp3File == null) return;
+
+            try
             {
-                try
+                if (file == null)
                 {
-                    if (file == null)
-                    {
-                        file = await StorageFile.GetFileFromPathAsync(mp3File.Path);
-                    }
-
-                    var albumartFolder = ApplicationData.Current.LocalFolder;
-                    var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3File.Album + mp3File.LeadArtist).ToLower().ToSha1() + ".jpg";
-
-                    if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
-                    {
-                        bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3File);
-                        mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
-                    }
-                    file = null;
+                    file = await StorageFile.GetFileFromPathAsync(mp3File.Path);
                 }
-                catch (Exception ex)
+
+                var albumartFolder = ApplicationData.Current.LocalFolder;
+                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3File.Album + mp3File.LeadArtist).ToLower().ToSha1() + ".jpg";
+
+                if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
                 {
-                    BLogger.Logger.Info("Failed to save albumart.", ex);
-                    await SharedLogic.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
+                    bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3File);
+                    mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
                 }
+                file = null;
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Info("Failed to save albumart.", ex);
+                await SharedLogic.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
             }
         }
 

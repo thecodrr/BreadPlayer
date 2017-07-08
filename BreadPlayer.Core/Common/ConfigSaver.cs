@@ -55,7 +55,7 @@ namespace BreadPlayer.Core.Common
         public List<EqualizerSettings> GetSettings()
         {
             List<EqualizerSettings> equalizerSettings = new List<EqualizerSettings>();
-            List<Config> listConfigs = new List<Config> { _rock, _classical, _club, _dance, _fullBass, _fullBassAndTreble };
+            IEnumerable<Config> listConfigs = new Config[] { _rock, _classical, _club, _dance, _fullBass, _fullBassAndTreble };
             foreach (var config in listConfigs)
             {
                 Dictionary<string, float> bands = new Dictionary<string, float>();

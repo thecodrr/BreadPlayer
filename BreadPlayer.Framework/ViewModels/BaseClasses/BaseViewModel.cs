@@ -44,10 +44,6 @@ namespace ViewModels
         }
         #endregion
         #endregion
-      
-        #region Constructor
-
-        #endregion
 
         #region public methods
         /// <summary>
@@ -56,7 +52,7 @@ namespace ViewModels
         /// </summary>
         public void CloseViewModel(bool? dialogResult)
         {
-           // Controller.Messenger.DeRegister(this);
+            // Controller.Messenger.DeRegister(this);
             ViewModelClosing?.Invoke(dialogResult);
             foreach (var childViewModel in _childViewModels)
             {

@@ -274,7 +274,7 @@ namespace BreadPlayer.Core
                             Buffer inputBuffer = new Buffer(1024);
                             using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                while ((buf = (await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None))).Length > 0)
+                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None)).Length > 0)
                                 {
                                     await albumstream.WriteAsync(buf);
                                 }

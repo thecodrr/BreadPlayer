@@ -29,8 +29,7 @@ namespace BreadPlayer.Behaviours
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var listView = d as ListView;
-            if (listView != null)
+            if (d is ListView listView)
             {
                 listView.SelectionChanged += OnSelectionChanged;
             }
@@ -38,9 +37,7 @@ namespace BreadPlayer.Behaviours
 
         private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView listView = (ListView)sender;
-
-            if (listView != null)
+            if (sender is ListView listView)
             {
                 //listView.ScrollIntoView(listView.SelectedItem);
                 listView.Focus(FocusState.Programmatic);

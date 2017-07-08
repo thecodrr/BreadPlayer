@@ -27,16 +27,13 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if(value is SplitViewDisplayMode mode)
+            if (value is SplitViewDisplayMode mode)
             { 
                 return mode == SplitViewDisplayMode.CompactOverlay;
             }
-            if (value is bool boolValue)
+            else if (value is bool boolValue && parameter == null)
             {
-                if (parameter == null)
-                {
-                    return boolValue != true;
-                }
+                return boolValue != true;
             }
 
             return false;

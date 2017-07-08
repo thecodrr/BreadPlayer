@@ -19,24 +19,22 @@ namespace BreadPlayer.Controls
             try
             {
                 using (var httpClient = new HttpClient())
+                using (var httpMessage = await httpClient.GetAsync(uri))
                 {
-                    using (var httpMessage = await httpClient.GetAsync(uri))
-                    {
-                        var cacheFolder = await BitmapCache.EnsureCacheFolderAsync();
-                        tempFile = await cacheFolder.CreateFileAsync($"{file.Name}.tmp");
+                    var cacheFolder = await BitmapCache.EnsureCacheFolderAsync();
+                    tempFile = await cacheFolder.CreateFileAsync($"{file.Name}.tmp");
 
-                        using (var fileStream = await tempFile.OpenAsync(FileAccessMode.ReadWrite))
+                    using (var fileStream = await tempFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        await httpMessage.Content.WriteToStreamAsync(fileStream);
+                    }
+                    using (var readStream = await tempFile.OpenAsync(FileAccessMode.Read))
+                    {
+                        var decoder = await BitmapDecoder.CreateAsync(readStream);
+                        using (var writeStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                         {
-                            await httpMessage.Content.WriteToStreamAsync(fileStream);
-                        }
-                        using (var readStream = await tempFile.OpenAsync(FileAccessMode.Read))
-                        {
-                            var decoder = await BitmapDecoder.CreateAsync(readStream);
-                            using (var writeStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-                            {
-                                var encoder = await BitmapEncoder.CreateForTranscodingAsync(writeStream, decoder);
-                                await encoder.FlushAsync();
-                            }
+                            var encoder = await BitmapEncoder.CreateForTranscodingAsync(writeStream, decoder);
+                            await encoder.FlushAsync();
                         }
                     }
                 }

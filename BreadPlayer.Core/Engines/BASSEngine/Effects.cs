@@ -156,7 +156,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public void UpdateHandle(int coreHandle)
         {
             _handle = coreHandle;
-            var version = BassFx.Version;
+            //var version = BassFx.Version;
             _myDspAddr = SetPreamp;
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
             EnableDisableEqualizer();
@@ -219,5 +219,4 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
         #endregion
     }
-    
 }

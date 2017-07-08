@@ -125,19 +125,14 @@ namespace BreadPlayer.Extensions
                 {
                     await Task.Run(() =>
                     {
-                        for (int i = 0; i < objectArray.Count(); i++)
-                        {
-                            AddItem(objectArray[i]);
-                        }                        
+                        AddItems(objectArray);
                     });
                 }
                 else
                 {
-                    for (int i = 0; i < objectArray.Count(); i++)
-                    {
-                        AddItem(objectArray[i]);
-                    }
+                    AddItems(objectArray);
                 }
+
                 _isObserving = true;
                 // fire the events
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
@@ -146,6 +141,14 @@ namespace BreadPlayer.Extensions
                 // LOLLO NOTE I took out the following so the list viewers don't lose the position.
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+
+                void AddItems(TElement[] array)
+                {
+                    for (int i = 0; i < array.Count(); i++)
+                    {
+                        AddItem(array[i]);
+                    }
+                }
             }
             catch (Exception ex)
             {

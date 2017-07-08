@@ -1,7 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Behaviours
 {
@@ -22,8 +21,7 @@ namespace BreadPlayer.Behaviours
 
         private static void OnCommandPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as GridView;
-            if (control != null)
+            if (d is GridView control)
             {
                 control.ItemClick += OnItemClick;
             }

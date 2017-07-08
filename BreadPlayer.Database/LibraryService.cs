@@ -21,13 +21,13 @@ namespace BreadPlayer.Database
         }
 
         #region ILibraryService 
-        public async Task<IEnumerable<Mediafile>> Query(string term)
+        public Task<IEnumerable<Mediafile>> Query(string term)
         {
-            return await Database.QueryRecords<Mediafile>(term);
+            return Database.QueryRecords<Mediafile>(term);
         }
-        public async Task<IEnumerable<Mediafile>> GetAllMediafiles()
+        public Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {
-            return await Database.GetRecords<Mediafile>();
+            return Database.GetRecords<Mediafile>();
         }
         public void AddMediafile(Mediafile data)
         {
@@ -37,9 +37,9 @@ namespace BreadPlayer.Database
         {
             await Database.InsertRecords(data);
         }
-        public async Task<bool> UpdateMediafile(Mediafile data)
+        public Task<bool> UpdateMediafile(Mediafile data)
         {
-            return await Database.UpdateRecordAsync(data, data.Id);
+            return Database.UpdateRecordAsync(data, data.Id);
         }
         public void UpdateMediafiles<T>(IEnumerable<Mediafile> data)
         {
