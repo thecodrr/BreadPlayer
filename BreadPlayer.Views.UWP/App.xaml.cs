@@ -151,6 +151,7 @@ namespace BreadPlayer
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
+            Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(args.Files[0]);
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files[0], 0.0, true, 50.0 });

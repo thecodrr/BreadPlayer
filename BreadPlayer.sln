@@ -51,6 +51,8 @@ Global
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.Debug|x86.Build.0 = Debug|x86
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.Debug|x86.Deploy.0 = Debug|x86
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|Any CPU.ActiveCfg = FastBuild_Release|x86
+		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|Any CPU.Build.0 = FastBuild_Release|x86
+		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|Any CPU.Deploy.0 = FastBuild_Release|x86
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|ARM.ActiveCfg = FastBuild_Release|ARM
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|ARM.Build.0 = FastBuild_Release|ARM
 		{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}.FastBuild_Release|ARM.Deploy.0 = FastBuild_Release|ARM
@@ -131,6 +133,8 @@ Global
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.Debug|x86.Build.0 = Debug|x86
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.Debug|x86.Deploy.0 = Debug|x86
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|Any CPU.ActiveCfg = FastBuild_Release|x86
+		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|Any CPU.Build.0 = FastBuild_Release|x86
+		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|Any CPU.Deploy.0 = FastBuild_Release|x86
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|ARM.ActiveCfg = FastBuild_Release|ARM
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|ARM.Build.0 = FastBuild_Release|ARM
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.FastBuild_Release|ARM.Deploy.0 = FastBuild_Release|ARM

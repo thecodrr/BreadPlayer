@@ -489,9 +489,11 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-
-            NotificationManager.SendUpcomingSongNotification(UpcomingSong);
-            await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
+            if (UpcomingSong != null)
+            {
+                NotificationManager.SendUpcomingSongNotification(UpcomingSong);
+                await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
+            }
         }
 
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -526,13 +528,15 @@ namespace BreadPlayer.ViewModels
             }
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                lastPlayingSong.PlayCount++;
-                lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
-                TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
-                TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
-                await _service.UpdateMediafile(lastPlayingSong);
-
-                await ScrobblePlayingSong();
+                if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
+                {
+                    lastPlayingSong.PlayCount++;
+                    lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
+                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
+                    await _service.UpdateMediafile(lastPlayingSong);
+                }
+                await ScrobblePlayingSong();                
             });
         }
         private void Timer_Tick(object sender, object e)
