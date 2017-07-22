@@ -612,7 +612,7 @@
                                             </Grid.RowDefinitions>
                                             <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="3" Grid.Row="0"
+                                                       TabIndex="3" SelectedIndex="0" Grid.Row="0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">

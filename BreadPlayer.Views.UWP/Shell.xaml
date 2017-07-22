@@ -249,16 +249,18 @@
 
             <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,69">
                 <controls:SplitViewMenu.TopNavigationItems>
-                    <controls:SimpleNavMenuItem x:Uid="recentlyEatenMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="" Arguments="Recent" Tooltip="" Symbol="Accept"></controls:SimpleNavMenuItem>
-                    <controls:SimpleNavMenuItem x:Uid="mostEatenMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="" Tooltip="" Arguments="MostEaten" Symbol="Accept"></controls:SimpleNavMenuItem>
-                    <controls:SimpleNavMenuItem x:Uid="recentlyAddedMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="" Tooltip="" Arguments="RecentlyAdded" Symbol="Accept"></controls:SimpleNavMenuItem>
-
-                    <controls:SimpleNavMenuItem x:Uid="toastCollectionMenuItem" x:Name="LibraryItem" DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="" Arguments="MusicCollection" Symbol="Accept" Tooltip="">
+                    <controls:SimpleNavMenuItem x:Uid="yourMusicMenuItem" x:Name="LibraryItem" DestinationPage="local:LibraryView" FontGlyph="&#x0041;" Label="" Arguments="MusicCollection" Symbol="Accept" Tooltip="">
                         <controls:SimpleNavMenuItem.Shortcuts>
                             <controls:Shortcut SymbolAsChar="&#xE71C;" ShortcutFlyout="{StaticResource GenreFlyout}" Tooltip="Filter"/>
                             <controls:Shortcut SymbolAsChar="&#xE174;" ShortcutFlyout="{StaticResource SortMenuFlyout}" Tooltip="Sort"/>
                         </controls:SimpleNavMenuItem.Shortcuts>
                     </controls:SimpleNavMenuItem>
+
+                    <controls:SimpleNavMenuItem x:Uid="musicHistoryMenuItem" DestinationPage="local:MusicHistoryView" FontGlyph="&#x0042;" Label="Your Music History" Arguments="Recent" Tooltip="" Symbol="Accept"></controls:SimpleNavMenuItem>
+                    <!--<controls:SimpleNavMenuItem x:Uid="mostEatenMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="" Tooltip="" Arguments="MostEaten" Symbol="Accept"></controls:SimpleNavMenuItem>
+                    <controls:SimpleNavMenuItem x:Uid="recentlyAddedMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x004a;" Label="" Tooltip="" Arguments="RecentlyAdded" Symbol="Accept"></controls:SimpleNavMenuItem>-->
+
+        
                     <!--<controls:SimpleNavMenuItem x:Uid="myBreadsMenuItem" DestinationPage="local:AlbumArtistView" FontGlyph="&#x0045;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>-->
                     <!--<controls:SimpleNavMenuItem DestinationPage="local:AlbumArtistView" FontGlyph="&#x0044;" Tooltip="Navigate to your music library." Label="My Bakers" Symbol="Accept"></controls:SimpleNavMenuItem>-->
 
@@ -266,7 +268,7 @@
                     <controls:SimpleNavMenuItem x:Uid="nowBakingMenuItem" DestinationPage="local:LibraryView" Arguments="MusicCollection"  x:Name="NowPlayingItem" FontGlyph="&#x004b;" Tooltip="" Label="" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.TopNavigationItems>
                 <controls:SplitViewMenu.BottomNavigationItems>
-                    <controls:SimpleNavMenuItem x:Uid="myBakeriesMenuItem" DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
+                    <!--<controls:SimpleNavMenuItem x:Uid="myBakeriesMenuItem" DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>-->
                     <controls:SimpleNavMenuItem x:Uid="settingsMenuItem" DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.BottomNavigationItems>
             </controls:SplitViewMenu>
