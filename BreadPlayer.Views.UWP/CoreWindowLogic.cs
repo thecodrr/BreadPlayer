@@ -184,7 +184,7 @@ namespace BreadPlayer
         {
             //we do not want to pause the background player.
             //pausing may cause stutter, that's why.
-            _player.Play();
+            _player?.Play();
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 switch (args.Button)

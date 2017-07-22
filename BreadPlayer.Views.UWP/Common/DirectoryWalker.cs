@@ -29,7 +29,6 @@ namespace BreadPlayer.Common
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
-            options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
             if(aqsQuery != null)
             {
