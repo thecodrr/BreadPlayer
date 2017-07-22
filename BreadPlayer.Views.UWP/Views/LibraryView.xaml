@@ -416,13 +416,14 @@
                             FromHorizontalOffset="200"/>
             </TransitionCollection>
         </Grid.Transitions>
-        <Pivot Grid.ColumnSpan="2" Margin="30,0,30,0" SelectionChanged="Pivot_SelectionChanged">
+        <Pivot Grid.ColumnSpan="2" Margin="30,0,10,0" SelectionChanged="Pivot_SelectionChanged">
             <PivotItem Header="Toasts">
                 <SemanticZoom x:Name="semanticZoom" ViewChangeStarted="semanticZoom_ViewChangeStarted" ScrollViewer.ZoomMode="Enabled">
                     <SemanticZoom.ZoomedInView>
                         <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" 
                                                    ReorderMode="Enabled" Tag="{StaticResource Source}"
-                                                   OddRowBackground="{ThemeResource EvenRowBackground}"  
+                                                   OddRowBackground="{ThemeResource EvenRowBackground}" 
+                                                           EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                                                    AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True"
                                                    Behaviours:ListViewService.FocusBeforeSelect="True" 
                                                    SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" 
@@ -551,6 +552,11 @@
             </PivotItem>
             <PivotItem Header="Bakers"/>
             <PivotItem Header="Playlists"/>
+            <Pivot.ItemContainerStyle>
+                <Style TargetType="PivotItem">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </Pivot.ItemContainerStyle>
         </Pivot>
         <Button x:Uid="backBtn" x:Name="backBtn" ToolTipService.ToolTip="" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Style="{StaticResource HyperlinkBtn}">
             <Interactivity:Interaction.Behaviors>

@@ -22,9 +22,9 @@ namespace BreadPlayer.Services
         }
         private async void Initialize()
         {
-            MusicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            MusicLibrary.ChangeTracker.Enable();
-            MusicLibraryParentFolder = KnownFolders.MusicLibrary;
+            //MusicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            //MusicLibrary.ChangeTracker.Enable();
+            //MusicLibraryParentFolder = KnownFolders.MusicLibrary;
 
             //run a timer every five seconds to check for updated files
             _updateTimer = new DispatcherTimer();
@@ -35,10 +35,10 @@ namespace BreadPlayer.Services
 
         private async void _updateTimer_Tick(object sender, object e)
         {
-            StorageItemsUpdated.Invoke(
-                 MusicLibrary.ChangeTracker,
-                 new StorageItemsUpdatedEventArgs(
-                     await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
+            //StorageItemsUpdated.Invoke(
+            //     MusicLibrary.ChangeTracker,
+            //     new StorageItemsUpdatedEventArgs(
+            //         await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
 
         public async Task<IEnumerable<StorageFile>> GetStorageFilesInLibraryAsync()
@@ -78,13 +78,13 @@ namespace BreadPlayer.Services
         }
         public async void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
         {
-            await Task.Delay(10000);
-            foreach (var folder in folderCollection)
-            {
-                StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
-                var files = await queryResult.GetItemCountAsync();
-                queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
-            }
+            //await Task.Delay(10000);
+            //foreach (var folder in folderCollection)
+            //{
+            //    StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
+            //    var files = await queryResult.GetItemCountAsync();
+            //    queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
+            //}
         }
         public async Task<StorageFolder> AddFolderToLibraryAsync()
         {
@@ -92,10 +92,10 @@ namespace BreadPlayer.Services
         }
         private async void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
-            StorageItemsUpdated.Invoke(
-                MusicLibrary.ChangeTracker, 
-                new StorageItemsUpdatedEventArgs(
-                    await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
+            //StorageItemsUpdated.Invoke(
+            //    MusicLibrary.ChangeTracker, 
+            //    new StorageItemsUpdatedEventArgs(
+            //        await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
         public event OnStorageItemsUpdatedEventHandler StorageItemsUpdated;
     }

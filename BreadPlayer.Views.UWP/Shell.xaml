@@ -247,7 +247,7 @@
                 <CompositeTransform TranslateY="0"/>
             </Grid.RenderTransform>
 
-            <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,70">
+            <controls:SplitViewMenu x:Name="hamburgerMenu" PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}" InitialPage="local:LibraryView" Margin="0,0,0,69">
                 <controls:SplitViewMenu.TopNavigationItems>
                     <controls:SimpleNavMenuItem x:Uid="recentlyEatenMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0042;" Label="" Arguments="Recent" Tooltip="" Symbol="Accept"></controls:SimpleNavMenuItem>
                     <controls:SimpleNavMenuItem x:Uid="mostEatenMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0048;" Label="" Tooltip="" Arguments="MostEaten" Symbol="Accept"></controls:SimpleNavMenuItem>
@@ -288,9 +288,9 @@
             </StackPanel>
             <Grid x:Name="playbarGrid" Height="70" VerticalAlignment="Bottom" Background="{ThemeResource PlaybarBrush}" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="Auto"/>
 
                     <ColumnDefinition Width="Auto" />
@@ -336,7 +336,7 @@
                 <ProgressBar Name="positionProgressBar" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="20" ToolTipService.Placement="Top" ToolTipService.ToolTip="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" Visibility="Collapsed" Background="Transparent" Foreground="{ThemeResource ThemeForeground}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
                 <Rectangle Fill="Transparent" Visibility="Collapsed" Name="seekRect" Grid.ColumnSpan="20" VerticalAlignment="Top" Height="10"/>
 
-                <TextBlock Visibility="{Binding ElementName=positionSlider, Path=Visibility}" Grid.Column="1" Grid.Row="1" Margin="10,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
+                <TextBlock Visibility="{Binding ElementName=positionSlider, Path=Visibility}" Grid.Column="1" Grid.Row="1" Margin="5,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
                 <Slider Visibility="Visible" x:Name="positionSlider"  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
                 <TextBlock Visibility="{Binding ElementName=positionSlider, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,10,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFE5E5E5" FontSize="12"/>
 
