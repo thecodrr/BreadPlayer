@@ -265,8 +265,9 @@
                     <controls:SimpleNavMenuItem x:Uid="favoritesMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0049;" Tooltip="" Label="" Symbol="Accept" Arguments="Favorites"></controls:SimpleNavMenuItem>
                     <controls:SimpleNavMenuItem x:Uid="nowBakingMenuItem" DestinationPage="local:LibraryView" Arguments="MusicCollection"  x:Name="NowPlayingItem" FontGlyph="&#x004b;" Tooltip="" Label="" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.TopNavigationItems>
-                <controls:SplitViewMenu.BottomNavigationItems>
+                <controls:SplitViewMenu.BottomNavigationItems>                    
                     <controls:SimpleNavMenuItem x:Uid="myBakeriesMenuItem" DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
+                    <controls:SimpleNavMenuItem DestinationPage="local:DevicesView" FontGlyph="&#x0044;" Tooltip="" Label="My Devices" Symbol="Accept"></controls:SimpleNavMenuItem>
                     <controls:SimpleNavMenuItem x:Uid="settingsMenuItem" DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.BottomNavigationItems>
             </controls:SplitViewMenu>

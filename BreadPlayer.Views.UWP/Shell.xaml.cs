@@ -33,6 +33,7 @@ using BreadPlayer.ViewModels;
 using SplitViewMenu;
 using BreadPlayer.Core.Common;
 using Windows.UI.ViewManagement;
+using BreadPlayer.Services;
 
 namespace BreadPlayer
 {
@@ -60,7 +61,7 @@ namespace BreadPlayer
             {
                 _shellVm.IsPlaybarHidden = true;
                 ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            });          
+            });
         }
         private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
         {

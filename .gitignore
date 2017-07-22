@@ -217,3 +217,6 @@ ModelManifest.xml
 
 *.appx
 /BreadPlayer.Views.UWP/BundleArtifacts
+/BreadPlayer.Views.UWP/Views/DevicesView.xaml
+/BreadPlayer.Views.UWP/Views/DevicesView.xaml.cs
+/BreadPlayer.Views.UWP/Services/MTPDeviceService.cs

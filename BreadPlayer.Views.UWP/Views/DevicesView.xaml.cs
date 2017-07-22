@@ -26,7 +26,21 @@ namespace BreadPlayer
         public DevicesView()
         {
             this.InitializeComponent();
-            MTPDeviceService mptService = new MTPDeviceService();         
+            get();
+        }
+        MTPDeviceService mptService;
+        void get()
+        {
+            mptService = new MTPDeviceService();
+            mptService.Devices.CollectionChanged += Devices_CollectionChanged;
+        }
+
+        private async void Devices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            var folder = mptService.GetMusicFolderFromDevice(mptService.Devices[0]);
+            var folders = (await folder.GetFoldersAsync(Windows.Storage.Search.CommonFolderQuery.DefaultQuery)).ToList();
+            var musicFolderquery = folder.CreateFolderQueryWithOptions(new Windows.Storage.Search.QueryOptions() { FolderDepth = Windows.Storage.Search.FolderDepth.Deep });
+            folders = (await musicFolderquery.GetFoldersAsync()).ToList();
         }
     }
 }

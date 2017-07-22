@@ -14,25 +14,28 @@ namespace BreadPlayer.Services
         public ThreadSafeObservableCollection<DeviceInformation> Devices { get; set; }
         public MTPDeviceService()
         {
+            Devices = new ThreadSafeObservableCollection<DeviceInformation>();
             Initiate();
         }
-        private async void Initiate()
+        private void Initiate()
         {
-            var deviceWatcher = DeviceInformation.CreateWatcher(StorageDevice.GetDeviceSelector());
-            deviceWatcher.Start();
-            deviceWatcher.Added += DeviceWatcher_Added;
-            Devices = new ThreadSafeObservableCollection<DeviceInformation>(await GetDevices());
-        }
 
+            var deviceWatcher = DeviceInformation.CreateWatcher(StorageDevice.GetDeviceSelector());
+            deviceWatcher.Added += DeviceWatcher_Added;
+         
+            deviceWatcher.Start();
+            
+        }
+        
         private async void DeviceWatcher_Added(DeviceWatcher sender, DeviceInformation args)
         {
-            Devices = new ThreadSafeObservableCollection<DeviceInformation>(await GetDevices());
+            Devices.AddRange(await GetDevices());
         }
-        public async Task<StorageFolder> GetMusicFolderFromDevice(DeviceInformation deviceInfo)
+        public StorageFolder GetMusicFolderFromDevice(DeviceInformation deviceInfo)
         {
             var device = StorageDevice.FromId(deviceInfo.Id);
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(device);
-            return await device.TryGetItemAsync("Music") as StorageFolder;
+            return device;
         }
         private async Task<IEnumerable<DeviceInformation>> GetDevices()
         {

@@ -6,6 +6,7 @@ using DBreeze.Objects;
 using DBreeze.Utils;
 using Newtonsoft.Json;
 using BreadPlayer.Core.Common;
+using DBreeze.Transactions;
 
 namespace BreadPlayer.Database
 {
@@ -178,13 +179,12 @@ namespace BreadPlayer.Database
         {
             await Task.Run(() =>
             {
-                ReinitEngine();
+                //ReinitEngine();
                 using (var tran = _engine.GetTransaction())
                 {
                     if (records.Any())
                     {
-
-                        tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
+                        //tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
 
                         foreach (var record in records.ToList())
                         {

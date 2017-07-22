@@ -995,10 +995,7 @@ namespace BreadPlayer.ViewModels
         {
             if (songsToadd.Any())
             {
-                await Task.Run(async () =>
-                {
-                    await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
-                });
+                await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
             }
         }
 
