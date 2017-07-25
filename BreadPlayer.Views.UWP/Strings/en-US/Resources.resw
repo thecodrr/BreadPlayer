@@ -357,10 +357,10 @@
     <value>Properties</value>
   </data>
   <data name="musicHistoryMenuItem.Label" xml:space="preserve">
-    <value>Music History</value>
+    <value>Toast History</value>
   </data>
   <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your music history.</value>
+    <value>Navigate to your toast history.</value>
   </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click to go to our reddit profile.</value>
@@ -433,10 +433,10 @@
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="yourMusicMenuItem.Label" xml:space="preserve">
-    <value>Your Music</value>
+    <value>Toasts Collection</value>
   </data>
   <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your music collection.</value>
+    <value>Navigate to your toast collection.</value>
   </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click to go to our twitter profile.</value>

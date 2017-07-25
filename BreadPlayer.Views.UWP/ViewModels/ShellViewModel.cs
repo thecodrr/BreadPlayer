@@ -61,6 +61,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            ThemeManager.SetThemeColor(null);
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
             DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);

@@ -219,14 +219,21 @@
                     <Grid x:Name="LayoutRoot" BorderBrush="{ThemeResource HoverBrush}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd" 
+                                                        To="{Binding Source={StaticResource ThemeBackground}, Path=Color}"/>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
-                                                                       Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetName="myback" 
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd"
+                                                        To="{Binding Source={StaticResource HoverBrush}, Path=Color}"/>
+             
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -242,11 +249,11 @@
                                 <VisualState x:Name="Disabled"></VisualState>
                                 <VisualState x:Name="PointerOverSelected">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
-                                                                       Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetName="myback" 
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd"
+                                                        To="{Binding Source={StaticResource HoverBrush}, Path=Color}"/>
+
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -261,11 +268,11 @@
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <Storyboard>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="myback"
-                                                                       Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>-->
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd" 
+                                                        To="{Binding Source={StaticResource ThemeBackground}, Path=Color}"/>
+
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -305,6 +312,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
     <Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
         <Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}" />
         <Setter Property="Height" Value="20" />
@@ -317,14 +325,20 @@
                     <Grid x:Name="LayoutRoot" BorderBrush="{ThemeResource HoverBrush}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd"
+                                                        To="{Binding Source={StaticResource ThemeForeground}, Path=Color}"/>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
-                                                                       Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd"
+                                                        To="{Binding Source={StaticResource HoverBrush}, Path=Color}"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -340,11 +354,10 @@
                                 <VisualState x:Name="Disabled"></VisualState>
                                 <VisualState x:Name="PointerOverSelected">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
-                                                                       Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{ThemeResource HoverBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd"
+                                                        To="{Binding Source={StaticResource HoverBrush}, Path=Color}"/>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -359,6 +372,11 @@
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Content" 
+                                                        Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" 
+                                                        Duration="0:0:0.5" FillBehavior="HoldEnd" 
+                                                        To="{Binding Source={StaticResource ThemeForeground}, Path=Color}"/>
+
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content"
                                                                        Storyboard.TargetProperty="FontWeight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -474,6 +492,7 @@
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
                                         <Setter Target="playlistBtn.Margin" Value="0"/>
+                                        <Setter Target="Pane.Background" Value="{x:Null}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource PlaybarBrush}"/>
                                         <Setter Target="Pane.Margin" Value="0,130,0,0"/>
                                     </VisualState.Setters>
@@ -565,24 +584,12 @@
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                                     </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,-7.5,0,0"/>
-                                    </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
                                 </Storyboard>
                                 <Storyboard x:Key="SearchButtonClickedFadeStoryboard" Duration="0:0:0.5">
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,35,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>
@@ -592,7 +599,12 @@
                                 <Grid x:Name="Pane" Margin="30,130,5,0" Background="{ThemeResource PlaybarBrush}" >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
@@ -602,53 +614,46 @@
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu" VerticalAlignment="Top"
                                       ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
-                                    <ScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
+                                    
+                                        <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="0" Grid.Row="0"
+                                                       TabIndex="3" SelectedIndex="0" Grid.Row="1"
+                                                               VerticalAlignment="Top"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                                <local:NavMenuListView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Vertical"/>
-                                                    </ItemsPanelTemplate>
-                                                </local:NavMenuListView.ItemsPanel>
-                                            </local:NavMenuListView>
-                                            <MenuFlyoutSeparator Grid.Row="1" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
+                                            <local:NavMenuListView.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical"/>
+                                                </ItemsPanelTemplate>
+                                            </local:NavMenuListView.ItemsPanel>
+                                        </local:NavMenuListView>
+                                        <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
 
-                                            <StackPanel x:Name="playlistBtnPanel" Grid.Row="2" Orientation="Horizontal" Width="355">
-                                                <Button x:Name="playlistBtn" 
+                                    <StackPanel x:Name="playlistBtnPanel" Grid.Row="3" Orientation="Horizontal" Width="355">
+                                            <Button x:Name="playlistBtn" 
                                                 TabIndex="2" Width="270" Margin="5,0,0,0"
                                                 Style="{StaticResource NavigationBackButtonStyle}"/>
-                                                <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
+                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
                                                 TabIndex="2" Width="50"  Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
                                                 Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
-                                            </StackPanel>
-                                            <local:NavMenuListView x:Name="PlaylistsMenuList"
+                                        </StackPanel>
+                                    <local:NavMenuListView x:Name="PlaylistsMenuList"
                                                        ItemsSource="{TemplateBinding PlaylistsItems}"
                                                        TabIndex="3"
-                                                       Grid.Row="3"
+                                                       Grid.Row="4"
                                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                        ScrollViewer.VerticalScrollMode="Enabled"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                            </local:NavMenuListView>
-                                        </Grid>
-                                    </ScrollViewer>
-                                    <MenuFlyoutSeparator Grid.Row="2" VerticalAlignment="Top" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
+                                        </local:NavMenuListView>
+                                    
+                                    <MenuFlyoutSeparator Grid.Row="5" VerticalAlignment="Top" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
 
-                                    <local:NavMenuListView Grid.Row="3" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
+                                    <local:NavMenuListView Grid.Row="6" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
-                                                       TabIndex="3" Height="90"
+                                                       TabIndex="3"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
@@ -732,6 +737,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
     <ControlTemplate x:Key="SplitViewControlTemplate1" TargetType="SplitView">
         <Grid Background="{TemplateBinding Background}">
             <VisualStateManager.VisualStateGroups>

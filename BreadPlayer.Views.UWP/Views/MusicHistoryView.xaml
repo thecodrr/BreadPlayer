@@ -8,13 +8,18 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Pivot>
+        <Pivot Margin="30,0,10,0">
             <PivotItem Header="Recently Played">
             </PivotItem>
             <PivotItem Header="Recently Added">
             </PivotItem>
             <PivotItem Header="Most Played">
             </PivotItem>
+            <Pivot.ItemContainerStyle>
+                <Style TargetType="PivotItem">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </Pivot.ItemContainerStyle>
         </Pivot>
     </Grid>
 </Page>

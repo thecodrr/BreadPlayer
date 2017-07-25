@@ -101,7 +101,7 @@ namespace BreadPlayer
             SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
             if(!string.IsNullOrEmpty(folderPaths))
             {
-                ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+                //ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
             }
         }
         #endregion

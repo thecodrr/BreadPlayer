@@ -43,7 +43,7 @@ namespace BreadPlayer.Themes
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false)
+                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
                     return;
