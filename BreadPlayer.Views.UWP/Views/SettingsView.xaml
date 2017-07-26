@@ -148,10 +148,7 @@
                             <LineBreak/>
                             <Run x:Uid="fontCapsHelpText" FontSize="11" Text="" Foreground="Gray"/>
                         </TextBlock>
-                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UiTextType, Mode=TwoWay}">
-                            <x:String x:Uid="fontCapsOptionFirst"></x:String>
-                            <x:String x:Uid="fontCapsOptionSecond"></x:String>
-                        </ComboBox>
+                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UiTextType, Mode=TwoWay}"></ComboBox>
                     </Grid>
                     <CheckBox x:Uid="enableBlurCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
                     <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -14,6 +15,8 @@ namespace BreadPlayer
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionFirst"));
+            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionSecond"));
         }
     }
 }
