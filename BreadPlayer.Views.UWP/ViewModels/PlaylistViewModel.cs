@@ -204,7 +204,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                var service = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
+                var service = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
                 songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
             }
             var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
@@ -287,7 +287,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
-            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "", ""));
+            PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
         }
         public void Init(object data)
         {
@@ -308,7 +308,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks","TracksText")).Query(album.AlbumName));
+            Songs.AddRange(await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(album.AlbumName));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);

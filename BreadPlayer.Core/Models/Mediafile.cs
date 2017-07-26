@@ -125,6 +125,7 @@ namespace BreadPlayer.Core.Models
 
         #endregion
 
+        public string TextSearchKey => GetTextSearchKey();
         public int CompareTo(Mediafile compareTo)
         {
             return Title.CompareTo(compareTo.Title);

@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core.Common;
+﻿using System;
+using BreadPlayer.Core.Common;
 using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
@@ -16,6 +17,9 @@ namespace BreadPlayer.Core.Models
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
+
+        public string TextSearchKey => GetTextSearchKey();
+
         public string GetTextSearchKey()
         {
             return string.Format("{0} {1}", AlbumName, Artist);

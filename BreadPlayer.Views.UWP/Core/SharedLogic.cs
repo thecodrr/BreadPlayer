@@ -317,7 +317,7 @@ namespace BreadPlayer.Core
                 return false;
             }
 
-            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText"));
+            var service = new LibraryService(new DocumentStoreDatabaseService(DatabasePath, "Tracks"));
 
             SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
             service.AddMediafile(file);
@@ -329,7 +329,7 @@ namespace BreadPlayer.Core
             {
                 return false;
             }
-            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks", "TracksText"));
+            var service = new LibraryService(new DocumentStoreDatabaseService(DatabasePath, "Tracks"));
             SettingsViewModel.TracksCollection.Elements.Remove(file);
             await service.RemoveMediafile(file);
             return true;

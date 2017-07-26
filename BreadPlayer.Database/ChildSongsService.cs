@@ -25,7 +25,7 @@ namespace BreadPlayer.Database
                 = fileCol.Select(x => new ChildSong()
                 {
                     SongId = x.Id,
-                    PlaylistId = x.Id
+                    PlaylistId = pList.Id
                 });
 
             Database.ChangeTable(_tablename, _texttablename);

@@ -3,44 +3,92 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using BreadPlayer.Core.Common;
+using LiteDB;
+using System.Linq;
 
 namespace BreadPlayer.Database
 {
+    public class StaticDocumentDatabase
+    {
+        private static string DbPath { get; set; }
+        private static LiteDatabase _db;
+        public static bool IsDisposed { get; set; }
+        public static LiteDatabase GetDatabase(string dbPath)
+        {
+            if (_db == null || DbPath != dbPath)
+            {
+                DbPath = dbPath;
+                _db = new LiteDatabase($"Filename={dbPath}; Journal=false; Async=true");
+                IsDisposed = false;
+            }
+            return _db;
+        }
+        public static void DisposeDatabaseEngine()
+        {
+            _db.Dispose();
+            _db = null;
+            IsDisposed = true;
+        }
+    }
     public class DocumentStoreDatabaseService : IDatabaseService
     {
-        public void ChangeTable(string tableName, string textTableName)
+        LiteDatabase DB { get; set; }
+        LiteCollection<IDbRecord> currentCollection;
+        public DocumentStoreDatabaseService(string dbPath, string collectionName)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool CheckExists(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CheckExists(string query)
-        {
-            throw new NotImplementedException();
+            CreateDb(dbPath.ToLower() + ".db");
+            currentCollection = DB.GetCollection<IDbRecord>(collectionName);
+            currentCollection.EnsureIndex(t => t.Id);
+            currentCollection.EnsureIndex(t => t.TextSearchKey);
         }
 
         public void CreateDb(string dbPath)
         {
-            throw new NotImplementedException();
+            DB = StaticDocumentDatabase.GetDatabase(dbPath);
+        }
+        public void ChangeTable(string tableName, string textTableName)
+        {
+            currentCollection = DB.GetCollection<IDbRecord>(tableName);
+            currentCollection.EnsureIndex(t => t.Id);
+            currentCollection.EnsureIndex(t => t.TextSearchKey);
+        }
+
+        public bool CheckExists(long id)
+        {
+            return currentCollection.Exists(t => t.Id == id);
+        }
+
+        public bool CheckExists(string query)
+        {
+            return currentCollection.Exists(t => t.TextSearchKey.Contains(query));
         }
 
         public T GetRecordById<T>(long id)
         {
-            throw new NotImplementedException();
+            return (T)currentCollection.FindOne(t => t.Id == id);
         }
 
         public Task<T> GetRecordByQueryAsync<T>(string query)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                var dbRecord = currentCollection.FindOne(t => t.TextSearchKey.Contains(query));
+                if (dbRecord != null)
+                   return (T)dbRecord;
+                return default(T);
+            });
         }
 
-        public Task<IEnumerable<T>> GetRecords<T>()
+        public async Task<IEnumerable<T>> GetRecords<T>()
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                var records = currentCollection.Find(Query.All());
+                if (records.Any())
+                    return records.Cast<T>();
+                else
+                    return null;
+            }).ConfigureAwait(false);
         }
 
         public Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId)
@@ -50,37 +98,91 @@ namespace BreadPlayer.Database
 
         public int GetRecordsCount()
         {
-            throw new NotImplementedException();
+            return currentCollection.Count();
         }
 
         public Task InsertRecord(IDbRecord record)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => 
+            {
+                record.Id = ObjectId.NewObjectId().Pid;
+                currentCollection.Insert(record);
+            });
         }
 
         public Task InsertRecords(IEnumerable<IDbRecord> records)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var trans = DB.BeginTrans())
+                {
+                    try
+                    {
+                        foreach (var record in records.ToList())
+                        {
+                            record.Id = Guid.NewGuid().GetHashCode();
+                            currentCollection.Insert(record);
+                        }
+
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                    }
+                }
+            });
         }
 
-        public Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term));
+                if (records.Any())
+                    return records.Cast<T>();
+                else
+                    return null;
+            }).ConfigureAwait(false);
         }
 
         public Task RemoveRecord(IDbRecord record)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => 
+            {
+                currentCollection.Delete(record.Id);
+            });
         }
 
         public Task RemoveRecords(IEnumerable<IDbRecord> records)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var trans = DB.BeginTrans())
+                {
+                    try
+                    {
+                        foreach (var record in records)
+                        {
+                            currentCollection.Delete(record.Id);
+                        }
+
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                    }
+                }
+            });
         }
 
         public Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => 
+            {
+                return currentCollection.Update(id, (IDbRecord)record);
+            });
         }
 
         public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
@@ -88,39 +190,11 @@ namespace BreadPlayer.Database
             throw new NotImplementedException();
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~DocumentStoreDatabaseService() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            StaticDocumentDatabase.DisposeDatabaseEngine();
+            DB.Dispose();
+            DB = null;
         }
-        #endregion
     }
 }

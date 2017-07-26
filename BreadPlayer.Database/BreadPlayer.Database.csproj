@@ -19,7 +19,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Downloads\Compressed\DBreeze-master_2\DBreeze-master\DBreeze.NetStandard\DBreeze.NetStandard.csproj" />
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DBreeze">
+      <HintPath>..\libs\DBreeze.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

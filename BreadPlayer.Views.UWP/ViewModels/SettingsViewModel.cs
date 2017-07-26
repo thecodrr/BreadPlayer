@@ -200,7 +200,7 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
-            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
+            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
             _changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
             _timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");

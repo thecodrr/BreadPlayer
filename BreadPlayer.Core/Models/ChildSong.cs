@@ -7,6 +7,7 @@ namespace BreadPlayer.Core.Models
         public long Id { get; set; }
         public long SongId { get; set; }
         public long PlaylistId { get; set; }
+        public string TextSearchKey => GetTextSearchKey();
 
         public string GetTextSearchKey()
         {

@@ -154,8 +154,7 @@ namespace BreadPlayer.ViewModels
         private LibraryService LibraryService
         {
             get => _libraryservice ?? (_libraryservice =
-                       new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks",
-                           "TracksText")));
+                       new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")));
             set => Set(ref _libraryservice, value);
         }
 
@@ -163,10 +162,9 @@ namespace BreadPlayer.ViewModels
 
         private PlaylistService PlaylistService => 
             _playlistService ?? (_playlistService = new PlaylistService(
-                new KeyValueStoreDatabaseService(
+                new DocumentStoreDatabaseService(
                     SharedLogic.DatabasePath, 
-                    "Playlists",
-                    "PlaylistsText")));
+                    "Playlists")));
 
         private CollectionViewSource _viewSource;
 
@@ -631,7 +629,7 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
-                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
+                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false));
             });
         }
 
@@ -905,9 +903,13 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadPlaylists()
         {
-            foreach (var list in await PlaylistService.GetPlaylistsAsync())
+            var playlists = await PlaylistService.GetPlaylistsAsync();
+            if (playlists != null)
             {
-                AddPlaylist(list);
+                foreach (var list in playlists)
+                {
+                    AddPlaylist(list);
+                }
             }
         }
 
