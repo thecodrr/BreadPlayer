@@ -367,7 +367,7 @@ namespace BreadPlayer.ViewModels
                         {
                             _shuffledList = await ShuffledCollection();
                             //set it to something random within playingCollection bounds.
-                            indexOfCurrentlyPlayingFile = new Random().Next(playingCollection.Count - 2);
+                            indexOfCurrentlyPlayingFile = 0;
                         }
                         toPlayFile = _shuffledList?.ElementAt(indexOfCurrentlyPlayingFile + 1);
                     }
