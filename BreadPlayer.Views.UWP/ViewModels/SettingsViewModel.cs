@@ -386,21 +386,13 @@ namespace BreadPlayer.ViewModels
                                 var storageFolder = await StorageFolder.GetFolderFromPathAsync(folder);
                                 LibraryFoldersCollection.Add(storageFolder);
                             }
-                            catch(FileNotFoundException)
-                            {}
+                            catch (FileNotFoundException)
+                            { }
                             catch (UnauthorizedAccessException)
                             { }
                         }
                     }
                 }
-
-                if (string.IsNullOrEmpty(folderPaths)
-                    || folderPaths.All(t => t == '|')
-                    && !string.IsNullOrEmpty(KnownFolders.MusicLibrary.Path))
-                {
-                    LibraryFoldersCollection.Add(KnownFolders.MusicLibrary);
-                }
-                StorageLibraryService.SetupDirectoryWatcher(LibraryFoldersCollection);
             }
         }
         #endregion

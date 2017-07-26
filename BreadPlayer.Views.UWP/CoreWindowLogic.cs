@@ -61,23 +61,7 @@ namespace BreadPlayer
             if (!onlyVol)
             {
                 _path = RoamingSettingsHelper.GetSetting<string>(PathKey, "");
-                string folders = RoamingSettingsHelper.GetSetting<string>(FoldersKey, "");
-                folders.Split('|').ToList().ForEach(async str =>
-                {
-                    if (!string.IsNullOrEmpty(str))
-                    {
-                        try
-                        {
-                            var folder = await StorageFolder.GetFolderFromPathAsync(str);
-                            SharedLogic.SettingsVm.LibraryFoldersCollection.Add(folder);
-                        }
-                        catch (System.IO.FileNotFoundException)
-                        { BLogger.Logger.Error("Could not find library folder."); }
-                        catch (UnauthorizedAccessException)
-                        { BLogger.Logger.Error("Access denied while trying to load library folders on startup."); }
-
-                    }
-                });
+                
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
                 if (_path != "" && SharedLogic.VerifyFileExists(_path, 300))
                 {
