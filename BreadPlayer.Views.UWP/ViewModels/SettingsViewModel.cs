@@ -516,10 +516,10 @@ namespace BreadPlayer.ViewModels
                 
                 await LibraryService.AddMediafiles(uniqueFiles);
 
-                //AlbumArtistViewModel vm = new AlbumArtistViewModel();
+                AlbumArtistViewModel vm = new AlbumArtistViewModel();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
-                //vm = null;
+                vm = null;
 
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
 
