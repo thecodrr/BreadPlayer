@@ -102,7 +102,7 @@ namespace BreadPlayer.ViewModels
                 Set(ref _playlistArt, value);
             }
         }
-
+        
         private RelayCommand _deleteCommand;
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>

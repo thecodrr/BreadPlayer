@@ -127,11 +127,9 @@ namespace BreadPlayer.Themes
         }
         private static void AdjustForeground(Color accentColor)
         {
-            var foreg = accentColor.ToForeground();
-            var a = accentColor.ToHoverColor();
             //var foregroundColor = GetThemeResource<SolidColorBrush>("TextBrush");
-            GetThemeResource<SolidColorBrush>("TextBrush").Color = foreg; //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
-            GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = a;
+            GetThemeResource<SolidColorBrush>("TextBrush").Color = accentColor.ToForeground(); //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
+            GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = accentColor.ToHoverColor();
         }
 
     }

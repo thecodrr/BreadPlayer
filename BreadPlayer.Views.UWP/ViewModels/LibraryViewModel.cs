@@ -114,9 +114,9 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is Mediafile song)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-
                 PlayCommand.Execute(song);
             }
+             
         }
         #endregion
 
@@ -1077,10 +1077,11 @@ namespace BreadPlayer.ViewModels
         private async void Frame_Navigated(object sender, NavigationEventArgs e)
         {
             string param = (e.Parameter ?? string.Empty).ToString();    // e.Parameter can be null and throw exception
-            CurrentPage = param;
+            
             if (e.SourcePageType == typeof(LibraryView))
             {
-                switch(param)
+                CurrentPage = param;
+                switch (param)
                 {
                     case "Recent":
                         await ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync().ConfigureAwait(false));

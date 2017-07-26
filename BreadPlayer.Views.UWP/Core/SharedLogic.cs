@@ -65,6 +65,7 @@ namespace BreadPlayer.Core
                 return _player;
             }
         }
+
         public static CoreDispatcher Dispatcher { get; set; } = CoreApplication.MainView.CoreWindow.Dispatcher;
         public static SettingsViewModel SettingsVm => GenericService<SettingsViewModel>.Instance.GenericClass;
         private static Lastfm _lastfmScrobbler;

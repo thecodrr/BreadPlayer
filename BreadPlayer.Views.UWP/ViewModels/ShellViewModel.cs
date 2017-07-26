@@ -385,8 +385,7 @@ namespace BreadPlayer.ViewModels
                 {
                     BLogger.Logger.Error("An error occured while trying to play next song.", ex);
                     await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
-                    TracksCollection?.Elements.Where(t => t.State == PlayerState.Playing).ToList().ForEach(file => { file.State = PlayerState.Stopped; });
-                    PlaylistSongCollection?.Where(t => t.State == PlayerState.Playing).ToList().ForEach(file => { file.State = PlayerState.Stopped; });
+                    ClearPlayerState();
                     PlayNext();
                 }
             }
@@ -739,24 +738,21 @@ namespace BreadPlayer.ViewModels
         {
             if (TracksCollection != null)
             {
-                List<Mediafile> songCollectionWithPlayingState = new List<Mediafile>();
                 if (IsSourceGrouped)
                 {
-                    songCollectionWithPlayingState.AddRange(TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)));
+                    foreach(var song in TracksCollection.SelectMany(t => t.Select(a => a).Where(b => b.State == PlayerState.Playing)))
+                    {
+                        song.State = PlayerState.Stopped;
+                    }
                 }
-                if (TracksCollection.Elements.Any())
+                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
                 {
-                    songCollectionWithPlayingState.AddRange(TracksCollection.Elements.Where(t => t.State == PlayerState.Playing));
-                }
-
-                if (PlaylistSongCollection != null && PlaylistSongCollection.Any())
-                {
-                    songCollectionWithPlayingState.AddRange(PlaylistSongCollection.Where(t => t.State == PlayerState.Playing));
+                    TracksCollection.Elements.FirstOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
                 }
 
-                foreach (var song in songCollectionWithPlayingState)
+                if (PlaylistSongCollection != null && PlaylistSongCollection.Any(t => t.State == PlayerState.Playing))
                 {
-                    song.State = PlayerState.Stopped;
+                    PlaylistSongCollection.FirstOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
                 }
             }
         }

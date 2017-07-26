@@ -23,7 +23,7 @@ namespace BreadPlayer.Extensions
         }
         public static Color ToHoverColor(this Color color)
         {
-            return IsDark(color) ? Colors.LightGray : Colors.DarkGray;
+            return IsDark(color) ? Colors.LightGray : Color.FromArgb(255, 59,59,59);
         }
     }
 }
