@@ -361,10 +361,13 @@ namespace BreadPlayer.ViewModels
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
-                        if (_shuffledList.Count < playingCollection.Count || _shuffledList == null)
+                        if (_shuffledList.Count < playingCollection.Count 
+                            || _shuffledList == null
+                            || indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
                         {
                             _shuffledList = await ShuffledCollection();
-                            indexOfCurrentlyPlayingFile = 0;
+                            //set it to something random within playingCollection bounds.
+                            indexOfCurrentlyPlayingFile = new Random().Next(playingCollection.Count - 2);
                         }
                         toPlayFile = _shuffledList?.ElementAt(indexOfCurrentlyPlayingFile + 1);
                     }
@@ -407,7 +410,7 @@ namespace BreadPlayer.ViewModels
                 _history.Do(Player.CurrentlyPlayingFile);
             }
 
-            Mediafile toPlayFile = await GetUpcomingSong(true);
+            Mediafile toPlayFile = UpcomingSong;
             if (toPlayFile == null)
             {
                 PlayPause();
@@ -781,7 +784,7 @@ namespace BreadPlayer.ViewModels
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             }
 
-            UpcomingSong = await GetUpcomingSong();
+            UpcomingSong = await GetUpcomingSong(true);
         }
         public async Task Load(Mediafile mp3File, bool play = false, double currentPos = 0, double vol = 50)
         {
@@ -826,7 +829,7 @@ namespace BreadPlayer.ViewModels
                 var playingCollection = GetPlayingCollection();
                 int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
                 Player.IgnoreErrors = false;
-                await Load(await GetUpcomingSong(), true);
+                await Load(await GetUpcomingSong(true), true);
             }
 
             await UpdateUi(mp3File);
