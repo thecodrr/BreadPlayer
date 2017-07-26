@@ -28,7 +28,7 @@ namespace BreadPlayer.ViewModels
         public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }
         #endregion
 
-        private LibraryService _service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
+        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
         private string _artistBio;

@@ -17,7 +17,7 @@ namespace BreadPlayer.ViewModels
         private AlbumService AlbumService { get; set; }
         public void InitDb()
         {
-            AlbumService = new AlbumService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Albums", "AlbumsText"));
+            AlbumService = new AlbumService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
         }       
         #endregion
 

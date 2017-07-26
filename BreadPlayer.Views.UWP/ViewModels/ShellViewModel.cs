@@ -54,7 +54,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         private DispatcherTimer _timer;
         private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
-        private LibraryService _service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
+        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         private int _songCount;
         #endregion
 

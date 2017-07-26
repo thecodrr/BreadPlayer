@@ -25,7 +25,7 @@ namespace BreadPlayer.ViewModels
       
         public Task<IEnumerable<Mediafile>> StartSearch(string query)
         {
-            LibraryService service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.DatabasePath, "Tracks", "TracksText"));
+            LibraryService service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             return service.Query(query);
         }
         public async Task GetAlbumsAndTracks(string query)
