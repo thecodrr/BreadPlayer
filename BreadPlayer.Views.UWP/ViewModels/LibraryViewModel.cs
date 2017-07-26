@@ -458,7 +458,7 @@ namespace BreadPlayer.ViewModels
             if (mediaFile != null)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mediaFile, true, _isPlayingFromPlaylist });
-                mediaFile.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                //mediaFile.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
             }
         }
 
