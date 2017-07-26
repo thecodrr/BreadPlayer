@@ -532,7 +532,7 @@
                                         <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-
+                                        <Setter Target="ShortcutsPanel.Orientation" Value="Vertical"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -556,6 +556,8 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+
                                         <!--<Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="2*"/>-->
                                         <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
@@ -566,6 +568,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
