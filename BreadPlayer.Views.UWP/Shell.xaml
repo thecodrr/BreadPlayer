@@ -267,7 +267,7 @@
                 </controls:SplitViewMenu.TopNavigationItems>
                 <controls:SplitViewMenu.BottomNavigationItems>                    
                     <controls:SimpleNavMenuItem x:Uid="myBakeriesMenuItem" DestinationPage="local:AccountsView" FontGlyph="&#x0044;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
-                    <controls:SimpleNavMenuItem DestinationPage="local:DevicesView" FontGlyph="&#x0044;" Tooltip="" Label="My Devices" Symbol="Accept"></controls:SimpleNavMenuItem>
+                    <!--<controls:SimpleNavMenuItem DestinationPage="local:DevicesView" FontGlyph="&#x0044;" Tooltip="" Label="My Devices" Symbol="Accept"></controls:SimpleNavMenuItem>-->
                     <controls:SimpleNavMenuItem x:Uid="settingsMenuItem" DestinationPage="local:SettingsView" FontGlyph="&#x0046;" Tooltip="" Label="" Symbol="Accept"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.BottomNavigationItems>
             </controls:SplitViewMenu>

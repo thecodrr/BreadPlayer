@@ -105,7 +105,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() => 
             {
-                record.Id = ObjectId.NewObjectId().Pid;
+                record.Id = Guid.NewGuid().GetHashCode();
                 currentCollection.Insert(record);
             });
         }

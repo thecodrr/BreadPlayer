@@ -923,7 +923,12 @@ namespace BreadPlayer.ViewModels
                 var songList = new List<Mediafile>();
                 if (menu?.Tag == null)
                 {
-                    songList = SelectedItems;
+                    if(menu.DataContext is Album album)
+                    {
+                        songList.AddRange(await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query((album.AlbumName)));
+                    }
+                    else
+                        songList.AddRange(SelectedItems);
                 }
                 else
                 {
