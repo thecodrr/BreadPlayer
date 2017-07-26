@@ -504,7 +504,8 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile mediaFile)
             {
                 _isPlayingFromPlaylist = false;
-                // SendLibraryLoadedMessage(TracksCollection.Elements, true);
+                if(CurrentPage != "MusicCollection")
+                     SendLibraryLoadedMessage(_source, true);
                 return mediaFile;
             }
             else if (path is IEnumerable<Mediafile> tmediaFile)
@@ -629,7 +630,7 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
-                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false));
+                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
 
@@ -1067,9 +1068,11 @@ namespace BreadPlayer.ViewModels
                 RecentlyPlayedCollection.RemoveAt(RecentlyPlayedCollection.Count + 1);
             }
         }
+        private string CurrentPage { get; set; } = "MusicCollection";
         private async void Frame_Navigated(object sender, NavigationEventArgs e)
         {
             string param = (e.Parameter ?? string.Empty).ToString();    // e.Parameter can be null and throw exception
+            CurrentPage = param;
             if (e.SourcePageType == typeof(LibraryView))
             {
                 switch(param)
