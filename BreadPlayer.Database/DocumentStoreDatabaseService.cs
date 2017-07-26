@@ -195,6 +195,7 @@ namespace BreadPlayer.Database
             StaticDocumentDatabase.DisposeDatabaseEngine();
             DB.Dispose();
             DB = null;
+            currentCollection = null;
         }
     }
 }

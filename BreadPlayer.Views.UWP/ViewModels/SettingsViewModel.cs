@@ -270,6 +270,7 @@ namespace BreadPlayer.ViewModels
                 ResetCommand.IsEnabled = false;
                 await Task.Delay(200);
                 ResetCommand.IsEnabled = true;
+                LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             }
             catch (Exception ex)
             {
@@ -512,6 +513,7 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
                 await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                
                 await LibraryService.AddMediafiles(uniqueFiles);
 
                 //AlbumArtistViewModel vm = new AlbumArtistViewModel();
