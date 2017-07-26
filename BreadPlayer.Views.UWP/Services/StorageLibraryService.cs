@@ -81,7 +81,7 @@ namespace BreadPlayer.Services
                 await SharedLogic.NotificationManager.ShowMessageAsync(error);
                 return null;
             }
-
+            await SharedLogic.NotificationManager.ShowMessageAsync("Getting files...");
             return await queryResult.GetFilesAsync();
         }
         public void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)

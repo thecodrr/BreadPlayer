@@ -441,7 +441,7 @@
             <TextBlock Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" VerticalAlignment="Bottom" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
 
         </Grid>
-       
+
         <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding Source={StaticResource ShellVM}, Path=IsVolumeSliderVisible}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
