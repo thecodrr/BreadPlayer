@@ -7,6 +7,7 @@ namespace BreadPlayer.Extensions
 {
     public static class DependencyObjectExtensions
     {
+
         public static void AnimateBrush(this DependencyObject objAnimate, Color fromColor, Color toColor, string propPath)
         {
             ColorAnimation col = new ColorAnimation()

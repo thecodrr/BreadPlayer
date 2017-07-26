@@ -203,7 +203,7 @@
                     </Grid.ColumnDefinitions>
 
                     <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0047;" Margin="0,5,0,0" VerticalAlignment="Center"
-                      HorizontalAlignment="Center" Foreground="White" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
+                      HorizontalAlignment="Center" Foreground="{ThemeResource TextBrush}" FontFamily="/Assets/breadplayer.ttf#breadplayer"/>
                     <!--<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />-->
                 </Grid>
@@ -212,7 +212,7 @@
     </Style>
 
     <Style x:Key="NavMenuItemContainerDarkStyle" TargetType="ListViewItem" BasedOn="{StaticResource NavMenuItemContainerStyle}">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
@@ -465,12 +465,12 @@
                                         <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
                                         <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
                                         <Setter Target="playlistBtn.Width" Value="355"/>
-                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
+                                        <Setter Target="playlistAddBtn.Foreground" Value="{ThemeResource TextBrush}"/>
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="Title.Margin" Value="90,30,0,40"/>
                                         <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>
                                         <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
-                                        <Setter Target="TogglePaneButton.Foreground" Value="White"/>
+                                        <Setter Target="TogglePaneButton.Foreground" Value="{ThemeResource TextBrush}"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
                                         <Setter Target="playlistBtn.Margin" Value="0"/>
                                         <Setter Target="Pane.Margin" Value="0,0,0,0"/>
@@ -599,7 +599,7 @@
                                       Style="{StaticResource SplitViewTogglePaneButtonStyle}"
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu" VerticalAlignment="Top"
-                                      ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
+                                      ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource TextBrush}"/>
                                     <ScrollViewer Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                         <Grid>
                                             <Grid.RowDefinitions>

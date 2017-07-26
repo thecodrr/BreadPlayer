@@ -30,6 +30,8 @@
                     <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="HoverBrush" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="Black"/>
+                    <SolidColorBrush x:Key="TextBrush" Color="#0b0b0b"/>
+                    <SolidColorBrush x:Key="AccentHoverBrush" Color="DarkGray"/>                    
                     <SolidColorBrush x:Key="SystemAccentForeground" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f0f0f0"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#e9e9e9" Opacity="0.7"/>
@@ -66,6 +68,8 @@
                     <SolidColorBrush x:Key="JumpListDefaultEnabledBackground" Color="{ThemeResource SystemAccentColor}" />
                     <SolidColorBrush x:Key="HoverBrush" Color="#323232" Opacity="1"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="White"/>
+                    <SolidColorBrush x:Key="TextBrush" Color="White"/>
+                    <SolidColorBrush x:Key="AccentHoverBrush" Color="LightGray"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#0c0c0c"/>
                     <SolidColorBrush x:Key="SystemAccentForeground" Color="White"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#141414" Opacity="0.9"/>
@@ -142,7 +146,7 @@
                                         <VisualState x:Name="PointerOver">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="LightGray"/>
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AccentHoverBrush}"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                             </Storyboard>
@@ -216,7 +220,7 @@
                                         <VisualState x:Name="PointerOver">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="LightGray"/>
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AccentHoverBrush}"/>
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                             </Storyboard>
