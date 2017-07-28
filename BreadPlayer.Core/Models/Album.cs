@@ -18,7 +18,7 @@ namespace BreadPlayer.Core.Models
             set => Set(ref _isSelected, value);
         }
 
-        public string TextSearchKey => GetTextSearchKey();
+        public string TextSearchKey => GetTextSearchKey().ToLower();
 
         public string GetTextSearchKey()
         {

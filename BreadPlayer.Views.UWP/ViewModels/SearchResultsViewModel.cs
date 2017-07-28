@@ -34,21 +34,25 @@ namespace BreadPlayer.ViewModels
             {
                 QueryAlbums = new ThreadSafeObservableCollection<Album>();
                 QuerySongs = new ThreadSafeObservableCollection<Mediafile>();
-                var queryresults = (await StartSearch(query)).GroupBy(t => t.Album).ToArray();
-                for(int i = 0; i < queryresults.Count(); i++)
+                var queryresults = (await StartSearch(query.ToLower()));
+                if(queryresults != null && queryresults.Any())
                 {
-                    QuerySongs.AddRange(queryresults[i].Where(t => t.Title.ToLower().Contains(query.ToLower())));
-                    if (queryresults[i].Key.ToLower().Contains(query.ToLower()))
+                    var groupedQueryresults = queryresults.GroupBy(t => t.Album).ToArray();
+                    for (int i = 0; i < groupedQueryresults.Count(); i++)
                     {
-                        var albumSongs = queryresults[i].Select(t => t);
-                        var firstSong = albumSongs.First() ?? new Mediafile();
-                        Album album = new Album
+                        QuerySongs.AddRange(groupedQueryresults[i].Where(t => t.Title.ToLower().Contains(query.ToLower())));
+                        if (groupedQueryresults[i].Key.ToLower().Contains(query.ToLower()))
                         {
-                            Artist = firstSong?.LeadArtist,
-                            AlbumName = queryresults[i].Key,
-                            AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                        };
-                        QueryAlbums.Add(album);
+                            var albumSongs = groupedQueryresults[i].Select(t => t);
+                            var firstSong = albumSongs.First() ?? new Mediafile();
+                            Album album = new Album
+                            {
+                                Artist = firstSong?.LeadArtist,
+                                AlbumName = groupedQueryresults[i].Key,
+                                AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
+                            };
+                            QueryAlbums.Add(album);
+                        }
                     }
                 }
             }

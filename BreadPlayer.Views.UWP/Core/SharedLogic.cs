@@ -361,6 +361,7 @@ namespace BreadPlayer.Core
                 mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, Path.GetFileNameWithoutExtension(file.Path));
                 mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
                 mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
+                
                 mediafile.Genre = string.Join(",", properties.Genre);
                 mediafile.Year = properties.Year.ToString();
                 mediafile.TrackNumber = properties.TrackNumber.ToString();

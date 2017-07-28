@@ -23,7 +23,7 @@ namespace BreadPlayer.Core.Models
 {
     public class Playlist : ObservableObject, IDbRecord
     {
-        public string TextSearchKey => GetTextSearchKey();
+        public string TextSearchKey => GetTextSearchKey().ToLower();
 
         private long _id;
         public long Id { get => _id;
