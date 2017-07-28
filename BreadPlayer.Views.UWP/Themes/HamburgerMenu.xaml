@@ -567,20 +567,20 @@
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,-7.5,0,0"/>
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,0,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0" To="1"/>
                                 </Storyboard>
                                 <Storyboard x:Key="SearchButtonClickedFadeStoryboard" Duration="0:0:0.5">
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="searchBox" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageFrame" Storyboard.TargetProperty="Margin">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="0,155,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerText" Storyboard.TargetProperty="Margin">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,35,0,0"/>
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="35,0,0,0"/>
                                     </ObjectAnimationUsingKeyFrames>
                                     <DoubleAnimation Storyboard.TargetName="searchBox"
                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0"/>

@@ -220,7 +220,7 @@ namespace SplitViewMenu
                 DiscreteObjectKeyFrame marginKeyFrame = null;
                 DiscreteObjectKeyFrame headerMarginKeyFrame = null;
 
-                if (_searchBox.Visibility == Visibility.Collapsed)
+                if (_searchBox.Opacity <= 0)
                 {
                     var searchClickedStoryboard = (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard);//.Begin();
                     marginKeyFrame = (searchClickedStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
@@ -233,7 +233,7 @@ namespace SplitViewMenu
                     searchClickedStoryboard.Begin();
                     _searchBox.Focus(FocusState.Programmatic);
                 }
-                else if(_searchBox.Visibility == Visibility.Visible)
+                else if(_searchBox.Opacity >= 1)
                 {
                     var fadeStoryboard = (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard);//.Begin();
                     marginKeyFrame = (fadeStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
