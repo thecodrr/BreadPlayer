@@ -372,25 +372,24 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
-                    </VisualState.Setters>
-                </VisualState>             
-                <VisualState>
-                    <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedMobileTemplate}"/>
-                        <Setter Target="AlbumsList.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                         <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource MobileSelectedTemplate}" />
                         <Setter Target="songsHeader.Margin" Value="25,15,0,0" />
-                        <Setter Target="songsHeader.FontSize" Value="18" />
+                        <Setter Target="songsHeader.FontSize" Value="18" />                        
                         <Setter Target="albumsHeader.Margin" Value="25,15,0,0" />
                         <Setter Target="albumsHeader.FontSize" Value="18" />
                         <Setter Target="MainGrid.Margin" Value="0,35,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileUnselectedTemplate}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -401,7 +400,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock x:Uid="songsHeader" Name="SongsHeader" Text="" FontSize="24" FontWeight="Bold"/>
+        <TextBlock x:Uid="songsHeader" Name="songsHeader" Text="" FontSize="24" FontWeight="Bold"/>
         <ListView Name="SongsList" Grid.Row="1" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource MediafileUnselectedTemplate}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -412,7 +411,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <TextBlock x:Uid="albumsHeader" Name="AlbumsHeader" Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
+        <TextBlock x:Uid="albumsHeader" Name="albumsHeader" Grid.Row="2" Text="Albums" FontSize="24" FontWeight="Bold"/>
         <GridView Name="AlbumsList" SelectionChanged="AlbumsList_SelectionChanged" ItemTemplate="{StaticResource SelectedTemplate}" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"> 
             <GridView.Transitions>
                 <TransitionCollection>
