@@ -365,7 +365,12 @@ namespace BreadPlayer.Core
                 mediafile.Genre = string.Join(",", properties.Genre);
                 mediafile.Year = properties.Year.ToString();
                 mediafile.TrackNumber = properties.TrackNumber.ToString();
-                mediafile.Length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+                string length = "";
+                if (properties.Duration.TotalMinutes > 60)
+                    length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"hh\:mm\:ss"), "00:00:00");
+                else
+                    length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
+                mediafile.Length = length;
                 mediafile.AddedDate = DateTime.Now.ToString();
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
