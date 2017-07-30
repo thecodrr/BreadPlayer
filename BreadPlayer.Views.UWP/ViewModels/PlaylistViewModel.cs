@@ -141,7 +141,7 @@ namespace BreadPlayer.ViewModels
                 try
                 {
                     PlaylistArt = null;
-                    TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(t.Length, "mm\\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                    TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.Parse(t.Length, CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
                     TotalSongs = Songs.Count + " Songs";
                     if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
                     {
