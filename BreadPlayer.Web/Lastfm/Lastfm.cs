@@ -20,17 +20,15 @@ namespace BreadPlayer.Web.Lastfm
         }
         public async Task<bool> Login(string username, string password)
         {
-            var response = await LastfmClient.Auth.GetSessionTokenAsync(username, password);            
-            Auth = LastfmClient.Auth;
+            await LastfmClient.Auth.GetSessionTokenAsync(username, password);            
             return LastfmClient.Auth.Authenticated;
         }
-
-        private ILastAuth Auth { get; set; }       
+           
         public async Task<ScrobbleResponse> Scrobble(params string[] data)
         {
             try
             {
-                if (!Auth.Authenticated)
+                if (!LastfmClient.Auth.Authenticated)
                 {
                     return new ScrobbleResponse(LastResponseStatus.BadAuth);
                 }
@@ -40,7 +38,7 @@ namespace BreadPlayer.Web.Lastfm
                     CreationCollisionOption.OpenIfExists);
                 IFile file = await folder.CreateFileAsync("scrobbles.db",
                     CreationCollisionOption.OpenIfExists);
-                IScrobbler scrobbler = new BreadScrobbler(Auth, file.Path);
+                IScrobbler scrobbler = new BreadScrobbler(LastfmClient.Auth, file.Path);
                 return (await scrobbler.ScrobbleAsync(new Scrobble(data[0], data[1], data[2], DateTimeOffset.Now)));
             }
             catch (NullReferenceException)

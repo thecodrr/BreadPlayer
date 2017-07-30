@@ -535,7 +535,7 @@ namespace BreadPlayer.ViewModels
                     TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
                     await _service.UpdateMediafile(lastPlayingSong);
                 }
-                await ScrobblePlayingSong();                
+                await ScrobblePlayingSong(lastPlayingSong);                
             });
         }
         private void Timer_Tick(object sender, object e)
@@ -688,11 +688,11 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Methods
-        private async Task ScrobblePlayingSong()
+        private async Task ScrobblePlayingSong(Mediafile song)
         {
             if (SharedLogic.LastfmScrobbler != null)
             {
-                var scrobble = await SharedLogic.LastfmScrobbler.Scrobble(Player.CurrentlyPlayingFile.LeadArtist, Player.CurrentlyPlayingFile.Album, Player.CurrentlyPlayingFile.Title);
+                var scrobble = await SharedLogic.LastfmScrobbler.Scrobble(song.LeadArtist, song.Album, song.Title);
                 if (scrobble.Success)
                 {
                     await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
