@@ -590,4 +590,7 @@
     <value>Become A Beta Tester</value>
     <comment>!!!NEW!!!</comment>
   </data>
+  <data name="donatePatreonBtn.Content" xml:space="preserve">
+    <value>Donate Via Patreon</value>
+  </data>
 </root>
