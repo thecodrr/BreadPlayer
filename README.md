@@ -1,7 +1,7 @@
 <dl>
   <a href="https://breadplayer.com/"><img height="150" src="http://i.imgur.com/PNMSGUr.png" title="breadplayer"/></a>
   <a href="https://www.microsoft.com/en-gb/store/p/bread-player/9nblggh42srx/"><img height="80" src="https://assets.windowsphone.com/f2f77ec7-9ba9-4850-9ebe-77e366d08adc/English_Get_it_Win_10_InvariantCulture_Default.png" title="Get it from Windows Store!" alt="Get it from Windows Store!"/></a>
-  <a href="https://patreon.com/thecodrr"><img src="http://i.imgur.com/PpJLBEQ.png" title="source: imgur.com" /></a>
+  <a href="https://patreon.com/thecodrr"><img src="http://i.imgur.com/uHXRhpN.png" title="source: imgur.com" /></a>
   <h1>Bread Player aka <em>Macalifa</em></h1>
   <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
