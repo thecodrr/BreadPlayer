@@ -74,13 +74,27 @@ namespace BreadPlayer
             GlobalPageKeyDown?.Invoke(sender, args);
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
-                string releaseNotes = "FIXES:\r\n\r\n" + 
-                    "Fix play on tap for all touch devices.\n"+
-                    "Fixed all crashes.\r\n\r\n" + 
+                string releaseNotes = "FIXES:\r\n\r\n" +
+                    "Fixed issue where next song to the currently playing song also got added to Recently Eaten.\n" +
+                    "Fixed app crash is result of a bug with library import.\n" +
+                    "Fixed crash when adding songs to a playlist.\n" +
+                    "Fixed app crash when trying to use SMTC on PC.\n" +
+                    "Fixed UI bug where Font Capitilization options weren't being displayed.\n" +
+                    "Fixed UI glitch in which search results weren't adjusted when screen width was reduced.\n" +
+                    "Fixed last.fm scrobbling issue.\n" +
+                    "Fixed issue where recently added items weren't displayed.\n" +
+                    "Fixed Song Duration display for songs longer than 1 hour.\n" +
+                    "Fixed issue where Next Song & Prev Song button didn't work in any playlist.\n" +
+                    "Fixed issue where songs couldn't be imported after player reset.\n" +
+                    "Fixed issue where playing through all tracks in \"Recently Eaten\" will then break out of the list.\r\n\r\n" + 
                     "NEW THINGS:\r\n\r\n" +
-                    "Removed enter to full screen on startup.\n" + 
-                    "Removed back button from shortcuts.\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.4.0");
+                    "Player foreground will now be adjusted according to the current accent color.\n" +
+                    "We also added a new database engine in this release.\n" +
+                    "Added \"Donate Via Patreon\" button.\r\n\r\n" +
+                    "IMPROVEMENTS:\r\n\r\n" +
+                    "Improved shuffle.\n" +
+                    "Improved UI for both PC & Mobile.\n";
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.5.0");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)
