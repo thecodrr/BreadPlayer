@@ -566,7 +566,7 @@ namespace BreadPlayer.ViewModels
         {
             return Task.Run(() =>
             {
-                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3 && !RecentlyAddedSongsCollection.All(t => t.Path == item.Path)));
+                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3));
                 return RecentlyAddedSongsCollection;
             });
         }
