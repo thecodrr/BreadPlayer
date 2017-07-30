@@ -454,7 +454,7 @@
     <value>අපගේ ට්විටර් ගිණුම වෙත යන්න ක්ලික් කරන්න.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.3.0-බීටා</value>
+    <value>v2.5.0-බීටා</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
