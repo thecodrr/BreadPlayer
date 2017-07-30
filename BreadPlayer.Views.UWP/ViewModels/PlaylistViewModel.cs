@@ -134,6 +134,10 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while deleting song from playlist.", ex);
             }
         }
+        private bool IsHour(string length)
+        {
+            return length.Count(t => t == ':') == 2;        
+        }
         public async Task Refresh()
         {
             await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -141,7 +145,7 @@ namespace BreadPlayer.ViewModels
                 try
                 {
                     PlaylistArt = null;
-                    TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.Parse(t.Length, CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                    TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
                     TotalSongs = Songs.Count + " Songs";
                     if (Songs.Any(s => !string.IsNullOrEmpty(s.AttachedPicture)) && PlaylistArt == null)
                     {

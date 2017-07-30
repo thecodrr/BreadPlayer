@@ -30,7 +30,7 @@ namespace BreadPlayer.Converters
             string formattedTime = "00:00";
             if (value is double time)
             {
-                if (time > 60)
+                if (TimeSpan.FromSeconds(time).TotalMinutes > 60)
                 {
                     formattedTime = TimeSpan.FromSeconds(time).ToString(@"hh\:mm\:ss");
                 }
