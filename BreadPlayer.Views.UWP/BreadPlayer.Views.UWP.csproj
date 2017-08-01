@@ -19,7 +19,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <HockeyAppResourceId>6085c48bdbf64fa78cb867f1dca0ca4f</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">

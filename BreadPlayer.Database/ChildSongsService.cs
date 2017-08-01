@@ -52,10 +52,14 @@ namespace BreadPlayer.Database
             return Task.Run(async () =>
             {
                 Database.ChangeTable(_tablename, _texttablename);
-                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId).ToLower())).Select(t => t.SongId);
-                Database.ChangeTable("Tracks", "TracksText");
-
-                return trackIds.Select(x => Database.GetRecordById<Mediafile>(x));
+                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId).ToLower()))
+                                ?.Select(t => t.SongId);
+                if (trackIds != null)
+                {
+                    Database.ChangeTable("Tracks", "TracksText");
+                    return trackIds.Select(x => Database.GetRecordById<Mediafile>(x));
+                }
+                return null;
             });
         }
     }

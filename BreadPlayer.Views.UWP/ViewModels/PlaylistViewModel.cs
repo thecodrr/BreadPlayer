@@ -330,7 +330,11 @@ namespace BreadPlayer.ViewModels
                     Songs.AddRange(await extPlaylist.LoadPlaylist(await StorageFile.GetFileFromPathAsync(_playlist.Path)));
                 }
                 else
-                    Songs.AddRange(await PlaylistService.GetTracksAsync(_playlist.Id));
+                {
+                    var playlistSongs = await PlaylistService.GetTracksAsync(_playlist.Id);
+                    if (playlistSongs != null)
+                        Songs.AddRange(playlistSongs);
+                }
                 await Refresh().ContinueWith(task =>
                 {
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
