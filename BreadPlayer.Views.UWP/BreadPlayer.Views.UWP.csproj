@@ -167,6 +167,7 @@
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\cs-CZ\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
