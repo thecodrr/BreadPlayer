@@ -1,5 +1,28 @@
 # Release Notes for Bread Player.
 
+## Version 2.5-beta
+### What's Fixed:
+- Fixed issue where next song to the currently playing song also got added to Recently Eaten.
+- Fixed app crash is result of a bug with library import.
+- Fixed crash when adding songs to a playlist.
+- Fixed app crash when trying to use SMTC on PC.
+- Fixed UI bug where Font Capitilization options weren't being displayed.
+- Fixed UI glitch in which search results weren't adjusted when screen width was reduced.
+- Fixed last.fm scrobbling issue.
+- Fixed issue where recently added items weren't displayed.
+- Fixed Song Duration display for songs longer than 1 hour.
+- Fixed issue where Next Song & Prev Song button didn't work in any playlist.
+- Fixed issue where songs couldn't be imported after player reset.
+- Fixed issue where playing through all tracks in "Recently Eaten" will then break out of the list. 
+
+### What's New:
+- Player foreground will now be adjusted according to the current accent color.
+- We also added a new database engine in this release.
+- Added "Donate Via Patreon" button.
+### What's Improved:
+- Improved shuffle.
+- Improved UI for both PC & Mobile.
+
 ## Version 2.4-beta
 ### What's Fixed:
 - Fixed player startup crashes.
