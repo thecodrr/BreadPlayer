@@ -52,8 +52,10 @@ namespace BreadPlayer.Services
             //SystemNavigationManager.GetForCurrentView().BackRequested +=
             //                NavigationService_BackRequested;
 
-            //if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            //{ }
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            }
         }
 
         #endregion
@@ -71,14 +73,16 @@ namespace BreadPlayer.Services
             UpdateBackButtonVisibility();
         }
 
-        public void NavigateBack()
+        public bool NavigateBack()
         {
             if (Frame.CanGoBack)
             {
                 Frame.GoBack();
-                // PageStack.Pop();
+                //PageStack.Pop();
                 UpdateBackButtonVisibility();
+                return true;
             }
+            return false;
         }
 
         public void NavigateToHome()
@@ -114,17 +118,14 @@ namespace BreadPlayer.Services
         private void NavigationService_BackRequested
             (object sender, BackRequestedEventArgs e)
         {
-            if (Frame.CanGoBack)
-            {
-                Frame.GoBack();
-            }
+            e.Handled = NavigateBack(); 
+            
         }
 
-        //private void HardwareButtons_BackPressed
-        //(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
-        //{
-        //    this.NavigateBack();
-        //}
+        private void HardwareButtons_BackPressed (object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            e.Handled = NavigateBack();
+        }
 
         #endregion
     }

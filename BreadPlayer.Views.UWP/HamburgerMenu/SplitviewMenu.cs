@@ -69,8 +69,7 @@ namespace SplitViewMenu
               typeof(SplitViewMenu),
               new PropertyMetadata(new List<INavigationMenuItem>(), OnPlaylistsItemsPropertyChanged));
 
-
-        private Button _backButton;
+        
         private static NavMenuListView _navTopMenuListView;
         private static NavMenuListView _navBottomMenuListView;
         private static NavMenuListView _playlistsMenuListView;
@@ -166,7 +165,6 @@ namespace SplitViewMenu
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
-            _backButton = GetTemplateChild("BackButton") as Button;
             _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
