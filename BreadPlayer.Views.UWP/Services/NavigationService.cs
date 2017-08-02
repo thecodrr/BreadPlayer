@@ -79,7 +79,7 @@ namespace BreadPlayer.Services
             {
                 Frame.GoBack();
                 //PageStack.Pop();
-                UpdateBackButtonVisibility();
+                //UpdateBackButtonVisibility();
                 return true;
             }
             return false;
