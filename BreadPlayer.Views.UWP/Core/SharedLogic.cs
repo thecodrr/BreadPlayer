@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Devices.Enumeration;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
+using Windows.Media.Devices;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
@@ -39,6 +41,8 @@ namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
+        private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
+
         public SharedLogic()
         {
             InitializeCore.Dispatcher = new BreadDispatcher(Dispatcher);
@@ -47,7 +51,26 @@ namespace BreadPlayer.Core
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
+
+            MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
         }
+
+        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
+                return;
+
+            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
+
+            System.Diagnostics.Debug.WriteLine($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+
+            _audioDeviceId = args.Id;
+
+            if (!InitializeCore.IsMobile)
+                await Player.ChangeDevice(device.Name);
+        }
+
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
         public ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }

@@ -97,24 +97,41 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 PlayerState = PlayerState.Stopped;
             });
         }
-        public async void ChangeDevice(string deviceName)
+
+
+        public async Task ChangeDevice(string deviceName)
         {
-            await InitializeCore.NotificationManager.ShowMessageAsync(string.Format("Transitioning to {0}.", deviceName),5);
-            await Task.Run(async () =>
+            await InitializeCore.NotificationManager.ShowMessageAsync($"Transitioning to {deviceName}.", 5);
+
+            await Task.Run(() =>
             {
-                var pos = Position;
-                Bass.ChannelPause(_handle);
-                PlayerState = PlayerState.Paused;
-                Bass.Free();
-                NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
-                Bass.Init();
-                await Load(CurrentlyPlayingFile);
-                Position = pos;
-                PlayerState = PlayerState.Playing;
-                Bass.ChannelPlay(_handle);
+                var count = Bass.DeviceCount;
+                for (var i = 0; i < count; i++)
+                {
+                    var deviceInfo = Bass.GetDeviceInfo(i);
+                    if (deviceInfo.IsDefault && deviceInfo.IsEnabled)
+                    {
+                        if (PlayerState == PlayerState.Playing)
+                        {
+                            Bass.ChannelPause(_handle);
+                            PlayerState = PlayerState.Paused;
+                        }
+                        NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+                        Bass.Init();
+                        Bass.ChannelSetDevice(_handle, i);
+                        if (PlayerState == PlayerState.Paused)
+                        {
+                            Bass.ChannelPlay(_handle);
+                            PlayerState = PlayerState.Playing;
+                        }
+                        return;
+                    }
+                }
             });
-            await InitializeCore.NotificationManager.ShowMessageAsync(string.Format("Transition complete.", deviceName), 5);
+
+            await InitializeCore.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
+
         /// <summary>
         /// Loads the specified file into the player.
         /// </summary>

@@ -840,7 +840,7 @@ namespace BreadPlayer.ViewModels
             var currentEndpoint = sender.GetAudioEndpoint();
             if (eventCount > 1)
             {
-                (SharedLogic.Player as BassPlayerEngine).ChangeDevice(currentEndpoint.ToString());
+                SharedLogic.Player?.ChangeDevice(currentEndpoint.ToString());
             }
             eventCount += 1;
         }
