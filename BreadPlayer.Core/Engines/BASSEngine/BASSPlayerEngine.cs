@@ -182,7 +182,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
             else
             { 
-                string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+                string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors)
                 {
                     await InitializeCore.NotificationManager.ShowMessageAsync(error);
