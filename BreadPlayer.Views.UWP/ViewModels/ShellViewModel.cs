@@ -43,6 +43,8 @@ using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Themes;
+using Windows.Phone.Media.Devices;
+using BreadPlayer.Core.Engines.BASSEngine;
 
 namespace BreadPlayer.ViewModels
 {
@@ -87,6 +89,8 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
             PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
+            if(InitializeCore.IsMobile)
+                AudioRoutingManager.GetDefault().AudioEndpointChanged += Shell_AudioEndpointChanged; ;
         }
         #endregion
 
@@ -829,6 +833,16 @@ namespace BreadPlayer.ViewModels
             }
 
             await UpdateUi(mp3File);
+        }
+        int eventCount = 0;
+        private void Shell_AudioEndpointChanged(AudioRoutingManager sender, object args)
+        {
+            var currentEndpoint = sender.GetAudioEndpoint();
+            if (eventCount > 1)
+            {
+                (SharedLogic.Player as BassPlayerEngine).ChangeDevice(currentEndpoint.ToString());
+            }
+            eventCount += 1;
         }
         #endregion
 
