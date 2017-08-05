@@ -81,7 +81,7 @@ namespace BreadPlayer.Core
         /// <summary>
         /// The singleton for player engine. Could this be better designed?
         /// Perhaps an Instance Singleton in the PlayerEngine itself?
-        /// #TODO improve this according to a better design principle.
+        /// A singleton here makes most sense.
         /// </summary>
         private static IPlayerEngine _player;
         public static IPlayerEngine Player
