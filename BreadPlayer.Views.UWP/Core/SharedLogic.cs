@@ -3,8 +3,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Devices.Enumeration;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
+using Windows.Media.Devices;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
@@ -39,6 +41,7 @@ namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
+
         public SharedLogic()
         {
             InitializeCore.Dispatcher = new BreadDispatcher(Dispatcher);
@@ -47,7 +50,9 @@ namespace BreadPlayer.Core
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
+
         }
+
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
         public ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
         public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }

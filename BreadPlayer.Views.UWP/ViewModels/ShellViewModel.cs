@@ -24,7 +24,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Graphics.Display;
+using Windows.Media.Devices;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
@@ -44,7 +46,6 @@ using BreadPlayer.Messengers;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Themes;
 using Windows.Phone.Media.Devices;
-using BreadPlayer.Core.Engines.BASSEngine;
 
 namespace BreadPlayer.ViewModels
 {
@@ -58,6 +59,8 @@ namespace BreadPlayer.ViewModels
         private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         private int _songCount;
+        private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
+
         #endregion
 
         #region Constructor
@@ -90,7 +93,9 @@ namespace BreadPlayer.ViewModels
             PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
             if(InitializeCore.IsMobile)
-                AudioRoutingManager.GetDefault().AudioEndpointChanged += Shell_AudioEndpointChanged; ;
+                AudioRoutingManager.GetDefault().AudioEndpointChanged += Shell_AudioEndpointChanged; 
+            else
+                MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
         }
         #endregion
 
@@ -840,10 +845,25 @@ namespace BreadPlayer.ViewModels
             var currentEndpoint = sender.GetAudioEndpoint();
             if (eventCount > 1)
             {
-                (SharedLogic.Player as BassPlayerEngine).ChangeDevice(currentEndpoint.ToString());
+                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
             }
             eventCount += 1;
         }
+
+        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
+                return;
+
+            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
+            BLogger.Logger.Error($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+
+            _audioDeviceId = args.Id;
+
+            await SharedLogic.Player.ChangeDevice(device.Name);
+        }
+
         #endregion
 
     }

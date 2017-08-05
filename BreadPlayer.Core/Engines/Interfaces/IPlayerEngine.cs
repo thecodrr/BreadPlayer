@@ -14,6 +14,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
         Task Pause();
         Task Stop();
         Task Play();
+        Task ChangeDevice(string deviceName);
 
         //PROPERTIES
         bool IsVolumeMuted { get; set; }
