@@ -857,7 +857,7 @@ namespace BreadPlayer.ViewModels
 
             var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
             var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.Logger.Error($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+            BLogger.Logger.Info($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
 
             _audioDeviceId = args.Id;
 
