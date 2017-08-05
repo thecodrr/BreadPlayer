@@ -92,8 +92,11 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
             PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
+
+            //these events are for detecting when the default audio
+            //device is changed in PC and Mobile.
             if(InitializeCore.IsMobile)
-                AudioRoutingManager.GetDefault().AudioEndpointChanged += Shell_AudioEndpointChanged; 
+                AudioRoutingManager.GetDefault().AudioEndpointChanged += OnAudioEndpointChanged; 
             else
                 MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
         }
@@ -491,6 +494,33 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events  
+        int eventCount = 0; //used in AudioEndpointChangedEvent
+        private void OnAudioEndpointChanged(AudioRoutingManager sender, object args)
+        {
+            var currentEndpoint = sender.GetAudioEndpoint();
+            //when this event is initialized, it is invoked 2 times.
+            //to avoid changing the device at that time, we use this statement.
+            if (eventCount > 1)
+            {
+                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
+            }
+            //increase the event count
+            eventCount += 1;
+        }
+
+        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
+                return;
+
+            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
+            BLogger.Logger.Error($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+
+            _audioDeviceId = args.Id;
+
+            await SharedLogic.Player.ChangeDevice(device.Name);
+        }
         private async void Player_MediaAboutToEnd(object sender, MediaAboutToEndEventArgs e)
         {
             if (UpcomingSong == null)
@@ -839,31 +869,6 @@ namespace BreadPlayer.ViewModels
 
             await UpdateUi(mp3File);
         }
-        int eventCount = 0;
-        private void Shell_AudioEndpointChanged(AudioRoutingManager sender, object args)
-        {
-            var currentEndpoint = sender.GetAudioEndpoint();
-            if (eventCount > 1)
-            {
-                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
-            }
-            eventCount += 1;
-        }
-
-        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
-        {
-            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
-                return;
-
-            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
-            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.Logger.Error($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
-
-            _audioDeviceId = args.Id;
-
-            await SharedLogic.Player.ChangeDevice(device.Name);
-        }
-
         #endregion
 
     }
