@@ -2,20 +2,21 @@
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using BreadPlayer.Core.Interfaces;
+using Windows.ApplicationModel.Core;
 
 namespace BreadPlayer.Dispatcher
 {
     public class BreadDispatcher : IDispatcher
     {
-        private CoreDispatcher _dispatcher;
-        public BreadDispatcher(CoreDispatcher dispatcher)
-        {
-            _dispatcher = dispatcher;
-        }
+        public static CoreDispatcher ParentDispatcher { get => CoreApplication.MainView.CoreWindow.Dispatcher; }      
         public async Task RunAsync(Action action)
         {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            await ParentDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
-        public bool HasThreadAccess => _dispatcher.HasThreadAccess;
+        public static async Task InvokeAsync(Action action)
+        {
+            await ParentDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+        }
+        public bool HasThreadAccess => ParentDispatcher.HasThreadAccess;
     }
 }

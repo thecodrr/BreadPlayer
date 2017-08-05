@@ -23,6 +23,7 @@ using Windows.UI.Core;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.NotificationManager;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer
 {
@@ -64,7 +65,7 @@ namespace BreadPlayer
         public event PropertyChangedEventHandler PropertyChanged;
         protected async virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             });

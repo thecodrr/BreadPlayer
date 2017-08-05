@@ -11,6 +11,7 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -138,7 +139,7 @@ namespace BreadPlayer.ViewModels
         }
         private async Task GetArtistInfo(string artistName)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 LastfmClient.Artist.HttpClient.CancelPendingRequests();
                 //CheckAndCancelOperation(ArtistInfoOperation, token);
@@ -170,7 +171,7 @@ namespace BreadPlayer.ViewModels
         }
         private async Task GetAlbumInfo(string artistName, string albumName)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 LastfmClient.Album.HttpClient.CancelPendingRequests();
                 //CheckAndCancelOperation(AlbumInfoOperation, token);

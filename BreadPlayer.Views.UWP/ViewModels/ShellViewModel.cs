@@ -83,7 +83,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            _timer = new DispatcherTimer(new BreadDispatcher(SharedLogic.Dispatcher))
+            _timer = new DispatcherTimer(new BreadDispatcher())
             {
                 Interval = TimeSpan.FromMilliseconds(500)
             };
@@ -310,7 +310,7 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                    await BreadDispatcher.InvokeAsync(async () =>
                     {
                         switch (Player.PlayerState)
                         {
@@ -551,7 +551,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     DontUpdatePosition = true;
                     CurrentPosition = 0;
@@ -564,7 +564,7 @@ namespace BreadPlayer.ViewModels
                         PlayPause();
                 });
             }
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
                 {
@@ -765,7 +765,7 @@ namespace BreadPlayer.ViewModels
         public async Task<ThreadSafeObservableCollection<Mediafile>> ShuffledCollection()
         {
             var shuffled = new ThreadSafeObservableCollection<Mediafile>();
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 shuffled.AddRange(TracksCollection.Elements.ToList());
                 shuffled.Shuffle();

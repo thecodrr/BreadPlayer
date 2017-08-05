@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media;
 using BreadPlayer.Common;
 using BreadPlayer.Core;
 using BreadPlayer.Extensions;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Themes
 {
@@ -41,7 +42,7 @@ namespace BreadPlayer.Themes
 
         public static async void SetThemeColor(string albumartPath)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false)
                 {

@@ -43,7 +43,7 @@ namespace BreadPlayer.Core
             //To define them all here is not good. This ctor is called multiple times.
             //should remove this to a better place.
             //#TODO Move these properties to a better place perhaps the App Ctor?
-            InitializeCore.Dispatcher = new BreadDispatcher(Dispatcher);
+            InitializeCore.Dispatcher = new BreadDispatcher();
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
@@ -96,16 +96,7 @@ namespace BreadPlayer.Core
                 return _player;
             }
         }
-
-        /// <summary>
-        /// It would be better if we define BreadDispatcher instead of CoreDispatcher.
-        /// The reason being, it is much better to implement and easier to understand.
-        /// Furthermore, it would make more sense if instead of make a global static Property here,
-        /// we moved to a more appropriate place. Perhaps, the BreadDispatcher could expose static methods?
-        /// #TODO remove this to a better place in the codebase
-        /// </summary>
-        public static CoreDispatcher Dispatcher { get; set; } = CoreApplication.MainView.CoreWindow.Dispatcher;
-
+       
         /// <summary>
         /// The static SettingsVM Singleton. I am still not sure if this should be here.
         /// This is bad design plain and simple. Needs improvement.

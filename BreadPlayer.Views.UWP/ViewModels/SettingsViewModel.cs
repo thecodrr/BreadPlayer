@@ -43,6 +43,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Themes;
 using BreadPlayer.Services;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -475,7 +476,7 @@ namespace BreadPlayer.ViewModels
             int failedCount = 0;
             var count = files.Count;
             short i = 2;
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 try
                 {

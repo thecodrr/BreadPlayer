@@ -47,6 +47,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using SplitViewMenu;
 using BreadPlayer.Helpers;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -93,7 +94,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 IsLibraryLoading = false;
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
                 });
@@ -129,7 +130,7 @@ namespace BreadPlayer.ViewModels
         {
            // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
-            SharedLogic.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
 
@@ -574,7 +575,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task RefreshSourceAsync()
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 if (_source == null)
                 {
@@ -596,7 +597,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task ChangeView(string header, bool group, object src)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 ViewSource.Source = null;
                 //Header = header;
@@ -613,7 +614,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 _grouped = group;
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
@@ -645,7 +646,7 @@ namespace BreadPlayer.ViewModels
                 Sort = propName;
                 if (propName != "Unsorted")
                 {
-                    await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                    await BreadDispatcher.InvokeAsync(async () =>
                     {
                         if (_files == null)
                         {
@@ -691,7 +692,7 @@ namespace BreadPlayer.ViewModels
         private async Task RemoveDuplicateGroups()
         {
             //the only workaround to remove the first group which is a 'false' duplicate really.
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             { 
                 if (ViewSource.IsSourceGrouped)
                 {
@@ -783,7 +784,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         private async Task CreateGenreMenu()
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 GenreFlyout = Application.Current.Resources["GenreFlyout"] as MenuFlyout;
                 Genre = "All genres";
@@ -1026,7 +1027,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (!PlaylistService.PlaylistExists(plist.Name))
                 {
@@ -1047,7 +1048,7 @@ namespace BreadPlayer.ViewModels
             if (TracksCollection.Elements.Count == SongCount)
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
                 });
