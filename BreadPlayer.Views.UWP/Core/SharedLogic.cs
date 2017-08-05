@@ -1,24 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Devices.Enumeration;
-using Windows.Foundation.Metadata;
-using Windows.Graphics.Imaging;
-using Windows.Media.Devices;
-using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using BreadPlayer.Common;
+﻿using BreadPlayer.Common;
 using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Engines.BASSEngine;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
@@ -29,34 +11,77 @@ using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using BreadPlayer.Web.Lastfm;
-using ColorThiefDotNet;
 using SplitViewMenu;
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using TagLib;
-using Buffer = Windows.Storage.Streams.Buffer;
-using Color = Windows.UI.Color;
-using File = TagLib.File;
-using BreadPlayer.Core.Engines.BASSEngine;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation.Metadata;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
-
+        #region Ctor
         public SharedLogic()
         {
+            //To define them all here is not good. This ctor is called multiple times.
+            //should remove this to a better place.
+            //#TODO Move these properties to a better place perhaps the App Ctor?
             InitializeCore.Dispatcher = new BreadDispatcher(Dispatcher);
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
-
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
-
         }
+        #endregion
 
+        #region Singletons (NEED IMPROVEMENTS)
+        /// <summary>
+        /// This path is used around the codebase multiple times,
+        /// so it is better to define it once and call it everywhere
+        /// </summary>
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
+
+        /// <summary>
+        /// This singleton shouldn't be here and it shouldn't be
+        /// a singleton. Bad design.
+        /// #TODO move this to the correct place
+        /// </summary>
         public ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
-        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
+
+        /// <summary>
+        /// These contextmenu items are used in the context menu for library
+        /// items. This shouldn't be here.
+        /// #TODO move this to the correct place & remove the singleton.
+        /// </summary>
+        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;
+
+        /// <summary>
+        /// The notification manager is used around the application many times,
+        /// a global singleton is best for such a design.
+        /// </summary>
         public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
+
+        /// <summary>
+        /// The singleton for player engine. Could this be better designed?
+        /// Perhaps an Instance Singleton in the PlayerEngine itself?
+        /// #TODO improve this according to a better design principle.
+        /// </summary>
         private static IPlayerEngine _player;
         public static IPlayerEngine Player
         {
@@ -71,8 +96,24 @@ namespace BreadPlayer.Core
             }
         }
 
+        /// <summary>
+        /// It would be better if we define BreadDispatcher instead of CoreDispatcher.
+        /// The reason being, it is much better to implement and easier to understand.
+        /// Furthermore, it would make more sense if instead of make a global static Property here,
+        /// we moved to a more appropriate place. Perhaps, the BreadDispatcher could expose static methods?
+        /// #TODO remove this to a better place in the codebase
+        /// </summary>
         public static CoreDispatcher Dispatcher { get; set; } = CoreApplication.MainView.CoreWindow.Dispatcher;
+
+        /// <summary>
+        /// The static SettingsVM Singleton. I am still not sure if this should be here.
+        /// This is bad design plain and simple. Needs improvement.
+        /// #TODO Clean this up and improve this to a better design.
+        /// </summary>
         public static SettingsViewModel SettingsVm => GenericService<SettingsViewModel>.Instance.GenericClass;
+
+        //This is not a traditional singleton. Instead of making it readonly,
+        //I have made this read/write capable. Can this be improved?
         private static Lastfm _lastfmScrobbler;
         public static Lastfm LastfmScrobbler
         {
@@ -85,28 +126,8 @@ namespace BreadPlayer.Core
                 }
             }
         }
-        public static Thickness DynamicMargin
-        {
-            get
-            {
-                if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
-                {
-                    return new Thickness(28, 0, 0, 0);
-                }
-                return new Thickness(48, 0, 0, 0);
-            }
-        }
-        public static DataTemplate DynamicAlbumSelectedTemplate
-        {
-            get
-            {
-                if (CoreWindow.GetForCurrentThread().Bounds.Width < 600)
-                {
-                    return Application.Current.Resources["MobileSelectedTemplate"] as DataTemplate;
-                }
-                return Application.Current.Resources["SelectedTemplate"] as DataTemplate;
-            }
-        }
+        #endregion
+
         #region ICommands
 
         #region Definitions
@@ -154,7 +175,7 @@ namespace BreadPlayer.Core
             var albumArt = await albumArtPicker.PickSingleFileAsync();
             if (albumArt != null)
             {
-                File tagFile = File.Create(new SimpleFileAbstraction(await StorageFile.GetFileFromPathAsync(mediaFile.Path)));
+                TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(await StorageFile.GetFileFromPathAsync(mediaFile.Path)));
                 IPicture[] pictures = new IPicture[1];
                 pictures[0] = new Picture(new SimpleFileAbstraction(albumArt));
                 tagFile.Tag.Pictures = pictures;
@@ -162,7 +183,7 @@ namespace BreadPlayer.Core
                 var createAlbumArt = AlbumArtFileExists(mediaFile);
                 await albumArt.CopyAsync(await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\"), createAlbumArt.FileName + Path.GetExtension(albumArt.Path), NameCollisionOption.ReplaceExisting);
                 mediaFile.AttachedPicture = ApplicationData.Current.LocalFolder.Path + "\\Albumarts\\" + createAlbumArt.FileName + Path.GetExtension(albumArt.Path);
-            }         
+            }
         }
 
         private async void ShowProperties(object para)
@@ -191,7 +212,7 @@ namespace BreadPlayer.Core
                 var storageFile = StorageFile.GetFileFromPathAsync(mp3File.Path);
                 var folderOptions = new FolderLauncherOptions();
                 folderOptions.ItemsToSelect.Add(await storageFile);
-                await Launcher.LaunchFolderAsync(folder, folderOptions);                
+                await Launcher.LaunchFolderAsync(folder, folderOptions);
             }
         }
 
@@ -215,107 +236,11 @@ namespace BreadPlayer.Core
         #endregion
 
         #endregion
-      
-        public static string GetStringForNullOrEmptyProperty(string data, string setInstead)
-        {
-            return string.IsNullOrEmpty(data) ? setInstead : data;
-        }
 
-        public static async Task<Color> GetDominantColor(StorageFile file)
-        {
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                try
-                {
-                    //Create a decoder for the image
-                    var decoder = BitmapDecoder.CreateAsync(stream);
-                    var colorThief = new ColorThief();
-                    var qColor = await colorThief.GetColor(await decoder);
-
-                    //read the color 
-                    return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
-                }
-                catch { return (Application.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
-            }
-        }
-        
-        private static (bool NotExists, string FileName) AlbumArtFileExists(Mediafile file)
-        {
-            var albumartFolder = ApplicationData.Current.LocalFolder;
-            var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
-            if (!System.IO.File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
-            {
-                //var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
-                return (true, md5Path);
-            }
-            return (false, md5Path);
-        }
-
-        /// <summary>
-        /// Asynchronously saves all the album arts in the library. 
-        /// </summary>
-        /// <param name="Data">ID3 tag of the song to get album art data from.</param>
-        public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mediafile)
-        {
-            var albumArt = AlbumArtFileExists(mediafile);
-            if (!albumArt.NotExists)
-            {
-                return false;
-            }
-
-            try
-            {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
-                {
-                    if (thumbnail == null)
-                    {
-                        return false;
-                    }
-
-                    switch (thumbnail.Type)
-                    {
-                        case ThumbnailType.Image:
-                            var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-                            IBuffer buf;
-                            Buffer inputBuffer = new Buffer(1024);
-                            using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
-                            {
-                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None)).Length > 0)
-                                {
-                                    await albumstream.WriteAsync(buf);
-                                }
-
-                                return true;
-                            }
-
-                        //case ThumbnailType.Icon:
-                        //    using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
-                        //    {
-                        //        if (tagFile.Tag.Pictures.Length >= 1)
-                        //        {
-                        //            var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-
-                        //            using (var albumstream = await image.OpenStreamForWriteAsync())
-                        //            {
-                        //                await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                        //            }
-                        //            return true;
-                        //        }
-                        //    }
-                          //  break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
-            }
-
-            return false;
-        }
-
+        #region Clean up needed
+        //these methods are badly designed and redundant.
+        //should be removed and cleanup.
+        //#TODO clean this up
         public static bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file == null)
@@ -340,57 +265,7 @@ namespace BreadPlayer.Core
             await service.RemoveMediafile(file);
             return true;
         }
-        public static bool VerifyFileExists(string path, int timeout)
-        {
-            var task = new Task<bool>(() =>
-            {
-                var fi = new FileInfo(path);
-                return fi.Exists;
-            });
-            task.Start();
-            return task.Wait(timeout) && task.Result;
-        }
-        public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
-        {
-            var mediafile = new Mediafile();
-            try
-            {               
-                if (cache)
-                {
-                    StorageApplicationPermissions.FutureAccessList.Add(file);
-                }
-               
-                mediafile.Path = file.Path;
-                mediafile.OrginalFilename = file.DisplayName;
-                var properties = await file.Properties.GetMusicPropertiesAsync(); //(await file.Properties.RetrievePropertiesAsync(new List<string>() { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" }));//.GetMusicPropertiesAsync();
-                mediafile.Title = GetStringForNullOrEmptyProperty(properties.Title, Path.GetFileNameWithoutExtension(file.Path));
-                mediafile.Album = GetStringForNullOrEmptyProperty(properties.Album, "Unknown Album");
-                mediafile.LeadArtist = GetStringForNullOrEmptyProperty(properties.Artist, "Unknown Artist");
-                
-                mediafile.Genre = string.Join(",", properties.Genre);
-                mediafile.Year = properties.Year.ToString();
-                mediafile.TrackNumber = properties.TrackNumber.ToString();
-                string length = "";
-                if (properties.Duration.TotalMinutes > 60)
-                    length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"hh\:mm\:ss"), "00:00:00");
-                else
-                    length = GetStringForNullOrEmptyProperty(properties.Duration.ToString(@"mm\:ss"), "00:00");
-                mediafile.Length = length;
-                mediafile.AddedDate = DateTime.Now.ToString();
-                var albumartFolder = ApplicationData.Current.LocalFolder;
-                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
 
-                if (System.IO.File.Exists(albumartLocation))
-                {
-                    mediafile.AttachedPicture = albumartLocation;
-                }
-            }
-            catch (Exception ex)
-            {
-                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
-            }
-            return mediafile;
-        }
         public async Task<bool> AskForPassword(Playlist playlist)
         {
             if (playlist.IsPrivate)
@@ -426,26 +301,172 @@ namespace BreadPlayer.Core
 
             return false;
         }
-    }
 
-    public class SimpleFileAbstraction : File.IFileAbstraction
-    {
-        private StorageFile _file;
-
-        public SimpleFileAbstraction(StorageFile file)
+        /// <summary>
+        /// wrongly placed.
+        /// #TODO remove this to a file/path extension
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="timeout"></param>
+        /// <returns></returns>
+        public static bool VerifyFileExists(string path, int timeout)
         {
-            _file = file;
+            var task = new Task<bool>(() =>
+            {
+                var fi = new FileInfo(path);
+                return fi.Exists;
+            });
+            task.Start();
+            return task.Wait(timeout) && task.Result;
         }
 
-        public string Name => _file.Name;
-
-        public Stream ReadStream => _file.OpenStreamForReadAsync().Result;
-
-        public Stream WriteStream => _file.OpenStreamForWriteAsync().Result;
-
-        public void CloseStream(Stream stream)
+        /// <summary>
+        /// this method is used to get the dominant color in an image.
+        /// still not sure about this. Doesn't make sense for this to be here.
+        /// #TODO make a color/image extension class and move this method into it.
+        /// </summary>
+        /// <param name="file">the image file</param>
+        /// <returns>the dominant color</returns>
+        public static async Task<Color> GetDominantColor(StorageFile file)
         {
-            stream.Position = 0;
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            {
+                try
+                {
+                    //Create a decoder for the image
+                    var decoder = BitmapDecoder.CreateAsync(stream);
+                    var colorThief = new ColorThiefDotNet.ColorThief();
+                    var qColor = await colorThief.GetColor(await decoder);
+
+                    //read the color 
+                    return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
+                }
+                catch { return (Application.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
+            }
         }
+
+        #endregion       
+
+        //these methods are file tag related. Could be moved to a diffferent class.
+        //#TODO see if these can be moved to a better place/file.
+        #region Methods
+        public static async Task<Mediafile> CreateMediafile(StorageFile file, bool cache = false)
+        {
+            var mediafile = new Mediafile();
+            try
+            {
+                if (cache)
+                {
+                    StorageApplicationPermissions.FutureAccessList.Add(file);
+                }
+
+                mediafile.Path = file.Path;
+                mediafile.OrginalFilename = file.DisplayName;
+                var properties = await file.Properties.GetMusicPropertiesAsync();
+                mediafile.Title = properties.Title.GetStringForNullOrEmptyProperty(Path.GetFileNameWithoutExtension(file.Path));
+                mediafile.Album = properties.Album.GetStringForNullOrEmptyProperty("Unknown Album");
+                mediafile.LeadArtist = properties.Artist.GetStringForNullOrEmptyProperty("Unknown Artist");
+
+                mediafile.Genre = string.Join(",", properties.Genre);
+                mediafile.Year = properties.Year.ToString();
+                mediafile.TrackNumber = properties.TrackNumber.ToString();
+                string length = "";
+                if (properties.Duration.TotalMinutes > 60)
+                    length = properties.Duration.ToString(@"hh\:mm\:ss").GetStringForNullOrEmptyProperty("00:00:00");
+                else
+                    length = properties.Duration.ToString(@"mm\:ss").GetStringForNullOrEmptyProperty("00:00");
+                mediafile.Length = length;
+                mediafile.AddedDate = DateTime.Now.ToString();
+                var albumartFolder = ApplicationData.Current.LocalFolder;
+                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mediafile.Album + mediafile.LeadArtist).ToLower().ToSha1() + ".jpg";
+
+                if (System.IO.File.Exists(albumartLocation))
+                {
+                    mediafile.AttachedPicture = albumartLocation;
+                }
+            }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+            }
+            return mediafile;
+        }
+
+        /// <summary>
+        /// Asynchronously saves all the album arts in the library. 
+        /// </summary>
+        /// <param name="Data">ID3 tag of the song to get album art data from.</param>
+        public static async Task<bool> SaveImagesAsync(StorageFile file, Mediafile mediafile)
+        {
+            var albumArt = AlbumArtFileExists(mediafile);
+            if (!albumArt.NotExists)
+            {
+                return false;
+            }
+
+            try
+            {
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
+                {
+                    if (thumbnail == null)
+                    {
+                        return false;
+                    }
+
+                    switch (thumbnail.Type)
+                    {
+                        case ThumbnailType.Image:
+                            var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                            IBuffer buf;
+                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
+                            using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                            {
+                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None)).Length > 0)
+                                {
+                                    await albumstream.WriteAsync(buf);
+                                }
+
+                                return true;
+                            }
+
+                        //case ThumbnailType.Icon:
+                        //    using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                        //    {
+                        //        if (tagFile.Tag.Pictures.Length >= 1)
+                        //        {
+                        //            var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+
+                        //            using (var albumstream = await image.OpenStreamForWriteAsync())
+                        //            {
+                        //                await albumstream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                        //            }
+                        //            return true;
+                        //        }
+                        //    }
+                        //  break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+            }
+
+            return false;
+        }
+        private static (bool NotExists, string FileName) AlbumArtFileExists(Mediafile file)
+        {
+            var albumartFolder = ApplicationData.Current.LocalFolder;
+            var md5Path = (file.Album + file.LeadArtist).ToLower().ToSha1();
+            if (!System.IO.File.Exists(albumartFolder.Path + @"\AlbumArts\" + md5Path + ".jpg"))
+            {
+                //var albumart = await albumartFolder.CreateFileAsync(@"AlbumArts\" + md5Path + ".jpg", CreationCollisionOption.FailIfExists).AsTask().ConfigureAwait(false);
+                return (true, md5Path);
+            }
+            return (false, md5Path);
+        }
+        #endregion
     }
 }
