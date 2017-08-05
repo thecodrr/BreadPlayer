@@ -172,7 +172,7 @@ namespace BreadPlayer.ViewModels
                     volume = (double)list[3];
                 }
 
-                await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
+                await Load(await TagReaderHelper.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
             }
             else
             {
@@ -478,7 +478,7 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var mp3File = await SharedLogic.CreateMediafile(file, true);
+                var mp3File = await TagReaderHelper.CreateMediafile(file, true);
                 if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
                 {
                     await Load(mp3File);

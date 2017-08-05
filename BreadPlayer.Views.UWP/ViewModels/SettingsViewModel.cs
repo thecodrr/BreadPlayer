@@ -422,7 +422,7 @@ namespace BreadPlayer.ViewModels
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
-                        mp3File = await SharedLogic.CreateMediafile(file, false); //the core of the whole method.
+                        mp3File = await TagReaderHelper.CreateMediafile(file, false); //the core of the whole method.
                         await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
                     });
                     SharedLogic.AddMediafile(mp3File, index);
@@ -485,7 +485,7 @@ namespace BreadPlayer.ViewModels
                         {
                             i++;
                             Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
-                            Mediafile mp3File = await SharedLogic.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
+                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
                             mp3File.FolderPath = Path.GetDirectoryName(file.Path);
                             await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
 
@@ -548,7 +548,7 @@ namespace BreadPlayer.ViewModels
 
                 if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
                 {
-                    bool albumSaved = await SharedLogic.SaveImagesAsync(file, mp3File);
+                    bool albumSaved = await TagReaderHelper.SaveAlbumArtsAsync(file, mp3File);
                     mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
                 }
                 file = null;

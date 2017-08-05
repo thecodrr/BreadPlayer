@@ -46,6 +46,7 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using SplitViewMenu;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
@@ -379,7 +380,7 @@ namespace BreadPlayer.ViewModels
                 var newFile = await openPicker.PickSingleFileAsync();
                 if (newFile != null)
                 {
-                    var newMediafile = await SharedLogic.CreateMediafile(newFile);
+                    var newMediafile = await TagReaderHelper.CreateMediafile(newFile);
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Id = newMediafile.Id;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
@@ -841,7 +842,7 @@ namespace BreadPlayer.ViewModels
                     if (!TracksCollection.Elements.All(t => t.Path != path)) continue;
                     try
                     {
-                        var mp3File = await SharedLogic.CreateMediafile(item as StorageFile);
+                        var mp3File = await TagReaderHelper.CreateMediafile(item as StorageFile);
                         await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File).ConfigureAwait(false);
                         SharedLogic.AddMediafile(mp3File);
                     }

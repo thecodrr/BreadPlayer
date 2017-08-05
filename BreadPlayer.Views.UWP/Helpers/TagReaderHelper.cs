@@ -126,7 +126,7 @@ namespace BreadPlayer.Helpers
         /// </summary>
         /// <param name="file">the mediafile of which to check the album art</param>
         /// <returns>tuple containing bool and the filename of the album art.</returns>
-        private static (bool NotExists, string FileName) AlbumArtFileExists(Mediafile file)
+        public static (bool NotExists, string FileName) AlbumArtFileExists(Mediafile file)
         {
             if (!System.IO.File.Exists(GetAlbumArtPath(file)))
             {

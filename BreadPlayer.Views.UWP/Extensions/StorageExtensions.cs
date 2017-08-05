@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
+using BreadPlayer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ namespace BreadPlayer.Extensions
                 if (IsItemInLibrary(change, Library, out Mediafile createdItem))
                 {
                     var id = createdItem.Id;
-                    createdItem = await SharedLogic.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
+                    createdItem = await TagReaderHelper.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
                     createdItem.Id = id;
                     if (await LibraryService.UpdateMediafile(createdItem))
                     {
@@ -48,7 +49,7 @@ namespace BreadPlayer.Extensions
                     return;
                 if (IsItemPotentialMediafile(await change.GetStorageItemAsync()))
                 {
-                    var newFile = await SharedLogic.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
+                    var newFile = await TagReaderHelper.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
                     newFile.FolderPath = Path.GetDirectoryName(newFile.Path);
                     if (SharedLogic.AddMediafile(newFile))
                     {

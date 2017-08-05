@@ -10,6 +10,7 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.ViewModels;
 using BreadPlayer.Messengers;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -55,7 +56,7 @@ namespace BreadPlayer.PlaylistBus
                                 var accessFile = await StorageFile.GetFileFromPathAsync(path);
                                 var token = StorageApplicationPermissions.FutureAccessList.Add(accessFile);
 
-                                Mediafile mp3File = await SharedLogic.CreateMediafile(accessFile); //prepare Mediafile
+                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(accessFile); //prepare Mediafile
 
                                 await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
                                 playlistSongs.Add(mp3File);
