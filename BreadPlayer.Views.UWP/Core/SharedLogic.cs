@@ -41,7 +41,6 @@ namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
-        private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
 
         public SharedLogic()
         {
@@ -52,23 +51,6 @@ namespace BreadPlayer.Core
 
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
 
-            MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
-        }
-
-        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
-        {
-            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
-                return;
-
-            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
-            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-
-            System.Diagnostics.Debug.WriteLine($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
-
-            _audioDeviceId = args.Id;
-
-            if (!InitializeCore.IsMobile)
-                await Player.ChangeDevice(device.Name);
         }
 
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");

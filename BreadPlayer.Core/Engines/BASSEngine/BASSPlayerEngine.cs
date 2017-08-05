@@ -111,15 +111,19 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     var deviceInfo = Bass.GetDeviceInfo(i);
                     if (deviceInfo.IsDefault && deviceInfo.IsEnabled)
                     {
-                        if (PlayerState == PlayerState.Playing)
+                        var isPlaying = PlayerState == PlayerState.Playing;
+                        if (isPlaying)
                         {
                             Bass.ChannelPause(_handle);
                             PlayerState = PlayerState.Paused;
                         }
-                        NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+
+                        if (InitializeCore.IsMobile)
+                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+
                         Bass.Init();
                         Bass.ChannelSetDevice(_handle, i);
-                        if (PlayerState == PlayerState.Paused)
+                        if (isPlaying)
                         {
                             Bass.ChannelPlay(_handle);
                             PlayerState = PlayerState.Playing;
