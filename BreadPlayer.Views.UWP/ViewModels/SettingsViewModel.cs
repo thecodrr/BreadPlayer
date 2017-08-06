@@ -449,10 +449,8 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if (!string.IsNullOrEmpty(KnownFolders.MusicLibrary.Path))
-                {
-                    await LoadFolderAsync(KnownFolders.MusicLibrary);
-                }
+                if(KnownFolders.MusicLibrary != null)
+                    await LoadFolderAsync(KnownFolders.MusicLibrary);                
             }
             catch (Exception ex)
             {
