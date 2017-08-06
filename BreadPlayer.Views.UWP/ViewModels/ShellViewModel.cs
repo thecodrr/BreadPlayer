@@ -373,13 +373,18 @@ namespace BreadPlayer.ViewModels
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
-                        if (_shuffledList.Count < playingCollection.Count 
-                            || _shuffledList == null
-                            || indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
+                        //only recreate the shuffled list if the current list is null or
+                        //if it has gotten stale.
+                        if (_shuffledList.Count < playingCollection.Count || _shuffledList == null)
                         {
                             _shuffledList = await ShuffledCollection();
-                            
-                            indexOfCurrentlyPlayingFile = 0;
+                        }
+
+                        //just set the index of currently playing file to -1
+                        //if we are reached the last file in the playing collection.
+                        if (indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
+                        {
+                            indexOfCurrentlyPlayingFile = -1;
                         }
                         toPlayFile = _shuffledList?.ElementAt(indexOfCurrentlyPlayingFile + 1);
                     }
