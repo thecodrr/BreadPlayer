@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core.Models;
+using BreadPlayer.ViewModels;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,9 +31,16 @@ namespace BreadPlayer.Dialogs
         {
             InitializeComponent();
             Mediafile = file;
+            ToggleShuffle.IsOn = Mediafile.SkipOnShuffle;
         }
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+        }
+
+        private void ToggleShuffle_OnToggled(object sender, RoutedEventArgs e)
+        {
+            Mediafile.SkipOnShuffle = ((ToggleSwitch) sender).IsOn;
+            ShellViewModel.SaveSettings(Mediafile);
         }
     }
 }

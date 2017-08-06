@@ -29,6 +29,7 @@
                     <TextBox Header="Track" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="4" Text="{Binding Path=TrackNumber}" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,0,0,0" IsReadOnly="True"/>
                     <TextBox Header="Genre" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Grid.Row="4" Text="{Binding Path=Genre}" IsReadOnly="True" Margin="10,0,0,0"/>
                     <TextBox Header="Filename" Style="{StaticResource RoundedTextBoxStyle}" Padding="14,6,14,8" Text="{Binding Path=OrginalFilename}" Grid.Row="5" IsReadOnly="True" Margin="10,0,0,0"/>
+                    <ToggleSwitch x:Name="ToggleShuffle" Header="Skip on Shuffle" Toggled="ToggleShuffle_OnToggled" Margin="10, 10, 0, 0" />
                 </StackPanel>
             </VariableSizedWrapGrid>
         </ScrollViewer>

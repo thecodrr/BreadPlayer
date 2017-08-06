@@ -1,17 +1,14 @@
 ﻿/* 
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
-
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -51,7 +48,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         /// <returns></returns>
         public async Task Init(bool isMobile)
         {
-           await Task.Run(async() => 
+            await Task.Run(async () =>
             {
                 try
                 {
@@ -75,7 +72,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 {
                     await Init(isMobile);
                 }
-            });                   
+            });
         }
         #endregion
 
@@ -87,7 +84,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public async void Dispose()
         {
             await Task.Run(() =>
-            {                
+            {
                 Bass.ChannelStop(_handle); // Stop Playback.
                 Bass.Stop();
                 Bass.MusicFree(_handle); // Free the Stream.
@@ -97,65 +94,87 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 PlayerState = PlayerState.Stopped;
             });
         }
-        public async void ChangeDevice(string deviceName)
+
+
+        public async Task ChangeDevice(string deviceName)
         {
-            await InitializeCore.NotificationManager.ShowMessageAsync(string.Format("Transitioning to {0}.", deviceName),5);
-            await Task.Run(async () =>
+            await InitializeCore.NotificationManager.ShowMessageAsync($"Transitioning to {deviceName}.", 5);
+
+            await Task.Run(() =>
             {
-                var pos = Position;
-                Bass.ChannelPause(_handle);
-                PlayerState = PlayerState.Paused;
-                Bass.Free();
-                NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
-                Bass.Init();
-                await Load(CurrentlyPlayingFile);
-                Position = pos;
-                PlayerState = PlayerState.Playing;
-                Bass.ChannelPlay(_handle);
+                var count = Bass.DeviceCount;
+                for (var i = 0; i < count; i++)
+                {
+                    var deviceInfo = Bass.GetDeviceInfo(i);
+                    if (deviceInfo.IsDefault && deviceInfo.IsEnabled)
+                    {
+                        var isPlaying = PlayerState == PlayerState.Playing;
+                        if (isPlaying)
+                        {
+                            Bass.ChannelPause(_handle);
+                            PlayerState = PlayerState.Paused;
+                        }
+
+                        if (InitializeCore.IsMobile)
+                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+
+                        Bass.Init();
+                        Bass.ChannelSetDevice(_handle, i);
+                        if (isPlaying)
+                        {
+                            Bass.ChannelPlay(_handle);
+                            PlayerState = PlayerState.Playing;
+                        }
+                        return;
+                    }
+                }
             });
-            await InitializeCore.NotificationManager.ShowMessageAsync(string.Format("Transition complete.", deviceName), 5);
+
+            await InitializeCore.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
+
         /// <summary>
         /// Loads the specified file into the player.
         /// </summary>
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mediaFile)
-        {            
+        {
             if (mediaFile != null && mediaFile.Length != "00:00")
             {
                 try
                 {
-                    await InitializeCore.Dispatcher.RunAsync(async () =>
+                    string path = mediaFile.Path;
+
+                    await InitializeCore.Dispatcher.RunAsync(() =>
                     {
                         MediaChanging?.Invoke(this, new EventArgs());
-
-                        string path = mediaFile.Path;
-                        await Stop();
-                        await Task.Run(() =>
-                        {
-                            _handle = Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
-                            PlayerState = PlayerState.Stopped;
-                            Length = 0;
-                            Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
-                            Bass.FloatingPointDSP = true;
-                            Bass.ChannelSetDevice(_handle, 1);
-                            Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                            Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
-                            Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
-
-                            CurrentlyPlayingFile = mediaFile;
-                        });
-                        if (Equalizer == null)
-                        {
-                            Equalizer = new BassEqualizer(_handle);
-                        }
-                        else
-                        {
-                            (Equalizer as BassEqualizer).ReInit(_handle);
-                        }
-                        MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     });
+                    await Stop();
+                    await Task.Run(() =>
+                    {
+                        _handle = Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                        PlayerState = PlayerState.Stopped;
+                        Length = 0;
+                        Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
+                        Bass.FloatingPointDSP = true;
+                        Bass.ChannelSetDevice(_handle, 1);
+                        Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
+
+                        CurrentlyPlayingFile = mediaFile;
+                    });
+                    if (Equalizer == null)
+                    {
+                        Equalizer = new BassEqualizer(_handle);
+                    }
+                    else
+                    {
+                        (Equalizer as BassEqualizer).ReInit(_handle);
+                    }
+                    MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+
                     return true;
                 }
                 catch (Exception ex)
@@ -164,8 +183,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 }
             }
             else
-            { 
-                string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+            {
+                string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors)
                 {
                     await InitializeCore.NotificationManager.ShowMessageAsync(error);
@@ -173,12 +192,12 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 else
                 {
                     await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
-                }          
+                }
             }
             return false;
         }
 
-        
+
         /// <summary>
         /// Pauses the audio playback.
         /// </summary>
@@ -209,8 +228,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Bass.ChannelPlay(_handle);
                 var vol = (float)Volume / 100f;
                 Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 1000);
-                PlayerState = PlayerState.Playing;
+
             });
+            PlayerState = PlayerState.Playing;
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
         }
         /// <summary>
@@ -225,12 +245,12 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Position = -1;
                 Bass.StreamFree(_handle);
                 Bass.ChannelStop(_handle); // Stop Playback.
-                Bass.MusicFree(_handle);                
+                Bass.MusicFree(_handle);
                 _handle = 0;
                 CurrentlyPlayingFile = null;
-                PlayerState = PlayerState.Stopped;
             });
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+            PlayerState = PlayerState.Stopped;
         }
         #endregion
 
@@ -265,9 +285,10 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public double Volume
         {
             get => _volume;
-            set {
+            set
+            {
                 Set(ref _volume, value);
-                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, _volume / 100);               
+                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, _volume / 100);
             }
         }
 
@@ -283,13 +304,14 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     Set(ref _seek, value);
                     Bass.ChannelSetPosition(_handle, Bass.ChannelSeconds2Bytes(_handle, _seek));
                 });
-            }            
+            }
         }
 
         private double _length;
         public double Length
         {
-            get {
+            get
+            {
                 if (_length <= 0)
                 {
                     _length = 1;
@@ -298,7 +320,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 return _length;
             }
             set => Set(ref _length, value);
-        }      
+        }
 
         public PlayerState PlayerState
         {
@@ -342,7 +364,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             {
                 MediaAboutToEnd?.Invoke(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
             }
-            else if(Position >= Length - 5)
+            else if (Position >= Length - 5)
             {
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             }

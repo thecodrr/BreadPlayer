@@ -56,7 +56,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         private DispatcherTimer _timer;
         private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
-        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
+        public static readonly LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         private int _songCount;
         #endregion
 
@@ -278,14 +278,17 @@ namespace BreadPlayer.ViewModels
             {
                 case "No Repeat":
                     Repeat = "Repeat Song";
+                    RepeatMode = RepeatEnum.Single;
                     Player.IsLoopingEnabled = true;
                     break;
                 case "Repeat Song":
                     Repeat = "Repeat List";
+                    RepeatMode = RepeatEnum.Playlist;
                     Player.IsLoopingEnabled = false;
                     break;
                 case "Repeat List":
                     Repeat = "No Repeat";
+                    RepeatMode = RepeatEnum.None;
                     Player.IsLoopingEnabled = false;
                     break;
                 default:
@@ -350,40 +353,41 @@ namespace BreadPlayer.ViewModels
         }
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
         {
-            var playingCollection = GetPlayingCollection();
-            NowPlayingQueue = playingCollection;
+            var playingCollection = Playlist;
+            NowPlayingQueue = Playlist;
+            Mediafile toPlayFile = null;
             if (playingCollection != null && playingCollection.Any())
             {
                 try
                 {
-                    int indexOfCurrentlyPlayingFile = -1;
-                    if (playingCollection.Any(t => t.State == PlayerState.Playing))
-                    {
-                        indexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.State == PlayerState.Playing));
-                    }
-
-                    Mediafile toPlayFile = null;
-                    if (Shuffle)
-                    {
-                        if (_shuffledList.Count < playingCollection.Count 
-                            || _shuffledList == null
-                            || indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
-                        {
-                            _shuffledList = await ShuffledCollection();
-                            
-                            indexOfCurrentlyPlayingFile = 0;
-                        }
-                        toPlayFile = _shuffledList?.ElementAt(indexOfCurrentlyPlayingFile + 1);
-                    }
-                    else if (IsSourceGrouped)
+                    if (IsSourceGrouped)
                     {
                         toPlayFile = GetNextSongInGroup();
                     }
                     else
                     {
-                        toPlayFile = indexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && indexOfCurrentlyPlayingFile != -1 ? playingCollection.ElementAt(indexOfCurrentlyPlayingFile + 1) : Repeat == "Repeat List" || isNext ? playingCollection.ElementAt(0) : null;
+                        int indexOfCurrentlyPlayingFile;
+                        if (playingCollection.Any(t => t.State == PlayerState.Playing))
+                        {
+                            indexOfCurrentlyPlayingFile =
+                                playingCollection.IndexOf(
+                                    playingCollection.FirstOrDefault(t => t.State == PlayerState.Playing));
+                        }
+                        else
+                        {
+                            indexOfCurrentlyPlayingFile = 0;
+                        }
+                        var indexToPlay = indexOfCurrentlyPlayingFile;
+                        do
+                        {
+                            indexToPlay += 1;
+                            if (indexToPlay > playingCollection.Count - 1)
+                            {
+                                indexToPlay = 0;
+                            }
+                            toPlayFile = playingCollection[indexToPlay];
+                        } while (Shuffle && toPlayFile.SkipOnShuffle);
                     }
-                    return toPlayFile;
                 }
                 catch (Exception ex)
                 {
@@ -393,7 +397,7 @@ namespace BreadPlayer.ViewModels
                     PlayNext();
                 }
             }
-            return null;
+            return toPlayFile;
         }
 
         private Mediafile GetNextSongInGroup()
@@ -413,7 +417,7 @@ namespace BreadPlayer.ViewModels
                 _history.Do(Player.CurrentlyPlayingFile);
             }
 
-            Mediafile toPlayFile = UpcomingSong;
+            var toPlayFile = UpcomingSong;
             if (toPlayFile == null)
             {
                 PlayPause();
@@ -423,6 +427,7 @@ namespace BreadPlayer.ViewModels
                 await PlayFile(toPlayFile);
             }
         }
+
         private ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
             if (PlaylistSongCollection?.Any(t => t.State == PlayerState.Playing) == true || IsPlayingFromPlaylist)
@@ -438,6 +443,15 @@ namespace BreadPlayer.ViewModels
 
         private async void PlayPrevious()
         {
+            var currentSong = Playlist.FirstOrDefault(t => t.State == PlayerState.Playing);
+            var currentIndex = Playlist.IndexOf(currentSong);
+            var indexToPlay = currentIndex - 1;
+            if (indexToPlay < 0)
+            {
+                indexToPlay = Playlist.Count - 1;
+            }
+            var toPlayFile = Playlist[indexToPlay];
+
             if (CurrentPosition > 5)
             {
                 DontUpdatePosition = true;
@@ -445,11 +459,10 @@ namespace BreadPlayer.ViewModels
                 DontUpdatePosition = false;
                 return;
             }
-            var file = _history.Undo(null);
-            PreviousSong = _history.SemiUndo(null);
-            if (file != null)
+            PreviousSong = currentSong;
+            if (toPlayFile != null)
             {
-                await PlayFile(file);
+                await PlayFile(toPlayFile);
             }
         }
 
@@ -612,6 +625,15 @@ namespace BreadPlayer.ViewModels
             set => Set(ref _queryWord, value);
         }
 
+        private RepeatEnum RepeatMode;
+
+        public enum RepeatEnum
+        {
+            None,
+            Playlist,
+            Single
+        }
+
         private string _repeat = "No Repeat";
         public string Repeat
         {
@@ -623,6 +645,8 @@ namespace BreadPlayer.ViewModels
             }
         }
 
+        private ThreadSafeObservableCollection<Mediafile> Playlist { get; set; }
+
         private bool _shuffle;
         public bool Shuffle
         {
@@ -630,6 +654,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _shuffle, value);
+                Playlist = value ? GetShuffledCollectionSync() : GetPlayingCollection();
                 ApplicationData.Current.RoamingSettings.Values["Shuffle"] = Shuffle;
             }
         }
@@ -707,7 +732,12 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-      
+
+        public static async void SaveSettings(Mediafile mediafile)
+        {
+            await _service.UpdateMediafile(mediafile);
+        }
+
         private void GetSettings()
         {
             Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
@@ -735,6 +765,14 @@ namespace BreadPlayer.ViewModels
                 shuffled.AddRange(TracksCollection.Elements.ToList());
                 shuffled.Shuffle();
             });
+            return shuffled;
+        }
+
+        public ThreadSafeObservableCollection<Mediafile> GetShuffledCollectionSync()
+        {
+            var shuffled = new ThreadSafeObservableCollection<Mediafile>();
+            shuffled.AddRange(TracksCollection.Elements.ToList());
+            shuffled.Shuffle();
             return shuffled;
         }
 

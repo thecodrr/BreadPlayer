@@ -52,6 +52,7 @@ namespace BreadPlayer.Core.Models
         private string _year;
         private string _naN = "NaN";
         private int _playCount;
+        private bool _skipOnShuffle;
         #endregion
 
         #region Properties
@@ -87,6 +88,7 @@ namespace BreadPlayer.Core.Models
         public string LeadArtist { get => _leadArtist; set => _leadArtist = string.IsNullOrEmpty(value) ? _leadArtist = _naN : value; }
         public string OrginalFilename { get => _orginalFilename; set => _orginalFilename = string.IsNullOrEmpty(value) ? _orginalFilename = _naN : value; }
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
+        public bool SkipOnShuffle { get => _skipOnShuffle; set => Set(ref _skipOnShuffle, value); }
 
         #region JsonIgnore Properties
         [JsonIgnore]
