@@ -304,9 +304,9 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if (Player.CurrentlyPlayingFile == null && TracksCollection.Elements.Count > 0)
+                if (Player.CurrentlyPlayingFile == null && TracksCollection?.Elements?.Count > 0)
                 {
-                    await Load(TracksCollection.Elements.First(), true);
+                    await Load(TracksCollection?.Elements?.First(), true);
                 }
                 else
                 {
