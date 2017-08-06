@@ -88,7 +88,8 @@ namespace BreadPlayer
                     "Added support for German Translation (thanks to Armin).\n" +
                     "Added backward navigation support for mobiles.\n" + 
                     "IMPROVEMENTS:\r\n\r\n" +
-                    "Core improvements (shuffle and other things).\n";
+                    "Core improvements (shuffle and other things).\n"+
+                    "Icon was improved.\n";
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.0");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
