@@ -51,9 +51,9 @@ namespace BreadPlayer
 
         private void semanticZoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
         {
-            // only interested in zoomed out->zoomed in transitions
             if (e.IsSourceZoomedInView)
             {
+                (this.FindName("alphabetList") as GridView).Visibility = Visibility.Visible;
                 return;
             }
             try
