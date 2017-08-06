@@ -68,16 +68,6 @@ namespace BreadPlayer.ViewModels
 
         #region MessageHandling
 
-        private void HandleSearchStartedMessage(Message message)
-        {
-            if (message.Payload != null)
-            {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                //if (!Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                //    Header = message.Payload.ToString();
-            }
-        }
-
         private void HandleDisposeMessage()
         {
             Reset();
@@ -138,7 +128,6 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgDispose, HandleDisposeMessage);
             Messenger.Instance.Register(MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
             Messenger.Instance.Register(MessageTypes.MsgUpdateSongCount, new Action<Message>(HandleUpdateSongCountMessage));
-            Messenger.Instance.Register(MessageTypes.MsgSearchStarted, new Action<Message>(HandleSearchStartedMessage));
         }
         #endregion
 
@@ -382,10 +371,10 @@ namespace BreadPlayer.ViewModels
                 if (newFile != null)
                 {
                     var newMediafile = await TagReaderHelper.CreateMediafile(newFile);
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Id = newMediafile.Id;
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
-                    await LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t.Id == mediafile.Id));
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Length = newMediafile.Length;
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Id = newMediafile.Id;
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Path = newMediafile.Path;
+                    await LibraryService.UpdateMediafile(TracksCollection.Elements.First(t => t.Id == mediafile.Id));
                 }
             }
         }
@@ -460,7 +449,6 @@ namespace BreadPlayer.ViewModels
             if (mediaFile != null)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mediaFile, true, _isPlayingFromPlaylist });
-                //mediaFile.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
             }
         }
 
@@ -536,8 +524,7 @@ namespace BreadPlayer.ViewModels
             return Task.Run(() =>
             {
                 MostEatenSongsCollection.AddRange(
-                    TracksCollection.Elements.Where(t => t.PlayCount > 1 &&
-                                                         MostEatenSongsCollection.All(a => a.Path != t.Path)));
+                    TracksCollection.Elements.Where(t => t.PlayCount > 1));
                 return MostEatenSongsCollection;
             });
         }
@@ -549,8 +536,7 @@ namespace BreadPlayer.ViewModels
                 RecentlyPlayedCollection.AddRange(
                     TracksCollection.Elements.Where(t => t.LastPlayed != null
                                                          && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed)))
-                                                         .Days <= 2
-                                                         && RecentlyPlayedCollection.All(a => a.Path != t.Path)));
+                                                         .Days <= 2));
 
                 return RecentlyPlayedCollection;
             });
@@ -605,9 +591,9 @@ namespace BreadPlayer.ViewModels
                 _source = src;
                 _libgrouped = ViewSource.IsSourceGrouped;
                 var tMediaFile = src as ThreadSafeObservableCollection<Mediafile>;
-                if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
+                if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.GetCurrentlyPlaying() != null)
                 {
-                    tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+                    tMediaFile.GetCurrentlyPlaying().State = PlayerState.Playing;
                 }
             });
         }
@@ -631,7 +617,6 @@ namespace BreadPlayer.ViewModels
                 }
 
                 ViewSource.IsSourceGrouped = group;
-                //await SplitList(TracksCollection, 300).ConfigureAwait(false);
                 await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
