@@ -356,17 +356,11 @@
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>Properties</value>
   </data>
-  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
-    <value>Recently Added</value>
+  <data name="musicHistoryMenuItem.Label" xml:space="preserve">
+    <value>Toast History</value>
   </data>
-  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your recently added toasts.</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
-    <value>Recently Eaten</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your recently played songs.</value>
+  <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigate to your toast history.</value>
   </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click to go to our reddit profile.</value>
@@ -438,10 +432,10 @@
     <value>Theme:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
-    <value>Toast Collection</value>
+  <data name="yourMusicMenuItem.Label" xml:space="preserve">
+    <value>Toasts Collection</value>
   </data>
-  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
+  <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your toast collection.</value>
   </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">

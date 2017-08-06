@@ -188,6 +188,8 @@
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
+    <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
+    <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\PlayerStateToBoolConverter.cs" />
@@ -284,6 +286,9 @@
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MusicHistoryView.xaml.cs">
+      <DependentUpon>MusicHistoryView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +444,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MusicHistoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

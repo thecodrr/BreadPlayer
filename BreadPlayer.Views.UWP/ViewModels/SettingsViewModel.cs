@@ -127,7 +127,7 @@ namespace BreadPlayer.ViewModels
             }
             set => Set(ref _LibraryFoldersCollection, value);
         }
-        public static GroupedObservableCollection<string, Mediafile> TracksCollection
+        public static GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
 
         private string _timeClosed;
@@ -183,8 +183,8 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload is List<object> list)
             {
-                TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (LibraryService.SongCount <= 0 && TracksCollection.Elements.Count <= 0)
+                TracksCollection = list[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
+                if (LibraryService.SongCount <= 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }

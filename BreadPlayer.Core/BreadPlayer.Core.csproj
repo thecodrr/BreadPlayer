@@ -164,6 +164,8 @@
     <Compile Include="InitializeCore.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\EqualizerBand.cs" />
+    <Compile Include="Models\GroupKeys.cs" />
+    <Compile Include="Models\IGroupKey.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\ChildSong.cs" />

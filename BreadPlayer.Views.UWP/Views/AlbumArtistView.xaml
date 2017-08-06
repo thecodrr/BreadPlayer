@@ -12,6 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BreadPlayer.Core.Models"
       xmlns:Extensions="using:BreadPlayer.Extensions"
+    
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>                
@@ -144,7 +145,7 @@
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid x:Name="grid" Margin="0,60,0,0">
+    <Grid x:Name="grid" Margin="0,0,0,0">
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
         </Grid.Resources>
