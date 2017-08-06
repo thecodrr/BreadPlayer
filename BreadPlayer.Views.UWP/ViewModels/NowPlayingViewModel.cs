@@ -96,7 +96,7 @@ namespace BreadPlayer.ViewModels
             if (e.NewState == PlayerState.Playing)
             {
                 SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
-                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album);
+                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile?.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile?.Album);
             }
         }
 
