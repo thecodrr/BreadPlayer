@@ -56,7 +56,7 @@ namespace BreadPlayer.ViewModels
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
         private Mediafile _songToStopAfter;
         private DispatcherTimer _timer;
-        private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
+        //private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         private int _songCount;
         private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
@@ -139,7 +139,9 @@ namespace BreadPlayer.ViewModels
             if (TracksCollection.Elements.Count == _songCount)
             {
                 SetNowPlayingSong();
+
                 UpcomingSong = await GetUpcomingSong();
+                PreviousSong = GetPreviousSong();
             }
             TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
         }
@@ -353,9 +355,12 @@ namespace BreadPlayer.ViewModels
                 if (TracksCollection.Elements.Any(t => t.Path == path))
                 {
                     TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
+                    UpdateCurrentlyPlayingSongIndex();
                 }
             }
         }
+
+        int indexOfCurrentlyPlayingFile = -1;
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
         {
             var playingCollection = GetPlayingCollection();
@@ -364,12 +369,6 @@ namespace BreadPlayer.ViewModels
             {
                 try
                 {
-                    int indexOfCurrentlyPlayingFile = -1;
-                    if (playingCollection.Any(t => t.State == PlayerState.Playing))
-                    {
-                        indexOfCurrentlyPlayingFile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.State == PlayerState.Playing));
-                    }
-
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
@@ -390,7 +389,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else if (IsSourceGrouped)
                     {
-                        toPlayFile = GetNextSongInGroup();
+                        toPlayFile = GetNextOrPrevSongInGroup(false);
                     }
                     else
                     {
@@ -408,22 +407,67 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
-
-        private Mediafile GetNextSongInGroup()
+        private Mediafile GetPreviousSong()
         {
-            var currentGroup = TracksCollection.FirstOrDefault(t => t.Any(c => c.Path == Player.CurrentlyPlayingFile.Path));
-            var currentSongIndex = currentGroup.IndexOf(currentGroup.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path));
-            var nextGroup = currentSongIndex + 1 == currentGroup.Count ? TracksCollection.ElementAt(TracksCollection.IndexOf(currentGroup) + 1) : currentGroup;
-            var toPlaySongIndex = nextGroup == currentGroup ? currentSongIndex + 1 : 0;
+            var playingCollection = GetPlayingCollection();
+            NowPlayingQueue = playingCollection;
+            if (playingCollection != null && playingCollection.Any())
+            {
+                try
+                {                    
+                    Mediafile previousSong = null;
+                    if (IsSourceGrouped)
+                    {
+                        GetNextOrPrevSongInGroup(true);
+                    }
+                    else
+                    {
+                        var previousSongIndex = indexOfCurrentlyPlayingFile.Equals(0) ? indexOfCurrentlyPlayingFile = playingCollection.Count - 1 : indexOfCurrentlyPlayingFile - 1;
+                        previousSong = Shuffle ? _shuffledList[indexOfCurrentlyPlayingFile - 1] : playingCollection[previousSongIndex];
+                    }
+                    return previousSong;
+                }
+                catch { }
+            }
+            return null;
+        }
+        private void UpdateCurrentlyPlayingSongIndex()
+        {
+            if (GetPlayingCollection()?.Any(t => t.State == PlayerState.Playing) == true)
+            {
+                indexOfCurrentlyPlayingFile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.State == PlayerState.Playing));
+            }
+        }
+        private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
+        {
+            //get current group (the group in which current song is playing).
+            Grouping<string, Mediafile> currentGroup = TracksCollection.FirstOrDefault(t => t.Any(c => c.Path == Player.CurrentlyPlayingFile.Path));
+
+            //get the index of the song playing in the currentGroup (with reference to the currentGroup)
+            int currentSongIndex = currentGroup.IndexOf(currentGroup.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path));
+            
+            //get next song index (depending on the parameters).
+            int nextSongIndex = prev ? currentSongIndex - 1 : currentSongIndex + 1;
+
+            //get condition for next/prev group.
+            bool nextGroupCondition = nextSongIndex.Equals(prev ? -1 : currentGroup.Count);
+
+            //get next/prev group index
+            int nextGroupIndex = prev ? TracksCollection.IndexOf(currentGroup)  - 1 : TracksCollection.IndexOf(currentGroup) + 1;
+            
+            //get next/prev group.
+            Grouping<string, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
+
+            //get nextSong index depending on if the group is new or old. 
+            int toPlaySongIndex = nextGroup.Equals(currentGroup) ? nextSongIndex : 0;
             return nextGroup.ElementAt(toPlaySongIndex);
         }
-
+        
         private async void PlayNext()
         {
             if (Player.CurrentlyPlayingFile != null)
             {
                 PreviousSong = Player.CurrentlyPlayingFile;
-                _history.Do(Player.CurrentlyPlayingFile);
             }
 
             Mediafile toPlayFile = UpcomingSong;
@@ -442,7 +486,7 @@ namespace BreadPlayer.ViewModels
             {
                 return PlaylistSongCollection;
             }
-            if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
+            else if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
             {
                 return TracksCollection.Elements;
             }
@@ -458,11 +502,9 @@ namespace BreadPlayer.ViewModels
                 DontUpdatePosition = false;
                 return;
             }
-            var file = _history.Undo(null);
-            PreviousSong = _history.SemiUndo(null);
-            if (file != null)
+            if (PreviousSong != null)
             {
-                await PlayFile(file);
+                await PlayFile(PreviousSong);
             }
         }
 
@@ -532,11 +574,8 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-            if (UpcomingSong != null)
-            {
-                NotificationManager.SendUpcomingSongNotification(UpcomingSong);
-                await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
-            }
+            NotificationManager.SendUpcomingSongNotification(UpcomingSong);
+            await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
         }
 
         private async void ShellViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -823,8 +862,9 @@ namespace BreadPlayer.ViewModels
             {
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             }
-
+            UpdateCurrentlyPlayingSongIndex();
             UpcomingSong = await GetUpcomingSong(true);
+            PreviousSong = GetPreviousSong();            
         }
         public async Task Load(Mediafile mp3File, bool play = false, double currentPos = 0, double vol = 50)
         {
