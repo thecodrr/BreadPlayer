@@ -140,8 +140,13 @@ namespace BreadPlayer.ViewModels
             {
                 SetNowPlayingSong();
 
-                UpcomingSong = await GetUpcomingSong();
-                PreviousSong = GetPreviousSong();
+                if (Shuffle)
+                    await ReshuffleCollection();
+                else
+                {
+                    UpcomingSong = await GetUpcomingSong();
+                    PreviousSong = GetPreviousSong();
+                }
             }
             TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
         }
@@ -422,7 +427,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        var previousSongIndex = indexOfCurrentlyPlayingFile.Equals(0) ? indexOfCurrentlyPlayingFile = playingCollection.Count - 1 : indexOfCurrentlyPlayingFile - 1;
+                        var previousSongIndex = indexOfCurrentlyPlayingFile <= 0 ? indexOfCurrentlyPlayingFile = playingCollection.Count - 1 : indexOfCurrentlyPlayingFile - 1;
                         previousSong = Shuffle ? _shuffledList[indexOfCurrentlyPlayingFile - 1] : playingCollection[previousSongIndex];
                     }
                     return previousSong;
@@ -436,7 +441,7 @@ namespace BreadPlayer.ViewModels
             if (GetPlayingCollection()?.Any(t => t.State == PlayerState.Playing) == true)
             {
                 indexOfCurrentlyPlayingFile = GetPlayingCollection().IndexOf(GetPlayingCollection().FirstOrDefault(t => t.State == PlayerState.Playing));
-            }
+            }            
         }
         private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
         {
@@ -482,13 +487,20 @@ namespace BreadPlayer.ViewModels
         }
         private ThreadSafeObservableCollection<Mediafile> GetPlayingCollection()
         {
-            if (PlaylistSongCollection?.Any(t => t.State == PlayerState.Playing) == true || IsPlayingFromPlaylist)
+            if (Shuffle)
             {
-                return PlaylistSongCollection;
+                return _shuffledList;
             }
-            else if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
+            else
             {
-                return TracksCollection.Elements;
+                if (PlaylistSongCollection?.Any(t => t.State == PlayerState.Playing) == true || IsPlayingFromPlaylist)
+                {
+                    return PlaylistSongCollection;
+                }
+                else if (TracksCollection?.Elements.Any(t => t.State == PlayerState.Playing) == true)
+                {
+                    return TracksCollection.Elements;
+                }
             }
             return null;
         }
@@ -582,8 +594,18 @@ namespace BreadPlayer.ViewModels
         {
             if (e.PropertyName == "Shuffle" && Shuffle)
             {
+                //on startup there is a chance that the main library will be null.
+                await ReshuffleCollection();
+            }
+        }
+        private async Task ReshuffleCollection()
+        {
+            if (TracksCollection?.Elements?.Any() == true)
+            {
                 _shuffledList = await ShuffledCollection().ConfigureAwait(false);
+                indexOfCurrentlyPlayingFile = -1;
                 UpcomingSong = await GetUpcomingSong().ConfigureAwait(false);
+                PreviousSong = GetPreviousSong();
             }
         }
         private async void Player_MediaEnded(object sender, MediaEndedEventArgs e)
