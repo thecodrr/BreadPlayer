@@ -657,7 +657,7 @@ namespace BreadPlayer.ViewModels
                         TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
-                        await TracksCollection.AddRange(_files, true, false);
+                        await TracksCollection.AddRange(_files);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
                     });
