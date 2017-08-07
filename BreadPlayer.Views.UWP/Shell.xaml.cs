@@ -16,27 +16,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Collections.Generic;
-using Windows.Storage;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Common;
 using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.ViewModels;
 using SplitViewMenu;
-using BreadPlayer.Core.Common;
+using System;
+using System.Collections.Generic;
+using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using BreadPlayer.Services;
-using Windows.Devices.Enumeration;
-using BreadPlayer.Core.Engines.BASSEngine;
-using Windows.Phone.Media.Devices;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace BreadPlayer
 {
