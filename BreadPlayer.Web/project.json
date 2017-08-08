@@ -3,7 +3,7 @@
   "dependencies": {
     "AngleSharp": "0.9.9",
     "Inflatable.Lastfm": "1.0.1.307",
-    "LiteDB": "3.1.0",
+    "LiteDB": "3.1.2",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.1"
   },
