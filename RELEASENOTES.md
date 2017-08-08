@@ -1,5 +1,21 @@
 # Release Notes for Bread Player.
 
+## Version 2.6-beta
+### What's Fixed:
+- Fixed 2 random crashes.
+- Fixed invisible jumplist issue when in sort/grouped mode.
+- Fixed empty album issue.
+- Fixed issue with auto loading of library at startup. 
+- Fixed issue where song wasn't played from external speakers/headphones.
+
+### What's New:
+- Added support for German Translation (thanks to Armin).
+- Added backward navigation support for mobiles. 
+
+### What's Improved:
+- Core improvements (shuffle and other things).
+- Icon was improved.
+
 ## Version 2.5-beta
 ### What's Fixed:
 - Fixed issue where next song to the currently playing song also got added to Recently Eaten.
