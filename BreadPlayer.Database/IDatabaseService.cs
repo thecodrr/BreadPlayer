@@ -20,7 +20,7 @@ namespace BreadPlayer.Database
 
         void UpdateRecords<T>(IEnumerable<IDbRecord> records);
         Task<bool> UpdateRecordAsync<T>(T record, long id);
-        Task<IEnumerable<T>> QueryRecords<T>(string term);
+        Task<IEnumerable<T>> QueryRecords<T>(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null);
         int GetRecordsCount();
         bool CheckExists(long id);
         bool CheckExists(string query);

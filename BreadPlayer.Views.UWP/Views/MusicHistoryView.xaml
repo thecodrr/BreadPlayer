@@ -8,8 +8,9 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Pivot Margin="30,0,10,0">
+        <Pivot x:Name="mainPivot" Margin="30,0,10,0" SelectionChanged="OnSelectionChanged">
             <PivotItem Header="Recently Played">
+                <ListView/>
             </PivotItem>
             <PivotItem Header="Recently Added">
             </PivotItem>

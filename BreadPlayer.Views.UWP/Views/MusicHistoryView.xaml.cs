@@ -13,5 +13,18 @@ namespace BreadPlayer
         {
             InitializeComponent();
         }
+
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (mainPivot.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+            }
+        }
     }
 }

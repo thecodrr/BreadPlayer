@@ -245,6 +245,7 @@
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
+    <Compile Include="ViewModels\MusicHistoryViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SearchResultsViewModel.cs" />

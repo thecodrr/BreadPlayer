@@ -134,11 +134,11 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null)
         {
             return await Task.Run(() =>
             {
-                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()));
+                var records = currentCollection.Find(filterFunc ?? (t => t.TextSearchKey.Contains(term.ToLower())));
                 if (records.Any())
                     return records.Cast<T>();
                 else
