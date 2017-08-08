@@ -138,7 +138,7 @@ namespace BreadPlayer.Database
         {
             return await Task.Run(() =>
             {
-                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term));
+                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()));
                 if (records.Any())
                     return records.Cast<T>();
                 else

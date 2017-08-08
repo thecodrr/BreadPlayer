@@ -52,7 +52,7 @@ namespace BreadPlayer.Database
             return Task.Run(async () =>
             {
                 Database.ChangeTable(_tablename, _texttablename);
-                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId).ToLower()))
+                var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId)))
                                 ?.Select(t => t.SongId);
                 if (trackIds != null)
                 {

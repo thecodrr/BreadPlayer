@@ -83,7 +83,7 @@ namespace BreadPlayer.ViewModels
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
             Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
-            _timer = new DispatcherTimer(new BreadDispatcher(SharedLogic.Dispatcher))
+            _timer = new DispatcherTimer(new BreadDispatcher())
             {
                 Interval = TimeSpan.FromMilliseconds(500)
             };
@@ -92,8 +92,11 @@ namespace BreadPlayer.ViewModels
             Player.MediaEnded += Player_MediaEnded;
             PropertyChanged += ShellViewModel_PropertyChanged;
             Player.MediaAboutToEnd += Player_MediaAboutToEnd;
+
+            //these events are for detecting when the default audio
+            //device is changed in PC and Mobile.
             if(InitializeCore.IsMobile)
-                AudioRoutingManager.GetDefault().AudioEndpointChanged += Shell_AudioEndpointChanged; 
+                AudioRoutingManager.GetDefault().AudioEndpointChanged += OnAudioEndpointChanged; 
             else
                 MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
         }
@@ -169,7 +172,7 @@ namespace BreadPlayer.ViewModels
                     volume = (double)list[3];
                 }
 
-                await Load(await SharedLogic.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
+                await Load(await TagReaderHelper.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
             }
             else
             {
@@ -301,13 +304,13 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if (Player.CurrentlyPlayingFile == null && TracksCollection.Elements.Count > 0)
+                if (Player.CurrentlyPlayingFile == null && TracksCollection?.Elements?.Count > 0)
                 {
-                    await Load(TracksCollection.Elements.First(), true);
+                    await Load(TracksCollection?.Elements?.First(), true);
                 }
                 else
                 {
-                    await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                    await BreadDispatcher.InvokeAsync(async () =>
                     {
                         switch (Player.PlayerState)
                         {
@@ -370,13 +373,18 @@ namespace BreadPlayer.ViewModels
                     Mediafile toPlayFile = null;
                     if (Shuffle)
                     {
-                        if (_shuffledList.Count < playingCollection.Count 
-                            || _shuffledList == null
-                            || indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
+                        //only recreate the shuffled list if the current list is null or
+                        //if it has gotten stale.
+                        if (_shuffledList.Count < playingCollection.Count || _shuffledList == null)
                         {
                             _shuffledList = await ShuffledCollection();
-                            
-                            indexOfCurrentlyPlayingFile = 0;
+                        }
+
+                        //just set the index of currently playing file to -1
+                        //if we are reached the last file in the playing collection.
+                        if (indexOfCurrentlyPlayingFile > playingCollection.Count - 2)
+                        {
+                            indexOfCurrentlyPlayingFile = -1;
                         }
                         toPlayFile = _shuffledList?.ElementAt(indexOfCurrentlyPlayingFile + 1);
                     }
@@ -475,7 +483,7 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var mp3File = await SharedLogic.CreateMediafile(file, true);
+                var mp3File = await TagReaderHelper.CreateMediafile(file, true);
                 if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
                 {
                     await Load(mp3File);
@@ -491,6 +499,34 @@ namespace BreadPlayer.ViewModels
         #endregion
 
         #region Events  
+        int eventCount = 0; //used in AudioEndpointChangedEvent
+        private void OnAudioEndpointChanged(AudioRoutingManager sender, object args)
+        {
+            var currentEndpoint = sender.GetAudioEndpoint();
+            //when this event is initialized, it is invoked 2 times.
+            //to avoid changing the device at that time, we use this statement.
+            if (eventCount > 1)
+            {
+                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
+            }
+            //increase the event count
+            eventCount += 1;
+        }
+
+        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
+                return;
+
+            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
+            BLogger.Logger.Info($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+
+            _audioDeviceId = args.Id;
+
+            await SharedLogic.Player.ChangeDevice(device.Name);
+        }
+
         private async void Player_MediaAboutToEnd(object sender, MediaAboutToEndEventArgs e)
         {
             if (UpcomingSong == null)
@@ -521,7 +557,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     DontUpdatePosition = true;
                     CurrentPosition = 0;
@@ -534,7 +570,7 @@ namespace BreadPlayer.ViewModels
                         PlayPause();
                 });
             }
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
                 {
@@ -735,7 +771,7 @@ namespace BreadPlayer.ViewModels
         public async Task<ThreadSafeObservableCollection<Mediafile>> ShuffledCollection()
         {
             var shuffled = new ThreadSafeObservableCollection<Mediafile>();
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 shuffled.AddRange(TracksCollection.Elements.ToList());
                 shuffled.Shuffle();
@@ -839,31 +875,6 @@ namespace BreadPlayer.ViewModels
 
             await UpdateUi(mp3File);
         }
-        int eventCount = 0;
-        private void Shell_AudioEndpointChanged(AudioRoutingManager sender, object args)
-        {
-            var currentEndpoint = sender.GetAudioEndpoint();
-            if (eventCount > 1)
-            {
-                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
-            }
-            eventCount += 1;
-        }
-
-        private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
-        {
-            if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
-                return;
-
-            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
-            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.Logger.Info($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
-
-            _audioDeviceId = args.Id;
-
-            await SharedLogic.Player.ChangeDevice(device.Name);
-        }
-
         #endregion
 
     }

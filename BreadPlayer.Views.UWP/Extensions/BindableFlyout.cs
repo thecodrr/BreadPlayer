@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Extensions
 {
@@ -161,7 +162,7 @@ namespace BreadPlayer.Extensions
         {
             if (menuFlyout == null) return;
 
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                 menuFlyout.Items.Clear();

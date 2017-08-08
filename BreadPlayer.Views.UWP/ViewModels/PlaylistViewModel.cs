@@ -37,6 +37,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using BreadPlayer.Themes;
 using BreadPlayer.PlaylistBus;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -140,7 +141,7 @@ namespace BreadPlayer.ViewModels
         }
         public async Task Refresh()
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 try
                 {

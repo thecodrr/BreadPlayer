@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Core;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Extensions
 {
@@ -161,7 +162,7 @@ namespace BreadPlayer.Extensions
             {
                 if (_isObserving)
                 {
-                    await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () => base.OnCollectionChanged(e));
+                    await BreadDispatcher.InvokeAsync(() => base.OnCollectionChanged(e));
                 }
             }
             catch (Exception ex)
@@ -176,7 +177,7 @@ namespace BreadPlayer.Extensions
             {
                 if (_isObserving)
                 {
-                    await SharedLogic.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () => base.OnPropertyChanged(e));
+                    await BreadDispatcher.InvokeAsync(() => base.OnPropertyChanged(e));
                 }
             }
             catch (Exception ex)

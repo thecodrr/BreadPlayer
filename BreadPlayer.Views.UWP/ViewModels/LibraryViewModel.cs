@@ -46,6 +46,8 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using SplitViewMenu;
+using BreadPlayer.Helpers;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -92,7 +94,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 IsLibraryLoading = false;
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
                 });
@@ -128,7 +130,7 @@ namespace BreadPlayer.ViewModels
         {
            // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
-            SharedLogic.Dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
             RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
 
@@ -379,7 +381,7 @@ namespace BreadPlayer.ViewModels
                 var newFile = await openPicker.PickSingleFileAsync();
                 if (newFile != null)
                 {
-                    var newMediafile = await SharedLogic.CreateMediafile(newFile);
+                    var newMediafile = await TagReaderHelper.CreateMediafile(newFile);
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Id = newMediafile.Id;
                     TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
@@ -573,7 +575,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task RefreshSourceAsync()
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 if (_source == null)
                 {
@@ -595,7 +597,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task ChangeView(string header, bool group, object src)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 ViewSource.Source = null;
                 //Header = header;
@@ -612,7 +614,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 _grouped = group;
                 TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
@@ -644,7 +646,7 @@ namespace BreadPlayer.ViewModels
                 Sort = propName;
                 if (propName != "Unsorted")
                 {
-                    await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                    await BreadDispatcher.InvokeAsync(async () =>
                     {
                         if (_files == null)
                         {
@@ -655,7 +657,7 @@ namespace BreadPlayer.ViewModels
                         TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
-                        await TracksCollection.AddRange(_files, true, false);
+                        await TracksCollection.AddRange(_files);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
                     });
@@ -690,7 +692,7 @@ namespace BreadPlayer.ViewModels
         private async Task RemoveDuplicateGroups()
         {
             //the only workaround to remove the first group which is a 'false' duplicate really.
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             { 
                 if (ViewSource.IsSourceGrouped)
                 {
@@ -782,7 +784,7 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         private async Task CreateGenreMenu()
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 GenreFlyout = Application.Current.Resources["GenreFlyout"] as MenuFlyout;
                 Genre = "All genres";
@@ -841,7 +843,7 @@ namespace BreadPlayer.ViewModels
                     if (!TracksCollection.Elements.All(t => t.Path != path)) continue;
                     try
                     {
-                        var mp3File = await SharedLogic.CreateMediafile(item as StorageFile);
+                        var mp3File = await TagReaderHelper.CreateMediafile(item as StorageFile);
                         await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File).ConfigureAwait(false);
                         SharedLogic.AddMediafile(mp3File);
                     }
@@ -923,11 +925,13 @@ namespace BreadPlayer.ViewModels
                 var songList = new List<Mediafile>();
                 if (menu?.Tag == null)
                 {
-                    if(menu.DataContext is Album album)
+                    if(menu?.DataContext is Album album)
                     {
-                        songList.AddRange(await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query((album.AlbumName)));
+                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query((album.AlbumName));
+                        if(albumSongs?.Any() == true)
+                             songList.AddRange(albumSongs);
                     }
-                    else
+                    else if(SelectedItems?.Any() == true)
                         songList.AddRange(SelectedItems);
                 }
                 else
@@ -1025,7 +1029,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (!PlaylistService.PlaylistExists(plist.Name))
                 {
@@ -1046,7 +1050,7 @@ namespace BreadPlayer.ViewModels
             if (TracksCollection.Elements.Count == SongCount)
             {
                 await RemoveDuplicateGroups().ConfigureAwait(false);
-                await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await BreadDispatcher.InvokeAsync(() =>
                 {
                     MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
                 });

@@ -142,18 +142,19 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         /// <param name="fileName">Path to the music file.</param>
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mediaFile)
-        {            
+        {
             if (mediaFile != null && mediaFile.Length != "00:00")
             {
                 try
                 {
-                    await InitializeCore.Dispatcher.RunAsync(async () =>
+                    string path = mediaFile.Path;
+                    
+                    await InitializeCore.Dispatcher.RunAsync(() =>
                     {
                         MediaChanging?.Invoke(this, new EventArgs());
-
-                        string path = mediaFile.Path;
-                        await Stop();
-                        await Task.Run(() =>
+                    });
+                    await Stop();
+                    await Task.Run(() =>
                         {
                             _handle = Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                             PlayerState = PlayerState.Stopped;
@@ -167,16 +168,16 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
                             CurrentlyPlayingFile = mediaFile;
                         });
-                        if (Equalizer == null)
-                        {
-                            Equalizer = new BassEqualizer(_handle);
-                        }
-                        else
-                        {
-                            (Equalizer as BassEqualizer).ReInit(_handle);
-                        }
-                        MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                    });
+                    if (Equalizer == null)
+                    {
+                        Equalizer = new BassEqualizer(_handle);
+                    }
+                    else
+                    {
+                        (Equalizer as BassEqualizer).ReInit(_handle);
+                    }
+                    MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+
                     return true;
                 }
                 catch (Exception ex)
@@ -185,7 +186,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 }
             }
             else
-            { 
+            {
                 string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
                 if (IgnoreErrors)
                 {
@@ -194,7 +195,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 else
                 {
                     await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
-                }          
+                }
             }
             return false;
         }
@@ -230,8 +231,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Bass.ChannelPlay(_handle);
                 var vol = (float)Volume / 100f;
                 Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 1000);
-                PlayerState = PlayerState.Playing;
+               
             });
+            PlayerState = PlayerState.Playing;
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
         }
         /// <summary>
@@ -249,9 +251,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Bass.MusicFree(_handle);                
                 _handle = 0;
                 CurrentlyPlayingFile = null;
-                PlayerState = PlayerState.Stopped;
             });
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+            PlayerState = PlayerState.Stopped;
         }
         #endregion
 
@@ -355,7 +357,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Set(ref _isLoopingEnabled, value);
                 //SetLoop();
             }
-        }
+        }        
         #endregion
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {

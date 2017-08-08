@@ -39,6 +39,7 @@ using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Messengers;
 using BreadPlayer.ViewModels;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer
 {
@@ -132,7 +133,7 @@ namespace BreadPlayer
         {
            // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
 
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 if (sender.PlaybackState == MediaPlaybackState.Paused)
                 {
@@ -169,7 +170,7 @@ namespace BreadPlayer
             //we do not want to pause the background player.
             //pausing may cause stutter, that's why.
             _player?.Play();
-            await SharedLogic.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await BreadDispatcher.InvokeAsync(() =>
             {
                 switch (args.Button)
                 {

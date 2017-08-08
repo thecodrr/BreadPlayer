@@ -396,7 +396,6 @@
                                             <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=groupBtn}">
                                                 <Core:EventTriggerBehavior.Actions>
                                                     <Core:ChangePropertyAction PropertyName="Visibility" Value="Visible" TargetObject="{Binding ElementName=backBtn}"/>
-                                                    <Core:ChangePropertyAction PropertyName="Visibility" Value="Visible" TargetObject="{Binding ElementName=alphabetList}"/>
                                                 </Core:EventTriggerBehavior.Actions>  
                                             </Core:EventTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
