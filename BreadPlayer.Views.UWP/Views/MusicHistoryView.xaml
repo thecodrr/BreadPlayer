@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <CollectionViewSource x:Key="cvs" IsSourceGrouped="True"/>
+        <CollectionViewSource x:Key="cvs" IsSourceGrouped="True" Source="{Binding Path=CurrentCollection, UpdateSourceTrigger=PropertyChanged}"/>
     </Page.Resources>
     <Grid>
         <Pivot x:Name="mainPivot" Margin="30,0,10,0" SelectionChanged="OnSelectionChanged">

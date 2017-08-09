@@ -13,71 +13,41 @@ using System.Threading.Tasks;
 namespace BreadPlayer.ViewModels
 {
     public class MusicHistoryViewModel : ObservableObject
-    {
-        LibraryService LibraryService { get; set; }
-        public MusicHistoryViewModel()
+    {        
+        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> currentCollection;
+        public ThreadSafeObservableCollection<IGrouping<string, Mediafile>> CurrentCollection
         {
-            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
-        }
-        
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> _mostPlayedCollection;
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> MostPlayedSongsCollection
-        {
-            get => _mostPlayedCollection ?? new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-            set => Set(ref _mostPlayedCollection, value);
+            get => currentCollection ?? new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
+            set => Set(ref currentCollection, value);
         }
 
-    private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> _recentlyAddedSongsCollection;
-
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> RecentlyAddedSongsCollection
+        public void GetMostPlayedSongs()
         {
-            get => _recentlyAddedSongsCollection ?? new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-            set => Set(ref _recentlyAddedSongsCollection, value);
+            ChangeFilteredCollection(t => (t as Mediafile).PlayCount > 1,
+                                    t => "Under " + GetNearest10(t.PlayCount) + " Plays");
         }
-
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> _recentlyPlayedCollection;
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> RecentlyPlayedCollection
+        public void GetRecentlyPlayedSongs()
         {
-            get => _recentlyPlayedCollection ?? new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-            set => Set(ref _recentlyPlayedCollection, value);
+            ChangeFilteredCollection(t => t.LastPlayed != null && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed))).Days <= 14,
+                                     t => DateTime.Parse(t.LastPlayed).ToString("D"));
         }
-
-        public ThreadSafeObservableCollection<IGrouping<string, Mediafile>> GetMostPlayedSongsAsync()
+        public void GetRecentlyAddedSongs()
         {
-            var filtered = SettingsViewModel.TracksCollection.Elements.Where(t => (t as Mediafile).PlayCount > 1);
-            if (filtered != null)
+            ChangeFilteredCollection(t => (t as Mediafile).AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse((t as Mediafile).AddedDate))).Days < 7,
+                                    t => DateTime.Parse(t.AddedDate).ToString("D"));
+        }
+        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> ChangeFilteredCollection(Func<Mediafile, bool> filterFunc, Func<Mediafile, string> groupingFunc)
+        {
+            var filtered = SettingsViewModel.TracksCollection.Elements.Where(filterFunc);
+            if (filtered?.Any() == true)
             {
-                MostPlayedSongsCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-                MostPlayedSongsCollection.AddRange(filtered.GroupBy(t => "Under " + GetNearest10(t.PlayCount) + " Plays"));
+                CurrentCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>(filtered.GroupBy(groupingFunc));
             }
-            return MostPlayedSongsCollection;            
+            return CurrentCollection;
         }
         private int GetNearest10(int n)
         {
             return (n + 9) - ((n + 9) % 10);
-        }
-        public ThreadSafeObservableCollection<IGrouping<string, Mediafile>> GetRecentlyPlayedSongsAsync()
-        {
-            var filtered = SettingsViewModel.TracksCollection.Elements.Where(t => t.LastPlayed != null
-                                                                   && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed)))
-                                                                       .Days <= 14);
-            if (filtered != null)
-            {
-                RecentlyPlayedCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-                RecentlyPlayedCollection.AddRange(filtered.GroupBy(t => DateTime.Parse(t.LastPlayed).ToString("D")));
-            }
-            return RecentlyPlayedCollection;
-        }
-        public ThreadSafeObservableCollection<IGrouping<string, Mediafile>> GetRecentlyAddedSongsAsync()
-        {
-            var filtered = SettingsViewModel.TracksCollection.Elements.Where(t => (t as Mediafile).AddedDate != null
-                                                                     && (DateTime.Now.Subtract(DateTime.Parse((t as Mediafile).AddedDate))).Days < 7);
-            if (filtered?.Any() == true)
-            {
-                RecentlyAddedSongsCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>();
-                RecentlyAddedSongsCollection.AddRange(filtered.GroupBy(t => DateTime.Parse(t.AddedDate).ToString("D")));
-            }
-            return RecentlyAddedSongsCollection;
         }
     }
 }

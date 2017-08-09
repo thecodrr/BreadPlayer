@@ -16,34 +16,26 @@ namespace BreadPlayer
         {
             InitializeComponent();
             MusicHistoryVM = new MusicHistoryViewModel();
+            this.DataContext = MusicHistoryVM;
         }
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(e.RemovedItems.Any())
+                (e.RemovedItems[0] as PivotItem).Content = null;
+            (mainPivot.SelectedItem as PivotItem).Content = recentlyPlayedList;
             switch (mainPivot.SelectedIndex)
             {
                 case 0:
-                    RemoveRecentlyPlayedList();
-                    recentlyPlayedPivotItem.Content = recentlyPlayedList;
-                    (this.Resources["cvs"] as CollectionViewSource).Source = MusicHistoryVM.GetRecentlyPlayedSongsAsync();
+                    MusicHistoryVM.GetRecentlyPlayedSongs();
                     break;
                 case 1:
-                    RemoveRecentlyPlayedList();
-                    recentlyAddedPivotItem.Content = recentlyPlayedList;
-                    (this.Resources["cvs"] as CollectionViewSource).Source = MusicHistoryVM.GetRecentlyAddedSongsAsync();
+                    MusicHistoryVM.GetRecentlyAddedSongs();
                     break;
                 case 2:
-                    RemoveRecentlyPlayedList();
-                    mostPlayedPivotItem.Content = recentlyPlayedList;
-                    (this.Resources["cvs"] as CollectionViewSource).Source = MusicHistoryVM.GetMostPlayedSongsAsync();
+                    MusicHistoryVM.GetMostPlayedSongs();
                     break;
             }
-        }
-        private void RemoveRecentlyPlayedList()
-        {
-            recentlyAddedPivotItem.Content = null;
-            recentlyPlayedPivotItem.Content = null;
-            mostPlayedPivotItem.Content = null;
         }
     }
 }
