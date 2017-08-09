@@ -116,14 +116,14 @@
 
             <!-- Default style for Windows.UI.Xaml.Controls.Primitives.PivotHeaderItem -->
             <Style TargetType="PivotHeaderItem">
-                <Setter Property="FontSize" Value="{ThemeResource PivotHeaderItemFontSize}" />
+                <Setter Property="FontSize" Value="15" />
                 <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
                 <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
                 <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
                 <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
-                <Setter Property="Height" Value="48" />
+                <Setter Property="Height" Value="38" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
                 <Setter Property="IsTabStop" Value="False" />
@@ -137,7 +137,7 @@
                                     <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
                                         <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>
-                                        <Setter Property="FontSize" Value="15"/>
+                                        <Setter Property="FontSize" Value="11"/>
                                         <Setter Property="TextWrapping" Value="Wrap"/>
                                         <Setter Property="LineStackingStrategy" Value="MaxHeight"/>
                                         <Setter Property="TextLineBounds" Value="Full"/>
@@ -256,7 +256,7 @@
             Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             Margin="{TemplateBinding Padding}"
-            FontSize="22"
+            FontSize="16"
             FontFamily="{TemplateBinding FontFamily}"
             FontWeight="SemiLight"
             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -266,8 +266,8 @@
                                     </ContentPresenter.RenderTransform>
                                 </ContentPresenter>
                                 <Rectangle Stroke="{ThemeResource ThemeForeground}"
-                            StrokeThickness="3"
-                            Height="3" x:Name="SelectedUnderline" Opacity="0"
+                            StrokeThickness="0.5"
+                            Height="1" x:Name="SelectedUnderline" Opacity="0"
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Stretch"/>
                             </Grid>

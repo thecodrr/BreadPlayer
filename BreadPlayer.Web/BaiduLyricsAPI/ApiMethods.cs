@@ -8,18 +8,12 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
     public class ApiMethods
     {
         private Helpers _helpers = new Helpers();
-        public async Task<SongListResponse> RequestSongListFromArtist(string artistId)
+
+        public async Task<Lrc> RequestSongLrc(string songId)
         {
-            var url = _helpers.GetCallUrl(Endpoints.MethodGetArtistsonglist, _helpers.GetAlbumByArtistParameterString(artistId));
-            string response = await _helpers.MakeRequest(url);   
-            var obj =  (SongListResponse)JsonConvert.DeserializeObject(response, typeof(SongListResponse));
-            return obj;
-        }
-        public async Task<AlbumDetailResponse> RequestAlbumDetail(string albumId)
-        {
-            var url = _helpers.GetCallUrl(Endpoints.MethodGetAlbuminfo, _helpers.GetAlbumDetailParameterString(albumId));
+            var url = _helpers.GetCallUrl(Endpoints.MethodSongLrc, _helpers.GetSongsInfoParameterString(songId));
             string response = await _helpers.MakeRequest(url);
-            var obj = (AlbumDetailResponse)JsonConvert.DeserializeObject(response, typeof(AlbumDetailResponse));
+            var obj = (Lrc)JsonConvert.DeserializeObject(response, typeof(Lrc));
             return obj;
         }
         public async Task<QueryMergeResponse> Search(string query)
@@ -28,27 +22,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             string response = await _helpers.MakeRequest(url);
             var obj = (QueryMergeResponse)JsonConvert.DeserializeObject(response, typeof(QueryMergeResponse));
             return obj;
-        }
-        public async Task<ArtistAlbumListResponse> RequestAlbumByArtist(string artistId)
-        {
-            var url = _helpers.GetCallUrl(Endpoints.MethodGetArtistalubmlist, _helpers.GetAlbumByArtistParameterString(artistId));
-            string response = await _helpers.MakeRequest(url);
-            var obj = (ArtistAlbumListResponse)JsonConvert.DeserializeObject(response, typeof(ArtistAlbumListResponse));
-            return obj;
-        }
-        public async Task<ArtistInfo> RequestArtistInfo(string artistId)
-        {
-            var url = _helpers.GetCallUrl(Endpoints.MethodGetArtistinfo, _helpers.GetMusicAndArtistInfoParameterString(artistId));
-            string response = await _helpers.MakeRequest(url);
-            var obj = (ArtistInfo)JsonConvert.DeserializeObject(response, typeof(ArtistInfo));
-            return obj;
-        }
-        public async Task<SongInfo> RequestMusicInfo(string artistId)
-        {
-            var url = _helpers.GetCallUrl(Endpoints.MethodGetSonginfo, _helpers.GetMusicAndArtistInfoParameterString(artistId));
-            string response = await _helpers.MakeRequest(url);
-            var obj = (SongInfo)JsonConvert.DeserializeObject(response, typeof(SongInfo));
-            return obj;
-        }
+        }        
     }
 }
