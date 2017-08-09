@@ -570,9 +570,9 @@ namespace BreadPlayer.ViewModels
                 if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
                 {
                     lastPlayingSong.PlayCount++;
-                    lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    lastPlayingSong.LastPlayed = DateTime.Now;
                     TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
-                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now;
                     await _service.UpdateMediafile(lastPlayingSong);
                 }
                 await ScrobblePlayingSong(lastPlayingSong);                

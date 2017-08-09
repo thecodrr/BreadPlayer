@@ -29,7 +29,7 @@ namespace BreadPlayer.Helpers
                     StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
 
-                var properties = await file.Properties.GetMusicPropertiesAsync();                
+                var properties = await file.Properties.GetMusicPropertiesAsync();
                 var mediafile = new Mediafile()
                 {
                     Path = file.Path,
@@ -41,7 +41,7 @@ namespace BreadPlayer.Helpers
                     Year = properties.Year.ToString(),
                     TrackNumber = properties.TrackNumber.ToString(),
                     Length = new DoubleToTimeConverter().Convert(properties.Duration.TotalSeconds, typeof(double), null, "").ToString(),
-                    AddedDate = DateTime.Now.ToString()
+                    AddedDate = DateTime.Now;
                 };
 
                 var albumartFolder = ApplicationData.Current.LocalFolder;

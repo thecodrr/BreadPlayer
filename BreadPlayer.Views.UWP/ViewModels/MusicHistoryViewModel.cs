@@ -28,13 +28,13 @@ namespace BreadPlayer.ViewModels
         }
         public void GetRecentlyPlayedSongs()
         {
-            ChangeFilteredCollection(t => t.LastPlayed != null && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed))).Days <= 14,
-                                     t => DateTime.Parse(t.LastPlayed).ToString("D"));
+            ChangeFilteredCollection(t => t.LastPlayed != null && (DateTime.Now.Subtract(t.LastPlayed)).Days <= 14,
+                                     t => t.LastPlayed.ToString("D"));
         }
         public void GetRecentlyAddedSongs()
         {
-            ChangeFilteredCollection(t => (t as Mediafile).AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse((t as Mediafile).AddedDate))).Days < 7,
-                                    t => DateTime.Parse(t.AddedDate).ToString("D"));
+            ChangeFilteredCollection(t => (t as Mediafile).AddedDate != null && (DateTime.Now.Subtract(t.AddedDate)).Days < 7,
+                                    t => t.AddedDate.ToString("D"));
         }
         private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> ChangeFilteredCollection(Func<Mediafile, bool> filterFunc, Func<Mediafile, string> groupingFunc)
         {

@@ -56,11 +56,11 @@ namespace BreadPlayer.Core.Models
 
         #region Properties
         public long Id { get; set; }
-        private string _lastPlayed;
-        public string LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
+        private DateTime _lastPlayed;
+        public DateTime LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
 
-        private string _addedDate;
-        public string AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
+        private DateTime _addedDate;
+        public DateTime AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
         private bool _isFavorite;
         public bool IsFavorite
         {
