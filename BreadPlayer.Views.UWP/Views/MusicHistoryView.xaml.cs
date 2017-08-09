@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Markup;
 
 namespace BreadPlayer
 {
@@ -24,6 +26,7 @@ namespace BreadPlayer
             if(e.RemovedItems.Any())
                 (e.RemovedItems[0] as PivotItem).Content = null;
             (mainPivot.SelectedItem as PivotItem).Content = recentlyPlayedList;
+
             switch (mainPivot.SelectedIndex)
             {
                 case 0:
