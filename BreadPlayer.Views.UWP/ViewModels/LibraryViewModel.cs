@@ -130,8 +130,6 @@ namespace BreadPlayer.ViewModels
         {
            // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
-
-            RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
 
             Messenger.Instance.Register(MessageTypes.MsgPlaySong, new Action<Message>(HandlePlaySongMessage));
@@ -218,22 +216,10 @@ namespace BreadPlayer.ViewModels
             private set => Set(ref _songCount, value);
         }
 
-        private ThreadSafeObservableCollection<Mediafile> _mostEatenCollection;
-        private ThreadSafeObservableCollection<Mediafile> MostEatenSongsCollection => 
-            _mostEatenCollection ?? (_mostEatenCollection = new ThreadSafeObservableCollection<Mediafile>());
-
+       
         private ThreadSafeObservableCollection<Mediafile> _favoriteSongsCollection;
         private ThreadSafeObservableCollection<Mediafile> FavoriteSongsCollection =>
             _favoriteSongsCollection ?? (_favoriteSongsCollection = new ThreadSafeObservableCollection<Mediafile>());
-
-        private ThreadSafeObservableCollection<Mediafile> _recentlyAddedSongsCollection;
-
-        private ThreadSafeObservableCollection<Mediafile> RecentlyAddedSongsCollection => 
-            _recentlyAddedSongsCollection ?? (_recentlyAddedSongsCollection = new ThreadSafeObservableCollection<Mediafile>());
-
-        private ThreadSafeObservableCollection<Mediafile> _recentlyPlayedCollection;
-        private ThreadSafeObservableCollection<Mediafile> RecentlyPlayedCollection => 
-            _recentlyPlayedCollection ?? (_recentlyPlayedCollection = new ThreadSafeObservableCollection<Mediafile>());
 
         private GroupedObservableCollection<IGroupKey, Mediafile> _tracksCollection;
         /// <summary>
@@ -530,32 +516,7 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
-
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                MostEatenSongsCollection.AddRange(
-                    TracksCollection.Elements.Where(t => t.PlayCount > 1 &&
-                                                         MostEatenSongsCollection.All(a => a.Path != t.Path)));
-                return MostEatenSongsCollection;
-            });
-        }
-
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                RecentlyPlayedCollection.AddRange(
-                    TracksCollection.Elements.Where(t => t.LastPlayed != null
-                                                         && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed)))
-                                                         .Days <= 2
-                                                         && RecentlyPlayedCollection.All(a => a.Path != t.Path)));
-
-                return RecentlyPlayedCollection;
-            });
-        }
-
+       
         private Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
         {
             return Task.Run(() =>
@@ -563,15 +524,7 @@ namespace BreadPlayer.ViewModels
                 FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
                 return FavoriteSongsCollection;
             });
-        }
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3));
-                return RecentlyAddedSongsCollection;
-            });
-        }
+        }       
 
         private async Task RefreshSourceAsync()
         {
@@ -900,7 +853,6 @@ namespace BreadPlayer.ViewModels
             LibraryService.Dispose();
             LibraryService = null;
             TracksCollection.Clear();
-            RecentlyPlayedCollection.Clear();
             GenreFlyout?.Items?.Clear();
             SharedLogic.PlaylistsItems?.Clear();
             _oldItems = null;
@@ -1088,14 +1040,6 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }
         }
-        private async void Elements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            await Task.Delay(1000);
-            if (RecentlyPlayedCollection.Count <= 100)
-            {
-                RecentlyPlayedCollection.RemoveAt(RecentlyPlayedCollection.Count + 1);
-            }
-        }
         private string CurrentPage { get; set; } = "MusicCollection";
         private async void Frame_Navigated(object sender, NavigationEventArgs e)
         {
@@ -1106,15 +1050,6 @@ namespace BreadPlayer.ViewModels
                 CurrentPage = param;
                 switch (param)
                 {
-                    case "Recent":
-                        await ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync().ConfigureAwait(false));
-                        break;
-                    case "MostEaten":
-                        await ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync().ConfigureAwait(false));
-                        break;
-                    case "RecentlyAdded":
-                        await ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync().ConfigureAwait(false));
-                        break;
                     case "Favorites":
                         await ChangeView("Favorites", false, await GetFavoriteSongs().ConfigureAwait(false));
                         break;

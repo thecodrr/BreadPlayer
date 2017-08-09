@@ -6,15 +6,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <CollectionViewSource x:Key="cvs" IsSourceGrouped="True"/>
+    </Page.Resources>
     <Grid>
         <Pivot x:Name="mainPivot" Margin="30,0,10,0" SelectionChanged="OnSelectionChanged">
-            <PivotItem Header="Recently Played">
-                <ListView/>
+            <PivotItem Name="recentlyPlayedPivotItem" Header="Recently Played">
+                <ListView Name="recentlyPlayedList" DisplayMemberPath="Title" ItemsSource="{Binding Source={StaticResource cvs}}">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Key}"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
             </PivotItem>
-            <PivotItem Header="Recently Added">
+            <PivotItem Name="recentlyAddedPivotItem" Header="Recently Added">
             </PivotItem>
-            <PivotItem Header="Most Played">
+            <PivotItem Name="mostPlayedPivotItem" Header="Most Played">
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">

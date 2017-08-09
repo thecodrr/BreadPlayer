@@ -114,7 +114,7 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+        ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
             get
