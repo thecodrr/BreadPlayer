@@ -12,6 +12,9 @@ using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
 using BreadPlayer.Dispatcher;
+using Kfstorm.LrcParser;
+using System.Collections.Generic;
+using Windows.UI.Xaml;
 
 namespace BreadPlayer.ViewModels
 {
@@ -45,6 +48,12 @@ namespace BreadPlayer.ViewModels
             get => _albumTracks;
             set => Set(ref _albumTracks, value);
         }
+        private ThreadSafeObservableCollection<ObservableOneLineLyric> lyrics;
+        public ThreadSafeObservableCollection<ObservableOneLineLyric> Lyrics
+        {
+            get => lyrics;
+            set => Set(ref lyrics, value);
+        }
 
         private ThreadSafeObservableCollection<LastArtist> _similarArtists;
         public ThreadSafeObservableCollection<LastArtist> SimilarArtists
@@ -61,11 +70,14 @@ namespace BreadPlayer.ViewModels
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
-            SharedLogic.Player.MediaChanging += (sender, e) =>
-            {
-                SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
-            };
+            SharedLogic.Player.MediaChanging += Player_MediaChanging;
         }
+
+        private void Player_MediaChanging(object sender, EventArgs e)
+        {
+            SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+        }
+
         private async void Retry(object para)
         {
             if (string.IsNullOrEmpty(CorrectArtist))
@@ -96,26 +108,74 @@ namespace BreadPlayer.ViewModels
             if (e.NewState == PlayerState.Playing)
             {
                 SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
-                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album);
+                //await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album);
+                await GetLyrics();
             }
         }
 
         private int _retries;
+        private async Task GetLyrics()
+        {
+            var list = await BreadPlayer.Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile);
+            var parser = LrcFile.FromText(list[0]);
+            Lyrics = new ThreadSafeObservableCollection<ObservableOneLineLyric>();
+            foreach(var lyric in parser.Lyrics)
+            {
+                Lyrics.Add(new ObservableOneLineLyric()
+                {
+                    Content = lyric.Content,
+                    Timestamp = lyric.Timestamp,
+                    IsActive = false
+                });
+            }
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromMilliseconds(10),
+            };
+            timer.Start();
+            timer.Tick += (s, e) => 
+            {
+                var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                {
+                    var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                    if (currentLyric != null)
+                    {
+                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                        if (previousLyric != null && previousLyric.IsActive == true)
+                            previousLyric.IsActive = false;
+                        currentLyric.IsActive = true;
+                        LyricActivated?.Invoke(currentLyric, new EventArgs());
+                    }
+                }
+            };
+        }
+        public event EventHandler LyricActivated;
+        public class ObservableOneLineLyric : ObservableObject
+        {
+            bool isActive;
+            public bool IsActive
+            {
+                get => isActive;
+                set => Set(ref isActive, value);
+            }
+            public TimeSpan Timestamp { get; set; }
+            public string Content { get; set; }
+        }
         private async Task GetInfo(string artistName, string albumName)
         {
             try
             {
-                //start the tasks on another thread so that the UI doesn't hang.
-
                 ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
                 
                 if (internetConnectionProfile != null)
                 {
-                    //cancel any previous requests
-                    LastfmClient.HttpClient.CancelPendingRequests();
-                    //start both tasks
-                    await GetArtistInfo(artistName.ScrubGarbage().GetTag()).ConfigureAwait(false);
-                    await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                    ////cancel any previous requests
+                    //LastfmClient.HttpClient.CancelPendingRequests();
+                    ////start both tasks
+                    //await GetArtistInfo(artistName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                    //await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                 
                 }
                 else
                 {

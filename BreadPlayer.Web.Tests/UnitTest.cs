@@ -71,13 +71,32 @@ namespace MyFirstUWPTests
         [InlineData("269398624")]
         public async void RequestArtistInfoTest(string id)
         {
-            Assert.NotNull(await new ApiMethods().RequestSongLrc(id));
+            Assert.NotNull(await new BaiduClient().RequestSongLrc(id));
         }
         [Theory]
         [InlineData("eminem")]
         public async void RequestMusicInfoTest(string id)
         {
-            Assert.NotNull(await new ApiMethods().Search(id));
+            Assert.NotNull(await new BaiduClient().Search(id));
+        }
+        [Theory]
+        [InlineData("eminem")]
+        public async void SearchSongsTest(string id)
+        {
+            Assert.NotNull(await new BreadPlayer.Web.NeteaseLyricsAPI.NeteaseClient().SearchSongs(id));
+        }
+        [Theory]
+        [InlineData("17572546")]
+        public async void GetLyricsTest(string id)
+        {
+            Assert.NotNull(await new BreadPlayer.Web.NeteaseLyricsAPI.NeteaseClient().GetLyrics(id));
+        }
+
+        [Theory]
+        [InlineData("stan")]
+        public async void Xiami_SearchSongTest(string id)
+        {
+            Assert.NotNull(await new BreadPlayer.Web.XiamiLyricsAPI.XiamiClient().SearchAsync(id));
         }
         //[Theory]
         //[InlineData("eminem", "justin bieber")]

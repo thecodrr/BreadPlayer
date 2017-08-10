@@ -208,6 +208,7 @@
     <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\SortedObservableCollection.cs" />

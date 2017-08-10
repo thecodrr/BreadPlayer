@@ -122,7 +122,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            <VisualStateGroup CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
+            <!--<VisualStateGroup CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
                 <VisualState>
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, UpdateSourceTrigger=PropertyChanged}"/>
@@ -170,7 +170,7 @@
                         </Storyboard>
                     </VisualState.Storyboard>
                 </VisualState>
-            </VisualStateGroup>            
+            </VisualStateGroup>-->            
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -367,12 +367,7 @@
                 <AppBarToggleButton x:Uid="showMoreBtn" Grid.Row="1" Grid.Column="12" Name="showMoreBtn" Visibility="Collapsed" IsChecked="False" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
             </Grid>
         </Grid>
-        
-        <Frame x:Name="NowPlayingFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
-            <Frame.RenderTransform>
-                <CompositeTransform TranslateY="-1000"/>
-            </Frame.RenderTransform>
-        </Frame>
+     
         <Grid Name="EqualizerGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="300"/>
@@ -445,81 +440,10 @@
             <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="5,0,0,0"/>
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
-        <Grid Background="{ThemeResource SystemControlHighlightListAccentLowBrush}" Visibility="Visible">
-            <Grid Background="WhiteSmoke" Width="600" Margin="0,100" VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Padding="20" DataContext="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.Background>
-                        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Path=AttachedPicture}"/>
-                    </Grid.Background>
-                    <blur:BackDrop Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20"/>
-                    <Border Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20" Background="{StaticResource SystemControlHighlightAltListAccentLowBrush}"/>
-                    <Image Grid.RowSpan="5" HorizontalAlignment="Left" Height="130" Width="130" Stretch="Fill" Source="{Binding Path=AttachedPicture}"/>
-                    
-                    <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Bottom">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
-                            <Button x:Name="playBtn" Margin="20,0,20,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
-                                <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="20"/>
-                            </Button>
-                            <Button  Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
-                        </StackPanel>
-                        <TextBlock Text="{Binding Path=Title}" Foreground="{StaticResource TextBrush}"/>
-                        <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
-                        <TextBlock Text="{Binding Path=Album}" Foreground="{StaticResource TextBrush}"/>
-                    </StackPanel>                    
-                </Grid>
-                <Pivot Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0">
-                    <PivotItem Header="Now Playing" >
-                        <ListView ItemsSource="{Binding Path=NowPlayingQueue}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Padding="0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock x:Name="Title" Width="10000" Foreground="{Binding ElementName=Title, Path=Foreground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Margin="0,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
-                                        <TextBlock x:Name="artistTxt" FontSize="12" Width="10000" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Grid.Row="1" Margin="0,0,0,0" Text="{Binding Path=LeadArtist}" VerticalAlignment="Center"/>
-                                        <TextBlock x:Name="Duration" FontSize="14" Grid.Column="2" Foreground="{Binding ElementName=Title, Path=Foreground}" TextTrimming="CharacterEllipsis" Margin="0,0,0,0" Grid.RowSpan="2" Text="{Binding Path=Length}" VerticalAlignment="Center"/>
-                                        <Border Grid.ColumnSpan="4" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}">
-                                            <Interactivity:Interaction.Behaviors>
-                                                <Core:EventTriggerBehavior EventName="DoubleTapped">
-                                                    <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
-                                                </Core:EventTriggerBehavior>
-                                                <Core:EventTriggerBehavior EventName="Tapped">
-                                                    <Core:CallMethodAction MethodName="PlayOnTap" TargetObject="{StaticResource LibVM}"></Core:CallMethodAction>
-                                                </Core:EventTriggerBehavior>
-                                                <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
-                                                    <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="DeepSkyBlue"/>
-                                                </Core:DataTriggerBehavior>
-                                                <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
-                                                    <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}"/>
-                                                </Core:DataTriggerBehavior>
-                                            </Interactivity:Interaction.Behaviors>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </PivotItem>
-                    <PivotItem Header="Lyrics"/>
-                    <PivotItem Header="Music Info"/>
-                </Pivot>
-            </Grid>
-        </Grid>
+
+        <Frame x:Name="NowPlayingFrame" Visibility="Visible" Width="700" Margin="0,100" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
+
+        </Frame>
     </Grid>
     <Interactivity:Interaction.Behaviors>
         <Core:EventTriggerBehavior EventName="GlobalPageKeyDown">

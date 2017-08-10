@@ -5,7 +5,10 @@ using BreadPlayer.Core;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.ViewModels;
-
+using Windows.UI.Text;
+using System;
+using Windows.UI.Xaml.Media;
+using System.Threading.Tasks;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -20,25 +23,33 @@ namespace BreadPlayer
         public NowPlayingView()
         {
             InitializeComponent();
-            _shellVm = (extrasPanel.DataContext as ShellViewModel);
 
-            //events for providing seeking ability to the positon slider.
-            Window.Current.CoreWindow.PointerPressed += (sender, e) =>
-            {
-                if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
-                {
-                    _isPressed = true;
-                    _shellVm.DontUpdatePosition = true;
-                }
-            };
-            Window.Current.CoreWindow.PointerReleased += (sender, e) => 
-            {
-                if (_isPressed && !positionSlider.IsDragging())
-                {
-                    positionSlider.UpdatePosition(null, _shellVm, true);
-                    _isPressed = false;
-                }
-            };
+            (Resources["NowPlayingVM"] as NowPlayingViewModel).LyricActivated += NowPlayingView_LyricActivated;
+          
+            //_shellVm = (extrasPanel.DataContext as ShellViewModel);
+
+            ////events for providing seeking ability to the positon slider.
+            //Window.Current.CoreWindow.PointerPressed += (sender, e) =>
+            //{
+            //    if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
+            //    {
+            //        _isPressed = true;
+            //        _shellVm.DontUpdatePosition = true;
+            //    }
+            //};
+            //Window.Current.CoreWindow.PointerReleased += (sender, e) => 
+            //{
+            //    if (_isPressed && !positionSlider.IsDragging())
+            //    {
+            //        positionSlider.UpdatePosition(null, _shellVm, true);
+            //        _isPressed = false;
+            //    }
+            //};
+        }
+
+        private async void NowPlayingView_LyricActivated(object sender, EventArgs e)
+        {
+             await lyricsList.ScrollToItem(sender);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,38 +60,13 @@ namespace BreadPlayer
             {
                 ApplicationView.GetForCurrentView().ExitFullScreenMode();
             }
-
             _shellVm.IsPlaybarHidden = false;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //initialize tap to seek ability in positionSlider.
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(null, _shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
-            Window.Current.SizeChanged += (evnt, args) =>
-            {
-                if (InitializeCore.IsMobile && NowPlayingGrid.Children.Contains(NowPlayingList))
-                {
-                    NowPlayingGrid.Children.Remove(NowPlayingList);
-                    RootGrid.Children.Insert(RootGrid.Children.Count - 2, NowPlayingList);
-                }
-                else if (!InitializeCore.IsMobile && !NowPlayingGrid.Children.Contains(NowPlayingList))
-                {
-                    RootGrid.Children.Remove(NowPlayingList);
-                    NowPlayingGrid.Children.Add(NowPlayingList);
-                }
-                NowPlayingList.ItemTemplate = (Resources["NowPlayingListItemTemplate"] as DataTemplate);
-            };
+          
         }
-
-        private void ShowNowPlayingListBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (InitializeCore.IsMobile && NowPlayingGrid.Children.Contains(NowPlayingList))
-            {
-                NowPlayingGrid.Children.Remove(NowPlayingList);
-                RootGrid.Children.Insert(RootGrid.Children.Count - 2, NowPlayingList);
-                NowPlayingList.ItemTemplate = (Resources["NowPlayingListItemTemplate"] as DataTemplate);
-            }
-        }
+       
     }
 }
