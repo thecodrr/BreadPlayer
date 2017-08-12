@@ -1,5 +1,12 @@
 # Release Notes for Bread Player.
 
+## Version 2.6.1-beta
+### What's Fixed:
+- Fixed issue where selecting Unsorted returned an empty list.
+- Fixed nullreference exception while adding album songs to an existing playlist.
+- Fixed bug where sound was coming from the front speakers instead of the back speakers.
+- Fixed other crashes and bugs.
+
 ## Version 2.6-beta
 ### What's Fixed:
 - Fixed 2 random crashes.
