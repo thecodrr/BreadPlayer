@@ -356,40 +356,41 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource SystemControlHighlightListAccentLowBrush}" Visibility="Visible">
-        <Grid Background="WhiteSmoke" VerticalAlignment="Stretch">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Padding="20" DataContext="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.Background>
-                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Path=AttachedPicture}"/>
-                </Grid.Background>
-                <blur:BackDrop Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20"/>
-                <Border Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20" Background="{StaticResource SystemControlHighlightAltListAccentLowBrush}"/>
-                <Image Grid.RowSpan="5" HorizontalAlignment="Left" Height="130" Width="130" Stretch="Fill" Source="{Binding Path=AttachedPicture}"/>
+    <Grid Background="WhiteSmoke" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Padding="20" DataContext="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Path=AttachedPicture}"/>
+            </Grid.Background>
+            <blur:BackDrop Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20"/>
+            <Border Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20" Background="{StaticResource SystemControlHighlightAltListAccentLowBrush}"/>
+            <Image Grid.RowSpan="5" HorizontalAlignment="Left" Height="130" Width="130" Stretch="Fill" Source="{Binding Path=AttachedPicture}"/>
 
-                <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" DataContext="{StaticResource ShellVM}">
-                        <Button Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
-                        <Button x:Name="playBtn" Margin="20,0,20,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
-                            <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="20"/>
-                        </Button>
-                        <Button  Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
-                    </StackPanel>
-                    <TextBlock Text="{Binding Path=Title}" Foreground="{StaticResource TextBrush}"/>
-                    <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
-                    <TextBlock Text="{Binding Path=Album}" Foreground="{StaticResource TextBrush}"/>
+            <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal" DataContext="{StaticResource ShellVM}">
+                    <Button Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+                    <Button x:Name="playBtn" Margin="20,0,20,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
+                        <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="20"/>
+                    </Button>
+                    <Button  Content="&#xE893;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
                 </StackPanel>
-            </Grid>
-            <Pivot Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0" Style="{StaticResource CustomPivot}">
-                <PivotItem Header="Now Playing" >
-                    <ListView ItemsSource="{Binding Path=NowPlayingQueue}">
+                <TextBlock Text="{Binding Path=Title}" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
+                <TextBlock Text="{Binding Path=Album}" Foreground="{StaticResource TextBrush}"/>
+            </StackPanel>
+        </Grid>
+        <Pivot Grid.Row="1" Grid.ColumnSpan="5" Margin="10,0" Style="{StaticResource CustomPivot}">
+            <PivotItem Header="Now Playing" >
+                <Grid>
+                    <MenuFlyoutSeparator Background="#dbdbdb" VerticalAlignment="Top"/>
+                    <ListView ItemsSource="{Binding Path=NowPlayingQueue}" Margin="0,6,0,0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="0,5">
@@ -425,9 +426,12 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </PivotItem>
-                <PivotItem Header="Lyrics" DataContext="{StaticResource NowPlayingVM}">
-                    <ListView x:Name="lyricsList" ItemsSource="{Binding Path=Lyrics}" SelectionMode="None">
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Lyrics" DataContext="{StaticResource NowPlayingVM}">
+                <Grid>
+                    <MenuFlyoutSeparator Background="#dbdbdb" VerticalAlignment="Top"/>
+                    <ListView x:Name="lyricsList" Margin="0,6,0,0" ItemsSource="{Binding Path=Lyrics}" SelectionMode="None">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Path=Content}" Name="lyricTxt" TextAlignment="Center" FontWeight="Normal" FontSize="15" Margin="5,0,0,0">
@@ -461,9 +465,9 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </PivotItem>
-                <PivotItem Header="Music Info"/>
-            </Pivot>
-        </Grid>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Music Info"/>
+        </Pivot>
     </Grid>
 </Page>

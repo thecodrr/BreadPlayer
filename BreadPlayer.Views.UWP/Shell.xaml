@@ -360,11 +360,11 @@
                     </ToolTipService.ToolTip>
                 </AppBarButton>
                 <AppBarToggleButton x:Uid="volumeBtn" Grid.Row="1" Grid.Column="7" x:Name="volBtn" Icon="Volume" VerticalAlignment="Center" IsChecked="{Binding Path=IsVolumeSliderVisible, Mode=TwoWay}" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0"/>
-                <AppBarToggleButton x:Uid="shuffleBtn" Grid.Row="1" Grid.Column="8" ToolTipService.ToolTip="" x:Name="shuffleBtn" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="5,0,0,0"/>
+                <!--<AppBarToggleButton x:Uid="shuffleBtn" Grid.Row="1" Grid.Column="8" ToolTipService.ToolTip="" x:Name="shuffleBtn" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="5,0,0,0"/>
                 <AppBarToggleButton x:Uid="showEqualizerBtn" Grid.Row="1"  Grid.Column="9" ToolTipService.ToolTip="" Command="{Binding Path=ShowEqualizerCommand}" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" x:Name="equalizerBtn" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
                 <AppBarButton BorderBrush="WhiteSmoke" Grid.Row="1" Grid.Column="10" ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="5,0,0,0" Height="40" />
-                <AppBarButton x:Uid="openFileBtn" Grid.Row="1" Grid.Column="11" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,5,0"/>
-                <AppBarToggleButton x:Uid="showMoreBtn" Grid.Row="1" Grid.Column="12" Name="showMoreBtn" Visibility="Collapsed" IsChecked="False" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
+                <AppBarButton x:Uid="openFileBtn" Grid.Row="1" Grid.Column="11" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,5,0"/>-->
+                <AppBarToggleButton x:Uid="showMoreBtn" Grid.Row="1" Grid.Column="12" Name="showMoreBtn" Visibility="Visible" IsChecked="False" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
             </Grid>
         </Grid>
      
@@ -440,10 +440,9 @@
             <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="5,0,0,0"/>
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
-
-        <Frame x:Name="NowPlayingFrame" Visibility="Visible" Width="700" Margin="0,100" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5">
-
-        </Frame>
+        <Grid Background="#ccdbdbdb" Visibility="Visible">
+            <Frame x:Name="NowPlayingFrame" Visibility="Visible" Width="700" Margin="0,100" SourcePageType="local:NowPlayingView" RenderTransformOrigin="0.5,0.5"/>
+        </Grid>
     </Grid>
     <Interactivity:Interaction.Behaviors>
         <Core:EventTriggerBehavior EventName="GlobalPageKeyDown">

@@ -31,7 +31,10 @@ namespace BreadPlayer.ViewModels
         private bool _albumFetchFailed;
         public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }
         #endregion
-
+        DispatcherTimer timer = new DispatcherTimer()
+        {
+            Interval = TimeSpan.FromMilliseconds(10),
+        };
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
@@ -75,6 +78,8 @@ namespace BreadPlayer.ViewModels
 
         private void Player_MediaChanging(object sender, EventArgs e)
         {
+            timer?.Stop();
+            Lyrics?.Clear();
             SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
@@ -117,38 +122,41 @@ namespace BreadPlayer.ViewModels
         private async Task GetLyrics()
         {
             var list = await BreadPlayer.Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile);
-            var parser = LrcFile.FromText(list[0]);
-            Lyrics = new ThreadSafeObservableCollection<ObservableOneLineLyric>();
-            foreach(var lyric in parser.Lyrics)
+            if (list != null && !string.IsNullOrEmpty(list[0]))
             {
-                Lyrics.Add(new ObservableOneLineLyric()
+                var parser = LrcFile.FromText(list[0]);
+                Lyrics = new ThreadSafeObservableCollection<ObservableOneLineLyric>();
+                foreach (var lyric in parser.Lyrics)
                 {
-                    Content = lyric.Content,
-                    Timestamp = lyric.Timestamp,
-                    IsActive = false
-                });
-            }
-            DispatcherTimer timer = new DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMilliseconds(10),
-            };
-            timer.Start();
-            timer.Tick += (s, e) => 
-            {
-                var currentPosition = TimeSpan.FromSeconds(Player.Position);
-                if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
-                {
-                    var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
-                    if (currentLyric != null)
+                    if (!string.IsNullOrEmpty(lyric.Content) && !string.IsNullOrWhiteSpace(lyric.Content))
                     {
-                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
-                        if (previousLyric != null && previousLyric.IsActive == true)
-                            previousLyric.IsActive = false;
-                        currentLyric.IsActive = true;
-                        LyricActivated?.Invoke(currentLyric, new EventArgs());
+                        Lyrics.Add(new ObservableOneLineLyric()
+                        {
+                            Content = lyric.Content,
+                            Timestamp = lyric.Timestamp,
+                            IsActive = false
+                        });
                     }
                 }
-            };
+
+                timer.Start();
+                timer.Tick += (s, e) =>
+                {
+                    var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                    if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                    {
+                        var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                        if (currentLyric != null)
+                        {
+                            var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                            if (previousLyric != null && previousLyric.IsActive == true)
+                                previousLyric.IsActive = false;
+                            currentLyric.IsActive = true;
+                            LyricActivated?.Invoke(currentLyric, new EventArgs());
+                        }
+                    }
+                };
+            }
         }
         public event EventHandler LyricActivated;
         public class ObservableOneLineLyric : ObservableObject

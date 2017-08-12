@@ -16,10 +16,12 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
         public async Task<string> FetchLyrics(Mediafile mediaFile)
         {
             var results = await SearchAsync(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist));
-            var xResult = results.Data.Songs.First(t => t.SongName.Contains(mediaFile.Title));
+            var xResult = results.Data.Songs.First(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower()));
             var xSong = await GetSongDetailAsync(xResult.SongId.ToString());
-            if (!string.IsNullOrEmpty(xSong.Data.TrackList[0].LyricUrl))
+            if (xSong.Data.TrackList?.Any() == true && !string.IsNullOrEmpty(xSong.Data.TrackList[0].LyricUrl))
                 return await new HttpClient().GetStringAsync(xSong.Data.TrackList[0].LyricUrl);
+            else if (!string.IsNullOrEmpty(xResult.Lyric) && xSong.Data.TrackList == null)
+                return await new HttpClient().GetStringAsync(xResult.Lyric);
             else
                 return "";
         }

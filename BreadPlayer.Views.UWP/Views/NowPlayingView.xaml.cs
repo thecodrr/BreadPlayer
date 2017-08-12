@@ -49,7 +49,11 @@ namespace BreadPlayer
 
         private async void NowPlayingView_LyricActivated(object sender, EventArgs e)
         {
-             await lyricsList.ScrollToItem(sender);
+            try
+            {
+                await lyricsList.ScrollToItem(sender);
+            }
+            catch { }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.LyricsFetch
@@ -18,8 +19,11 @@ namespace BreadPlayer.Web.LyricsFetch
             ILyricAPI[] Sources = new ILyricAPI[] { new XiamiClient(), new NeteaseClient(), new BaiduClient() };
             try
             {
+                var mediaFile = file;
+                mediaFile.Title = Regex.Replace(mediaFile.Title, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
+                mediaFile.LeadArtist = Regex.Replace(mediaFile.LeadArtist, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
                 List<string> Lyrics = new List<string>();
-                Lyrics.Add(await Sources[0].FetchLyrics(file));
+                Lyrics.Add(await Sources[0].FetchLyrics(mediaFile));
                 
                 return Lyrics;
             }
