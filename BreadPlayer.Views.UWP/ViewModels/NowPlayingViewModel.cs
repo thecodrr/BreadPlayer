@@ -171,13 +171,13 @@ namespace BreadPlayer.ViewModels
         }
         private async Task GetAlbumInfo(string artistName, string albumName)
         {
+            LastfmClient.Album.HttpClient.CancelPendingRequests();
+            //CheckAndCancelOperation(AlbumInfoOperation, token);
+            AlbumInfoLoading = true;
+            AlbumTracks?.Clear();
+            AlbumFetchFailed = false;
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                LastfmClient.Album.HttpClient.CancelPendingRequests();
-                //CheckAndCancelOperation(AlbumInfoOperation, token);
-                AlbumInfoLoading = true;
-                AlbumTracks?.Clear();
-                AlbumFetchFailed = false;
                 var albumInfoResponse = await LastfmClient.Album.GetInfoAsync(artistName, albumName, true).ConfigureAwait(false);
                 if (albumInfoResponse.Success)
                 {
@@ -189,13 +189,13 @@ namespace BreadPlayer.ViewModels
                     AlbumFetchFailed = true;
                     AlbumInfoLoading = false;
                 }
-                if (AlbumTracks?.Any() == false)
-                {
-                    AlbumFetchFailed = true;
-                }
-
-                AlbumInfoLoading = false;
             });
+
+            if (AlbumTracks?.Any() == false)
+            {
+                AlbumFetchFailed = true;
+            }
+            AlbumInfoLoading = false;
         }     
     }
 }

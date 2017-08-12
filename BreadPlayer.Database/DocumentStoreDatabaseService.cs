@@ -179,9 +179,16 @@ namespace BreadPlayer.Database
 
         public Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
-                return currentCollection.Update(id, (IDbRecord)record);
+                try
+                {
+                    return currentCollection.Update(id, (IDbRecord)record);
+                }
+                catch
+                {
+                    return false;
+                }
             });
         }
 

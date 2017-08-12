@@ -83,18 +83,25 @@ namespace BreadPlayer
 
         public static void SaveSettings()
         {
-            if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+            try
             {
-                ApplicationData.Current.RoamingSettings.Values[PathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
-                ApplicationData.Current.RoamingSettings.Values[PosKey] = SharedLogic.Player.Position;
+                if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+                {
+                    ApplicationData.Current.RoamingSettings.Values[PathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
+                    ApplicationData.Current.RoamingSettings.Values[PosKey] = SharedLogic.Player.Position;
+                }
+                ApplicationData.Current.RoamingSettings.Values[VolKey] = SharedLogic.Player.Volume;
+                ApplicationData.Current.RoamingSettings.Values[TimeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string folderPaths = "";
+                SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
+                if (!string.IsNullOrEmpty(folderPaths))
+                {
+                    ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+                }
             }
-            ApplicationData.Current.RoamingSettings.Values[VolKey] = SharedLogic.Player.Volume;
-            ApplicationData.Current.RoamingSettings.Values[TimeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string folderPaths = "";
-            SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
-            if(!string.IsNullOrEmpty(folderPaths))
+            catch(Exception ex)
             {
-                ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+                BLogger.Logger.Error("Error while saving settings.", ex);
             }
         }
         #endregion
@@ -149,21 +156,27 @@ namespace BreadPlayer
             {
                 return;
             }
-
-            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            var musicProps = _smtc.DisplayUpdater.MusicProperties;
-            _smtc.DisplayUpdater.ClearAll();
-            if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {               
-                musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
-                musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
-                musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
-                if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+            try
+            {
+                _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+                var musicProps = _smtc.DisplayUpdater.MusicProperties;
+                _smtc.DisplayUpdater.ClearAll();
+                if (SharedLogic.Player.CurrentlyPlayingFile != null)
                 {
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                    musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
+                    musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
+                    musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
+                    if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+                    {
+                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                    }
                 }
+                _smtc.DisplayUpdater.Update();
             }
-            _smtc.DisplayUpdater.Update();
+            catch(Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating SMTC.", ex);
+            }
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
