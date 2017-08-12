@@ -75,17 +75,10 @@ namespace BreadPlayer
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
                 string releaseNotes = "FIXES:\r\n\r\n" +
-                    "Fixed 2 random crashes.\n" +
-                    "Fixed invisible jumplist issue when in sort/grouped mode.\n" +
-                    "Fixed empty album issue.\n" +
-                     "Fixed issue with auto loading of library at startup.\n" + 
-                     "Fixed issue where song wasn't played from external speakers/headphones.\n" +
-                    "NEW THINGS:\r\n\r\n" +
-                    "Added support for German Translation (thanks to Armin).\n" +
-                    "Added backward navigation support for mobiles.\n" + 
-                    "IMPROVEMENTS:\r\n\r\n" +
-                    "Core improvements (shuffle and other things).\n"+
-                    "Icon was improved.\n";
+                    "Fixed issue where selecting Unsorted returned an empty list..\n" +
+                    "Fixed nullreference exception while adding album songs to an existing playlist.\n" +
+                    "Fixed bug where sound was coming from the front speakers instead of the back speakers.\n" +
+                     "Fixed other crashes and bugs.\n";
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.0");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
