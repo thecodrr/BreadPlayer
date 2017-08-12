@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "Kfstorm.LrcParser": "1.0.3",
     "ksemenenko.ColorThief": "1.1.0.3",
     "ManagedBass": "2.0.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",

@@ -12,9 +12,9 @@ using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
 using BreadPlayer.Dispatcher;
-using Kfstorm.LrcParser;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
+using BreadPlayer.Parsers.LRCParser;
 
 namespace BreadPlayer.ViewModels
 {
@@ -51,8 +51,8 @@ namespace BreadPlayer.ViewModels
             get => _albumTracks;
             set => Set(ref _albumTracks, value);
         }
-        private ThreadSafeObservableCollection<ObservableOneLineLyric> lyrics;
-        public ThreadSafeObservableCollection<ObservableOneLineLyric> Lyrics
+        private ThreadSafeObservableCollection<IOneLineLyric> lyrics;
+        public ThreadSafeObservableCollection<IOneLineLyric> Lyrics
         {
             get => lyrics;
             set => Set(ref lyrics, value);
@@ -121,23 +121,11 @@ namespace BreadPlayer.ViewModels
         private int _retries;
         private async Task GetLyrics()
         {
-            var list = await BreadPlayer.Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile);
+            var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile);
             if (list != null && !string.IsNullOrEmpty(list[0]))
             {
-                var parser = LrcFile.FromText(list[0]);
-                Lyrics = new ThreadSafeObservableCollection<ObservableOneLineLyric>();
-                foreach (var lyric in parser.Lyrics)
-                {
-                    if (!string.IsNullOrEmpty(lyric.Content) && !string.IsNullOrWhiteSpace(lyric.Content))
-                    {
-                        Lyrics.Add(new ObservableOneLineLyric()
-                        {
-                            Content = lyric.Content,
-                            Timestamp = lyric.Timestamp,
-                            IsActive = false
-                        });
-                    }
-                }
+                var parser = LrcParser.FromText(list[0]);
+                Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
 
                 timer.Start();
                 timer.Tick += (s, e) =>
@@ -159,17 +147,7 @@ namespace BreadPlayer.ViewModels
             }
         }
         public event EventHandler LyricActivated;
-        public class ObservableOneLineLyric : ObservableObject
-        {
-            bool isActive;
-            public bool IsActive
-            {
-                get => isActive;
-                set => Set(ref isActive, value);
-            }
-            public TimeSpan Timestamp { get; set; }
-            public string Content { get; set; }
-        }
+        
         private async Task GetInfo(string artistName, string albumName)
         {
             try

@@ -58,23 +58,23 @@ namespace BreadPlayer.Extensions
             double previousHorizontalOffset = default(double), previousVerticalOffset = default(double);
 
             // get the ScrollViewer withtin the ListView/GridView
-            var scrollViewer = listViewBase.GetScrollViewer();
+            var scrollViewer = listViewBase?.GetScrollViewer();
             // get the SelectorItem to scroll to
-            var selectorItem = listViewBase.ContainerFromItem(item) as SelectorItem;
+            var selectorItem = listViewBase?.ContainerFromItem(item) as SelectorItem;
 
             // when it's null, means virtualization is on and the item hasn't been realized yet
             if (selectorItem == null)
             {
                 isVirtualizing = true;
 
-                previousHorizontalOffset = scrollViewer.HorizontalOffset;
-                previousVerticalOffset = scrollViewer.VerticalOffset;
+                previousHorizontalOffset = scrollViewer?.HorizontalOffset ?? 0.0;
+                previousVerticalOffset = scrollViewer?.VerticalOffset ?? 0.0;
 
                 // call task-based ScrollIntoViewAsync to realize the item
-                await listViewBase.ScrollIntoViewAsync(item);
+                await listViewBase?.ScrollIntoViewAsync(item);
 
                 // this time the item shouldn't be null again
-                selectorItem = (SelectorItem)listViewBase.ContainerFromItem(item);
+                selectorItem = (SelectorItem)listViewBase?.ContainerFromItem(item);
             }
 
             // calculate the position object in order to know how much to scroll to
@@ -84,11 +84,11 @@ namespace BreadPlayer.Extensions
             // when virtualized, scroll back to previous position without animation
             if (isVirtualizing)
             {
-                await scrollViewer.ChangeViewAsync(previousHorizontalOffset, previousVerticalOffset, true);
+                await scrollViewer?.ChangeViewAsync(previousHorizontalOffset, previousVerticalOffset, true);
             }
 
             // scroll to desired position with animation!
-            scrollViewer.ChangeView(position.X, position.Y - scrollViewer.ActualHeight / 2, null);
+            scrollViewer?.ChangeView(position.X, position.Y - scrollViewer?.ActualHeight / 2, null);
         }
 
         public static async Task ScrollIntoViewAsync(this ListViewBase listViewBase, object item)

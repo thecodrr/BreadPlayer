@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Controls", "Bre
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreadPlayer.Database", "BreadPlayer.Database\BreadPlayer.Database.csproj", "{E63C3DE4-AB33-4611-B193-9739FCCB1661}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Parsers", "BreadPlayer.Parsers\BreadPlayer.Parsers.csproj", "{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +228,30 @@ Global
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x64.Build.0 = Release|x64
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x86.ActiveCfg = Release|x86
 		{E63C3DE4-AB33-4611-B193-9739FCCB1661}.Release|x86.Build.0 = Release|x86
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|Any CPU.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|ARM.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|ARM.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|x64.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|x64.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|x86.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.FastBuild_Release|x86.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|ARM.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|x64.Build.0 = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC3F27A8-AB79-420F-AEF2-8D3316ABAB3C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
