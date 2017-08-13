@@ -32,6 +32,7 @@ using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Services;
 using BreadPlayer.Views;
+using BreadPlayer.Models;
 
 namespace SplitViewMenu
 {
@@ -310,6 +311,10 @@ namespace SplitViewMenu
             else if(e.Parameter is Album)
             {
                 await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+            }
+            else if(e.Parameter is SettingGroup settingGroup)
+            {
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { Label = "Settings 🡒 " + settingGroup.Title });
             }
             else if(e.Parameter is Query query)
             {

@@ -33,5 +33,6 @@ namespace BreadPlayer.Core.Engines.Interfaces
         event OnMediaEnded MediaEnded;
         event OnMediaAboutToEnd MediaAboutToEnd;
         event OnMediaChanging MediaChanging;
+        event OnMediaChanging MediaChanged;
     }
 }

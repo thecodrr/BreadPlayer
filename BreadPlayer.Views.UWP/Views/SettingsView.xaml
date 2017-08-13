@@ -10,37 +10,38 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core" xmlns:Behaviours="using:BreadPlayer.Behaviours"
     mc:Ignorable="d">
     <Page.Resources>
-        <!--<Canvas x:Name="appbar_chevron_down" Width="76" Height="76" Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
-            <Path Width="28.5" Height="25.3333" Canvas.Left="23.6016" Canvas.Top="24.9375" Stretch="Fill" Fill="#FF000000" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z "/>
-        </Canvas>-->
-        <DataTemplate x:Key="LargeHeaderText">
-            <TextBlock x:Name="headerText" Text="{Binding}" FontSize="28" FontFamily="Segoe UI" FontWeight="Bold" />
+        <DataTemplate x:Key="MobileSettingItemTemplate">
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <FontIcon Glyph="{Binding Path=Icon}" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" Grid.RowSpan="2"/>
+                <TextBlock Grid.Column="1" Text="{Binding Path=Title}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}"/>
+            </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="SmallHeaderText">
-            <TextBlock x:Name="headerText" Text="{Binding}" FontSize="20" FontFamily="Segoe UI" FontWeight="Bold" />
-        </DataTemplate>
+        <Style TargetType="GridViewItem" x:Key="MobileGridViewItemStyle">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <ItemsPanelTemplate x:Key="MobileGridViewPanel">
+            <ItemsStackPanel Orientation="Vertical"/>
+        </ItemsPanelTemplate>
         <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
     </Page.Resources>
-    <Grid Margin="25,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding ElementName=showhideListBtn, Path=IsChecked}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="showSymbol.Text" Value="&#xE010;  "/>
-                        <Setter Target="showLabel.Text" Value="Show less"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
+    <Grid Margin="0,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
+        <VisualStateManager.VisualStateGroups>           
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="fileList.MaxWidth" Value="400"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -48,316 +49,35 @@
                         <AdaptiveTrigger MinWindowWidth="0"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ParentGrid.Margin" Value="10,0,0,0"/>
-                        <Setter Target="fileList.HorizontalAlignment" Value="Stretch"/>
-                        <Setter Target="MainPivot.HeaderTemplate" Value="{StaticResource SmallHeaderText}"/>
-                        <Setter Target="MainPivot.Margin" Value="3,-15,0,0"/>
+                        <Setter Target="settingsGridView.Margin" Value="0"/>
+                        <Setter Target="settingsGridView.VerticalAlignment" Value="Stretch"/>
+                        <Setter Target="settingsGridView.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="settingsGridView.ItemTemplate" Value="{StaticResource MobileSettingItemTemplate}"/>
+                        <Setter Target="settingsGridView.ItemContainerStyle" Value="{StaticResource MobileGridViewItemStyle}"/>
+                        <Setter Target="settingsGridView.ItemsPanel" Value="{StaticResource MobileGridViewPanel}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="47"/>
-            <RowDefinition Height="13" MinHeight="13"/>
-            <RowDefinition Height="57*"/>
-        </Grid.RowDefinitions>
-        <Pivot Name="MainPivot" Grid.Row="2" Margin="0,-20,0,0" HeaderTemplate="{StaticResource LargeHeaderText}">
-            <PivotItem x:Uid="generalPivot" Header="">
-                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="lockscreenHeader" Text="" FontWeight="Bold" FontSize="18"/>
-                    <CheckBox x:Uid="preventScreenLockingCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run x:Uid="preventScreenLockingInfoText" Text=""/>
-                        <Run FontWeight="Bold" x:Uid="preventScreenLockingFurtherInfoText"></Run>
-                    </TextBlock>
-                    <CheckBox x:Uid="replaceLockscreenCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run x:Uid="replaceLockscreenInfoText" Text=""/>
-                        <Run FontWeight="Bold" x:Uid="replaceLockscreenFurtherInfoText"></Run>
-                    </TextBlock>
-                </StackPanel>
-            </PivotItem>
-
-            <PivotItem x:Uid="libraryPivot" Header="">
-                <StackPanel x:Name="libraryGrid" MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="importToastsHeader" x:Name="importHeader" Text="" FontWeight="Bold" FontSize="18"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Uid="importFolderBtn" x:Name="importFolderBtn" FontSize="16" Padding="0" Margin="0" Content="" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" HorizontalAlignment="Stretch"/>
-                        <ToggleButton Grid.Column="1" x:Name="showhideListBtn" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource HyperlinkToggleBtn}" Margin="3,4,0,0" Height="20" >
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="showSymbol"  Text="&#xE011;  " FontSize="13" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="importShowMoreLabel" x:Name="showLabel" FontSize="16" Text="" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ToggleButton>
+       
+        <GridView x:Name="settingsGridView" ItemsSource="{Binding Path=SettingsCollection}" IsItemClickEnabled="True" ItemClick="OnSettingClicked" Margin="100,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="200" Height="200" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <StackPanel VerticalAlignment="Center">
+                            <FontIcon Glyph="{Binding Path=Icon}" FontSize="72" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding Path=Title}" HorizontalAlignment="Center"/>
+                            <TextBlock FontSize="11" TextAlignment="Center" TextWrapping="WrapWholeWords" Text="{Binding Path=Subtitle}" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
                     </Grid>
-                    <TextBlock x:Uid="importHelpText" x:Name="importHelp" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
-
-                    <!--<ToggleSwitch x:Name="showhideListBtn" IsOn="False" OffContent="Hide List" OnContent="Show List" Margin="105,0,0,0"></ToggleSwitch>-->
-                    <ListBox x:Name="fileList" Visibility="{Binding ElementName=showhideListBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Left" Height="200" Background="{ThemeResource ThemeBackground}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,10,0" ItemsSource="{Binding LibraryFoldersCollection}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding DisplayName}" MaxWidth="200" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding Path}" Margin="20,0,0,0" TextWrapping="NoWrap" TextTrimming="None"/>
-
-                                    <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem Text="Delete"/>
-                                        </MenuFlyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-
-                    <Button x:Uid="importPlaylistBtn" x:Name="importPlistBtn" Padding="0" Content="" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-                    <TextBlock x:Uid="importPlaylistHelpText" x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
-                    <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Margin="0,10,0,0"  Text="" FontWeight="Bold"  FontSize="18"/>
-
-                    <Button x:Uid="resetEverythingBtn" FontSize="16" Padding="0" Content="" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-                    <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
-
-                </StackPanel>
-            </PivotItem>
-
-            <PivotItem x:Uid="personalizationPivot" Header="">
-                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="appearenceHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <TextBlock VerticalAlignment="Center">
-                                    <Run x:Uid="themeText" Text=""/>
-                                    <LineBreak/>
-                                    <Run x:Uid="themeHelpText" Text="" FontSize="11" Foreground="Gray"/>
-                        </TextBlock>
-                        <ToggleSwitch x:Uid="themeChangeToggleSwitch" Grid.Column="1" x:Name="themeChange" OffContent="" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
-
-                        <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" x:Name="uiTextTypeText">
-                            <Run x:Uid="fontCapsText" Text=""/>
-                            <LineBreak/>
-                            <Run x:Uid="fontCapsHelpText" FontSize="11" Text="" Foreground="Gray"/>
-                        </TextBlock>
-                        <ComboBox Grid.Row="1" VerticalAlignment="Center"  x:Name="uiTextType_ComboBox" Grid.Column="1" HorizontalAlignment="Left" SelectedItem="{Binding UiTextType, Mode=TwoWay}"></ComboBox>
-                    </Grid>
-                    <CheckBox x:Uid="enableBlurCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
-                    <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
-                    <CheckBox x:Uid="changeAccentCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
-                    <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
-                </StackPanel>
-            </PivotItem>
-            <PivotItem x:Uid="keyBindingsPivot" Header="">
-                <Grid MaxWidth="500" HorizontalAlignment="Left" Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Uid="commandsHeader" Grid.Column="0" Grid.Row="0" TextAlignment="Center" Width="100" Text="" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" TextAlignment="Center" FontWeight="Bold" FontSize="12">
-                        <Run x:Uid="basicCommandsHeader"></Run>
-                        <LineBreak/>
-                        <Run x:Uid="basicCommandsInfo" FontSize="9" FontWeight="Normal" Text=""/>
-                    </TextBlock>
-                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                        <TextBlock x:Uid="playPauseCmd" Text=""/>
-                        <TextBlock x:Uid="nextCmd"></TextBlock>
-                        <TextBlock x:Uid="prevCmd"></TextBlock>
-                        <TextBlock x:Uid="seekForwardCmd"></TextBlock>
-                        <TextBlock x:Uid="seekBackwardCmd"></TextBlock>
-                        <TextBlock x:Uid="volUpCmd"></TextBlock>
-                        <TextBlock x:Uid="volDownCmd"></TextBlock>
-                        <TextBlock x:Uid="showEQCmd"></TextBlock>
-                        <TextBlock x:Uid="repeatCmd"></TextBlock>
-                        <TextBlock x:Uid="shuffleCmd"></TextBlock>
-                        <TextBlock x:Uid="openFileCmd"></TextBlock>
-                        <TextBlock x:Uid="muteCmd"></TextBlock>
-                        <TextBlock x:Uid="showPropsCmd"></TextBlock>
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="20,10,0,0">
-                        <TextBlock Text="Ctrl + P"/>
-                        <TextBlock>Ctrl + (. or >)</TextBlock>
-                        <TextBlock>Ctrl + (, or &lt;)</TextBlock>
-                        <TextBlock>Ctrl + Right Arrow</TextBlock>
-                        <TextBlock>Ctrl + Left Arrow</TextBlock>
-                        <TextBlock>Ctrl + (=)</TextBlock>
-                        <TextBlock>Ctrl + (-)</TextBlock>
-                        <TextBlock>Ctrl + E</TextBlock>
-                        <TextBlock>Ctrl + R</TextBlock>
-                        <TextBlock>Ctrl + S</TextBlock>
-                        <TextBlock>Ctrl + O</TextBlock>
-                        <TextBlock>Ctrl + M</TextBlock>
-                        <TextBlock>Ctrl + I</TextBlock>
-                    </StackPanel>
-                    <TextBlock Grid.Row="3" Grid.ColumnSpan="2" TextAlignment="Center" Margin="0,10,0,0" FontWeight="Bold" FontSize="12">
-                        <Run  x:Uid="toastLibraryCmdsHeader"></Run>
-                        <LineBreak/>
-                        <Run  x:Uid="toastLibraryCmdsInfoText" FontSize="9" FontWeight="Normal" Text=""/>
-                    </TextBlock>
-                    <StackPanel Grid.Row="4" Margin="0,10,0,0">
-                        <TextBlock  x:Uid="playSongCmd"></TextBlock>
-                        <TextBlock x:Uid="deleteSongCmd"></TextBlock>
-                        <!--<TextBlock>Add to queue</TextBlock>-->
-                        <TextBlock x:Uid="addToFavCmd"></TextBlock>
-                        <TextBlock x:Uid="showTagsCmd"></TextBlock>
-                    </StackPanel>
-                    <StackPanel Grid.Row="4" Grid.Column="1" Margin="20,10,0,0">
-                        <TextBlock>Enter</TextBlock>
-                        <TextBlock>Delete</TextBlock>
-                        <!--<TextBlock>Ctrl + Q</TextBlock>-->
-                        <TextBlock>Ctrl + F</TextBlock>
-                        <TextBlock>Ctrl + T</TextBlock>
-                    </StackPanel>
-                    <TextBlock  x:Uid="keyBindingsHeader" Grid.Column="1"  Grid.Row="0" Text="" Width="100" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
-                </Grid>
-            </PivotItem>
-            <PivotItem x:Uid="contactUsPivot" Header="">
-                <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="helpfulLinksHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Uid="byGithubHeader" Text="" Grid.Row="0" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button x:Uid="reportIssueBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Padding="30,10" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button x:Uid="requestFeatureBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/new" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock x:Uid="byEmailHeader" Text="" Grid.Row="2" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button x:Uid="reportIssueBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="bug-report" Padding="30,10" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button x:Uid="requestFeatureBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="feature-request" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="3" Padding="23,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock x:Uid="byStoreHeader" Text="" Grid.Row="4" Grid.ColumnSpan="4" FontSize="14" FontWeight="Bold"/>
-                        <Button x:Uid="leaveReviewBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="ms-windows-store://review/?ProductId=9nblggh42srx" Grid.Row="5" Padding="33,10" Grid.ColumnSpan="2" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <Button x:Uid="sendFeedbackBtn" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="feedback-hub://" Grid.Row="5"  Grid.Column="2" Grid.ColumnSpan="3" Padding="33,10" Style="{StaticResource RoundedIconButtonStyle}"/>
-                        <TextBlock x:Uid="contactUsHereHeader" Text="" Grid.Row="6" Grid.ColumnSpan="4" FontSize="18" FontWeight="Bold"/>
-                        <HyperlinkButton x:Uid="facebookBtn" Grid.Row="7" Width="50" HorizontalAlignment="Center" NavigateUri="https://www.facebook.com/yourbreadplayer/">
-                            <Path Fill="#3b5998" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
-			C49.652,11.137,38.516,0,24.826,0z M31,25.7h-4.039c0,6.453,0,14.396,0,14.396h-5.985c0,0,0-7.866,0-14.396h-2.845v-5.088h2.845
-			v-3.291c0-2.357,1.12-6.04,6.04-6.04l4.435,0.017v4.939c0,0-2.695,0-3.219,0c-0.524,0-1.269,0.262-1.269,1.386v2.99h4.56L31,25.7z" Stretch="Fill"></Path>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Uid="twitterBtn" Grid.Row="7" Width="50" Grid.Column="1" HorizontalAlignment="Center"  NavigateUri="https://www.twitter.com/yourbreadplayer/">
-                            <Path Fill="#4099FF" Data="M24.826,0C11.137,0,0,11.137,0,24.826c0,13.688,11.137,24.826,24.826,24.826c13.688,0,24.826-11.138,24.826-24.826
-			C49.652,11.137,38.516,0,24.826,0z M35.901,19.144c0.011,0.246,0.017,0.494,0.017,0.742c0,7.551-5.746,16.255-16.259,16.255
-			c-3.227,0-6.231-0.943-8.759-2.565c0.447,0.053,0.902,0.08,1.363,0.08c2.678,0,5.141-0.914,7.097-2.446
-			c-2.5-0.046-4.611-1.698-5.338-3.969c0.348,0.066,0.707,0.103,1.074,0.103c0.521,0,1.027-0.068,1.506-0.199
-			c-2.614-0.524-4.583-2.833-4.583-5.603c0-0.024,0-0.049,0.001-0.072c0.77,0.427,1.651,0.685,2.587,0.714
-			c-1.532-1.023-2.541-2.773-2.541-4.755c0-1.048,0.281-2.03,0.773-2.874c2.817,3.458,7.029,5.732,11.777,5.972
-			c-0.098-0.419-0.147-0.854-0.147-1.303c0-3.155,2.558-5.714,5.713-5.714c1.644,0,3.127,0.694,4.171,1.804
-			c1.303-0.256,2.523-0.73,3.63-1.387c-0.43,1.335-1.333,2.454-2.516,3.162c1.157-0.138,2.261-0.444,3.282-0.899
-			C37.987,17.334,37.018,18.341,35.901,19.144z" Stretch="Fill"></Path>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Uid="githubBtn" Grid.Row="7" Width="50" Height="60" Grid.Column="2" HorizontalAlignment="Center"  NavigateUri="https://www.github.com/theweavrs/BreadPlayer/">
-                            <Path Fill="#333" Data="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
-		c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
-		c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
-		c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136
-		c-4.187,0.767-9.469,1.092-15.846,1c-6.374-0.089-12.991-0.757-19.842-1.999c-6.854-1.231-13.229-4.086-19.13-8.559
-		c-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559
-		c-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-0.951-2.568-2.098-3.711-3.429c-1.142-1.331-1.997-2.663-2.568-3.997
-		c-0.572-1.335-0.098-2.43,1.427-3.289c1.525-0.859,4.281-1.276,8.28-1.276l5.708,0.853c3.807,0.763,8.516,3.042,14.133,6.851
-		c5.614,3.806,10.229,8.754,13.846,14.842c4.38,7.806,9.657,13.754,15.846,17.847c6.184,4.093,12.419,6.136,18.699,6.136
-		c6.28,0,11.704-0.476,16.274-1.423c4.565-0.952,8.848-2.383,12.847-4.285c1.713-12.758,6.377-22.559,13.988-29.41
-		c-10.848-1.14-20.601-2.857-29.264-5.14c-8.658-2.286-17.605-5.996-26.835-11.14c-9.235-5.137-16.896-11.516-22.985-19.126
-		c-6.09-7.614-11.088-17.61-14.987-29.979c-3.901-12.374-5.852-26.648-5.852-42.826c0-23.035,7.52-42.637,22.557-58.817
-		c-7.044-17.318-6.379-36.732,1.997-58.24c5.52-1.715,13.706-0.428,24.554,3.853c10.85,4.283,18.794,7.952,23.84,10.994
-		c5.046,3.041,9.089,5.618,12.135,7.708c17.705-4.947,35.976-7.421,54.818-7.421s37.117,2.474,54.823,7.421l10.849-6.849
-		c7.419-4.57,16.18-8.758,26.262-12.565c10.088-3.805,17.802-4.853,23.134-3.138c8.562,21.509,9.325,40.922,2.279,58.24
-		c15.036,16.18,22.559,35.787,22.559,58.817c0,16.178-1.958,30.497-5.853,42.966c-3.9,12.471-8.941,22.457-15.125,29.979
-		c-6.191,7.521-13.901,13.85-23.131,18.986c-9.232,5.14-18.182,8.85-26.84,11.136c-8.662,2.286-18.415,4.004-29.263,5.146
-		c9.894,8.562,14.842,22.077,14.842,40.539v60.237c0,3.422,1.19,6.279,3.572,8.562c2.379,2.279,6.136,2.95,11.276,1.995
-		c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906
-		C438.536,184.851,428.728,148.168,409.132,114.573z" Stretch="Fill"></Path>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Uid="redditBtn" Grid.Row="7" Width="50" Height="60" Grid.Column="3" HorizontalAlignment="Center" NavigateUri="https://www.reddit.com/user/thecodrr/">
-                            <Path Fill="#FF5700" Data="M25.098,43.863c-0.977-0.766-2.18-1.207-3.432-1.207c-3.07,0-5.566,2.5-5.566,5.572c0,1.78,0.859,3.422,2.254,4.455
-			C19.512,49.369,21.861,46.359,25.098,43.863z M72.748,30.117c2.293,0,4.158-1.867,4.158-4.162s-1.865-4.16-4.158-4.16c-2.295,0-4.164,1.865-4.164,4.16
-			S70.453,30.117,72.748,30.117z M48.875,0C21.883,0,0,21.883,0,48.875S21.883,97.75,48.875,97.75S97.75,75.867,97.75,48.875S75.867,0,48.875,0z
-			 M79.729,55.033c0.131,0.77,0.215,1.549,0.215,2.344c0,11.439-14.002,20.744-31.214,20.744c-17.211,0-31.211-9.305-31.211-20.744
-			c0-0.844,0.098-1.67,0.246-2.486c-2.348-1.377-3.832-3.899-3.832-6.662c0-4.268,3.469-7.737,7.734-7.737
-			c1.949,0,3.805,0.775,5.229,2.088c5.506-3.59,12.998-5.828,21.268-5.928l4.815-15.229c0.172-0.543,0.734-0.861,1.283-0.729
-			l12.604,2.967c0.922-2.354,3.204-4.031,5.883-4.031c3.487,0,6.326,2.838,6.326,6.326c0,3.488-2.839,6.328-6.326,6.328
-			c-3.49,0-6.328-2.84-6.328-6.328c0-0.059,0.015-0.111,0.017-0.17l-11.693-2.754l-4.32,13.658c7.908,0.283,15.051,2.508,20.326,6
-			c1.434-1.385,3.309-2.199,5.332-2.199c4.266,0,7.738,3.471,7.738,7.738C83.818,51.123,82.234,53.697,79.729,55.033z M33.664,53.539c0-2.539,2.066-4.605,4.605-4.605s4.604,2.066,4.604,4.605s-2.064,4.604-4.604,4.604
-			S33.664,56.078,33.664,53.539z M60.047,67.191c-2.32,2.322-5.963,3.449-11.135,3.449c-0.012,0-0.023-0.009-0.037-0.009
-			s-0.025,0.009-0.039,0.009c-5.172,0-8.814-1.127-11.135-3.449c-0.422-0.422-0.422-1.107,0-1.531c0.424-0.422,1.109-0.422,1.533,0
-			c1.893,1.895,5.033,2.814,9.602,2.814c0.014,0,0.025,0.008,0.039,0.008s0.025-0.008,0.037-0.008c4.57,0,7.711-0.92,9.604-2.814
-			c0.424-0.422,1.109-0.422,1.533,0C60.471,66.084,60.471,66.77,60.047,67.191z M59.498,58.143c-2.537,0-4.604-2.063-4.604-4.604
-			s2.065-4.605,4.604-4.605c2.539,0,4.604,2.066,4.604,4.605S62.037,58.143,59.498,58.143z M76.08,42.656c-1.328,0-2.574,0.479-3.57,1.313c3.217,2.516,5.539,5.546,6.66,8.878c1.531-1.019,2.48-2.722,2.48-4.619
-			C81.65,45.156,79.154,42.656,76.08,42.656z" Stretch="Fill"></Path>
-                        </HyperlinkButton>
-                        <HyperlinkButton x:Uid="mailBtn" Grid.Row="8" Content="&#xE715;" NavigateUri="mailto:support@braedplayer.com" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        </HyperlinkButton>
-                    </Grid>
-                </StackPanel>
-            </PivotItem>
-            <PivotItem x:Uid="contributePivot" Header="">
-                <StackPanel>
-                    <Button x:Uid="donatePatreonBtn" Width="200" Height="50" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://patreon.com/thecodrr" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                    <Button x:Uid="helpTranslateBtn" Width="200" Height="50" Content="" Margin="0,5,0,0" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/I-Want-To-Translate!" Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                    <Button x:Uid="contributeCodeBtn" Width="200" Height="50" Margin="0,5,0,0" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/How-To-Build-Bread-Player" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                    <Button x:Uid="testForUsBtn" Width="200" Height="50" Margin="0,5,0,0" Content="" Command="{Binding Path=NavigateCommand}" CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/Guide-For-Testers" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="1" Style="{StaticResource RoundedIconButtonStyle}"/>
-                </StackPanel>
-            </PivotItem>
-            <PivotItem x:Uid="aboutPivot" Header="">
-                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <StackPanel MaxWidth="700" HorizontalAlignment="Left">
-                    <TextBlock x:Uid="versionHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock x:Uid="version" Text=""/>
-                    <TextBlock x:Uid="contributorsHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <ItemsControl MaxHeight="250">
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov"/>
-                        <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0"/>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                    <TextBlock x:Uid="creditsHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-                    <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
-                    <TextBlock x:Uid="licenseHeader" Text="" FontSize="18" FontWeight="Bold"/>
-                        <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
-                        </TextBlock>
-                </StackPanel>
-                </ScrollViewer>
-            </PivotItem>
-        
-        </Pivot>
-
+                </DataTemplate>
+            </GridView.ItemTemplate>
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </GridView.ItemContainerStyle>
+        </GridView>
     </Grid>
 </Page>

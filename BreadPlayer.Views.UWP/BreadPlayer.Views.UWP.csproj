@@ -233,12 +233,31 @@
     <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
+    <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\StorageLibraryService.cs" />
+    <Compile Include="SettingsViews\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\ContactView.xaml.cs">
+      <DependentUpon>ContactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\ContributeView.xaml.cs">
+      <DependentUpon>ContributeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\KeyboardSettingsView.xaml.cs">
+      <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\MusicLibrarySettingsView.xaml.cs">
+      <DependentUpon>MusicLibrarySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\PersonlizationView.xaml.cs">
+      <DependentUpon>PersonlizationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
@@ -406,6 +425,30 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\TagDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\ContactView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\ContributeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\KeyboardSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\MusicLibrarySettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\PersonlizationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

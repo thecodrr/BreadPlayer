@@ -42,30 +42,26 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer>
-            <Grid Margin="35,50,0,0" Name="RootGrid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <Grid Margin="35,0" Name="RootGrid">
                 <StackPanel x:Name="lastfmStackPanel" Grid.Column="1">
                     <TextBlock x:Name="lastfmHeader" FontSize="26" FontWeight="Bold">
                         <Run Text="Last.fm"/>
                         <Run Text="{Binding Path=LoginStatus}"/>
                     </TextBlock>
-                <TextBox x:Uid="lastfmUsernameTextBlock" Header="Username:" Padding="14,6,14,8" Text="{Binding Path=LastfmUsername, Mode=TwoWay}" PlaceholderText="" Grid.Row="1" Margin="0,10,0,0" Style="{StaticResource RoundedTextBoxStyle}"/>
-                    <PasswordBox x:Uid="lastfmPasswordTextBlock" Header="" Password="{Binding Path=LastfmPassword, Mode=TwoWay}" PlaceholderText="" Padding="14,6,14,8"  Grid.Row="2" Margin="0,10,0,0" Style="{StaticResource RoundedPasswordBoxStyle}"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,0">
-                        <Button Width="200" x:Uid="lastfmLoginBtn" Content="" Margin="5,0,0,0" Command="{Binding Path=LastfmLoginCommand}" BorderThickness="1" Style="{StaticResource RoundedIconButtonStyle}">
+                    <TextBox x:Uid="lastfmUsernameTextBlock" Header="Username:" Text="{Binding Path=LastfmUsername, Mode=TwoWay}" PlaceholderText="" Grid.Row="1" Margin="0,10,0,0"/>
+                    <PasswordBox x:Uid="lastfmPasswordTextBlock" Header="" Password="{Binding Path=LastfmPassword, Mode=TwoWay}" PlaceholderText="" Grid.Row="2" Margin="0,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,0">
+                        <Button Width="200" x:Uid="lastfmLoginBtn" Content="Login" Margin="0,0,0,0" Command="{Binding Path=LastfmLoginCommand}">
                             <Button.CommandParameter>
                                 <x:Boolean>true</x:Boolean>
                             </Button.CommandParameter>
                         </Button>
-                </StackPanel>
+                        <Button Width="200" x:Uid="lastfmLoginBtn" Content="Logout" Margin="5,0,0,0" Command="{Binding Path=LastfmLoginCommand}">
+                            <Button.CommandParameter>
+                                <x:Boolean>true</x:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
                 <!--<StackPanel Visibility="Collapsed" x:Name="soundcloudStackPanel" Margin="0,20,0,0" Grid.Row="1">
                     <TextBlock Text="SoundCloud" Grid.Row="4" FontSize="26" FontWeight="Bold"/>

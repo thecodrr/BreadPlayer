@@ -568,23 +568,21 @@
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>Volume Up</value>
   </data>
-  <data name="contributeCodeBtn.Content" xml:space="preserve">
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>Contribute Code</value>
-    <comment>!!!NEW!!!</comment>
   </data>
   <data name="contributePivot.Header" xml:space="preserve">
     <value>Contribute</value>
+  </data>
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
+    <value>Help us Translate</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="helpTranslateBtn.Content" xml:space="preserve">
-    <value>Help Us Translate</value>
+  <data name="testForUsTxt.Text" xml:space="preserve">
+    <value>Help us debug</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="testForUsBtn.Content" xml:space="preserve">
-    <value>Become A Beta Tester</value>
-    <comment>!!!NEW!!!</comment>
-  </data>
-  <data name="donatePatreonBtn.Content" xml:space="preserve">
-    <value>Donate Via Patreon</value>
+  <data name="donatePatreonTxt.Text" xml:space="preserve">
+    <value>Donate via Patreon</value>
   </data>
 </root>

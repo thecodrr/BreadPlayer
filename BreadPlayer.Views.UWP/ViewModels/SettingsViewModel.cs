@@ -44,12 +44,20 @@ using BreadPlayer.PlaylistBus;
 using BreadPlayer.Themes;
 using BreadPlayer.Services;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Models;
+using BreadPlayer.SettingsViews;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        ThreadSafeObservableCollection<SettingGroup> settingsCollection;
+        public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
+        {
+            get => settingsCollection;
+            set => Set(ref settingsCollection, value);
+        }
 
         private bool _enableBlur;
         public bool EnableBlur
@@ -201,6 +209,7 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
+            InitSettingsCollection();
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
             _changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
@@ -214,6 +223,22 @@ namespace BreadPlayer.ViewModels
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
             LoadFolders();
+        }
+
+        public void InitSettingsCollection()
+        {
+            SettingsCollection = new ThreadSafeObservableCollection<SettingGroup>()
+            {
+                new SettingGroup("\uE771","Personlization","Lockscreen, font, theme", typeof(PersonlizationView)),
+                new SettingGroup("\uE8D6","Music Library","Folder import, playlists", typeof(MusicLibrarySettingsView)),
+                new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
+                new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
+                new SettingGroup("\uE770", "Core", "Reset to default", typeof(PersonlizationView)),
+                new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, other junk", typeof(PersonlizationView)),
+                new SettingGroup("\uE779", "Contact", "Facebook, email, github", typeof(ContactView)),
+                new SettingGroup("\uE946", "About", "Version info, license, credits", typeof(AboutView)),
+                new SettingGroup("\uE789", "Contribute", "Translation, bug hunting, coding", typeof(ContributeView)),
+            };
         }
         #endregion
 

@@ -487,7 +487,7 @@
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="Title.Margin" Value="90,30,0,40"/>-->
-                                        <Setter Target="ShortcutsPanel.Margin" Value="20,0,35,0"/>
+                                        <Setter Target="ShortcutsPanel.Margin" Value="5,0,35,0"/>
                                         <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
@@ -495,26 +495,11 @@
                                         <Setter Target="Pane.Background" Value="{x:Null}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource PlaybarBrush}"/>
                                         <Setter Target="Pane.Margin" Value="0,130,0,0"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup>
-                                <!--<VisualState>
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="600" />
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
-                                                <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
-                                                <Setter Target="toggleButton.Visibility" Value="Collapsed"/>
-                                                <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                                <Setter Target="headerText.Margin" Value="35,35,0,0"/>
-                                                <Setter Target="searchBox.Margin" Value="35,10,20,0"/>
-                                                <Setter Target="headerText.FontSize" Value="24"/>
-                                                <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
-                                                <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
-                                            </VisualState.Setters>
-                                        </VisualState>-->
                                 <VisualState>
                                     <VisualState.StateTriggers>
                                         <AdaptiveTrigger MinWindowWidth="0" />
@@ -524,15 +509,19 @@
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                         <Setter Target="toggleButton.Visibility" Value="Visible"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
-                                        <Setter Target="ShortcutsPanel.Margin" Value="20,0,0,0"/>
+                                        <Setter Target="headerText.Margin" Value="10,35,0,0"/>
+                                        <Setter Target="ShortcutsPanel.Margin" Value="5,0,0,0"/>
                                         <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="0,65,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="10,105,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                        <Setter Target="ShortcutsPanel.Orientation" Value="Vertical"/>
+                                        <Setter Target="ShortcutsPanel.(Grid.Column)" Value="0"/>
+                                        <Setter Target="ShortcutsPanel.Orientation" Value="Horizontal"/>
+                                        <Setter Target="ShortcutsPanel.VerticalAlignment" Value="Top"/>
+                                        <Setter Target="ShortcutsPanel.HorizontalAlignment" Value="Left"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -557,6 +546,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
 
                                         <!--<Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="2*"/>-->
                                         <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
@@ -664,7 +654,7 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                                <Frame x:Name="PageFrame"  Margin="0,130,0,0">
+                                <Frame x:Name="PageFrame"  Margin="35,130,10,0">
                                     <Frame.ContentTransitions>
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
@@ -681,7 +671,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,35,0" Name="ShortcutsPanel">
+                                    <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,35,0" Name="ShortcutsPanel">
                                         <ToggleButton x:Name="toggleButton" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Background="Transparent" Margin="0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
                                         <ItemsControl x:Name="Shortcuts" Background="Transparent" Margin="0">
                                             <ItemsControl.ItemTemplate>

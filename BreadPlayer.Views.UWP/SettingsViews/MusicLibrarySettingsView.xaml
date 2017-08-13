@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="BreadPlayer.SettingsViews.MusicLibrarySettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BreadPlayer.SettingsViews"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="HyperlinkButtonContentTemplate">
+            <TextBlock Text="{Binding}"/>
+        </DataTemplate>
+    </Page.Resources>
+    <ScrollViewer>
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
+            <TextBlock x:Uid="importToastsHeader" x:Name="importHeader" Text="" FontWeight="Bold" FontSize="22"/>
+            <HyperlinkButton x:Uid="importFolderBtn" ContentTemplate="{StaticResource HyperlinkButtonContentTemplate}" x:Name="importFolderBtn" FontSize="16" Padding="0" Margin="0" Content="" HorizontalContentAlignment="Left" Command="{Binding LoadCommand}" Background="{x:Null}" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Uid="importHelpText" x:Name="importHelp" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+            <ListBox x:Name="fileList" Background="Transparent" HorizontalAlignment="Left" MaxHeight="200" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,10,10,0" ItemsSource="{Binding LibraryFoldersCollection}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding DisplayName}" MaxWidth="200" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding Path}" Margin="20,0,0,0" TextWrapping="NoWrap" TextTrimming="None"/>
+
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Delete"/>
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <HyperlinkButton x:Uid="importPlaylistBtn" ContentTemplate="{StaticResource HyperlinkButtonContentTemplate}" x:Name="importPlistBtn" Padding="0" Content="" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Uid="importPlaylistHelpText" x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+            <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Margin="0,10,0,0"  Text="" FontWeight="Bold"  FontSize="18"/>
+
+            <Button x:Uid="resetEverythingBtn" FontSize="16" Padding="0" Content="" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
+            <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

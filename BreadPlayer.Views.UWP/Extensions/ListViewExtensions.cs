@@ -63,7 +63,7 @@ namespace BreadPlayer.Extensions
             var selectorItem = listViewBase?.ContainerFromItem(item) as SelectorItem;
 
             // when it's null, means virtualization is on and the item hasn't been realized yet
-            if (selectorItem == null)
+            if (selectorItem == null && listViewBase != null && scrollViewer != null)
             {
                 isVirtualizing = true;
 

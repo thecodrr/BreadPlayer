@@ -25,26 +25,26 @@ namespace BreadPlayer
             InitializeComponent();
 
             (Resources["NowPlayingVM"] as NowPlayingViewModel).LyricActivated += NowPlayingView_LyricActivated;
-          
-            //_shellVm = (extrasPanel.DataContext as ShellViewModel);
 
-            ////events for providing seeking ability to the positon slider.
-            //Window.Current.CoreWindow.PointerPressed += (sender, e) =>
-            //{
-            //    if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
-            //    {
-            //        _isPressed = true;
-            //        _shellVm.DontUpdatePosition = true;
-            //    }
-            //};
-            //Window.Current.CoreWindow.PointerReleased += (sender, e) => 
-            //{
-            //    if (_isPressed && !positionSlider.IsDragging())
-            //    {
-            //        positionSlider.UpdatePosition(null, _shellVm, true);
-            //        _isPressed = false;
-            //    }
-            //};
+            _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
+
+            //events for providing seeking ability to the positon slider.
+            Window.Current.CoreWindow.PointerPressed += (sender, e) =>
+            {
+                if (positionSlider.GetBoundingRect().Contains(e.CurrentPoint.Position) && !positionSlider.IsDragging())
+                {
+                    _isPressed = true;
+                    _shellVm.DontUpdatePosition = true;
+                }
+            };
+            Window.Current.CoreWindow.PointerReleased += (sender, e) =>
+            {
+                if (_isPressed && !positionSlider.IsDragging())
+                {
+                    positionSlider.UpdatePosition(null, _shellVm, true);
+                    _isPressed = false;
+                }
+            };
         }
 
         private async void NowPlayingView_LyricActivated(object sender, EventArgs e)

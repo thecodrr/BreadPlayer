@@ -196,6 +196,10 @@
       <Project>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</Project>
       <Name>BreadPlayer.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
+      <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
+      <Name>BreadPlayer.Parsers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PCLStorage">

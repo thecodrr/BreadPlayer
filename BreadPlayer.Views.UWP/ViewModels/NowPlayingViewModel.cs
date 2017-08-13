@@ -80,14 +80,14 @@ namespace BreadPlayer.ViewModels
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
-            SharedLogic.Player.MediaChanging += Player_MediaChanging;
+            SharedLogic.Player.MediaChanged += OnMediaChanged;
         }
 
-        private void Player_MediaChanging(object sender, EventArgs e)
+        private async void OnMediaChanged(object sender, EventArgs e)
         {
             timer?.Stop();
             Lyrics?.Clear();
-            SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+            await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
         }
 
         private async void Retry(object para)
@@ -115,14 +115,7 @@ namespace BreadPlayer.ViewModels
             }
             await _service.UpdateMediafile(SharedLogic.Player.CurrentlyPlayingFile);
         }
-        private async void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
-        {
-            if (e.NewState == PlayerState.Playing)
-            {
-                SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
-                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
-            }
-        }
+       
 
         private int _retries;
         private async Task GetLyrics()
@@ -173,8 +166,7 @@ namespace BreadPlayer.ViewModels
                     ////cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
                     ////start both tasks
-                    await GetLyrics().ConfigureAwait(false);
-                    await GetArtistInfo(artistName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                    await Task.WhenAll(GetLyrics(), GetArtistInfo(artistName.ScrubGarbage().GetTag())).ConfigureAwait(false);
                     //await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false)
                     
                 }
@@ -210,6 +202,8 @@ namespace BreadPlayer.ViewModels
                 {
                     Artist = artistInfoResponse.Content;
                     ArtistBio = Artist.Bio.Content.ScrubHtml();
+                    if(ArtistBio.Any())
+                        ArtistBio = ArtistBio.Insert(ArtistBio.IndexOf("Read more on Last.fm."), "\r\n\r\n");
                     SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(Artist.Similar);
                 }
                 else

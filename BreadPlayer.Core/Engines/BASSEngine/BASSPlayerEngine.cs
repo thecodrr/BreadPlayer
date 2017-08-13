@@ -177,7 +177,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         (Equalizer as BassEqualizer).ReInit(_handle);
                     }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-
+                    MediaChanged?.Invoke(this, new EventArgs());
                     return true;
                 }
                 catch (Exception ex)
@@ -379,6 +379,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public event OnMediaEnded MediaEnded;
         public event OnMediaAboutToEnd MediaAboutToEnd;
         public event OnMediaChanging MediaChanging;
+        public event OnMediaChanging MediaChanged;
     }
 
     public delegate void OnMediaStateChanged(object sender, MediaStateChangedEventArgs e);
