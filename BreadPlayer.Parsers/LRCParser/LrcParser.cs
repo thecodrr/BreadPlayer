@@ -58,6 +58,16 @@ namespace BreadPlayer.Parsers.LRCParser
 
         private static readonly Regex TimestampRegex = new Regex(@"^(?'minutes'\d+):(?'seconds'\d+(\.\d+)?)$");
         private static readonly Regex MetadataRegex = new Regex(@"^(?'title'[A-Za-z]+?):(?'content'.*)$");
+        
+        /// <summary>
+        /// Checks if the text is a valid LRC
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static bool IsLrc(string text)
+        {
+            return Regex.Match(text, @"\[\d+:\d+.\d+\]|\[[a-zA-Z]+:[a-zA-Z\s]+\]").Success;                
+        }
         /// <summary>
         /// Create a new new instance of the <see cref="ILrcFile"/> interface with the specified LRC text.
         /// </summary>

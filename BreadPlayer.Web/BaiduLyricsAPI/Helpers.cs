@@ -6,7 +6,6 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
 {
     public class Helpers
     {
-        HttpClient client = new HttpClient();
         public string GetQueryParameterString(string query, string pageNo = "1", string pageSize = "50", string type = "-1", string dataSource = "0", string useCluster="1")
         {
             var formatString = "&query={0}&page_no={1}&page_size={2}&type={3}&data_source={4}&use_cluster={5}";
@@ -40,9 +39,10 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             builder.AppendFormat("?from={0}&version={1}&method={2}&format={3}{4}", Endpoints.ApiFrom, Endpoints.ApiVersion, method, Endpoints.ApiFormat, parameters);
             return builder.ToString();
         }
-        public Task<string> MakeRequest(string url)
+        public async Task<string> MakeRequest(string url)
         {
-            return client.GetStringAsync(url);            
+            using(HttpClient client = new HttpClient())
+                return await client.GetStringAsync(url).ConfigureAwait(false);            
         }
     }
 }

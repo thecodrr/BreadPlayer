@@ -23,8 +23,8 @@ namespace BreadPlayer.Web.LyricsFetch
                 mediaFile.Title = Regex.Replace(mediaFile.Title, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
                 mediaFile.LeadArtist = Regex.Replace(mediaFile.LeadArtist, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
                 List<string> Lyrics = new List<string>();
-                Lyrics.Add(await Sources[0].FetchLyrics(mediaFile));
-                
+                foreach (var source in Sources)
+                    Lyrics.Add(await source.FetchLyrics(mediaFile).ConfigureAwait(false));
                 return Lyrics;
             }
             catch

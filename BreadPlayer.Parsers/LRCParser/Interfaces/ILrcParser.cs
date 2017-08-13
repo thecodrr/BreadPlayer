@@ -6,6 +6,7 @@ namespace BreadPlayer.Parsers.LRCParser
 {
     public interface ILrcParser
     {
+       
         /// <summary>
         /// Gets the metadata.
         /// </summary>
