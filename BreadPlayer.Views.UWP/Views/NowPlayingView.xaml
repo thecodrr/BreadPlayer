@@ -535,7 +535,7 @@
                     <ProgressRing IsActive="{Binding LyricsLoading}"/>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Music Info" DataContext="{StaticResource NowPlayingVM}">
+            <PivotItem Header="Artist Info" DataContext="{StaticResource NowPlayingVM}">
                 <ScrollViewer>
                     <Grid>
                         <Grid.ColumnDefinitions>
