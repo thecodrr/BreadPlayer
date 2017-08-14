@@ -364,7 +364,7 @@
                         <AdaptiveTrigger MinWindowWidth="900" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="similarArtistsHeader.Visibility" Value="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}"/>
+                        <!--<Setter Target="similarArtistsHeader.Visibility" Value="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -372,7 +372,7 @@
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="similarArtistsHeader.Visibility" Value="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}"/>
+                        <!--<Setter Target="similarArtistsHeader.Visibility" Value="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}"/>-->
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -380,14 +380,14 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="artistImage.(Grid.ColumnSpan)" Value="4" />
+                        <!--<Setter Target="artistImage.(Grid.ColumnSpan)" Value="4" />
                         <Setter Target="artistImage.(Grid.Row)" Value="0" />
                         <Setter Target="artistImage.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="artistName.(Grid.ColumnSpan)" Value="4"/>
                         <Setter Target="artistStats.(Grid.ColumnSpan)" Value="4"/>
                         <Setter Target="artistImage.HorizontalAlignment" Value="Center"/>
                         <Setter Target="artistName.HorizontalAlignment" Value="Center"/>
-                        <Setter Target="artistStats.HorizontalAlignment" Value="Center"/>
+                        <Setter Target="artistStats.HorizontalAlignment" Value="Center"/>-->
                         <!--<Setter Target="addBtn.(Grid.Row)" Value="1" />-->
                         <Setter Target="similarArtistsHeader.Visibility" Value="Collapsed"/>
                         <Setter Target="infoPivot.Margin" Value="0"/>
@@ -535,61 +535,67 @@
                     <ProgressRing IsActive="{Binding LyricsLoading}"/>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Artist Info" DataContext="{StaticResource NowPlayingVM}">
-                <ScrollViewer>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Border x:Name="artistImage" Width="100" Height="100" Margin="0,0,10,0" Grid.RowSpan="3" CornerRadius="100" VerticalAlignment="Top" HorizontalAlignment="Left">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding Path=Artist.MainImage.Large}"/>
-                            </Border.Background>
-                        </Border>
-                        <TextBlock x:Name="artistName" Text="{Binding Path=Artist.Name}" VerticalAlignment="Bottom" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"/>
-                        <TextBlock x:Name="artistStats" Visibility="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}" Grid.Column="1" FontSize="12" Grid.Row="2" Grid.ColumnSpan="3">
-                            <Run Text="{Binding Path=Artist.Stats.Listeners}"/>
+            <PivotItem Header="Artists Info" DataContext="{StaticResource NowPlayingVM}">
+                <Grid>
+                    <ListView SelectionMode="None" ItemsSource="{Binding Path=Artists}" Visibility="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border x:Name="artistImage" Width="100" Height="100" Margin="0,0,10,0" Grid.RowSpan="3" CornerRadius="100" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding Path=MainImage.Large}"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <TextBlock x:Name="artistName" Text="{Binding Path=Name}" VerticalAlignment="Bottom" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"/>
+                                    <TextBlock x:Name="artistStats" Grid.Column="1" FontSize="12" Grid.Row="2" Grid.ColumnSpan="3">
+                            <Run Text="{Binding Path=Stats.Listeners}"/>
                             <Run Text="Listeners &#x2022;"/>
-                            <Run Text="{Binding Path=Artist.Stats.Plays}"/>
+                            <Run Text="{Binding Path=Stats.Plays}"/>
                             <Run Text="Plays"/>
-                        </TextBlock>
-                        <TextBlock x:Name="similarArtistsHeader" Text="Similar Artists" FontWeight="SemiBold" Typography.Capitals="AllSmallCaps" Margin="0,10,0,0" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center"/>
-                        <GridView Visibility="{Binding ElementName=similarArtistsHeader, Path=Visibility}" ItemsSource="{Binding Path=SimilarArtists}" HorizontalAlignment="Center" SelectionMode="None" FontSize="13" Margin="0,10,0,0" Grid.Row="4" Grid.ColumnSpan="4">
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,5" Width="90">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <Border Width="50" Height="50" CornerRadius="100">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding Path=MainImage.Medium}"/>
-                                            </Border.Background>
-                                        </Border>
-                                        <TextBlock FontSize="11" Grid.Row="1" VerticalAlignment="Bottom" TextAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="{Binding Path=Name}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>                          
-                        </GridView>
-                        <TextBlock Text="{Binding Path=ArtistBio}" IsTextSelectionEnabled="True" TextAlignment="Justify" Margin="0,10,0,0" TextWrapping="WrapWholeWords" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"/>
-                        <ProgressRing IsActive="{Binding ArtistInfoLoading}" Grid.RowSpan="7" Grid.ColumnSpan="4"/>
-                    </Grid>
-                </ScrollViewer>
+                                    </TextBlock>
+                                    <TextBlock x:Name="similarArtistsHeader" Text="Similar Artists" FontWeight="SemiBold" Typography.Capitals="AllSmallCaps" Margin="0,10,0,0" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center"/>
+                                    <GridView ItemsSource="{Binding Path=Similar}" HorizontalAlignment="Center" SelectionMode="None" FontSize="13" Margin="0,10,0,0" Grid.Row="4" Grid.ColumnSpan="4">
+                                        <GridView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,5" Width="90">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Border Width="50" Height="50" CornerRadius="100">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding Path=MainImage.Medium}"/>
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <TextBlock FontSize="11" Grid.Row="1" VerticalAlignment="Bottom" TextAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="WrapWholeWords" Text="{Binding Path=Name}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </GridView.ItemTemplate>
+                                        <GridView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                            </ItemsPanelTemplate>
+                                        </GridView.ItemsPanel>
+                                    </GridView>
+                                    <TextBlock Text="{Binding Path=Bio.Content}" IsTextSelectionEnabled="True" TextAlignment="Justify" Margin="0,10,0,0" TextWrapping="WrapWholeWords" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ProgressRing IsActive="{Binding ArtistInfoLoading}"/>
+                </Grid>
             </PivotItem>
         </Pivot>
     </Grid>

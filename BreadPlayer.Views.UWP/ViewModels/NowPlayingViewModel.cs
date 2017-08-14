@@ -15,6 +15,8 @@ using BreadPlayer.Dispatcher;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using BreadPlayer.Parsers.LRCParser;
+using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Core.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
@@ -40,17 +42,11 @@ namespace BreadPlayer.ViewModels
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
-        private string _artistBio;
-        public string ArtistBio
+        ThreadSafeObservableCollection<LastArtist> artists;
+        public ThreadSafeObservableCollection<LastArtist> Artists
         {
-            get => _artistBio;
-            set => Set(ref _artistBio, value);
-        }
-        LastArtist artist;
-        public LastArtist Artist
-        {
-            get => artist;
-            set => Set(ref artist, value);
+            get => artists;
+            set => Set(ref artists, value);
         }
         private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         public ThreadSafeObservableCollection<LastTrack> AlbumTracks
@@ -195,30 +191,43 @@ namespace BreadPlayer.ViewModels
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 ArtistInfoLoading = true;
-                var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false);
-                ArtistBio = "";
+                Artists = new ThreadSafeObservableCollection<LastArtist>();
+                SimilarArtists = null;
+
+                //Parse and make a list of all artists from title
+                //and artist strings
+                var artistsList = TagParser.ParseArtists(artistName);
+                var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
+                if (artistsFromTitle != null)
+                    artistsList.AddRange(artistsFromTitle);
+                artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
+                
                 ArtistFetchFailed = false;
-                if (artistInfoResponse.Success)
+                //begin fetching all artist's info
+                foreach (var artist in artistsList)
                 {
-                    Artist = artistInfoResponse.Content;
-                    ArtistBio = Artist.Bio.Content.ScrubHtml();
-                    if(ArtistBio.Any())
-                        ArtistBio = ArtistBio.Insert(ArtistBio.IndexOf("Read more on Last.fm."), "\r\n\r\n");
-                    SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(Artist.Similar);
+                    var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artist, "en", true).ConfigureAwait(false);
+                    if (artistInfoResponse.Success)
+                    {
+                        var bio = artistInfoResponse.Content.Bio.Content;
+                        bio = bio.ScrubHtml();
+                        if (bio.Any())
+                            bio = bio.Insert(bio.IndexOf("Read more on Last.fm."), "\r\n\r\n");
+                        artistInfoResponse.Content.Bio.Content = bio;
+                        Artists.Add(artistInfoResponse.Content);
+
+                        if (SimilarArtists == null)
+                            SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artistInfoResponse.Content.Similar);
+                    }
                 }
-                else
+
+                //fail if no artist info is fetched
+                if (!Artists.Any())
                 {
                     ArtistFetchFailed = true;
                     ArtistInfoLoading = false;
                 }
-                //if it is empty or it starts with [unknown],
-                //which is the identifier for unknown artists;
-                //just fail.
-                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]") || ArtistBio.StartsWith("This is not an artist"))
-                {
-                    ArtistFetchFailed = true;
-                }
-
+                
                 ArtistInfoLoading = false;
             });
         }

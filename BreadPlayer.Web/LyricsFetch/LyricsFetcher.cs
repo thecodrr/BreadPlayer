@@ -1,5 +1,6 @@
 ﻿using BreadPlayer.Core.Models;
 using BreadPlayer.Parsers.LRCParser;
+using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Web.BaiduLyricsAPI;
 using BreadPlayer.Web.NeteaseLyricsAPI;
 using BreadPlayer.Web.XiamiLyricsAPI;
@@ -20,9 +21,9 @@ namespace BreadPlayer.Web.LyricsFetch
             ILyricAPI[] Sources = new ILyricAPI[] { new NeteaseClient(), new XiamiClient(), new BaiduClient() };
             try
             {
-                var mediaFile = file;
-                mediaFile.Title = Regex.Replace(mediaFile.Title, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
-                mediaFile.LeadArtist = Regex.Replace(mediaFile.LeadArtist, @"\(.*?\)|\[.*?\]|\(.*|\[.*|&.*", "").Trim();
+                var mediaFile = new Mediafile();
+                mediaFile.Title = TagParser.ParseTitle(file.Title);
+                mediaFile.LeadArtist = TagParser.ParseTitle(file.LeadArtist);
                 List<string> Lyrics = new List<string>();
                 for (int i = 0; i < Sources.Length; i++)
                 {

@@ -36,7 +36,7 @@ namespace BreadPlayer.Extensions
         }
         public static string ScrubGarbage(this string value)
         {
-            var step1 = Regex.Replace(value, @"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*", "").Trim();
+            var step1 = Regex.Replace(value, @"(?i)((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*(?i)", "").Trim();
             var step2 = Regex.Replace(step1, @"\(\s\)|\(\)|\[\s\]|\[\]", "");
             return step2;
         }
