@@ -44,6 +44,8 @@ using BreadPlayer.PlaylistBus;
 using BreadPlayer.Themes;
 using BreadPlayer.Services;
 using BreadPlayer.Dispatcher;
+using System.Diagnostics;
+using System.Collections;
 
 namespace BreadPlayer.ViewModels
 {
@@ -439,7 +441,7 @@ namespace BreadPlayer.ViewModels
                 return;
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, (short)2);
             LibraryFoldersCollection.Add(folder);
-            await AddFolderToLibraryAsync(await StorageLibraryService.GetStorageFilesInFolderAsync(folder));
+            await AddFolderToLibraryAsync(folder);
         }
 
         /// <summary>
@@ -463,42 +465,52 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> storageFiles)
+        public async Task AddFolderToLibraryAsync(StorageFolder folder)
         {
-            if (storageFiles == null) return;
-            var files = storageFiles.ToList();
-
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
+            Stopwatch watch = Stopwatch.StartNew();
+            uint index = 0, stepSize = 20;
+            IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
+            index += stepSize;
             //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
-            var tempList = new List<Mediafile>();
+
 
             int failedCount = 0;
-            var count = files.Count;
-            short i = 2;
+            var count = await queryResult.GetItemCountAsync();
+            var tempList = new List<Mediafile>((int)count);
+            short i = 0;
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 try
                 {
-                    foreach (StorageFile file in files)
+                    // Note that I'm paging in the files as described
+                    while (files.Count != 0)
                     {
-                        try
+                        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
+                        foreach (StorageFile file in files)
                         {
-                            i++;
-                            Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
-                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
-                            mp3File.FolderPath = Path.GetDirectoryName(file.Path);
-                            await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
+                            try
+                            {
+                                i++;
+                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
+                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
+                                mp3File.FolderPath = Path.GetDirectoryName(file.Path);
+                                await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
 
-                            await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
+                                await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
 
-                            tempList.Add(mp3File);
+                                tempList.Add(mp3File);
+                            }
+                            catch (Exception ex)
+                            {
+                                BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                                //we catch and report any exception without distrubing the 'foreach flow'.
+                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                failedCount++;
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            BLogger.Logger.Error("Loading of a song in folder failed.", ex);
-                            //we catch and report any exception without distrubing the 'foreach flow'.
-                            await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
-                            failedCount++;
-                        }
+                        files = await fileTask;
+                        index += stepSize;
                     }
                 }
                 catch (Exception ex)
@@ -506,7 +518,8 @@ namespace BreadPlayer.ViewModels
                     string message1 = ex.Message + "||" + ex.InnerException;
                     await NotificationManager.ShowMessageAsync(message1);
                 }
-
+                watch.Stop();
+                Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
                 var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");

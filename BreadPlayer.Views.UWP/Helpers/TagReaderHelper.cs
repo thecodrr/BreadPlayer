@@ -4,6 +4,7 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -29,7 +30,8 @@ namespace BreadPlayer.Helpers
                     StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
 
-                var properties = await file.Properties.GetMusicPropertiesAsync();                
+                var properties = await file.Properties.GetMusicPropertiesAsync();
+                
                 var mediafile = new Mediafile()
                 {
                     Path = file.Path,
@@ -74,7 +76,7 @@ namespace BreadPlayer.Helpers
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.ReturnOnlyIfCached))
                 {
                     if (thumbnail == null)
                     {
@@ -86,10 +88,10 @@ namespace BreadPlayer.Helpers
                         case ThumbnailType.Image:
                             var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
                             IBuffer buf;
-                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
+                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(2048);
                             using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None)).Length > 0)
+                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.ReadAhead)).Length > 0)
                                 {
                                     await albumstream.WriteAsync(buf);
                                 }

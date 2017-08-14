@@ -25,16 +25,14 @@ namespace BreadPlayer.Common
     {
         public static QueryOptions GetQueryOptions(string aqsQuery = null)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.DefaultQuery,
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
-            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
-            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
-            if(aqsQuery != null)
-            {
-                options.ApplicationSearchFilter += "kind:music " + aqsQuery;
-            }
-
+            options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.ReturnOnlyIfCached);
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new string[] { });
+            //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;
+            
             return options;
         }
     }

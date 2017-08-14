@@ -833,8 +833,7 @@ namespace BreadPlayer.ViewModels
                 {
                     if (!item.IsOfType(StorageItemTypes.Folder)) continue;
                     await SharedLogic.SettingsVm.AddFolderToLibraryAsync(
-                        await ((StorageFolder)item).CreateFileQueryWithOptions(
-                            DirectoryWalker.GetQueryOptions()).GetFilesAsync());
+                         ((StorageFolder)item));
                 }
                 else
                 {
