@@ -546,7 +546,7 @@ namespace BreadPlayer.ViewModels
         #region AlbumArt Methods
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
         {
-            if (mp3File == null) return;
+            if (mp3File == null || mp3File.Path == null) return;
 
             try
             {

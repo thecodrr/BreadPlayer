@@ -29,7 +29,7 @@ namespace BreadPlayer.Common
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
-            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.ReturnOnlyIfCached);
+            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new string[] { });
             //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;
             

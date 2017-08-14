@@ -31,7 +31,7 @@ namespace BreadPlayer.Helpers
                 }
 
                 var properties = await file.Properties.GetMusicPropertiesAsync();
-                
+
                 var mediafile = new Mediafile()
                 {
                     Path = file.Path,
@@ -76,7 +76,7 @@ namespace BreadPlayer.Helpers
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.ReturnOnlyIfCached))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
                     if (thumbnail == null)
                     {
@@ -88,7 +88,7 @@ namespace BreadPlayer.Helpers
                         case ThumbnailType.Image:
                             var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
                             IBuffer buf;
-                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(2048);
+                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer((uint)thumbnail.Size / 2);
                             using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
                             {
                                 while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.ReadAhead)).Length > 0)
