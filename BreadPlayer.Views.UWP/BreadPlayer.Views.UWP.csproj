@@ -25,8 +25,8 @@
     <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
-    <PackageCertificateThumbprint>2DFE2553EF88B45066FDF89C63D6BC47F9A13D0A</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>A86B74C4C5963FFE7011A4C6A2014D0EC695DD14</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
