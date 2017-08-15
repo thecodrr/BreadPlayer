@@ -519,7 +519,7 @@ namespace BreadPlayer.ViewModels
                     await NotificationManager.ShowMessageAsync(message1);
                 }
                 watch.Stop();
-                Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
+                BLogger.Logger.Info("Time to run: " + watch.ElapsedMilliseconds + " ms");
                 var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
