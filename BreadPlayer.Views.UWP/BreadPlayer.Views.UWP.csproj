@@ -20,14 +20,13 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <HockeyAppResourceId>6085c48bdbf64fa78cb867f1dca0ca4f</HockeyAppResourceId>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
-    <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
-    <PackageCertificateThumbprint>3230D7C894080DA474B598A0026D92FDE611887A</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>BreadPlayer.Views.UWP.StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>2DFE2553EF88B45066FDF89C63D6BC47F9A13D0A</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -165,6 +164,7 @@
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
     <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
+    <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
     <PRIResource Include="Strings\es-es\Resources.resw">
@@ -294,7 +294,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-100.png" />
