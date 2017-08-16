@@ -115,8 +115,22 @@ namespace BreadPlayer
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
+            NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            {
+                if (NowPlayingFrame.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
+                }
+            });
         }
-
+        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsPlaybarHidden = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
+            }
+        }
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             if (_isPressed && !positionSlider.IsDragging())
@@ -130,6 +144,7 @@ namespace BreadPlayer
                 _isProgBarPressed = false;
                 positionSlider.UpdatePosition(positionProgressBar, _shellVm, true, true);
             }
+
         }
 
         private void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)

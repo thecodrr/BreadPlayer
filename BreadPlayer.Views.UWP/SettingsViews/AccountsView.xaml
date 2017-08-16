@@ -59,9 +59,9 @@
                         </Button>
                     </StackPanel>
                     <TextBlock Text="Artists Information" Margin="0,5,0,0" FontSize="18" FontWeight="SemiBold"/>
-                    <ComboBox SelectedIndex="0" Margin="0,5,0,0" Header="Choose artist info type:">
-                        <ComboBoxItem Content="Lead Artist"/>
-                        <ComboBoxItem Content="Multiple Artists"/>
+                    <ComboBox SelectedIndex="1" Margin="0,5,0,0" Header="Choose no. of artist(s) to fetch info for:">
+                        <ComboBoxItem Content="Lead artist"/>
+                        <ComboBoxItem Content="All artists"/>
                         <ComboBoxItem Content="None"/>
                     </ComboBox>
 
