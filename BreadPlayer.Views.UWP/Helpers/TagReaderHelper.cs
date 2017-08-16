@@ -98,6 +98,24 @@ namespace BreadPlayer.Helpers
 
                                 return true;
                             }
+                        case ThumbnailType.Icon:
+                            if (SharedLogic.VerifyFileExists(file.Path, 300))
+                            {
+                                using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file)))
+                                {
+                                    if (tagFile.Tag.Pictures.Length >= 1)
+                                    {
+                                        var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+
+                                        using (FileStream stream = new FileStream(image.Path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
+                                        {
+                                            await stream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
+                                        }
+                                        return true;
+                                    }
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
