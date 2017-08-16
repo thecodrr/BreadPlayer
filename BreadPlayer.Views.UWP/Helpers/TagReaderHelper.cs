@@ -15,6 +15,12 @@ namespace BreadPlayer.Helpers
 {
     public class TagReaderHelper
     {
+        public static string[] GetExtraPropertiesNames()
+        {
+            return new string[] {
+                "System.DRM.IsProtected"
+            };
+        }
         /// <summary>
         /// Create mediafile from StorageFile.
         /// </summary>
@@ -31,7 +37,14 @@ namespace BreadPlayer.Helpers
                 }
 
                 var properties = await file.Properties.GetMusicPropertiesAsync();
-
+                var extraProperties = await file.Properties.RetrievePropertiesAsync(GetExtraPropertiesNames());
+                if (extraProperties.TryGetValue("System.DRM.IsProtected", out object drm))
+                {
+                    if ((bool)drm)
+                    {
+                        throw new InvalidDataException("File is DRM Protected.");
+                    }
+                }
                 var mediafile = new Mediafile()
                 {
                     Path = file.Path,
@@ -54,6 +67,10 @@ namespace BreadPlayer.Helpers
                     mediafile.AttachedPicture = albumartLocation;
                 }
                 return mediafile;
+            }
+            catch (InvalidDataException)
+            {
+                return null;
             }
             catch (Exception ex)
             {
@@ -78,52 +95,41 @@ namespace BreadPlayer.Helpers
             {
                 using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
-                    if (thumbnail == null)
+                    if (thumbnail == null && SharedLogic.VerifyFileExists(file.Path, 150))
                     {
-                        return false;
-                    }
-
-                    switch (thumbnail.Type)
-                    {
-                        case ThumbnailType.Image:
-                            var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-                            IBuffer buf;
-                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer((uint)thumbnail.Size / 2);
-                            using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                        using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                        {
+                            if (tagFile.Tag.Pictures.Length >= 1)
                             {
-                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.ReadAhead)).Length > 0)
+                                var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                                using (FileStream stream = new FileStream(image.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
                                 {
-                                    await albumstream.WriteAsync(buf);
+                                    await stream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
                                 }
-
                                 return true;
                             }
-                        case ThumbnailType.Icon:
-                            if (SharedLogic.VerifyFileExists(file.Path, 300))
+                        }
+                    }
+                    else
+                    {
+                        var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                        IBuffer buf;
+                        Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer((uint)thumbnail.Size / 2);
+                        using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                        {
+                            while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.ReadAhead)).Length > 0)
                             {
-                                using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file)))
-                                {
-                                    if (tagFile.Tag.Pictures.Length >= 1)
-                                    {
-                                        var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-
-                                        using (FileStream stream = new FileStream(image.Path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
-                                        {
-                                            await stream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
-                                        }
-                                        return true;
-                                    }
-                                }
+                                await albumstream.WriteAsync(buf);
                             }
-                            break;
-                        default:
-                            break;
+
+                            return true;
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                //await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
 
             return false;

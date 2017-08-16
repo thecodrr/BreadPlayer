@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Helpers;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 
@@ -30,7 +31,7 @@ namespace BreadPlayer.Common
             options.FolderDepth = FolderDepth.Deep;
             options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
-            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new string[] { });
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, TagReaderHelper.GetExtraPropertiesNames());
             //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;
             
             return options;
