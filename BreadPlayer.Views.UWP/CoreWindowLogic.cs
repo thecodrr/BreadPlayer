@@ -142,7 +142,7 @@ namespace BreadPlayer
 
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused)
+                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Player.PlayerState != PlayerState.Paused)
                 {
                    // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
