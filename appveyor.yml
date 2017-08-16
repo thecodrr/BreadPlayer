@@ -11,6 +11,8 @@ build:
   project: BreadPlayer.NoTests.sln
   parallel: true
   verbosity: minimal
+environment:
+  UseTemporarySignCert: True  
 artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
