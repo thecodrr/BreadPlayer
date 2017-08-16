@@ -75,11 +75,9 @@ namespace BreadPlayer
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
                 string releaseNotes = "FIXES:\r\n\r\n" +
-                    "Fixed issue where selecting Unsorted returned an empty list..\n" +
-                    "Fixed nullreference exception while adding album songs to an existing playlist.\n" +
-                    "Fixed bug where sound was coming from the front speakers instead of the back speakers.\n" +
-                     "Fixed other crashes and bugs.\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.0");
+                    "Fixed issue where library import took too much time.\n" +
+                    "Fixed other bugs.\n";
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)

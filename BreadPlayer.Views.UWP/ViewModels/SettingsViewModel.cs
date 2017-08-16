@@ -478,7 +478,7 @@ namespace BreadPlayer.ViewModels
             int failedCount = 0;
             var count = await queryResult.GetItemCountAsync();
             var tempList = new List<Mediafile>((int)count);
-            short i = 0;
+            short progress = 0;
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 try
@@ -487,17 +487,17 @@ namespace BreadPlayer.ViewModels
                     while (files.Count != 0)
                     {
                         var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
-                        foreach (StorageFile file in files)
+                        for(int i =0; i< files.Count; i++)
                         {
+                            progress++;
                             try
                             {
-                                i++;
-                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
-                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
-                                mp3File.FolderPath = Path.GetDirectoryName(file.Path);
-                                await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
+                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
+                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
+                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
 
-                                await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
+                                await NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
 
                                 tempList.Add(mp3File);
                             }
@@ -505,7 +505,7 @@ namespace BreadPlayer.ViewModels
                             {
                                 BLogger.Logger.Error("Loading of a song in folder failed.", ex);
                                 //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
+                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + files[i].Path);
                                 failedCount++;
                             }
                         }
@@ -520,7 +520,8 @@ namespace BreadPlayer.ViewModels
                 }
                 watch.Stop();
                 BLogger.Logger.Info("Time to run: " + watch.ElapsedMilliseconds + " ms");
-                var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
+                Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
+                var uniqueFiles = tempList;//.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
@@ -533,7 +534,7 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
                 vm = null;
 
-                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
+            string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
 
                 BLogger.Logger.Info(message);
                 await NotificationManager.ShowMessageAsync(message);
