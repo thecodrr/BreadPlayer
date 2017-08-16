@@ -79,6 +79,7 @@ namespace BreadPlayer
                     "• Fixed issue where many album arts were not loaded.\n" +
                     "• Fixed other bugs.\n\n" +
                     "𝐖𝐡𝐚𝐭'𝐬 𝐍𝐞𝐰:\n\n" +
+                    "• Added ability to ignore DRM-Protected songs. (𝑒𝑥𝑝𝑟𝑖𝑚𝑒𝑛𝑡𝑎𝑙)" +
                     "• Added sorting by tracknumber for album songs.\n";
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
