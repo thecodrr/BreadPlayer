@@ -19,7 +19,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
     <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
