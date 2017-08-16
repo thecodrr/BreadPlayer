@@ -74,9 +74,12 @@ namespace BreadPlayer
             GlobalPageKeyDown?.Invoke(sender, args);
             if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
             {
-                string releaseNotes = "FIXES:\r\n\r\n" +
-                    "Fixed issue where library import took too much time.\n" +
-                    "Fixed other bugs.\n";
+                string releaseNotes = "𝐖𝐡𝐚𝐭'𝐬 𝐅𝐢𝐱𝐞𝐝:\n\n" +
+                    "• Fixed issue where library import took too much time.\n" +
+                    "• Fixed issue where many album arts were not loaded.\n" +
+                    "• Fixed other bugs.\n\n" +
+                    "𝐖𝐡𝐚𝐭'𝐬 𝐍𝐞𝐰:\n\n" +
+                    "• Added sorting by tracknumber for album songs.\n";
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
                 RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
             }
