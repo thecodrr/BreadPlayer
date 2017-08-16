@@ -10,8 +10,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastBuild_Release|x64'" />
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
 
   <ItemGroup>
