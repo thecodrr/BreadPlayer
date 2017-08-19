@@ -1,5 +1,18 @@
 # Release Notes for Bread Player.
 
+## Version 2.6.2-beta:
+### What's Fixed:
+- Fixed issue where library import took too much time.
+- Fixed issue where many album arts were not loaded.
+- Fixed other bugs.
+
+### What's New:
+- Added ability to ignore DRM-Protected songs.
+- Added sorting by tracknumber for album songs.
+
+### What's Improved:
+- Improved library import
+
 ## Version 2.6.1-beta
 ### What's Fixed:
 - Fixed issue where selecting Unsorted returned an empty list.
