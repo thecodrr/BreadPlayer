@@ -70,6 +70,37 @@ namespace BreadPlayer.ViewModels
             }
         }
         #endregion
+
+        string _noOfArtistsToFetchInfoFor;
+        string _lyricType;
+        string _lyricSource;
+        public string NoOfArtistsToFetchInfoFor
+        {
+            get => _noOfArtistsToFetchInfoFor;
+            set
+            {
+                Set(ref _noOfArtistsToFetchInfoFor, value);
+                RoamingSettingsHelper.SaveSetting("NoOfArtistsToFetchInfoFor", _noOfArtistsToFetchInfoFor);
+            }
+        }
+        public string LyricType
+        {
+            get => _lyricType;
+            set
+            {
+                Set(ref _lyricType, value);
+                RoamingSettingsHelper.SaveSetting("LyricType", _lyricType);
+            }
+        }
+        public string LyricSource
+        {
+            get => _lyricSource;
+            set
+            {
+                Set(ref _lyricSource, value);
+                RoamingSettingsHelper.SaveSetting("LyricSource", _lyricSource);
+            }
+        }
         private LastUserSession GetUserSessionFromSettings()
         {
             string token = RoamingSettingsHelper.GetSetting<string>("LastfmSessionToken", "");
@@ -92,6 +123,9 @@ namespace BreadPlayer.ViewModels
         }
         public AccountsViewModel()
         {
+            LyricSource = RoamingSettingsHelper.GetSetting<string>("LyricSource", "Auto (recommended)");
+            LyricType = RoamingSettingsHelper.GetSetting<string>("LyricType", "Synced (scrollable)");
+            NoOfArtistsToFetchInfoFor = RoamingSettingsHelper.GetSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
             LastfmPassword = RoamingSettingsHelper.GetSetting<string>("LastfmPassword", "");
             LastfmUsername = RoamingSettingsHelper.GetSetting<string>("LastfmUsername", "");
             LastfmLogin(false);

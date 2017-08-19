@@ -810,6 +810,8 @@ namespace BreadPlayer.ViewModels
         }
         private async Task UpdateUi(Mediafile mediaFile)
         {
+            ApplicationView.GetForCurrentView().Title = "Playing - "  + mediaFile.Title;
+            
             ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.UpdateTile(mediaFile);
