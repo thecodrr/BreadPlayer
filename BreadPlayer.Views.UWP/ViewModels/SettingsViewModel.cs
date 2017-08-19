@@ -46,6 +46,7 @@ using BreadPlayer.Services;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Models;
 using BreadPlayer.SettingsViews;
+using BreadPlayer.SettingsViews.ViewModels;
 
 namespace BreadPlayer.ViewModels
 {
@@ -53,6 +54,7 @@ namespace BreadPlayer.ViewModels
     {
         #region Properties
         public AccountsViewModel AccountSettingsVM { get; set; }
+
         ThreadSafeObservableCollection<SettingGroup> settingsCollection;
         public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
         {
@@ -212,6 +214,7 @@ namespace BreadPlayer.ViewModels
         {
             InitSettingsCollection();
             AccountSettingsVM = new AccountsViewModel();
+
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
             _changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);

@@ -233,9 +233,6 @@
     <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
-    <Compile Include="Models\ArtistsInfoFetch.cs" />
-    <Compile Include="Models\LyricSource.cs" />
-    <Compile Include="Models\LyricType.cs" />
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
@@ -261,6 +258,7 @@
     <Compile Include="SettingsViews\PersonlizationView.xaml.cs">
       <DependentUpon>PersonlizationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsViews\ViewModels\ContactViewModel.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />

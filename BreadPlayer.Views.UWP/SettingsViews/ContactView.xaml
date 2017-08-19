@@ -24,14 +24,20 @@
         </Grid.RowDefinitions>
         <TextBlock Text="Contact me:" FontSize="22" FontWeight="Bold"/>
         <VariableSizedWrapGrid Orientation="Horizontal" Grid.Row="1">
-            <RadioButton Content="Bug report" IsChecked="True"/>
-            <RadioButton Content="Suggestion"/>
-            <RadioButton Content="Question"/>
-            <RadioButton Content="Other"/>
+            <RadioButton Content="Bug report" IsChecked="True" Command="{Binding Path=ChangeContactTypeCommand}" CommandParameter="Bug report"/>
+            <RadioButton Content="Suggestion" Command="{Binding Path=ChangeContactTypeCommand}" CommandParameter="Suggestion"/>
+            <RadioButton Content="Question" Command="{Binding Path=ChangeContactTypeCommand}" CommandParameter="Question"/>
+            <RadioButton Content="Other" Command="{Binding Path=ChangeContactTypeCommand}" CommandParameter="Other"/>
+            <RadioButton Content="Kudos" Command="{Binding Path=ChangeContactTypeCommand}" CommandParameter="Kudos"/>
         </VariableSizedWrapGrid>
-        <TextBox Header="Email:" Grid.Row="2"/>
-        <RichEditBox Header="Bug details:" MinHeight="200" Margin="0,0,0,10" Grid.Row="3"/>
-        <Button Grid.Row="4" Foreground="White" Background="{ThemeResource SystemControlBackgroundAccentBrush}" FontWeight="SemiBold" Style="{StaticResource DateTimePickerFlyoutButtonStyle}" Content="Send"/>
+        <RichEditBox Header="{Binding Path=ContentTitle, FallbackValue='Bug details:'}" PlaceholderText="Enter further details here..." MinHeight="200" Margin="0,0,0,10" Grid.Row="3" TextChanged="RichEditBox_TextChanged">
+            <RichEditBox.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" FontSize="18" FontWeight="SemiBold"/>
+                </DataTemplate>
+            </RichEditBox.HeaderTemplate>
+        </RichEditBox>
+        <Button Grid.Row="4" Command="{Binding Path=SendCommand}" Foreground="White" Background="{ThemeResource SystemControlBackgroundAccentBrush}" FontWeight="SemiBold" Style="{StaticResource DateTimePickerFlyoutButtonStyle}" Content="Send"/>
 
         <TextBlock Text="Social Sites:" Margin="0,10,0,0" Grid.Row="5" FontSize="22" FontWeight="Bold"/>
         <StackPanel Orientation="Horizontal" Grid.Row="6">

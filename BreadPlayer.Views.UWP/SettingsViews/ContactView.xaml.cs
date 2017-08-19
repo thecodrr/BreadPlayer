@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreadPlayer.SettingsViews.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,19 @@ namespace BreadPlayer.SettingsViews
     /// </summary>
     public sealed partial class ContactView : Page
     {
+        ContactViewModel contactVM;
         public ContactView()
         {
             this.InitializeComponent();
+            contactVM = new ContactViewModel();
+            this.DataContext = contactVM;
+        }
+
+        private void RichEditBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            var richEditBox = sender as RichEditBox;
+            richEditBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out string text);
+            contactVM.Content = text;
         }
     }
 }
