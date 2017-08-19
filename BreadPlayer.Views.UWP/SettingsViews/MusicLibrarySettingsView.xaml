@@ -36,10 +36,6 @@
 
             <HyperlinkButton x:Uid="importPlaylistBtn" ContentTemplate="{StaticResource HyperlinkButtonContentTemplate}" x:Name="importPlistBtn" Padding="0" Content="" Grid.Column="0" Margin="0,10,10,0" HorizontalContentAlignment="Left" Command="{Binding ImportPlaylistCommand}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
             <TextBlock x:Uid="importPlaylistHelpText" x:Name="importPlaylistsHelp" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
-            <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Margin="0,10,0,0"  Text="" FontWeight="Bold"  FontSize="18"/>
-
-            <Button x:Uid="resetEverythingBtn" FontSize="16" Padding="0" Content="" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch"/>
-            <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11"/>
 
         </StackPanel>
     </ScrollViewer>

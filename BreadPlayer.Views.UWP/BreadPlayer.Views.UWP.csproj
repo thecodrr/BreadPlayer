@@ -249,6 +249,9 @@
     <Compile Include="SettingsViews\ContributeView.xaml.cs">
       <DependentUpon>ContributeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsViews\CoreSettingsView.xaml.cs">
+      <DependentUpon>CoreSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsViews\KeyboardSettingsView.xaml.cs">
       <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
     </Compile>
@@ -438,6 +441,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsViews\ContributeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\CoreSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

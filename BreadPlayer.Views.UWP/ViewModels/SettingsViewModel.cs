@@ -238,7 +238,7 @@ namespace BreadPlayer.ViewModels
                 new SettingGroup("\uE8D6","Music Library","Folder import, playlists", typeof(MusicLibrarySettingsView)),
                 new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
                 new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
-                new SettingGroup("\uE770", "Core", "Reset to default", typeof(PersonlizationView)),
+                new SettingGroup("\uE770", "Core", "Reset, notifications, lock screen", typeof(CoreSettingsView)),
                 new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, other junk", typeof(PersonlizationView)),
                 new SettingGroup("\uE779", "Contact", "Facebook, email, github", typeof(ContactView)),
                 new SettingGroup("\uE946", "About", "Version info, license, credits", typeof(AboutView)),
@@ -250,13 +250,7 @@ namespace BreadPlayer.ViewModels
         #region Commands
 
         #region Definitions   
-
-        private RelayCommand _navigateCommand;
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public RelayCommand NavigateCommand { get { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(Navigate); } return _navigateCommand; } }
-
+        
         private DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -277,20 +271,7 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region Implementation
-        private async void Navigate(object para)
-        {
-            if (para.ToString() == "bug-report")
-            {
-                para = "mailto:support@breadplayer.com?subject=Bread%20Player%202.3.0%20Bug%20Report&body=Summary%3A%0A%0A%20%20%5BA%20brief%20sentence%20describing%20the%20issue%5D%0A%0ASteps%20to%20Reproduce%3A%0A%0A%20%201.%20%5BFirst%20Step%5D%0A%20%202.%20%5BSecond%20Step%5D%0A%20%203.%20%5Band%20so%20on...%5D%0A%0AExpected%20behavior%3A%20%5BWhat%20you%20expect%20to%20happen%5D%0A%0AActual%20behavior%3A%20%5BWhat%20actually%20happens%5D%0A%0A%5BAttach%20any%20logs%20situated%20in%3A%20Music%5CBreadPlayerLogs%5C%5D%0A%0A";
-            }
-            else if (para.ToString() == "feature-request")
-            {
-                para = "mailto:support@breadplayer.com?subject=Bread%20Player%20Feature%20Request&body=Summary%3A%0A%0A%5BA%20few%20sentences%20describing%20what%20the%20feature%20actually%20is%5D%0A%0AHow%20will%20it%20be%20useful%3A%0A%0A%5BAn%20explanation%20on%20how%20it%20will%20help%5D%0A%0AHelpful%20links%3A%0A%0A%5BIf%20there%20are%20any%20links%20we%20can%20refer%20to%20that%20might%20help%20us%20in%20implementing%20this%20faster%20and%20better%5D%0A%0AAdditional%20Comments%3A%0A%0A%5BIf%20you%20have%20something%20other%20to%20say%20%3A)%5D%0A%0A";
-            }
-
-            await Launcher.LaunchUriAsync(new Uri(para.ToString()));
-        }
+        #region Implementation      
         private async void Reset()
         {
             try

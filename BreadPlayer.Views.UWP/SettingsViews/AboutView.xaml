@@ -15,7 +15,7 @@
             <HyperlinkButton Content="Release notes"/>
             <TextBlock x:Uid="contributorsHeader" Text="" FontSize="22" FontWeight="Bold"/>
             <TextBlock Text="BreadPlayer is indebted to these great people for their dedication and support." FontSize="13"/>
-            <HyperlinkButton Content="Become a Contributor?" Padding="0,0,0,5"/>
+            <HyperlinkButton Content="Become a Contributor?" Padding="0,0,0,5" NavigateUri="ContributeView.xaml"/>
             <ItemsControl MaxHeight="250">
                 <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u"/>
                 <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent"/>
