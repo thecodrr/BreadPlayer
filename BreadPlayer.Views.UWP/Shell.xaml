@@ -132,24 +132,10 @@
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:2" Storyboard.TargetName="NowPlayingGrid" Storyboard.TargetProperty="Opacity" From="0" To="1"/>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetName="NowPlayingGrid" Storyboard.TargetProperty="Opacity" From="0" To="1"/>
                         </Storyboard>
                     </VisualState.Storyboard>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Path=IsPlaybarHidden, Converter={StaticResource TrueToFalse}, UpdateSourceTrigger=PropertyChanged}"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="NowPlayingGrid.Visibility" Value="Collapsed"/>
-                        <Setter Target="NowPlayingFrame.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                    <VisualState.Storyboard>
-                        <Storyboard>
-                            <DoubleAnimation Duration="0:0:2" Storyboard.TargetName="NowPlayingGrid" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" From="1" To="0"/>
-                        </Storyboard>
-                    </VisualState.Storyboard>
-                </VisualState>
+                </VisualState>                
             </VisualStateGroup>            
             <VisualStateGroup>
                 <VisualState>

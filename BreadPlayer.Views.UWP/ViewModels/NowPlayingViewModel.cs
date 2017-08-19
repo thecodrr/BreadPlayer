@@ -197,10 +197,10 @@ namespace BreadPlayer.ViewModels
                 //Parse and make a list of all artists from title
                 //and artist strings
                 var artistsList = TagParser.ParseArtists(artistName);
-                var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
-                if (artistsFromTitle != null)
-                    artistsList.AddRange(artistsFromTitle);
-                artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
+                //var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
+                //if (artistsFromTitle != null)
+                //    artistsList.AddRange(artistsFromTitle);
+                //artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
                 
                 ArtistFetchFailed = false;
                 //begin fetching all artist's info
