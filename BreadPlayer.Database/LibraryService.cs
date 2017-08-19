@@ -1,4 +1,6 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,9 +23,9 @@ namespace BreadPlayer.Database
         }
 
         #region ILibraryService 
-        public Task<IEnumerable<Mediafile>> Query(string term)
+        public Task<IEnumerable<Mediafile>> Query(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null)
         {
-            return Database.QueryRecords<Mediafile>(term);
+            return Database.QueryRecords<Mediafile>(term, filterFunc);
         }
         public Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {

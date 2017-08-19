@@ -2,7 +2,7 @@
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
 
-public static class Info
+public static class DeviceInfoHelper
 {
     public static string SystemFamily { get; }
     public static string SystemVersion { get; }
@@ -12,7 +12,7 @@ public static class Info
     public static string DeviceManufacturer { get; }
     public static string DeviceModel { get; }
 
-    static Info()
+    static DeviceInfoHelper()
     {
         // get the system family name
         AnalyticsVersionInfo ai = AnalyticsInfo.VersionInfo;

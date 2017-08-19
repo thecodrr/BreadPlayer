@@ -66,6 +66,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            ThemeManager.SetThemeColor(null);
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
             DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);
@@ -122,7 +123,7 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var listObject = message.Payload as List<object>;
-                TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
+                TracksCollection = listObject[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
                 IsSourceGrouped = (bool)listObject[1];
                 _songCount = _service.SongCount;
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
@@ -271,8 +272,6 @@ namespace BreadPlayer.ViewModels
         private void NavigateToNowPlayingView()
         {
             IsPlaybarHidden = true;
-            if(!InitializeCore.IsMobile)
-                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
         private void ShowEqualizer()
         {
@@ -574,9 +573,9 @@ namespace BreadPlayer.ViewModels
                 if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
                 {
                     lastPlayingSong.PlayCount++;
-                    lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    lastPlayingSong.LastPlayed = DateTime.Now;
                     TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
-                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
+                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now;
                     await _service.UpdateMediafile(lastPlayingSong);
                 }
                 await ScrobblePlayingSong(lastPlayingSong);                
@@ -633,7 +632,7 @@ namespace BreadPlayer.ViewModels
             get => _isSourceGrouped;
             set => Set(ref _isSourceGrouped, value);
         }
-        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
         public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }
@@ -816,6 +815,8 @@ namespace BreadPlayer.ViewModels
         }
         private async Task UpdateUi(Mediafile mediaFile)
         {
+            ApplicationView.GetForCurrentView().Title = "Playing - "  + mediaFile.Title;
+            
             ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.UpdateTile(mediaFile);

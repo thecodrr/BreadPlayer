@@ -32,6 +32,7 @@ using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Services;
 using BreadPlayer.Views;
+using BreadPlayer.Models;
 
 namespace SplitViewMenu
 {
@@ -69,7 +70,8 @@ namespace SplitViewMenu
               typeof(SplitViewMenu),
               new PropertyMetadata(new List<INavigationMenuItem>(), OnPlaylistsItemsPropertyChanged));
 
-        
+
+        private Button _backButton;
         private static NavMenuListView _navTopMenuListView;
         private static NavMenuListView _navBottomMenuListView;
         private static NavMenuListView _playlistsMenuListView;
@@ -165,6 +167,7 @@ namespace SplitViewMenu
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
+            _backButton = GetTemplateChild("BackButton") as Button;
             _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
@@ -215,34 +218,15 @@ namespace SplitViewMenu
         {
             DelegateCommand cmd = new DelegateCommand(() =>
             {
-                DiscreteObjectKeyFrame marginKeyFrame = null;
-                DiscreteObjectKeyFrame headerMarginKeyFrame = null;
-
-                if (_searchBox.Opacity <= 0)
+                if (_searchBox.Visibility == Visibility.Collapsed)
                 {
                     var searchClickedStoryboard = (_splitView.Resources["SearchButtonClickedStoryBoard"] as Storyboard);//.Begin();
-                    marginKeyFrame = (searchClickedStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                    headerMarginKeyFrame = (searchClickedStoryboard.Children[2] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                    if ((Window.Current.Bounds.Width <= 900))
-                    {
-                        marginKeyFrame.Value = new Thickness(0, 105, 0, 0);
-                        headerMarginKeyFrame.Value = new Thickness(25, 10, 0, 0);
-                    }
                     searchClickedStoryboard.Begin();
                     _searchBox.Focus(FocusState.Programmatic);
                 }
-                else if(_searchBox.Opacity >= 1)
+                else if (_searchBox.Visibility == Visibility.Visible)
                 {
                     var fadeStoryboard = (_splitView.Resources["SearchButtonClickedFadeStoryboard"] as Storyboard);//.Begin();
-                    marginKeyFrame = (fadeStoryboard.Children[1] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                    headerMarginKeyFrame = (fadeStoryboard.Children[2] as ObjectAnimationUsingKeyFrames).KeyFrames[0] as DiscreteObjectKeyFrame;
-                   
-                    if ((Window.Current.Bounds.Width <= 900))
-                    {
-                        marginKeyFrame.Value = new Thickness(0, 65, 0, 0);
-                        headerMarginKeyFrame.Value = new Thickness(25, 10, 0, 0);
-                    }
-
                     fadeStoryboard.Begin();
                 }
             });
@@ -327,6 +311,10 @@ namespace SplitViewMenu
             else if(e.Parameter is Album)
             {
                 await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
+            }
+            else if(e.Parameter is SettingGroup settingGroup)
+            {
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { Label = "Settings 🡒 " + settingGroup.Title });
             }
             else if(e.Parameter is Query query)
             {
@@ -460,11 +448,11 @@ namespace SplitViewMenu
         {
             if (item != null) 
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
-                { 
-                _headerText.DataContext = item;
-                _shortcuts.DataContext = item.Shortcuts;
-                _shortcuts.ItemsSource = item.Shortcuts;
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    _headerText.DataContext = item;
+                    _shortcuts.DataContext = item.Shortcuts;
+                    _shortcuts.ItemsSource = item.Shortcuts;
                 });
             }
         }

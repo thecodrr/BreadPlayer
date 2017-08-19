@@ -294,7 +294,6 @@ namespace BreadPlayer
             InitSmtc();
             SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
             Window.Current.SizeChanged += Current_SizeChanged;
-            var vm = (Application.Current.Resources["AccountsVM"] as AccountsViewModel);
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)

@@ -581,7 +581,7 @@
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>ශබ්දය වැඩි කරන්න</value>
   </data>
-  <data name="contributeCodeBtn.Content" xml:space="preserve">
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>ප්‍රභවය කේතනය කිරීමට දායක වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>
@@ -589,11 +589,11 @@
     <value>දායක වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="helpTranslateBtn.Content" xml:space="preserve">
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
     <value>පරිවර්තනයට සහය වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="testForUsBtn.Content" xml:space="preserve">
+  <data name="testForUsTxt.Text" xml:space="preserve">
     <value>බීටා තත්ව පරීක්ෂකයෙක් වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>

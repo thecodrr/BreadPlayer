@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace BreadPlayer.Database
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Mediafile>> GetAllMediafiles();
-        Task<IEnumerable<Mediafile>> Query(string term);
+        Task<IEnumerable<Mediafile>> Query(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null);
         ///<summary>
         ///Update a customer in the data store
         ///</summary>

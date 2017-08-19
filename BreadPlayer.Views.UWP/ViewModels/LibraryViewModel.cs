@@ -130,8 +130,6 @@ namespace BreadPlayer.ViewModels
         {
            // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
-
-            RecentlyPlayedCollection.CollectionChanged += Elements_CollectionChanged;
             LoadLibrary();
 
             Messenger.Instance.Register(MessageTypes.MsgPlaySong, new Action<Message>(HandlePlaySongMessage));
@@ -218,31 +216,19 @@ namespace BreadPlayer.ViewModels
             private set => Set(ref _songCount, value);
         }
 
-        private ThreadSafeObservableCollection<Mediafile> _mostEatenCollection;
-        private ThreadSafeObservableCollection<Mediafile> MostEatenSongsCollection => 
-            _mostEatenCollection ?? (_mostEatenCollection = new ThreadSafeObservableCollection<Mediafile>());
-
+       
         private ThreadSafeObservableCollection<Mediafile> _favoriteSongsCollection;
         private ThreadSafeObservableCollection<Mediafile> FavoriteSongsCollection =>
             _favoriteSongsCollection ?? (_favoriteSongsCollection = new ThreadSafeObservableCollection<Mediafile>());
 
-        private ThreadSafeObservableCollection<Mediafile> _recentlyAddedSongsCollection;
-
-        private ThreadSafeObservableCollection<Mediafile> RecentlyAddedSongsCollection => 
-            _recentlyAddedSongsCollection ?? (_recentlyAddedSongsCollection = new ThreadSafeObservableCollection<Mediafile>());
-
-        private ThreadSafeObservableCollection<Mediafile> _recentlyPlayedCollection;
-        private ThreadSafeObservableCollection<Mediafile> RecentlyPlayedCollection => 
-            _recentlyPlayedCollection ?? (_recentlyPlayedCollection = new ThreadSafeObservableCollection<Mediafile>());
-
-        private GroupedObservableCollection<string, Mediafile> _tracksCollection;
+        private GroupedObservableCollection<IGroupKey, Mediafile> _tracksCollection;
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
         /// </summary>
-        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         {
             get => _tracksCollection ?? (_tracksCollection =
-                       new GroupedObservableCollection<string, Mediafile>(GetSortFunction("FolderPath")));
+                       new GroupedObservableCollection<IGroupKey, Mediafile>(GetSortFunction("FolderPath")));
             private set
             {
                 Set(ref _tracksCollection, value);
@@ -530,32 +516,7 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
-
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetMostPlayedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                MostEatenSongsCollection.AddRange(
-                    TracksCollection.Elements.Where(t => t.PlayCount > 1 &&
-                                                         MostEatenSongsCollection.All(a => a.Path != t.Path)));
-                return MostEatenSongsCollection;
-            });
-        }
-
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyPlayedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                RecentlyPlayedCollection.AddRange(
-                    TracksCollection.Elements.Where(t => t.LastPlayed != null
-                                                         && (DateTime.Now.Subtract(DateTime.Parse(t.LastPlayed)))
-                                                         .Days <= 2
-                                                         && RecentlyPlayedCollection.All(a => a.Path != t.Path)));
-
-                return RecentlyPlayedCollection;
-            });
-        }
-
+       
         private Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
         {
             return Task.Run(() =>
@@ -563,15 +524,7 @@ namespace BreadPlayer.ViewModels
                 FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
                 return FavoriteSongsCollection;
             });
-        }
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetRecentlyAddedSongsAsync()
-        {
-            return Task.Run(() =>
-            {
-                RecentlyAddedSongsCollection.AddRange(TracksCollection.Elements.Where(item => item.AddedDate != null && (DateTime.Now.Subtract(DateTime.Parse(item.AddedDate))).Days < 3));
-                return RecentlyAddedSongsCollection;
-            });
-        }
+        }       
 
         private async Task RefreshSourceAsync()
         {
@@ -612,12 +565,12 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task LoadCollectionAsync(Func<Mediafile, string> sortFunc, bool group)
+        private async Task LoadCollectionAsync(Func<Mediafile, IGroupKey> sortFunc, bool group)
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 _grouped = group;
-                TracksCollection = new GroupedObservableCollection<string, Mediafile>(sortFunc);
+                TracksCollection = new GroupedObservableCollection<IGroupKey, Mediafile>(sortFunc);
                 TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
 
                 SongCount = LibraryService.SongCount;
@@ -629,7 +582,7 @@ namespace BreadPlayer.ViewModels
                 {
                     ViewSource.Source = TracksCollection.Elements;
                 }
-
+             
                 ViewSource.IsSourceGrouped = group;
                 //await SplitList(TracksCollection, 300).ConfigureAwait(false);
                 await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
@@ -654,12 +607,13 @@ namespace BreadPlayer.ViewModels
                         }
 
                         _grouped = true;
-                        TracksCollection = new GroupedObservableCollection<string, Mediafile>(GetSortFunction(propName));
+                        TracksCollection = new GroupedObservableCollection<IGroupKey, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
                         await TracksCollection.AddRange(_files);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
+
                     });
                 }
                 else
@@ -699,13 +653,27 @@ namespace BreadPlayer.ViewModels
                     UpdateJumplist(Sort);
                     ViewSource.IsSourceGrouped = false;
                     ViewSource.IsSourceGrouped = true;
+                    FillKeys();
                 }
             });
         }
-
-        private static Func<Mediafile, string> GetSortFunction(string propName)
+        private void FillKeys()
         {
-            Func<Mediafile, string> f;
+            foreach(var group in TracksCollection)
+            {
+                if (group.Key is TitleGroupKey titleGroupKey)
+                {
+                    titleGroupKey.TotalAlbums = group.GroupBy(t => t.Album).Count();
+                    titleGroupKey.TotalArtists = group.GroupBy(t => t.LeadArtist).Count();
+                    titleGroupKey.TotalPlays = group.Sum(t => t.PlayCount);
+                }
+                else
+                    return;
+            }
+        }
+        private static Func<Mediafile, IGroupKey> GetSortFunction(string propName)
+        {
+            Func<Mediafile, IGroupKey> f = null;
             switch (propName)
             {
                 case "Title":
@@ -714,41 +682,47 @@ namespace BreadPlayer.ViewModels
                     {
                         if (t.Title.StartsWithLetter())
                         {
-                            return t.Title[0].ToString().ToUpper();
+                            return new TitleGroupKey() { Key = t.Title[0].ToString().ToUpper() };
                         }
 
                         if (t.Title.StartsWithNumber())
                         {
-                            return "#";
+                            return new TitleGroupKey() { Key = "#" };
                         }
 
                         if (t.Title.StartsWithSymbol())
                         {
-                            return "&";
+                            return new TitleGroupKey() { Key = "&" };
                         }
 
-                        return t.Title;
+                        return new TitleGroupKey() { Key = t.Title };
                     };
                     break;
                 case "Year":
-                    f = t => string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year };
                     break;
                 case "Length":
                     string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" };
-                    f = t => string.IsNullOrEmpty(t.Length) || t.Length == "0:00" 
+                    f = t => new TitleGroupKey()
+                    {
+                        Key = string.IsNullOrEmpty(t.Length) || t.Length == "0:00"
                     ? "Unknown Length"
-                    : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes";
+                    : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes"
+                    };
                     break;
                 case "TrackNumber":
-                    f = t => string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber };
                     break;
                 case "FolderPath":
-                    f = t => string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName;
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName };
                     break;
-                default:
-                    f = t => GetPropValue(t, propName) as string; 
+                case "Album":
+                    f = t => new AlbumGroupKey() { Key = t.Album, FirstElement = t}; 
                     break;
-            }          
+                case "LeadArtist":
+                    f = t => new ArtistGroupKey() { Key = t.LeadArtist };
+                    break;
+            }
             return f;
         }
         private async void UpdateJumplist(string propName)
@@ -759,13 +733,13 @@ namespace BreadPlayer.ViewModels
                 {
                     case "Year":
                     case "TrackNumber":
-                        AlphabetList = TracksCollection.Keys.DistinctBy(t => t).ToList();
+                        AlphabetList = TracksCollection.Keys.DistinctBy(t => t.Key).Select(t => t.Key).ToList();
                         break;
                     case "Length":
-                        AlphabetList = TracksCollection.Keys.Select(t => t.Replace(" minutes", "")).DistinctBy(a => a).ToList();
+                        AlphabetList = TracksCollection.Keys.Select(t => t.Key.Replace(" minutes", "")).DistinctBy(a => a).ToList();
                         break;
                     case "FolderPath":
-                        AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t).Name.Remove(1)).DistinctBy(t => t).ToList();
+                        AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t.Key).Name.Remove(1)).DistinctBy(t => t).ToList();
                         break;
                     default:
                         AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
@@ -878,7 +852,6 @@ namespace BreadPlayer.ViewModels
             LibraryService.Dispose();
             LibraryService = null;
             TracksCollection.Clear();
-            RecentlyPlayedCollection.Clear();
             GenreFlyout?.Items?.Clear();
             SharedLogic.PlaylistsItems?.Clear();
             _oldItems = null;
@@ -1068,14 +1041,6 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }
         }
-        private async void Elements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            await Task.Delay(1000);
-            if (RecentlyPlayedCollection.Count <= 100)
-            {
-                RecentlyPlayedCollection.RemoveAt(RecentlyPlayedCollection.Count + 1);
-            }
-        }
         private string CurrentPage { get; set; } = "MusicCollection";
         private async void Frame_Navigated(object sender, NavigationEventArgs e)
         {
@@ -1086,15 +1051,6 @@ namespace BreadPlayer.ViewModels
                 CurrentPage = param;
                 switch (param)
                 {
-                    case "Recent":
-                        await ChangeView("Recently Played", false, await GetRecentlyPlayedSongsAsync().ConfigureAwait(false));
-                        break;
-                    case "MostEaten":
-                        await ChangeView("Most Eaten", false, await GetMostPlayedSongsAsync().ConfigureAwait(false));
-                        break;
-                    case "RecentlyAdded":
-                        await ChangeView("Recently Added", false, await GetRecentlyAddedSongsAsync().ConfigureAwait(false));
-                        break;
                     case "Favorites":
                         await ChangeView("Favorites", false, await GetFavoriteSongs().ConfigureAwait(false));
                         break;

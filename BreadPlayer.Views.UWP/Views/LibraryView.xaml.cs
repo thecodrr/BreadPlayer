@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Core.Models;
 using BreadPlayer.ViewModels;
+using BreadPlayer.Controls;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -38,6 +39,7 @@ namespace BreadPlayer
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
+            
         }
         
         private void fileBox_DragOver(object sender, DragEventArgs e)
@@ -60,7 +62,7 @@ namespace BreadPlayer
             { 
                 // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
-                Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                Grouping<IGroupKey, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;
                 e.DestinationItem = new SemanticZoomLocation
                 {
@@ -70,6 +72,13 @@ namespace BreadPlayer
             }
             catch { }
         }
-        
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if((sender as Pivot).SelectedIndex == 1)
+            {
+                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
+            }
+        }
     }
 }

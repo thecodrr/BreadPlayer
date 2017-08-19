@@ -110,7 +110,6 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlternativeRowListView\AlternateRowListView.cs" />
     <Compile Include="ImageEx\BitmapCache.cs" />
     <Compile Include="ImageEx\BitmapTools.cs" />
     <Compile Include="ImageEx\ImageEx.cs" />

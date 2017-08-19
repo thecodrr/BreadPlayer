@@ -7,6 +7,7 @@ using DBreeze.Utils;
 using Newtonsoft.Json;
 using BreadPlayer.Core.Common;
 using DBreeze.Transactions;
+using System;
 
 namespace BreadPlayer.Database
 {
@@ -210,7 +211,7 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null)
         {
             return await Task.Run(() =>
             {
