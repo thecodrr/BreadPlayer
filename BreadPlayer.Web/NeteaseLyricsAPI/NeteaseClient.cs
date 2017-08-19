@@ -26,7 +26,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
         public async Task<string> FetchLyrics(Mediafile mediaFile)
         {
             var results = await SearchSongs(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist)).ConfigureAwait(false);
-            var bSong = results.Result.Songs.First(t => t.Name.Contains(mediaFile.Title));
+            var bSong = results.Result.Songs.First(t => t.Name.ToLower().Contains(mediaFile.Title.ToLower()));
             return (await GetLyrics(bSong.Id.ToString()).ConfigureAwait(false)).Lrc.Lyric;
         }
     }

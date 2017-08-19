@@ -56,7 +56,7 @@ namespace BreadPlayer.Helpers
                     Year = properties.Year.ToString(),
                     TrackNumber = properties.TrackNumber.ToString(),
                     Length = new DoubleToTimeConverter().Convert(properties.Duration.TotalSeconds, typeof(double), null, "").ToString(),
-                    AddedDate = DateTime.Now.ToString()
+                    AddedDate = DateTime.Now
                 };
 
                 var albumartFolder = ApplicationData.Current.LocalFolder;

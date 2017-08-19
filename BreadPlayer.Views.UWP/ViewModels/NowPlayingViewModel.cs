@@ -120,9 +120,12 @@ namespace BreadPlayer.ViewModels
                 return;
             LyricsLoading = true;
             var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
-            
+
             if (!list.Any())
+            {
+                LyricsLoading = false;
                 return;
+            }
             while (!LrcParser.IsLrc(list[0]))
                 list.RemoveAt(0);
 
