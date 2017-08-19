@@ -116,6 +116,8 @@ namespace BreadPlayer.ViewModels
         private int _retries;
         private async Task GetLyrics()
         {
+            if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
+                return;
             LyricsLoading = true;
             var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
             
@@ -197,11 +199,13 @@ namespace BreadPlayer.ViewModels
                 //Parse and make a list of all artists from title
                 //and artist strings
                 var artistsList = TagParser.ParseArtists(artistName);
-                //var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
-                //if (artistsFromTitle != null)
-                //    artistsList.AddRange(artistsFromTitle);
-                //artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
-                
+                if (SharedLogic.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "All artists")
+                {
+                    var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
+                    if (artistsFromTitle != null)
+                        artistsList.AddRange(artistsFromTitle);
+                    artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
+                }
                 ArtistFetchFailed = false;
                 //begin fetching all artist's info
                 foreach (var artist in artistsList)

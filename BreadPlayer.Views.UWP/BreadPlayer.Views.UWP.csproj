@@ -233,6 +233,9 @@
     <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
+    <Compile Include="Models\ArtistsInfoFetch.cs" />
+    <Compile Include="Models\LyricSource.cs" />
+    <Compile Include="Models\LyricType.cs" />
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
