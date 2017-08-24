@@ -56,10 +56,7 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
-            NowPlayingItem.Command = new DelegateCommand(() =>
-            {
-                _shellVm.IsPlaybarHidden = true;
-            });
+            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -94,9 +91,8 @@ namespace BreadPlayer
         private bool _isProgBarPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, _shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
             NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
             {
@@ -118,28 +114,11 @@ namespace BreadPlayer
         {
             if (_isPressed && !positionSlider.IsDragging())
             {
-                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true);
+                positionSlider.UpdatePosition(_shellVm, true);
                 _isPressed = false;
             }
-            else if (_isProgBarPressed)
-            {
-                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight - 4, "Height");
-                _isProgBarPressed = false;
-                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true, true);
-            }
-
         }
-
-        private void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
-        {
-            if (_isProgBarPressed)
-            {
-                double mousePosition = args.CurrentPoint.Position.X;
-                double ratio = mousePosition / positionProgressBar.ActualWidth;
-                double progressBarValue = ratio * positionProgressBar.Maximum;
-                positionProgressBar.Value = progressBarValue;
-            }
-        }
+        
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
@@ -147,12 +126,6 @@ namespace BreadPlayer
             {
                 _isPressed = true;
                 _shellVm.DontUpdatePosition = true;
-            }
-            if (seekRect.GetBoundingRect().Contains(args.CurrentPoint.Position))
-            {
-                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight + 4, "Height");
-                _shellVm.DontUpdatePosition = true;
-                _isProgBarPressed = true;
             }
         }
     }

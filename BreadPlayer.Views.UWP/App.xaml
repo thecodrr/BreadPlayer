@@ -31,7 +31,7 @@
                     <SolidColorBrush x:Key="HoverBrush" Color="{ThemeResource SystemAccentColor}" Opacity="1"/>
                     <SolidColorBrush x:Key="ThemeForeground" Color="Black"/>
                     <SolidColorBrush x:Key="TextBrush" Color="#0b0b0b"/>
-                    <SolidColorBrush x:Key="AccentHoverBrush" Color="DarkGray"/>                    
+                    <SolidColorBrush x:Key="AccentHoverBrush" Color="DarkGray"/>
                     <SolidColorBrush x:Key="SystemAccentForeground" Color="{ThemeResource SystemAccentColor}"/>
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#f0f0f0"/>
                     <SolidColorBrush x:Key="ThemeBackground" Color="#e9e9e9" Opacity="0.7"/>
@@ -89,7 +89,7 @@
             <VM:LibraryViewModel x:Key="LibVM"/>
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>
             <VM:ShellViewModel x:Key="ShellVM"/>
-            
+
             <Converter:PathToImageSourceConverter x:Key="PathToImage"/>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
             <Converter:PlayerStateToBoolConverter x:Key="PlayerStateToBool"/>
@@ -99,7 +99,7 @@
             <Converter:ColorToBrushConverter x:Key="ColorToBrush"/>
             <Converter:TrueToFalseConverter x:Key="TrueToFalse"/>
             <Converter:SymbolToCharConverter x:Key="SymbolToChar"/>
-            
+
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                 <MenuFlyoutItem Text="Artist" Tag="LeadArtist" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
@@ -177,15 +177,15 @@
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource ThemeForeground}, Path=Color}"/>
-                                               
+
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
                                                 </ObjectAnimationUsingKeyFrames>
-                                                
+
                                                 <DoubleAnimation Storyboard.TargetName="SelectedUnderline"
                                                Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3"/>
-                                                
+
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid"
                                                Storyboard.TargetProperty="Background" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
@@ -483,7 +483,7 @@
             <Style x:Key="CircleSlider" TargetType="Slider">
                 <Setter Property="Background" Value="LightSalmon"/>
                 <Setter Property="BorderBrush" Value="Salmon"/>
-                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Foreground" Value="Gold"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -494,9 +494,9 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Thumb">
-                                                    <Ellipse x:Name="thumb" StrokeThickness="2" RenderTransformOrigin="0.5,0.5" Stroke="White" Fill="{TemplateBinding Foreground}">
+                                                    <Ellipse x:Name="thumb" StrokeThickness="2" Opacity="1" Height="15" Width="15" RenderTransformOrigin="0.5,0.5" Stroke="White" Fill="{TemplateBinding Foreground}">
                                                         <Ellipse.RenderTransform>
-                                                            <ScaleTransform x:Name="scaleTrans" />
+                                                            <ScaleTransform x:Name="scaleTrans" ScaleX="0.9" ScaleY="0.9"/>
                                                         </Ellipse.RenderTransform>
                                                         <VisualStateManager.VisualStateGroups>
                                                             <VisualStateGroup x:Name="CommonStates">
@@ -512,11 +512,11 @@
                                                                     <Storyboard>
                                                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" Storyboard.TargetName="thumb">
                                                                             <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.3"/>
+                                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
                                                                         </DoubleAnimationUsingKeyFrames>
                                                                         <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" Storyboard.TargetName="thumb">
                                                                             <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.3"/>
+                                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1.2"/>
                                                                         </DoubleAnimationUsingKeyFrames>
                                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="thumb">
                                                                             <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
@@ -540,24 +540,19 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <Grid x:Name="SliderContainer" Background="Transparent" Grid.Row="1">
+                                <Grid x:Name="SliderContainer" Grid.Row="1">
                                     <Grid x:Name="HorizontalTemplate">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="17"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="17"/>
-                                        </Grid.RowDefinitions>
-                                        <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="#FF999999" Grid.Row="1" Height="2" RadiusX="0.5" RadiusY="0.5"/>
-                                        <Rectangle x:Name="HorizontalDecreaseRect" Fill="{TemplateBinding Background}" Grid.Row="1" Height="2"/>
+                                        <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="DarkGray" Grid.Row="1" Height="4" RadiusX="2" RadiusY="2"/>
+                                        <Rectangle x:Name="HorizontalDecreaseRect" Fill="{TemplateBinding Background}" Grid.Row="1" Height="4" RadiusX="2" RadiusY="2"/>
                                         <Rectangle x:Name="HorizontalBorder" Grid.ColumnSpan="3" Grid.Row="1" Stroke="{TemplateBinding BorderBrush}"
                             StrokeThickness="{TemplateBinding BorderThickness}" Height="2" RadiusX="1" RadiusY="1"/>
                                         <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw" Background="{ThemeResource SliderThumbBackgroundThemeBrush}"
-                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" Height="20" Width="20"/>
+                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" Margin="0,0,0,0" Height="15" Width="15"/>
                                     </Grid>
                                     <Grid x:Name="VerticalTemplate" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
@@ -734,7 +729,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <Style TargetType="ToolTip">
                 <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                 <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />

@@ -46,6 +46,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Themes;
 using Windows.Phone.Media.Devices;
+using BreadPlayer.Services;
 
 namespace BreadPlayer.ViewModels
 {
@@ -271,6 +272,7 @@ namespace BreadPlayer.ViewModels
         }
         private void NavigateToNowPlayingView()
         {
+            NavigationService.Instance.UnregisterEvents();
             IsPlaybarHidden = true;
         }
         private void ShowEqualizer()

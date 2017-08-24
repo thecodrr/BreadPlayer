@@ -88,13 +88,20 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="positionSlider.Visibility" Value="Collapsed" />
+                        <Setter Target="positionTxt.Visibility" Value="Collapsed" />
                         <Setter Target="showMoreBtn.Visibility" Value="Visible" />
                         <Setter Target="infoBar.(Grid.ColumnSpan)" Value="4"/>
                         <Setter Target="infoBar.Margin" Value="0,3,0,0"/>
                         <Setter Target="playbarGrid.(Grid.ColumnDefinitions)[1].Width" Value="*"/>
-                        <Setter Target="seekRect.Visibility" Value="Visible"/>
-                        <Setter Target="positionProgressBar.Visibility" Value="Visible"/>
+                        
+                        <Setter Target="positionSlider.Visibility" Value="Visible"/>
+                        <Setter Target="positionSlider.(Grid.Row)" Value="0"/>
+                        <Setter Target="positionSlider.(Grid.Column)" Value="0"/>
+                        <Setter Target="positionSlider.(Grid.ColumnSpan)" Value="20"/>
+                        <Setter Target="positionSlider.Margin" Value="0,-5,0,0"/>
+                        <Setter Target="positionSlider.Background" Value="{ThemeResource ThemeForeground}"/>
+                        <Setter Target="positionSlider.VerticalAlignment" Value="Top"/>
+
                         <Setter Target="AlbumArtGrid.Visibility" Value="Collapsed"/>
                         <Setter Target="tagsPanel.Margin" Value="10,0,0,0"/>
                         <Setter Target="NowPlayingFrame.Margin" Value="0"/>
@@ -209,6 +216,7 @@
         <blur:BackDrop x:Name="backgroundBlur" BlurAmount="15"/>
         <Border x:Name="backgroundBorder" Opacity="0.8" Background="{ThemeResource ThemeBackgroundMobile}"/>
 
+     
         <Grid x:Name="ShellGrid" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateY="0"/>
@@ -240,6 +248,60 @@
                     <TextBlock FontSize="14" TextWrapping="WrapWholeWords" Text="{Binding Path=Status, FallbackValue='Nothing Baking'}" TextAlignment="Center" Foreground="White"></TextBlock>
                 </Grid>
             </Border>
+            <Grid Background="#ccdbdbdb" Margin="0,0,0,69.5">
+                <Grid Background="White" Padding="15" HorizontalAlignment="Center" Height="300">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <ComboBox MinWidth="100" HorizontalAlignment="Right" ItemsSource="{Binding Path=Player.Equalizer.Presets}" SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" DisplayMemberPath="Name" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                    <ToggleSwitch x:Uid="enableEqToggleSwitch" Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="0,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" OnContent="" OffContent="" IsOn="{Binding Source={StaticResource Core}, Path=Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <StackPanel Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" Orientation="Horizontal" HorizontalAlignment="Center" >
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Text="0dB" FontSize="11"/>
+                        <Slider Width="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5"  Minimum="0" Maximum="12" Style="{StaticResource CircleSlider}" Orientation="Horizontal" Value="{Binding Path=Player.Equalizer.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Text="+12dB" FontSize="11"/>
+                    </StackPanel>
+                    <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding Path=Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" VerticalAlignment="Center" Margin="0,0,0,-5">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Slider 
+                                    Height="140" 
+                                    Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                    BorderBrush="{x:Null}" 
+                                    Background="#FFC5C5C5"
+                                    Style="{StaticResource CircleSlider}" 
+                                    Minimum="-14"
+        							Maximum="14"
+        							LargeChange="0.2"
+        							SmallChange="0.1"
+                                    SnapsTo="Ticks"
+                                    TickPlacement="None"
+                                    IsEnabled="{Binding Path=IsActive}"
+                                    TickFrequency="0.1"
+                                    Margin="0,0,0,0" 
+                                    Orientation="Vertical" Value="{Binding Path=Gain, Mode=TwoWay}"/>
+                                    <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="{Binding Path=BandCaption}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ScrollViewer Padding="0,20" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+
             <StackPanel Width="50" Name="ShowMorePanel" Visibility="{Binding ElementName=showMoreBtn, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" HorizontalAlignment="Right" Background="{ThemeResource PlaybarBrush}" VerticalAlignment="Bottom" Margin="0,0,0,70">
                 <AppBarToggleButton x:Uid="shuffleBtn" HorizontalAlignment="Center" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="0,0,0,0"/>
                 <AppBarToggleButton x:Uid="showEqualizerBtn" HorizontalAlignment="Center" Command="{Binding Path=ShowEqualizerCommand}" IsChecked="{Binding ElementName=equalizerBtn, Path=IsChecked, Mode=TwoWay}" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="0,5,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
@@ -293,12 +355,10 @@
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
                 </AppBarButton>
-                <ProgressBar Name="positionProgressBar" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="20" ToolTipService.Placement="Top" ToolTipService.ToolTip="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" Visibility="Collapsed" Background="Transparent" Foreground="{ThemeResource ThemeForeground}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}"/>
-                <Rectangle Fill="Transparent" Visibility="Collapsed" Name="seekRect" Grid.ColumnSpan="20" VerticalAlignment="Top" Height="10"/>
-
-                <TextBlock Visibility="{Binding ElementName=positionSlider, Path=Visibility}" Grid.Column="1" Grid.Row="1" Margin="5,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
-                <Slider Visibility="Visible" x:Name="positionSlider"  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFC5C5C5" BorderBrush="{x:Null}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
-                <TextBlock Visibility="{Binding ElementName=positionSlider, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,10,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFE5E5E5" FontSize="12"/>
+                
+                <TextBlock x:Name="positionTxt" Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="15,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
+                <Slider Visibility="Visible" x:Name="positionSlider" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFDBDBDB" BorderBrush="Transparent" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
+                <TextBlock Visibility="{Binding ElementName=positionTxt, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,15,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFE5E5E5" FontSize="12"/>
 
                 <AppBarButton x:Uid="previousSongBtn" Grid.Row="1" Grid.Column="4" BorderBrush="White" Icon="Previous" VerticalAlignment="Center" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="40" Height="40">
                     <ToolTipService.ToolTip>
@@ -334,69 +394,8 @@
             </Grid>
         </Grid>
      
-        <Grid Name="EqualizerGrid" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Margin="0,0,0,70" Background="{ThemeResource ThemeBackgroundMobile}" Opacity="0" Height="250" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-            <Grid.RenderTransform>
-                <CompositeTransform TranslateY="300"/>
-            </Grid.RenderTransform>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>           
-            <ComboBox HorizontalAlignment="Right" ItemsSource="{Binding Path=Player.Equalizer.Presets}" SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" DisplayMemberPath="Name" VerticalAlignment="Center" Margin="0,0,20,0"/>
-            <!--<blur:BackDrop x:Name="equalizerBlur" BlurAmount="30" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" Grid.RowSpan="2" TintColor="#7FE5E5E5" HorizontalAlignment="Stretch"></blur:BackDrop>-->
-            <StackPanel Name="BandStackPanel" Height="200" Grid.Row="1" DataContext="{StaticResource Core}" HorizontalAlignment="Center"  Orientation="Horizontal">
-                <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid">
-                    <TextBlock Name="ValueIndicatorText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="11"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
-                </Grid>
-                <ItemsControl Name="BandPanel" ItemsSource="{Binding Path=Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Slider 
-                                    Height="140" 
-                                    Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                    BorderBrush="{x:Null}" 
-                                    Background="#FFC5C5C5"
-                                    Style="{StaticResource CircleSlider}" 
-                                    Minimum="-14"
-        							Maximum="14"
-        							LargeChange="0.2"
-        							SmallChange="0.1"
-                                    SnapsTo="Ticks"
-                                    TickPlacement="None"
-                                    IsEnabled="{Binding Path=IsActive}"
-                                    TickFrequency="0.1"
-                                    Margin="0,20,0,0" 
-                                    Orientation="Vertical" Value="{Binding Path=Gain, Mode=TwoWay}"/>
-                                <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="{Binding Path=BandCaption}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsStackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-                <Grid Margin="0,15,0,35" Name="ValueIndicatorGrid2">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="-14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Text="+14dB" FontSize="{Binding ElementName=ValueIndicatorText, Path=FontSize}"/>
-                </Grid>
-            </StackPanel>
-            <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
-                <ToggleSwitch x:Uid="enableEqToggleSwitch" Grid.Column="0" HorizontalAlignment="Left" Padding="0" Margin="5,0,0,0" VerticalAlignment="Center" FontWeight="SemiBold" OnContent="" OffContent="" IsOn="{Binding Source={StaticResource Core}, Path=Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-            </StackPanel>
-            <StackPanel Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" Orientation="Horizontal" HorizontalAlignment="Center" >
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" Text="0dB" FontSize="11"/>
-                <Slider Width="140" DataContext="{StaticResource Core}" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" SmallChange="0.1" LargeChange="1" BorderBrush="{x:Null}" Background="#FFC5C5C5"  Minimum="0" Maximum="12" Style="{StaticResource CircleSlider}" Orientation="Horizontal" Value="{Binding Path=Player.Equalizer.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Text="+12dB" FontSize="11"/>
-            </StackPanel>
-            <TextBlock Margin="0,0,0,0" Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}" VerticalAlignment="Bottom" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="PreAMP"/>
-
-        </Grid>
        
-        <Grid x:Name="volumeGrid" Margin="0,0,10,70" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding Source={StaticResource ShellVM}, Path=IsVolumeSliderVisible}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
+        <Grid x:Name="volumeGrid" Margin="0,0,10,69.5" DataContext="{StaticResource Core}" Background="{ThemeResource SystemControlHighlightListAccentHighBrush}" Height="60" Visibility="{Binding Source={StaticResource ShellVM}, Path=IsVolumeSliderVisible}"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="320">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

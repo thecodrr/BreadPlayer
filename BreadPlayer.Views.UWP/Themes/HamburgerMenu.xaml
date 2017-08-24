@@ -511,8 +511,8 @@
                                         <Setter Target="headerText.FontSize" Value="24"/>
                                         <Setter Target="headerText.Margin" Value="10,35,0,0"/>
                                         <Setter Target="ShortcutsPanel.Margin" Value="5,0,0,0"/>
-                                        <Setter Target="MainStackPanel.Margin" Value="0,30,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="10,105,0,0"/>
+                                        <Setter Target="MainStackPanel.Margin" Value="0,15,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="10,85,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="searchBox.Margin" Value="25,10,20,0"/>

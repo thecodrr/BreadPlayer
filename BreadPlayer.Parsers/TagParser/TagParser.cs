@@ -75,7 +75,6 @@ namespace BreadPlayer.Parsers.TagParser
 
         public static string ParseTitle(string text)
         {
-
             string regex = @"^\d+(?:\.)?(?:\s\-)?\s|[\(\[:].*|(\s&\s).*|(?i)(f(ea)?t).*(?-i)|(?i)((http|https)\:\/\/|(www\.))?[a-zA-Z0-9\.\/\?\:@\-_=#]{2,}\.[a-zA-Z0-9\.\/\?\:@\-_=#]+(?i)";
             return Regex.Replace(text, regex, "").Trim();
         }

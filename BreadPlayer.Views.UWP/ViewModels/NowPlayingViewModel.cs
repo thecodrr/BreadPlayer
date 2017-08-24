@@ -17,6 +17,7 @@ using Windows.UI.Xaml;
 using BreadPlayer.Parsers.LRCParser;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Core.Extensions;
+using System.Threading;
 
 namespace BreadPlayer.ViewModels
 {
@@ -42,6 +43,12 @@ namespace BreadPlayer.ViewModels
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
+        IOneLineLyric _currentLyric;
+        public IOneLineLyric CurrentLyric
+        {
+            get => _currentLyric;
+            set => Set(ref _currentLyric, value);
+        }
         ThreadSafeObservableCollection<LastArtist> artists;
         public ThreadSafeObservableCollection<LastArtist> Artists
         {
@@ -78,11 +85,12 @@ namespace BreadPlayer.ViewModels
             //the event is needed to update the bio etc.
             SharedLogic.Player.MediaChanged += OnMediaChanged;
         }
-
+        
         private async void OnMediaChanged(object sender, EventArgs e)
         {
             timer?.Stop();
             Lyrics?.Clear();
+            CurrentLyric = null;
             await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
         }
 
@@ -131,7 +139,6 @@ namespace BreadPlayer.ViewModels
 
             var parser = LrcParser.FromText(list[0]);
             Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
-          
             await BreadDispatcher.InvokeAsync(() =>
             {
                 LyricsLoading = false;
@@ -149,11 +156,14 @@ namespace BreadPlayer.ViewModels
                         if (previousLyric != null && previousLyric.IsActive == true)
                             previousLyric.IsActive = false;
                         currentLyric.IsActive = true;
+
+                        CurrentLyric = currentLyric;
                         LyricActivated?.Invoke(currentLyric, new EventArgs());
                     }
                 };
             });
         }
+        
         public event EventHandler LyricActivated;
         
         private async Task GetInfo(string artistName, string albumName)
@@ -210,6 +220,14 @@ namespace BreadPlayer.ViewModels
                     artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
                 }
                 ArtistFetchFailed = false;
+                //var trackInfo = await LastfmClient.Track.GetInfoAsync(TagParser.ParseTitle(SharedLogic.Player.CurrentlyPlayingFile.Title), artistsList[0]);
+                //if (trackInfo.Success && SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture == null)
+                //{
+                //    Player.CurrentlyPlayingFile.AttachedPicture = trackInfo.Content.Images?.Large?.AbsoluteUri;
+                //    Player.CurrentlyPlayingFile.Album = trackInfo.Content.AlbumName;
+                //    Player.CurrentlyPlayingFile.LeadArtist = trackInfo.Content.ArtistName;
+                //    Player.CurrentlyPlayingFile.Title = trackInfo.Content.Name;
+                //}
                 //begin fetching all artist's info
                 foreach (var artist in artistsList)
                 {

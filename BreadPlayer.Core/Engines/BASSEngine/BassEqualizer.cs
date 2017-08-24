@@ -17,7 +17,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public BassEqualizer(int coreHandle)
         {
             _handle = coreHandle;
-            //var version = BassFx.Version;
+            var version = BassFx.Version;
             IsPreampAvailable = true;
             Name = "DefaultEqualizer";
             Bands = new ObservableCollection<IEqualizerBand>();
@@ -30,7 +30,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             DeInit();
             _handle = coreHandle;
-            //var version = BassFx.Version;
+            var version = BassFx.Version;
             _myDspAddr = SetPreamp;
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
             Init();

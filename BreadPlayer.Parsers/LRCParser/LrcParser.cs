@@ -214,12 +214,10 @@ namespace BreadPlayer.Parsers.LRCParser
                     }
                     else if (title == "by")
                     {
-                        if (metadata.Maker != null && content != metadata.Maker)
+                        if (metadata.Maker == null && content == metadata.Maker)
                         {
-                            //throw new FormatException(string.Format("Duplicate LRC metadata found. Metadata name: '{0}', Values: '{1}', '{2}'", "by", metadata.Maker, content));
-                        }
-                        else
                             metadata.Maker = content;
+                        }
                     }
                     else if (title == "offset")
                     {
