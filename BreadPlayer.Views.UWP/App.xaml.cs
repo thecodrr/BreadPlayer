@@ -165,7 +165,7 @@ namespace BreadPlayer
         {
             try
             {
-               // BLogger.Logger.Info("Loading frame started...");
+                // BLogger.Logger.Info("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
 
                 // Do not repeat app initialization when the Window already has content
@@ -179,7 +179,7 @@ namespace BreadPlayer
                     //    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                     //    //TODO: Load state from previously suspended application
                     //}
-                    
+
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
                     Window.Current.Content = rootFrame;
@@ -194,7 +194,7 @@ namespace BreadPlayer
                     BLogger.Logger.Info("Navigating to Shell...");
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
-                
+
                 var view = ApplicationView.GetForCurrentView();
                 view.SetPreferredMinSize(new Size(360, 100));
                 if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
@@ -202,6 +202,11 @@ namespace BreadPlayer
                     BLogger.Logger.Info("Trying to hide status bar.");
                     await StatusBar.GetForCurrentView().HideAsync();
                     BLogger.Logger.Info("Status bar hidden.");
+                }
+                else
+                {
+                    CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                    coreTitleBar.ExtendViewIntoTitleBar = true;
                 }
                 if (args.Kind != ActivationKind.File)
                 {

@@ -495,7 +495,6 @@
                                         <Setter Target="Pane.Background" Value="{x:Null}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource PlaybarBrush}"/>
                                         <Setter Target="Pane.Margin" Value="0,130,0,0"/>
-                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -559,6 +558,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                         <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
