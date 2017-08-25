@@ -211,7 +211,7 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, int limit = int.MaxValue)
         {
             return await Task.Run(() =>
             {

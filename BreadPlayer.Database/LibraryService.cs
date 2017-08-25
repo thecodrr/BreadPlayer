@@ -23,9 +23,9 @@ namespace BreadPlayer.Database
         }
 
         #region ILibraryService 
-        public Task<IEnumerable<Mediafile>> Query(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null)
+        public Task<IEnumerable<Mediafile>> Query(string term, int limit = int.MaxValue)
         {
-            return Database.QueryRecords<Mediafile>(term, filterFunc);
+            return Database.QueryRecords<Mediafile>(term, limit);
         }
         public Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {

@@ -182,15 +182,13 @@ namespace BreadPlayer.ViewModels
                 
                 if (internetConnectionProfile != null)
                 {
-                    ////cancel any previous requests
+                    //cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
-                    ////start both tasks
+                    //start both tasks
                     TaskList.Clear();
                     TaskList.Add(GetLyrics());
                     TaskList.Add(GetArtistInfo(artistName.ScrubGarbage().GetTag()));
                     await Task.WhenAll(TaskList).ConfigureAwait(false);
-                    //await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false)
-                    
                 }
                 else
                 {

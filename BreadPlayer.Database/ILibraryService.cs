@@ -13,7 +13,7 @@ namespace BreadPlayer.Database
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Mediafile>> GetAllMediafiles();
-        Task<IEnumerable<Mediafile>> Query(string term, System.Linq.Expressions.Expression<Func<IDbRecord, bool>> filterFunc = null);
+        Task<IEnumerable<Mediafile>> Query(string term, int limit = int.MaxValue);
         ///<summary>
         ///Update a customer in the data store
         ///</summary>
