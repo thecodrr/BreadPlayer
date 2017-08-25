@@ -56,6 +56,7 @@ namespace BreadPlayer.ViewModels
     {
         #region Properties
         public AccountsViewModel AccountSettingsVM { get; set; }
+        public AudioSettingsViewModel AudioSettingsVM { get; set; }
 
         ThreadSafeObservableCollection<SettingGroup> settingsCollection;
         public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
@@ -216,6 +217,7 @@ namespace BreadPlayer.ViewModels
         {
             InitSettingsCollection();
             AccountSettingsVM = new AccountsViewModel();
+            AudioSettingsVM = new AudioSettingsViewModel();
 
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
@@ -241,7 +243,7 @@ namespace BreadPlayer.ViewModels
                 new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
                 new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
                 new SettingGroup("\uE770", "Core", "Reset, notifications, lock screen", typeof(CoreSettingsView)),
-                new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, other junk", typeof(PersonlizationView)),
+                new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, cross-fade", typeof(AudioSettingsView)),
                 new SettingGroup("\uE779", "Contact", "Facebook, email, github", typeof(ContactView)),
                 new SettingGroup("\uE946", "About", "Version info, license, credits", typeof(AboutView)),
                 new SettingGroup("\uE789", "Contribute", "Translation, bug hunting, coding", typeof(ContributeView)),

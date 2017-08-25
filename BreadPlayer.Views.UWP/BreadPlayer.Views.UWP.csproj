@@ -250,6 +250,9 @@
     <Compile Include="SettingsViews\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsViews\AudioSettingsView.xaml.cs">
+      <DependentUpon>AudioSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SettingsViews\ContactView.xaml.cs">
       <DependentUpon>ContactView.xaml</DependentUpon>
     </Compile>
@@ -268,6 +271,7 @@
     <Compile Include="SettingsViews\PersonlizationView.xaml.cs">
       <DependentUpon>PersonlizationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsViews\ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="SettingsViews\ViewModels\ContactViewModel.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
@@ -439,6 +443,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsViews\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\AudioSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

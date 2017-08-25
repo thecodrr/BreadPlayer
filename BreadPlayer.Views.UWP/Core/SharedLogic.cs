@@ -90,7 +90,7 @@ namespace BreadPlayer.Core
             {
                 if (_player == null)
                 {
-                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), SettingsVm.AudioSettingsVM.CrossfadeEnabled);
                 }
 
                 return _player;

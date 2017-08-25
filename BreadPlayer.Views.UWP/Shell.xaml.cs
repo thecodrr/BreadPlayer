@@ -88,7 +88,6 @@ namespace BreadPlayer
         }
 
         private bool _isPressed;
-        private bool _isProgBarPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });

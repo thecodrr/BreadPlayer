@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="BreadPlayer.SettingsViews.AudioSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BreadPlayer.SettingsViews"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AudioSettingsVM}">
+            <TextBlock x:Uid="generalHeader" Text="" FontSize="22" FontWeight="Bold"/>
+            <ToggleSwitch x:Uid="crossfadeSwitch" Header="" IsOn="{Binding Path=CrossfadeEnabled}"/>
+            
+        </StackPanel>
+    </ScrollViewer>
+</Page>

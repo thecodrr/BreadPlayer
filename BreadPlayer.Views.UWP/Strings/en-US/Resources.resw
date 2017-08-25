@@ -585,4 +585,12 @@
   <data name="donatePatreonTxt.Text" xml:space="preserve">
     <value>Donate via Patreon</value>
   </data>
+  <data name="crossfadeSwitch.Header" xml:space="preserve">
+    <value>Crossfade when changing songs</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="generalHeader.Text" xml:space="preserve">
+    <value>General</value>
+    <comment>**NEW**</comment>
+  </data>
 </root>

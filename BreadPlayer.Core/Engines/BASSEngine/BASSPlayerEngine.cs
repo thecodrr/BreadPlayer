@@ -36,7 +36,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         #endregion
 
         #region Constructor
-        public BassPlayerEngine(bool isMobile)
+        public BassPlayerEngine(bool isMobile, bool crossFade)
         {
             Init(isMobile);
             _sync = EndSync;
@@ -257,7 +257,15 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         #endregion
 
         #region Properties
-
+        bool crossfadeEnabled;
+        public bool CrossfadeEnabled
+        {
+            get => crossfadeEnabled;
+            set
+            {
+                Set(ref crossfadeEnabled, value);
+            }
+        }
         private bool _isVolumeMuted;
         public bool IsVolumeMuted
         {
@@ -364,7 +372,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             {
                 MediaAboutToEnd?.Invoke(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
             }
-            else if(Position >= Length - 5)
+            else if(Position >= Length - 5 && CrossfadeEnabled)
             {
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             }
