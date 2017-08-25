@@ -101,6 +101,22 @@ namespace BreadPlayer
                     CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
                 }
             });
+            equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            {
+                if (equalizerOverlayGrid.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
+                }
+            });
+        }
+        private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsEqualizerVisible = false;
+                equalizerBtn.IsChecked = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
+            }
         }
         private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
         {
