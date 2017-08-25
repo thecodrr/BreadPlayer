@@ -77,6 +77,7 @@ namespace BreadPlayer.ViewModels
         public ICommand RetryCommand { get; set; }
         private LastfmClient LastfmClient => new Lastfm().LastfmClient;
 
+        List<Task> TaskList = new List<Task>();
         public NowPlayingViewModel()
         {
             RetryCommand = new RelayCommand(Retry);
@@ -124,43 +125,47 @@ namespace BreadPlayer.ViewModels
         private int _retries;
         private async Task GetLyrics()
         {
-            if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
-                return;
-            LyricsLoading = true;
-            var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
-
-            if (!list.Any())
+            await BreadDispatcher.InvokeAsync(async () =>
             {
-                LyricsLoading = false;
-                return;
-            }
-            while (!LrcParser.IsLrc(list[0]))
-                list.RemoveAt(0);
+                if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
+                    return;
+                LyricsLoading = true;
+                var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
 
-            var parser = LrcParser.FromText(list[0]);
-            Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
-            await BreadDispatcher.InvokeAsync(() =>
-            {
-                LyricsLoading = false;
-                timer.Start();
-                timer.Tick += (s, e) =>
+                if (!list.Any())
                 {
-                    var currentPosition = TimeSpan.FromSeconds(Player.Position);
-                    if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                    LyricsLoading = false;
+                    return;
+                }
+                while (!LrcParser.IsLrc(list[0]))
+                    list.RemoveAt(0);
+
+                var parser = LrcParser.FromText(list[0]);
+                Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+
+                LyricsLoading = false;
+                await BreadDispatcher.InvokeAsync(() =>
+                {
+                    timer.Start();
+                    timer.Tick += (s, e) =>
                     {
-                        var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
-                        if (currentLyric == null)
-                            return;
+                        var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                        if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                        {
+                            var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                            if (currentLyric == null)
+                                return;
 
-                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
-                        if (previousLyric != null && previousLyric.IsActive == true)
-                            previousLyric.IsActive = false;
-                        currentLyric.IsActive = true;
+                            var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                            if (previousLyric != null && previousLyric.IsActive == true)
+                                previousLyric.IsActive = false;
+                            currentLyric.IsActive = true;
 
-                        CurrentLyric = currentLyric;
-                        LyricActivated?.Invoke(currentLyric, new EventArgs());
-                    }
-                };
+                            CurrentLyric = currentLyric;
+                            LyricActivated?.Invoke(currentLyric, new EventArgs());
+                        }
+                    };
+                });
             });
         }
         
@@ -177,7 +182,10 @@ namespace BreadPlayer.ViewModels
                     ////cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
                     ////start both tasks
-                    await Task.WhenAll(GetLyrics(), GetArtistInfo(artistName.ScrubGarbage().GetTag())).ConfigureAwait(false);
+                    TaskList.Clear();
+                    TaskList.Add(GetLyrics());
+                    TaskList.Add(GetArtistInfo(artistName.ScrubGarbage().GetTag()));
+                    await Task.WhenAll(TaskList).ConfigureAwait(false);
                     //await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false)
                     
                 }

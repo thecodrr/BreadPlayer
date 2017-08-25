@@ -23,7 +23,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
 
         public AudioSettingsViewModel()
         {
-            CrossfadeEnabled = RoamingSettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
+           // CrossfadeEnabled = RoamingSettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
         }
     }
 }
