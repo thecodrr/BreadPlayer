@@ -144,6 +144,9 @@ namespace BreadPlayer.ViewModels
                 Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
 
                 LyricsLoading = false;
+
+                //as much as I hate to do this, it is necessary.
+                //to avoid thread exception we need to invoke on UI Thread again.
                 await BreadDispatcher.InvokeAsync(() =>
                 {
                     timer.Start();
