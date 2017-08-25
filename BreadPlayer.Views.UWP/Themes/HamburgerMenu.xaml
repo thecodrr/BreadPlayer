@@ -466,7 +466,6 @@
                                         <Setter Target="Pane.Background" Value="{x:Null}"/>
                                         <Setter Target="TogglePaneButton.Background" Value="{x:Null}"/>
                                         <Setter Target="NavTopMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
-                                        <Setter Target="PlaylistsMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="NavBottomMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="TopSeperator.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
@@ -477,21 +476,14 @@
                                         <StateTrigger IsActive="{Binding ElementName=RootSplitView, Path=DisplayMode, Converter={StaticResource TrueToFalse}}"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="playlistBtn.Style" Value="{StaticResource CompactPlaylistButtonStyle}"/>
                                         <Setter Target="NavTopMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
                                         <Setter Target="NavBottomMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
-                                        <Setter Target="PlaylistsMenuList.Visibility" Value="Collapsed"/>
-                                        <Setter Target="playlistBtnPanel.Orientation" Value="Vertical"/>
-                                        <Setter Target="playlistBtn.Width" Value="355"/>
-                                        <Setter Target="playlistAddBtn.Foreground" Value="White"/>
-                                        <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="Title.Margin" Value="90,30,0,40"/>-->
                                         <Setter Target="Shortcuts.Margin" Value="5,0,35,0"/>
                                         <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
-                                        <Setter Target="playlistBtn.Margin" Value="0"/>
                                         <Setter Target="Pane.Background" Value="{x:Null}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource PlaybarBrush}"/>
                                         <Setter Target="Pane.Margin" Value="0,130,0,0"/>
@@ -627,27 +619,8 @@
                                                 </ItemsPanelTemplate>
                                             </local:NavMenuListView.ItemsPanel>
                                         </local:NavMenuListView>
-                                        <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
+                                    <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
 
-                                    <StackPanel x:Name="playlistBtnPanel" Grid.Row="3" Orientation="Horizontal" Width="355">
-                                            <Button x:Name="playlistBtn" 
-                                                TabIndex="2" Width="270" Margin="5,0,0,0"
-                                                Style="{StaticResource NavigationBackButtonStyle}"/>
-                                            <Button x:Name="playlistAddBtn" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding AddToPlaylistCommand}"
-                                                TabIndex="2" Width="50"  Height="{Binding ElementName=playlistBtn, Path=Height}" Content="&#59152;" Padding="0"
-                                                Style="{StaticResource HyperlinkBtn}" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="15"/>
-                                        </StackPanel>
-                                    <local:NavMenuListView x:Name="PlaylistsMenuList"
-                                                       ItemsSource="{TemplateBinding PlaylistsItems}"
-                                                       TabIndex="3"
-                                                       Grid.Row="4"
-                                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                       ScrollViewer.VerticalScrollMode="Enabled"
-                                                       ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
-                                                       ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
-                                                       ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                        </local:NavMenuListView>
-                                    
                                     <MenuFlyoutSeparator Grid.Row="5" VerticalAlignment="Top" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
 
                                     <local:NavMenuListView Grid.Row="6" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
