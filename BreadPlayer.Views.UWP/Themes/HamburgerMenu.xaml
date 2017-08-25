@@ -487,7 +487,7 @@
                                         <Setter Target="playlistAddBtn.Width" Value="50"/>
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="Title.Margin" Value="90,30,0,40"/>-->
-                                        <Setter Target="ShortcutsPanel.Margin" Value="5,0,35,0"/>
+                                        <Setter Target="Shortcuts.Margin" Value="5,0,35,0"/>
                                         <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
@@ -508,19 +508,25 @@
                                         <Setter Target="TogglePaneButton.Background" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
                                         <Setter Target="toggleButton.Visibility" Value="Visible"/>
                                         <Setter Target="headerText.FontSize" Value="24"/>
-                                        <Setter Target="headerText.Margin" Value="10,35,0,0"/>
-                                        <Setter Target="ShortcutsPanel.Margin" Value="5,0,0,0"/>
-                                        <Setter Target="MainStackPanel.Margin" Value="0,15,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="10,85,0,0"/>
+                                        <Setter Target="headerText.Margin" Value="10,0,0,0"/>
+                                        <Setter Target="headerText.(Grid.ColumnSpan)" Value="4"/>
+                                        <Setter Target="headerText.(Grid.Row)" Value="2"/>
+                                        <Setter Target="Shortcuts.Margin" Value="0,20,0,0"/>
+                                        <Setter Target="toggleButton.Margin" Value="5,20,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="10,0,0,0"/>
                                         <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="PageFrame.(Grid.Row)" Value="4"/>
+
                                         <Setter Target="Title.Visibility" Value="Collapsed"/>
-                                        <Setter Target="searchBox.Margin" Value="25,10,20,0"/>
+                                        <Setter Target="searchBox.(Grid.Column)" Value="0"/>
+                                        <Setter Target="searchBox.(Grid.ColumnSpan)" Value="3"/>
+                                        <Setter Target="searchBox.(Grid.Row)" Value="1"/>
+                                        <Setter Target="searchBox.Margin" Value="10,0"/>
                                         <Setter Target="Shortcuts.ItemTemplate" Value="{StaticResource MobileShortcutsTemplate}"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
-                                        <Setter Target="ShortcutsPanel.(Grid.Column)" Value="0"/>
-                                        <Setter Target="ShortcutsPanel.Orientation" Value="Horizontal"/>
-                                        <Setter Target="ShortcutsPanel.VerticalAlignment" Value="Top"/>
-                                        <Setter Target="ShortcutsPanel.HorizontalAlignment" Value="Left"/>
+                                        <Setter Target="Shortcuts.(Grid.Column)" Value="1"/>
+                                        <Setter Target="Shortcuts.VerticalAlignment" Value="Center"/>
+                                        <Setter Target="Shortcuts.HorizontalAlignment" Value="Left"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -531,8 +537,8 @@
                                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                                         <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
                                         <Setter Target="toggleButton.Visibility" Value="Collapsed"/>
-                                        <Setter Target="headerText.Margin" Value="35,0,0,0"/>
-                                        <Setter Target="searchBox.Margin" Value="35,0,20,0"/>
+                                        <Setter Target="headerText.Margin" Value="35,55,0,0"/>
+                                        <Setter Target="searchBox.Margin" Value="0,0,40,0"/>
 
                                     </VisualState.Setters>
                                 </VisualState>
@@ -654,7 +660,19 @@
                                 </Grid>
                             </SplitView.Pane>
                             <Grid>
-                                <Frame x:Name="PageFrame"  Margin="35,130,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Frame x:Name="PageFrame" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4" Margin="35,0,10,0">
                                     <Frame.ContentTransitions>
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
@@ -665,43 +683,25 @@
                                         </TransitionCollection>
                                     </Frame.ContentTransitions>
                                 </Frame>
-                                <Grid VerticalAlignment="Top" Margin="0,55,0,0" Name="MainStackPanel">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,35,0" Name="ShortcutsPanel">
-                                        <ToggleButton x:Name="toggleButton" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Background="Transparent" Margin="0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
-                                        <ItemsControl x:Name="Shortcuts" Background="Transparent" Margin="0">
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Button FontFamily="Segoe MDL2 Assets" Background="Transparent" Margin="10,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.Template>
-                                                <ControlTemplate TargetType="ItemsControl">
-                                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
-                                                        <ItemsPresenter/>
-                                                    </ScrollViewer>
-                                                </ControlTemplate>
-                                            </ItemsControl.Template>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                    <AutoSuggestBox x:Name="searchBox" Grid.Column="1" Margin="25,0,20,0" VerticalAlignment="Center" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
-                                        <AutoSuggestBox.RenderTransform>
-                                            <TranslateTransform X="0"/>
-                                        </AutoSuggestBox.RenderTransform>
-                                        <AutoSuggestBox.QueryIcon>
+                                <ToggleButton x:Name="toggleButton" VerticalAlignment="Top" HorizontalAlignment="Left" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Background="Transparent" Margin="0,55,0,0" IsChecked="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Mode=TwoWay}" FontFamily="Segoe MDL2 Assets" Visibility="Collapsed" FontSize="22" Content="&#xE700;" Style="{StaticResource HyperlinkToggleBtn}"/>
+                                <ItemsControl x:Name="Shortcuts" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,55,35,0" Background="Transparent">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button FontFamily="Segoe MDL2 Assets" Background="Transparent" Margin="10,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" FontSize="22" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                                <AutoSuggestBox x:Name="searchBox" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                    <AutoSuggestBox.QueryIcon>
                                             <FontIcon Glyph="&#xe721;"/>
                                         </AutoSuggestBox.QueryIcon>
                                     </AutoSuggestBox>
-                                    <TextBlock x:Name="headerText" Grid.Column="0" VerticalAlignment="Center" Tag="Heading" Margin="10,0,0,0" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}"/>
+                                    <TextBlock x:Name="headerText" Grid.Column="0" VerticalAlignment="Center" Tag="Heading" Margin="10,55,0,0" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}"/>
 
                                     <!--<StackPanel >
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE00F;" Style="{StaticResource HyperlinkBtn}"/>
@@ -718,13 +718,9 @@
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE7EC;" Style="{StaticResource HyperlinkBtn}"/>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE80F;" Style="{StaticResource HyperlinkBtn}"/>
                                     </StackPanel>-->
-                                </Grid>
-
                             </Grid>
                         </SplitView>
                         <TextBlock Name="Title" Text="Bread Player" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="20" Margin="48,70,0,0"/>
-
-
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
