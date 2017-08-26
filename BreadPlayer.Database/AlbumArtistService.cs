@@ -35,6 +35,16 @@ namespace BreadPlayer.Database
             Database.ChangeTable("Albums", "AlbumsText");                  
             return Database.GetRecords<Album>();
         }
+        public Task<IEnumerable<Artist>> QueryArtistsAsync(string term, int limit = int.MaxValue)
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            return Database.QueryRecords<Artist>(term, limit);
+        }
+        public Task<IEnumerable<Album>> QueryAlbumsAsync(string term, int limit = int.MaxValue)
+        {
+            Database.ChangeTable("Albums", "AlbumsText");
+            return Database.QueryRecords<Album>(term, limit);
+        }
         public void Dispose()
         {
             Database.Dispose();

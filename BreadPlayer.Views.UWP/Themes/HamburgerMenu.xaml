@@ -644,7 +644,7 @@
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                 </ItemsControl>
-                                <AutoSuggestBox x:Name="searchBox" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
+                                <AutoSuggestBox x:Name="searchBox" MinWidth="360" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed" Opacity="0" HorizontalAlignment="Stretch" AutoMaximizeSuggestionArea="False" PlaceholderText="Search" IsSuggestionListOpen="False">
                                     <AutoSuggestBox.QueryIcon>
                                             <FontIcon Glyph="&#xe721;"/>
                                         </AutoSuggestBox.QueryIcon>

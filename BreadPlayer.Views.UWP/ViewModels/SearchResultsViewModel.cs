@@ -22,11 +22,21 @@ namespace BreadPlayer.ViewModels
             get => _queryAlbums;
             set => Set(ref _queryAlbums, value);
         }
-      
-        public Task<IEnumerable<Mediafile>> StartSearch(string query)
+
+        private ThreadSafeObservableCollection<Artist> _queryArtists;
+        public ThreadSafeObservableCollection<Artist> QueryArtists
         {
-            LibraryService service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
-            return service.Query(query, 5);
+            get => _queryArtists;
+            set => Set(ref _queryArtists, value);
+        }
+        public async Task<(IEnumerable<Mediafile> Songs, IEnumerable<Album> Albums, IEnumerable<Artist> Artists)> StartSearch(string query)
+        {
+            var documentStore = new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks");
+            LibraryService service = new LibraryService(documentStore);
+            AlbumArtistService albumArtistService = new AlbumArtistService(documentStore);
+            return (await service.Query(query, 5),
+                    await albumArtistService.QueryAlbumsAsync(query, 10),
+                    await albumArtistService.QueryArtistsAsync(query, 10));
         }
         public async Task GetAlbumsAndTracks(string query)
         {
@@ -34,27 +44,15 @@ namespace BreadPlayer.ViewModels
             {
                 QueryAlbums = new ThreadSafeObservableCollection<Album>();
                 QuerySongs = new ThreadSafeObservableCollection<Mediafile>();
+                QueryArtists = new ThreadSafeObservableCollection<Artist>();
+
                 var queryresults = (await StartSearch(query.ToLower()));
-                if(queryresults != null && queryresults.Any())
-                {
-                    var groupedQueryresults = queryresults.GroupBy(t => t.Album).ToArray();
-                    for (int i = 0; i < groupedQueryresults.Count(); i++)
-                    {
-                        QuerySongs.AddRange(groupedQueryresults[i].Where(t => t.Title.ToLower().Contains(query.ToLower())));
-                        if (groupedQueryresults[i].Key.ToLower().Contains(query.ToLower()))
-                        {
-                            var albumSongs = groupedQueryresults[i].Select(t => t);
-                            var firstSong = albumSongs.First() ?? new Mediafile();
-                            Album album = new Album
-                            {
-                                Artist = firstSong?.LeadArtist,
-                                AlbumName = groupedQueryresults[i].Key,
-                                AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                            };
-                            QueryAlbums.Add(album);
-                        }
-                    }
-                }
+                if(queryresults.Songs != null)
+                    QuerySongs.AddRange(queryresults.Songs);
+                if (queryresults.Albums != null)
+                    QueryAlbums.AddRange(queryresults.Albums);
+                if (queryresults.Artists != null)
+                    QueryArtists.AddRange(queryresults.Artists);
             }
         }
     }

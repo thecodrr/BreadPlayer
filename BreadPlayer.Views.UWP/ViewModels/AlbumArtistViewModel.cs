@@ -7,6 +7,8 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.Messengers;
+using IF.Lastfm.Core.Api;
+using BreadPlayer.Web.Lastfm;
 
 namespace BreadPlayer.ViewModels
 {
@@ -27,6 +29,7 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 await AddAlbums(message.Payload as IEnumerable<Mediafile>);
+                await AddArtists(message.Payload as IEnumerable<Mediafile>);
             }
         }
         /// <summary>
@@ -41,35 +44,51 @@ namespace BreadPlayer.ViewModels
       
         public async Task LoadAlbums()
         {
-            AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
-            AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
-            if (AlbumCollection.Count <= 0)
+            if (AlbumCollection?.Count <= 0)
             {
-                AlbumsLoaded = false;
+                AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
+                AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
+                if (AlbumCollection.Count <= 0)
+                {
+                    RecordsLoaded = false;
+                }
+            }
+        }
+
+        public async Task LoadArtists()
+        {
+            if (ArtistsCollection?.Count <= 0)
+            {
+                ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
+                ArtistsCollection.CollectionChanged += AlbumCollection_CollectionChanged;
+                if (ArtistsCollection.Count <= 0)
+                {
+                    RecordsLoaded = false;
+                }
             }
         }
 
         private void AlbumCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //Albums are loaded, we can now hide the progress ring.
-            if (AlbumCollection.Count > 0)
+            if (AlbumCollection.Count > 0 || ArtistsCollection.Count > 0)
             {
-                AlbumsLoaded = false;
+                RecordsLoaded = false;
             }
             else
             {
-                AlbumsLoaded = true;
+                RecordsLoaded = true;
             }
         }
 
-        private bool _albumsLoaded = true;
+        private bool _recordsLoaded = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
-        public bool AlbumsLoaded
+        public bool RecordsLoaded
         {
-            get => _albumsLoaded;
-            set => Set(ref _albumsLoaded, value);
+            get => _recordsLoaded;
+            set => Set(ref _recordsLoaded, value);
         }
 
         private ThreadSafeObservableCollection<Album> _albumcollection;
@@ -117,23 +136,27 @@ namespace BreadPlayer.ViewModels
                 await AlbumArtistService.InsertAlbums(albums);
             });           
         }
+        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
 
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
-        public async Task AddToDatabase<T>(IEnumerable<Mediafile> mediafiles)
+        public async Task AddArtists(IEnumerable<Mediafile> mediafiles)
         {
             List<Artist> artists = new List<Artist>();
             //List<ChildSong> childsongs = new List<ChildSong>();
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 //Random albumRandom = new Random();
                 foreach (var artistGroup in mediafiles.GroupBy(t => t.LeadArtist))
                 {
                     var firstSong = artistGroup.First() ?? new Mediafile();
+                     var artistInfo = await LastfmClient.Artist.GetInfoAsync(firstSong?.LeadArtist, "en", true);
                     Artist artist = new Artist
                     {
-                        Name = firstSong?.LeadArtist
+                        Name = firstSong?.LeadArtist,
+                        Picture = artistInfo?.Content?.MainImage?.Large.AbsoluteUri,
+                        Bio = artistInfo?.Content?.Bio?.Content
                     };
                     artists.Add(artist);
                 }

@@ -25,29 +25,39 @@ namespace BreadPlayer
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
-                (grid.Resources["Source"] as CollectionViewSource).Source = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
-                (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
+                if (e.Parameter.ToString() == "AlbumView")
+                {
+                    albumListView.ItemTemplate = this.Resources["SelectedTemplate"] as Windows.UI.Xaml.DataTemplate;
+                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
+                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
+                }
+                else if (e.Parameter.ToString() == "ArtistView")
+                {
+                    albumListView.ItemTemplate = this.Resources["SelectedArtistTemplate"] as Windows.UI.Xaml.DataTemplate;
+                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
+                    (grid.DataContext as AlbumArtistViewModel).LoadArtists().ConfigureAwait(false);
+                }
             });
             base.OnNavigatedTo(e);
         }
         
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            (grid.Resources["Source"] as CollectionViewSource).Source = null;
-            (grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
+            //(grid.Resources["Source"] as CollectionViewSource).Source = null;
+            //(grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
             base.OnNavigatedFrom(e);
         }
 
         private void albumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach(Album album in e.RemovedItems)
-            {
-                album.IsSelected = false;
-            }
-            foreach(Album album in e.AddedItems)
-            {
-                album.IsSelected = true;
-            }
+            //foreach(Album album in e.RemovedItems)
+            //{
+            //    album.IsSelected = false;
+            //}
+            //foreach(Album album in e.AddedItems)
+            //{
+            //    album.IsSelected = true;
+            //}
         }
     }
 }

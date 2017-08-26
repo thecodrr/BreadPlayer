@@ -550,9 +550,11 @@
                 </Grid>
             </PivotItem>
             <PivotItem Header="Breads">
-                <Frame Name="BreadsFrame" SourcePageType="local:AlbumArtistView" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
+                <Frame Name="BreadsFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
             </PivotItem>
-            <PivotItem Header="Bakers"/>
+            <PivotItem Header="Bakers">
+                <Frame Name="BakersFrame"  x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
+            </PivotItem>
             <PivotItem Header="Playlists"/>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
