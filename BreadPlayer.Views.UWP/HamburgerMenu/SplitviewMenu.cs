@@ -152,10 +152,10 @@ namespace SplitViewMenu
         }
         private static void OnPlaylistsItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (_playlistsMenuListView != null)
-            {
-                _playlistsMenuListView.ItemsSource = e.NewValue;
-            }
+            //if (_playlistsMenuListView != null)
+            //{
+            //    _playlistsMenuListView.ItemsSource = e.NewValue;
+            //}
         }
         protected async override void OnApplyTemplate()
         {
@@ -166,7 +166,7 @@ namespace SplitViewMenu
             _searchBox = GetTemplateChild("searchBox") as AutoSuggestBox;
             _navTopMenuListView = GetTemplateChild("NavTopMenuList") as NavMenuListView;
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
-            _playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
+            //_playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
             _backButton = GetTemplateChild("BackButton") as Button;
             _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
@@ -184,12 +184,12 @@ namespace SplitViewMenu
                 _navBottomMenuListView.ContainerContentChanging += OnContainerContextChanging;
                 _navBottomMenuListView.SelectionChanged += _navBottomMenuListView_SelectionChanged;
             }
-            if (_playlistsMenuListView != null)
-            {
-                _playlistsMenuListView.ItemInvoked += OnNavMenuItemInvoked;
-                _playlistsMenuListView.ContainerContentChanging += OnContainerContextChanging;
-                _playlistsMenuListView.SelectionChanged += _playlistsMenuListView_SelectionChanged; ;
-            }        
+            //if (_playlistsMenuListView != null)
+            //{
+            //    _playlistsMenuListView.ItemInvoked += OnNavMenuItemInvoked;
+            //    _playlistsMenuListView.ContainerContentChanging += OnContainerContextChanging;
+            //    _playlistsMenuListView.SelectionChanged += _playlistsMenuListView_SelectionChanged; ;
+            //}        
             if (_searchBox != null)
             {
                 _searchBox.TextChanged += _searchBox_TextChanged;
@@ -234,33 +234,31 @@ namespace SplitViewMenu
         }
 
         private static INavigationMenuItem _lastItem = new SimpleNavMenuItem();
-        private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_navTopMenuListView.SelectedIndex > -1 || _navBottomMenuListView.SelectedIndex > -1)
-            {
-                _navTopMenuListView.SelectedIndex = -1;
-                _navBottomMenuListView.SelectedIndex = -1;
-                _lastItem = new SimpleNavMenuItem();
-            }
-            else
-            {
-                if (e.RemovedItems.Count > 0 && _navTopMenuListView.SelectedIndex == -1)
-                {
-                    _lastItem = e.RemovedItems[0] as INavigationMenuItem;
-                }
-            }
-        }
+        //private void _playlistsMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    if (_navTopMenuListView.SelectedIndex > -1 || _navBottomMenuListView.SelectedIndex > -1)
+        //    {
+        //        _navTopMenuListView.SelectedIndex = -1;
+        //        _navBottomMenuListView.SelectedIndex = -1;
+        //        _lastItem = new SimpleNavMenuItem();
+        //    }
+        //    else
+        //    {
+        //        if (e.RemovedItems.Count > 0 && _navTopMenuListView.SelectedIndex == -1)
+        //        {
+        //            _lastItem = e.RemovedItems[0] as INavigationMenuItem;
+        //        }
+        //    }
+        //}
 
         private void _navBottomMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _navTopMenuListView.SelectedIndex = -1;
-            _playlistsMenuListView.SelectedIndex = -1;
         }
 
         private void _navTopMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _navBottomMenuListView.SelectedIndex = -1;
-            _playlistsMenuListView.SelectedIndex = -1;
         }
 
         private void OnBackButtonClick(object sender, RoutedEventArgs e)
@@ -326,7 +324,7 @@ namespace SplitViewMenu
             _lastItem = null;
             _navBottomMenuListView.SelectedIndex = -1;
             _navTopMenuListView.SelectedIndex = -1;
-            _playlistsMenuListView.SelectedIndex = -1;
+            //_playlistsMenuListView.SelectedIndex = -1;
         }
         public static void SelectHome()
         {

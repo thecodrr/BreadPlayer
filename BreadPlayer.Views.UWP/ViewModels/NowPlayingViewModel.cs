@@ -132,7 +132,7 @@ namespace BreadPlayer.ViewModels
                 LyricsLoading = true;
                 var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
 
-                if (!list.Any())
+                if (list?.Any() == false)
                 {
                     LyricsLoading = false;
                     return;

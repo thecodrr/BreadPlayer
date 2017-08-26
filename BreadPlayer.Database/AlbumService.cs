@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
-    public class AlbumService : IDisposable
+    public class AlbumArtistService : IDisposable
     {
         private IDatabaseService Database
         {
             get;
         }
-        public AlbumService(IDatabaseService database)
+        public AlbumArtistService(IDatabaseService database)
         {
             Database = database;
         }
@@ -19,6 +19,16 @@ namespace BreadPlayer.Database
         {
             Database.ChangeTable("Albums", "AlbumsText");
             await Database.InsertRecords(albums);
+        }
+        public async Task InsertArtists(IEnumerable<Artist> artists)
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            await Database.InsertRecords(artists);
+        }
+        public Task<IEnumerable<Artist>> GetArtistsAsync()
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            return Database.GetRecords<Artist>();
         }
         public Task<IEnumerable<Album>> GetAlbumsAsync()
         {

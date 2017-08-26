@@ -14,10 +14,10 @@ namespace BreadPlayer.ViewModels
     {
         #region Database Methods
 
-        private AlbumService AlbumService { get; set; }
+        private AlbumArtistService AlbumArtistService { get; set; }
         public void InitDb()
         {
-            AlbumService = new AlbumService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
+            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
         }       
         #endregion
 
@@ -41,7 +41,7 @@ namespace BreadPlayer.ViewModels
       
         public async Task LoadAlbums()
         {
-            AlbumCollection.AddRange(await AlbumService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
+            AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
             AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
             if (AlbumCollection.Count <= 0)
             {
@@ -81,6 +81,16 @@ namespace BreadPlayer.ViewModels
             get { if (_albumcollection == null) { _albumcollection = new ThreadSafeObservableCollection<Album>(); } return _albumcollection; }
             set => Set(ref _albumcollection, value);
         }
+
+        private ThreadSafeObservableCollection<Artist> _artistscollection;
+        /// <summary>
+        /// Collection containing all albums.
+        /// </summary>
+        public ThreadSafeObservableCollection<Artist> ArtistsCollection
+        {
+            get { if (_artistscollection == null) { _artistscollection = new ThreadSafeObservableCollection<Artist>(); } return _artistscollection; }
+            set => Set(ref _artistscollection, value);
+        }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
@@ -104,9 +114,33 @@ namespace BreadPlayer.ViewModels
                 }
             }).ContinueWith(async (task) =>
             {
-                await AlbumService.InsertAlbums(albums);
-                AlbumCollection.AddRange(albums);
+                await AlbumArtistService.InsertAlbums(albums);
             });           
-        }        
+        }
+
+        /// <summary>
+        /// Adds all albums to <see cref="AlbumCollection"/>.
+        /// </summary>
+        public async Task AddToDatabase<T>(IEnumerable<Mediafile> mediafiles)
+        {
+            List<Artist> artists = new List<Artist>();
+            //List<ChildSong> childsongs = new List<ChildSong>();
+            await Task.Run(() =>
+            {
+                //Random albumRandom = new Random();
+                foreach (var artistGroup in mediafiles.GroupBy(t => t.LeadArtist))
+                {
+                    var firstSong = artistGroup.First() ?? new Mediafile();
+                    Artist artist = new Artist
+                    {
+                        Name = firstSong?.LeadArtist
+                    };
+                    artists.Add(artist);
+                }
+            }).ContinueWith(async (task) =>
+            {
+                await AlbumArtistService.InsertArtists(artists);
+            });
+        }
     }
 }

@@ -467,7 +467,6 @@
                                         <Setter Target="TogglePaneButton.Background" Value="{x:Null}"/>
                                         <Setter Target="NavTopMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
                                         <Setter Target="NavBottomMenuList.ItemTemplate" Value="{StaticResource NavMenuItemTemplateLight}"/>
-                                        <Setter Target="TopSeperator.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState>
@@ -478,15 +477,10 @@
                                     <VisualState.Setters>
                                         <Setter Target="NavTopMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
                                         <Setter Target="NavBottomMenuList.ItemContainerStyle" Value="{StaticResource NavMenuItemContainerDarkStyle}"/>
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
-                                        <!--<Setter Target="Title.Margin" Value="90,30,0,40"/>-->
-                                        <Setter Target="Shortcuts.Margin" Value="5,0,35,0"/>
                                         <Setter Target="TogglePaneButton.VerticalAlignment" Value="Bottom"/>
                                         <Setter Target="TogglePaneButton.Foreground" Value="White"/>
                                         <Setter Target="TogglePaneButton.Margin" Value="0"/>
-                                        <Setter Target="Pane.Background" Value="{x:Null}"/>
-                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource PlaybarBrush}"/>
-                                        <Setter Target="Pane.Margin" Value="0,130,0,0"/>
+                                        <Setter Target="Pane.Padding" Value="0,70,0,0"/>
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -506,10 +500,8 @@
                                         <Setter Target="Shortcuts.Margin" Value="0,20,0,0"/>
                                         <Setter Target="toggleButton.Margin" Value="5,20,0,0"/>
                                         <Setter Target="PageFrame.Margin" Value="10,0,0,0"/>
-                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
+                                        <Setter Target="Pane.Padding" Value="15,15,0,0"/>
                                         <Setter Target="PageFrame.(Grid.Row)" Value="4"/>
-
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
                                         <Setter Target="searchBox.(Grid.Column)" Value="0"/>
                                         <Setter Target="searchBox.(Grid.ColumnSpan)" Value="3"/>
                                         <Setter Target="searchBox.(Grid.Row)" Value="1"/>
@@ -541,8 +533,7 @@
                                         <StateTriggers:AdaptiveTriggerWithCondition MinWindowWidth="0" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen}"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Pane.Padding" Value="15,15,0,0"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
 
                                         <!--<Setter Target="Pane.(Grid.RowDefinitions)[6].Height" Value="2*"/>-->
@@ -554,8 +545,7 @@
                                         <StateTriggers:AdaptiveTriggerWithCondition MinWindowWidth="0" Condition="{Binding ElementName=RootSplitView, Path=IsPaneOpen, Converter={StaticResource TrueToFalse}}"/>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="Pane.Margin" Value="15,15,0,0"/>
-                                        <Setter Target="Title.Visibility" Value="Collapsed"/>
+                                        <Setter Target="Pane.Padding" Value="15,15,0,0"/>
                                         <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource ThemeBackgroundMobile}"/>
                                         <!--<Setter Target="UpperGrid.Margin" Value="0,0,0,0"/>-->
                                     </VisualState.Setters>
@@ -566,7 +556,7 @@
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
-                                   OpenPaneLength="355"
+                                   OpenPaneLength="375"
                                    CompactPaneLength="48"
                                    IsTabStop="False" Template="{StaticResource SplitViewControlTemplate1}"
                                   PaneBackground="{ThemeResource ThemeBackground}">
@@ -587,16 +577,10 @@
                                 </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
-                                <Grid x:Name="Pane" Margin="30,130,5,0" Background="{ThemeResource PlaybarBrush}" >
+                                <Grid x:Name="Pane" Padding="80,70,5,0" Background="{ThemeResource PlaybarBrush}" >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        
                                         <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <ToggleButton x:Name="TogglePaneButton"
@@ -605,25 +589,16 @@
                                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                                       AutomationProperties.Name="Menu" VerticalAlignment="Top"
                                       ToolTipService.ToolTip="Menu" Width="48" Foreground="{ThemeResource ThemeForeground}"/>
-                                    
-                                        <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
+
+                                    <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
                                                        TabIndex="3" SelectedIndex="0" Grid.Row="1"
-                                                               VerticalAlignment="Top"
+                                                               VerticalAlignment="Stretch" Margin="0,20,0,0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
-                                            <local:NavMenuListView.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Vertical"/>
-                                                </ItemsPanelTemplate>
-                                            </local:NavMenuListView.ItemsPanel>
-                                        </local:NavMenuListView>
-                                    <MenuFlyoutSeparator Grid.Row="2" x:Name="TopSeperator" Background="LightGray" Visibility="Collapsed"/>
-
-                                    <MenuFlyoutSeparator Grid.Row="5" VerticalAlignment="Top" Background="LightGray" Visibility="{Binding ElementName=TopSeperator, Path=Visibility}"/>
-
-                                    <local:NavMenuListView Grid.Row="6" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
+                                    </local:NavMenuListView>
+                                    <local:NavMenuListView Grid.Row="2" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
                                                        TabIndex="3"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
@@ -645,7 +620,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <Frame x:Name="PageFrame" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4" Margin="35,0,10,0">
+                                <Frame x:Name="PageFrame" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="4" Margin="35,30,10,0">
                                     <Frame.ContentTransitions>
                                         <TransitionCollection>
                                             <NavigationThemeTransition>
@@ -693,7 +668,6 @@
                                     </StackPanel>-->
                             </Grid>
                         </SplitView>
-                        <TextBlock Name="Title" Text="Bread Player" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="20" Margin="48,70,0,0"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

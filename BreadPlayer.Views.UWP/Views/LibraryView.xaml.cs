@@ -79,6 +79,10 @@ namespace BreadPlayer
             {
                 (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
             }
+            else
+            {
+                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
