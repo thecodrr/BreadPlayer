@@ -74,7 +74,8 @@ namespace SplitViewMenu
         private Button _backButton;
         private static NavMenuListView _navTopMenuListView;
         private static NavMenuListView _navBottomMenuListView;
-        private static NavMenuListView _playlistsMenuListView;
+        //private static NavMenuListView _playlistsMenuListView;
+        private static bool _focusPageOnLoad = true;
         private static Frame _pageFrame;
         private static SplitView _splitView;
         private static ToggleButton _togglePaneButton;
@@ -203,6 +204,7 @@ namespace SplitViewMenu
 
         private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
+            _focusPageOnLoad = false;
             if (sender.Text.Any())
             {
                 UnSelectAll();
@@ -211,6 +213,7 @@ namespace SplitViewMenu
             else
             {
                 NavigationService.Instance.NavigateToHome();
+                _focusPageOnLoad = true;
             }
         }
 
@@ -347,7 +350,9 @@ namespace SplitViewMenu
       
         private void PageLoaded(object sender, RoutedEventArgs e)
         {
-            ((Page)sender).Focus(FocusState.Programmatic);
+            if(_focusPageOnLoad)
+                ((Page)sender).Focus(FocusState.Programmatic);
+            _focusPageOnLoad = true;
             ((Page)sender).Loaded -= PageLoaded;
         }
         public static object GetParameterFromSelectedItem()
@@ -378,10 +383,10 @@ namespace SplitViewMenu
             {
                 return _navTopMenuListView;
             }
-            if (item.DestinationPage == typeof(PlaylistView))
-            {
-                return _playlistsMenuListView;
-            }
+            //if (item.DestinationPage == typeof(PlaylistView))
+            //{
+            //    return _playlistsMenuListView;
+            //}
             return _navBottomMenuListView;
         }
         private async void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
