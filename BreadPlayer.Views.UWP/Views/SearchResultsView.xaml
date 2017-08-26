@@ -48,44 +48,44 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
 
-            <TextBlock Grid.Row="0" Text="Bakers" FontSize="22" FontWeight="SemiBold"/>
-            <Button HorizontalAlignment="Right" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Bakers">
+            <TextBlock Name="artistsHeader" Grid.Row="0"  Text="Bakers" FontSize="22" Visibility="{Binding Path=ArtistsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" FontWeight="SemiBold"/>
+            <Button HorizontalAlignment="Right" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Bakers">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
                     <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
                 </StackPanel>
             </Button>
-            <GridView Grid.Row="1" Margin="0,20,0,20" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" ItemTemplate="{StaticResource ArtistTemplate}" ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
+            <GridView Grid.Row="1" Margin="0,20,0,20" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" ItemTemplate="{StaticResource ArtistTemplate}" ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
-            
-            <TextBlock x:Uid="albumsHeader" Name="albumsHeader" Grid.Row="2" Text="Breads" FontSize="22" FontWeight="SemiBold"/>
-            <Button Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Breads">
+
+            <TextBlock Name="albumsHeader" x:Uid="albumsHeader" Visibility="{Binding Path=AlbumsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}"  Grid.Row="2" Text="Breads" FontSize="22" FontWeight="SemiBold"/>
+            <Button Grid.Row="2" Visibility="{Binding ElementName=albumsHeader, Path=Visibility}" HorizontalAlignment="Right" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Breads">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
                     <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
                 </StackPanel>
             </Button>
-            <GridView Name="AlbumsList" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,20,0,20" SelectionChanged="AlbumsList_SelectionChanged" ItemTemplate="{StaticResource AlbumTemplate}" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
+            <GridView Name="AlbumsList" Visibility="{Binding ElementName=albumsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,20,0,20" SelectionChanged="AlbumsList_SelectionChanged" ItemTemplate="{StaticResource AlbumTemplate}" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
-            
-            <TextBlock x:Uid="songsHeader" Grid.Row="4" Name="songsHeader" Text="Toasts" FontSize="22" FontWeight="SemiBold"/>
-            <Button Grid.Row="4" HorizontalAlignment="Right" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Toasts">
+
+            <TextBlock x:Uid="songsHeader" Grid.Row="4" Name="songsHeader" Visibility="{Binding Path=ToastsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" Text="Toasts" FontSize="22" FontWeight="SemiBold"/>
+            <Button Grid.Row="4" HorizontalAlignment="Right" Visibility="{Binding ElementName=songsHeader, Path=Visibility}" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Toasts">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
                     <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
                 </StackPanel>
             </Button>
-            <ListView Name="SongsList" Margin="0,20,0,0" Grid.Row="5" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource MediafileTemplate}">
+            <ListView Name="SongsList" Margin="0,20,0,0" Visibility="{Binding ElementName=songsHeader, Path=Visibility}" Grid.Row="5" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource MediafileTemplate}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

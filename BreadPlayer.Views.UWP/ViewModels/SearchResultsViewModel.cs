@@ -9,6 +9,24 @@ namespace BreadPlayer.ViewModels
 {
     public class SearchResultsViewModel : ViewModelBase
     {
+        private bool _albumsVisible;
+        public bool AlbumsVisible
+        {
+            get => _albumsVisible;
+            set => Set(ref _albumsVisible, value);
+        }
+        private bool _artistsVisible;
+        public bool ArtistsVisible
+        {
+            get => _artistsVisible;
+            set => Set(ref _artistsVisible, value);
+        }
+        private bool _toastsVisible;
+        public bool ToastsVisible
+        {
+            get => _toastsVisible;
+            set => Set(ref _toastsVisible, value);
+        }
         private ThreadSafeObservableCollection<Mediafile> _querySongs;
         public ThreadSafeObservableCollection<Mediafile> QuerySongs
         {
@@ -47,12 +65,21 @@ namespace BreadPlayer.ViewModels
                 QueryArtists = new ThreadSafeObservableCollection<Artist>();
 
                 var queryresults = (await StartSearch(query.ToLower()));
-                if(queryresults.Songs != null)
+                if (queryresults.Songs != null)
+                {
+                    ToastsVisible = true;
                     QuerySongs.AddRange(queryresults.Songs);
+                }
                 if (queryresults.Albums != null)
+                {
+                    AlbumsVisible = true;
                     QueryAlbums.AddRange(queryresults.Albums);
+                }
                 if (queryresults.Artists != null)
+                {
+                    ArtistsVisible = true;
                     QueryArtists.AddRange(queryresults.Artists);
+                }
             }
         }
     }

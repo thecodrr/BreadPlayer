@@ -304,7 +304,7 @@ namespace SplitViewMenu
             if (e.Parameter?.ToString() == "Home")
             {
                 _navTopMenuListView.SelectedIndex = 0;
-                await UpdateHeaderAndShortCuts(_navTopMenuListView.Items[3] as SimpleNavMenuItem);
+                await UpdateHeaderAndShortCuts(_navTopMenuListView.Items[0] as SimpleNavMenuItem);
             }
             else if(e.Parameter is Album)
             {

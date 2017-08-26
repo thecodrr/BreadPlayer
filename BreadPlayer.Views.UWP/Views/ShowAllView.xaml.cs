@@ -29,7 +29,7 @@ namespace BreadPlayer.Views
         {
             this.InitializeComponent();
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var parameter = (ValueTuple<Query, string>)e.Parameter;
@@ -38,15 +38,19 @@ namespace BreadPlayer.Views
             {
                 case "Toasts":
                     LibraryService libraryService = new LibraryService(documentStore);
-                    libraryService.Query(parameter.Item1.QueryWord);
+                    searchResultsList.ItemsSource = await libraryService.Query(parameter.Item1.QueryWord);
                     break;
                 case "Bakers":
+                    searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
+                    searchResultsList.ItemTemplate = App.Current.Resources["ArtistTemplate"] as DataTemplate;
                     AlbumArtistService artistService = new AlbumArtistService(documentStore);
-                    artistService.QueryArtistsAsync(parameter.Item1.QueryWord);
+                    searchResultsList.ItemsSource = await artistService.QueryArtistsAsync(parameter.Item1.QueryWord);
                     break;
                 case "Breads":
+                    searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
+                    searchResultsList.ItemTemplate = App.Current.Resources["AlbumTemplate"] as DataTemplate;
                     AlbumArtistService albumService = new AlbumArtistService(documentStore);
-                    albumService.QueryAlbumsAsync(parameter.Item1.QueryWord);
+                    searchResultsList.ItemsSource = await albumService.QueryAlbumsAsync(parameter.Item1.QueryWord);
                     break;
             }
         }
