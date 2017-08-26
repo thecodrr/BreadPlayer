@@ -4,8 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Converter="using:BreadPlayer.Converters"
     xmlns:MacalifaCore="using:BreadPlayer.Core"
+    xmlns:Themes="using:BreadPlayer.Themes"
     xmlns:VM="using:BreadPlayer.ViewModels"
-   RequiresPointerMode="WhenRequested">
+
+    RequiresPointerMode="WhenRequested">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
@@ -84,7 +86,9 @@
                     <Color x:Key="BlurTint2">#990C0C0C</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-
+            <ResourceDictionary.MergedDictionaries>
+                <Themes:DataTemplates/>
+            </ResourceDictionary.MergedDictionaries>
             <MacalifaCore:SharedLogic x:Key="Core"/>
             <VM:LibraryViewModel x:Key="LibVM"/>
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>

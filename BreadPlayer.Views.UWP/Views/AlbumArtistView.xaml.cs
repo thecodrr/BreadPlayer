@@ -27,13 +27,13 @@ namespace BreadPlayer
             {
                 if (e.Parameter.ToString() == "AlbumView")
                 {
-                    albumListView.ItemTemplate = this.Resources["SelectedTemplate"] as Windows.UI.Xaml.DataTemplate;
+                    albumListView.ItemTemplate = App.Current.Resources["AlbumTemplate"] as Windows.UI.Xaml.DataTemplate;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
                     (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
                 }
                 else if (e.Parameter.ToString() == "ArtistView")
                 {
-                    albumListView.ItemTemplate = this.Resources["SelectedArtistTemplate"] as Windows.UI.Xaml.DataTemplate;
+                    albumListView.ItemTemplate = App.Current.Resources["ArtistTemplate"] as Windows.UI.Xaml.DataTemplate;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
                     (grid.DataContext as AlbumArtistViewModel).LoadArtists().ConfigureAwait(false);
                 }

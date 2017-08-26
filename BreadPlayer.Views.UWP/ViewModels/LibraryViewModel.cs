@@ -168,7 +168,7 @@ namespace BreadPlayer.ViewModels
 
         private CollectionViewSource _viewSource;
 
-        private CollectionViewSource ViewSource
+        public CollectionViewSource ViewSource
         {
             get => _viewSource;
             set => Set(ref _viewSource, value);
