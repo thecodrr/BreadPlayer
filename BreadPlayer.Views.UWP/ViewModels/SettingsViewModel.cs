@@ -500,7 +500,7 @@ namespace BreadPlayer.ViewModels
                     while (files.Count != 0)
                     {
                         var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
-                        for(int i =0; i< files.Count; i++)
+                        for (int i = 0; i < files.Count; i++)
                         {
                             progress++;
                             try
@@ -539,15 +539,12 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
                 await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
-                
-                await LibraryService.AddMediafiles(uniqueFiles);
 
-                AlbumArtistViewModel vm = new AlbumArtistViewModel();
+                await LibraryService.AddMediafiles(uniqueFiles);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
-                vm = null;
 
-            string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
+                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
 
                 BLogger.Logger.Info(message);
                 await NotificationManager.ShowMessageAsync(message);

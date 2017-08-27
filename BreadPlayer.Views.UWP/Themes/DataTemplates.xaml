@@ -373,7 +373,7 @@
                     <Grid.Background>
                         <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
                             <ImageBrush.ImageSource>
-                                <BitmapImage DecodePixelHeight="150" DecodePixelWidth="150" DecodePixelType="Logical" UriSource="{Binding Picture}"/>
+                                <BitmapImage DecodePixelHeight="150" DecodePixelWidth="150" DecodePixelType="Logical" UriSource="{Binding Picture, UpdateSourceTrigger=PropertyChanged}"/>
                             </ImageBrush.ImageSource>
                             <Interactivity:Interaction.Behaviors>
                                 <Core:EventTriggerBehavior EventName="ImageOpened">
@@ -388,7 +388,7 @@
                             </Interactivity:Interaction.Behaviors>
                         </ImageBrush>
                     </Grid.Background>
-                    <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Converter={StaticResource BoolToVisibility}}"/>
+                    <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
                 </Grid>
             </Border>
             <TextBlock x:Name="artistName" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>

@@ -168,6 +168,7 @@ namespace BreadPlayer
                 // BLogger.Logger.Info("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
 
+                var vm = App.Current.Resources["AlbumArtistVM"];
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {

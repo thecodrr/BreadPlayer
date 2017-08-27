@@ -18,7 +18,6 @@ namespace BreadPlayer
         public AlbumArtistView()
         {
             InitializeComponent();
-            grid.DataContext = new AlbumArtistViewModel();
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

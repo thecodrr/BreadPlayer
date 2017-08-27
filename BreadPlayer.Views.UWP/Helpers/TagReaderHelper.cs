@@ -5,6 +5,7 @@ using BreadPlayer.Extensions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -159,6 +160,24 @@ namespace BreadPlayer.Helpers
                 return (true, Path.GetFileNameWithoutExtension(GetAlbumArtPath(file)));
             }
             return (false, Path.GetFileNameWithoutExtension(GetAlbumArtPath(file)));
+        }
+
+        public static async Task<string> CacheArtistArt(string url, Artist artist)
+        {
+            var artistArtPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, @"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg");
+            if (!File.Exists(artistArtPath))
+            {
+                var artistArt = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg", CreationCollisionOption.FailIfExists);
+
+                HttpClient client = new HttpClient(); // Create HttpClient
+                byte[] buffer = await client.GetByteArrayAsync(url).ConfigureAwait(false); // Download file
+                using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
+                {
+                    await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    return artistArt.Path;
+                }
+            }
+            return artistArtPath;
         }
     }
 }

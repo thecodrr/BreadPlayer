@@ -192,9 +192,27 @@ namespace BreadPlayer.Database
             });
         }
 
-        public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
+        public Task UpdateRecords<T>(IEnumerable<IDbRecord> records)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var trans = DB.BeginTrans())
+                {
+                    try
+                    {
+                        foreach (var record in records)
+                        {
+                            currentCollection.Update(record.Id, record);
+                        }
+
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                    }
+                }
+            });
         }
 
         public void Dispose()

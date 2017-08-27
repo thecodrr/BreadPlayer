@@ -11,6 +11,14 @@ namespace BreadPlayer.Database
         {
             get;
         }
+        public int ArtistsCount
+        {
+            get
+            {
+                Database.ChangeTable("Artists", "ArtistsText");
+                return Database.GetRecordsCount();
+            }
+        }
         public AlbumArtistService(IDatabaseService database)
         {
             Database = database;
@@ -44,6 +52,11 @@ namespace BreadPlayer.Database
         {
             Database.ChangeTable("Albums", "AlbumsText");
             return Database.QueryRecords<Album>(term, limit);
+        }
+        public Task UpdateArtistAsync(Artist artist)
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            return Database.UpdateRecordAsync(artist, artist.Id);
         }
         public void Dispose()
         {

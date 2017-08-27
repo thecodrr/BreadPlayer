@@ -93,6 +93,7 @@
             <VM:LibraryViewModel x:Key="LibVM"/>
             <VM:PlaylistViewModel x:Key="PlaylistVM"/>
             <VM:ShellViewModel x:Key="ShellVM"/>
+            <VM:AlbumArtistViewModel x:Key="AlbumArtistVM"/>
 
             <Converter:PathToImageSourceConverter x:Key="PathToImage"/>
             <Converter:BoolToVisibilityConverter x:Key="BoolToVisibility"/>

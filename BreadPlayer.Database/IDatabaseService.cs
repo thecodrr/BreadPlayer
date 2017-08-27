@@ -18,7 +18,7 @@ namespace BreadPlayer.Database
         Task RemoveRecords(IEnumerable<IDbRecord> records);
         Task RemoveRecord(IDbRecord record);
 
-        void UpdateRecords<T>(IEnumerable<IDbRecord> records);
+        Task UpdateRecords<T>(IEnumerable<IDbRecord> records);
         Task<bool> UpdateRecordAsync<T>(T record, long id);
         Task<IEnumerable<T>> QueryRecords<T>(string term, int limit = int.MaxValue);
         int GetRecordsCount();

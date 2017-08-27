@@ -15,7 +15,7 @@
     
     mc:Ignorable="d">
     
-    <Grid x:Name="grid" Margin="0,0,0,0">
+    <Grid x:Name="grid" Margin="0,0,0,0" DataContext="{StaticResource AlbumArtistVM}">
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
         </Grid.Resources>

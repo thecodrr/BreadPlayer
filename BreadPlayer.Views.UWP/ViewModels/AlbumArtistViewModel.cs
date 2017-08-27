@@ -9,6 +9,8 @@ using BreadPlayer.Database;
 using BreadPlayer.Messengers;
 using IF.Lastfm.Core.Api;
 using BreadPlayer.Web.Lastfm;
+using BreadPlayer.Helpers;
+using BreadPlayer.Parsers.TagParser;
 
 namespace BreadPlayer.ViewModels
 {
@@ -28,8 +30,7 @@ namespace BreadPlayer.ViewModels
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbums(message.Payload as IEnumerable<Mediafile>);
-                await AddArtists(message.Payload as IEnumerable<Mediafile>);
+                await AddAlbumsAndArtists(message.Payload as IEnumerable<Mediafile>);
             }
         }
         /// <summary>
@@ -57,21 +58,25 @@ namespace BreadPlayer.ViewModels
 
         public async Task LoadArtists()
         {
-            if (ArtistsCollection?.Count <= 0)
+            if (ArtistsCollection?.Count != AlbumArtistService.ArtistsCount)
             {
                 ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
-                ArtistsCollection.CollectionChanged += AlbumCollection_CollectionChanged;
+                ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
                 if (ArtistsCollection.Count <= 0)
                 {
                     RecordsLoaded = false;
                 }
+            }
+            else
+            {
+                RecordsLoaded = false;
             }
         }
 
         private void AlbumCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //Albums are loaded, we can now hide the progress ring.
-            if (AlbumCollection.Count > 0 || ArtistsCollection.Count > 0)
+            if (AlbumCollection.Count > 0)
             {
                 RecordsLoaded = false;
             }
@@ -113,57 +118,70 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
-        public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
+        public async Task AddAlbumsAndArtists(IEnumerable<Mediafile> mediafiles)
         {
             List<Album> albums = new List<Album>();
-            //List<ChildSong> childsongs = new List<ChildSong>();
+            List<Artist> artists = new List<Artist>();
             await Task.Run(() =>
             {
-                //Random albumRandom = new Random();
-                foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
+                foreach (var mediafile in mediafiles.ToList())
                 {
-                    var firstSong = albumGroup.First() ?? new Mediafile();
-                    Album album = new Album
+                    if (albums.All(t => t.AlbumName != mediafile.Album))
                     {
-                        Artist = firstSong?.LeadArtist,
-                        AlbumName = albumGroup.Key,
-                        AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                    };                           
-                    albums.Add(album);
+                        Album album = new Album
+                        {
+                            Artist = mediafile.LeadArtist,
+                            AlbumName = mediafile.Album,
+                            AlbumArt = string.IsNullOrEmpty(mediafile?.AttachedPicture) ? null : mediafile?.AttachedPicture
+                        };
+
+                        albums.Add(album);
+                    }
+                    if(artists.All(t => t.Name != mediafile.LeadArtist))
+                    {
+                         Artist artist = new Artist
+                        {
+                            Name = mediafile?.LeadArtist
+                        };
+
+                        artists.Add(artist);
+                    }
                 }
             }).ContinueWith(async (task) =>
             {
-                await AlbumArtistService.InsertAlbums(albums);
+                await AlbumArtistService.InsertAlbums(albums).ConfigureAwait(false);
+                await AlbumArtistService.InsertArtists(artists).ConfigureAwait(false);
+                ArtistsCollection.AddRange(artists);
+                ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
             });           
         }
-        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
 
-        /// <summary>
-        /// Adds all albums to <see cref="AlbumCollection"/>.
-        /// </summary>
-        public async Task AddArtists(IEnumerable<Mediafile> mediafiles)
+        private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            List<Artist> artists = new List<Artist>();
-            //List<ChildSong> childsongs = new List<ChildSong>();
-            await Task.Run(async () =>
+            if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
             {
-                //Random albumRandom = new Random();
-                foreach (var artistGroup in mediafiles.GroupBy(t => t.LeadArtist))
+                ArtistsCollection.CollectionChanged -= ArtistsCollection_CollectionChanged;
+                RecordsLoaded = false;
+                await CacheAllArtists().ConfigureAwait(false);
+            }
+        }
+
+        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
+        private async Task CacheAllArtists()
+        {
+            foreach (var artist in ArtistsCollection.Where(t => string.IsNullOrEmpty(t.Picture)))
+            {
+                var artistInfo = (await LastfmClient.Artist.GetInfoAsync(TagParser.ParseArtists(artist.Name)[0], "en", true).ConfigureAwait(false))?.Content;
+                if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
                 {
-                    var firstSong = artistGroup.First() ?? new Mediafile();
-                     var artistInfo = await LastfmClient.Artist.GetInfoAsync(firstSong?.LeadArtist, "en", true);
-                    Artist artist = new Artist
-                    {
-                        Name = firstSong?.LeadArtist,
-                        Picture = artistInfo?.Content?.MainImage?.Large.AbsoluteUri,
-                        Bio = artistInfo?.Content?.Bio?.Content
-                    };
-                    artists.Add(artist);
+                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
                 }
-            }).ContinueWith(async (task) =>
-            {
-                await AlbumArtistService.InsertArtists(artists);
-            });
+                if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                {
+                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = artistInfo?.Bio?.Content ?? "";
+                }
+                await AlbumArtistService.UpdateArtistAsync(artist).ConfigureAwait(false);
+            }
         }
     }
 }
