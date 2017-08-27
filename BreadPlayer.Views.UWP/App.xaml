@@ -498,7 +498,7 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Thumb">
-                                                    <Ellipse x:Name="thumb" StrokeThickness="2" Opacity="1" Height="15" Width="15" RenderTransformOrigin="0.5,0.5" Stroke="White" Fill="{TemplateBinding Foreground}">
+                                                    <Ellipse x:Name="thumb" StrokeThickness="2" Opacity="1" Height="15" Width="15" RenderTransformOrigin="0.5,0.5" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Foreground}">
                                                         <Ellipse.RenderTransform>
                                                             <ScaleTransform x:Name="scaleTrans" ScaleX="0.9" ScaleY="0.9"/>
                                                         </Ellipse.RenderTransform>
@@ -544,25 +544,30 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <Grid x:Name="SliderContainer" Grid.Row="1">
+                                <Grid x:Name="SliderContainer" Background="Transparent" Grid.Row="1">
                                     <Grid x:Name="HorizontalTemplate">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="DarkGray" Grid.Row="1" Height="4" RadiusX="2" RadiusY="2"/>
-                                        <Rectangle x:Name="HorizontalDecreaseRect" Fill="{TemplateBinding Background}" Grid.Row="1" Height="4" RadiusX="2" RadiusY="2"/>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="5"/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" Fill="#FF999999" Grid.Row="1" Height="2" RadiusX="0.5" RadiusY="0.5"/>
+                                        <Rectangle x:Name="HorizontalDecreaseRect" Fill="{TemplateBinding Background}" Grid.Row="1" Height="2"/>
                                         <Rectangle x:Name="HorizontalBorder" Grid.ColumnSpan="3" Grid.Row="1" Stroke="{TemplateBinding BorderBrush}"
-                            StrokeThickness="{TemplateBinding BorderThickness}" Height="2" RadiusX="1" RadiusY="1"/>
+                            StrokeThickness="{TemplateBinding BorderThickness}" Visibility="Collapsed" Height="2" RadiusX="1" RadiusY="1"/>
                                         <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw" Background="{ThemeResource SliderThumbBackgroundThemeBrush}"
-                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" Margin="0,0,0,0" Height="15" Width="15"/>
+                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" BorderBrush="{TemplateBinding BorderBrush}" Height="20" Width="15"/>
                                     </Grid>
                                     <Grid x:Name="VerticalTemplate" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="17"/>
+                                            <ColumnDefinition Width="5"/>
                                             <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="17"/>
+                                            <ColumnDefinition Width="5"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
@@ -574,7 +579,7 @@
                                         <Rectangle x:Name="VerticalBorder" Grid.RowSpan="3" Grid.Column="1"  Stroke="{TemplateBinding BorderBrush}"
                             StrokeThickness="{TemplateBinding BorderThickness}" Width="2" RadiusX="1" RadiusY="1" />
                                         <Thumb x:Name="VerticalThumb" AutomationProperties.AccessibilityView="Raw" Background="{ThemeResource SliderThumbBackgroundThemeBrush}"
-                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" Height="20" Width="20"/>
+                            Grid.Column="1" DataContext="{TemplateBinding Value}" Grid.Row="1" Style="{StaticResource SliderThumbStyle}" BorderBrush="{TemplateBinding BorderBrush}" Height="15" Width="20"/>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -586,7 +591,7 @@
             <Style TargetType="Button" x:Key="HyperlinkBtn">
                 <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
                 <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
-                <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource SystemControlHyperlinkBaseMediumBrush}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Padding" Value="8,4,8,4" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
@@ -610,7 +615,7 @@
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                    Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AccentHoverBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding ElementName=ContentPresenter, Path=BorderBrush, TargetNullValue={ThemeResource SystemControlHyperlinkBaseMediumBrush}, FallbackValue={ThemeResource SystemControlHyperlinkBaseMediumBrush}}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                             </Storyboard>

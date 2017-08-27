@@ -101,7 +101,7 @@
                         <Setter Target="positionSlider.(Grid.Row)" Value="0"/>
                         <Setter Target="positionSlider.(Grid.Column)" Value="0"/>
                         <Setter Target="positionSlider.(Grid.ColumnSpan)" Value="20"/>
-                        <Setter Target="positionSlider.Margin" Value="0,-5,0,0"/>
+                        <Setter Target="positionSlider.Margin" Value="0,-10,0,0"/>
                         <Setter Target="positionSlider.Background" Value="{ThemeResource ThemeForeground}"/>
                         <Setter Target="positionSlider.VerticalAlignment" Value="Top"/>
 
@@ -361,7 +361,7 @@
                 </AppBarButton>
                 
                 <TextBlock x:Name="positionTxt" Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="15,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
-                <Slider Visibility="Visible" x:Name="positionSlider" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFDBDBDB" BorderBrush="Transparent" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
+                <Slider Visibility="Visible" x:Name="positionSlider" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFDBDBDB" BorderBrush="#FFDBDBDB" BorderThickness="0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
                 <TextBlock Visibility="{Binding ElementName=positionTxt, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,15,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFE5E5E5" FontSize="12"/>
 
                 <AppBarButton x:Uid="previousSongBtn" Grid.Row="1" Grid.Column="4" BorderBrush="White" Icon="Previous" VerticalAlignment="Center" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="40" Height="40">
@@ -406,7 +406,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <AppBarToggleButton x:Uid="muteBtn" BorderBrush="WhiteSmoke" IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}" VerticalAlignment="Center" Grid.Column="0" Icon="Mute" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Margin="15,0,0,0" Height="40" />
-            <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" BorderBrush="{x:Null}" Margin="5,0,0,0"/>
+            <Slider x:Name="volumeSlider" VerticalAlignment="Center" Grid.Column="1" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10" Style="{StaticResource CircleSlider}"  Background="#FFC5C5C5" BorderBrush="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="5,0,0,0"/>
             <TextBlock Grid.Column="2" Width="40" TextAlignment="Center" Text="{Binding  Path=Player.Volume}" VerticalAlignment="Center" Margin="5,0,15,0" FontSize="20" Height="30" Foreground="#FFE0E0E0"/>
         </Grid>
         <Grid x:Name="NowPlayingGrid" Background="#ccdbdbdb" Visibility="Collapsed" Opacity="0">

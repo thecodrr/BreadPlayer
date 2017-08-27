@@ -323,7 +323,7 @@ namespace SplitViewMenu
             }
             else if(e.Parameter is ValueTuple<Query, string> parameter)
             {
-                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { Label = $"{parameter.Item2} search results for \"" + parameter.Item1.QueryWord + "\"" });
+                await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { Label = $"{parameter.Item2} for \"" + parameter.Item1.QueryWord + "\"" });
             }
         }
         public static void UnSelectAll()

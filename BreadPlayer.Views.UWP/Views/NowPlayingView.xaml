@@ -452,6 +452,7 @@
                         <Setter Target="positionSlider.Margin" Value="0"/>
                         <Setter Target="positionSlider.(Grid.Row)" Value="1"/>
                         <Setter Target="currentLyricTxt.Visibility" Value="Visible"/>
+                        <Setter Target="volumeGrid.(Grid.Row)" Value="2"/>
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
@@ -496,23 +497,23 @@
             <Image x:Name="coverArtImage" HorizontalAlignment="Left" Height="130" Width="130" Stretch="Fill" Source="{Binding Path=AttachedPicture}"/>
 
             <StackPanel x:Name="trackInfoPanel" Margin="10,0,0,0" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Bottom">
-                <StackPanel Margin="0,0,0,-10" Orientation="Horizontal" DataContext="{StaticResource ShellVM}">
-                    <Button Content="&#xE892;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
-                    <Button x:Name="playBtn" Margin="5,0,5,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
+                <StackPanel Margin="0,0,0,-10" BorderBrush="{ThemeResource AccentHoverBrush}" Orientation="Horizontal" DataContext="{StaticResource ShellVM}">
+                    <Button Content="&#xE892;" BorderBrush="{ThemeResource AccentHoverBrush}" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+                    <Button x:Name="playBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Margin="5,0,5,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
                         <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="20"/>
                     </Button>
-                    <Button  Content="&#xE893;" Margin="0,0,5,0" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+                    <Button  Content="&#xE893;" BorderBrush="{ThemeResource AccentHoverBrush}" Margin="0,0,5,0" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
                     <ToggleButton x:Name="volumeBtn" Content="&#xE767;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Style="{StaticResource HyperlinkToggleBtn}" VerticalAlignment="Stretch"/>
                 </StackPanel>
                 <TextBlock Text="{Binding Path=Title}" Foreground="{StaticResource TextBrush}"/>
                 <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
                 <TextBlock Text="{Binding Path=Album}" TextTrimming="WordEllipsis" Foreground="{StaticResource TextBrush}"/>
-                <Button x:Name="maximizeBtn" Content="&#xE740;" Click="OnMaximizeToFullScreen" Margin="0,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="15" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}"/>
+                <Button x:Name="maximizeBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE740;" Click="OnMaximizeToFullScreen" Margin="0,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="15" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}"/>
             </StackPanel>
             <Slider x:Name="positionSlider"
                     Grid.Row="2" 
                     ThumbToolTipValueConverter="{StaticResource DoubleToTime}"
-                    Margin="-20,0,-20,-25" Padding="0" 
+                    Margin="-20,0,-20,-35" Padding="0" 
                     Grid.ColumnSpan="4" 
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom" 
@@ -520,11 +521,12 @@
                     Background="#1b1b1b" 
                     Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" 
                     Value="{Binding Source={StaticResource ShellVM}, Path=CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" 
-                    BorderBrush="Transparent"
+                    BorderBrush="#1b1b1b"
+                    BorderThickness="0"
                     Foreground="{ThemeResource TextBrush}" />
             <!--<Button x:Name="addBtn" Content="&#xE710;" Grid.Row="1" Margin="0,0,0,0" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}"/>-->
-            <Grid Grid.Row="2" Visibility="{Binding ElementName=volumeBtn, Path=IsChecked}" DataContext="{StaticResource Core}" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="4" Margin="120,65,0,-30" HorizontalAlignment="Left" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}">
-                <Slider Orientation="Vertical" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10"  Margin="0,10" VerticalAlignment="Stretch" Style="{StaticResource CircleSlider}" Background="#FFC5C5C5" BorderBrush="Transparent" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+            <Grid Name="volumeGrid" Grid.Row="0" Visibility="{Binding ElementName=volumeBtn, Path=IsChecked}" DataContext="{StaticResource Core}" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="4" Margin="120,45,0,-30" HorizontalAlignment="Left" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}">
+                <Slider Orientation="Vertical" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10"  Margin="0,10" VerticalAlignment="Stretch" Style="{StaticResource CircleSlider}" Background="#FFC5C5C5" BorderBrush="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
             </Grid>
             <TextBlock FontSize="36" 
                        TextWrapping="WrapWholeWords"
