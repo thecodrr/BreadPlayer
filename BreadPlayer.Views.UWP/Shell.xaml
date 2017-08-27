@@ -314,7 +314,7 @@
             </StackPanel>
             <Grid x:Name="playbarGrid" Height="70" VerticalAlignment="Bottom" Background="{ThemeResource PlaybarBrush}" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -330,7 +330,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <AppBarButton x:Name="infoBar" Grid.Row="1" Command="{Binding Path=NavigateToNowPlayingViewCommand}" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}">
+                <AppBarButton x:Name="infoBar" MinWidth="375" Grid.Row="1" Command="{Binding Path=NavigateToNowPlayingViewCommand}" Grid.Column="0" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}">
                     <AppBarButton.Resources>
                         <MenuFlyout xmlns:Extension="using:BreadPlayer.Extensions" Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=OptionItems}" x:Name="contextMenu" x:Key="Flyout">
                         </MenuFlyout>

@@ -83,7 +83,7 @@ namespace BreadPlayer
                     var currentlyPlaying = SharedLogic.Player.CurrentlyPlayingFile;
                     DataRequest dataRequest = args.Request;
                     dataRequest.Data.Properties.Title = $"{currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}";
-                    dataRequest.Data.Properties.Description = "Now Playing toast from Bread Player";
+                    dataRequest.Data.Properties.Description = "Now baking toast from BreadPlayer";
                     dataRequest.Data.SetApplicationLink(GetApplicationLink(GetType().Name));
                     dataRequest.Data.Properties.ContentSourceApplicationLink = GetApplicationLink(GetType().Name);
 

@@ -509,7 +509,7 @@
                 <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
                 <TextBlock Text="{Binding Path=Album}" TextTrimming="WordEllipsis" Foreground="{StaticResource TextBrush}"/>
                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
-                    <Button x:Name="shareBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE72D;" Click="OnShareSong" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="15" Style="{StaticResource HyperlinkBtn}"/>
+                    <Button x:Name="shareBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE72D;" Click="OnShareSong" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="16" Style="{StaticResource HyperlinkBtn}"/>
                     <Button x:Name="maximizeBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE740;" Click="OnMaximizeToFullScreen" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="15" Style="{StaticResource HyperlinkBtn}"/>
                 </StackPanel>
             </StackPanel>
