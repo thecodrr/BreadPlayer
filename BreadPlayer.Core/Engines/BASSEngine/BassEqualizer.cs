@@ -61,9 +61,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             _eq.fQ = 0f;
             _eq.fBandwidth = 2.5f;
             _eq.lChannel = FXChannelFlags.All;
-            
+
             //init equalizer bands
-            Bands.Clear();
+            Bands = new ObservableCollection<IEqualizerBand>();
 
             var gainValues = !setToDefaultValues && EqualizerSettings != null ? EqualizerSettings.GainValues : null;
             for(int i =0;i < EqDefaultValues.Length; i++)

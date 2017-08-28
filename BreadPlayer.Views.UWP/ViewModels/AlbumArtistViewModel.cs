@@ -169,18 +169,22 @@ namespace BreadPlayer.ViewModels
         private LastfmClient LastfmClient => new Lastfm().LastfmClient;
         private async Task CacheAllArtists()
         {
-            foreach (var artist in ArtistsCollection.Where(t => string.IsNullOrEmpty(t.Picture)))
+            if (InternetConnectivityHelper.IsInternetConnected)
             {
-                var artistInfo = (await LastfmClient.Artist.GetInfoAsync(TagParser.ParseArtists(artist.Name)[0], "en", true).ConfigureAwait(false))?.Content;
-                if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                foreach (var artist in ArtistsCollection.Where(t => string.IsNullOrEmpty(t.Picture)))
                 {
-                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                    //will crash here if there is no internet.
+                    var artistInfo = (await LastfmClient.Artist.GetInfoAsync(TagParser.ParseArtists(artist.Name)[0], "en", true).ConfigureAwait(false))?.Content;
+                    if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                    {
+                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                    }
+                    if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                    {
+                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = artistInfo?.Bio?.Content ?? "";
+                    }
+                    await AlbumArtistService.UpdateArtistAsync(artist).ConfigureAwait(false);
                 }
-                if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
-                {
-                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = artistInfo?.Bio?.Content ?? "";
-                }
-                await AlbumArtistService.UpdateArtistAsync(artist).ConfigureAwait(false);
             }
         }
     }

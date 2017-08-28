@@ -147,7 +147,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 try
                 {
                     string path = mediaFile.Path;
-                    
+
                     await InitializeCore.Dispatcher.RunAsync(() =>
                     {
                         MediaChanging?.Invoke(this, new EventArgs());
@@ -173,6 +173,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     }
                     else
                     {
+                        //Crash here.
                         (Equalizer as BassEqualizer).ReInit(_handle);
                     }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));

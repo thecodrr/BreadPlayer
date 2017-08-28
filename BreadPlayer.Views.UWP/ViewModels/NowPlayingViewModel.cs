@@ -18,6 +18,7 @@ using BreadPlayer.Parsers.LRCParser;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Core.Extensions;
 using System.Threading;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
@@ -89,7 +90,6 @@ namespace BreadPlayer.ViewModels
         
         private async void OnMediaChanged(object sender, EventArgs e)
         {
-            timer?.Stop();
             Lyrics?.Clear();
             CurrentLyric = null;
             await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
@@ -127,12 +127,13 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
+                timer?.Stop();
                 if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
                     return;
                 LyricsLoading = true;
                 var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
 
-                if (list?.Any() == false)
+                if (list == null || list?.Any() == false)
                 {
                     LyricsLoading = false;
                     return;
@@ -178,9 +179,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-                
-                if (internetConnectionProfile != null)
+                if (InternetConnectivityHelper.IsInternetConnected)
                 {
                     //cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();

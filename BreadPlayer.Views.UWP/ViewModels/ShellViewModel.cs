@@ -815,9 +815,10 @@ namespace BreadPlayer.ViewModels
             }
             return false;
         }
+        ApplicationView applicationView = ApplicationView.GetForCurrentView();
         private async Task UpdateUi(Mediafile mediaFile)
         {
-            ApplicationView.GetForCurrentView().Title = "Playing - "  + mediaFile.Title;
+            applicationView.Title = string.Format("Listening to {0} by {1}", mediaFile.Title, mediaFile.LeadArtist);
             
             ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
