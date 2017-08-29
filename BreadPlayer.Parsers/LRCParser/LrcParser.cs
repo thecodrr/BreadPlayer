@@ -76,6 +76,7 @@ namespace BreadPlayer.Parsers.LRCParser
         public static ILrcParser FromText(string lrcText)
         {
             if (lrcText == null) throw new ArgumentNullException("lrcText");
+            
             var pairs = new List<KeyValuePair<string, string>>();
             var titles = new List<string>();
             var sb = new StringBuilder();
@@ -233,13 +234,6 @@ namespace BreadPlayer.Parsers.LRCParser
                     {
                         // Ignore unsupported tag
                     }
-                }
-                else if (pair.Key.Contains("x-trans")) //ignore translation tag
-                {
-                }
-                else
-                {
-                    throw new FormatException(string.Format("Unknown tag [{0}]", pair.Key));
                 }
             }
 
