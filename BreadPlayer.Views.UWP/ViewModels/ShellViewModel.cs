@@ -533,7 +533,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-            if (UpcomingSong != null)
+            if (UpcomingSong != null && Repeat != "Repeat Song")
             {
                 NotificationManager.SendUpcomingSongNotification(UpcomingSong);
                 await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
