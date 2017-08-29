@@ -28,6 +28,12 @@ namespace BreadPlayer.Core.Models
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
+        bool hasFetchedInfo;
+        public bool HasFetchedInfo
+        {
+            get => hasFetchedInfo;
+            set => Set(ref hasFetchedInfo, value);
+        }
         public string GetTextSearchKey()
         {
             return Name;
