@@ -183,8 +183,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="titleTxt" x:Phase="0" Width="10000" Grid.Column="1" Margin="0,0,5,0" TextWrapping="NoWrap" FontSize="14" TextTrimming="Clip" Text="{x:Bind Title}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock x:Name="artistTxt" x:Phase="1" Width="10000" Grid.Column="2" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{x:Bind LeadArtist}"  VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock x:Name="albumTxt" x:Phase="2" Width="10000" Grid.Column="3" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Text="{x:Bind Album}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock x:Name="durationTxt" x:Phase="3" Width="50" Grid.Column="4" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Tag="Numerical" Text="{x:Bind Length}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="50" Grid.ColumnSpan="9">
                 <Interactivity:Interaction.Behaviors>
@@ -204,14 +202,10 @@
                     <Core:EventTriggerBehavior EventName="Holding">
                         <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
                     </Core:EventTriggerBehavior>
-                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                    <Behaviours:InputSpecificEventTriggerBehaviour EventName="PointerEntered" InputType="Mouse">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
-                    </Core:EventTriggerBehavior>
-                    <Core:EventTriggerBehavior EventName="PointerExited">
-                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Collapsed"/>
-                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
-                    </Core:EventTriggerBehavior>
+                    </Behaviours:InputSpecificEventTriggerBehaviour>
                     <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected}" Value="False" ComparisonCondition="Equal">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Collapsed"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
@@ -225,6 +219,8 @@
                     </Core:DataTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Border>
+            <Button x:Name="artistBtn" x:Phase="1" Grid.Column="2" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToArtistPageCommand}" CommandParameter="{x:Bind LeadArtist}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind LeadArtist}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
+            <Button x:Name="albumBtn" x:Phase="2" Grid.Column="3" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" CommandParameter="{x:Bind Album}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind Album}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
             <ToggleButton Name="FavoriteButton"  Background="Transparent" Visibility="Collapsed" HorizontalAlignment="Left" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="PointerEntered">

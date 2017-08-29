@@ -42,7 +42,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>        
-        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" ItemTemplate="{StaticResource AlbumTemplate}" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" DataFetchSize="50" SelectionChanged="albumListView_SelectionChanged" >
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" ItemTemplate="{StaticResource AlbumTemplate}" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" DataFetchSize="5" SelectionChanged="albumListView_SelectionChanged" >
             <GridView.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Album : ObservableObject, IDbRecord, IComparable<Album>
+    public class Album : ObservableObject, IDbRecord, IComparable<Album>, ISelectable
     {
         public long Id { get; set; }
         public string AlbumName { get; set; }

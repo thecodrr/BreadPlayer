@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord
+    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable
     {
         #region Fields
         private PlayerState _state = PlayerState.Stopped;

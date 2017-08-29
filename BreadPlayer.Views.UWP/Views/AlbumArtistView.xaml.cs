@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.ViewModels;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Core.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -49,14 +50,14 @@ namespace BreadPlayer
 
         private void albumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //foreach(Album album in e.RemovedItems)
-            //{
-            //    album.IsSelected = false;
-            //}
-            //foreach(Album album in e.AddedItems)
-            //{
-            //    album.IsSelected = true;
-            //}
+            foreach (ISelectable record in e.RemovedItems)
+            {
+                record.IsSelected = false;
+            }
+            foreach (ISelectable record in e.AddedItems)
+            {
+                record.IsSelected = true;
+            }
         }
     }
 }

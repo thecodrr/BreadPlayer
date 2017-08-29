@@ -123,10 +123,24 @@ namespace BreadPlayer.Core
         #region ICommands
 
         #region Definitions
-
+        private RelayCommand _navigateToArtistPageCommand;
         private RelayCommand _changeAlbumArtCommand;
         private RelayCommand _showPropertiesCommand;
         private RelayCommand _opensonglocationCommand;
+        private RelayCommand _navigateCommand;
+
+        public ICommand NavigateToAlbumPageCommand
+        {
+            get
+            { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
+        }/// <summary>
+         /// Gets command for navigating to a page./>
+         /// </summary>
+        public ICommand NavigateToArtistPageCommand
+        {
+            get
+            { if (_navigateToArtistPageCommand == null) { _navigateToArtistPageCommand = new RelayCommand(param => NavigateToArtistPage(param)); } return _navigateToArtistPageCommand; }
+        }
         /// <summary>
         /// Gets command for showing properties of a mediafile. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -208,23 +222,18 @@ namespace BreadPlayer.Core
             }
         }
 
-        private RelayCommand _navigateCommand;
-        public ICommand NavigateToAlbumPageCommand
-        {
-            get
-            { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
-        }
-
         private void NavigateToAlbumPage(object para)
         {
-            if (para is Album album)
-            {
-                SplitViewMenu.SplitViewMenu.UnSelectAll();
-
-                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
-            }
+            SplitViewMenu.SplitViewMenu.UnSelectAll();
+            var album = para is Album ? (Album)para : new Album { AlbumName = para.ToString() };
+            NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
         }
-
+        private void NavigateToArtistPage(object para)
+        {
+            SplitViewMenu.SplitViewMenu.UnSelectAll();
+            var artist = para is Artist ? (Artist)para : new Artist { Name = para.ToString() };
+            NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+        }
         #endregion
 
         #endregion

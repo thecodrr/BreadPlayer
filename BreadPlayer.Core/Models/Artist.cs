@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Artist : ObservableObject, IDbRecord
+    public class Artist : ObservableObject, IDbRecord, ISelectable
     {
         public long Id { get; set; }
         public string Name { get; set; }

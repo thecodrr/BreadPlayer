@@ -185,6 +185,7 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviours\InputDeviceEventBehaviour.cs" />
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />

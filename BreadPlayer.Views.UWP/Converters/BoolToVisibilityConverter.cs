@@ -44,12 +44,13 @@ namespace BreadPlayer.Converters
                     flag = ((BitmapImage)imageSource).UriSource == null;
                     break;
                 case string stringValue:
-                    flag = stringValue.Length < 0;
+                    flag = stringValue.Length < 0 || stringValue == null;
                     break;
                 case null:
                     flag = true;
                     break;
                 default:
+                    flag = true;
                     break;
             }
 
