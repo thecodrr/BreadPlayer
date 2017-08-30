@@ -338,12 +338,12 @@
                     <StackPanel Orientation="Horizontal" DataContext="{StaticResource Core}" VerticalAlignment="Stretch" Height="70" Margin="0,-15,0,-30">
                         <Grid x:Name="AlbumArtGrid">
                             <Image x:Name="albumArt" Width="60" Height="50" VerticalAlignment="Center" Stretch="Uniform" Margin="5,5,5,5"  Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"></Image>
-                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
+                            <FontIcon Glyph="&#xE93C;" Foreground="{ThemeResource TextBrush}" FontSize="52" Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
                         </Grid>
                         <StackPanel  x:Name="tagsPanel" Orientation="Vertical" Margin="0,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>
-                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>
-                            <TextBlock Text="{Binding  Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="White"/>
+                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="{ThemeResource TextBrush}"/>
+                            <TextBlock Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="{ThemeResource TextBrush}"/>
+                            <TextBlock Text="{Binding  Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" FontSize="13" FontFamily="Segoe UI Light" VerticalAlignment="Center" FontWeight="Normal" Foreground="{ThemeResource TextBrush}"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -359,12 +359,12 @@
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
                 </AppBarButton>
-                
-                <TextBlock x:Name="positionTxt" Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="15,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFE5E5E5" FontSize="12"/>
-                <Slider Visibility="Visible" x:Name="positionSlider" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFDBDBDB" BorderBrush="#FFDBDBDB" BorderThickness="0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,0,10,0"/>
-                <TextBlock Visibility="{Binding ElementName=positionTxt, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,15,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFE5E5E5" FontSize="12"/>
 
-                <AppBarButton x:Uid="previousSongBtn" Grid.Row="1" Grid.Column="4" BorderBrush="White" Icon="Previous" VerticalAlignment="Center" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="40" Height="40">
+                <TextBlock x:Name="positionTxt" Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="15,0,0,0" Text="{Binding CurrentPosition, Converter={StaticResource DoubleToTime}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{ThemeResource TextBrush}" FontSize="12"/>
+                <Slider Visibility="Visible" x:Name="positionSlider" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" ThumbToolTipValueConverter="{StaticResource DoubleToTime}" VerticalAlignment="Center" Style="{StaticResource CircleSlider}" Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}" Value="{Binding CurrentPosition, Mode=TwoWay, UpdateSourceTrigger=Explicit, FallbackValue=0}" Background="#FFDBDBDB" BorderBrush="#FFDBDBDB" BorderThickness="0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" Margin="10,5,10,0"/>
+                <TextBlock Visibility="{Binding ElementName=positionTxt, Path=Visibility}" Grid.Column="3" Grid.Row="1" Margin="0,0,15,0" Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="{ThemeResource TextBrush}" FontSize="12"/>
+
+                <AppBarButton x:Uid="previousSongBtn" Foreground="{ThemeResource TextBrush}" Grid.Row="1" Grid.Column="4" BorderBrush="White" Icon="Previous" VerticalAlignment="Center" IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayPreviousCommand}" Width="40" Height="40">
                     <ToolTipService.ToolTip>
                         <StackPanel Orientation="Horizontal" Width="250" DataContext="{Binding PreviousSong}" Height="Auto">
                             <Image Width="60" Height="50" Margin="5" Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="Uniform"/>
@@ -376,8 +376,8 @@
                         </StackPanel>
                     </ToolTipService.ToolTip>
                 </AppBarButton>
-                <AppBarButton BorderBrush="WhiteSmoke" Grid.Row="1" Grid.Column="5" Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Center" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,0,0"/>
-                <AppBarButton x:Uid="nextSongBtn" Grid.Row="1" Grid.Column="6" BorderBrush="WhiteSmoke" Icon="Next" VerticalAlignment="Center"   IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="40" Height="40" Margin="5,0,0,0">
+                <AppBarButton BorderBrush="WhiteSmoke" Foreground="{ThemeResource TextBrush}" Grid.Row="1" Grid.Column="5" Icon="{Binding PlayPauseIcon, Mode=TwoWay}" VerticalAlignment="Center" IsCompact="True" Command="{Binding PlayPauseCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,0,0"/>
+                <AppBarButton x:Uid="nextSongBtn" Foreground="{ThemeResource TextBrush}" Grid.Row="1" Grid.Column="6" BorderBrush="WhiteSmoke" Icon="Next" VerticalAlignment="Center"   IsCompact="True" Style="{StaticResource CustomAppBarButtonStyle}" Command="{Binding PlayNextCommand}" Background="{ThemeResource AppBarButtonBackgroundDisabled}" Width="40" Height="40" Margin="5,0,0,0">
                     <ToolTipService.ToolTip>
                         <StackPanel Orientation="Horizontal" Width="250" DataContext="{Binding UpcomingSong}" Height="Auto">
                             <Image Width="60" Height="50" Margin="5" Source="{Binding Path=AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}" MaxHeight="70" Stretch="Uniform"/>
@@ -389,12 +389,12 @@
                         </StackPanel>
                     </ToolTipService.ToolTip>
                 </AppBarButton>
-                <AppBarToggleButton x:Uid="volumeBtn" Grid.Row="1" Grid.Column="7" x:Name="volBtn" Icon="Volume" VerticalAlignment="Center" IsChecked="{Binding Path=IsVolumeSliderVisible, Mode=TwoWay}" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0"/>
+                <AppBarToggleButton x:Uid="volumeBtn" Foreground="{ThemeResource TextBrush}" Grid.Row="1" Grid.Column="7" x:Name="volBtn" Icon="Volume" VerticalAlignment="Center" IsChecked="{Binding Path=IsVolumeSliderVisible, Mode=TwoWay}" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0"/>
                 <!--<AppBarToggleButton x:Uid="shuffleBtn" Grid.Row="1" Grid.Column="8" ToolTipService.ToolTip="" x:Name="shuffleBtn" VerticalAlignment="Center" IsCompact="True" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Icon="Shuffle" Height="40" Margin="5,0,0,0"/>
                 <AppBarToggleButton x:Uid="showEqualizerBtn" Grid.Row="1"  Grid.Column="9" ToolTipService.ToolTip="" Command="{Binding Path=ShowEqualizerCommand}" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" x:Name="equalizerBtn" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,0,0" Content="&#x04c;" FontFamily="Assets/breadplayer.ttf#breadplayer" FontSize="20"/>
                 <AppBarButton BorderBrush="WhiteSmoke" Grid.Row="1" Grid.Column="10" ToolTipService.ToolTip="{Binding Repeat}" x:Name="repeatBtn" Icon="{Binding Repeat, Converter={StaticResource StringToIcon}}" VerticalAlignment="Center" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" IsCompact="True" Command="{Binding SetRepeatCommand}" Width="40" Style="{StaticResource CustomAppBarButtonStyle}" Margin="5,0,0,0" Height="40" />
                 <AppBarButton x:Uid="openFileBtn" Grid.Row="1" Grid.Column="11" BorderBrush="WhiteSmoke" ToolTipService.ToolTip="" x:Name="openFileBtn" Visibility="{Binding ElementName=shuffleBtn, Path=Visibility}" Icon="OpenFile" VerticalAlignment="Center" IsCompact="True" Command="{Binding Path=OpenSongCommand}" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Margin="5,0,5,0"/>-->
-                <AppBarToggleButton x:Uid="showMoreBtn" Grid.Row="1" Grid.Column="12" Name="showMoreBtn" Visibility="Visible" IsChecked="False" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
+                <AppBarToggleButton x:Uid="showMoreBtn" Foreground="{ThemeResource TextBrush}" Grid.Row="1" Grid.Column="12" Name="showMoreBtn" Visibility="Visible" IsChecked="False" ToolTipService.ToolTip="" VerticalAlignment="Center" IsCompact="True" Width="40" Style="{StaticResource CustomAppBarToggleButtonStyle}" Height="40" Margin="5,0,5,0" Icon="More" FontSize="20"></AppBarToggleButton>
             </Grid>
         </Grid>
      

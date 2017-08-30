@@ -7,7 +7,7 @@
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
     xmlns:models="using:BreadPlayer.Core.Models"
-    xmlns:Extensions="using:BreadPlayer.Extensions"
+    xmlns:Extensions="using:BreadPlayer.Extensions"    
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity">
 
     <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
@@ -361,7 +361,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ArtistTemplate" x:DataType="models:Artist">
-        <Grid x:Name="LayoutRoot" Width="160" Height="200" Background="Transparent">
+        <Grid x:Name="LayoutRoot" Width="160" Height="200">
+         
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -387,19 +388,29 @@
                             </Interactivity:Interaction.Behaviors>
                         </ImageBrush>
                     </Grid.Background>
-                    <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+                   <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+                    <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}"/>-->
                 </Grid>
             </Border>
-            <TextBlock x:Name="artistName" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
-            <Grid Grid.Row="0" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Center" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0" Height="46">
+            <TextBlock x:Name="artistName" Foreground="{ThemeResource TextBrush}" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
+            <Grid Grid.Row="0" CornerRadius="100" Width="150" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Transparent" Offset="0"/>
+                        <GradientStop Color="{Binding Path=PictureColor}" Offset="0.95"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <AppBarButton Icon="Play" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" HorizontalAlignment="Right" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" 
-                              BorderBrush="WhiteSmoke" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}">
+                              BorderBrush="WhiteSmoke" VerticalAlignment="Center">
+                    <AppBarButton.Background>
+                        <SolidColorBrush Color="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged}"/>
+                    </AppBarButton.Background>
                 </AppBarButton>
-                <AppBarButton x:Name="button2" Icon="Add" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" 
+                <AppBarButton x:Name="button2" VerticalAlignment="Center" Icon="Add" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" 
                               BorderBrush="WhiteSmoke" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" >
                     <AppBarButton.Background>
                         <SolidColorBrush Color="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged}"/>

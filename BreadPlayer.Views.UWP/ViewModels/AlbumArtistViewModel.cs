@@ -178,19 +178,24 @@ namespace BreadPlayer.ViewModels
                     //we need to take precautions.
                     if (InternetConnectivityHelper.IsInternetConnected)
                     {
-                        var artistInfo = (await LastfmClient.Artist.GetInfoAsync(TagParser.ParseArtists(artist.Name)[0], "en", true).ConfigureAwait(false))?.Content;
-                        if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                        var artistName = TagParser.ParseArtists(artist.Name)[0];
+                        if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
                         {
-                            var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
-                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
-                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                            var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
+                            if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                            {
+                                var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                            }
+                            if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                            {
+                                string bio = artistInfo?.Bio?.Content.Length >= 500 ? await artistInfo?.Bio?.Content.ZipAsync() : artistInfo?.Bio?.Content;
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                            }
+                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
+                            await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
                         }
-                        if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
-                        {
-                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = artistInfo?.Bio?.Content ?? "";
-                        }
-                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
-                        await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
                     }
                 }
             }

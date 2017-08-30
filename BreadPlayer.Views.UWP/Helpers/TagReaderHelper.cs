@@ -179,7 +179,11 @@ namespace BreadPlayer.Helpers
                 var color = await SharedLogic.GetDominantColor(artistArt).ConfigureAwait(false);
                 return (artistArt.Path, color);
             }
-            return (artistArtPath, Colors.Transparent);
+            else
+            {
+                var color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
+                return (artistArtPath, color);
+            }
         }
     }
 }

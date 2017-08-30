@@ -104,6 +104,7 @@
             <Converter:ColorToBrushConverter x:Key="ColorToBrush"/>
             <Converter:TrueToFalseConverter x:Key="TrueToFalse"/>
             <Converter:SymbolToCharConverter x:Key="SymbolToChar"/>
+            <Converter:HexToColorConverter x:Key="HexToColor"/>
 
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem Text="A to Z" Tag="Title" Command="{Binding RefreshViewCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>

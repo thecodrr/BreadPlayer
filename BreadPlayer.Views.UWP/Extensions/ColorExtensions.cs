@@ -15,7 +15,7 @@ namespace BreadPlayer.Extensions
             return "#" + c.A.ToString("X2") + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
       
-        private static Color FromHexString(this string hexColor)
+        public static Color FromHexString(this string hexColor)
         {
             //Remove # if present
             if (hexColor.IndexOf('#') != -1)
