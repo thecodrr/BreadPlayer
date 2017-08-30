@@ -80,7 +80,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _noOfArtistsToFetchInfoFor, value);
-                RoamingSettingsHelper.SaveSetting("NoOfArtistsToFetchInfoFor", _noOfArtistsToFetchInfoFor);
+                SettingsHelper.SaveRoamingSetting("NoOfArtistsToFetchInfoFor", _noOfArtistsToFetchInfoFor);
             }
         }
         public string LyricType
@@ -89,7 +89,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _lyricType, value);
-                RoamingSettingsHelper.SaveSetting("LyricType", _lyricType);
+                SettingsHelper.SaveRoamingSetting("LyricType", _lyricType);
             }
         }
         public string LyricSource
@@ -98,14 +98,14 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _lyricSource, value);
-                RoamingSettingsHelper.SaveSetting("LyricSource", _lyricSource);
+                SettingsHelper.SaveRoamingSetting("LyricSource", _lyricSource);
             }
         }
         private LastUserSession GetUserSessionFromSettings()
         {
-            string token = RoamingSettingsHelper.GetSetting<string>("LastfmSessionToken", "");
-            bool isSubscriber = RoamingSettingsHelper.GetSetting<bool>("LastfmIsSubscriber", false);
-            string username = RoamingSettingsHelper.GetSetting<string>("LastfmSessionUsername", "");
+            string token = SettingsHelper.GetRoamingSetting<string>("LastfmSessionToken", "");
+            bool isSubscriber = SettingsHelper.GetRoamingSetting<bool>("LastfmIsSubscriber", false);
+            string username = SettingsHelper.GetRoamingSetting<string>("LastfmSessionUsername", "");
             return new LastUserSession
             {
                 Token = token,
@@ -115,19 +115,19 @@ namespace BreadPlayer.ViewModels
         }
         private void SaveUserSession(LastUserSession usersession)
         {
-            RoamingSettingsHelper.SaveSetting("LastfmSessionToken", usersession.Token);
-            RoamingSettingsHelper.SaveSetting("LastfmIsSubscriber", usersession.IsSubscriber);
-            RoamingSettingsHelper.SaveSetting("LastfmSessionUsername", usersession.Username);
-            RoamingSettingsHelper.SaveSetting("LastfmPassword", LastfmPassword);
-            RoamingSettingsHelper.SaveSetting("LastfmUsername", LastfmUsername);
+            SettingsHelper.SaveRoamingSetting("LastfmSessionToken", usersession.Token);
+            SettingsHelper.SaveRoamingSetting("LastfmIsSubscriber", usersession.IsSubscriber);
+            SettingsHelper.SaveRoamingSetting("LastfmSessionUsername", usersession.Username);
+            SettingsHelper.SaveRoamingSetting("LastfmPassword", LastfmPassword);
+            SettingsHelper.SaveRoamingSetting("LastfmUsername", LastfmUsername);
         }
         public AccountsViewModel()
         {
-            LyricSource = RoamingSettingsHelper.GetSetting<string>("LyricSource", "Auto (recommended)");
-            LyricType = RoamingSettingsHelper.GetSetting<string>("LyricType", "Synced (scrollable)");
-            NoOfArtistsToFetchInfoFor = RoamingSettingsHelper.GetSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
-            LastfmPassword = RoamingSettingsHelper.GetSetting<string>("LastfmPassword", "");
-            LastfmUsername = RoamingSettingsHelper.GetSetting<string>("LastfmUsername", "");
+            LyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto (recommended)");
+            LyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced (scrollable)");
+            NoOfArtistsToFetchInfoFor = SettingsHelper.GetRoamingSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
+            LastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
+            LastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
             LastfmLogin(false);
         }      
     }

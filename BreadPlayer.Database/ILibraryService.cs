@@ -24,7 +24,7 @@ namespace BreadPlayer.Database
         Task AddMediafiles(IEnumerable<Mediafile> data);
         void RemoveFolder(string folderPath);
         Task RemoveMediafile(Mediafile data);
-        Task<Mediafile> GetMediafileAsync(string query);
+        Mediafile GetMediafile(long id);
         bool CheckExists(long id);
         int SongCount { get; }
     }

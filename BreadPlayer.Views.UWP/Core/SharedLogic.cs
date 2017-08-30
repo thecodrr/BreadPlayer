@@ -45,7 +45,7 @@ namespace BreadPlayer.Core
             //#TODO Move these properties to a better place perhaps the App Ctor?
             InitializeCore.Dispatcher = new BreadDispatcher();
             InitializeCore.NotificationManager = NotificationManager;
-            InitializeCore.EqualizerSettingsHelper = new RoamingSettingsHelper();
+            InitializeCore.EqualizerSettingsHelper = new SettingsHelper();
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }

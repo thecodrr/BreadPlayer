@@ -71,7 +71,7 @@ namespace BreadPlayer
 
         private void InitializeTheme()
         {
-            var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
+            var value = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light");
             var theme = Enum.Parse(typeof(ApplicationTheme), value);
             RequestedTheme = (ApplicationTheme)theme;
         }

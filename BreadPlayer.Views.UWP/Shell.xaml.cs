@@ -63,7 +63,7 @@ namespace BreadPlayer
         {
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
             GlobalPageKeyDown?.Invoke(sender, args);
-            if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
+            if (SettingsHelper.GetLocalSetting<bool>("IsFirstTime", true))
             {
                 string releaseNotes = "𝐖𝐡𝐚𝐭'𝐬 𝐅𝐢𝐱𝐞𝐝:\n\n" +
                     "• Fixed issue where library import took too much time.\n" +
@@ -73,7 +73,7 @@ namespace BreadPlayer
                     "• Added ability to ignore DRM-Protected songs. (𝑒𝑥𝑝𝑟𝑖𝑚𝑒𝑛𝑡𝑎𝑙)\n" +
                     "• Added sorting by tracknumber for album songs.\n";
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
-                RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
+                SettingsHelper.SaveLocalSetting("IsFirstTime", false);
             }
             if (e.Parameter is StorageFile)
             {

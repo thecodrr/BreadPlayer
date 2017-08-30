@@ -34,7 +34,7 @@ public class BLogger
         {
             await logFile.CopyAsync(ApplicationData.Current.TemporaryFolder, "breadplayer.log", NameCollisionOption.GenerateUniqueName);
         }
-        if (RoamingSettingsHelper.GetSetting<bool>("SendReportOnEveryStartup", true))
+        if (SettingsHelper.GetRoamingSetting<bool>("SendReportOnEveryStartup", true))
         {
             int totalErrorCount = 0;
             var logfiles = new List<StorageFile>();

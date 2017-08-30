@@ -19,9 +19,9 @@ namespace BreadPlayer.Helpers
         public static StorageFile DefaultImage { get; set; }
         public static async Task<bool> SaveCurrentLockscreenImage()
         {
-            if (RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", "") != "")
+            if (SettingsHelper.GetLocalSetting<string>("DefaultImagePath", "") != "")
             {
-                DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
+                DefaultImage = await StorageFile.GetFileFromPathAsync(SettingsHelper.GetLocalSetting<string>("DefaultImagePath", ""));
                 return true;
             }
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
@@ -47,7 +47,7 @@ namespace BreadPlayer.Helpers
                             if (image != null)
                             {
                                 DefaultImage = await image.CopyAsync(ApplicationData.Current.LocalFolder, "lockscreen.jpg", NameCollisionOption.ReplaceExisting);
-                                RoamingSettingsHelper.SaveSetting("DefaultImagePath", DefaultImage.Path);
+                                SettingsHelper.SaveLocalSetting("DefaultImagePath", DefaultImage.Path);
                                 success = true;
                             }
                         }

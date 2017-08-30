@@ -17,13 +17,13 @@ namespace BreadPlayer.SettingsViews.ViewModels
             {
                 Set(ref crossfadeEnabled, value);
                 Player.CrossfadeEnabled = crossfadeEnabled;
-                RoamingSettingsHelper.SaveSetting("CrossfadeEnabled", value);
+                SettingsHelper.SaveRoamingSetting("CrossfadeEnabled", value);
             }
         }
 
         public AudioSettingsViewModel()
         {
-           // CrossfadeEnabled = RoamingSettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
+           // CrossfadeEnabled = SettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
         }
     }
 }

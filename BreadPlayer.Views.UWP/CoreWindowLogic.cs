@@ -58,15 +58,15 @@ namespace BreadPlayer
         #region Load/Save Logic
         public static async void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            var volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
+            var volume = SettingsHelper.GetLocalSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                _path = RoamingSettingsHelper.GetSetting<string>(PathKey, "");
+                _path = SettingsHelper.GetLocalSetting<string>(PathKey, "");
                 
                 // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
                 if (_path != "" && SharedLogic.VerifyFileExists(_path, 300))
                 {
-                    double position = RoamingSettingsHelper.GetSetting<double>(PosKey, 0);
+                    double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
                     try
                     {
@@ -87,16 +87,17 @@ namespace BreadPlayer
             {
                 if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
                 {
-                    ApplicationData.Current.RoamingSettings.Values[PathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
-                    ApplicationData.Current.RoamingSettings.Values[PosKey] = SharedLogic.Player.Position;
+                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Player.CurrentlyPlayingFile.Id);
+                    SettingsHelper.SaveLocalSetting(PathKey,SharedLogic.Player.CurrentlyPlayingFile.Path);
+                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Player.Position);
                 }
-                ApplicationData.Current.RoamingSettings.Values[VolKey] = SharedLogic.Player.Volume;
-                ApplicationData.Current.RoamingSettings.Values[TimeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Player.Volume);
+                SettingsHelper.SaveLocalSetting(TimeclosedKey, DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 string folderPaths = "";
                 SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
                 if (!string.IsNullOrEmpty(folderPaths))
                 {
-                    ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+                    SettingsHelper.SaveLocalSetting(FoldersKey, folderPaths.Remove(folderPaths.LastIndexOf('|')));
                 }
             }
             catch(Exception ex)
@@ -292,7 +293,6 @@ namespace BreadPlayer
             }
 
             InitSmtc();
-            SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
             Window.Current.SizeChanged += Current_SizeChanged;
         }
 

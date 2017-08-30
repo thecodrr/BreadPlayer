@@ -60,9 +60,9 @@ namespace BreadPlayer.Database
         {
             await Database.RemoveRecords(data);
         }
-        public async Task<Mediafile> GetMediafileAsync(string query)
+        public Mediafile GetMediafile(long id)
         {
-            return (await Database.GetRecordByQueryAsync<Mediafile>(query));
+            return Database.GetRecordById<Mediafile>(id);
         }
         public bool CheckExists(long id)
         {

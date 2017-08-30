@@ -37,10 +37,6 @@ namespace BreadPlayer.ViewModels
         public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }       
         #endregion
 
-        DispatcherTimer timer = new DispatcherTimer()
-        {
-            Interval = TimeSpan.FromMilliseconds(10),
-        };
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
@@ -123,53 +119,64 @@ namespace BreadPlayer.ViewModels
        
 
         private int _retries;
+        BreadPlayer.Core.PortableAPIs.DispatcherTimer timer;
         private async Task GetLyrics()
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                timer?.Stop();
                 if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
                     return;
                 LyricsLoading = true;
-                var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
 
-                if (list == null || list?.Any() == false)
+                timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
                 {
-                    LyricsLoading = false;
-                    return;
-                }
-                while (!LrcParser.IsLrc(list[0]))
-                    list.RemoveAt(0);
+                    Interval = TimeSpan.FromMilliseconds(10)
+                };
 
-                var parser = LrcParser.FromText(list[0]);
+                string lyricsText = "";
+                if (string.IsNullOrEmpty(Player.CurrentlyPlayingFile?.SynchronizedLyric))
+                {
+                    var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
+
+                    if (list == null || list?.Any() == false)
+                    {
+                        LyricsLoading = false;
+                        return;
+                    }
+                    while (!LrcParser.IsLrc(list[0]))
+                        list.RemoveAt(0);
+                    lyricsText = list[0];
+                    var s = SettingsViewModel.TracksCollection;
+                    Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
+                    await _service.UpdateMediafile(Player.CurrentlyPlayingFile);
+                }
+                else
+                {
+                    lyricsText = await Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
+                }
+
+                var parser = LrcParser.FromText(lyricsText);
                 Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
 
                 LyricsLoading = false;
-
-                //as much as I hate to do this, it is necessary.
-                //to avoid thread exception we need to invoke on UI Thread again.
-                await BreadDispatcher.InvokeAsync(() =>
+                timer.Tick += (s, e) =>
                 {
-                    timer.Start();
-                    timer.Tick += (s, e) =>
+                    var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                    if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
                     {
-                        var currentPosition = TimeSpan.FromSeconds(Player.Position);
-                        if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
-                        {
-                            var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
-                            if (currentLyric == null)
-                                return;
+                        var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                        if (currentLyric == null)
+                            return;
 
-                            var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
-                            if (previousLyric != null && previousLyric.IsActive == true)
-                                previousLyric.IsActive = false;
-                            currentLyric.IsActive = true;
+                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                        if (previousLyric != null && previousLyric.IsActive == true)
+                            previousLyric.IsActive = false;
+                        currentLyric.IsActive = true;
 
-                            CurrentLyric = currentLyric;
-                            LyricActivated?.Invoke(currentLyric, new EventArgs());
-                        }
-                    };
-                });
+                        CurrentLyric = currentLyric;
+                        LyricActivated?.Invoke(currentLyric, new EventArgs());
+                    }
+                };
             });
         }
         

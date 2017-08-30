@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Extensions
 {
@@ -51,6 +54,38 @@ namespace BreadPlayer.Extensions
             var step1 = Regex.Replace(value, @"<(.|\n)*?>", "").Trim();
             //var step2 = Regex.Replace(step1, @"\s{2,}", " ");
             return step1;
+        }
+
+        public static async Task<string> ZipAsync(this string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+
+            using (var msi = new MemoryStream(bytes))
+            using (var mso = new MemoryStream())
+            {
+                using (var gs = new GZipStream(mso, CompressionMode.Compress))
+                {
+                    //msi.CopyTo(gs);
+                    await msi.CopyToAsync(gs);
+                }
+
+                return Convert.ToBase64String(mso.ToArray());
+            }
+        }
+
+        public static async Task<string> UnzipAsync(this string base64String)
+        {
+            using (var msi = new MemoryStream(Convert.FromBase64String(base64String)))
+            using (var mso = new MemoryStream())
+            {
+                using (var gs = new GZipStream(msi, CompressionMode.Decompress))
+                {
+                    //gs.CopyTo(mso);
+                    await gs.CopyToAsync(mso);
+                }
+
+                return Encoding.UTF8.GetString(mso.ToArray());
+            }
         }
     }
 }

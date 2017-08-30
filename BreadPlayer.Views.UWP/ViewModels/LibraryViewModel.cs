@@ -197,7 +197,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _sort, value);
-                ApplicationData.Current.RoamingSettings.Values["Sort"] = Sort;
+                SettingsHelper.SaveRoamingSetting("Sort", _sort);
             }
         }
 
@@ -793,7 +793,7 @@ namespace BreadPlayer.ViewModels
 
         private void GetSettings()
         {
-            Sort = RoamingSettingsHelper.GetSetting<string>("Sort", "Unsorted");
+            Sort = SettingsHelper.GetLocalSetting<string>("Sort", "Unsorted");
         }
 
         public async void DropFiles(object sender, DragEventArgs e)

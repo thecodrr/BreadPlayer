@@ -72,7 +72,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _enableBlur, value);
-                RoamingSettingsHelper.SaveSetting("EnableBlur", value);
+                SettingsHelper.SaveLocalSetting("EnableBlur", value);
             }
         }
 
@@ -101,7 +101,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _replaceLockscreenWithAlbumArt, value);
-                RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
+                SettingsHelper.SaveLocalSetting("ReplaceLockscreenWithAlbumArt", value);
             }
         }
 
@@ -112,7 +112,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _uiTextType, value);
-                RoamingSettingsHelper.SaveSetting("UITextType", _uiTextType);
+                SettingsHelper.SaveRoamingSetting("UITextType", _uiTextType);
             }
         }
 
@@ -123,7 +123,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _isThemeDark, value);
-                RoamingSettingsHelper.SaveSetting("SelectedTheme", _isThemeDark ? "Light" : "Dark");
+                SettingsHelper.SaveLocalSetting("SelectedTheme", _isThemeDark ? "Light" : "Dark");
                 // SharedLogic.InitializeTheme();
             }
         }
@@ -151,7 +151,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _timeClosed, value);
-                RoamingSettingsHelper.SaveSetting("timeclosed", _timeClosed);
+                SettingsHelper.SaveLocalSetting("timeclosed", _timeClosed);
             }
         }
 
@@ -185,7 +185,7 @@ namespace BreadPlayer.ViewModels
                     ThemeManager.SetThemeColor("default");
                 }
 
-                RoamingSettingsHelper.SaveSetting("ChangeAccentByAlbumArt", _changeAccentByAlbumart);
+                SettingsHelper.SaveRoamingSetting("ChangeAccentByAlbumArt", _changeAccentByAlbumart);
             }
         }
 
@@ -221,12 +221,12 @@ namespace BreadPlayer.ViewModels
 
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
-            _changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+            _changeAccentByAlbumart = SettingsHelper.GetRoamingSetting<bool>("ChangeAccentByAlbumArt", true);
             _timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            _uiTextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
-            _isThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
-            _enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
-            _replaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("replaceLockscreenWithAlbumArt", false);
+            _uiTextType = SettingsHelper.GetRoamingSetting<string>("UITextType", "Normal");
+            _isThemeDark = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
+            _enableBlur = SettingsHelper.GetLocalSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
+            _replaceLockscreenWithAlbumArt = SettingsHelper.GetLocalSetting<bool>("replaceLockscreenWithAlbumArt", false);
             _timeOpened = DateTime.Now.ToString();
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
@@ -391,7 +391,7 @@ namespace BreadPlayer.ViewModels
         {
             if (LibraryFoldersCollection.Count <= 0)
             {
-                var folderPaths = RoamingSettingsHelper.GetSetting<string>("folders", null);
+                var folderPaths = SettingsHelper.GetLocalSetting<string>("folders", null);
                 if (folderPaths != null)
                 {
                     foreach (var folder in folderPaths.Split('|'))

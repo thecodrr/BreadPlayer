@@ -125,9 +125,9 @@ namespace BreadPlayer.ViewModels
             {
                 var listObject = message.Payload as List<object>;
                 TracksCollection = listObject[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 IsSourceGrouped = (bool)listObject[1];
                 _songCount = _service.SongCount;
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 GetSettings();
             }
         }
@@ -167,14 +167,19 @@ namespace BreadPlayer.ViewModels
                 double volume = 0;
                 if ((double)list[3] == 50.0)
                 {
-                    volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
+                    volume = SettingsHelper.GetLocalSetting<double>("volume", 50.0);
                 }
                 else
                 {
                     volume = (double)list[3];
                 }
-
-                await Load(await TagReaderHelper.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
+                var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0);
+                var libraryMediaFile =  _service.GetMediafile(id);
+                if(libraryMediaFile == null)
+                {
+                    libraryMediaFile = await TagReaderHelper.CreateMediafile(list[0] as StorageFile);
+                }
+                await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }
             else
             {
@@ -340,21 +345,19 @@ namespace BreadPlayer.ViewModels
         }
         private void SetNowPlayingSong()
         {
-            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
-            if (!TracksCollection.Elements.Any(t => t.Path == path && t.State == PlayerState.Playing))
+            string path = SettingsHelper.GetLocalSetting<string>("path", "");
+       
+            if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
-                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+                var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                foreach (var mp3 in sa)
                 {
-                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                    foreach (var mp3 in sa)
-                    {
-                        mp3.State = PlayerState.Stopped;
-                    }
+                    mp3.State = PlayerState.Stopped;
                 }
-                if (TracksCollection.Elements.Any(t => t.Path == path))
-                {
-                    TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
-                }
+            }
+            if (TracksCollection.Elements.Any(t => t.Path == path))
+            {
+                TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
             }
         }
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
@@ -660,7 +663,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _repeat, value);
-                ApplicationData.Current.RoamingSettings.Values["Repeat"] = Repeat;
+                SettingsHelper.SaveRoamingSetting("Repeat", _repeat);
             }
         }
 
@@ -671,7 +674,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _shuffle, value);
-                ApplicationData.Current.RoamingSettings.Values["Shuffle"] = Shuffle;
+               SettingsHelper.SaveRoamingSetting("Shuffle", _shuffle);
             }
         }
 
@@ -751,8 +754,8 @@ namespace BreadPlayer.ViewModels
       
         private void GetSettings()
         {
-            Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
-            Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
+            Shuffle = SettingsHelper.GetRoamingSetting<bool>("Shuffle", false);
+            Repeat = SettingsHelper.GetRoamingSetting<string>("Repeat", "No Repeat");
         }
 
         private async Task PlayFile(Mediafile toPlayFile, bool play = false)
