@@ -59,45 +59,13 @@ namespace BreadPlayer
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            Window.Current.SizeChanged -= Current_SizeChanged;
             _playlistVm.Songs.Clear();
             _playlistVm.Reset();
             _playlistVm = null;
             fileBox.ItemsSource = null;
             GC.Collect();
             base.OnNavigatedFrom(e);
-        }
-        private void fileBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            fileBox.FindChildOfType<ScrollViewer>().ViewChanging += PlaylistView_ViewChanging;
-        }
-     
-        private void PlaylistView_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-            if (e.NextView.VerticalOffset < 15)// > (sender as ScrollViewer).VerticalOffset)
-            {
-                if(art.Height == 264)
-                {
-                   art.ZoomAnimate(264, 354, "Height");
-                }
-                if (headerText.FontSize < _maxFontSize)
-                {
-                    headerText.FontSize = headerText.FontSize + 2;
-                    headerDesc.FontSize++;
-                }
-            }
-            else
-            {
-                if (art.Height == 354)
-                {
-                    art.ZoomAnimate(354, 264, "Height");
-                }
-                if (headerText.FontSize > _minFontSize)
-                {
-                    headerText.FontSize = headerText.FontSize - 2;
-                    headerDesc.FontSize--;
-                }
-            }
-        }
-        
+        }     
     }
 }

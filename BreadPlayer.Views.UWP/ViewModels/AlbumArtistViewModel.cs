@@ -190,9 +190,9 @@ namespace BreadPlayer.ViewModels
                                 ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
                                 ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
                             }
-                            if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                            if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
                             {
-                                string bio = artistInfo?.Bio?.Content.Length >= 500 ? await artistInfo?.Bio?.Content.ZipAsync() : artistInfo?.Bio?.Content;
+                                string bio = await artistInfo?.Bio?.Content.ZipAsync();
                                 ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
                             }
                             ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;

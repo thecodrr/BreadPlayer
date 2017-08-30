@@ -38,6 +38,7 @@ using BreadPlayer.Services;
 using BreadPlayer.Themes;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
@@ -294,7 +295,7 @@ namespace BreadPlayer.ViewModels
         {
             PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
         }
-        public void Init(object data)
+        public async void Init(object data)
         {
             IsPlaylistLoading = true;
             if (data is Playlist playlist)
@@ -311,7 +312,7 @@ namespace BreadPlayer.ViewModels
             else if (data is Artist artist)
             {
                 IsMenuVisible = false;
-                Playlist = new Playlist { Name = artist.Name, Description = artist.Bio };
+                Playlist = new Playlist { Name = artist.Name, Description = await artist.Bio.UnzipAsync() };
                 LoadArtistSongs(artist);
             }
         }

@@ -36,13 +36,15 @@ namespace BreadPlayer
 
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
-                Windows.Phone.UI.Input.HardwareButtons.BackPressed += (s, args) => 
-                {
-                    args.Handled = true;
-                    NavigationService.Instance.RegisterEvents();
-                    _shellVm.IsPlaybarHidden = false;
-                };
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
+        }
+
+        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            NavigationService.Instance.RegisterEvents();
+            _shellVm.IsPlaybarHidden = false;
         }
 
         private async void NowPlayingView_LyricActivated(object sender, EventArgs e)
@@ -69,11 +71,7 @@ namespace BreadPlayer
             removeTo.Children.Add(lyricsList);
             ((SolidColorBrush)Resources["LyricsForeground"]).Color = ((SolidColorBrush)Application.Current.Resources[foregroundColor]).Color;
         }
-        public static Uri GetApplicationLink(string sharePageName)
-        {
-            return new Uri("ms-sdk-sharesourcecs:navigate?page=" + sharePageName);
-        }
-    private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataTransferManager.IsSupported())
             {
@@ -84,9 +82,7 @@ namespace BreadPlayer
                     DataRequest dataRequest = args.Request;
                     dataRequest.Data.Properties.Title = $"{currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}";
                     dataRequest.Data.Properties.Description = "Now baking toast from BreadPlayer";
-                    dataRequest.Data.SetApplicationLink(GetApplicationLink(GetType().Name));
-                    dataRequest.Data.Properties.ContentSourceApplicationLink = GetApplicationLink(GetType().Name);
-
+                
                     if (!string.IsNullOrEmpty(currentlyPlaying.AttachedPicture))
                     {
                         var albumArt = await StorageFile.GetFileFromPathAsync(currentlyPlaying.AttachedPicture);
@@ -98,6 +94,7 @@ namespace BreadPlayer
                         dataRequest.Data.Properties.Thumbnail = imageStreamRef;
                         dataRequest.Data.SetBitmap(imageStreamRef);
                     }
+                    dataRequest.Data.SetHtmlFormat($"Now listening to {currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}.\r\n\r\nGet BreadPlayer for your device: http://bit.ly/2wIqkHX");
                     dataRequest.Data.SetText($"Now listening to {currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}.\r\n\r\nGet BreadPlayer for your device: http://bit.ly/2wIqkHX");
                     dataRequest.Data.SetWebLink(new Uri("http://bit.ly/2wIqkHX"));
                 };

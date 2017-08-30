@@ -309,7 +309,7 @@ namespace SplitViewMenu
                 _navTopMenuListView.SelectedIndex = 0;
                 await UpdateHeaderAndShortCuts(_navTopMenuListView.Items[0] as SimpleNavMenuItem);
             }
-            else if(e.Parameter is Album)
+            else if (e.Parameter is Album || e.Parameter is Artist)
             {
                 await UpdateHeaderAndShortCuts(new SimpleNavMenuItem { HeaderVisibility = Visibility.Collapsed, ShortcutTheme = ElementTheme.Dark });
             }
