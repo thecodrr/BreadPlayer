@@ -27,8 +27,22 @@
             <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
             <CheckBox x:Uid="changeAccentCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
             <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
-            
-           
+
+            <ComboBox Margin="0,5,0,0">
+                <ComboBox.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="Background blur overlay color:"/>
+                            <LineBreak/>
+                            <Run Text="This is the overlay color of album art on the player background." Foreground="Gray" FontSize="11"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.HeaderTemplate>
+                <x:String>Accent color</x:String>
+                <x:String>Theme color</x:String>
+                <x:String>Album art color</x:String>
+            </ComboBox>
+
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -361,7 +361,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ArtistTemplate" x:DataType="models:Artist">
-        <Grid x:Name="LayoutRoot" Width="160" Height="200">
+        <Grid x:Name="LayoutRoot" Width="160" Height="220">
          
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -393,7 +393,7 @@
                 </Grid>
             </Border>
             <TextBlock x:Name="artistName" Foreground="{ThemeResource TextBrush}" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
-            <Grid Grid.Row="0" CornerRadius="100" Width="150" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <Grid Grid.Row="0" Height="153" CornerRadius="100" Width="153" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Transparent" Offset="0"/>

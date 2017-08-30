@@ -46,31 +46,33 @@ namespace BreadPlayer.ViewModels
       
         public async Task LoadAlbums()
         {
+            RecordsLoading = true;
             if (AlbumCollection?.Count <= 0)
             {
                 AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
                 AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
                 if (AlbumCollection.Count <= 0)
                 {
-                    RecordsLoaded = false;
+                    RecordsLoading = false;
                 }
             }
         }
 
         public async Task LoadArtists()
         {
+            RecordsLoading = true;
             if (ArtistsCollection?.Count != AlbumArtistService.ArtistsCount)
             {
                 ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
                 ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
                 if (ArtistsCollection.Count <= 0)
                 {
-                    RecordsLoaded = false;
+                    RecordsLoading = false;
                 }
             }
             else
             {
-                RecordsLoaded = false;
+                RecordsLoading = false;
             }
         }
 
@@ -79,22 +81,22 @@ namespace BreadPlayer.ViewModels
             //Albums are loaded, we can now hide the progress ring.
             if (AlbumCollection.Count > 0)
             {
-                RecordsLoaded = false;
+                RecordsLoading = false;
             }
             else
             {
-                RecordsLoaded = true;
+                RecordsLoading = true;
             }
         }
 
-        private bool _recordsLoaded = true;
+        private bool _recordsLoading = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
-        public bool RecordsLoaded
+        public bool RecordsLoading
         {
-            get => _recordsLoaded;
-            set => Set(ref _recordsLoaded, value);
+            get => _recordsLoading;
+            set => Set(ref _recordsLoading, value);
         }
 
         private ThreadSafeObservableCollection<Album> _albumcollection;
@@ -162,7 +164,7 @@ namespace BreadPlayer.ViewModels
             if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
             {
                 ArtistsCollection.CollectionChanged -= ArtistsCollection_CollectionChanged;
-                RecordsLoaded = false;
+                RecordsLoading = false;
                 await CacheAllArtists().ConfigureAwait(false);
             }
         }

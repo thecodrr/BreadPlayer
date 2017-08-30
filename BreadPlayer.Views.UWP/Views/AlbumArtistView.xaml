@@ -59,9 +59,9 @@
                 <Style TargetType="GridViewItem">
                     <Setter Property="Margin" Value="20"/>
                 </Style>
-            </GridView.ItemContainerStyle>          
+            </GridView.ItemContainerStyle>
         </GridView>
-        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=RecordsLoaded, Converter={StaticResource BoolToVisibility}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
+        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=RecordsLoading, Converter={StaticResource BoolToVisibility}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
     
     </Grid>
 </Page>

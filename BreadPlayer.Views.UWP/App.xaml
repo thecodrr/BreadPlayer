@@ -126,7 +126,6 @@
                 <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
                 <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
                 <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Foreground" Value="{ThemeResource TextBrush}" />
                 <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
                 <Setter Property="Height" Value="38" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -261,7 +260,7 @@
             Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             Margin="{TemplateBinding Padding}"
-            FontSize="16" Foreground="{TemplateBinding Foreground}"
+            FontSize="16"
             FontFamily="{TemplateBinding FontFamily}"
             FontWeight="SemiLight"
             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
