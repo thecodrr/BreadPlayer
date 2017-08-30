@@ -170,7 +170,7 @@
                             FromHorizontalOffset="200"/>
             </TransitionCollection>
         </Grid.Transitions>
-        <Pivot x:Name="mainPivot" Grid.ColumnSpan="2" SelectionChanged="Pivot_SelectionChanged">
+        <Pivot x:Name="mainPivot" Foreground="{ThemeResource TextBrush}" Grid.ColumnSpan="2" SelectionChanged="Pivot_SelectionChanged">
             <PivotItem Header="Toasts" Margin="0,-8.4,0,0">
                 <Grid Margin="0,0,0,0">
                     <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb"/>

@@ -400,7 +400,10 @@
                               BorderBrush="WhiteSmoke" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}">
                 </AppBarButton>
                 <AppBarButton x:Name="button2" Icon="Add" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" 
-                              BorderBrush="WhiteSmoke" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" Background="{ThemeResource SystemControlHighlightAltListAccentMediumBrush}">
+                              BorderBrush="WhiteSmoke" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" >
+                    <AppBarButton.Background>
+                        <SolidColorBrush Color="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged}"/>
+                    </AppBarButton.Background>
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
                             <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>

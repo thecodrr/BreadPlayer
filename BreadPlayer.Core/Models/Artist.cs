@@ -18,6 +18,12 @@ namespace BreadPlayer.Core.Models
             get => picture;
             set => Set(ref picture, value);
         }
+        string pictureColor;
+        public string PictureColor
+        {
+            get => pictureColor;
+            set => Set(ref pictureColor, value);
+        }
         public string Bio { get; set; }
         public string DOB { get; set; }
         public string TextSearchKey => GetTextSearchKey();

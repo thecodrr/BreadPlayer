@@ -11,6 +11,7 @@ using IF.Lastfm.Core.Api;
 using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Helpers;
 using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
@@ -180,7 +181,9 @@ namespace BreadPlayer.ViewModels
                         var artistInfo = (await LastfmClient.Artist.GetInfoAsync(TagParser.ParseArtists(artist.Name)[0], "en", true).ConfigureAwait(false))?.Content;
                         if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
                         {
-                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                            var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
+                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
                         }
                         if (string.IsNullOrEmpty(artistInfo?.Bio?.Content))
                         {

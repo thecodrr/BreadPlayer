@@ -85,7 +85,6 @@ namespace BreadPlayer.Themes
         private static void ChangeColor(Color color)
         {
             ChangeTitleBarColor(color);
-            AdjustForeground(color);
             var oldColor = GetThemeResource<SolidColorBrush>("PlaybarBrush").Color;
             if (oldColor == color)
             {
@@ -93,6 +92,7 @@ namespace BreadPlayer.Themes
             }
 
             GetThemeResource<SolidColorBrush>("PlaybarBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
+            AdjustForeground(color);
             foreach (var brushKey in BrushKeys)
             {
                 if (Application.Current.Resources.ContainsKey(brushKey))
@@ -131,6 +131,8 @@ namespace BreadPlayer.Themes
             //var foregroundColor = GetThemeResource<SolidColorBrush>("TextBrush");
             GetThemeResource<SolidColorBrush>("TextBrush").Color = accentColor.ToForeground(); //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
             GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = accentColor.ToHoverColor();
+            var foregroundColor = GetThemeResource<SolidColorBrush>("TextBrush");
+
         }
 
     }

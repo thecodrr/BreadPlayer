@@ -11,6 +11,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Windows.UI;
 
 namespace BreadPlayer.Helpers
 {
@@ -162,7 +163,7 @@ namespace BreadPlayer.Helpers
             return (false, Path.GetFileNameWithoutExtension(GetAlbumArtPath(file)));
         }
 
-        public static async Task<string> CacheArtistArt(string url, Artist artist)
+        public static async Task<(string artistArtPath, Color dominantColor)> CacheArtistArt(string url, Artist artist)
         {
             var artistArtPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, @"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg");
             if (!File.Exists(artistArtPath))
@@ -174,10 +175,11 @@ namespace BreadPlayer.Helpers
                 using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
                 {
                     await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
-                    return artistArt.Path;
                 }
+                var color = await SharedLogic.GetDominantColor(artistArt).ConfigureAwait(false);
+                return (artistArt.Path, color);
             }
-            return artistArtPath;
+            return (artistArtPath, Colors.Transparent);
         }
     }
 }

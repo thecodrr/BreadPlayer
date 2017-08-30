@@ -125,7 +125,7 @@
                 <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
                 <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
                 <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+                <Setter Property="Foreground" Value="{ThemeResource TextBrush}" />
                 <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
                 <Setter Property="Height" Value="38" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -181,7 +181,7 @@
                                         <VisualState x:Name="Selected">
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource ThemeForeground}, Path=Color}"/>
+                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
 
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
@@ -201,7 +201,7 @@
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="Foreground" >
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid"
                                                Storyboard.TargetProperty="Background" >
@@ -212,7 +212,7 @@
                                         <VisualState x:Name="SelectedPointerOver">
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource ThemeForeground}, Path=Color}"/>
+                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
@@ -229,7 +229,7 @@
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="Foreground" >
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid"
                                                Storyboard.TargetProperty="Background" >
@@ -240,7 +240,7 @@
                                         <VisualState x:Name="SelectedPressed">
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource ThemeForeground}, Path=Color}"/>
+                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
@@ -260,7 +260,7 @@
             Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             Margin="{TemplateBinding Padding}"
-            FontSize="16"
+            FontSize="16" Foreground="{TemplateBinding Foreground}"
             FontFamily="{TemplateBinding FontFamily}"
             FontWeight="SemiLight"
             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
