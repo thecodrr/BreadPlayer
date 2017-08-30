@@ -62,6 +62,7 @@ namespace BreadPlayer
             _playlistVm.Songs.Clear();
             _playlistVm.Reset();
             _playlistVm = null;
+            fileBox.ItemsSource = null;
             GC.Collect();
             base.OnNavigatedFrom(e);
         }

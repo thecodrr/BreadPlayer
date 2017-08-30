@@ -66,7 +66,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// <returns></returns>
         public static bool IsLrc(string text)
         {
-            return Regex.Match(text, @"\[\d+:\d+.\d+\]|\[[a-zA-Z]+:[a-zA-Z\s]+\]").Success;                
+            return !string.IsNullOrEmpty(text) ? Regex.Match(text, @"\[\d+:\d+.\d+\]|\[[a-zA-Z]+:[a-zA-Z\s]+\]").Success : false;                
         }
         /// <summary>
         /// Create a new new instance of the <see cref="ILrcFile"/> interface with the specified LRC text.

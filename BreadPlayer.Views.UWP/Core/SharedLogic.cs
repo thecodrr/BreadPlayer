@@ -224,6 +224,13 @@ namespace BreadPlayer.Core
 
         private void NavigateToAlbumPage(object para)
         {
+            //because the gridview for both artists and albums is the same we need to handle,
+            //item selection this way.
+            if (para is Artist artist)
+            {
+                NavigateToArtistPage(artist);
+                return;
+            }
             SplitViewMenu.SplitViewMenu.UnSelectAll();
             var album = para is Album ? (Album)para : new Album { AlbumName = para.ToString() };
             NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);

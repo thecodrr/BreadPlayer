@@ -73,7 +73,13 @@ namespace BreadPlayer
             }
             catch { }
         }
-
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            BakersFrame.Navigate(typeof(AlbumArtistView), "Clear");
+            BreadsFrame.Navigate(typeof(AlbumArtistView), "Clear");
+            (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Collapsed;
+            (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Collapsed;
+        }
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if((sender as Pivot).SelectedIndex == 1)
@@ -88,6 +94,8 @@ namespace BreadPlayer
             }
             else
             {
+                BakersFrame?.Navigate(typeof(AlbumArtistView), "Clear");
+                BreadsFrame?.Navigate(typeof(AlbumArtistView), "Clear");
                 (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Collapsed;
                 (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Collapsed;
             }

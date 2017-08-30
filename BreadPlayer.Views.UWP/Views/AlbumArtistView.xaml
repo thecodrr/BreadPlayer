@@ -52,7 +52,7 @@
             </GridView.Transitions>
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" HorizontalAlignment="Stretch"/>
+                    <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemContainerStyle>
