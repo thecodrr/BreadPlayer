@@ -282,6 +282,7 @@
 
             <Style x:Key="CustomAppBarButtonStyle" TargetType="AppBarButton">
                 <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="VerticalAlignment" Value="Top"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
                 <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
@@ -290,7 +291,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="AppBarButton">
                             <Grid x:Name="RootGrid" Background="Transparent" Width="40"
-                              RenderTransformOrigin="0.5,0.5" BorderBrush="{TemplateBinding BorderBrush}">
+                              RenderTransformOrigin="0.5,0.5" CornerRadius="100" BorderBrush="{TemplateBinding BorderBrush}">
                                 <Grid.RenderTransform>
                                     <ScaleTransform x:Name="scaleTrans" />
                                 </Grid.RenderTransform>
@@ -312,6 +313,7 @@
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content" Storyboard.TargetProperty="Foreground">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AccentHoverBrush}"/>
                                                 </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0:0:0.5" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HighlightBackground"/>
                                                 <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                             </Storyboard>
                                         </VisualState>
@@ -344,7 +346,7 @@
                                         <VisualState x:Name="PointerFocused"/>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Rectangle x:Name="CheckedHighlightBackground" RadiusX="20" RadiusY="20" Fill="{ThemeResource SystemControlHighlightAccentBrush}" Opacity="0"/>
+                                <Rectangle x:Name="HighlightBackground" RadiusX="20" RadiusY="20" Fill="{TemplateBinding Background}" Opacity="0"/>
                                 <Rectangle x:Name="AccentOverlayBackground" RadiusX="20" RadiusY="20"/>
                                 <ContentPresenter x:Name="Content" AutomationProperties.AccessibilityView="Raw" CornerRadius="40" Content="{TemplateBinding Icon}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                                 <Rectangle x:Name="FocusVisualBlack" RadiusX="20" RadiusY="20" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
