@@ -499,7 +499,7 @@
                                         <Setter Target="headerText.(Grid.Row)" Value="2"/>
                                         <Setter Target="Shortcuts.Margin" Value="0,20,0,0"/>
                                         <Setter Target="toggleButton.Margin" Value="5,20,0,0"/>
-                                        <Setter Target="PageFrame.Margin" Value="10,0,0,0"/>
+                                        <Setter Target="PageFrame.Margin" Value="0,0,0,0"/>
                                         <Setter Target="Pane.Padding" Value="15,15,0,0"/>
                                         <Setter Target="PageFrame.(Grid.Row)" Value="4"/>
                                         <Setter Target="searchBox.(Grid.Column)" Value="0"/>

@@ -282,15 +282,22 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MediafileMobileTemplate" x:DataType="models:Mediafile">
-        <Grid Height="80" x:Name="MainGrid" Background="Transparent" Margin="-12,0,-12,0" Padding="10,0,10,0">
-            <TextBlock Typography.Capitals="AllSmallCaps" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,0,0" DataContext="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}" TextTrimming="CharacterEllipsis" FontSize="17">
-                <Run Text="{x:Bind Path=Title}"/>
-                <LineBreak/>
-                <Run Text="{x:Bind Path=LeadArtist}"/>
-                <Run Text="&#x2022;"/>
-                <Run Text="{x:Bind Path=Album}"/>
-            </TextBlock>
-            <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Height="80" Grid.ColumnSpan="9">
+        <Grid x:Name="MainGrid" Background="Transparent" Padding="10" Margin="-12,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="Title" Foreground="{Binding ElementName=Title, Path=Foreground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Margin="0,0,0,0" Text="{Binding Path=Title}" VerticalAlignment="Center"/>
+            <TextBlock x:Name="artistTxt" FontSize="12" Foreground="{Binding ElementName=Title, Path=Foreground}" TextTrimming="CharacterEllipsis" Grid.Column="1" Grid.Row="1" Margin="0,0,0,0" Text="{Binding Path=LeadArtist}" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Duration" FontSize="13" Grid.Column="3" Foreground="{Binding ElementName=Title, Path=Foreground}" TextTrimming="CharacterEllipsis" Margin="10,0,10,0" Grid.RowSpan="2" Text="{Binding Path=Length}" VerticalAlignment="Center"/>
+
+            <Border Background="Transparent" Margin="-10" Grid.RowSpan="4" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Grid.ColumnSpan="9">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="DoubleTapped">
                         <Core:InvokeCommandAction CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" Command="{Binding Source={StaticResource LibVM},Path=PlayCommand}"></Core:InvokeCommandAction>
@@ -308,10 +315,10 @@
                     <Core:EventTriggerBehavior EventName="Holding">
                         <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}"/>
                     </Core:EventTriggerBehavior>
-                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                    <Behaviours:InputSpecificEventTriggerBehaviour EventName="PointerEntered" InputType="Mouse">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
-                    </Core:EventTriggerBehavior>
+                    </Behaviours:InputSpecificEventTriggerBehaviour>
                     <Core:EventTriggerBehavior EventName="PointerExited">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
@@ -324,19 +331,29 @@
                     </Core:DataTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Border>
-            <ToggleButton Name="FavoriteButton" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" HorizontalAlignment="Left" Content="&#xEB51;" Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" DataContext="{Binding ElementName=ContentPresenter, Path=Content}" IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,0,0" Width="40" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource FavoriteButtonStyle}">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="PointerEntered">
-                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </ToggleButton>
-            <StackPanel x:Name="ButtonsStack" Grid.Column="0" Width="50" VerticalAlignment="Stretch" HorizontalAlignment="Right" Visibility="Collapsed" Height="80" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
-                <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
+            
+            <StackPanel x:Name="ButtonsStack" Grid.Column="2" Grid.RowSpan="4" VerticalAlignment="Stretch" HorizontalAlignment="Right" Visibility="Collapsed" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
+                <ToggleButton Name="FavoriteButton"
+                          Visibility="Visible" 
+                          VerticalAlignment="Center"
+                          Content="&#xEB51;" FontSize="18"
+                          Command="{Binding Source={StaticResource LibVM}, Path=AddToFavoritesCommand}" 
+                          CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" 
+                          DataContext="{Binding ElementName=ContentPresenter, Path=Content}" 
+                          IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                          Margin="0,0,10,0"
+                          Style="{StaticResource FavoriteButtonStyle}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="PointerEntered">
+                            <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </ToggleButton>
+                <Button x:Name="button2" Content="&#xE710;"
             IsDoubleTapEnabled="False" FontSize="18"
             Visibility="Visible" ToolTipService.ToolTip="Add this song to playlist."
-            Height="80"  VerticalAlignment="Center" Background="Transparent"
-            Width="50" Style="{StaticResource HyperlinkBtn}"
+            VerticalAlignment="Center" Background="Transparent"
+            Style="{StaticResource HyperlinkBtn}"
             FontFamily="Segoe MDL2 Assets">
 
                     <Interactivity:Interaction.Behaviors>
@@ -357,6 +374,28 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </StackPanel>
+            <Interactivity:Interaction.Behaviors>
+                <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
+                    <Media:ControlStoryboardAction>
+                        <Media:ControlStoryboardAction.Storyboard>
+                            <Storyboard x:Name="myStoryboard"  AutoReverse="True" RepeatBehavior="Forever">
+                                <ColorAnimation Storyboard.TargetName="MainGrid"  Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)" From="{Binding Source={ThemeResource SystemAccentColor1}, Path=Color }" To="DeepSkyBlue" Duration="0:0:6"/>
+                            </Storyboard>
+                        </Media:ControlStoryboardAction.Storyboard>
+                    </Media:ControlStoryboardAction>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
+                </Core:DataTriggerBehavior>
+                <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=MainGrid}" PropertyName="Background" Value="Transparent"/>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                </Core:DataTriggerBehavior>
+                <Core:EventTriggerBehavior EventName="PointerExited">
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 

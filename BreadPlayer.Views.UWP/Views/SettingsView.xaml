@@ -25,7 +25,7 @@
                 <TextBlock Grid.Column="1" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}"/>
             </Grid>
         </DataTemplate>
-        <Style TargetType="GridViewItem" x:Key="MobileGridViewItemStyle">
+        <Style TargetType="ListViewItem" x:Key="MobileGridViewItemStyle">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         </Style>
@@ -60,8 +60,8 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
        
-        <GridView x:Name="settingsGridView" ItemsSource="{Binding Path=SettingsCollection}" IsItemClickEnabled="True" ItemClick="OnSettingClicked" Margin="100,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <GridView.ItemTemplate>
+        <ListView x:Name="settingsGridView" ItemsSource="{Binding Path=SettingsCollection}" IsItemClickEnabled="True" ItemClick="OnSettingClicked" Margin="100,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="200" Height="200" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <StackPanel VerticalAlignment="Center">
@@ -71,13 +71,18 @@
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
-            </GridView.ItemTemplate>
-            <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
+            </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
-            </GridView.ItemContainerStyle>
-        </GridView>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </Grid>
 </Page>

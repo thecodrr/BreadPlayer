@@ -16,7 +16,7 @@
         <CollectionViewSource x:Key="cvs" IsSourceGrouped="True" Source="{Binding Path=CurrentCollection, UpdateSourceTrigger=PropertyChanged}"/>
     </Page.Resources>
     <Grid>
-        <Pivot x:Name="mainPivot" Margin="30,0,10,0" SelectionChanged="OnSelectionChanged">
+        <Pivot x:Name="mainPivot" Margin="0,0,10,0" SelectionChanged="OnSelectionChanged">
             <PivotItem Name="recentlyPlayedPivotItem" Header="Recently Played">
                 <ListView Name="recentlyPlayedList" ItemTemplate="{StaticResource MediafileTemplate}" ItemsSource="{Binding Source={StaticResource cvs}}">
                     <ListView.GroupStyle>

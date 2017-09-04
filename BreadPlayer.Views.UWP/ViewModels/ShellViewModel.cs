@@ -511,6 +511,7 @@ namespace BreadPlayer.ViewModels
             //to avoid changing the device at that time, we use this statement.
             if (eventCount > 1)
             {
+                BLogger.Logger.Info($"Switching audio render device to [{currentEndpoint.ToString()}].");
                 SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
             }
             //increase the event count
@@ -524,7 +525,7 @@ namespace BreadPlayer.ViewModels
 
             var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
             var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.Logger.Error($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+            BLogger.Logger.Info($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
 
             _audioDeviceId = args.Id;
 
