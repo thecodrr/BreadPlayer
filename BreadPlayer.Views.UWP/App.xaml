@@ -120,10 +120,11 @@
             <MenuFlyout x:Key="GenreFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}"></MenuFlyout>
 
             <!-- Default style for Windows.UI.Xaml.Controls.Primitives.PivotHeaderItem -->
-            <Style TargetType="PivotHeaderItem">
+            <Style TargetType="PivotHeaderItem" x:Key="DefaultPivotHeaderItemStyle">
                 <Setter Property="FontSize" Value="15" />
                 <Setter Property="FontFamily" Value="{ThemeResource PivotHeaderItemFontFamily}" />
                 <Setter Property="FontWeight" Value="{ThemeResource PivotHeaderItemThemeFontWeight}" />
+                <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Padding" Value="{ThemeResource PivotHeaderItemMargin}" />
@@ -180,9 +181,6 @@
                                         </VisualState>
                                         <VisualState x:Name="Selected">
                                             <Storyboard>
-                                                <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
-
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
@@ -199,10 +197,6 @@
                                         </VisualState>
                                         <VisualState x:Name="UnselectedPointerOver">
                                             <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Foreground" >
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid"
                                                Storyboard.TargetProperty="Background" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
@@ -211,8 +205,6 @@
                                         </VisualState>
                                         <VisualState x:Name="SelectedPointerOver">
                                             <Storyboard>
-                                                <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
@@ -227,10 +219,6 @@
                                         </VisualState>
                                         <VisualState x:Name="UnselectedPressed">
                                             <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="Foreground" >
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid"
                                                Storyboard.TargetProperty="Background" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
@@ -239,8 +227,6 @@
                                         </VisualState>
                                         <VisualState x:Name="SelectedPressed">
                                             <Storyboard>
-                                                <ColorAnimation Storyboard.TargetName="ContentPresenter"
-                                               Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" Duration="0:0:0.3" To="{Binding Source={ThemeResource TextBrush}, Path=Color}"/>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                Storyboard.TargetProperty="FontWeight" >
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="SemiBold" />
@@ -260,7 +246,7 @@
             Content="{TemplateBinding Content}"
             ContentTemplate="{TemplateBinding ContentTemplate}"
             Margin="{TemplateBinding Padding}"
-            FontSize="16"
+            FontSize="16" Foreground="{TemplateBinding Foreground}"
             FontFamily="{TemplateBinding FontFamily}"
             FontWeight="SemiLight"
             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -269,7 +255,7 @@
                                         <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
                                     </ContentPresenter.RenderTransform>
                                 </ContentPresenter>
-                                <Rectangle Stroke="{ThemeResource ThemeForeground}"
+                                <Rectangle Stroke="{ThemeResource TextBrush}"
                             StrokeThickness="0.5"
                             Height="1" x:Name="SelectedUnderline" Opacity="0"
                             VerticalAlignment="Bottom"

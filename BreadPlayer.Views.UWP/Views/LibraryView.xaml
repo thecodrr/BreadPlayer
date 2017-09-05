@@ -171,7 +171,7 @@
             </TransitionCollection>
         </Grid.Transitions>
         <Pivot x:Name="mainPivot" Foreground="{ThemeResource TextBrush}" Grid.ColumnSpan="2" SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem Header="Toasts" Margin="0,-8.4,0,0">
+            <PivotItem Header="Toasts" Foreground="{ThemeResource TextBrush}" Margin="0,-8.4,0,0">
                 <Grid Margin="0,0,0,0">
                     <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb"/>
                     <SemanticZoom x:Name="semanticZoom" Margin="0,6,0,0" ViewChangeStarted="semanticZoom_ViewChangeStarted" ScrollViewer.ZoomMode="Enabled">
@@ -317,6 +317,11 @@
                     <Setter Property="Margin" Value="0,10,0,0"/>
                 </Style>
             </Pivot.ItemContainerStyle>
+            <Pivot.Resources>
+                <Style BasedOn="{StaticResource DefaultPivotHeaderItemStyle}" TargetType="PivotHeaderItem">
+                    <Setter Property="Foreground" Value="{ThemeResource TextBrush}"/>
+                </Style>
+            </Pivot.Resources>
         </Pivot>
         <Button x:Uid="backBtn" x:Name="backBtn" ToolTipService.ToolTip="" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Style="{StaticResource HyperlinkBtn}">
             <Interactivity:Interaction.Behaviors>

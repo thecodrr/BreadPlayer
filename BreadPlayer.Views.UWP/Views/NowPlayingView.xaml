@@ -562,7 +562,7 @@
                     <ListView ItemsSource="{Binding Path=NowPlayingQueue}" Margin="0,6,0,0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="0,5">
+                                <Grid Padding="5,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -705,6 +705,11 @@
                     <ProgressRing IsActive="{Binding ArtistInfoLoading}"/>
                 </Grid>
             </PivotItem>
+            <Pivot.Resources>
+                <Style BasedOn="{StaticResource DefaultPivotHeaderItemStyle}" TargetType="PivotHeaderItem">
+                    <Setter Value="Black" Property="Foreground"/>
+                </Style>
+            </Pivot.Resources>
         </Pivot>
     </Grid>
 </Page>

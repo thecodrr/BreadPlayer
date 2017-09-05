@@ -132,7 +132,7 @@ namespace BreadPlayer.ViewModels
                 {
                     Interval = TimeSpan.FromMilliseconds(10)
                 };
-
+                timer.Start();
                 string lyricsText = "";
                 if (string.IsNullOrEmpty(Player.CurrentlyPlayingFile?.SynchronizedLyric))
                 {
