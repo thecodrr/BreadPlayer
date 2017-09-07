@@ -56,28 +56,15 @@ namespace BreadPlayer
         #endregion
 
         #region Load/Save Logic
-        public static async void LoadSettings(bool onlyVol = false, bool play = false)
+        public static void LoadSettings(bool onlyVol = false, bool play = false)
         {
             var volume = SettingsHelper.GetLocalSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                _path = SettingsHelper.GetLocalSetting<string>(PathKey, "");
-                
-                // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-                if (_path != "" && SharedLogic.VerifyFileExists(_path, 300))
-                {
                     double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
-                    try
-                    {
-                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
-                            new List<object> { await StorageFile.GetFileFromPathAsync(_path), position, play, volume });
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
-                    }
-                }
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
+                            new List<object> { position, play, volume });                
             }
         }
 

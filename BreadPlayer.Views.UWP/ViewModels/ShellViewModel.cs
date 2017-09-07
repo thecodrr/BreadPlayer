@@ -173,11 +173,15 @@ namespace BreadPlayer.ViewModels
                 {
                     volume = (double)list[3];
                 }
-                var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0);
-                var libraryMediaFile =  _service.GetMediafile(id);
-                if(libraryMediaFile == null)
+                Mediafile libraryMediaFile = null;  
+                if(list[0] is StorageFile file)
                 {
-                    libraryMediaFile = await TagReaderHelper.CreateMediafile(list[0] as StorageFile);
+                    libraryMediaFile = await TagReaderHelper.CreateMediafile(file);
+                }
+                else
+                {
+                    var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0);
+                    libraryMediaFile = _service.GetMediafile(id);
                 }
                 await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }
