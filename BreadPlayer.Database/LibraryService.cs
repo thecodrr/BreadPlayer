@@ -31,6 +31,10 @@ namespace BreadPlayer.Database
         {
             return Database.GetRecords<Mediafile>();
         }
+        public Task<IEnumerable<Mediafile>> GetRangeOfMediafiles(int index, int limit)
+        {
+            return Database.GetRangeOfRecords<Mediafile>(index, limit);
+        }
         public void AddMediafile(Mediafile data)
         {
             Database.InsertRecord(data);

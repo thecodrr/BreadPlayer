@@ -154,15 +154,17 @@ namespace BreadPlayer.ViewModels
                 {
                     lyricsText = await Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
                 }
-
-                var parser = LrcParser.FromText(lyricsText);
-                Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
-
+                if (!string.IsNullOrEmpty(lyricsText))
+                {
+                    var parser = LrcParser.FromText(lyricsText);
+                    if (parser.Lyrics.Any())
+                        Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+                }
                 LyricsLoading = false;
                 timer.Tick += (s, e) =>
                 {
                     var currentPosition = TimeSpan.FromSeconds(Player.Position);
-                    if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                    if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50) == true)
                     {
                         var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
                         if (currentLyric == null)

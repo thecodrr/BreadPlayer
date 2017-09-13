@@ -174,9 +174,19 @@ namespace BreadPlayer.ViewModels
                     volume = (double)list[3];
                 }
                 Mediafile libraryMediaFile = null;  
-                if(list[0] is StorageFile file)
+                if(list[0] is IReadOnlyList<IStorageItem> files)
                 {
-                    libraryMediaFile = await TagReaderHelper.CreateMediafile(file);
+                    List<Mediafile> mediafileList = new List<Mediafile>(files.Count);
+                    foreach (IStorageItem item in files)
+                    {
+                        if (item.IsOfType(StorageItemTypes.File))
+                        {
+                            mediafileList.Add(await TagReaderHelper.CreateMediafile(item as StorageFile));
+                        }
+                    }
+                    NowPlayingQueue = new ThreadSafeObservableCollection<Mediafile>();
+                    NowPlayingQueue.AddRange(mediafileList);
+                    libraryMediaFile = NowPlayingQueue[0];
                 }
                 else
                 {
@@ -454,6 +464,10 @@ namespace BreadPlayer.ViewModels
             {
                 return TracksCollection.Elements;
             }
+            if (NowPlayingQueue?.Any() == true)
+            {
+                return NowPlayingQueue;
+            }
             return null;
         }
 
@@ -653,7 +667,7 @@ namespace BreadPlayer.ViewModels
             get => _nowPlayingQueue;
             set => Set(ref _nowPlayingQueue, value);
         }
-
+        
         private string _queryWord = "";
         public string QueryWord
         {
@@ -802,11 +816,16 @@ namespace BreadPlayer.ViewModels
                 {
                     TracksCollection.Elements.FirstOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
                 }
+                else if(NowPlayingQueue?.Any(t => t.State == PlayerState.Playing) == true)
+                {
+                    NowPlayingQueue.FirstOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
+                }
 
                 if (PlaylistSongCollection != null && PlaylistSongCollection.Any(t => t.State == PlayerState.Playing))
                 {
                     PlaylistSongCollection.FirstOrDefault(t => t.State == PlayerState.Playing).State = PlayerState.Stopped;
                 }
+                
             }
         }
         private bool IsSongToStopAfter()

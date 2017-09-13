@@ -75,9 +75,9 @@ namespace BreadPlayer
                 await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
                 SettingsHelper.SaveLocalSetting("IsFirstTime", false);
             }
-            if (e.Parameter is StorageFile file)
+            if (e.Parameter is IReadOnlyList<IStorageItem> files)
             {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { file, 0.0, true, 50.0 });
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { files, 0.0, true, 50.0 });
             }
 
             base.OnNavigatedTo(e);

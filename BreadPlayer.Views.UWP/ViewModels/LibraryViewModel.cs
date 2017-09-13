@@ -584,11 +584,17 @@ namespace BreadPlayer.ViewModels
                 }
              
                 ViewSource.IsSourceGrouped = group;
-                //await SplitList(TracksCollection, 300).ConfigureAwait(false);
-                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
+                await SplitList(300).ConfigureAwait(false);
+               // await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
-
+        public async Task SplitList(int nSize = 30)
+        {
+            for (int i = 0; i < SongCount; i += nSize)
+            {
+                TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
+            }
+        }
         /// <summary>
         /// Refresh the view, based on filters and sorting mechanisms.
         /// </summary>

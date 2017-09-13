@@ -308,10 +308,10 @@ namespace BreadPlayer.Database
         }
         public Task<IEnumerable<T>> GetRecords<T>()
         {
-            return GetRecords<T>(long.MinValue, long.MaxValue);
+            return GetRangeOfRecords<T>(int.MinValue, int.MaxValue);
         }
 
-        public Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId)
+        public Task<IEnumerable<T>> GetRangeOfRecords<T>(int fromId, int toId)
         {
             return Task.Run(() =>
             {

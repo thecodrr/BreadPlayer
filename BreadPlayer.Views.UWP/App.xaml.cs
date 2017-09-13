@@ -150,13 +150,13 @@ namespace BreadPlayer
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(args.Files[0]);
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files[0], 0.0, true, 50.0 });
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files, 0.0, true, 50.0 });
                 BLogger.Logger.Info("File was loaded successfully while app was running...");
                 // ShellVM.Play(args.Files[0]);
             }
             else
             {
-                LoadFrame(args, args.Files[0]);
+                LoadFrame(args, args.Files);
                 BLogger.Logger.Info("Player opened successfully with file as argument...");
             }
         }
