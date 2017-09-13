@@ -111,7 +111,7 @@
     </DataTemplate>
     
     <DataTemplate x:Key="AlbumMobileTemplate" x:DataType="models:Album">
-        <Grid x:Name="LayoutRoot" Width="130" Height="200"  Background="Transparent">
+        <Grid x:Name="LayoutRoot" Width="130" Height="200" Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -130,11 +130,11 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Image>
-            <FontIcon x:Name="PlaceHolder" Width="130" Height="130" Glyph="&#xE93C;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="112" Visibility="{x:Bind Path=AlbumArt, Converter={StaticResource BoolToVisibility}}"/>
+            <FontIcon x:Name="PlaceHolder" Width="130" Height="130" Glyph="&#xE93C;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="60" Visibility="{x:Bind Path=AlbumArt, Converter={StaticResource BoolToVisibility}}"/>
             <TextBlock x:Name="albumTitle" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,5,5,0" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind AlbumName, FallbackValue=25}" HorizontalAlignment="Center"/>
             <TextBlock x:Name="albumArtist" x:Phase="1" Grid.Row="2" TextAlignment="Center" Margin="5,5,5,0" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind Artist, FallbackValue=Adele}" HorizontalAlignment="Center"/>
 
-            <Grid Grid.Row="0" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Bottom" Visibility="Collapsed" x:DeferLoadStrategy="Lazy" HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="40">
+            <Grid Grid.Row="0" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Bottom" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0" Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}" Height="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -206,6 +206,10 @@
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="Visible"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Visible"/>
                     </Behaviours:InputSpecificEventTriggerBehaviour>
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>
+                        <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
+                    </Core:EventTriggerBehavior>
                     <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected}" Value="False" ComparisonCondition="Equal">
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="Collapsed"/>
                         <Core:ChangePropertyAction TargetObject="{Binding ElementName=FavoriteButton}" PropertyName="Visibility" Value="{Binding ElementName=FavoriteButton, Path=IsChecked, Converter={StaticResource BoolToVisibility}}"/>
@@ -282,7 +286,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MediafileMobileTemplate" x:DataType="models:Mediafile">
-        <Grid x:Name="MainGrid" Background="Transparent" Padding="10" Margin="-12,0,0,0">
+        <Grid x:Name="MainGrid" Background="Transparent" Padding="20,15,15,15" Margin="-12,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -400,14 +404,14 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ArtistTemplate" x:DataType="models:Artist">
-        <Grid x:Name="LayoutRoot" Width="160" Height="220">
+        <Grid x:Name="LayoutRoot" Width="120" Height="180">
          
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Border Width="150" Height="150" Background="#ccdbdbdb" CornerRadius="100">
+            <Border Width="110" Height="110" Background="#ccdbdbdb" CornerRadius="100">
                 <Grid x:Name="artistImageGrid" Opacity="0" CornerRadius="100">
                     <Grid.Background>
                         <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
@@ -427,12 +431,96 @@
                             </Interactivity:Interaction.Behaviors>
                         </ImageBrush>
                     </Grid.Background>
-                   <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+                   <FontIcon x:Name="PlaceHolder" Width="110" Height="110" Glyph="&#xE13D;" Foreground="{ThemeResource ThemeForeground}" FontSize="32" Visibility="{Binding Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
                     <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}"/>-->
                 </Grid>
             </Border>
             <TextBlock x:Name="artistName" Foreground="{ThemeResource TextBrush}" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
-            <Grid Grid.Row="0" Height="153" CornerRadius="100" Width="153" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <Grid Grid.Row="0" Height="113" CornerRadius="100" Width="113" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Transparent" Offset="0"/>
+                        <GradientStop Color="{Binding Path=PictureColor}" Offset="0.95"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <AppBarButton Icon="Play" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" HorizontalAlignment="Right" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}" 
+                              BorderBrush="WhiteSmoke" VerticalAlignment="Center">
+                    <AppBarButton.Background>
+                        <SolidColorBrush Color="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged}"/>
+                    </AppBarButton.Background>
+                </AppBarButton>
+                <AppBarButton x:Name="button2" VerticalAlignment="Center" Icon="Add" Style="{StaticResource CustomAppBarButtonStyle}" Width="40" Height="40" Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" 
+                              BorderBrush="WhiteSmoke" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}" >
+                    <AppBarButton.Background>
+                        <SolidColorBrush Color="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged}"/>
+                    </AppBarButton.Background>
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}"/>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </AppBarButton>
+                <Interactivity:Interaction.Behaviors>
+                    <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}" ComparisonCondition="Equal" Value="True">
+                        <Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=ButtonsStack}" Value="Visible"/>
+                        <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource SystemAccentForeground}"/>
+                        <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource SystemAccentForeground}"/>
+                        <Media:ControlStoryboardAction>
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ButtonsStack" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3"></DoubleAnimation>
+                                </Storyboard>
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
+                    </Core:DataTriggerBehavior>
+                    <Core:DataTriggerBehavior Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}" ComparisonCondition="Equal" Value="False">
+                        <Core:ChangePropertyAction PropertyName="Visibility" TargetObject="{Binding ElementName=ButtonsStack}" Value="Collapsed"/>
+                        <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumTitle}" Value="{StaticResource ThemeForeground}"/>
+                        <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=albumArtist}" Value="{StaticResource ThemeForeground}"/>
+                    </Core:DataTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ArtistMobileTemplate" x:DataType="models:Artist">
+        <Grid x:Name="LayoutRoot" Width="120" Height="180">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Border Width="110" Height="110" Background="#ccdbdbdb" CornerRadius="100">
+                <Grid x:Name="artistImageGrid" Opacity="0" CornerRadius="100">
+                    <Grid.Background>
+                        <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
+                            <ImageBrush.ImageSource>
+                                <BitmapImage DecodePixelHeight="150" DecodePixelWidth="150" DecodePixelType="Logical" UriSource="{Binding Picture, UpdateSourceTrigger=PropertyChanged}"/>
+                            </ImageBrush.ImageSource>
+                            <Interactivity:Interaction.Behaviors>
+                                <Core:EventTriggerBehavior EventName="ImageOpened">
+                                    <Media:ControlStoryboardAction>
+                                        <Media:ControlStoryboardAction.Storyboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="artistImageGrid" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.8"></DoubleAnimation>
+                                            </Storyboard>
+                                        </Media:ControlStoryboardAction.Storyboard>
+                                    </Media:ControlStoryboardAction>
+                                </Core:EventTriggerBehavior>
+                            </Interactivity:Interaction.Behaviors>
+                        </ImageBrush>
+                    </Grid.Background>
+                    <FontIcon x:Name="PlaceHolder" Width="110" Height="110" Glyph="&#xE13D;" Foreground="{ThemeResource ThemeForeground}" FontSize="32" Visibility="{Binding Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+                    <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}"/>-->
+                </Grid>
+            </Border>
+            <TextBlock x:Name="artistName" Foreground="{ThemeResource TextBrush}" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
+            <Grid Grid.Row="0" Height="113" CornerRadius="100" Width="113" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Transparent" Offset="0"/>

@@ -14,7 +14,11 @@
       xmlns:Extensions="using:BreadPlayer.Extensions"
     
     mc:Ignorable="d">
-    
+    <Page.Resources>
+        <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
+            <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Center"/>
+        </ItemsPanelTemplate>
+    </Page.Resources>
     <Grid x:Name="grid" Margin="0,0,0,0" DataContext="{StaticResource AlbumArtistVM}">
         <Grid.Resources>
             <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
@@ -26,7 +30,6 @@
                         <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="albumListView.ItemTemplate" Value="{StaticResource AlbumTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -34,10 +37,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="albumListView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />-->
-                        <Setter Target="albumListView.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
-                       
-                        <Setter Target="grid.Margin" Value="0,40,0,0" />
+                        <Setter Target="albumListView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

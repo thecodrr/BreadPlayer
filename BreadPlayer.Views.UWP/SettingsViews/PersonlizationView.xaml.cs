@@ -26,8 +26,6 @@ namespace BreadPlayer.SettingsViews
         public PersonlizationView()
         {
             this.InitializeComponent();
-            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionFirst"));
-            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionSecond"));
         }
     }
 }

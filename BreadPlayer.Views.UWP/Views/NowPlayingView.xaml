@@ -436,6 +436,7 @@
                         <Setter Target="artistInfoList.ItemTemplate" Value="{StaticResource MobileArtistInfoTemplate}"/>
                         <Setter Target="currentLyricTxt.Width" Value="200"/>
                         <Setter Target="infoPivot.Margin" Value="0"/>
+                        <Setter Target="extraControlsPanel.HorizontalAlignment" Value="Left"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -502,15 +503,17 @@
                     <Button x:Name="playBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Margin="5,0,5,0" Background="Transparent" Foreground="{StaticResource TextBrush}" Height="60" Command="{Binding PlayPauseCommand}" VerticalAlignment="Stretch"  Style="{StaticResource HyperlinkBtn}">
                         <TextBlock x:Name="playIcon" FontFamily="Segoe MDL2 Assets" Text="{Binding PlayPauseIcon, Mode=TwoWay,Converter={StaticResource SymbolToChar}}" FontSize="20"/>
                     </Button>
-                    <Button  Content="&#xE893;" BorderBrush="{ThemeResource AccentHoverBrush}" Margin="0,0,5,0" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+                    <Button Content="&#xE893;" BorderBrush="{ThemeResource AccentHoverBrush}" Margin="0,0,5,0" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Command="{Binding PlayNextCommand}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
                     <ToggleButton x:Name="volumeBtn" Content="&#xE767;" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Style="{StaticResource HyperlinkToggleBtn}" VerticalAlignment="Stretch"/>
                 </StackPanel>
                 <TextBlock Text="{Binding Path=Title}" Foreground="{StaticResource TextBrush}"/>
                 <TextBlock Text="{Binding Path=LeadArtist}" Foreground="{StaticResource TextBrush}"/>
                 <TextBlock Text="{Binding Path=Album}" TextTrimming="WordEllipsis" Foreground="{StaticResource TextBrush}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
-                    <Button x:Name="shareBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE72D;" Click="OnShareSong" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="16" Style="{StaticResource HyperlinkBtn}"/>
-                    <Button x:Name="maximizeBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE740;" Click="OnMaximizeToFullScreen" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="15" Style="{StaticResource HyperlinkBtn}"/>
+                <StackPanel x:Name="extraControlsPanel" Orientation="Horizontal" Margin="0,5,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" >
+                    <Button DataContext="{StaticResource ShellVM}" Margin="0,0,5,0" Command="{Binding SetRepeatCommand}" ToolTipService.ToolTip="{Binding Repeat}" Content="{Binding Repeat, Converter={StaticResource StringToIcon}}" BorderBrush="{ThemeResource AccentHoverBrush}" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Style="{StaticResource HyperlinkBtn}" VerticalAlignment="Stretch"/>
+                    <ToggleButton DataContext="{StaticResource ShellVM}" Margin="0,0,5,0" Content="&#xE8B1;" IsChecked="{Binding Path=Shuffle, Mode=TwoWay}" BorderBrush="{ThemeResource AccentHoverBrush}" FontFamily="Segoe MDL2 Assets" Background="Transparent" FontSize="20" Foreground="{StaticResource TextBrush}" Style="{StaticResource HyperlinkToggleBtn}" VerticalAlignment="Stretch"/>
+                    <Button x:Name="shareBtn" Margin="0,0,5,0" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE72D;" Click="OnShareSong" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Style="{StaticResource HyperlinkBtn}"/>
+                    <Button x:Name="maximizeBtn" BorderBrush="{ThemeResource AccentHoverBrush}" Content="&#xE740;" Click="OnMaximizeToFullScreen" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Style="{StaticResource HyperlinkBtn}"/>
                 </StackPanel>
             </StackPanel>
             <Slider x:Name="positionSlider"
@@ -528,7 +531,7 @@
                     BorderThickness="0"
                     Foreground="{ThemeResource TextBrush}" />
             <!--<Button x:Name="addBtn" Content="&#xE710;" Grid.Row="1" Margin="0,0,0,0" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}"/>-->
-            <Grid Name="volumeGrid" Grid.Row="0" Visibility="{Binding ElementName=volumeBtn, Path=IsChecked}" DataContext="{StaticResource Core}" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="4" Margin="120,45,0,-30" HorizontalAlignment="Left" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}">
+            <Grid Name="volumeGrid" Grid.Row="0" Visibility="{Binding ElementName=volumeBtn, Path=IsChecked}" DataContext="{StaticResource Core}" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="4" Margin="215,45,0,-30" HorizontalAlignment="Left" Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}">
                 <Slider Orientation="Vertical" Value="{Binding  Path=Player.Volume, Mode=TwoWay}" Maximum="100" LargeChange="10"  Margin="0,10" VerticalAlignment="Stretch" Style="{StaticResource CircleSlider}" Background="#FFC5C5C5" BorderBrush="#FFC5C5C5" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
             </Grid>
             <TextBlock FontSize="36" 

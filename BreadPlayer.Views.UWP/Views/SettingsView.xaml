@@ -11,7 +11,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="MobileSettingItemTemplate">
-            <Grid Padding="10">
+            <Grid Padding="0,10,10,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -20,9 +20,9 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <FontIcon Glyph="{Binding Path=Icon}" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" Grid.RowSpan="2"/>
-                <TextBlock Grid.Column="1" Text="{Binding Path=Title}"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}"/>
+                <FontIcon Glyph="{Binding Path=Icon}" Foreground="{ThemeResource TextBrush}" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" Grid.RowSpan="2"/>
+                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Text="{Binding Path=Title}"/>
+                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}"/>
             </Grid>
         </DataTemplate>
         <Style TargetType="ListViewItem" x:Key="MobileGridViewItemStyle">

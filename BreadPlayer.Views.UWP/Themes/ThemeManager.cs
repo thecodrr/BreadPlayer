@@ -13,7 +13,7 @@ using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Themes
 {
-    public class ThemeManager
+    public class ThemeManager : ObservableObject
     {
         private static readonly string[] BrushKeys = {
             //wp
@@ -130,7 +130,6 @@ namespace BreadPlayer.Themes
         {
             GetThemeResource<SolidColorBrush>("TextBrush").Color = accentColor.ToForeground(); //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
             GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = accentColor.ToHoverColor();
-        }
-
+        }        
     }
 }
