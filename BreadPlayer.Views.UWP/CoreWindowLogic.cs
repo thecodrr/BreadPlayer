@@ -56,45 +56,40 @@ namespace BreadPlayer
         #endregion
 
         #region Load/Save Logic
-        public static async void LoadSettings(bool onlyVol = false, bool play = false)
+        public static void LoadSettings(bool onlyVol = false, bool play = false)
         {
-            var volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
+            var volume = SettingsHelper.GetLocalSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                _path = RoamingSettingsHelper.GetSetting<string>(PathKey, "");
-                
-                // SettingsVM.LibraryFoldersCollection.ToList().ForEach(new Action<StorageFolder>((StorageFolder folder) => { folderPaths += folder.Path + "|"; }));
-                if (_path != "" && SharedLogic.VerifyFileExists(_path, 300))
-                {
-                    double position = RoamingSettingsHelper.GetSetting<double>(PosKey, 0);
+                    double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
-                    try
-                    {
-                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
-                            new List<object> { await StorageFile.GetFileFromPathAsync(_path), position, play, volume });
-                    }
-                    catch (UnauthorizedAccessException ex)
-                    {
-                        BLogger.Logger.Error("Access denied while trying to play file on startup.", ex);
-                    }
-                }
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
+                            new List<object> { "", position, play, volume });                
             }
         }
 
         public static void SaveSettings()
         {
-            if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+            try
             {
-                ApplicationData.Current.RoamingSettings.Values[PathKey] = SharedLogic.Player.CurrentlyPlayingFile.Path;
-                ApplicationData.Current.RoamingSettings.Values[PosKey] = SharedLogic.Player.Position;
+                if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+                {
+                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Player.CurrentlyPlayingFile.Id);
+                    SettingsHelper.SaveLocalSetting(PathKey,SharedLogic.Player.CurrentlyPlayingFile.Path);
+                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Player.Position);
+                }
+                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Player.Volume);
+                SettingsHelper.SaveLocalSetting(TimeclosedKey, DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                string folderPaths = "";
+                SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
+                if (!string.IsNullOrEmpty(folderPaths))
+                {
+                    SettingsHelper.SaveLocalSetting(FoldersKey, folderPaths.Remove(folderPaths.LastIndexOf('|')));
+                }
             }
-            ApplicationData.Current.RoamingSettings.Values[VolKey] = SharedLogic.Player.Volume;
-            ApplicationData.Current.RoamingSettings.Values[TimeclosedKey] = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string folderPaths = "";
-            SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
-            if(!string.IsNullOrEmpty(folderPaths))
+            catch(Exception ex)
             {
-                ApplicationData.Current.RoamingSettings.Values[FoldersKey] = folderPaths.Remove(folderPaths.LastIndexOf('|'));
+                BLogger.Logger.Error("Error while saving settings.", ex);
             }
         }
         #endregion
@@ -135,7 +130,7 @@ namespace BreadPlayer
 
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused)
+                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Player.PlayerState != PlayerState.Paused)
                 {
                    // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
@@ -149,21 +144,27 @@ namespace BreadPlayer
             {
                 return;
             }
-
-            _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
-            var musicProps = _smtc.DisplayUpdater.MusicProperties;
-            _smtc.DisplayUpdater.ClearAll();
-            if (SharedLogic.Player.CurrentlyPlayingFile != null)
-            {               
-                musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
-                musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
-                musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
-                if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+            try
+            {
+                _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
+                var musicProps = _smtc.DisplayUpdater.MusicProperties;
+                _smtc.DisplayUpdater.ClearAll();
+                if (SharedLogic.Player.CurrentlyPlayingFile != null)
                 {
-                    _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                    musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
+                    musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
+                    musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
+                    if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+                    {
+                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                    }
                 }
+                _smtc.DisplayUpdater.Update();
             }
-            _smtc.DisplayUpdater.Update();
+            catch(Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while updating SMTC.", ex);
+            }
         }
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
@@ -279,9 +280,7 @@ namespace BreadPlayer
             }
 
             InitSmtc();
-            SharedLogic.Player.Volume = RoamingSettingsHelper.GetSetting<double>(VolKey, 50.0);
             Window.Current.SizeChanged += Current_SizeChanged;
-            var vm = (Application.Current.Resources["AccountsVM"] as AccountsViewModel);
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)

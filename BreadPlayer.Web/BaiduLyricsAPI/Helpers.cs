@@ -39,12 +39,10 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             builder.AppendFormat("?from={0}&version={1}&method={2}&format={3}{4}", Endpoints.ApiFrom, Endpoints.ApiVersion, method, Endpoints.ApiFormat, parameters);
             return builder.ToString();
         }
-        public Task<string> MakeRequest(string url)
+        public async Task<string> MakeRequest(string url)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                return client.GetStringAsync(url);
-            }
+            using(HttpClient client = new HttpClient())
+                return await client.GetStringAsync(url).ConfigureAwait(false);            
         }
     }
 }

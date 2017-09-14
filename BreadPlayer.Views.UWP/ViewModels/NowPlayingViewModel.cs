@@ -12,38 +12,57 @@ using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
 using BreadPlayer.Dispatcher;
+using System.Collections.Generic;
+using Windows.UI.Xaml;
+using BreadPlayer.Parsers.LRCParser;
+using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Core.Extensions;
+using System.Threading;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.ViewModels
 {
     public class NowPlayingViewModel : ViewModelBase
     {
         #region Loading Properties
-
         private bool _artistInfoLoading;
         public bool ArtistInfoLoading { get => _artistInfoLoading; set => Set(ref _artistInfoLoading, value); }
         private bool _albumInfoLoading;
         public bool AlbumInfoLoading { get => _albumInfoLoading; set => Set(ref _albumInfoLoading, value); }
+        private bool _lyricsLoading;
+        public bool LyricsLoading { get => _lyricsLoading; set => Set(ref _lyricsLoading, value); }
         private bool _artistFetchFailed;
         public bool ArtistFetchFailed { get => _artistFetchFailed; set => Set(ref _artistFetchFailed, value); }
         private bool _albumFetchFailed;
-        public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }
+        public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }       
         #endregion
 
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
         public string CorrectArtist { get; set; }
         public string CorrectAlbum { get; set; }
-        private string _artistBio;
-        public string ArtistBio
+        IOneLineLyric _currentLyric;
+        public IOneLineLyric CurrentLyric
         {
-            get => _artistBio;
-            set => Set(ref _artistBio, value);
+            get => _currentLyric;
+            set => Set(ref _currentLyric, value);
         }
-
+        ThreadSafeObservableCollection<LastArtist> artists;
+        public ThreadSafeObservableCollection<LastArtist> Artists
+        {
+            get => artists;
+            set => Set(ref artists, value);
+        }
         private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         public ThreadSafeObservableCollection<LastTrack> AlbumTracks
         {
             get => _albumTracks;
             set => Set(ref _albumTracks, value);
+        }
+        private ThreadSafeObservableCollection<IOneLineLyric> lyrics;
+        public ThreadSafeObservableCollection<IOneLineLyric> Lyrics
+        {
+            get => lyrics;
+            set => Set(ref lyrics, value);
         }
 
         private ThreadSafeObservableCollection<LastArtist> _similarArtists;
@@ -55,17 +74,23 @@ namespace BreadPlayer.ViewModels
         public ICommand RetryCommand { get; set; }
         private LastfmClient LastfmClient => new Lastfm().LastfmClient;
 
+        List<Task> TaskList = new List<Task>();
         public NowPlayingViewModel()
         {
             RetryCommand = new RelayCommand(Retry);
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
-            SharedLogic.Player.MediaChanging += (sender, e) =>
-            {
-                SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
-            };
+            SharedLogic.Player.MediaChanged += OnMediaChanged;
         }
+        
+        private async void OnMediaChanged(object sender, EventArgs e)
+        {
+            Lyrics?.Clear();
+            CurrentLyric = null;
+            await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
+        }
+
         private async void Retry(object para)
         {
             if (string.IsNullOrEmpty(CorrectArtist))
@@ -91,31 +116,85 @@ namespace BreadPlayer.ViewModels
             }
             await _service.UpdateMediafile(SharedLogic.Player.CurrentlyPlayingFile);
         }
-        private async void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
-        {
-            if (e.NewState == PlayerState.Playing)
-            {
-                SharedLogic.Player.MediaStateChanged -= Player_MediaStateChanged;
-                await GetInfo(SharedLogic.Player.CurrentlyPlayingFile?.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile?.Album);
-            }
-        }
+       
 
         private int _retries;
+        BreadPlayer.Core.PortableAPIs.DispatcherTimer timer;
+        private async Task GetLyrics()
+        {
+            await BreadDispatcher.InvokeAsync(async () =>
+            {
+                if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
+                    return;
+                LyricsLoading = true;
+
+                timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
+                {
+                    Interval = TimeSpan.FromMilliseconds(10)
+                };
+                timer.Start();
+                string lyricsText = "";
+                if (string.IsNullOrEmpty(Player.CurrentlyPlayingFile?.SynchronizedLyric))
+                {
+                    var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
+
+                    if (list == null || list?.Any() == false)
+                    {
+                        LyricsLoading = false;
+                        return;
+                    }
+                    while (!LrcParser.IsLrc(list[0]))
+                        list.RemoveAt(0);
+                    lyricsText = list[0];
+                    var s = SettingsViewModel.TracksCollection;
+                    Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
+                    await _service.UpdateMediafile(Player.CurrentlyPlayingFile);
+                }
+                else
+                {
+                    lyricsText = await Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
+                }
+
+                var parser = LrcParser.FromText(lyricsText);
+                Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+
+                LyricsLoading = false;
+                timer.Tick += (s, e) =>
+                {
+                    var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                    if (Lyrics.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50))
+                    {
+                        var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                        if (currentLyric == null)
+                            return;
+
+                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                        if (previousLyric != null && previousLyric.IsActive == true)
+                            previousLyric.IsActive = false;
+                        currentLyric.IsActive = true;
+
+                        CurrentLyric = currentLyric;
+                        LyricActivated?.Invoke(currentLyric, new EventArgs());
+                    }
+                };
+            });
+        }
+        
+        public event EventHandler LyricActivated;
+        
         private async Task GetInfo(string artistName, string albumName)
         {
             try
             {
-                //start the tasks on another thread so that the UI doesn't hang.
-
-                ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-                
-                if (internetConnectionProfile != null)
+                if (InternetConnectivityHelper.IsInternetConnected)
                 {
                     //cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
                     //start both tasks
-                    await GetArtistInfo(artistName.ScrubGarbage().GetTag()).ConfigureAwait(false);
-                    await GetAlbumInfo(artistName.ScrubGarbage().GetTag(), albumName.ScrubGarbage().GetTag()).ConfigureAwait(false);
+                    TaskList.Clear();
+                    TaskList.Add(GetLyrics());
+                    TaskList.Add(GetArtistInfo(artistName.ScrubGarbage().GetTag()));
+                    await Task.WhenAll(TaskList).ConfigureAwait(false);
                 }
                 else
                 {
@@ -141,31 +220,54 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                LastfmClient.Artist.HttpClient.CancelPendingRequests();
-                //CheckAndCancelOperation(ArtistInfoOperation, token);
                 ArtistInfoLoading = true;
-                var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false);
-                ArtistBio = "";
-                ArtistFetchFailed = false;
-                if (artistInfoResponse.Success)
+                Artists = new ThreadSafeObservableCollection<LastArtist>();
+                SimilarArtists = null;
+
+                //Parse and make a list of all artists from title
+                //and artist strings
+                var artistsList = TagParser.ParseArtists(artistName);
+                if (SharedLogic.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "All artists")
                 {
-                    LastArtist artist = artistInfoResponse.Content;
-                    ArtistBio = artist.Bio.Content.ScrubHtml();
-                    SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artist.Similar);
+                    var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
+                    if (artistsFromTitle != null)
+                        artistsList.AddRange(artistsFromTitle);
+                    artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
                 }
-                else
+                ArtistFetchFailed = false;
+                //var trackInfo = await LastfmClient.Track.GetInfoAsync(TagParser.ParseTitle(SharedLogic.Player.CurrentlyPlayingFile.Title), artistsList[0]);
+                //if (trackInfo.Success && SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture == null)
+                //{
+                //    Player.CurrentlyPlayingFile.AttachedPicture = trackInfo.Content.Images?.Large?.AbsoluteUri;
+                //    Player.CurrentlyPlayingFile.Album = trackInfo.Content.AlbumName;
+                //    Player.CurrentlyPlayingFile.LeadArtist = trackInfo.Content.ArtistName;
+                //    Player.CurrentlyPlayingFile.Title = trackInfo.Content.Name;
+                //}
+                //begin fetching all artist's info
+                foreach (var artist in artistsList)
+                {
+                    var artistInfoResponse = await LastfmClient.Artist.GetInfoAsync(artist, "en", true).ConfigureAwait(false);
+                    if (artistInfoResponse.Success)
+                    {
+                        var bio = artistInfoResponse.Content.Bio.Content;
+                        bio = bio.ScrubHtml();
+                        if (bio.Any())
+                            bio = bio.Insert(bio.IndexOf("Read more on Last.fm."), "\r\n\r\n");
+                        artistInfoResponse.Content.Bio.Content = bio;
+                        Artists.Add(artistInfoResponse.Content);
+
+                        if (SimilarArtists == null)
+                            SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artistInfoResponse.Content.Similar);
+                    }
+                }
+
+                //fail if no artist info is fetched
+                if (!Artists.Any())
                 {
                     ArtistFetchFailed = true;
                     ArtistInfoLoading = false;
                 }
-                //if it is empty or it starts with [unknown],
-                //which is the identifier for unknown artists;
-                //just fail.
-                if (string.IsNullOrEmpty(ArtistBio) || ArtistBio.StartsWith("[unknown]") || ArtistBio.StartsWith("This is not an artist"))
-                {
-                    ArtistFetchFailed = true;
-                }
-
+                
                 ArtistInfoLoading = false;
             });
         }
@@ -173,8 +275,6 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                LastfmClient.Album.HttpClient.CancelPendingRequests();
-                //CheckAndCancelOperation(AlbumInfoOperation, token);
                 AlbumInfoLoading = true;
                 AlbumTracks?.Clear();
                 AlbumFetchFailed = false;

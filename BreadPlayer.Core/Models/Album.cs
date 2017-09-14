@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Album : ObservableObject, IDbRecord
+    public class Album : ObservableObject, IDbRecord, IComparable<Album>, ISelectable
     {
         public long Id { get; set; }
         public string AlbumName { get; set; }
@@ -23,6 +23,11 @@ namespace BreadPlayer.Core.Models
         public string GetTextSearchKey()
         {
             return string.Format("{0} {1}", AlbumName, Artist);
+        }
+
+        public int CompareTo(Album other)
+        {
+            return this.AlbumName.CompareTo(other.AlbumName);
         }
     }
 }

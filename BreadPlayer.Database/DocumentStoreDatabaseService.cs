@@ -72,10 +72,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                var dbRecord = currentCollection.FindOne(t => t.TextSearchKey.Contains(query));
-                if (dbRecord != null)
-                   return (T)dbRecord;
-                return default(T);
+                return (T)currentCollection.FindOne(t => t.Id == Convert.ToInt64(query));
             });
         }
 
@@ -134,11 +131,11 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, int limit = int.MaxValue)
         {
             return await Task.Run(() =>
             {
-                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()));
+                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()), 0, limit);
                 if (records.Any())
                     return records.Cast<T>();
                 else
@@ -179,15 +176,40 @@ namespace BreadPlayer.Database
 
         public Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
-                return currentCollection.Update(id, (IDbRecord)record);
+                try
+                {
+                    return currentCollection.Update(id, (IDbRecord)record);
+                }
+                catch
+                {
+                    return false;
+                }
             });
         }
 
-        public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
+        public Task UpdateRecords<T>(IEnumerable<IDbRecord> records)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var trans = DB.BeginTrans())
+                {
+                    try
+                    {
+                        foreach (var record in records)
+                        {
+                            currentCollection.Update(record.Id, record);
+                        }
+
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                    }
+                }
+            });
         }
 
         public void Dispose()

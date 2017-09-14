@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="BreadPlayer.SettingsViews.PersonlizationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel Margin="10,0,0,0" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
+            <TextBlock x:Uid="appearenceHeader" Text="" FontSize="22" FontWeight="Bold"/>
+            <TextBlock VerticalAlignment="Center" Margin="0,10,0,0">
+                                    <Run x:Uid="themeText" Text=""/>
+                                    <LineBreak/>
+                                    <Run x:Uid="themeHelpText" Text="" FontSize="11" Foreground="Gray"/>
+            </TextBlock>
+            <ToggleSwitch x:Uid="themeChangeToggleSwitch" Grid.Column="1" x:Name="themeChange" OffContent="" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
+            
+            <CheckBox x:Uid="enableBlurCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding EnableBlur, Mode=TwoWay}"/>
+            <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
+            <CheckBox x:Uid="changeAccentCheckBox" Margin="0,5,0,0" Content="" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}"/>
+            <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray"/>
+
+            <ComboBox Margin="0,5,0,0">
+                <ComboBox.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="Background blur overlay color:"/>
+                            <LineBreak/>
+                            <Run Text="This is the overlay color of album art on the player background." Foreground="Gray" FontSize="11"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.HeaderTemplate>
+                <x:String>Accent color</x:String>
+                <x:String>Theme color</x:String>
+                <x:String>Album art color</x:String>
+            </ComboBox>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

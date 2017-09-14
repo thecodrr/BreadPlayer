@@ -13,7 +13,7 @@ using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Themes
 {
-    public class ThemeManager
+    public class ThemeManager : ObservableObject
     {
         private static readonly string[] BrushKeys = {
             //wp
@@ -44,12 +44,12 @@ namespace BreadPlayer.Themes
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false)
+                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVm.ChangeAccentByAlbumArt)
+                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVm.ChangeAccentByAlbumArt)
                 {
                     try
                     {
@@ -85,7 +85,6 @@ namespace BreadPlayer.Themes
         private static void ChangeColor(Color color)
         {
             ChangeTitleBarColor(color);
-            AdjustForeground(color);
             var oldColor = GetThemeResource<SolidColorBrush>("PlaybarBrush").Color;
             if (oldColor == color)
             {
@@ -93,6 +92,7 @@ namespace BreadPlayer.Themes
             }
 
             GetThemeResource<SolidColorBrush>("PlaybarBrush").AnimateBrush(oldColor, color, "(SolidColorBrush.Color)");
+            AdjustForeground(color);
             foreach (var brushKey in BrushKeys)
             {
                 if (Application.Current.Resources.ContainsKey(brushKey))
@@ -128,10 +128,8 @@ namespace BreadPlayer.Themes
         }
         private static void AdjustForeground(Color accentColor)
         {
-            //var foregroundColor = GetThemeResource<SolidColorBrush>("TextBrush");
             GetThemeResource<SolidColorBrush>("TextBrush").Color = accentColor.ToForeground(); //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
             GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = accentColor.ToHoverColor();
-        }
-
+        }        
     }
 }

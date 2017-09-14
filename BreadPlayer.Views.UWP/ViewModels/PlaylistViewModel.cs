@@ -38,10 +38,11 @@ using BreadPlayer.Services;
 using BreadPlayer.Themes;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
-	public class PlaylistViewModel : ViewModelBase
+    public class PlaylistViewModel : ViewModelBase
     {
         private ThreadSafeObservableCollection<Mediafile> _songs;
         public ThreadSafeObservableCollection<Mediafile> Songs { get { if (_songs == null) { _songs = new ThreadSafeObservableCollection<Mediafile>(); } return _songs; } set => Set(ref _songs, value);
@@ -103,7 +104,7 @@ namespace BreadPlayer.ViewModels
                 Set(ref _playlistArt, value);
             }
         }
-        
+
         private RelayCommand _deleteCommand;
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
@@ -137,7 +138,7 @@ namespace BreadPlayer.ViewModels
         }
         private bool IsHour(string length)
         {
-            return length.Count(t => t == ':') == 2;        
+            return length.Count(t => t == ':') == 2;
         }
         public async Task Refresh()
         {
@@ -220,7 +221,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
-              
+
                 if (selectedPlaylist != null && await SharedLogic.AskForPassword(selectedPlaylist))
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
@@ -294,7 +295,7 @@ namespace BreadPlayer.ViewModels
         {
             PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
         }
-        public void Init(object data)
+        public async void Init(object data)
         {
             IsPlaylistLoading = true;
             if (data is Playlist playlist)
@@ -302,18 +303,31 @@ namespace BreadPlayer.ViewModels
                 Playlist = playlist;
                 LoadDb();
             }
-            else
+            else if (data is Album album)
             {
-                Album album = data as Album;
                 IsMenuVisible = false;
                 Playlist = new Playlist { Name = album.AlbumName, Description = album.Artist };
-                LoadAlbumSongs(album);               
+                LoadAlbumSongs(album);
+            }
+            else if (data is Artist artist)
+            {
+                IsMenuVisible = false;
+                Playlist = new Playlist { Name = artist.Name, Description = await artist.Bio.UnzipAsync() };
+                LoadArtistSongs(artist);
             }
         }
-
+        private async void LoadArtistSongs(Artist artist)
+        {
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(artist.Name)));
+            await Refresh().ContinueWith(task =>
+            {
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
+                IsPlaylistLoading = false;
+            });
+        }
         private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange(await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(album.AlbumName));
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);

@@ -10,8 +10,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastBuild_Release|x64'" />
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
 
   <ItemGroup>
@@ -20,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj" />
+    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DBreeze">

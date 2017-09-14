@@ -7,6 +7,7 @@ using DBreeze.Utils;
 using Newtonsoft.Json;
 using BreadPlayer.Core.Common;
 using DBreeze.Transactions;
+using System;
 
 namespace BreadPlayer.Database
 {
@@ -210,7 +211,7 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, int limit = int.MaxValue)
         {
             return await Task.Run(() =>
             {
@@ -251,24 +252,27 @@ namespace BreadPlayer.Database
             });
         }
 
-        public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
+        public Task UpdateRecords<T>(IEnumerable<IDbRecord> records)
         {
-            using (var tran = _engine.GetTransaction())
+            return Task.Run(() =>
             {
-                foreach (var data in records)
+                using (var tran = _engine.GetTransaction())
                 {
-                    var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id));
-                    if (row.Exists)
+                    foreach (var data in records)
                     {
-                        var getRecord = row.ObjectGet<T>();
-                        getRecord.Entity = (T)data;
-                        getRecord.NewEntity = false;
-                        getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
-                        tran.ObjectInsert(_tableName, getRecord, true);
+                        var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(data.Id));
+                        if (row.Exists)
+                        {
+                            var getRecord = row.ObjectGet<T>();
+                            getRecord.Entity = (T)data;
+                            getRecord.NewEntity = false;
+                            getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, data.Id) { PrimaryIndex = true } }; //PI Primary Index
+                            tran.ObjectInsert(_tableName, getRecord, true);
+                        }
                     }
+                    tran.Commit();
                 }
-                tran.Commit();
-            }
+            });
         }
 
         public async Task RemoveRecord(IDbRecord record)

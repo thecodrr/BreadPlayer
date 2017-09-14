@@ -56,42 +56,28 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
-            NowPlayingItem.Command = new DelegateCommand(() =>
-            {
-                _shellVm.IsPlaybarHidden = true;
-                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-            });
+            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
         }
 
-        private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
-        {
-            if (NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
-                NowPlayingFrame.Navigate(typeof(NowPlayingView));
-        }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
             GlobalPageKeyDown?.Invoke(sender, args);
-            if (RoamingSettingsHelper.GetSetting<bool>("IsFirstTime", true))
+            if (SettingsHelper.GetLocalSetting<bool>("IsFirstTime", true))
             {
-                string releaseNotes = "FIXES:\r\n\r\n" +
-                    "Fixed 2 random crashes.\n" +
-                    "Fixed invisible jumplist issue when in sort/grouped mode.\n" +
-                    "Fixed empty album issue.\n" +
-                     "Fixed issue with auto loading of library at startup.\n" + 
-                     "Fixed issue where song wasn't played from external speakers/headphones.\n" +
-                    "NEW THINGS:\r\n\r\n" +
-                    "Added support for German Translation (thanks to Armin).\n" +
-                    "Added backward navigation support for mobiles.\n" + 
-                    "IMPROVEMENTS:\r\n\r\n" +
-                    "Core improvements (shuffle and other things).\n"+
-                    "Icon was improved.\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.0");
-                RoamingSettingsHelper.SaveSetting("IsFirstTime", false);
+                string releaseNotes = "𝐖𝐡𝐚𝐭'𝐬 𝐅𝐢𝐱𝐞𝐝:\n\n" +
+                    "• Fixed issue where library import took too much time.\n" +
+                    "• Fixed issue where many album arts were not loaded.\n" +
+                    "• Fixed other bugs.\n\n" +
+                    "𝐖𝐡𝐚𝐭'𝐬 𝐍𝐞𝐰:\n\n" +
+                    "• Added ability to ignore DRM-Protected songs. (𝑒𝑥𝑝𝑟𝑖𝑚𝑒𝑛𝑡𝑎𝑙)\n" +
+                    "• Added sorting by tracknumber for album songs.\n";
+                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
+                SettingsHelper.SaveLocalSetting("IsFirstTime", false);
             }
-            if (e.Parameter is StorageFile)
+            if (e.Parameter is StorageFile file)
             {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { e.Parameter, 0.0, true, 50.0 });
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { file, 0.0, true, 50.0 });
             }
 
             base.OnNavigatedTo(e);
@@ -102,40 +88,52 @@ namespace BreadPlayer
         }
 
         private bool _isPressed;
-        private bool _isProgBarPressed;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(positionProgressBar, _shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
+            NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            {
+                if (NowPlayingFrame.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
+                }
+            });
+            equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            {
+                if (equalizerOverlayGrid.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
+                }
+            });
         }
-
+        private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsEqualizerVisible = false;
+                equalizerBtn.IsChecked = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
+            }
+        }
+        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsPlaybarHidden = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
+            }
+        }
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             if (_isPressed && !positionSlider.IsDragging())
             {
-                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true);
+                positionSlider.UpdatePosition(_shellVm, true);
                 _isPressed = false;
             }
-            else if (_isProgBarPressed)
-            {
-                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight - 4, "Height");
-                _isProgBarPressed = false;
-                positionSlider.UpdatePosition(positionProgressBar, _shellVm, true, true);
-            }
         }
-
-        private void CoreWindow_PointerMoved(CoreWindow sender, PointerEventArgs args)
-        {
-            if (_isProgBarPressed)
-            {
-                double mousePosition = args.CurrentPoint.Position.X;
-                double ratio = mousePosition / positionProgressBar.ActualWidth;
-                double progressBarValue = ratio * positionProgressBar.Maximum;
-                positionProgressBar.Value = progressBarValue;
-            }
-        }
+        
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
@@ -143,12 +141,6 @@ namespace BreadPlayer
             {
                 _isPressed = true;
                 _shellVm.DontUpdatePosition = true;
-            }
-            if (seekRect.GetBoundingRect().Contains(args.CurrentPoint.Position))
-            {
-                positionProgressBar.ZoomAnimate((int)positionProgressBar.ActualHeight, (int)positionProgressBar.ActualHeight + 4, "Height");
-                _shellVm.DontUpdatePosition = true;
-                _isProgBarPressed = true;
             }
         }
     }

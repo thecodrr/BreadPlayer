@@ -61,7 +61,20 @@ namespace BreadPlayer.Services
         #endregion
 
         #region Navigation Methods
-
+        public void UnregisterEvents()
+        {
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            }
+        }
+        public void RegisterEvents()
+        {
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            }
+        }
         public void NavigateTo(Type pageType, object parameter)
         {
             if (PageStack.Count > 0 && PageStack.Peek() == pageType)

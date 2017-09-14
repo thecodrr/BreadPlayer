@@ -24,6 +24,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Core.Models;
 using BreadPlayer.ViewModels;
+using BreadPlayer.Controls;
+using Windows.UI.Xaml.Data;
+using BreadPlayer.Extensions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -39,7 +42,7 @@ namespace BreadPlayer
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
         }
-        
+        public LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
@@ -60,7 +63,7 @@ namespace BreadPlayer
             { 
                 // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
-                Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                Grouping<IGroupKey, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;
                 e.DestinationItem = new SemanticZoomLocation
                 {
@@ -70,6 +73,32 @@ namespace BreadPlayer
             }
             catch { }
         }
-        
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            BakersFrame.Navigate(typeof(AlbumArtistView), "Clear");
+            BreadsFrame.Navigate(typeof(AlbumArtistView), "Clear");
+            (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Collapsed;
+            (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Collapsed;
+        }
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if((sender as Pivot).SelectedIndex == 1)
+            {
+                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
+                BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");
+            }
+            else if((sender as Pivot).SelectedIndex == 2)
+            {
+                (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Visible;
+                BakersFrame.Navigate(typeof(AlbumArtistView), "ArtistView");
+            }
+            else
+            {
+                BakersFrame?.Navigate(typeof(AlbumArtistView), "Clear");
+                BreadsFrame?.Navigate(typeof(AlbumArtistView), "Clear");
+                (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Collapsed;
+                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

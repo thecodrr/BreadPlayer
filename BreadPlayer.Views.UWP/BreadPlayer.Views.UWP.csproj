@@ -19,15 +19,17 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <HockeyAppResourceId>6085c48bdbf64fa78cb867f1dca0ca4f</HockeyAppResourceId>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' == 'true')">
-    <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
-    <PackageCertificateThumbprint>3230D7C894080DA474B598A0026D92FDE611887A</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>BreadPlayer.Views.UWP.StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>696C597C6DC03389C6B9798E1817ABB034EB6D71</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>BreadPlayer_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -120,7 +122,7 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
@@ -134,7 +136,7 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
@@ -158,15 +160,21 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="Assets\5minsilence.mp3" />
+    <Content Include="Assets\album-3.png" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
-    <None Include="BreadPlayer.Views.UWP.StoreKey.pfx" />
+    <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
+    <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\es-es\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\pl-PL\Resources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\cs-CZ\Resources.resw">
       <SubType>Designer</SubType>
@@ -177,6 +185,7 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviours\InputDeviceEventBehaviour.cs" />
     <Compile Include="Behaviours\InvokeCommondOnKeyDown.cs" />
     <Compile Include="Behaviours\ItemClickedBehaviour.cs" />
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
@@ -188,8 +197,11 @@
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
+    <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
+    <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
+    <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\PlayerStateToBoolConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
@@ -206,6 +218,7 @@
     <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\SortedObservableCollection.cs" />
@@ -215,6 +228,7 @@
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="HamburgerMenu\Shortcut.cs" />
+    <Compile Include="Helpers\InternetConnectivityHelper.cs" />
     <Compile Include="Helpers\LockscreenHelper.cs" />
     <Compile Include="Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
@@ -229,25 +243,54 @@
     <Compile Include="Common\UndoRedoStack.cs" />
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
+    <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\StorageLibraryService.cs" />
+    <Compile Include="SettingsViews\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\AudioSettingsView.xaml.cs">
+      <DependentUpon>AudioSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\ContactView.xaml.cs">
+      <DependentUpon>ContactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\ContributeView.xaml.cs">
+      <DependentUpon>ContributeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\CoreSettingsView.xaml.cs">
+      <DependentUpon>CoreSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\KeyboardSettingsView.xaml.cs">
+      <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\MusicLibrarySettingsView.xaml.cs">
+      <DependentUpon>MusicLibrarySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\PersonlizationView.xaml.cs">
+      <DependentUpon>PersonlizationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViews\ViewModels\AudioSettingsViewModel.cs" />
+    <Compile Include="SettingsViews\ViewModels\ContactViewModel.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
     <Compile Include="StateTriggers\ITriggerValue.cs" />
+    <Compile Include="Themes\DataTemplates.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
+    <Compile Include="ViewModels\MusicHistoryViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SearchResultsViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="Views\AccountsView.xaml.cs">
+    <Compile Include="SettingsViews\AccountsView.xaml.cs">
       <DependentUpon>AccountsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AlbumArtistView.xaml.cs">
@@ -285,12 +328,17 @@
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MusicHistoryView.xaml.cs">
+      <DependentUpon>MusicHistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShowAllView.xaml.cs">
+      <DependentUpon>ShowAllView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-100.png" />
@@ -401,12 +449,49 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SettingsViews\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\AudioSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\ContactView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\ContributeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\CoreSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\KeyboardSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\MusicLibrarySettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsViews\PersonlizationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Themes\HamburgerMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="Views\AccountsView.xaml">
+    <Page Include="SettingsViews\AccountsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -442,6 +527,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\MusicHistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShowAllView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
@@ -453,6 +546,15 @@
     <SDKReference Include="WindowsMobile, Version=10.0.14393.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="XLog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\XLog.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BreadPlayer.Controls\BreadPlayer.Controls.csproj">
@@ -471,21 +573,15 @@
       <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
       <Name>BreadPlayer.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
+      <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
+      <Name>BreadPlayer.Parsers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Web\BreadPlayer.Web.csproj">
       <Project>{8baa2dc7-9675-480f-a9f5-8d8d6245689b}</Project>
       <Name>BreadPlayer.Web</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="XLog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\XLog.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

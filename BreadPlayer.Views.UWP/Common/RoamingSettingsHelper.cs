@@ -5,30 +5,38 @@ using Newtonsoft.Json;
 
 namespace BreadPlayer.Common
 {
-    public class RoamingSettingsHelper : IEqualizerSettingsHelper
+    public class SettingsHelper : IEqualizerSettingsHelper
     {
-        public static void SaveSetting(string key, object value)
+        public static void SaveRoamingSetting(string key, object value)
         {
             ApplicationData.Current.RoamingSettings.Values[key] = value;
         }
-        public static T GetSetting<T>(string key, object def)
+        public static T GetRoamingSetting<T>(string key, object def)
         {
             object setting = ApplicationData.Current.RoamingSettings.Values[key] ?? def;
             return (T)setting;
         }
-
+        public static void SaveLocalSetting(string key, object value)
+        {
+            ApplicationData.Current.LocalSettings.Values[key] = value;
+        }
+        public static T GetLocalSetting<T>(string key, object def)
+        {
+            object setting = ApplicationData.Current.LocalSettings.Values[key] ?? def;
+            return (T)setting;
+        }
         public (EqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
         {
-            var eqJson = GetSetting<string>(eqConfigName, "{}");
+            var eqJson = GetRoamingSetting<string>(eqConfigName, "{}");
             var settings = JsonConvert.DeserializeObject<EqualizerSettings>(eqJson);
-            return (settings, GetSetting<float>("PreAMP", 0.0f));
+            return (settings, GetRoamingSetting<float>("PreAMP", 0.0f));
         }
 
         public void SaveEqualizerSettings(EqualizerSettings settings, float preAmp)
         {
             var eqJson = JsonConvert.SerializeObject(settings);
-            SaveSetting(settings.Name, eqJson);
-            SaveSetting("PreAMP", preAmp);
+            SaveRoamingSetting(settings.Name, eqJson);
+            SaveRoamingSetting("PreAMP", preAmp);
         }
     }
 }

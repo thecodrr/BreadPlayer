@@ -1,5 +1,41 @@
 # Release Notes for Bread Player.
 
+## Version 2.6.2-beta:
+### What's Fixed:
+- Fixed issue where library import took too much time.
+- Fixed issue where many album arts were not loaded.
+- Fixed other bugs.
+
+### What's New:
+- Added ability to ignore DRM-Protected songs.
+- Added sorting by tracknumber for album songs.
+
+### What's Improved:
+- Improved library import
+
+## Version 2.6.1-beta
+### What's Fixed:
+- Fixed issue where selecting Unsorted returned an empty list.
+- Fixed nullreference exception while adding album songs to an existing playlist.
+- Fixed bug where sound was coming from the front speakers instead of the back speakers.
+- Fixed other crashes and bugs.
+
+## Version 2.6-beta
+### What's Fixed:
+- Fixed 2 random crashes.
+- Fixed invisible jumplist issue when in sort/grouped mode.
+- Fixed empty album issue.
+- Fixed issue with auto loading of library at startup. 
+- Fixed issue where song wasn't played from external speakers/headphones.
+
+### What's New:
+- Added support for German Translation (thanks to Armin).
+- Added backward navigation support for mobiles. 
+
+### What's Improved:
+- Core improvements (shuffle and other things).
+- Icon was improved.
+
 ## Version 2.5-beta
 ### What's Fixed:
 - Fixed issue where next song to the currently playing song also got added to Recently Eaten.

@@ -1,4 +1,6 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,9 +23,9 @@ namespace BreadPlayer.Database
         }
 
         #region ILibraryService 
-        public Task<IEnumerable<Mediafile>> Query(string term)
+        public Task<IEnumerable<Mediafile>> Query(string term, int limit = int.MaxValue)
         {
-            return Database.QueryRecords<Mediafile>(term);
+            return Database.QueryRecords<Mediafile>(term, limit);
         }
         public Task<IEnumerable<Mediafile>> GetAllMediafiles()
         {
@@ -58,9 +60,9 @@ namespace BreadPlayer.Database
         {
             await Database.RemoveRecords(data);
         }
-        public async Task<Mediafile> GetMediafileAsync(string query)
+        public Mediafile GetMediafile(long id)
         {
-            return (await Database.GetRecordByQueryAsync<Mediafile>(query));
+            return Database.GetRecordById<Mediafile>(id);
         }
         public bool CheckExists(long id)
         {

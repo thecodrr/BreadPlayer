@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord
+    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable
     {
         #region Fields
         private PlayerState _state = PlayerState.Stopped;
@@ -56,18 +56,18 @@ namespace BreadPlayer.Core.Models
 
         #region Properties
         public long Id { get; set; }
-        private string _lastPlayed;
-        public string LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
+        private DateTime _lastPlayed;
+        public DateTime LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
 
-        private string _addedDate;
-        public string AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
+        private DateTime _addedDate;
+        public DateTime AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
         private bool _isFavorite;
         public bool IsFavorite
         {
             get => _isFavorite;
             set => Set(ref _isFavorite, value);
         }
-        private bool _isSelected;
+        private bool _isSelected = false;
         [JsonIgnore]
         public bool IsSelected
         {

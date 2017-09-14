@@ -7,6 +7,11 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.Messengers;
+using IF.Lastfm.Core.Api;
+using BreadPlayer.Web.Lastfm;
+using BreadPlayer.Helpers;
+using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
@@ -14,10 +19,10 @@ namespace BreadPlayer.ViewModels
     {
         #region Database Methods
 
-        private AlbumService AlbumService { get; set; }
+        private AlbumArtistService AlbumArtistService { get; set; }
         public void InitDb()
         {
-            AlbumService = new AlbumService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
+            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
         }       
         #endregion
 
@@ -26,7 +31,7 @@ namespace BreadPlayer.ViewModels
             if (message != null)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbums(message.Payload as IEnumerable<Mediafile>);
+                await AddAlbumsAndArtists(message.Payload as IEnumerable<Mediafile>);
             }
         }
         /// <summary>
@@ -41,11 +46,33 @@ namespace BreadPlayer.ViewModels
       
         public async Task LoadAlbums()
         {
-            AlbumCollection.AddRange(await AlbumService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
-            AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
-            if (AlbumCollection.Count <= 0)
+            RecordsLoading = true;
+            if (AlbumCollection?.Count <= 0)
             {
-                AlbumsLoaded = false;
+                AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
+                AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
+                if (AlbumCollection.Count <= 0)
+                {
+                    RecordsLoading = false;
+                }
+            }
+        }
+
+        public async Task LoadArtists()
+        {
+            RecordsLoading = true;
+            if (ArtistsCollection?.Count != AlbumArtistService.ArtistsCount)
+            {
+                ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
+                ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
+                if (ArtistsCollection.Count <= 0)
+                {
+                    RecordsLoading = false;
+                }
+            }
+            else
+            {
+                RecordsLoading = false;
             }
         }
 
@@ -54,22 +81,22 @@ namespace BreadPlayer.ViewModels
             //Albums are loaded, we can now hide the progress ring.
             if (AlbumCollection.Count > 0)
             {
-                AlbumsLoaded = false;
+                RecordsLoading = false;
             }
             else
             {
-                AlbumsLoaded = true;
+                RecordsLoading = true;
             }
         }
 
-        private bool _albumsLoaded = true;
+        private bool _recordsLoading = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
-        public bool AlbumsLoaded
+        public bool RecordsLoading
         {
-            get => _albumsLoaded;
-            set => Set(ref _albumsLoaded, value);
+            get => _recordsLoading;
+            set => Set(ref _recordsLoading, value);
         }
 
         private ThreadSafeObservableCollection<Album> _albumcollection;
@@ -81,32 +108,99 @@ namespace BreadPlayer.ViewModels
             get { if (_albumcollection == null) { _albumcollection = new ThreadSafeObservableCollection<Album>(); } return _albumcollection; }
             set => Set(ref _albumcollection, value);
         }
+
+        private ThreadSafeObservableCollection<Artist> _artistscollection;
+        /// <summary>
+        /// Collection containing all albums.
+        /// </summary>
+        public ThreadSafeObservableCollection<Artist> ArtistsCollection
+        {
+            get { if (_artistscollection == null) { _artistscollection = new ThreadSafeObservableCollection<Artist>(); } return _artistscollection; }
+            set => Set(ref _artistscollection, value);
+        }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
-        public async Task AddAlbums(IEnumerable<Mediafile> mediafiles)
+        public async Task AddAlbumsAndArtists(IEnumerable<Mediafile> mediafiles)
         {
             List<Album> albums = new List<Album>();
-            //List<ChildSong> childsongs = new List<ChildSong>();
+            List<Artist> artists = new List<Artist>();
             await Task.Run(() =>
             {
-                //Random albumRandom = new Random();
-                foreach (var albumGroup in mediafiles.GroupBy(t => t.Album))
+                foreach (var mediafile in mediafiles.ToList())
                 {
-                    var firstSong = albumGroup.First() ?? new Mediafile();
-                    Album album = new Album
+                    if (albums.All(t => t.AlbumName != mediafile.Album))
                     {
-                        Artist = firstSong?.LeadArtist,
-                        AlbumName = albumGroup.Key,
-                        AlbumArt = string.IsNullOrEmpty(firstSong?.AttachedPicture) ? null : firstSong?.AttachedPicture
-                    };                           
-                    albums.Add(album);
+                        Album album = new Album
+                        {
+                            Artist = mediafile.LeadArtist,
+                            AlbumName = mediafile.Album,
+                            AlbumArt = string.IsNullOrEmpty(mediafile?.AttachedPicture) ? null : mediafile?.AttachedPicture
+                        };
+
+                        albums.Add(album);
+                    }
+                    if(artists.All(t => t.Name != mediafile.LeadArtist))
+                    {
+                         Artist artist = new Artist
+                        {
+                            Name = mediafile?.LeadArtist
+                        };
+
+                        artists.Add(artist);
+                    }
                 }
             }).ContinueWith(async (task) =>
             {
-                await AlbumService.InsertAlbums(albums);
-                AlbumCollection.AddRange(albums);
+                await AlbumArtistService.InsertAlbums(albums).ConfigureAwait(false);
+                await AlbumArtistService.InsertArtists(artists).ConfigureAwait(false);
+                ArtistsCollection.AddRange(artists);
+                ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
             });           
-        }        
+        }
+
+        private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
+            {
+                ArtistsCollection.CollectionChanged -= ArtistsCollection_CollectionChanged;
+                RecordsLoading = false;
+                await CacheAllArtists().ConfigureAwait(false);
+            }
+        }
+
+        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
+        private async Task CacheAllArtists()
+        {
+            if (InternetConnectivityHelper.IsInternetConnected && ArtistsCollection.Any(t => t.HasFetchedInfo == false))
+            {
+                foreach (var artist in ArtistsCollection.Where(t => t.HasFetchedInfo == false))
+                {
+                    //if internet is disconnected in the middle of this process,
+                    //we need to take precautions.
+                    if (InternetConnectivityHelper.IsInternetConnected)
+                    {
+                        var artistName = TagParser.ParseArtists(artist.Name)[0];
+                        if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
+                        {
+                            var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
+                            if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                            {
+                                var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                            }
+                            if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                            {
+                                string bio = await artistInfo?.Bio?.Content.ZipAsync();
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                            }
+                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
+                            await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

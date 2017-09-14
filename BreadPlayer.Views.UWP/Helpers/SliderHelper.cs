@@ -31,18 +31,14 @@ namespace BreadPlayer.Helpers
                 };
             }
         }
-        public static async void UpdatePosition(this Slider slider, ProgressBar positionProgressBar, ShellViewModel shellVm, bool wait = false, bool progressBar = false)
+        public static async void UpdatePosition(this Slider slider, ShellViewModel shellVm, bool wait = false, bool progressBar = false)
         {
             if (shellVm != null)
             {
                 if (!progressBar)
                 {
                     shellVm.CurrentPosition = slider.Value < slider.Maximum ? slider.Value : slider.Value - 1;
-                }
-                else
-                {
-                    shellVm.CurrentPosition = positionProgressBar.Value < positionProgressBar.Maximum ? positionProgressBar.Value : positionProgressBar.Value - 1;
-                }
+                }               
             }
             if (wait)
             {

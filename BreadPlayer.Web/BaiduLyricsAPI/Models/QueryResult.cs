@@ -1,4 +1,6 @@
 ﻿using BreadPlayer.Web.BaiduLyricsAPI.Group;
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
@@ -8,17 +10,18 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
         public const int SearchTypeSong = 1;
         public const int SearchTypeArtist = 2;
         public const int SearchTypeAlbum = 3;
-
-        /**
-         * query : 七里香
-         * syn_words :
-         * rqt_type : 1
-         */
+        
+        [JsonProperty("query")]
         public string Query { get; set; }
+        [JsonProperty("syn_words")]
         public string SynWords { get; set; }
+        [JsonProperty("rqt_type")]
         public int RqtType { get; set; }   //专辑3 歌手2 歌曲1
-        public Song_Info SongInfo { get; set; }
-        public Album_info AlbumInfo { get; set; }
-        public Artist_Info ArtistInfo { get; set; }
+        [JsonProperty("song_info")]
+        public SongInfoList SongInfo { get; set; }
+        [JsonProperty("album_info")]
+        public AlbumInfoList AlbumInfo { get; set; }
+        [JsonProperty("artist_info")]
+        public ArtistInfoList ArtistInfo { get; set; }
     }
 }

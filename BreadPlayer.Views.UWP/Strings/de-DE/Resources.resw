@@ -448,7 +448,7 @@
     <value>Besuche unser Twitter Profil.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.5.0-beta</value>
+    <value>v2.6.2-beta</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
@@ -574,7 +574,7 @@
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>Lautstärke hoch</value>
   </data>
-  <data name="contributeCodeBtn.Content" xml:space="preserve">
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>Contribute Code</value>
     <comment>!!!NEW!!!</comment>
   </data>
@@ -582,15 +582,15 @@
     <value>Contribute</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="helpTranslateBtn.Content" xml:space="preserve">
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
     <value>Helfe uns bei der Übersetzung</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="testForUsBtn.Content" xml:space="preserve">
+  <data name="testForUsTxt.Text" xml:space="preserve">
     <value>Werde ein Beta Tester</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="donatePatreonBtn.Content" xml:space="preserve">
+  <data name="donatePatreonTxt.Text" xml:space="preserve">
     <value>Spenden via Patreon</value>
   </data>
 </root>

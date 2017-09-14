@@ -11,6 +11,7 @@
     xmlns:Converters="using:BreadPlayer.Converters"
         xmlns:Models="using:BreadPlayer.Core.Models"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:VM="using:BreadPlayer.ViewModels"
   mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>            
@@ -305,8 +306,8 @@
                 <Border Background="#99000000" />
                 <Grid Grid.Row="0" RequestedTheme="Dark" Margin="0,100,0,0">
                     <StackPanel x:Name="headerStack" Margin="35,40,0,0" Grid.Row="0" >
-                        <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Name,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
-                        <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{Binding Playlist.Description, Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
+                        <TextBlock x:Name="headerText" MaxLines="3" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Name,Mode=OneWay, FallbackValue='Unknown Playlist'}" FontSize="60" FontWeight="Bold" FontFamily="Segoe UI Light"/>
+                        <TextBlock x:Name="headerDesc" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Description, Mode=OneWay, FallbackValue='No Description'}" FontSize="24" FontWeight="Normal" FontFamily="Segoe UI Light"/>
                     </StackPanel>
                     <Grid VerticalAlignment="Bottom" Margin="15,0,15,10">
                         <Grid.ColumnDefinitions>
@@ -315,25 +316,30 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Column="0">
-                            <TextBlock Text="{Binding TotalSongs,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
+                            <TextBlock Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalSongs, Mode=OneWay, FallbackValue='0 Songs'}" FontSize="15"></TextBlock>
                             <TextBlock Text="&#x2022;" FontSize="15" Margin="5,0,0,0"/>
-                            <TextBlock Text="{Binding TotalMinutes,Mode=TwoWay,UpdateSourceTrigger=Explicit, FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
+                            <TextBlock Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalMinutes, Mode=OneWay,FallbackValue='0 Minutes'}" FontSize="15" Margin="5,0,0,0"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="2">
-                            <Button x:Uid="playlistPlayAllBtn" Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding Path=Songs[0]}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
+                            <Button x:Uid="playlistPlayAllBtn" Style="{StaticResource HyperlinkBtn}" Padding="0,0,0,0" HorizontalAlignment="Center" Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" CommandParameter="{Binding Path=Songs[0], Mode=OneWay}" RequestedTheme="Dark" Background="{x:Null}" Height="20">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center" Text="&#xE102;"></TextBlock>
                                     <TextBlock x:Uid="playlistPlayAllTextBlock" FontFamily="Segoe UI" Text=" Play all" ></TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button x:Uid="playlistMore" Style="{StaticResource HyperlinkBtn}" Visibility="{Binding IsMenuVisible, Converter={StaticResource BoolToVisibility}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
+                            <Button x:Uid="playlistMore" Style="{StaticResource HyperlinkBtn}" Visibility="{x:Bind ((VM:PlaylistViewModel)DataContext).IsMenuVisible, Converter={StaticResource BoolToVisibility}}" Flyout="{StaticResource ExtraMenuFlyout}" Padding="0,0,0,0" HorizontalAlignment="Center" Margin="10,0,0,0" Content="&#x2022;&#x2022;&#x2022;" RequestedTheme="Dark" Background="{x:Null}"></Button>
                         </StackPanel>
                     </Grid>
                 </Grid>
             </Grid>
         </Border>
 
-        <ListView x:Name="fileBox" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}" Loaded="fileBox_Loaded">
+        <ListView x:Name="fileBox" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" ScrollViewer.IsScrollInertiaEnabled="True" ShowsScrollingPlaceholders="True" ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.RowSpan="3" ItemTemplate="{StaticResource MediafileUnselectedTemplate}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel Orientation="Vertical" CacheLength="0"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -350,6 +356,6 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </ListView>
-        <ProgressRing Grid.Row="1" IsActive="{Binding Path=IsPlaylistLoading}" Width="40" Height="40"/>
+        <ProgressRing Grid.Row="1" IsActive="{x:Bind ((VM:PlaylistViewModel)DataContext).IsPlaylistLoading, Mode=OneWay}" Width="40" Height="40"/>
     </Grid>
 </Page>

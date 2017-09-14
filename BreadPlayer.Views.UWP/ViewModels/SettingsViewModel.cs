@@ -44,12 +44,26 @@ using BreadPlayer.PlaylistBus;
 using BreadPlayer.Themes;
 using BreadPlayer.Services;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Models;
+using BreadPlayer.SettingsViews;
+using BreadPlayer.SettingsViews.ViewModels;
+using System.Diagnostics;
+using System.Collections;
 
 namespace BreadPlayer.ViewModels
 {
     public class SettingsViewModel : ViewModelBase
     {
         #region Properties
+        public AccountsViewModel AccountSettingsVM { get; set; }
+        public AudioSettingsViewModel AudioSettingsVM { get; set; }
+
+        ThreadSafeObservableCollection<SettingGroup> settingsCollection;
+        public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
+        {
+            get => settingsCollection;
+            set => Set(ref settingsCollection, value);
+        }
 
         private bool _enableBlur;
         public bool EnableBlur
@@ -58,7 +72,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _enableBlur, value);
-                RoamingSettingsHelper.SaveSetting("EnableBlur", value);
+                SettingsHelper.SaveLocalSetting("EnableBlur", value);
             }
         }
 
@@ -87,7 +101,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _replaceLockscreenWithAlbumArt, value);
-                RoamingSettingsHelper.SaveSetting("ReplaceLockscreenWithAlbumArt", value);
+                SettingsHelper.SaveLocalSetting("ReplaceLockscreenWithAlbumArt", value);
             }
         }
 
@@ -98,7 +112,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _uiTextType, value);
-                RoamingSettingsHelper.SaveSetting("UITextType", _uiTextType);
+                SettingsHelper.SaveRoamingSetting("UITextType", _uiTextType);
             }
         }
 
@@ -109,12 +123,12 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _isThemeDark, value);
-                RoamingSettingsHelper.SaveSetting("SelectedTheme", _isThemeDark ? "Light" : "Dark");
+                SettingsHelper.SaveLocalSetting("SelectedTheme", _isThemeDark ? "Light" : "Dark");
                 // SharedLogic.InitializeTheme();
             }
         }
 
-        public ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+        ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
             get
@@ -127,7 +141,7 @@ namespace BreadPlayer.ViewModels
             }
             set => Set(ref _LibraryFoldersCollection, value);
         }
-        public static GroupedObservableCollection<string, Mediafile> TracksCollection
+        public static GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
 
         private string _timeClosed;
@@ -137,7 +151,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _timeClosed, value);
-                RoamingSettingsHelper.SaveSetting("timeclosed", _timeClosed);
+                SettingsHelper.SaveLocalSetting("timeclosed", _timeClosed);
             }
         }
 
@@ -171,7 +185,7 @@ namespace BreadPlayer.ViewModels
                     ThemeManager.SetThemeColor("default");
                 }
 
-                RoamingSettingsHelper.SaveSetting("ChangeAccentByAlbumArt", _changeAccentByAlbumart);
+                SettingsHelper.SaveRoamingSetting("ChangeAccentByAlbumArt", _changeAccentByAlbumart);
             }
         }
 
@@ -183,8 +197,8 @@ namespace BreadPlayer.ViewModels
         {
             if (message.Payload is List<object> list)
             {
-                TracksCollection = list[0] as GroupedObservableCollection<string, Mediafile>;
-                if (LibraryService.SongCount <= 0 && TracksCollection.Elements.Count <= 0)
+                TracksCollection = list[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
+                if (LibraryService.SongCount <= 0)
                 {
                     await AutoLoadMusicLibraryAsync().ConfigureAwait(false);
                 }
@@ -201,32 +215,46 @@ namespace BreadPlayer.ViewModels
         #region Ctor  
         public SettingsViewModel()
         {
+            InitSettingsCollection();
+            AccountSettingsVM = new AccountsViewModel();
+            AudioSettingsVM = new AudioSettingsViewModel();
+
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
-            _changeAccentByAlbumart = RoamingSettingsHelper.GetSetting<bool>("ChangeAccentByAlbumArt", true);
+            _changeAccentByAlbumart = SettingsHelper.GetRoamingSetting<bool>("ChangeAccentByAlbumArt", true);
             _timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            _uiTextType = RoamingSettingsHelper.GetSetting<string>("UITextType", "Normal");
-            _isThemeDark = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
-            _enableBlur = RoamingSettingsHelper.GetSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
-            _replaceLockscreenWithAlbumArt = RoamingSettingsHelper.GetSetting<bool>("replaceLockscreenWithAlbumArt", false);
+            _uiTextType = SettingsHelper.GetRoamingSetting<string>("UITextType", "Normal");
+            _isThemeDark = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
+            _enableBlur = SettingsHelper.GetLocalSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
+            _replaceLockscreenWithAlbumArt = SettingsHelper.GetLocalSetting<bool>("replaceLockscreenWithAlbumArt", false);
             _timeOpened = DateTime.Now.ToString();
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
             LoadFolders();
         }
+
+        public void InitSettingsCollection()
+        {
+            SettingsCollection = new ThreadSafeObservableCollection<SettingGroup>()
+            {
+                new SettingGroup("\uE771","Personlization","Lockscreen, font, theme", typeof(PersonlizationView)),
+                new SettingGroup("\uE8D6","Music Library","Folder import, playlists", typeof(MusicLibrarySettingsView)),
+                new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
+                new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
+                new SettingGroup("\uE770", "Core", "Reset, notifications, lock screen", typeof(CoreSettingsView)),
+                new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, cross-fade", typeof(AudioSettingsView)),
+                new SettingGroup("\uE779", "Contact", "Facebook, email, github", typeof(ContactView)),
+                new SettingGroup("\uE946", "About", "Version info, license, credits", typeof(AboutView)),
+                new SettingGroup("\uE789", "Contribute", "Translation, bug hunting, coding", typeof(ContributeView)),
+            };
+        }
         #endregion
 
         #region Commands
 
         #region Definitions   
-
-        private RelayCommand _navigateCommand;
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public RelayCommand NavigateCommand { get { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(Navigate); } return _navigateCommand; } }
-
+        
         private DelegateCommand _loadCommand;
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
@@ -247,20 +275,7 @@ namespace BreadPlayer.ViewModels
 
         #endregion
 
-        #region Implementation
-        private async void Navigate(object para)
-        {
-            if (para.ToString() == "bug-report")
-            {
-                para = "mailto:support@breadplayer.com?subject=Bread%20Player%202.3.0%20Bug%20Report&body=Summary%3A%0A%0A%20%20%5BA%20brief%20sentence%20describing%20the%20issue%5D%0A%0ASteps%20to%20Reproduce%3A%0A%0A%20%201.%20%5BFirst%20Step%5D%0A%20%202.%20%5BSecond%20Step%5D%0A%20%203.%20%5Band%20so%20on...%5D%0A%0AExpected%20behavior%3A%20%5BWhat%20you%20expect%20to%20happen%5D%0A%0AActual%20behavior%3A%20%5BWhat%20actually%20happens%5D%0A%0A%5BAttach%20any%20logs%20situated%20in%3A%20Music%5CBreadPlayerLogs%5C%5D%0A%0A";
-            }
-            else if (para.ToString() == "feature-request")
-            {
-                para = "mailto:support@breadplayer.com?subject=Bread%20Player%20Feature%20Request&body=Summary%3A%0A%0A%5BA%20few%20sentences%20describing%20what%20the%20feature%20actually%20is%5D%0A%0AHow%20will%20it%20be%20useful%3A%0A%0A%5BAn%20explanation%20on%20how%20it%20will%20help%5D%0A%0AHelpful%20links%3A%0A%0A%5BIf%20there%20are%20any%20links%20we%20can%20refer%20to%20that%20might%20help%20us%20in%20implementing%20this%20faster%20and%20better%5D%0A%0AAdditional%20Comments%3A%0A%0A%5BIf%20you%20have%20something%20other%20to%20say%20%3A)%5D%0A%0A";
-            }
-
-            await Launcher.LaunchUriAsync(new Uri(para.ToString()));
-        }
+        #region Implementation      
         private async void Reset()
         {
             try
@@ -376,7 +391,7 @@ namespace BreadPlayer.ViewModels
         {
             if (LibraryFoldersCollection.Count <= 0)
             {
-                var folderPaths = RoamingSettingsHelper.GetSetting<string>("folders", null);
+                var folderPaths = SettingsHelper.GetLocalSetting<string>("folders", null);
                 if (folderPaths != null)
                 {
                     foreach (var folder in folderPaths.Split('|'))
@@ -439,7 +454,7 @@ namespace BreadPlayer.ViewModels
                 return;
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, (short)2);
             LibraryFoldersCollection.Add(folder);
-            await AddFolderToLibraryAsync(await StorageLibraryService.GetStorageFilesInFolderAsync(folder));
+            await AddFolderToLibraryAsync(folder);
         }
 
         /// <summary>
@@ -463,42 +478,52 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(IEnumerable<StorageFile> storageFiles)
+        public async Task AddFolderToLibraryAsync(StorageFolder folder)
         {
-            if (storageFiles == null) return;
-            var files = storageFiles.ToList();
-
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
+            Stopwatch watch = Stopwatch.StartNew();
+            uint index = 0, stepSize = 20;
+            IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
+            index += stepSize;
             //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
-            var tempList = new List<Mediafile>();
+
 
             int failedCount = 0;
-            var count = files.Count;
-            short i = 2;
+            var count = await queryResult.GetItemCountAsync();
+            var tempList = new List<Mediafile>((int)count);
+            short progress = 0;
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 try
                 {
-                    foreach (StorageFile file in files)
+                    // Note that I'm paging in the files as described
+                    while (files.Count != 0)
                     {
-                        try
+                        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
+                        for (int i = 0; i < files.Count; i++)
                         {
-                            i++;
-                            Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, i);
-                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(file, false).ConfigureAwait(false); //the core of the whole method.
-                            mp3File.FolderPath = Path.GetDirectoryName(file.Path);
-                            await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
+                            progress++;
+                            try
+                            {
+                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
+                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
+                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
 
-                            await NotificationManager.ShowMessageAsync(i + "\\" + count + " Song(s) Loaded", 0);
+                                await NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
 
-                            tempList.Add(mp3File);
+                                tempList.Add(mp3File);
+                            }
+                            catch (Exception ex)
+                            {
+                                BLogger.Logger.Error("Loading of a song in folder failed.", ex);
+                                //we catch and report any exception without distrubing the 'foreach flow'.
+                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + files[i].Path);
+                                failedCount++;
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            BLogger.Logger.Error("Loading of a song in folder failed.", ex);
-                            //we catch and report any exception without distrubing the 'foreach flow'.
-                            await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + file.Path);
-                            failedCount++;
-                        }
+                        files = await fileTask;
+                        index += stepSize;
                     }
                 }
                 catch (Exception ex)
@@ -506,21 +531,20 @@ namespace BreadPlayer.ViewModels
                     string message1 = ex.Message + "||" + ex.InnerException;
                     await NotificationManager.ShowMessageAsync(message1);
                 }
-
+                watch.Stop();
+                BLogger.Logger.Info("Time to run: " + watch.ElapsedMilliseconds + " ms");
+                Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
                 var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
                 await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
                 await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
-                
-                await LibraryService.AddMediafiles(uniqueFiles);
 
-                AlbumArtistViewModel vm = new AlbumArtistViewModel();
+                await LibraryService.AddMediafiles(uniqueFiles);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
-                vm = null;
 
-                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, i);
+                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
 
                 BLogger.Logger.Info(message);
                 await NotificationManager.ShowMessageAsync(message);
@@ -533,7 +557,7 @@ namespace BreadPlayer.ViewModels
         #region AlbumArt Methods
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
         {
-            if (mp3File == null) return;
+            if (mp3File == null || mp3File.Path == null) return;
 
             try
             {

@@ -46,6 +46,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Themes;
 using Windows.Phone.Media.Devices;
+using BreadPlayer.Services;
 
 namespace BreadPlayer.ViewModels
 {
@@ -66,6 +67,7 @@ namespace BreadPlayer.ViewModels
         #region Constructor
         public ShellViewModel()
         {
+            ThemeManager.SetThemeColor(null);
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
             DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);
@@ -122,10 +124,10 @@ namespace BreadPlayer.ViewModels
             else
             {
                 var listObject = message.Payload as List<object>;
-                TracksCollection = listObject[0] as GroupedObservableCollection<string, Mediafile>;
+                TracksCollection = listObject[0] as GroupedObservableCollection<IGroupKey, Mediafile>;
+                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 IsSourceGrouped = (bool)listObject[1];
                 _songCount = _service.SongCount;
-                TracksCollection.CollectionChanged += TracksCollection_CollectionChanged;
                 GetSettings();
             }
         }
@@ -165,14 +167,23 @@ namespace BreadPlayer.ViewModels
                 double volume = 0;
                 if ((double)list[3] == 50.0)
                 {
-                    volume = RoamingSettingsHelper.GetSetting<double>("volume", 50.0);
+                    volume = SettingsHelper.GetLocalSetting<double>("volume", 50.0);
                 }
                 else
                 {
                     volume = (double)list[3];
                 }
-
-                await Load(await TagReaderHelper.CreateMediafile(list[0] as StorageFile), (bool)list[2], (double)list[1], volume);
+                Mediafile libraryMediaFile = null;  
+                if(list[0] is StorageFile file)
+                {
+                    libraryMediaFile = await TagReaderHelper.CreateMediafile(file);
+                }
+                else
+                {
+                    var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0);
+                    libraryMediaFile = _service.GetMediafile(id);
+                }
+                await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }
             else
             {
@@ -270,9 +281,8 @@ namespace BreadPlayer.ViewModels
         }
         private void NavigateToNowPlayingView()
         {
+            NavigationService.Instance.UnregisterEvents();
             IsPlaybarHidden = true;
-            if(!InitializeCore.IsMobile)
-                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
         private void ShowEqualizer()
         {
@@ -339,21 +349,19 @@ namespace BreadPlayer.ViewModels
         }
         private void SetNowPlayingSong()
         {
-            string path = RoamingSettingsHelper.GetSetting<string>("path", "");
-            if (!TracksCollection.Elements.Any(t => t.Path == path && t.State == PlayerState.Playing))
+            string path = SettingsHelper.GetLocalSetting<string>("path", "");
+       
+            if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
-                if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
+                var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                foreach (var mp3 in sa)
                 {
-                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                    foreach (var mp3 in sa)
-                    {
-                        mp3.State = PlayerState.Stopped;
-                    }
+                    mp3.State = PlayerState.Stopped;
                 }
-                if (TracksCollection.Elements.Any(t => t.Path == path))
-                {
-                    TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
-                }
+            }
+            if (TracksCollection.Elements.Any(t => t.Path == path))
+            {
+                TracksCollection.Elements.FirstOrDefault(t => t.Path == path).State = PlayerState.Playing;
             }
         }
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
@@ -507,6 +515,7 @@ namespace BreadPlayer.ViewModels
             //to avoid changing the device at that time, we use this statement.
             if (eventCount > 1)
             {
+                BLogger.Logger.Info($"Switching audio render device to [{currentEndpoint.ToString()}].");
                 SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
             }
             //increase the event count
@@ -533,7 +542,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-            if (UpcomingSong != null)
+            if (UpcomingSong != null && Repeat != "Repeat Song")
             {
                 NotificationManager.SendUpcomingSongNotification(UpcomingSong);
                 await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
@@ -575,9 +584,9 @@ namespace BreadPlayer.ViewModels
                 if (TracksCollection.Elements.Any(t => t.Path == lastPlayingSong.Path))
                 {
                     lastPlayingSong.PlayCount++;
-                    lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    lastPlayingSong.LastPlayed = DateTime.Now;
                     TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).PlayCount++;
-                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now.ToString();
+                    TracksCollection.Elements.First(T => T.Path == lastPlayingSong.Path).LastPlayed = DateTime.Now;
                     await _service.UpdateMediafile(lastPlayingSong);
                 }
                 await ScrobblePlayingSong(lastPlayingSong);                
@@ -634,7 +643,7 @@ namespace BreadPlayer.ViewModels
             get => _isSourceGrouped;
             set => Set(ref _isSourceGrouped, value);
         }
-        public GroupedObservableCollection<string, Mediafile> TracksCollection
+        public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
         public ThreadSafeObservableCollection<Mediafile> PlaylistSongCollection
         { get; set; }
@@ -660,7 +669,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _repeat, value);
-                ApplicationData.Current.RoamingSettings.Values["Repeat"] = Repeat;
+                SettingsHelper.SaveRoamingSetting("Repeat", _repeat);
             }
         }
 
@@ -671,7 +680,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _shuffle, value);
-                ApplicationData.Current.RoamingSettings.Values["Shuffle"] = Shuffle;
+               SettingsHelper.SaveRoamingSetting("Shuffle", _shuffle);
             }
         }
 
@@ -751,8 +760,8 @@ namespace BreadPlayer.ViewModels
       
         private void GetSettings()
         {
-            Shuffle = RoamingSettingsHelper.GetSetting<bool>("Shuffle", false);
-            Repeat = RoamingSettingsHelper.GetSetting<string>("Repeat", "No Repeat");
+            Shuffle = SettingsHelper.GetRoamingSetting<bool>("Shuffle", false);
+            Repeat = SettingsHelper.GetRoamingSetting<string>("Repeat", "No Repeat");
         }
 
         private async Task PlayFile(Mediafile toPlayFile, bool play = false)
@@ -815,8 +824,11 @@ namespace BreadPlayer.ViewModels
             }
             return false;
         }
+        ApplicationView applicationView = ApplicationView.GetForCurrentView();
         private async Task UpdateUi(Mediafile mediaFile)
         {
+            applicationView.Title = string.Format("Listening to {0} by {1}", mediaFile.Title, mediaFile.LeadArtist);
+            
             ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.UpdateTile(mediaFile);
