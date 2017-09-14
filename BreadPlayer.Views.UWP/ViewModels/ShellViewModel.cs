@@ -190,8 +190,8 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0);
-                    libraryMediaFile = _service.GetMediafile(id);
+                    var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0L);
+                        libraryMediaFile = _service.GetMediafile(id);
                 }
                 await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }

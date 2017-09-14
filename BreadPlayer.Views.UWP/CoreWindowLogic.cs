@@ -61,7 +61,7 @@ namespace BreadPlayer
             var volume = SettingsHelper.GetLocalSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                    double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0);
+                    double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0.0D);
                     SharedLogic.Player.PlayerState = PlayerState.Paused;
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
                             new List<object> { "", position, play, volume });                

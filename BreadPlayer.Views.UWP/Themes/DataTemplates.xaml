@@ -404,14 +404,13 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ArtistTemplate" x:DataType="models:Artist">
-        <Grid x:Name="LayoutRoot" Width="120" Height="180">
-         
+        <Grid x:Name="LayoutRoot" Width="160" Height="200" Padding="0,0,0,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Border Width="110" Height="110" Background="#ccdbdbdb" CornerRadius="100">
+            <Border Width="150" Height="150" Background="#ccdbdbdb" CornerRadius="100">
                 <Grid x:Name="artistImageGrid" Opacity="0" CornerRadius="100">
                     <Grid.Background>
                         <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
@@ -431,12 +430,12 @@
                             </Interactivity:Interaction.Behaviors>
                         </ImageBrush>
                     </Grid.Background>
-                   <FontIcon x:Name="PlaceHolder" Width="110" Height="110" Glyph="&#xE13D;" Foreground="{ThemeResource ThemeForeground}" FontSize="32" Visibility="{Binding Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+                    <FontIcon x:Name="PlaceHolder" Width="150" Height="150" Glyph="&#xE13D;" x:Phase="2" Foreground="{ThemeResource ThemeForeground}" FontSize="52" Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
                     <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}"/>-->
                 </Grid>
             </Border>
             <TextBlock x:Name="artistName" Foreground="{ThemeResource TextBrush}" x:Phase="0" Grid.Row="1" TextAlignment="Center" Margin="5,10,5,0" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{x:Bind Name, FallbackValue=25}" HorizontalAlignment="Center"/>
-            <Grid Grid.Row="0" Height="113" CornerRadius="100" Width="113" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <Grid Grid.Row="0" CornerRadius="100" Width="150" x:Name="ButtonsStack" Opacity="0" VerticalAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,0,0,0">
                 <Grid.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Transparent" Offset="0"/>

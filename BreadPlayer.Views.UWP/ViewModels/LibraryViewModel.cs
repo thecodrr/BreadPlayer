@@ -584,8 +584,8 @@ namespace BreadPlayer.ViewModels
                 }
              
                 ViewSource.IsSourceGrouped = group;
-                await SplitList(300).ConfigureAwait(false);
-               // await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
+               // await SplitList(300).ConfigureAwait(false);
+                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
         public async Task SplitList(int nSize = 30)

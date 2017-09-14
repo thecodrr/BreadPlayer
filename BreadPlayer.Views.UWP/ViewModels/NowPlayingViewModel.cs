@@ -132,7 +132,6 @@ namespace BreadPlayer.ViewModels
                 {
                     Interval = TimeSpan.FromMilliseconds(10)
                 };
-                timer.Start();
                 string lyricsText = "";
                 if (string.IsNullOrEmpty(Player.CurrentlyPlayingFile?.SynchronizedLyric))
                 {
@@ -158,7 +157,10 @@ namespace BreadPlayer.ViewModels
                 {
                     var parser = LrcParser.FromText(lyricsText);
                     if (parser.Lyrics.Any())
+                    {
                         Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+                        timer.Start();
+                    }
                 }
                 LyricsLoading = false;
                 timer.Tick += (s, e) =>
@@ -195,7 +197,7 @@ namespace BreadPlayer.ViewModels
                     //start both tasks
                     TaskList.Clear();
                     TaskList.Add(GetLyrics());
-                    TaskList.Add(GetArtistInfo(artistName.ScrubGarbage().GetTag()));
+                    TaskList.Add(GetArtistInfo(artistName.GetTag()));
                     await Task.WhenAll(TaskList).ConfigureAwait(false);
                 }
                 else

@@ -12,6 +12,7 @@ using BreadPlayer.Web.Lastfm;
 using BreadPlayer.Helpers;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Extensions;
+using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -183,6 +184,7 @@ namespace BreadPlayer.ViewModels
                         var artistName = TagParser.ParseArtists(artist.Name)[0];
                         if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
                         {
+                            await BreadDispatcher.InvokeAsync(async () => { 
                             var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
                             if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
                             {
@@ -197,6 +199,7 @@ namespace BreadPlayer.ViewModels
                             }
                             ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
                             await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
+                            });
                         }
                     }
                 }

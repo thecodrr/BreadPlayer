@@ -312,7 +312,7 @@ namespace BreadPlayer.ViewModels
             else if (data is Artist artist)
             {
                 IsMenuVisible = false;
-                Playlist = new Playlist { Name = artist.Name, Description = await artist.Bio.UnzipAsync() };
+                Playlist = new Playlist { Name = artist.Name, Description = await artist.Bio?.UnzipAsync() };
                 LoadArtistSongs(artist);
             }
         }

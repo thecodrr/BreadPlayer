@@ -349,7 +349,10 @@ namespace BreadPlayer.Core
                     //read the color 
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
                 }
-                catch { return (Application.Current.Resources["PhoneAccentBrush"] as SolidColorBrush).Color; }
+                catch
+                {
+                    return Colors.Transparent;
+                }
             }
         }
 
