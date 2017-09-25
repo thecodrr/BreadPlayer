@@ -60,11 +60,9 @@ namespace BreadPlayer
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             Window.Current.SizeChanged -= Current_SizeChanged;
-            _playlistVm.Songs.Clear();
             _playlistVm.Reset();
             _playlistVm = null;
             fileBox.ItemsSource = null;
-            GC.Collect();
             base.OnNavigatedFrom(e);
         }     
     }

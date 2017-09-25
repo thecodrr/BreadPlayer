@@ -362,7 +362,6 @@ namespace BreadPlayer.ViewModels
             }
         }
         
-        public ListView PlaylistSongsListBox;
         private bool _isPageLoaded;
         public bool IsPageLoaded { get => _isPageLoaded;
             set => Set(ref _isPageLoaded, value);
@@ -374,7 +373,7 @@ namespace BreadPlayer.ViewModels
             PlaylistArt = null;
             TotalSongs = "0";
             TotalMinutes = "0";
-            Songs.Clear();
+            Songs = null;
         }
     }
 }
