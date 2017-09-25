@@ -24,12 +24,12 @@ namespace BreadPlayer.Common
 {
     internal static class DirectoryWalker
     {
-        public static QueryOptions GetQueryOptions(string aqsQuery = null)
+        public static QueryOptions GetQueryOptions(string aqsQuery = null, bool useIndexer = true)
         {
             QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
-            options.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+            options.IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, TagReaderHelper.GetExtraPropertiesNames());
             //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;

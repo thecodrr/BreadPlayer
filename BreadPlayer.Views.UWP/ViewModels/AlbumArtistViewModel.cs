@@ -184,21 +184,22 @@ namespace BreadPlayer.ViewModels
                         var artistName = TagParser.ParseArtists(artist.Name)[0];
                         if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
                         {
-                            await BreadDispatcher.InvokeAsync(async () => { 
-                            var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
-                            if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                            await BreadDispatcher.InvokeAsync(async () =>
                             {
-                                var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
-                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
-                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
-                            }
-                            if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
-                            {
-                                string bio = await artistInfo?.Bio?.Content.ZipAsync();
-                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
-                            }
-                            ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
-                            await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
+                                var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
+                                if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                                {
+                                    var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
+                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                                }
+                                if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                                {
+                                    string bio = await artistInfo?.Bio?.Content.ZipAsync();
+                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                                }
+                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
+                                await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
                             });
                         }
                     }

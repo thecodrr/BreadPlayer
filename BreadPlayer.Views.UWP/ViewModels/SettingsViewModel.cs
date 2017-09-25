@@ -49,6 +49,7 @@ using BreadPlayer.SettingsViews;
 using BreadPlayer.SettingsViews.ViewModels;
 using System.Diagnostics;
 using System.Collections;
+using Windows.UI.Popups;
 
 namespace BreadPlayer.ViewModels
 {
@@ -478,18 +479,33 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(StorageFolder folder)
+        public async Task AddFolderToLibraryAsync(StorageFolder folder, bool useIndexer = true)
         {
-            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions());
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions(null, useIndexer));
             Stopwatch watch = Stopwatch.StartNew();
             uint index = 0, stepSize = 20;
             IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
             index += stepSize;
             //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
 
-
             int failedCount = 0;
             var count = await queryResult.GetItemCountAsync();
+            if (count <= 0)
+            {
+                await NotificationManager.ShowMessageAsync("No songs found! Please try again.");
+                await BreadDispatcher.InvokeAsync(async () =>
+                {
+                    var dialog = new MessageDialog($"There were no songs in the {folder.DisplayName} folder. Do you want to try and search without using the indexer (the process might be a bit slow)?", "No songs were found!");
+                    dialog.Commands.Add(new UICommand("Yes", null, "yesCmd"));
+                    dialog.Commands.Add(new UICommand("No", null, "noCmd"));
+                    var result = await dialog.ShowAsync();
+                    if(result.Id.ToString() == "yesCmd")
+                    {
+                        await AddFolderToLibraryAsync(folder, false).ConfigureAwait(false);
+                    }
+                });
+                return;
+            }
             var tempList = new List<Mediafile>((int)count);
             short progress = 0;
             await BreadDispatcher.InvokeAsync(async () =>

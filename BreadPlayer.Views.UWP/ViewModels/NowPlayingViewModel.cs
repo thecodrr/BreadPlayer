@@ -145,7 +145,6 @@ namespace BreadPlayer.ViewModels
                     while (!LrcParser.IsLrc(list[0]))
                         list.RemoveAt(0);
                     lyricsText = list[0];
-                    var s = SettingsViewModel.TracksCollection;
                     Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
                     await _service.UpdateMediafile(Player.CurrentlyPlayingFile);
                 }
