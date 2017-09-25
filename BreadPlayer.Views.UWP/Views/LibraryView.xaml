@@ -309,7 +309,7 @@
                 <Frame Name="BreadsFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
             </PivotItem>
             <PivotItem Header="Bakers">
-                <Frame Name="BakersFrame"  x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
+                <Frame Name="BakersFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
             </PivotItem>
             <PivotItem Header="Playlists"/>
             <Pivot.ItemContainerStyle>
