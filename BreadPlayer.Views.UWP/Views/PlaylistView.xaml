@@ -264,7 +264,8 @@
         </ResourceDictionary>
     </Page.Resources>
     
-        <Grid >
+        <Grid x:Name="mainGrid"
+              Margin="-35,0,-10,0">
         <VisualStateManager.VisualStateGroups>           
             <VisualStateGroup>               
                 <VisualState>
@@ -282,6 +283,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="mainGrid.Margin" Value="0"/>
                         <Setter Target="headerText.TextAlignment" Value="Center" />
                         <Setter Target="headerText.FontSize" Value="34" />
                         <Setter Target="headerText.Margin" Value="0" />
