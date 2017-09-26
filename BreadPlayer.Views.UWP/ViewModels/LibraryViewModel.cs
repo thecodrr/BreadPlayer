@@ -216,10 +216,6 @@ namespace BreadPlayer.ViewModels
             private set => Set(ref _songCount, value);
         }
 
-       
-        private ThreadSafeObservableCollection<Mediafile> _favoriteSongsCollection;
-        private ThreadSafeObservableCollection<Mediafile> FavoriteSongsCollection =>
-            _favoriteSongsCollection ?? (_favoriteSongsCollection = new ThreadSafeObservableCollection<Mediafile>());
 
         private GroupedObservableCollection<IGroupKey, Mediafile> _tracksCollection;
         /// <summary>
@@ -517,14 +513,7 @@ namespace BreadPlayer.ViewModels
             return null;
         }
        
-        private Task<ThreadSafeObservableCollection<Mediafile>> GetFavoriteSongs()
-        {
-            return Task.Run(() =>
-            {
-                FavoriteSongsCollection.AddRange(TracksCollection.Elements.Where(t => t.IsFavorite));
-                return FavoriteSongsCollection;
-            });
-        }       
+           
 
         private async Task RefreshSourceAsync()
         {
@@ -1057,9 +1046,6 @@ namespace BreadPlayer.ViewModels
                 CurrentPage = param;
                 switch (param)
                 {
-                    case "Favorites":
-                        await ChangeView("Favorites", false, await GetFavoriteSongs().ConfigureAwait(false));
-                        break;
                     default:
                         await ChangeView("Music Collection", _libgrouped, TracksCollection.Elements);
                         break;

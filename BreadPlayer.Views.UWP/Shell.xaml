@@ -235,7 +235,7 @@
                         </controls:SimpleNavMenuItem.Shortcuts>
                     </controls:SimpleNavMenuItem>
                     <controls:SimpleNavMenuItem x:Uid="musicHistoryMenuItem" DestinationPage="local:MusicHistoryView" FontGlyph="&#x0042;" Label="Your Music History" Arguments="Recent" Tooltip="" Symbol="Accept"></controls:SimpleNavMenuItem>
-                      <controls:SimpleNavMenuItem x:Uid="favoritesMenuItem" DestinationPage="local:LibraryView" FontGlyph="&#x0049;" Tooltip="" Label="" Symbol="Accept" Arguments="Favorites"></controls:SimpleNavMenuItem>
+                      <controls:SimpleNavMenuItem x:Uid="favoritesMenuItem" DestinationPage="local:FavoritesView" FontGlyph="&#x0049;" Tooltip="" Label="" Symbol="Accept" Arguments="Favorites"></controls:SimpleNavMenuItem>
                     <controls:SimpleNavMenuItem x:Uid="nowBakingMenuItem" DestinationPage="local:LibraryView" Arguments="MusicCollection"  x:Name="NowPlayingItem" FontGlyph="&#x004b;" Tooltip="" Label="" Symbol="Accept" HeaderVisibility="Collapsed"></controls:SimpleNavMenuItem>
                 </controls:SplitViewMenu.TopNavigationItems>
                 <controls:SplitViewMenu.BottomNavigationItems>
