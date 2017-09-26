@@ -549,6 +549,7 @@ namespace BreadPlayer.ViewModels
 
             await SharedLogic.Player.ChangeDevice(device.Name);
         }
+
         private async void Player_MediaAboutToEnd(object sender, MediaAboutToEndEventArgs e)
         {
             if (UpcomingSong == null)

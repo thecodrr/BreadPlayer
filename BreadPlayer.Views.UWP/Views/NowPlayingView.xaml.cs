@@ -56,11 +56,28 @@ namespace BreadPlayer
             catch { }
         }
         bool isMaximized = false;
-        private void OnMaximizeToFullScreen(object sender, RoutedEventArgs e)
+
+        private async void OnMaximizeToFullScreen(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, isMaximized ? "MinimizeState" : "MaximizeState", false);
+
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                if (!isMaximized)
+                {
+                    var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+                    preferences.CustomSize = new Windows.Foundation.Size(335, 455);
+                    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences);
+                }
+                else
+                {
+                    await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                }
+            }
+
             isMaximized = !isMaximized;
         }
+
         private void OnShareSong(object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
