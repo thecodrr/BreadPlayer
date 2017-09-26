@@ -19,6 +19,7 @@
 using System;
 using BreadPlayer.Core.Common;
 using Newtonsoft.Json;
+using LiteDB;
 
 namespace BreadPlayer.Core.Models
 {
@@ -68,6 +69,7 @@ namespace BreadPlayer.Core.Models
             set => Set(ref _isFavorite, value);
         }
         private bool _isSelected = false;
+        [BsonIgnore]
         [JsonIgnore]
         public bool IsSelected
         {
@@ -89,36 +91,50 @@ namespace BreadPlayer.Core.Models
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
 
         #region JsonIgnore Properties
+        [BsonIgnore]
         [JsonIgnore]
         public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string SynchronizedLyric
         {
             get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
         }
+        [BsonIgnore]
         [JsonIgnore]
         public PlayerState State { get => _state; set => Set(ref _state, value); }
+        [BsonIgnore]
         [JsonIgnore]
         public string EncryptedMetaFile { get => _encryptedMetaFile; set => _encryptedMetaFile = string.IsNullOrEmpty(value) ? _encryptedMetaFile = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string Size { get => _size; set => _size = string.IsNullOrEmpty(value) ? _size = _naN : value; }
 
+        [BsonIgnore]
         [JsonIgnore]
         public string Publisher { get => _publisher; set => _publisher = string.IsNullOrEmpty(value) ? _publisher = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string Subtitle { get => _subtitle; set => _subtitle = string.IsNullOrEmpty(value) ? _subtitle = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string CopyrightMessage { get => _copyrightMessage; set => _copyrightMessage = string.IsNullOrEmpty(value) ? _copyrightMessage = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string Date { get => _date; set => _date = string.IsNullOrEmpty(value) ? _date = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string EncodedBy { get => _encodedBy; set => _encodedBy = string.IsNullOrEmpty(value) ? _encodedBy = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string Lyric { get => _lyric; set => _lyric = string.IsNullOrEmpty(value) ? _lyric = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string ContentGroupDescription { get => _contentGroupDescription; set => _contentGroupDescription = string.IsNullOrEmpty(value) ? _contentGroupDescription = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string BeatsPerMinutes { get => _beatsperminutes; set => _beatsperminutes = string.IsNullOrEmpty(value) ? _beatsperminutes = _naN : value; }
+        [BsonIgnore]
         [JsonIgnore]
         public string Composer { get => _composer; set => _composer = string.IsNullOrEmpty(value) ? _composer = _naN : value; }
         #endregion
