@@ -179,7 +179,7 @@
                             <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True" 
                                                    ReorderMode="Enabled" Tag="{StaticResource Source}"
                                                    OddRowBackground="{ThemeResource EvenRowBackground}" 
-                                                           EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                                   EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                                                    AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True"
                                                    Behaviours:ListViewService.FocusBeforeSelect="True" 
                                                    SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}" 

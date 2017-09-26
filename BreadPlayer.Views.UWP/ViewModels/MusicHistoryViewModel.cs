@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
+using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using System;
 using System.Collections.Generic;
@@ -21,28 +22,32 @@ namespace BreadPlayer.ViewModels
             set => Set(ref currentCollection, value);
         }
 
-        public void GetMostPlayedSongs()
+        public async Task GetMostPlayedSongs()
         {
-            ChangeFilteredCollection(t => (t as Mediafile).PlayCount > 1,
-                                    t => "Under " + GetNearest10(t.PlayCount) + " Plays");
+            await ChangeFilteredCollection(t => (t as Mediafile).PlayCount > 1,
+                                    t => "Under " + GetNearest10(t.PlayCount) + " Plays").ConfigureAwait(false);
         }
-        public void GetRecentlyPlayedSongs()
+        public async Task GetRecentlyPlayedSongs()
         {
-            ChangeFilteredCollection(t => t.LastPlayed != null && (DateTime.Now.Subtract(t.LastPlayed)).Days <= 14,
-                                     t => t.LastPlayed.ToString("D"));
+            await ChangeFilteredCollection(t => t.LastPlayed != null && (DateTime.Now.Subtract(t.LastPlayed)).Days <= 14,
+                                     t => t.LastPlayed.ToString("D")).ConfigureAwait(false);
         }
-        public void GetRecentlyAddedSongs()
+        public async Task GetRecentlyAddedSongs()
         {
-            ChangeFilteredCollection(t => (t as Mediafile).AddedDate != null && (DateTime.Now.Subtract(t.AddedDate)).Days < 7,
-                                    t => t.AddedDate.ToString("D"));
+            await ChangeFilteredCollection(t => (t as Mediafile).AddedDate != null && (DateTime.Now.Subtract(t.AddedDate)).Days < 7,
+                                    t => t.AddedDate.ToString("D")).ConfigureAwait(false);
         }
-        private ThreadSafeObservableCollection<IGrouping<string, Mediafile>> ChangeFilteredCollection(Func<Mediafile, bool> filterFunc, Func<Mediafile, string> groupingFunc)
+        private async Task<ThreadSafeObservableCollection<IGrouping<string, Mediafile>>> ChangeFilteredCollection(Func<Mediafile, bool> filterFunc, Func<Mediafile, string> groupingFunc)
         {
-            var filtered = SettingsViewModel.TracksCollection.Elements.Where(filterFunc);
-            if (filtered?.Any() == true)
+            IEnumerable<Mediafile> filtered = null;
+            await BreadDispatcher.InvokeAsync(() =>
             {
-                CurrentCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>(filtered.GroupBy(groupingFunc));
-            }
+                filtered = SettingsViewModel.TracksCollection.Elements.Where(filterFunc);
+                if (filtered?.Any() == true)
+                {
+                    CurrentCollection = new ThreadSafeObservableCollection<IGrouping<string, Mediafile>>(filtered.GroupBy(groupingFunc));
+                }
+            });
             return CurrentCollection;
         }
         private int GetNearest10(int n)

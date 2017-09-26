@@ -24,9 +24,9 @@ namespace BreadPlayer
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(e.RemovedItems.Any())
-                (e.RemovedItems[0] as PivotItem).Content = null;
+                (e.RemovedItems[0] as PivotItem).Content = null;            
             (mainPivot.SelectedItem as PivotItem).Content = recentlyPlayedList;
-
+            MusicHistoryVM.CurrentCollection = null;
             switch (mainPivot.SelectedIndex)
             {
                 case 0:
