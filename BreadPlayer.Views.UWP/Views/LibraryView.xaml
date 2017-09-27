@@ -311,7 +311,9 @@
             <PivotItem Header="Bakers">
                 <Frame Name="BakersFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
             </PivotItem>
-            <PivotItem Header="Playlists"/>
+            <PivotItem Header="Playlists">
+                <Frame Name="PlaylistsFrame" SourcePageType="local:PlaylistsCollectionView" x:DeferLoadStrategy="Lazy" Visibility="Collapsed"/>
+            </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
                     <Setter Property="Margin" Value="0,10,0,0"/>
