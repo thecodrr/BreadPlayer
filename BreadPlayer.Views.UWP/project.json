@@ -3,7 +3,7 @@
     "ksemenenko.ColorThief": "1.1.0.3",
     "ManagedBass": "2.0.1",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.3.3",
-    "Microsoft.Toolkit.Uwp.Notifications": "1.5.1",
+    "Microsoft.Toolkit.Uwp.Notifications": "2.0.0",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "PCLStorage": "1.0.2",
     "System.ValueTuple": "4.4.0",
@@ -11,7 +11,7 @@
     "Win2D.uwp": "1.21.0"
   },
   "frameworks": {
-    "uap10.0": {}
+    "uap10.0.14393": {}
   },
   "runtimes": {
     "win10-arm": {},
