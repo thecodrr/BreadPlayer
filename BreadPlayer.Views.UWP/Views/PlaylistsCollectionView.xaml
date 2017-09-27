@@ -5,9 +5,12 @@
     xmlns:local="using:BreadPlayer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:VM="using:BreadPlayer.ViewModels"
     mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <VM:PlaylistsCollectionViewModel x:Key="PlaylistsCollectionVM"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource PlaylistsCollectionVM}">
 
     </Grid>
 </Page>

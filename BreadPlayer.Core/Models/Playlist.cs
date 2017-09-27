@@ -49,20 +49,11 @@ namespace BreadPlayer.Core.Models
         public string Salt { get => _salt;
             set => Set(ref _salt, value);
         }
-        private bool _isExternal;
-        public bool IsExternal
-        {
-            get => _isExternal;
-            set => Set(ref _isExternal, value);
-        }
-        private string _path;
-        public string Path
-        {
-            get => _path;
-            set => Set(ref _path, value);
-        }
-        public List<long> SongsIds { get; set; } = new List<long>();
-
+        public bool IsExternal { get; set; }
+        public string Path { get; set; }
+        public string ImagePath { get; set; }
+        public string Duration { get; set; }
+        public string SongsCount { get; set; }
         public string GetTextSearchKey()
         {
             return Name;

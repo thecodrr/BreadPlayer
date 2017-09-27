@@ -101,16 +101,6 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private async void HandleAddPlaylistMessage(Message message)
-        {
-            if (message.Payload is Playlist plist)
-            {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-
-                await AddPlaylistAsync(plist, false);
-            }
-        }
-
         private void HandlePlaySongMessage(Message message)
         {
             if (message.Payload is Mediafile song)
@@ -134,7 +124,6 @@ namespace BreadPlayer.ViewModels
 
             Messenger.Instance.Register(MessageTypes.MsgPlaySong, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MsgDispose, HandleDisposeMessage);
-            Messenger.Instance.Register(MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
             Messenger.Instance.Register(MessageTypes.MsgUpdateSongCount, new Action<Message>(HandleUpdateSongCountMessage));
             Messenger.Instance.Register(MessageTypes.MsgSearchStarted, new Action<Message>(HandleSearchStartedMessage));
         }
@@ -158,13 +147,6 @@ namespace BreadPlayer.ViewModels
             set => Set(ref _libraryservice, value);
         }
 
-        private PlaylistService _playlistService;
-
-        private PlaylistService PlaylistService => 
-            _playlistService ?? (_playlistService = new PlaylistService(
-                new DocumentStoreDatabaseService(
-                    SharedLogic.DatabasePath, 
-                    "Playlists")));
 
         private CollectionViewSource _viewSource;
 
@@ -260,7 +242,6 @@ namespace BreadPlayer.ViewModels
         private RelayCommand _deleteCommand;
         private RelayCommand _playCommand;
         private RelayCommand _stopAfterCommand;
-        private RelayCommand _addtoplaylistCommand;
         private RelayCommand _refreshViewCommand;
         private RelayCommand _initCommand;
         private RelayCommand _relocateSongCommand;
@@ -289,16 +270,8 @@ namespace BreadPlayer.ViewModels
         {
             get
             { if (_initCommand == null) { _initCommand = new RelayCommand(param => Init(param)); } return _initCommand; }
-        }
-      
-        /// <summary>
-        /// Gets AddToPlaylist command. This calls the <see cref="AddToPlaylist(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
-        public ICommand AddToPlaylistCommand
-        {
-            get
-            { if (_addtoplaylistCommand == null) { _addtoplaylistCommand = new RelayCommand(param => AddToPlaylist(param)); } return _addtoplaylistCommand; }
-        }
+        }      
+
         /// <summary>
         /// Gets refresh command. This calls the <see cref="RefreshView(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -498,12 +471,13 @@ namespace BreadPlayer.ViewModels
                 SendLibraryLoadedMessage(col, sendUpdateMessage);
                 return col[0];
             }
-            else if (path is Playlist playlist)
-            { 
-                var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
-                SendLibraryLoadedMessage(songList, sendUpdateMessage);
-                return songList[0];
-            }
+            //TODO
+            //else if (path is Playlist playlist)
+            //{ 
+            //    var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
+            //    SendLibraryLoadedMessage(songList, sendUpdateMessage);
+            //    return songList[0];
+            //}
             else if (path is Album album)
             {
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query(album.AlbumName + " " + album.Artist));
@@ -512,9 +486,6 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
-       
-           
-
         private async Task RefreshSourceAsync()
         {
             await BreadDispatcher.InvokeAsync(() =>
@@ -581,7 +552,7 @@ namespace BreadPlayer.ViewModels
         {
             for (int i = 0; i < SongCount; i += nSize)
             {
-                TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
+                await TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
             }
         }
         /// <summary>
@@ -848,7 +819,6 @@ namespace BreadPlayer.ViewModels
             LibraryService = null;
             TracksCollection.Clear();
             GenreFlyout?.Items?.Clear();
-            SharedLogic.PlaylistsItems?.Clear();
             _oldItems = null;
             SharedLogic.OptionItems.Clear();
             SongCount = -1;
@@ -859,158 +829,14 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Loads library from the database file.
         /// </summary>
-        private async void LoadLibrary()
+        private void LoadLibrary()
         {
             GetSettings();
-            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-            await LoadPlaylists();
             UpdateJumplist("Title");
         }
       
         #endregion
-
-        #region Playlist Methods
-
-        private async Task LoadPlaylists()
-        {
-            var playlists = await PlaylistService.GetPlaylistsAsync();
-            if (playlists != null)
-            {
-                foreach (var list in playlists)
-                {
-                    AddPlaylist(list);
-                }
-            }
-        }
-
-        private async void AddToPlaylist(object file)
-        {
-            if (file != null)
-            {
-                var menu = file as MenuFlyoutItem;
-                //songList is a variable to initiate both (if available) sources of songs. First is AlbumSongs and the second is the direct library songs.
-                var songList = new List<Mediafile>();
-                if (menu?.Tag == null)
-                {
-                    if(menu?.DataContext is Album album)
-                    {
-                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query((album.AlbumName));
-                        if(albumSongs?.Any() == true)
-                             songList.AddRange(albumSongs);
-                    }
-                    else if(SelectedItems?.Any() == true)
-                        songList.AddRange(SelectedItems);
-                }
-                else
-                {
-                    songList.Add(Player.CurrentlyPlayingFile);
-                }
-                var dictPlaylist = menu?.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : await PlaylistService.GetPlaylistAsync(menu?.Text);
-                bool proceed;
-                if (menu?.Text != "New Playlist")
-                {
-                    proceed = await SharedLogic.AskForPassword(dictPlaylist);
-                }
-                else
-                {
-                    proceed = true;
-                }
-
-                if (dictPlaylist != null && proceed)
-                {
-                    await AddPlaylistAsync(dictPlaylist, true, songList);
-                }
-            }
-            else
-            {
-                var pList = await ShowAddPlaylistDialogAsync();
-                if (pList != null)
-                {
-                    await AddPlaylistAsync(pList, false);
-                }
-            }
-        }
-
-        private async Task<Playlist> ShowAddPlaylistDialogAsync(string title = "Name this playlist", string playlistName = "", string desc = "", string password = "")
-        {
-            var dialog = new InputDialog
-            {
-                Title = title,
-                Text = playlistName,
-                Description = desc,
-                IsPrivate = password.Length > 0,
-                Password = password
-            };
-            if (CoreWindow.GetForCurrentThread().Bounds.Width <= 501)
-            {
-                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 50;
-            }
-            else
-            {
-                dialog.DialogWidth = CoreWindow.GetForCurrentThread().Bounds.Width - 300;
-            }
-
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary && dialog.Text != "")
-            {
-                var salthash = PasswordStorage.CreateHash(dialog.Password);
-                var playlist = new Playlist()
-                {
-                    Name = dialog.Text,
-                    Description = dialog.Description,
-                    IsPrivate = dialog.Password.Length > 0,
-                    Hash = salthash.Hash,
-                    Salt = salthash.Salt
-                };
-                if (PlaylistService.PlaylistExists(playlist.Name))
-                {
-                    playlist = await ShowAddPlaylistDialogAsync("Playlist already exists! Please choose another name.", playlist.Name, playlist.Description);
-                }
-                return playlist;
-            }
-            return null;
-        }
-
-        private async Task AddSongsToPlaylist(Playlist list, IReadOnlyCollection<Mediafile> songsToadd)
-        {
-            if (songsToadd.Any())
-            {
-                await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
-            }
-        }
-
-        private void AddPlaylist(Playlist playlist)
-        {
-            var cmd = new ContextMenuCommand(AddToPlaylistCommand, playlist.Name);
-            SharedLogic.OptionItems.Add(cmd);
-            SharedLogic.PlaylistsItems.Add(new SimpleNavMenuItem
-            {
-                Arguments = playlist,
-                Label = playlist.Name,
-                DestinationPage = typeof(PlaylistView),
-                Symbol = Symbol.List,
-                FontGlyph = "\u0045",
-                ShortcutTheme = ElementTheme.Dark,
-                HeaderVisibility = Visibility.Collapsed
-            });
-        }
-
-        private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
-        {
-            await BreadDispatcher.InvokeAsync(async () =>
-            {
-                if (!PlaylistService.PlaylistExists(plist.Name))
-                {
-                    AddPlaylist(plist);
-                    await PlaylistService.AddPlaylistAsync(plist);
-                }
-                if (addsongs)
-                {
-                    await AddSongsToPlaylist(plist, songs.ToList());
-                }
-            });
-        }
-        #endregion
-
+        
         #region Events
         private async void TracksCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

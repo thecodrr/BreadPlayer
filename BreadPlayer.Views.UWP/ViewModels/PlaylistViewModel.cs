@@ -243,7 +243,7 @@ namespace BreadPlayer.ViewModels
                             File.Delete(path);
                         }
 
-                        SharedLogic.PlaylistsItems.Remove(SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                        //SharedLogic.PlaylistsItems.Remove(SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
                         SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                         await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.                        
                     }
@@ -278,8 +278,8 @@ namespace BreadPlayer.ViewModels
                             File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
                         }
 
-                        SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                        SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                        //SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                        //SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
                         SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
                         await PlaylistService.UpdatePlaylistAsync(pl);
                         Playlist = pl; //set this.Playlist to pl (local variable);

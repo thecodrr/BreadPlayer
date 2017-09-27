@@ -25,6 +25,7 @@ namespace BreadPlayer
         public PlaylistsCollectionView()
         {
             this.InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
     }
 }

@@ -86,6 +86,10 @@ namespace BreadPlayer
                 (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Visible;
                 BakersFrame.Navigate(typeof(AlbumArtistView), "ArtistView");
             }
+            else if ((sender as Pivot).SelectedIndex == 3)
+            {
+                (this.FindName("PlaylistsFrame") as Frame).Visibility = Visibility.Visible;
+            }
         }
     }
 }

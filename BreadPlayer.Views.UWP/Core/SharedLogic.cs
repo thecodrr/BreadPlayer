@@ -59,13 +59,6 @@ namespace BreadPlayer.Core
         public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
 
         /// <summary>
-        /// This singleton shouldn't be here and it shouldn't be
-        /// a singleton. Bad design.
-        /// #TODO move this to the correct place
-        /// </summary>
-        public ObservableCollection<SimpleNavMenuItem> PlaylistsItems => GenericService<ObservableCollection<SimpleNavMenuItem>>.Instance.GenericClass;
-
-        /// <summary>
         /// These contextmenu items are used in the context menu for library
         /// items. This shouldn't be here.
         /// #TODO move this to the correct place & remove the singleton.
