@@ -8,9 +8,11 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Messengers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -40,7 +42,9 @@ namespace BreadPlayer.ViewModels
         {
             Playlists = new ThreadSafeObservableCollection<Playlist>();
             SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-            Messengers.Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Messengers.Message>(HandleAddPlaylistMessage));
+            LoadPlaylists();
+            Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
+            Messenger.Instance.Register(Messengers.MessageTypes.MsgRemovePlaylist, new Action<Message>(HandleRemovePlaylistMessage));
         }
         private async void HandleAddPlaylistMessage(Message message)
         {
@@ -50,7 +54,14 @@ namespace BreadPlayer.ViewModels
                 await AddPlaylistAsync(plist, false);
             }
         }
-
+        private async void HandleRemovePlaylistMessage(Message message)
+        {
+            if (message.Payload is Playlist plist)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await AddPlaylistAsync(plist, false);
+            }
+        }
         private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
             await BreadDispatcher.InvokeAsync(async () =>
@@ -165,12 +176,21 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
-
+        private bool IsHour(string length)
+        {
+            return length.Count(t => t == ':') == 2;
+        }
         private async Task AddSongsToPlaylist(Playlist list, IReadOnlyCollection<Mediafile> songsToadd)
         {
             if (songsToadd.Any())
-            {
+            {               
                 await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
+                var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
+                list.SongsCount = pSongs.Count + " songs";
+                list.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
+                list.ImageColor = (await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
+                list.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                await PlaylistService.UpdatePlaylistAsync(list);
             }
         }
 

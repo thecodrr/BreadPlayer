@@ -171,7 +171,7 @@
             </TransitionCollection>
         </Grid.Transitions>
         <Pivot x:Name="mainPivot" Foreground="{ThemeResource TextBrush}" Grid.ColumnSpan="2" SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem Header="Toasts" Foreground="{ThemeResource TextBrush}" Margin="0,-8.4,0,0">
+            <PivotItem Header="Toasts" Foreground="{ThemeResource TextBrush}">
                 <Grid Margin="0,0,0,0">
                     <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb"/>
                     <SemanticZoom x:Name="semanticZoom" Margin="0,6,0,0" ViewChangeStarted="semanticZoom_ViewChangeStarted" ScrollViewer.ZoomMode="Enabled">

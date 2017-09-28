@@ -243,7 +243,7 @@ namespace BreadPlayer.ViewModels
                             File.Delete(path);
                         }
 
-                        //SharedLogic.PlaylistsItems.Remove(SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name)); //delete from hamburger menu
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgRemovePlaylist, selectedPlaylist); //delete from hamburger menu
                         SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                         await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.                        
                     }

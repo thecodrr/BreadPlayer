@@ -200,6 +200,7 @@
     <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
     <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
+    <Compile Include="Converters\ColorDarknessChanger.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\PlayerStateToBoolConverter.cs" />

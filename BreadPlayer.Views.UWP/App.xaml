@@ -276,7 +276,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="AppBarButton">
-                            <Grid x:Name="RootGrid" Background="Transparent" Width="40"
+                            <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" Width="40"
                               RenderTransformOrigin="0.5,0.5" CornerRadius="100" BorderBrush="{TemplateBinding BorderBrush}">
                                 <Grid.RenderTransform>
                                     <ScaleTransform x:Name="scaleTrans" />

@@ -68,16 +68,6 @@ namespace BreadPlayer.ViewModels
 
         #region MessageHandling
 
-        private void HandleSearchStartedMessage(Message message)
-        {
-            if (message.Payload != null)
-            {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                //if (!Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
-                //    Header = message.Payload.ToString();
-            }
-        }
-
         private void HandleDisposeMessage()
         {
             Reset();
@@ -118,14 +108,12 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public LibraryViewModel()
         {
-           // Header = "Music Collection";
             MusicLibraryLoaded += LibraryViewModel_MusicLibraryLoaded;
             LoadLibrary();
 
             Messenger.Instance.Register(MessageTypes.MsgPlaySong, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MsgDispose, HandleDisposeMessage);
             Messenger.Instance.Register(MessageTypes.MsgUpdateSongCount, new Action<Message>(HandleUpdateSongCountMessage));
-            Messenger.Instance.Register(MessageTypes.MsgSearchStarted, new Action<Message>(HandleSearchStartedMessage));
         }
         #endregion
 
@@ -147,7 +135,13 @@ namespace BreadPlayer.ViewModels
             set => Set(ref _libraryservice, value);
         }
 
+        private PlaylistService _playlistService;
 
+        private PlaylistService PlaylistService =>
+            _playlistService ?? (_playlistService = new PlaylistService(
+                new DocumentStoreDatabaseService(
+                    SharedLogic.DatabasePath,
+                    "Playlists")));
         private CollectionViewSource _viewSource;
 
         public CollectionViewSource ViewSource
@@ -471,13 +465,12 @@ namespace BreadPlayer.ViewModels
                 SendLibraryLoadedMessage(col, sendUpdateMessage);
                 return col[0];
             }
-            //TODO
-            //else if (path is Playlist playlist)
-            //{ 
-            //    var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
-            //    SendLibraryLoadedMessage(songList, sendUpdateMessage);
-            //    return songList[0];
-            //}
+            else if (path is Playlist playlist)
+            {
+                var songList = new ThreadSafeObservableCollection<Mediafile>(await PlaylistService.GetTracksAsync(playlist.Id));
+                SendLibraryLoadedMessage(songList, sendUpdateMessage);
+                return songList[0];
+            }
             else if (path is Album album)
             {
                 var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query(album.AlbumName + " " + album.Artist));

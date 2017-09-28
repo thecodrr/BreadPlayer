@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreadPlayer.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,15 @@ namespace BreadPlayer
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        private void OnPlaylistClicked(object sender, ItemClickEventArgs e)
+        {
+            if(e.ClickedItem != null)
+            {
+                SplitViewMenu.SplitViewMenu.UnSelectAll();
+                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), e.ClickedItem);
+            }
         }
     }
 }

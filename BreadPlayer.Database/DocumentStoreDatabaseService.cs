@@ -72,7 +72,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                return (T)currentCollection.FindOne(t => t.Id == Convert.ToInt64(query));
+                return (T)currentCollection.FindOne(t => t.TextSearchKey.Contains(query));
             });
         }
 

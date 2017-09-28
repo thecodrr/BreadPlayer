@@ -46,12 +46,25 @@ namespace BreadPlayer.Core.Models
             set => Set(ref _hash, value);
         }
         private string _salt;
-        public string Salt { get => _salt;
+        public string Salt
+        {
+            get => _salt;
             set => Set(ref _salt, value);
         }
         public bool IsExternal { get; set; }
         public string Path { get; set; }
-        public string ImagePath { get; set; }
+        string imagePath;
+        public string ImagePath
+        {
+            get => imagePath;
+            set => Set(ref imagePath, value);
+        }
+        string imageColor;
+        public string ImageColor
+        {
+            get => imageColor;
+            set => Set(ref imageColor, value);
+        }
         public string Duration { get; set; }
         public string SongsCount { get; set; }
         public string GetTextSearchKey()

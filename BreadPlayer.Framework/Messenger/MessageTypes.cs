@@ -10,6 +10,7 @@
         MsgDispose,
         MsgExecuteCmd,
         MsgAddPlaylist,
+        MsgRemovePlaylist,
         MsgAddAlbums,
         MsgPlaylistLoaded,
         MsgUpdateSongCount,
