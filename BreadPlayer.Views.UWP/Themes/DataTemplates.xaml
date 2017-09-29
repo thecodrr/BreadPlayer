@@ -13,32 +13,40 @@
     <Extensions:BindableFlyout x:Key="PlaylistsFlyout" ItemsSource="{Binding Source={StaticResource Core}, Path=OptionItems}" Placement="Right"></Extensions:BindableFlyout>
 
     <MenuFlyout x:Key="Flyout">
-        <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{StaticResource LibVM}"
+        <Extensions:MenuFlyoutIconItem x:Name="playMenuItem" Text="Play" DataContext="{StaticResource LibVM}"
                                         CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-                                          Command="{Binding Path=PlayCommand}"/>        
-        <MenuFlyoutItem Text="Open Song Location"
+                                          Command="{Binding Path=PlayCommand}"
+                                       Glyph="&#xE768;">
+        </Extensions:MenuFlyoutIconItem>
+        <Extensions:MenuFlyoutIconItem Text="Open Song Location"
                                         DataContext="{Binding Source={StaticResource Core}}"
                                         Command="{Binding OpenSongLocationCommand}"
+                                       Glyph="&#xE8DA;"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-        <MenuFlyoutItem Text="Relocate Song"
+        <Extensions:MenuFlyoutIconItem Text="Relocate Song"
+                                       Glyph="&#xE8DE;"
                                          DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding RelocateSongCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-        <MenuFlyoutItem Text="Change Album Art"
+        <Extensions:MenuFlyoutIconItem Text="Change Album Art"
+                                       Glyph="&#xEE71;"
                                         DataContext="{Binding Source={StaticResource Core}}"
                                         Command="{Binding ChangeAlbumArtCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-        <MenuFlyoutItem Text="Stop Playing After This Song"
+        <Extensions:MenuFlyoutIconItem Text="Stop Playing After This Song"
+                                       Glyph="&#xE81A;"
                                         DataContext="{Binding ElementName=playMenuItem, Path=DataContext}"
                                         Command="{Binding Path=StopAfterCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
-        <MenuFlyoutItem Text="Delete"
+        <Extensions:MenuFlyoutIconItem Text="Delete"
+                                       Glyph="&#xE74D;"
                                         Command="{Binding Source={StaticResource LibVM}, Path=DeleteCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-        </MenuFlyoutItem>
+        </Extensions:MenuFlyoutIconItem>
         <MenuFlyoutSeparator/>
-        <MenuFlyoutItem Text="Properties"
-                                                    DataContext="{Binding Source={StaticResource Core}}"                                       
+        <Extensions:MenuFlyoutIconItem Text="Properties"
+                                       Glyph="&#xE90B;"
+                                       DataContext="{Binding Source={StaticResource Core}}"                                       
                                         Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                         Command="{Binding ShowPropertiesCommand}"
                                         CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"/>
@@ -182,7 +190,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="titleTxt" x:Phase="0" Width="10000" Grid.Column="1" Margin="0,0,5,0" TextWrapping="NoWrap" FontSize="14" TextTrimming="Clip" Text="{x:Bind Title}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock x:Name="durationTxt" x:Phase="3" Width="50" Grid.Column="4" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Tag="Numerical" Text="{x:Bind Length}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock x:Name="durationTxt" Foreground="{Binding ElementName=titleTxt, Path=Foreground}" x:Phase="3" Width="50" Grid.Column="4" Visibility="Visible" Margin="15,0,0,0" FontSize="13" Tag="Numerical" Text="{x:Bind Length}" VerticalAlignment="Center" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Border Background="Transparent" ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Title}" Height="50" Grid.ColumnSpan="9">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="DoubleTapped">
@@ -218,8 +226,8 @@
                     </Core:DataTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Border>
-            <Button x:Name="artistBtn" x:Phase="1" Grid.Column="2" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToArtistPageCommand}" CommandParameter="{x:Bind LeadArtist}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind LeadArtist}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
-            <Button x:Name="albumBtn" x:Phase="2" Grid.Column="3" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" CommandParameter="{x:Bind Album}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind Album}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
+            <Button x:Name="artistBtn" x:Phase="1" Foreground="{Binding ElementName=titleTxt, Path=Foreground}" Grid.Column="2" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToArtistPageCommand}" CommandParameter="{x:Bind LeadArtist}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind LeadArtist}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
+            <Button x:Name="albumBtn" x:Phase="2" Foreground="{Binding ElementName=titleTxt, Path=Foreground}" Grid.Column="3" Visibility="Visible" Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" CommandParameter="{x:Bind Album}" Margin="15,0,0,0" FontSize="13" Content="{x:Bind Album}" VerticalAlignment="Center" Background="Transparent" Style="{StaticResource HyperlinkBtn}"/>
             <ToggleButton Name="FavoriteButton" 
                           Background="Transparent" 
                           Visibility="Collapsed" 
@@ -231,22 +239,32 @@
                           Margin="0,0,0,0" 
                           Width="40" 
                           Height="40" 
+                          Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                           HorizontalContentAlignment="Center"
                           VerticalContentAlignment="Center"
                           Style="{StaticResource FavoriteButtonStyle}"/>
             <StackPanel x:Name="ButtonsStack" Grid.Column="1" Width="100" HorizontalAlignment="Right" Visibility="Collapsed" Height="50" VerticalAlignment="Stretch" Background="{Binding ElementName=MainGrid, Path=Background}" Orientation="Horizontal">
                 <Button x:Name="playBtn" Grid.Column="1" ToolTipService.ToolTip="Play" DataContext="{Binding ElementName=LayoutRoot, Path=DataContext}"
                                           Width="50" Visibility="Visible"
+                                          Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                                           VerticalAlignment="Stretch" Background="Transparent"
                                           Height="50" FontSize="18" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
                                           Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}" Content="&#xE102;" Style="{StaticResource HyperlinkBtn}" FontFamily="Segoe MDL2 Assets">
                 </Button>
-                <Button Grid.Column="2" x:Name="button2" Content="&#xE710;"
-            IsDoubleTapEnabled="False" FontSize="18"
-            Visibility="Visible" ToolTipService.ToolTip="Add this song to playlist."
-            Height="50"  VerticalAlignment="Stretch" Background="Transparent"
-            Width="50" Style="{StaticResource HyperlinkBtn}"
-            FontFamily="Segoe MDL2 Assets">
+                <Button x:Name="button2" 
+                        Grid.Column="2" 
+                        Content="&#xE710;"
+                        IsDoubleTapEnabled="False"
+                        FontSize="18"
+                        Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                        Visibility="Visible" 
+                        ToolTipService.ToolTip="Add this song to playlist."
+                        Height="50"  
+                        VerticalAlignment="Stretch"
+                        Background="Transparent"
+                        Width="50" 
+                        Style="{StaticResource HyperlinkBtn}"
+                        FontFamily="Segoe MDL2 Assets">
 
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
@@ -264,9 +282,11 @@
                             </Storyboard>
                         </Media:ControlStoryboardAction.Storyboard>
                     </Media:ControlStoryboardAction>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=titleTxt}" PropertyName="Foreground" Value="White"/>
                 </Core:DataTriggerBehavior>
                 <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
                     <Core:ChangePropertyAction TargetObject="{Binding ElementName=MainGrid}" PropertyName="Background" Value="Transparent"/>
+                    <Core:ChangePropertyAction TargetObject="{Binding ElementName=titleTxt}" PropertyName="Foreground" Value="Black"/>
                 </Core:DataTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="PointerExited">
                     <Core:ChangePropertyAction TargetObject="{Binding ElementName=ButtonsStack}" PropertyName="Visibility" Value="{Binding Path=IsSelected, Converter={StaticResource BoolToVisibility}}"/>

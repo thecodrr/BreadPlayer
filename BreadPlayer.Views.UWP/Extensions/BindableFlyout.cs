@@ -81,11 +81,13 @@ namespace BreadPlayer.Extensions
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
-                var item = new MenuFlyoutItem
+                var item = new MenuFlyoutIconItem
                 {
                     Text = menuItem.Text,
-                    Command = menuItem.Command
+                    Command = menuItem.Command,
+                    Glyph = menuItem.CommandIcon
                 };
+                
                 item.CommandParameter =  menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
                 item.Tag = menuFlyout.DataContext as Mediafile;
                 if(menuFlyout.Items.Count == 1)
@@ -97,14 +99,25 @@ namespace BreadPlayer.Extensions
         }
         
     }
+    public class MenuFlyoutIconItem : MenuFlyoutItem
+    {
+        public string Glyph
+        {
+            get { return (string)GetValue(GlyphProperty); }
+            set { SetValue(GlyphProperty, value); }
+        }
 
+        public static readonly DependencyProperty GlyphProperty =
+            DependencyProperty.Register("Glyph", typeof(string), typeof(MenuFlyoutIconItem), new PropertyMetadata(null));
+    }
     public class ContextMenuCommand : ViewModelBase
     {
-        public ContextMenuCommand(ICommand command, string text, object cmdPara = null)
+        public ContextMenuCommand(ICommand command, string text, string glyph = "\uE93C", object cmdPara = null)
         {
             Command = command;
             Text = text;
             CommandParameter = cmdPara;
+            CommandIcon = glyph;
         }
 
         private string _text;
@@ -113,6 +126,7 @@ namespace BreadPlayer.Extensions
             get => _text;
             set => Set(ref _text, value);
         }
+        public string CommandIcon { get; set; }
         public ICommand Command
         {
             get; private set;

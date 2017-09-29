@@ -87,7 +87,7 @@ namespace BreadPlayer.ViewModels
             if (playlists != null)
             {
                 Playlists.AddRange(playlists);
-                SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
+                SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
                 SharedLogic.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
             }
         }
