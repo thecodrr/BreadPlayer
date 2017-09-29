@@ -23,7 +23,15 @@ namespace BreadPlayer.Web.LyricsFetch
             {
                 var mediaFile = new Mediafile();
                 mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
-                mediaFile.LeadArtist = TagParser.ParseArtists(TagParser.ParseTitle(file.LeadArtist.ToString()))[0];
+                var cleanedArtist = TagParser.ParseTitle(file.LeadArtist.ToString());
+                List<string> parsedArtists = TagParser.ParseArtists(cleanedArtist);              
+                if (string.IsNullOrEmpty(cleanedArtist))
+                {
+                    cleanedArtist = file.Title;
+                    parsedArtists = TagParser.ParseArtists(cleanedArtist);
+                    parsedArtists.RemoveAt(0);
+                }
+                mediaFile.LeadArtist = !parsedArtists.Any() ? file.LeadArtist : TagParser.ParseTitle(parsedArtists[0]);
                 List<string> Lyrics = new List<string>();
                 for (int i = 0; i < Sources.Length; i++)
                 {

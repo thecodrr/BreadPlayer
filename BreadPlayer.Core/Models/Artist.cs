@@ -26,7 +26,7 @@ namespace BreadPlayer.Core.Models
         }
         public string Bio { get; set; }
         public string DOB { get; set; }
-        public string TextSearchKey => GetTextSearchKey();
+        public string TextSearchKey => GetTextSearchKey().ToLower();
         bool _isSelected;
         [JsonIgnore]
         public bool IsSelected

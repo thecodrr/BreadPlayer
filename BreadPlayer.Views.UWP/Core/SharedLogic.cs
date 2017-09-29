@@ -215,7 +215,7 @@ namespace BreadPlayer.Core
             }
         }
 
-        private void NavigateToAlbumPage(object para)
+        private async void NavigateToAlbumPage(object para)
         {
             //because the gridview for both artists and albums is the same we need to handle,
             //item selection this way.
@@ -225,14 +225,23 @@ namespace BreadPlayer.Core
                 return;
             }
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var album = para is Album ? (Album)para : new Album { AlbumName = para.ToString() };
-            NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
+            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbum(para.ToString()).ConfigureAwait(false);
+            await BreadDispatcher.InvokeAsync(() =>
+            {
+                if (album != null)
+                    NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
+            });
         }
-        private void NavigateToArtistPage(object para)
+        private AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+        private async void NavigateToArtistPage(object para)
         {
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var artist = para is Artist ? (Artist)para : new Artist { Name = para.ToString() };
-            NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+            var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtist(para.ToString()).ConfigureAwait(false);
+            await BreadDispatcher.InvokeAsync(() =>
+            {
+                if(artist != null)
+                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+            });
         }
         #endregion
 

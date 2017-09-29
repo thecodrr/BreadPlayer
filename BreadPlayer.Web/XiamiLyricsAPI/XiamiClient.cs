@@ -18,14 +18,16 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
             using (HttpClient client = new HttpClient())
             {
                 var results = await SearchAsync(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist));
-                var xResult = results.Data.Songs.First(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower()));
-                var xSong = await GetSongDetailAsync(xResult.SongId.ToString());
-                if (xSong.Data.TrackList?.Any() == true && !string.IsNullOrEmpty(xSong.Data.TrackList[0].LyricUrl))
-                    return await client.GetStringAsync(xSong.Data.TrackList[0].LyricUrl).ConfigureAwait(false);
-                else if (!string.IsNullOrEmpty(xResult.Lyric) && xSong.Data.TrackList == null)
-                    return await client.GetStringAsync(xResult.Lyric).ConfigureAwait(false);
-                else
-                    return "";
+                if (results.Data.Songs.Any())
+                {
+                    var xResult = results.Data.Songs.First(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower()));
+                    var xSong = await GetSongDetailAsync(xResult.SongId.ToString());
+                    if (xSong.Data.TrackList?.Any() == true && !string.IsNullOrEmpty(xSong.Data.TrackList[0].LyricUrl))
+                        return await client.GetStringAsync(xSong.Data.TrackList[0].LyricUrl).ConfigureAwait(false);
+                    else if (!string.IsNullOrEmpty(xResult.Lyric) && xSong.Data.TrackList == null)
+                        return await client.GetStringAsync(xResult.Lyric).ConfigureAwait(false);
+                }
+                return "";
             }
         }
         public async Task<SongDetailResponse> GetSongDetailAsync(string id)

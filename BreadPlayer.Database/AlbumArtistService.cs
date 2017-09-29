@@ -33,6 +33,16 @@ namespace BreadPlayer.Database
             Database.ChangeTable("Artists", "ArtistsText");
             await Database.InsertRecords(artists);
         }
+        public Task<Artist> GetArtist(string query)
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            return Database.GetRecordByQueryAsync<Artist>(query);
+        }
+        public Task<Album> GetAlbum(string query)
+        {
+            Database.ChangeTable("Albums", "AlbumsText");
+            return Database.GetRecordByQueryAsync<Album>(query);
+        }
         public Task<IEnumerable<Artist>> GetArtistsAsync()
         {
             Database.ChangeTable("Artists", "ArtistsText");

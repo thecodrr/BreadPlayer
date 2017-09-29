@@ -16,8 +16,12 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
         public async Task<string> FetchLyrics(Mediafile mediaFile)
         {
             var results = await Search(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist)).ConfigureAwait(false);
-            var bSong = results.Result.SongInfo.SongList.First(t => t.Title.Contains(mediaFile.Title));
-            return (await RequestSongLrc(bSong.SongId).ConfigureAwait(false)).LrcContent;
+            if (results.Result.SongInfo.SongList.Any())
+            {
+                var bSong = results.Result.SongInfo.SongList.First(t => t.Title.Contains(mediaFile.Title));
+                return (await RequestSongLrc(bSong.SongId).ConfigureAwait(false)).LrcContent;
+            }
+            return "";
         }
 
         public async Task<Lrc> RequestSongLrc(string songId)

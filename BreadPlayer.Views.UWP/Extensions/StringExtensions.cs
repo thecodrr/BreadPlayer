@@ -75,6 +75,8 @@ namespace BreadPlayer.Extensions
 
         public static async Task<string> UnzipAsync(this string base64String)
         {
+            if (base64String == null)
+                return "";
             using (var msi = new MemoryStream(Convert.FromBase64String(base64String)))
             using (var mso = new MemoryStream())
             {
