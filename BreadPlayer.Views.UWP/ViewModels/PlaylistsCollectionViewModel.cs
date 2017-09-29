@@ -41,10 +41,13 @@ namespace BreadPlayer.ViewModels
         public PlaylistsCollectionViewModel()
         {
             Playlists = new ThreadSafeObservableCollection<Playlist>();
-            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
-            LoadPlaylists();
+            Init();
             Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
             Messenger.Instance.Register(Messengers.MessageTypes.MsgRemovePlaylist, new Action<Message>(HandleRemovePlaylistMessage));
+        }
+        private async void Init()
+        {
+            await LoadPlaylists().ConfigureAwait(false);
         }
         private async void HandleAddPlaylistMessage(Message message)
         {
@@ -80,13 +83,12 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadPlaylists()
         {
-            var playlists = await PlaylistService.GetPlaylistsAsync();
+            var playlists = await PlaylistService.GetPlaylistsAsync().ConfigureAwait(false);
             if (playlists != null)
             {
-                foreach (var list in playlists)
-                {
-                    AddPlaylist(list);
-                }
+                Playlists.AddRange(playlists);
+                SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist"));
+                SharedLogic.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
             }
         }
 
@@ -196,9 +198,7 @@ namespace BreadPlayer.ViewModels
 
         private void AddPlaylist(Playlist playlist)
         {
-            var cmd = new ContextMenuCommand(AddToPlaylistCommand, playlist.Name);
-            SharedLogic.OptionItems.Add(cmd);
-            Playlists.Add(playlist);
+            
             //SharedLogic.PlaylistsItems.Add(new SimpleNavMenuItem
             //{
             //    Arguments = playlist,

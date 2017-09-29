@@ -28,6 +28,7 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dispatcher;
+using System.Linq;
 
 namespace BreadPlayer.Extensions
 {
@@ -45,6 +46,10 @@ namespace BreadPlayer.Extensions
             {
                 var obj = o as BindableFlyout;
                 obj.Setup(obj);
+                obj.ItemsSource.CollectionChanged += (e, a) => 
+                {
+                    obj.Setup(obj);
+                };
             }
         ));
 
@@ -72,9 +77,7 @@ namespace BreadPlayer.Extensions
             {
                 return;
             }
-
-            ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            menuFlyout.Opening += MenuFlyout_Opened;
+            
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
@@ -92,19 +95,7 @@ namespace BreadPlayer.Extensions
                 menuFlyout.Items.Add(item);
             }
         }
-
-        private void MenuFlyout_Opened(object sender, object e)
-        {
-            //var oldItems = ItemsSource;
-            //Items.Clear();
-            //ItemsSource = null;
-            //ItemsSource = oldItems;
-            Setup(this);
-        }
-        private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            Setup(this);
-        }
+        
     }
 
     public class ContextMenuCommand : ViewModelBase
@@ -158,13 +149,34 @@ namespace BreadPlayer.Extensions
         }
 
         private static SharedLogic _core = new SharedLogic();
+        private static void AddMenuItems(MenuFlyoutSubItem menuFlyoutSubItem, MenuFlyout menuFlyout = null)
+        {
+            foreach (var menuItem in _core.OptionItems)
+            {
+                var item = new MenuFlyoutItem
+                {
+                    Text = menuItem.Text,
+                    Command = menuItem.Command
+                };
+                item.CommandParameter = menuItem.CommandParameter ?? item;
+                if (menuFlyout != null && menuFlyout.GetType() != typeof(CustomFlyout))
+                {
+                    item.Tag = "Current";
+                }
+
+                if (menuFlyoutSubItem.Items.Count == 1)
+                {
+                    menuFlyoutSubItem.Items.Add(new MenuFlyoutSeparator());
+                }
+                menuFlyoutSubItem.Items.Add(item);
+            }
+        }
         private async static void Setup(MenuFlyout menuFlyout)
         {
             if (menuFlyout == null) return;
 
             await BreadDispatcher.InvokeAsync(() =>
             {
-                _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                 menuFlyout.Items.Clear();
                 MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
                 MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
@@ -175,25 +187,7 @@ namespace BreadPlayer.Extensions
                 menuFlyout.Items.Add(changeAlbumArt);
                 menuFlyout.Items.Add(openLoc);
                 menuFlyout.Items.Add(properties);
-                foreach (var menuItem in _core.OptionItems)
-                {
-                    var item = new MenuFlyoutItem
-                    {
-                        Text = menuItem.Text,
-                        Command = menuItem.Command
-                    };
-                    item.CommandParameter = menuItem.CommandParameter ?? item;
-                    if (menuFlyout.GetType() != typeof(CustomFlyout))
-                    {
-                        item.Tag = "Current";
-                    }
-
-                    if (addTo.Items.Count == 1)
-                    {
-                        addTo.Items.Add(new MenuFlyoutSeparator());
-                    }
-                    addTo.Items.Add(item);
-                }
+                AddMenuItems(addTo, menuFlyout);
             });
             //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
         }
@@ -251,9 +245,12 @@ namespace BreadPlayer.Extensions
                 typeof(FlyoutMenuExtension),
                 new PropertyMetadata(new ThreadSafeObservableCollection<ContextMenuCommand>(), (sender, e) =>
                 {
-                    var menuFlyout = sender as MenuFlyout;
-                    _menu = menuFlyout;
-                    Setup(menuFlyout);
+                    if (sender is MenuFlyout menuFlyout)
+                    {
+                        _menu = menuFlyout;
+                        Setup(menuFlyout);
+                        _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                    }
                 }));
 
         private static void OptionItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

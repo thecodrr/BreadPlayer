@@ -15,9 +15,7 @@
     <MenuFlyout x:Key="Flyout">
         <MenuFlyoutItem x:Name="playMenuItem" Text="Play" DataContext="{StaticResource LibVM}"
                                         CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-                                          Command="{Binding Path=PlayCommand}"/>
-        <!--<MenuFlyoutSubItem x:Name="addto" Extensions:MenuExtension.MyItems="{Binding Options}" DataContext="{StaticResource LibVM}" Text="Add to">
-                                        </MenuFlyoutSubItem>-->
+                                          Command="{Binding Path=PlayCommand}"/>        
         <MenuFlyoutItem Text="Open Song Location"
                                         DataContext="{Binding Source={StaticResource Core}}"
                                         Command="{Binding OpenSongLocationCommand}"
@@ -38,6 +36,7 @@
                                         Command="{Binding Source={StaticResource LibVM}, Path=DeleteCommand}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
         </MenuFlyoutItem>
+        <MenuFlyoutSeparator/>
         <MenuFlyoutItem Text="Properties"
                                                     DataContext="{Binding Source={StaticResource Core}}"                                       
                                         Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}"
