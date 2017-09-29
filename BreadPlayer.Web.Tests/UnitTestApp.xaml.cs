@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestPlatform.TestExecutor;
+using System;
 using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.VisualStudio.TestPlatform.TestExecutor;
 
 namespace BreadPlayer.Web.Tests
 {
@@ -31,7 +31,6 @@ namespace BreadPlayer.Web.Tests
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
 #if DEBUG
             if (Debugger.IsAttached)
             {
@@ -58,7 +57,7 @@ namespace BreadPlayer.Web.Tests
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
-            
+
             UnitTestClient.CreateDefaultUI();
 
             // Ensure the current window is active

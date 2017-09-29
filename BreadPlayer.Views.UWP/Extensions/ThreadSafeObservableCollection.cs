@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -29,13 +29,16 @@ using Windows.UI.Core;
 
 /// <summary>
 /// a thread safe observable collection using reader writer lock - created with the help of http://web.archive.org/web/20101105144104/http://www.deanchalk.me.uk/post/Thread-Safe-Dispatcher-Safe-Observable-Collection-for-WPF.aspx
-/// 
+///
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotifyCollectionChanged
 {
     protected volatile bool _isObserving = true;
-    public bool IsObserving { get => _isObserving;
+
+    public bool IsObserving
+    {
+        get => _isObserving;
         set => _isObserving = value;
     }
 
@@ -43,11 +46,14 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     //private readonly int _capacity = MAX_CAPACITY;
     //public int Capacity { get { return _capacity; } }
     private CoreDispatcher _dispatcher;
+
     internal ReaderWriterLockSlim Sync = new ReaderWriterLockSlim();
+
     public ThreadSafeObservableCollection()
     {
         _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
     }
+
     public ThreadSafeObservableCollection(IEnumerable<T> collection = null)
     {
         //copy the collection to ourself
@@ -115,6 +121,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             }
         });
     }
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         if (_isObserving)
@@ -123,9 +130,9 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         }
     }
 
-    /// <summary> 
-    /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
-    /// </summary> 
+    /// <summary>
+    /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
+    /// </summary>
     public void AddRange(IEnumerable<T> range)
     {
         try
@@ -159,9 +166,9 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         }
     }
 
-    /// <summary> 
-    /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T). 
-    /// </summary> 
+    /// <summary>
+    /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T).
+    /// </summary>
     public void RemoveRange(IEnumerable<T> collection)
     {
         // get out if no new items
@@ -187,17 +194,17 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove));
     }
 
-    /// <summary> 
-    /// Clears the current collection and replaces it with the specified item. 
-    /// </summary> 
+    /// <summary>
+    /// Clears the current collection and replaces it with the specified item.
+    /// </summary>
     public void Replace(T item)
     {
         ReplaceRange(new[] { item });
     }
 
-    /// <summary> 
-    /// Clears the current collection and replaces it with the specified collection. 
-    /// </summary> 
+    /// <summary>
+    /// Clears the current collection and replaces it with the specified collection.
+    /// </summary>
     public void ReplaceRange(IEnumerable<T> collection)
     {
         if (collection == null)
@@ -264,9 +271,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         }
     }
 
-
-
-
     public new bool Remove(T item)
     {
         if (_dispatcher.HasThreadAccess)
@@ -295,7 +299,6 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         Sync.ExitWriteLock();
         return result;
     }
-
 
     public new int IndexOf(T item)
     {
@@ -385,10 +388,8 @@ public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
 {
     private readonly ThreadSafeObservableCollection<T> _mInner;
 
-
     public ThreadSafeObservableCollectionEnumerableWrapper(ThreadSafeObservableCollection<T> observable)
     {
-
         _mInner = observable;
     }
 
@@ -404,11 +405,11 @@ public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>
         return GetEnumerator();
     }
 
-    #endregion
+    #endregion Implementation of IEnumerable
 }
 
 /// <summary>
-/// Created with the help of http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C 
+/// Created with the help of http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C
 /// provides a ThreadSafe enumerator for ThreadSafeObservableCollection
 /// </summary>
 /// <typeparam name="T"></typeparam>
@@ -417,7 +418,8 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
     // this is the (thread-unsafe)
     // enumerator of the underlying collection
     private readonly IEnumerator<T> _mInner;
-    // this is the object we shall lock on. 
+
+    // this is the object we shall lock on.
     private ReaderWriterLockSlim _mLock;
 
     public SafeReaderWriterEnumerator(ThreadSafeObservableCollection<T> inner, ReaderWriterLockSlim @lock)
@@ -426,7 +428,6 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
         // entering lock in constructor
         _mLock.EnterReadLock();
         _mInner = inner.GetEnumerator();
-
     }
 
     #region Implementation of IDisposable
@@ -439,7 +440,7 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
         _mInner.Dispose();
     }
 
-    #endregion
+    #endregion Implementation of IDisposable
 
     #region Implementation of IEnumerator
 
@@ -459,8 +460,7 @@ public class SafeReaderWriterEnumerator<T> : IEnumerator<T>
 
     public T Current => _mInner.Current;
 
-
     object IEnumerator.Current => _mInner.Current;
 
-    #endregion
+    #endregion Implementation of IEnumerator
 }

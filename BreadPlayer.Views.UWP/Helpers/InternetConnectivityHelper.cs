@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Networking.Connectivity;
+﻿using Windows.Networking.Connectivity;
 
 namespace BreadPlayer.Helpers
 {
@@ -14,6 +9,7 @@ namespace BreadPlayer.Helpers
         {
             get { return IsInternetAvailable(); }
         }
+
         private static bool IsInternetAvailable()
         {
             ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();

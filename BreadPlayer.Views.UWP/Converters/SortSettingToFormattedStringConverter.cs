@@ -12,18 +12,24 @@ namespace BreadPlayer.Converters
             {
                 case "LeadArtist":
                     return "Artist";
+
                 case "TrackNumber":
                     return "Track No.";
+
                 case "Length":
                     return "Song Length";
+
                 case "FolderPath":
                     return "Folder";
+
                 case "Title":
                     return "A to Z";
+
                 default:
                     return sort;
             }
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

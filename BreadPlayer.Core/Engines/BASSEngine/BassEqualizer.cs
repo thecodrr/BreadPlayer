@@ -12,8 +12,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
     {
         private int _handle;
         private int _fxEq;
-        private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it  
+        private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it
         private PeakEQParameters _eq;
+
         public BassEqualizer(int coreHandle)
         {
             _handle = coreHandle;
@@ -26,6 +27,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             IsEnabled = EqualizerSettings == null || EqualizerSettings.IsEnabled;
             Init();
         }
+
         public void ReInit(int coreHandle)
         {
             DeInit();
@@ -35,6 +37,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
             Init();
         }
+
         public override void DeInit()
         {
             Bass.ChannelRemoveFX(_handle, _fxEq);
@@ -55,7 +58,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
         public override void Init(bool setToDefaultValues = false)
         {
-            // Set peaking equalizer effect with no bands          
+            // Set peaking equalizer effect with no bands
             _eq = new PeakEQParameters();
             _fxEq = Bass.ChannelSetFX(_handle, EffectType.PeakEQ, 0);
             _eq.fQ = 0f;
@@ -66,7 +69,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             Bands = new ObservableCollection<IEqualizerBand>();
 
             var gainValues = !setToDefaultValues && EqualizerSettings != null ? EqualizerSettings.GainValues : null;
-            for(int i =0;i < EqDefaultValues.Length; i++)
+            for (int i = 0; i < EqDefaultValues.Length; i++)
             {
                 _eq.lBand = i;
                 _eq.fCenter = EqDefaultValues[i][0];
@@ -93,7 +96,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
         }
 
-        #region unsafe Methods            
+        #region unsafe Methods
+
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
             if (Preamp == 1f || length == 0 || buffer == IntPtr.Zero)
@@ -110,6 +114,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 pointer[i] *= Preamp;
             }
         }
-        #endregion
+
+        #endregion unsafe Methods
     }
 }

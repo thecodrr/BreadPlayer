@@ -14,10 +14,12 @@ namespace BreadPlayer.Services
         private StorageLibrary MusicLibrary { get; set; }
         private StorageFolder MusicLibraryParentFolder { get; set; }
         private DispatcherTimer _updateTimer;
+
         public StorageLibraryService()
         {
             Initialize();
         }
+
         private async void Initialize()
         {
             try
@@ -52,6 +54,7 @@ namespace BreadPlayer.Services
         {
             return GetStorageFilesInFolderAsync(MusicLibraryParentFolder);
         }
+
         public async Task<IEnumerable<StorageFile>> GetStorageFilesInFolderAsync(StorageFolder folder)
         {
             //Get query options with which we search for files in the specified folder
@@ -73,7 +76,7 @@ namespace BreadPlayer.Services
 
             //the event for files changed
             queryResult.ContentsChanged += QueryResult_ContentsChanged;
-          
+
             if (count == 0)
             {
                 string error = "No songs found!";
@@ -84,6 +87,7 @@ namespace BreadPlayer.Services
             await SharedLogic.NotificationManager.ShowMessageAsync("Getting files...");
             return await queryResult.GetFilesAsync();
         }
+
         public void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
         {
             //await Task.Delay(10000);
@@ -94,12 +98,14 @@ namespace BreadPlayer.Services
             //    queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
             //}
         }
+
         public async Task<StorageFolder> AddFolderToLibraryAsync()
         {
             if (MusicLibrary != null)
                 return await MusicLibrary.RequestAddFolderAsync();
             return null;
         }
+
         private void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
             //if (MusicLibrary != null)
@@ -108,12 +114,16 @@ namespace BreadPlayer.Services
             //    new StorageItemsUpdatedEventArgs(
             //        await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
+
         public event OnStorageItemsUpdatedEventHandler StorageItemsUpdated;
     }
+
     public delegate void OnStorageItemsUpdatedEventHandler(object sender, StorageItemsUpdatedEventArgs e);
+
     public class StorageItemsUpdatedEventArgs : EventArgs
     {
         public IReadOnlyList<StorageLibraryChange> UpdatedItems { get; set; }
+
         public StorageItemsUpdatedEventArgs(IReadOnlyList<StorageLibraryChange> updatedItems)
         {
             UpdatedItems = updatedItems;

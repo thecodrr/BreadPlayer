@@ -8,10 +8,10 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ItemsPanelTemplate x:Key="ToastsPanel">
-            <ItemsStackPanel Orientation="Vertical"/>
+            <ItemsStackPanel Orientation="Vertical" />
         </ItemsPanelTemplate>
         <ItemsPanelTemplate x:Key="BreadsBakersPanel">
-            <ItemsWrapGrid Orientation="Horizontal"/>
+            <ItemsWrapGrid Orientation="Horizontal" />
         </ItemsPanelTemplate>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

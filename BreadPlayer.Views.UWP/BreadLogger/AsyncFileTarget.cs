@@ -12,6 +12,7 @@ namespace BreadPlayer.Targets
         private readonly object _syncRoot = new object();
         private readonly string _logFilePath;
         private static StorageFile _file;
+
         public AsyncFileTarget(string logFilePath)
             : this(null, logFilePath)
         {
@@ -19,7 +20,7 @@ namespace BreadPlayer.Targets
 
         public AsyncFileTarget(IFormatter formatter, string logFilePath, bool autoFlush = false)
             : base(formatter)
-        {   
+        {
             try
             {
                 _logFilePath = logFilePath;
@@ -29,11 +30,13 @@ namespace BreadPlayer.Targets
             {
             }
         }
+
         private async void CreateFile(string filename)
         {
             StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
             _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
         }
+
         public async override void Write(string content)
         {
             try
@@ -86,7 +89,7 @@ namespace BreadPlayer.Targets
             }
             catch (IOException)
             {
-                // If log file cannot be flushed - we shouldn't crash. 
+                // If log file cannot be flushed - we shouldn't crash.
                 // Supressing finalization to avoid crash in finalizer
                 GC.SuppressFinalize(_file);
             }

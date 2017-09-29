@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Parsers.LRCParser
 {
@@ -24,6 +22,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The timestamp.
         /// </value>
         public TimeSpan Timestamp { get; internal set; }
+
         /// <summary>
         /// Gets the content.
         /// </summary>
@@ -31,7 +30,9 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The content.
         /// </value>
         public string Content { get; internal set; }
-        bool isActive;
+
+        private bool isActive;
+
         public bool IsActive
         {
             get => isActive;

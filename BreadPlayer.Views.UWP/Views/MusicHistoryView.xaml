@@ -13,39 +13,40 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <Page.Resources>
-        <CollectionViewSource x:Key="cvs" IsSourceGrouped="True" Source="{Binding Path=CurrentCollection, UpdateSourceTrigger=PropertyChanged}"/>
+        <CollectionViewSource x:Key="cvs" IsSourceGrouped="True" Source="{Binding Path=CurrentCollection, UpdateSourceTrigger=PropertyChanged}" />
     </Page.Resources>
     <Grid>
         <Pivot x:Name="mainPivot" Margin="0,0,10,0" SelectionChanged="OnSelectionChanged">
             <PivotItem Name="recentlyPlayedPivotItem" Header="Recently Played">
-                <BPControls:AlternatingRowListView x:Name="recentlyPlayedList" 
-                                                   OddRowBackground="{ThemeResource EvenRowBackground}" 
+                <BPControls:AlternatingRowListView x:Name="recentlyPlayedList"
+                                                   OddRowBackground="{ThemeResource EvenRowBackground}"
                                                    EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                                   ItemTemplate="{StaticResource MediafileTemplate}" 
-                                                   ItemsSource="{Binding Source={StaticResource cvs}}"                                                   
-                                                   IncrementalLoadingThreshold="10" 
-                                                   IncrementalLoadingTrigger="Edge" 
-                                                   DataFetchSize="10" >
+                                                   ItemTemplate="{StaticResource MediafileTemplate}"
+                                                   ItemsSource="{Binding Source={StaticResource cvs}}"
+                                                   IncrementalLoadingThreshold="10"
+                                                   IncrementalLoadingTrigger="Edge"
+                                                   DataFetchSize="10">
                     <ListView.GroupStyle>
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="{ThemeResource TextBrush}" Text="{Binding Path=Key}"/>
+                                    <TextBlock Foreground="{ThemeResource TextBrush}" Text="{Binding Path=Key}" />
                                 </DataTemplate>
                             </GroupStyle.HeaderTemplate>
                         </GroupStyle>
                     </ListView.GroupStyle>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>                        </Style>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        </Style>
                     </ListView.ItemContainerStyle>
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="SelectionChanged">
                             <Core:EventTriggerBehavior.Actions>
-                                <Core:CallMethodAction MethodName="SelectionChanged" TargetObject="{Binding Source={StaticResource LibVM}}"/>
+                                <Core:CallMethodAction MethodName="SelectionChanged" TargetObject="{Binding Source={StaticResource LibVM}}" />
                             </Core:EventTriggerBehavior.Actions>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
@@ -57,12 +58,12 @@
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
-                    <Setter Property="Margin" Value="0,10,0,0"/>
+                    <Setter Property="Margin" Value="0,10,0,0" />
                 </Style>
             </Pivot.ItemContainerStyle>
             <Pivot.Resources>
                 <Style BasedOn="{StaticResource DefaultPivotHeaderItemStyle}" TargetType="PivotHeaderItem">
-                    <Setter Property="Foreground" Value="{ThemeResource TextBrush}"/>
+                    <Setter Property="Foreground" Value="{ThemeResource TextBrush}" />
                 </Style>
             </Pivot.Resources>
         </Pivot>

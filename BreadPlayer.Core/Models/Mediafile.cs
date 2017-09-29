@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,16 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using BreadPlayer.Core.Common;
-using Newtonsoft.Json;
 using LiteDB;
+using Newtonsoft.Json;
+using System;
 
 namespace BreadPlayer.Core.Models
 {
     public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable
     {
         #region Fields
+
         private PlayerState _state = PlayerState.Stopped;
         private string _path;
         private string _encryptedMetaFile;
@@ -53,9 +54,11 @@ namespace BreadPlayer.Core.Models
         private string _year;
         private string _naN = "NaN";
         private int _playCount;
-        #endregion
+
+        #endregion Fields
 
         #region Properties
+
         public long Id { get; set; }
         private DateTime _lastPlayed;
         public DateTime LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }
@@ -63,12 +66,23 @@ namespace BreadPlayer.Core.Models
         private DateTime _addedDate;
         public DateTime AddedDate { get => _addedDate; set => Set(ref _addedDate, value); }
         private bool _isFavorite;
+
         public bool IsFavorite
         {
             get => _isFavorite;
             set => Set(ref _isFavorite, value);
         }
+
+        private bool _isPlaylistSong;
+
+        public bool IsPlaylistSong
+        {
+            get => _isPlaylistSong;
+            set => Set(ref _isPlaylistSong, value);
+        }
+
         private bool _isSelected = false;
+
         [BsonIgnore]
         [JsonIgnore]
         public bool IsSelected
@@ -76,10 +90,13 @@ namespace BreadPlayer.Core.Models
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
+
         public int PlayCount { get => _playCount; set => Set(ref _playCount, value); }
         public string Path { get => _path; set => Set(ref _path, value); }
+
         //public long Id { get => id; set => Set(ref id, value); }
         public string AttachedPicture { get => _attachedPicture; set => Set(ref _attachedPicture, value); }
+
         public string FolderPath { get => _folderPath; set => _folderPath = string.IsNullOrEmpty(value) ? _folderPath = "" : value; }
         public string Album { get => _album; set => _album = string.IsNullOrEmpty(value) ? _album = "Unknown Album" : value; }
         public string Genre { get => _genre; set => _genre = string.IsNullOrEmpty(value) ? _genre = "Other" : value; }
@@ -91,21 +108,26 @@ namespace BreadPlayer.Core.Models
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
 
         #region JsonIgnore Properties
+
         [BsonIgnore]
         [JsonIgnore]
         public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string SynchronizedLyric
         {
             get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
         }
+
         [BsonIgnore]
         [JsonIgnore]
         public PlayerState State { get => _state; set => Set(ref _state, value); }
+
         [BsonIgnore]
         [JsonIgnore]
         public string EncryptedMetaFile { get => _encryptedMetaFile; set => _encryptedMetaFile = string.IsNullOrEmpty(value) ? _encryptedMetaFile = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string Size { get => _size; set => _size = string.IsNullOrEmpty(value) ? _size = _naN : value; }
@@ -113,35 +135,45 @@ namespace BreadPlayer.Core.Models
         [BsonIgnore]
         [JsonIgnore]
         public string Publisher { get => _publisher; set => _publisher = string.IsNullOrEmpty(value) ? _publisher = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string Subtitle { get => _subtitle; set => _subtitle = string.IsNullOrEmpty(value) ? _subtitle = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string CopyrightMessage { get => _copyrightMessage; set => _copyrightMessage = string.IsNullOrEmpty(value) ? _copyrightMessage = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string Date { get => _date; set => _date = string.IsNullOrEmpty(value) ? _date = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string EncodedBy { get => _encodedBy; set => _encodedBy = string.IsNullOrEmpty(value) ? _encodedBy = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string Lyric { get => _lyric; set => _lyric = string.IsNullOrEmpty(value) ? _lyric = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string ContentGroupDescription { get => _contentGroupDescription; set => _contentGroupDescription = string.IsNullOrEmpty(value) ? _contentGroupDescription = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string BeatsPerMinutes { get => _beatsperminutes; set => _beatsperminutes = string.IsNullOrEmpty(value) ? _beatsperminutes = _naN : value; }
+
         [BsonIgnore]
         [JsonIgnore]
         public string Composer { get => _composer; set => _composer = string.IsNullOrEmpty(value) ? _composer = _naN : value; }
-        #endregion
 
-        #endregion
+        #endregion JsonIgnore Properties
+
+        #endregion Properties
 
         public string TextSearchKey => GetTextSearchKey().ToLower();
+
         public int CompareTo(Mediafile compareTo)
         {
             return Title.CompareTo(compareTo.Title);

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Helpers;
+using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.ViewModels;
-using BreadPlayer.Messengers;
-using BreadPlayer.Helpers;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -58,7 +55,7 @@ namespace BreadPlayer.PlaylistBus
 
                                 Mediafile mp3File = await TagReaderHelper.CreateMediafile(accessFile); //prepare Mediafile
 
-                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
+                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
                                 playlistSongs.Add(mp3File);
                                 StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
@@ -67,7 +64,7 @@ namespace BreadPlayer.PlaylistBus
                                 failedFiles++;
                             }
                         });
-                    }                    
+                    }
                 }
                 return playlistSongs;
             }

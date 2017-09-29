@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using IF.Lastfm.Core.Api;
+﻿using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Api.Enums;
 using IF.Lastfm.Core.Objects;
 using IF.Lastfm.Core.Scrobblers;
 using PCLStorage;
+using System;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.Lastfm
 {
@@ -13,17 +13,19 @@ namespace BreadPlayer.Web.Lastfm
         public LastfmClient LastfmClient
         {
             get; set;
-        }        
+        }
+
         public Lastfm()
         {
             LastfmClient = new LastfmClient("c0e0693c36913c6f691e36d6d199aa79", "1d9298cdcca7a7488d92ab13803ceb7e");
         }
+
         public async Task<bool> Login(string username, string password)
         {
-            await LastfmClient.Auth.GetSessionTokenAsync(username, password);            
+            await LastfmClient.Auth.GetSessionTokenAsync(username, password);
             return LastfmClient.Auth.Authenticated;
         }
-           
+
         public async Task<ScrobbleResponse> Scrobble(params string[] data)
         {
             try
@@ -45,6 +47,6 @@ namespace BreadPlayer.Web.Lastfm
             {
                 return new ScrobbleResponse(LastResponseStatus.Failure);
             }
-        }      
+        }
     }
 }

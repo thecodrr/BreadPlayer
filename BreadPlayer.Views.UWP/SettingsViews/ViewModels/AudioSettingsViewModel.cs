@@ -1,15 +1,11 @@
 ﻿using BreadPlayer.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.SettingsViews.ViewModels
 {
     public class AudioSettingsViewModel : ViewModelBase
     {
-        bool crossfadeEnabled;
+        private bool crossfadeEnabled;
+
         public bool CrossfadeEnabled
         {
             get => crossfadeEnabled;
@@ -23,7 +19,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
 
         public AudioSettingsViewModel()
         {
-           // CrossfadeEnabled = SettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
+            // CrossfadeEnabled = SettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
         }
     }
 }

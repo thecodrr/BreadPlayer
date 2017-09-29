@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Extensions;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -24,30 +35,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Extensions;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Dialogs;
-using BreadPlayer.Extensions;
-using BreadPlayer.Messengers;
-using BreadPlayer.Services;
-using SplitViewMenu;
-using BreadPlayer.Helpers;
-using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -57,6 +53,7 @@ namespace BreadPlayer.ViewModels
     public class LibraryViewModel : ViewModelBase
     {
         #region Fields
+
         private IEnumerable<Mediafile> _files;
         private IEnumerable<Mediafile> _oldItems;
         private bool _grouped;
@@ -64,7 +61,8 @@ namespace BreadPlayer.ViewModels
         private object _source;
         private bool _isPlayingFromPlaylist;
         private bool _libraryLoaded;
-        #endregion
+
+        #endregion Fields
 
         #region MessageHandling
 
@@ -98,11 +96,12 @@ namespace BreadPlayer.ViewModels
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 PlayCommand.Execute(song);
             }
-             
         }
-        #endregion
+
+        #endregion MessageHandling
 
         #region Contructor
+
         /// <summary>
         /// Creates a new instance of LibraryViewModel
         /// </summary>
@@ -115,11 +114,13 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgDispose, HandleDisposeMessage);
             Messenger.Instance.Register(MessageTypes.MsgUpdateSongCount, new Action<Message>(HandleUpdateSongCountMessage));
         }
-        #endregion
 
-        #region Properties 
-        
+        #endregion Contructor
+
+        #region Properties
+
         private List<string> _alphabetList;
+
         public List<string> AlphabetList
         {
             get => _alphabetList;
@@ -142,6 +143,7 @@ namespace BreadPlayer.ViewModels
                 new DocumentStoreDatabaseService(
                     SharedLogic.DatabasePath,
                     "Playlists")));
+
         private CollectionViewSource _viewSource;
 
         public CollectionViewSource ViewSource
@@ -151,6 +153,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _isMultiSelectModeEnabled;
+
         public bool IsMultiSelectModeEnabled
         {
             get => _isMultiSelectModeEnabled;
@@ -178,6 +181,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private Mediafile _selectedItem;
+
         public Mediafile SelectedItem
         {
             get => _selectedItem;
@@ -192,8 +196,8 @@ namespace BreadPlayer.ViewModels
             private set => Set(ref _songCount, value);
         }
 
-
         private GroupedObservableCollection<IGroupKey, Mediafile> _tracksCollection;
+
         /// <summary>
         /// Gets or sets a grouped observable collection of Tracks/Mediafiles. <seealso cref="GroupedObservableCollection{TKey, TElement}"/>
         /// </summary>
@@ -209,6 +213,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private MenuFlyout _genreFlyout;
+
         /// <summary>
         /// Gets or Sets a flyout for genres. This is a dynamic control bound to <see cref="LibraryView"/>.
         /// </summary>
@@ -219,6 +224,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _isLibraryLoading;
+
         /// <summary>
         /// Gets or Sets <see cref="Mediafile"/> for this ViewModel
         /// </summary>
@@ -227,9 +233,10 @@ namespace BreadPlayer.ViewModels
             get => _isLibraryLoading;
             set => Set(ref _isLibraryLoading, value);
         }
-        #endregion
 
-        #region Commands 
+        #endregion Properties
+
+        #region Commands
 
         #region Definitions
 
@@ -241,16 +248,19 @@ namespace BreadPlayer.ViewModels
         private RelayCommand _relocateSongCommand;
         private DelegateCommand _changeSelectionModeCommand;
         private RelayCommand _addToFavoritesCommand;
+
         public ICommand RelocateSongCommand
         {
             get
             { if (_relocateSongCommand == null) { _relocateSongCommand = new RelayCommand(RelocateSong); } return _relocateSongCommand; }
         }
+
         public ICommand ChangeSelectionModeCommand
         {
             get
             { if (_changeSelectionModeCommand == null) { _changeSelectionModeCommand = new DelegateCommand(ChangeSelectionMode); } return _changeSelectionModeCommand; }
         }
+
         public ICommand AddToFavoritesCommand
         {
             get
@@ -264,7 +274,7 @@ namespace BreadPlayer.ViewModels
         {
             get
             { if (_initCommand == null) { _initCommand = new RelayCommand(param => Init(param)); } return _initCommand; }
-        }      
+        }
 
         /// <summary>
         /// Gets refresh command. This calls the <see cref="RefreshView(object)"/> method. <seealso cref="ICommand"/>
@@ -274,6 +284,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_refreshViewCommand == null) { _refreshViewCommand = new RelayCommand(param => RefreshView(param)); } return _refreshViewCommand; }
         }
+
         /// <summary>
         /// Gets Play command. This calls the <see cref="Play(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -282,14 +293,14 @@ namespace BreadPlayer.ViewModels
             get
             { if (_playCommand == null) { _playCommand = new RelayCommand(param => Play(param)); } return _playCommand; }
         }
-        
+
         /// <summary>
         /// Gets Stop command. This calls the <see cref="StopAfter(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
         public ICommand StopAfterCommand
         {
-           get
-           { if (_stopAfterCommand == null) { _stopAfterCommand = new RelayCommand(param => StopAfter(param)); } return _stopAfterCommand; }
+            get
+            { if (_stopAfterCommand == null) { _stopAfterCommand = new RelayCommand(param => StopAfter(param)); } return _stopAfterCommand; }
         }
 
         /// <summary>
@@ -300,9 +311,11 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => Delete(param)); } return _deleteCommand; }
         }
-        #endregion
 
-        #region Implementations 
+        #endregion Definitions
+
+        #region Implementations
+
         private async void AddToFavorites(object para)
         {
             if (para is Mediafile mediafile)
@@ -311,6 +324,7 @@ namespace BreadPlayer.ViewModels
                 await LibraryService.UpdateMediafile(mediafile);
             }
         }
+
         /// <summary>
         /// Relocates song to a new location. We only update _id, Path and Length of the song.
         /// </summary>
@@ -338,10 +352,12 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
+
         private void ChangeSelectionMode()
         {
             IsMultiSelectModeEnabled = !IsMultiSelectModeEnabled;
         }
+
         /// <summary>
         /// Refreshes the view with new sorting order and/or filtering. <seealso cref="RefreshViewCommand"/>
         /// </summary>
@@ -359,6 +375,7 @@ namespace BreadPlayer.ViewModels
                 await RefreshView(null, selectedItem?.Tag.ToString()).ConfigureAwait(false);
             }
         }
+
         /// <summary>
         /// Deletes a song from the FileCollection. <seealso cref="DeleteCommand"/>
         /// </summary>
@@ -368,7 +385,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 var index = 0;
-                if(SelectedItems.Count > 0)
+                if (SelectedItems.Count > 0)
                 {
                     foreach (var item in SelectedItems)
                     {
@@ -377,7 +394,7 @@ namespace BreadPlayer.ViewModels
                         await LibraryService.RemoveMediafile(item);
                     }
                 }
-               
+
                 if (TracksCollection.Elements.Count > 0)
                 {
                     await Task.Delay(100);
@@ -398,7 +415,7 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgStopAfterSong, mediaFile);
             }
         }
-        
+
         /// <summary>
         /// Plays the selected file. <seealso cref="PlayCommand"/>
         /// </summary>
@@ -418,7 +435,7 @@ namespace BreadPlayer.ViewModels
             NavigationService.Instance.Frame.Navigated += Frame_Navigated;
             if (ViewSource == null)
             {
-                ViewSource = ((Grid) para).Resources["Source"] as CollectionViewSource;
+                ViewSource = ((Grid)para).Resources["Source"] as CollectionViewSource;
             }
 
             await RefreshSourceAsync().ConfigureAwait(false);
@@ -435,11 +452,13 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        #endregion
 
-        #endregion
-        
-        #region Methods 
+        #endregion Implementations
+
+        #endregion Commands
+
+        #region Methods
+
         private void SendLibraryLoadedMessage(object payload, bool sendMessage)
         {
             if (!sendMessage)
@@ -450,13 +469,14 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, payload);
             _isPlayingFromPlaylist = true;
         }
+
         private async Task<Mediafile> GetMediafileFromParameterAsync(object path, bool sendUpdateMessage = false)
         {
             if (path is Mediafile mediaFile)
             {
                 _isPlayingFromPlaylist = false;
-                if(CurrentPage != "MusicCollection")
-                     SendLibraryLoadedMessage(_source, true);
+                if (CurrentPage != "MusicCollection")
+                    SendLibraryLoadedMessage(_source, true);
                 return mediaFile;
             }
             else if (path is IEnumerable<Mediafile> tmediaFile)
@@ -479,6 +499,7 @@ namespace BreadPlayer.ViewModels
             }
             return null;
         }
+
         private async Task RefreshSourceAsync()
         {
             await BreadDispatcher.InvokeAsync(() =>
@@ -535,12 +556,13 @@ namespace BreadPlayer.ViewModels
                 {
                     ViewSource.Source = TracksCollection.Elements;
                 }
-             
+
                 ViewSource.IsSourceGrouped = group;
-               // await SplitList(300).ConfigureAwait(false);
+                // await SplitList(300).ConfigureAwait(false);
                 await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
             });
         }
+
         public async Task SplitList(int nSize = 30)
         {
             for (int i = 0; i < SongCount; i += nSize)
@@ -548,6 +570,7 @@ namespace BreadPlayer.ViewModels
                 await TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
             }
         }
+
         /// <summary>
         /// Refresh the view, based on filters and sorting mechanisms.
         /// </summary>
@@ -572,7 +595,6 @@ namespace BreadPlayer.ViewModels
                         await TracksCollection.AddRange(_files);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
-
                     });
                 }
                 else
@@ -606,7 +628,7 @@ namespace BreadPlayer.ViewModels
         {
             //the only workaround to remove the first group which is a 'false' duplicate really.
             await BreadDispatcher.InvokeAsync(() =>
-            { 
+            {
                 if (ViewSource.IsSourceGrouped)
                 {
                     UpdateJumplist(Sort);
@@ -616,9 +638,10 @@ namespace BreadPlayer.ViewModels
                 }
             });
         }
+
         private void FillKeys()
         {
-            foreach(var group in TracksCollection)
+            foreach (var group in TracksCollection)
             {
                 if (group.Key is TitleGroupKey titleGroupKey)
                 {
@@ -630,6 +653,7 @@ namespace BreadPlayer.ViewModels
                     return;
             }
         }
+
         private static Func<Mediafile, IGroupKey> GetSortFunction(string propName)
         {
             Func<Mediafile, IGroupKey> f = null;
@@ -657,9 +681,11 @@ namespace BreadPlayer.ViewModels
                         return new TitleGroupKey() { Key = t.Title };
                     };
                     break;
+
                 case "Year":
                     f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year };
                     break;
+
                 case "Length":
                     string[] timeformats = { @"m\:ss", @"mm\:ss", @"h\:mm\:ss", @"hh\:mm\:ss" };
                     f = t => new TitleGroupKey()
@@ -669,21 +695,26 @@ namespace BreadPlayer.ViewModels
                     : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes"
                     };
                     break;
+
                 case "TrackNumber":
                     f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber };
                     break;
+
                 case "FolderPath":
                     f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName };
                     break;
+
                 case "Album":
-                    f = t => new AlbumGroupKey() { Key = t.Album, FirstElement = t}; 
+                    f = t => new AlbumGroupKey() { Key = t.Album, FirstElement = t };
                     break;
+
                 case "LeadArtist":
                     f = t => new ArtistGroupKey() { Key = t.LeadArtist };
                     break;
             }
             return f;
         }
+
         private async void UpdateJumplist(string propName)
         {
             try
@@ -694,24 +725,27 @@ namespace BreadPlayer.ViewModels
                     case "TrackNumber":
                         AlphabetList = TracksCollection.Keys.DistinctBy(t => t.Key).Select(t => t.Key).ToList();
                         break;
+
                     case "Length":
                         AlphabetList = TracksCollection.Keys.Select(t => t.Key.Replace(" minutes", "")).DistinctBy(a => a).ToList();
                         break;
+
                     case "FolderPath":
                         AlphabetList = TracksCollection.Keys.Select(t => new DirectoryInfo(t.Key).Name.Remove(1)).DistinctBy(t => t).ToList();
                         break;
+
                     default:
                         AlphabetList = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray().Select(x => x.ToString()).ToList();
                         break;
                 }
                 AlphabetList.Sort();
             }
-            catch(ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException ex)
             {
                 await NotificationManager.ShowMessageAsync("Unable to update jumplist due to some problem with TracksCollection. ERROR INFO: " + ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Creates genre menu.
         /// </summary>
@@ -725,7 +759,7 @@ namespace BreadPlayer.ViewModels
                 var genres = TracksCollection.Elements.GroupBy(t => t.Genre);
                 foreach (var genre in genres)
                 {
-                    if (GenreFlyout != null && (genre.Key != null && genre.Key != "NaN" && GenreFlyout.Items.All(t => ((MenuFlyoutItem) t).Text != genre.Key)))
+                    if (GenreFlyout != null && (genre.Key != null && genre.Key != "NaN" && GenreFlyout.Items.All(t => ((MenuFlyoutItem)t).Text != genre.Key)))
                     {
                         GenreFlyout.Items?.Add(CreateMenuItem(genre.Key));
                     }
@@ -787,12 +821,13 @@ namespace BreadPlayer.ViewModels
             }
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, "");
         }
-        #endregion
+
+        #endregion Methods
 
         #region Helper Methods
 
         /// <summary>
-        /// Gets name of a property in a class. 
+        /// Gets name of a property in a class.
         /// </summary>
         /// <param name="src">Class to search for property.</param>
         /// <param name="propName">Property to search for.</param>
@@ -800,9 +835,9 @@ namespace BreadPlayer.ViewModels
         private static object GetPropValue(object src, string propName)
         {
             return src.GetType().GetTypeInfo().GetDeclaredProperty(propName).GetValue(src, null);
-        }       
+        }
 
-        #endregion
+        #endregion Helper Methods
 
         #region Disposable
 
@@ -816,9 +851,11 @@ namespace BreadPlayer.ViewModels
             SharedLogic.OptionItems.Clear();
             SongCount = -1;
         }
-        #endregion
+
+        #endregion Disposable
 
         #region Library Methods
+
         /// <summary>
         /// Loads library from the database file.
         /// </summary>
@@ -827,10 +864,11 @@ namespace BreadPlayer.ViewModels
             GetSettings();
             UpdateJumplist("Title");
         }
-      
-        #endregion
-        
+
+        #endregion Library Methods
+
         #region Events
+
         private async void TracksCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (TracksCollection.Elements.Count == SongCount)
@@ -844,6 +882,7 @@ namespace BreadPlayer.ViewModels
                 TracksCollection.CollectionChanged -= TracksCollection_CollectionChanged;
             }
         }
+
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {
             if (!_libraryLoaded)
@@ -855,11 +894,13 @@ namespace BreadPlayer.ViewModels
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }
         }
+
         private string CurrentPage { get; set; } = "MusicCollection";
+
         private async void Frame_Navigated(object sender, NavigationEventArgs e)
         {
             string param = (e.Parameter ?? string.Empty).ToString();    // e.Parameter can be null and throw exception
-            
+
             if (e.SourcePageType == typeof(LibraryView))
             {
                 CurrentPage = param;
@@ -869,7 +910,7 @@ namespace BreadPlayer.ViewModels
                         await ChangeView("Music Collection", _libgrouped, TracksCollection.Elements);
                         break;
                 }
-                await RefreshSourceAsync().ConfigureAwait(false); 
+                await RefreshSourceAsync().ConfigureAwait(false);
             }
             else if (ViewSource.Source != null)
             {
@@ -883,7 +924,7 @@ namespace BreadPlayer.ViewModels
         {
             if (e.PointerDeviceType == PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
             {
-                Play(((Border) e.OriginalSource).DataContext);
+                Play(((Border)e.OriginalSource).DataContext);
             }
         }
 
@@ -908,10 +949,11 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        #endregion
+
+        #endregion Events
 
         public event OnMusicLibraryLoaded MusicLibraryLoaded;
     }
 
-    public delegate void OnMusicLibraryLoaded(object sender, RoutedEventArgs e);    
+    public delegate void OnMusicLibraryLoaded(object sender, RoutedEventArgs e);
 }

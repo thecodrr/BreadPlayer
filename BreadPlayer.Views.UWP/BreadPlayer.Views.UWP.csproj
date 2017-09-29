@@ -205,6 +205,7 @@
     <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\PlayerStateToBoolConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
+    <Compile Include="Converters\RecordTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
     <Compile Include="Converters\SortSettingToFormattedStringConverter.cs" />
     <Compile Include="Converters\StringToIconConverter.cs" />

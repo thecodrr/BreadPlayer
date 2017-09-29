@@ -1,15 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.XiamiLyricsAPI.Models
 {
     public class Song
     {
-
         [JsonProperty("song_id")]
         public int SongId { get; set; }
 
@@ -44,7 +38,7 @@ namespace BreadPlayer.Web.XiamiLyricsAPI.Models
         public int NeedPayFlag { get; set; }
 
         [JsonProperty("lyric")]
-        public string Lyric { get; set; }        
+        public string Lyric { get; set; }
 
         [JsonProperty("is_play")]
         public int IsPlay { get; set; }

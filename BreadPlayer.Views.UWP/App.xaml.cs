@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Common;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,9 +32,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Common;
-using BreadPlayer.Helpers;
-using BreadPlayer.Messengers;
 
 namespace BreadPlayer
 {
@@ -45,7 +45,7 @@ namespace BreadPlayer
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
-        {           
+        {
             InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
@@ -84,7 +84,7 @@ namespace BreadPlayer
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {           
+        {
             var deferral = e.GetDeferral();
             BLogger.Logger.Info("App has entered background...");
             CoreWindowLogic.SaveSettings();
@@ -93,6 +93,7 @@ namespace BreadPlayer
         }
 
         private Stopwatch _sessionWatch;
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -143,7 +144,6 @@ namespace BreadPlayer
             await Task.Delay(500);
             deferral.Complete();
         }
-
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {

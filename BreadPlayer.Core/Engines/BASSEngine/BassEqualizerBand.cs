@@ -8,8 +8,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
     {
         private float _gain;
         private bool _isActive;
-        PeakEQParameters _eq;
-        int _fxEq;
+        private PeakEQParameters _eq;
+        private int _fxEq;
+
         public BassEqualizerBand(int fxEqHandle, int bandNo, float centerValue, float gainValue, bool active)
         {
             _fxEq = fxEqHandle;
@@ -28,7 +29,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             _gain = gainValue;
             IsActive = active;
         }
+
         public string BandCaption { get; set; }
+
         /// <summary>
         /// Gain: Frequency Gain. 0.05 to 3.0. Default = 1.0
         /// </summary>
@@ -38,17 +41,19 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             set
             {
                 Set(ref _gain, value);
-                
+
                 Bass.FXGetParameters(_fxEq, _eq);
                 _eq.fGain = _gain;
                 Bass.FXSetParameters(_fxEq, _eq);
             }
         }
+
         public bool IsActive
         {
             get => _isActive;
             set => Set(ref _isActive, value);
         }
+
         public void Remove()
         {
         }

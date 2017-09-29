@@ -10,24 +10,24 @@
     <ScrollViewer>
         <Grid HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock x:Uid="commandsHeader" Grid.Column="0" Grid.Row="0" FontSize="22" TextAlignment="Center" Width="150" Text="" FontWeight="Bold"/>
+            <TextBlock x:Uid="commandsHeader" Grid.Column="0" Grid.Row="0" FontSize="22" TextAlignment="Center" Width="150" Text="" FontWeight="Bold" />
             <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0" TextAlignment="Center" FontWeight="Bold" FontSize="15">
                         <Run x:Uid="basicCommandsHeader"></Run>
-                        <LineBreak/>
-                        <Run x:Uid="basicCommandsInfo" FontSize="12" FontWeight="Normal" Text=""/>
+                        <LineBreak />
+                        <Run x:Uid="basicCommandsInfo" FontSize="12" FontWeight="Normal" Text="" />
             </TextBlock>
             <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                <TextBlock x:Uid="playPauseCmd" Text=""/>
+                <TextBlock x:Uid="playPauseCmd" Text="" />
                 <TextBlock x:Uid="nextCmd"></TextBlock>
                 <TextBlock x:Uid="prevCmd"></TextBlock>
                 <TextBlock x:Uid="seekForwardCmd"></TextBlock>
@@ -42,7 +42,7 @@
                 <TextBlock x:Uid="showPropsCmd"></TextBlock>
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="1" Margin="20,10,0,0">
-                <TextBlock Text="Ctrl + P"/>
+                <TextBlock Text="Ctrl + P" />
                 <TextBlock>Ctrl + (. or >)</TextBlock>
                 <TextBlock>Ctrl + (, or &lt;)</TextBlock>
                 <TextBlock>Ctrl + Right Arrow</TextBlock>
@@ -58,8 +58,8 @@
             </StackPanel>
             <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,20,0,0" TextAlignment="Center" FontWeight="Bold" FontSize="15">
                         <Run  x:Uid="toastLibraryCmdsHeader"></Run>
-                        <LineBreak/>
-                        <Run  x:Uid="toastLibraryCmdsInfoText" FontSize="12" FontWeight="Normal" Text=""/>
+                        <LineBreak />
+                        <Run  x:Uid="toastLibraryCmdsInfoText" FontSize="12" FontWeight="Normal" Text="" />
             </TextBlock>
             <StackPanel Grid.Row="4" Margin="0,10,0,0">
                 <TextBlock  x:Uid="playSongCmd"></TextBlock>
@@ -75,7 +75,7 @@
                 <TextBlock>Ctrl + F</TextBlock>
                 <TextBlock>Ctrl + T</TextBlock>
             </StackPanel>
-            <TextBlock  x:Uid="keyBindingsHeader" FontSize="22" Grid.Column="1"  Grid.Row="0" Text="" Width="150" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
+            <TextBlock  x:Uid="keyBindingsHeader" FontSize="22" Grid.Column="1"  Grid.Row="0" Text="" Width="150" TextAlignment="Center" FontWeight="Bold" Margin="20,0,0,0" />
         </Grid>
     </ScrollViewer>
 </Page>

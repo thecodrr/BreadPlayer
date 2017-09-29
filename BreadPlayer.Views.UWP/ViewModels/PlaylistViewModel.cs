@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.Dialogs;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.Messengers;
+using BreadPlayer.PlaylistBus;
+using BreadPlayer.Services;
+using BreadPlayer.Themes;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,37 +34,34 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Dialogs;
-using BreadPlayer.Messengers;
-using BreadPlayer.Services;
-using BreadPlayer.Themes;
-using BreadPlayer.PlaylistBus;
-using BreadPlayer.Dispatcher;
-using BreadPlayer.Extensions;
 
 namespace BreadPlayer.ViewModels
 {
     public class PlaylistViewModel : ViewModelBase
     {
         private ThreadSafeObservableCollection<Mediafile> _songs;
-        public ThreadSafeObservableCollection<Mediafile> Songs { get { if (_songs == null) { _songs = new ThreadSafeObservableCollection<Mediafile>(); } return _songs; } set => Set(ref _songs, value);
+
+        public ThreadSafeObservableCollection<Mediafile> Songs
+        {
+            get { if (_songs == null) { _songs = new ThreadSafeObservableCollection<Mediafile>(); } return _songs; }
+            set => Set(ref _songs, value);
         }
 
         private Playlist _playlist;
-        public Playlist Playlist { get => _playlist;
+
+        public Playlist Playlist
+        {
+            get => _playlist;
             set => Set(ref _playlist, value);
         }
+
         private PlaylistService PlaylistService { get; set; }
         private string _totalSongs;
+
         public string TotalSongs
         {
             get => _totalSongs;
@@ -63,7 +71,9 @@ namespace BreadPlayer.ViewModels
                 Set(ref _totalSongs, value);
             }
         }
+
         private bool _isPlaylistLoading;
+
         public bool IsPlaylistLoading
         {
             get => _isPlaylistLoading;
@@ -72,7 +82,9 @@ namespace BreadPlayer.ViewModels
                 Set(ref _isPlaylistLoading, value);
             }
         }
+
         private string _totalMinutes;
+
         public string TotalMinutes
         {
             get => _totalMinutes;
@@ -84,6 +96,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _isMenuVisible = true;
+
         public bool IsMenuVisible
         {
             get => _isMenuVisible;
@@ -91,6 +104,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private ImageSource _playlistArt;
+
         public ImageSource PlaylistArt
         {
             get => _playlistArt;
@@ -106,6 +120,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private RelayCommand _deleteCommand;
+
         /// <summary>
         /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -136,10 +151,12 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while deleting song from playlist.", ex);
             }
         }
+
         private bool IsHour(string length)
         {
             return length.Count(t => t == ':') == 2;
         }
+
         public async Task Refresh()
         {
             await BreadDispatcher.InvokeAsync(() =>
@@ -169,6 +186,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private RelayCommand _renamePlaylistCommand;
+
         /// <summary>
         /// Gets command for playlist rename. This calls the <see cref="RenamePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -179,6 +197,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private RelayCommand _deletePlaylistCommand;
+
         /// <summary>
         /// Gets command for playlist delete. This calls the <see cref="DeletePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -187,7 +206,9 @@ namespace BreadPlayer.ViewModels
             get
             { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => DeletePlaylist(param)); } return _deletePlaylistCommand; }
         }
+
         private RelayCommand _exportPlaylistCommand;
+
         /// <summary>
         /// Gets command for playlist delete. This calls the <see cref="DeletePlaylist(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -196,6 +217,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_exportPlaylistCommand == null) { _exportPlaylistCommand = new RelayCommand(param => ExportPlaylist(param)); } return _exportPlaylistCommand; }
         }
+
         private async void ExportPlaylist(object para)
         {
             var menu = para as MenuFlyoutItem;
@@ -216,6 +238,7 @@ namespace BreadPlayer.ViewModels
             var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
             await toExportPlaylist.SavePlaylist(songs);
         }
+
         private async void DeletePlaylist(object playlist)
         {
             try
@@ -245,7 +268,7 @@ namespace BreadPlayer.ViewModels
 
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgRemovePlaylist, selectedPlaylist); //delete from hamburger menu
                         SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
-                        await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.                        
+                        await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.
                     }
                 }
             }
@@ -259,7 +282,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.                    
+                var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
                 if (await SharedLogic.AskForPassword(selectedPlaylist))
                 {
                     var dialog = new InputDialog
@@ -291,10 +314,12 @@ namespace BreadPlayer.ViewModels
                 await NotificationManager.ShowMessageAsync("Cannot rename playlist. Please try again.");
             }
         }
+
         public PlaylistViewModel()
         {
             PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
         }
+
         public async void Init(object data)
         {
             IsPlaylistLoading = true;
@@ -316,6 +341,7 @@ namespace BreadPlayer.ViewModels
                 LoadArtistSongs(artist);
             }
         }
+
         private async void LoadArtistSongs(Artist artist)
         {
             Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(artist.Name)));
@@ -325,6 +351,7 @@ namespace BreadPlayer.ViewModels
                 IsPlaylistLoading = false;
             });
         }
+
         private async void LoadAlbumSongs(Album album)
         {
             Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
@@ -349,6 +376,10 @@ namespace BreadPlayer.ViewModels
                     var playlistSongs = await PlaylistService.GetTracksAsync(_playlist.Id);
                     if (playlistSongs != null)
                         Songs.AddRange(playlistSongs);
+                    foreach (var playlistSong in Songs)
+                    {
+                        playlistSong.IsPlaylistSong = true;
+                    }
                 }
                 await Refresh().ContinueWith(task =>
                 {
@@ -361,13 +392,15 @@ namespace BreadPlayer.ViewModels
                 NavigationService.Instance.NavigateToHome();
             }
         }
-        
+
         private bool _isPageLoaded;
-        public bool IsPageLoaded { get => _isPageLoaded;
+
+        public bool IsPageLoaded
+        {
+            get => _isPageLoaded;
             set => Set(ref _isPageLoaded, value);
         }
-        
-        
+
         public void Reset()
         {
             PlaylistArt = null;

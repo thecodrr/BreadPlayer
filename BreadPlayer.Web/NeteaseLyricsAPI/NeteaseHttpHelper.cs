@@ -23,6 +23,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
             var response = await client.PostAsync(url, new StringContent(body, Encoding.UTF8, "application/x-www-form-urlencoded"));
             return await response.Content.ReadAsStringAsync();
         }
+
         public static Task<string> GetAsync(string url)
         {
             HttpClient client = new HttpClient();

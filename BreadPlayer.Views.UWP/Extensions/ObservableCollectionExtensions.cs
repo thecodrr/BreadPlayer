@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -20,7 +20,7 @@ using System;
 
 namespace BreadPlayer.Extensions
 {
-	public static class ThreadSafeRandom
+    public static class ThreadSafeRandom
     {
         [ThreadStatic]
         private static Random _local;
@@ -29,7 +29,7 @@ namespace BreadPlayer.Extensions
     }
 
     internal static class ObservableCollectionExtensions
-    {      
+    {
         public static void Shuffle<T>(this ThreadSafeObservableCollection<T> list)
         {
             int n = list.Count;

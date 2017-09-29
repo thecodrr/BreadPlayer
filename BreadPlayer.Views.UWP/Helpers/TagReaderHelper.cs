@@ -4,7 +4,6 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -23,6 +22,7 @@ namespace BreadPlayer.Helpers
                 "System.DRM.IsProtected"
             };
         }
+
         /// <summary>
         /// Create mediafile from StorageFile.
         /// </summary>
@@ -82,7 +82,7 @@ namespace BreadPlayer.Helpers
         }
 
         /// <summary>
-        /// Asynchronously saves all the album arts in the library. 
+        /// Asynchronously saves all the album arts in the library.
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public static async Task<bool> SaveAlbumArtsAsync(StorageFile file, Mediafile mediafile)
@@ -187,7 +187,7 @@ namespace BreadPlayer.Helpers
                 }
             }
             color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
-            return (artistArtPath, color);            
+            return (artistArtPath, color);
         }
     }
 }

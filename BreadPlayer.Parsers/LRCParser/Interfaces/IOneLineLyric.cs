@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Parsers.LRCParser
 {
     public interface IOneLineLyric
     {
         bool IsActive { get; set; }
+
         /// <summary>
         /// Gets the timestamp.
         /// </summary>
@@ -14,6 +13,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The timestamp.
         /// </value>
         TimeSpan Timestamp { get; }
+
         /// <summary>
         /// Gets the content.
         /// </summary>

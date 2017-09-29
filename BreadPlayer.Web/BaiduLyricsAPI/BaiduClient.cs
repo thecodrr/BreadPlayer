@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Models;
 using BreadPlayer.Web.BaiduLyricsAPI.Models;
 using BreadPlayer.Web.BaiduLyricsAPI.Response;
 using Newtonsoft.Json;
-using System.Net;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI
 {
@@ -31,12 +30,13 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
             var obj = (Lrc)JsonConvert.DeserializeObject(response, typeof(Lrc));
             return obj;
         }
+
         public async Task<QueryMergeResponse> Search(string query)
         {
             var url = _helpers.GetCallUrl(Endpoints.MethodQueryMerge, _helpers.GetQueryParameterString(query));
             string response = await _helpers.MakeRequest(url).ConfigureAwait(false);
             var obj = (QueryMergeResponse)JsonConvert.DeserializeObject(response, typeof(QueryMergeResponse));
             return obj;
-        }        
+        }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
 using Newtonsoft.Json;
+using System;
 
 namespace BreadPlayer.Core.Models
 {
@@ -10,7 +10,8 @@ namespace BreadPlayer.Core.Models
         public string AlbumName { get; set; }
         public string Artist { get; set; }
         public string AlbumArt { get; set; }
-        bool _isSelected;
+        private bool _isSelected;
+
         [JsonIgnore]
         public bool IsSelected
         {

@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using BreadPlayer.Core.Models;
+using System.Collections.ObjectModel;
 using System.Linq;
-using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Core.Engines.Interfaces
 {
@@ -21,9 +21,11 @@ namespace BreadPlayer.Core.Engines.Interfaces
               new[] {8000f, 1f, 0f},
               new[] {16000f, 1f, 0f }
         };
+
         public EqualizerSettings EqualizerSettings { get; set; }
         public ObservableCollection<EqualizerSettings> Presets { get; set; }
         private int _selectedPreset = -1;
+
         public int SelectedPreset
         {
             get => _selectedPreset;
@@ -41,8 +43,10 @@ namespace BreadPlayer.Core.Engines.Interfaces
                 Init();
             }
         }
+
         public ObservableCollection<IEqualizerBand> Bands { get; set; }
         private bool _isEnabled;
+
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -60,18 +64,24 @@ namespace BreadPlayer.Core.Engines.Interfaces
                 }
             }
         }
+
         private float _preamp = 1f;
+
         public float Preamp
         {
             get => _preamp;
             set => _preamp = value;
         }
+
         public bool IsPreampAvailable { get; set; }
         public string Name { get; set; }
-       
+
         public abstract void Init(bool setToDefaultValues = false);
+
         public abstract void DeInit();
+
         public abstract void Dispose();
+
         public void SaveEqualizerSettings()
         {
             var equalizerSettings = EqualizerSettings;
@@ -84,11 +94,13 @@ namespace BreadPlayer.Core.Engines.Interfaces
             equalizerSettings.IsEnabled = IsEnabled;
             InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
         }
+
         public void SetToDefault()
         {
             DeInit();
             Init();
         }
+
         public abstract IEqualizerBand GetEqualizerBand(bool isActive, float centerValue, float bandwithValue, float gainValue);
     }
 }

@@ -5,7 +5,7 @@
     xmlns:local="using:BreadPlayer.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" 
+    mc:Ignorable="d"
     Title="TITLE" MinWidth="{Binding ElementName=InputDia, Path=DialogWidth}"
     PrimaryButtonText="Add"
     SecondaryButtonText="Cancel"
@@ -13,8 +13,8 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
     <StackPanel>
         <TextBox x:Name="text" Padding="14,6,14,8"  Header="Name:" Text="{Binding ElementName=InputDia, Path=Text, Mode=TwoWay}" />
-        <TextBox x:Name="desc" Padding="14,6,14,8"  Header="Description (Optional):" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,5,0,0"/>
-        <PasswordBox x:Name="password" Padding="14,6,14,8" Visibility="{Binding ElementName=isPrivate, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" Header="Password:" Password="{Binding ElementName=InputDia, Path=Password, Mode=TwoWay}" Margin="0,5,0,0"/>
-        <CheckBox x:Name="isPrivate" Visibility="Visible" Content="Is Private?" IsChecked="{Binding ElementName=InputDia, Path=IsPrivate, Mode=TwoWay}" Margin="0,5,0,0"/>
+        <TextBox x:Name="desc" Padding="14,6,14,8"  Header="Description (Optional):" Text="{Binding ElementName=InputDia, Path=Description, Mode=TwoWay}" Margin="0,5,0,0" />
+        <PasswordBox x:Name="password" Padding="14,6,14,8" Visibility="{Binding ElementName=isPrivate, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" Header="Password:" Password="{Binding ElementName=InputDia, Path=Password, Mode=TwoWay}" Margin="0,5,0,0" />
+        <CheckBox x:Name="isPrivate" Visibility="Visible" Content="Is Private?" IsChecked="{Binding ElementName=InputDia, Path=IsPrivate, Mode=TwoWay}" Margin="0,5,0,0" />
     </StackPanel>
 </ContentDialog>

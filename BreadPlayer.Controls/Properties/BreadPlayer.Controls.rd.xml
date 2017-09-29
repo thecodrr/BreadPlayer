@@ -28,6 +28,5 @@
   <Library Name="BreadPlayer.Controls">
 
   	<!-- add directives for your library here -->
-
   </Library>
 </Directives>

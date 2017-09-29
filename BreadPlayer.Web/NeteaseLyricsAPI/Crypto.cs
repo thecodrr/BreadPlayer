@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.NeteaseLyricsAPI
 {
@@ -11,19 +9,24 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
     {
         // for aes , 第一个 key
         private const string nonce = "0CoJUm6Qyw8W8jud";
+
         // for aes , 密码向量
         private const string ivString = "0102030405060708";
+
         // for rsa
         private const string pubKey = "010001";    // e-> ‭65537‬
-                                        // 公钥
+
+                                                   // 公钥
         private const string modulus = "00e0b509f6259df8642dbc35662901477df22" +
                 "677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e4" +
                 "17629ec4ee341f56135fccf695280104e0312ecbda92557c938701" +
                 "14af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe" +
                 "4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
+
         // for 随机数 [a-zA-Z0-9]
         private const string randomStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHI" +
                 "JKLMNOPQRSTUVWXYZ0123456789";
+
         public static string AddPadding(string encText, string modulus)
         {
             var ml = modulus.Length;
@@ -36,6 +39,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
             }
             return prefix + encText;
         }
+
         public static byte[] ConvertToByteArray(string str, Encoding encoding)
         {
             return encoding.GetBytes(str);
@@ -46,7 +50,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
             return string.Join(" ", data.Select(byt => Convert.ToString(byt, 2).PadLeft(8, '0')));
         }
 
-        // Use any sort of encoding you like. 
+        // Use any sort of encoding you like.
         public static string RsaEncrypt(string text, string exponent, string modulus)
         {
             var rText = "";
@@ -59,6 +63,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
             var biRet = biText.modPow(biEx, biMod);
             return AddPadding(biRet.ToString(radix), modulus);
         }
+
         public static string AESEncrypt(string text, string secKey)
         {
             byte[] iv = Encoding.UTF8.GetBytes(ivString);
@@ -79,6 +84,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
                 }
             }
         }
+
         public static string CreateSecretKey(int size)
         {
             Random random = new Random();
@@ -91,6 +97,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
 
             return buf;
         }
+
         public static object[] AESRSAEncrypt(string text)
         {
             string secKey = CreateSecretKey(16);

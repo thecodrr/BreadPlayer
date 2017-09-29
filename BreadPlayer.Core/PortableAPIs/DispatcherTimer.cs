@@ -1,6 +1,6 @@
-﻿using System;
+﻿using BreadPlayer.Core.Interfaces;
+using System;
 using System.Threading;
-using BreadPlayer.Core.Interfaces;
 
 namespace BreadPlayer.Core.PortableAPIs
 {
@@ -35,7 +35,8 @@ namespace BreadPlayer.Core.PortableAPIs
 
         private void timer_tick(object state)
         {
-            _targetDispatcher.RunAsync(() => { 
+            _targetDispatcher.RunAsync(() =>
+            {
                 Tick?.Invoke(this, EventArgs.Empty);
                 _callback?.Invoke(this, EventArgs.Empty);
             });
@@ -99,6 +100,7 @@ namespace BreadPlayer.Core.PortableAPIs
 
             set => _tag = value;
         }
+
         public event EventHandler Tick;
     }
 }

@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,26 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Windows.UI.Core;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Engines.Interfaces;
-using BreadPlayer.NotificationManager;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.NotificationManager;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace BreadPlayer
 {
-   public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         private BreadNotificationManager _notificationManager;
+
         public BreadNotificationManager NotificationManager
         {
             get { if (_notificationManager == null) { _notificationManager = SharedLogic.NotificationManager; } return _notificationManager; }
         }
 
         private IPlayerEngine _player;
+
         public IPlayerEngine Player
         {
             get
@@ -50,6 +50,7 @@ namespace BreadPlayer
         }
 
         private static SharedLogic _logic;
+
         public static SharedLogic SharedLogic
         {
             get
@@ -62,7 +63,9 @@ namespace BreadPlayer
                 return _logic;
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected async virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             await BreadDispatcher.InvokeAsync(() =>
@@ -70,6 +73,7 @@ namespace BreadPlayer
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             });
         }
+
         public bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {
             if (Equals(storage, value))

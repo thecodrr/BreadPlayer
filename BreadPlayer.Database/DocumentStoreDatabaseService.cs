@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
 using LiteDB;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
@@ -13,6 +12,7 @@ namespace BreadPlayer.Database
         private static string DbPath { get; set; }
         private static LiteDatabase _db;
         public static bool IsDisposed { get; set; }
+
         public static LiteDatabase GetDatabase(string dbPath)
         {
             if (_db == null || DbPath != dbPath)
@@ -23,6 +23,7 @@ namespace BreadPlayer.Database
             }
             return _db;
         }
+
         public static void DisposeDatabaseEngine()
         {
             _db.Dispose();
@@ -30,10 +31,12 @@ namespace BreadPlayer.Database
             IsDisposed = true;
         }
     }
+
     public class DocumentStoreDatabaseService : IDatabaseService
     {
-        LiteDatabase DB { get; set; }
-        LiteCollection<IDbRecord> currentCollection;
+        private LiteDatabase DB { get; set; }
+        private LiteCollection<IDbRecord> currentCollection;
+
         public DocumentStoreDatabaseService(string dbPath, string collectionName)
         {
             CreateDb(dbPath.ToLower() + ".db");
@@ -46,6 +49,7 @@ namespace BreadPlayer.Database
         {
             DB = StaticDocumentDatabase.GetDatabase(dbPath);
         }
+
         public void ChangeTable(string tableName, string textTableName)
         {
             currentCollection = DB.GetCollection<IDbRecord>(tableName);
@@ -107,7 +111,7 @@ namespace BreadPlayer.Database
 
         public Task InsertRecord(IDbRecord record)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
                 record.Id = Guid.NewGuid().GetHashCode();
                 currentCollection.Insert(record);
@@ -152,7 +156,7 @@ namespace BreadPlayer.Database
 
         public Task RemoveRecord(IDbRecord record)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
                 currentCollection.Delete(record.Id);
             });

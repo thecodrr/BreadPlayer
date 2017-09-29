@@ -6,6 +6,7 @@
         {
             get; set;
         }
+
         public string ArtistName { get; set; }
         public string ArtistPhoto { get; set; }
 

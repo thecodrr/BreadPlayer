@@ -8,34 +8,33 @@
     xmlns:VM="using:BreadPlayer.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
-
     </Page.Resources>
     <Grid DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AccountSettingsVM}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800"/>
+                        <AdaptiveTrigger MinWindowWidth="800" />
                     </VisualState.StateTriggers>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="500"/>
+                        <AdaptiveTrigger MinWindowWidth="500" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0"/>
-                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3"/>
-                        <Setter Target="RootGrid.Margin" Value="25,50,25,0"/>
+                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0" />
+                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3" />
+                        <Setter Target="RootGrid.Margin" Value="25,50,25,0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
+                        <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0"/>
-                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3"/>
-                        <Setter Target="lastfmHeader.FontSize" Value="18"/>
+                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0" />
+                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3" />
+                        <Setter Target="lastfmHeader.FontSize" Value="18" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -43,9 +42,9 @@
         <ScrollViewer>
             <Grid Name="RootGrid">
                 <StackPanel x:Name="lastfmStackPanel" Grid.Column="1">
-                    <TextBlock x:Name="lastfmHeader" Text="Last.fm" FontSize="22" FontWeight="Bold"/>
-                    <TextBox x:Uid="lastfmUsernameTextBlock" Header="Username:" Text="{Binding Path=LastfmUsername, Mode=TwoWay}" PlaceholderText="" Grid.Row="1" Margin="0,10,0,0"/>
-                    <PasswordBox x:Uid="lastfmPasswordTextBlock" Header="" Password="{Binding Path=LastfmPassword, Mode=TwoWay}" PlaceholderText="" Grid.Row="2" Margin="0,10,0,0"/>
+                    <TextBlock x:Name="lastfmHeader" Text="Last.fm" FontSize="22" FontWeight="Bold" />
+                    <TextBox x:Uid="lastfmUsernameTextBlock" Header="Username:" Text="{Binding Path=LastfmUsername, Mode=TwoWay}" PlaceholderText="" Grid.Row="1" Margin="0,10,0,0" />
+                    <PasswordBox x:Uid="lastfmPasswordTextBlock" Header="" Password="{Binding Path=LastfmPassword, Mode=TwoWay}" PlaceholderText="" Grid.Row="2" Margin="0,10,0,0" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Margin="0,10,0,0">
                         <Button Width="200" x:Uid="lastfmLoginBtn" Content="Login" Margin="0,0,0,0" Command="{Binding Path=LastfmLoginCommand}">
                             <Button.CommandParameter>
@@ -58,14 +57,14 @@
                             </Button.CommandParameter>
                         </Button>
                     </StackPanel>
-                    <TextBlock Text="Artists Information" Margin="0,5,0,0" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="Artists Information" Margin="0,5,0,0" FontSize="18" FontWeight="SemiBold" />
                     <ComboBox Margin="0,5,0,0" SelectedItem="{Binding Path=NoOfArtistsToFetchInfoFor, Mode=TwoWay}" Header="Choose no. of artist(s) to fetch info for:">
                         <x:String>Lead artist</x:String>
                         <x:String>All artists</x:String>
                         <x:String>None</x:String>
                     </ComboBox>
 
-                    <TextBlock Text="Lyrics" Margin="0,10,0,0" FontSize="22" FontWeight="Bold"/>
+                    <TextBlock Text="Lyrics" Margin="0,10,0,0" FontSize="22" FontWeight="Bold" />
                     <ComboBox Margin="0,5,0,0" SelectedItem="{Binding Path=LyricType, Mode=TwoWay}" Header="Choose lyric type:">
                         <x:String>Synced (scrollable)</x:String>
                         <x:String>None</x:String>
@@ -77,7 +76,7 @@
                         <x:String>Baidu (fast)</x:String>
                         <x:String>Xiami (slowest)</x:String>
                     </ComboBox>
-                </StackPanel>               
+                </StackPanel>
             </Grid>
         </ScrollViewer>
     </Grid>

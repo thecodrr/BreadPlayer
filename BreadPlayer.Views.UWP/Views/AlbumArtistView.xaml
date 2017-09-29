@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BreadPlayer"
-    xmlns:Converters="using:BreadPlayer.Converters"    
-    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:Converters="using:BreadPlayer.Converters"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
@@ -12,16 +12,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BreadPlayer.Core.Models"
       xmlns:Extensions="using:BreadPlayer.Extensions"
-    
+
     mc:Ignorable="d">
     <Page.Resources>
         <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
-            <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Center"/>
+            <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Center" />
         </ItemsPanelTemplate>
     </Page.Resources>
     <Grid x:Name="grid" Margin="0,0,0,0" DataContext="{StaticResource AlbumArtistVM}">
         <Grid.Resources>
-            <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}"/>
+            <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding AlbumCollection}" />
         </Grid.Resources>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -41,8 +41,8 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>        
-        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" ItemTemplate="{StaticResource AlbumTemplate}" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" DataFetchSize="5" SelectionChanged="albumListView_SelectionChanged" >
+        </VisualStateManager.VisualStateGroups>
+        <GridView x:Name="albumListView" IncrementalLoadingTrigger="Edge" ItemTemplate="{StaticResource AlbumTemplate}" IncrementalLoadingThreshold="50" HorizontalContentAlignment="Center" Grid.Row="2" ShowsScrollingPlaceholders="True" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}" DataFetchSize="5" SelectionChanged="albumListView_SelectionChanged">
             <GridView.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition
@@ -52,16 +52,15 @@
             </GridView.Transitions>
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Stretch"/>
+                    <ItemsWrapGrid Orientation="Horizontal" CacheLength="1" HorizontalAlignment="Stretch" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
-                    <Setter Property="Margin" Value="20"/>
+                    <Setter Property="Margin" Value="20" />
                 </Style>
             </GridView.ItemContainerStyle>
         </GridView>
-        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=RecordsLoading, Converter={StaticResource BoolToVisibility}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71"/>
-    
+        <ProgressRing x:Name="loadingRing" Grid.Row="2" Width="70" Height="70" IsActive="True" Visibility="{Binding Path=RecordsLoading, Converter={StaticResource BoolToVisibility}}" Background="{x:Null}" Foreground="Black" Margin="10,180,10,71" />
     </Grid>
 </Page>

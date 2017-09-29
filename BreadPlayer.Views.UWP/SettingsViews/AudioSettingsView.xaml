@@ -8,9 +8,8 @@
     mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AudioSettingsVM}">
-            <TextBlock x:Uid="generalHeader" Text="" FontSize="22" FontWeight="Bold"/>
-            <ToggleSwitch x:Uid="crossfadeSwitch" Header="" IsOn="{Binding Path=CrossfadeEnabled}"/>
-            
+            <TextBlock x:Uid="generalHeader" Text="" FontSize="22" FontWeight="Bold" />
+            <ToggleSwitch x:Uid="crossfadeSwitch" Header="" IsOn="{Binding Path=CrossfadeEnabled}" />
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -1,9 +1,9 @@
-﻿using System.Numerics;
+﻿using Microsoft.Graphics.Canvas.Effects;
+using System.Numerics;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
-using Microsoft.Graphics.Canvas.Effects;
 
 namespace BreadPlayer.Effects
 {
@@ -19,7 +19,7 @@ namespace BreadPlayer.Effects
 #endif
 
         public BackDrop()
-        { 
+        {
             _mRootVisual = ElementCompositionPreview.GetElementVisual(this);
 
             Compositor = _mRootVisual.Compositor;
@@ -66,7 +66,7 @@ namespace BreadPlayer.Effects
                 _mRootVisual.Properties.InsertScalar(BlurAmountProperty, (float)value);
 #endif
             }
-        }       
+        }
 
         public Compositor Compositor
         {
@@ -76,6 +76,7 @@ namespace BreadPlayer.Effects
         }
 
 #pragma warning disable 1998
+
         private async void OnLoading(FrameworkElement sender, object args)
         {
             SizeChanged += OnSizeChanged;
@@ -87,7 +88,6 @@ namespace BreadPlayer.Effects
             SizeChanged -= OnSizeChanged;
         }
 
-
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_mBlurVisual != null)
@@ -97,6 +97,7 @@ namespace BreadPlayer.Effects
         }
 
 #if SDKVERSION_14393
+
         private void SetUpPropertySetExpressions()
         {
             _mSetUpExpressions = true;
@@ -108,7 +109,6 @@ namespace BreadPlayer.Effects
             _mBlurBrush.Properties.StartAnimation("Blur.BlurAmount", exprAnimation);
         }
 
-
         private CompositionEffectBrush BuildBlurBrush()
         {
             GaussianBlurEffect blurEffect = new GaussianBlurEffect
@@ -118,11 +118,11 @@ namespace BreadPlayer.Effects
                 BorderMode = EffectBorderMode.Hard,
                 Optimization = EffectOptimization.Balanced,
                 Source = new CompositionEffectSourceParameter("source")
-            };    
+            };
 
             var factory = Compositor.CreateEffectFactory(
                 blurEffect,
-                new[] { "Blur.BlurAmount"}
+                new[] { "Blur.BlurAmount" }
                 );
 
             CompositionEffectBrush brush = factory.CreateBrush();
@@ -142,6 +142,5 @@ namespace BreadPlayer.Effects
         }
 
 #endif
-
     }
 }

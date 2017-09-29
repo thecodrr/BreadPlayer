@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -33,7 +33,7 @@ namespace BreadPlayer.Common
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, TagReaderHelper.GetExtraPropertiesNames());
             //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;
-            
+
             return options;
         }
     }

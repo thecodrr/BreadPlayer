@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.BASSEngine;
 using BreadPlayer.Core.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Engines.Interfaces
 {
@@ -10,14 +10,20 @@ namespace BreadPlayer.Core.Engines.Interfaces
     {
         //METHODS
         Task Init(bool isMobile);
+
         Task<bool> Load(Mediafile mediaFile);
+
         Task Pause();
+
         Task Stop();
+
         Task Play();
+
         Task ChangeDevice(string deviceName);
 
         //PROPERTIES
         bool CrossfadeEnabled { get; set; }
+
         bool IsVolumeMuted { get; set; }
         Effects Effect { get; set; }
         Equalizer Equalizer { get; set; }
@@ -31,9 +37,13 @@ namespace BreadPlayer.Core.Engines.Interfaces
 
         //EVENTS
         event OnMediaStateChanged MediaStateChanged;
+
         event OnMediaEnded MediaEnded;
+
         event OnMediaAboutToEnd MediaAboutToEnd;
+
         event OnMediaChanging MediaChanging;
+
         event OnMediaChanging MediaChanged;
     }
 }

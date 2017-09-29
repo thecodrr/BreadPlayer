@@ -2,11 +2,9 @@
 using BreadPlayer.Web.XiamiLyricsAPI.Responses;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.XiamiLyricsAPI
@@ -18,7 +16,7 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
             using (HttpClient client = new HttpClient())
             {
                 var results = await SearchAsync(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist));
-                if (results.Data.Songs.Any())
+                if (results.Data.Songs.Any(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower())))
                 {
                     var xResult = results.Data.Songs.First(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower()));
                     var xSong = await GetSongDetailAsync(xResult.SongId.ToString());
@@ -30,6 +28,7 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
                 return "";
             }
         }
+
         public async Task<SongDetailResponse> GetSongDetailAsync(string id)
         {
             using (HttpClient client = new HttpClient())
@@ -38,6 +37,7 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
                 return JsonConvert.DeserializeObject<SongDetailResponse>(response);
             }
         }
+
         public async Task<SearchResponse> SearchAsync(string query)
         {
             using (HttpClient client = new HttpClient())

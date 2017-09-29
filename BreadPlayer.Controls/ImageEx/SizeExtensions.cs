@@ -8,14 +8,17 @@ namespace BreadPlayer.Controls.Extensions
         {
             return ByUniform(size, 1024 * factor, 1024);
         }
+
         public static Size ByUniform(this Size size, double width, double height)
         {
             return ToUniform(new Size(width, height), size);
         }
+
         public static Size ToUniform(this Size size, Size availableSize)
         {
             return ToUniform(size, availableSize.Width, availableSize.Height);
         }
+
         public static Size ToUniform(this Size size, double availableWidth = double.PositiveInfinity, double availableHeight = double.PositiveInfinity)
         {
             if (double.IsInfinity(availableWidth) && double.IsInfinity(availableHeight))
@@ -39,14 +42,17 @@ namespace BreadPlayer.Controls.Extensions
         {
             return ByUniformToFill(size, 1024 * factor, 1024);
         }
+
         public static Size ByUniformToFill(this Size size, double width, double height)
         {
             return ToUniformToFill(new Size(width, height), size);
         }
+
         public static Size ToUniformToFill(this Size size, Size availableSize)
         {
             return ToUniformToFill(size, availableSize.Width, availableSize.Height);
         }
+
         public static Size ToUniformToFill(this Size size, double availableWidth = double.PositiveInfinity, double availableHeight = double.PositiveInfinity)
         {
             if (double.IsInfinity(availableWidth) && double.IsInfinity(availableHeight))

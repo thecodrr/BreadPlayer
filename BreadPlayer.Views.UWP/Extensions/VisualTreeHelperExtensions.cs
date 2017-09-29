@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -57,6 +57,7 @@ namespace BreadPlayer.Extensions
             }
             return null;
         }
+
         /// <summary>
         /// Gets the window root that is the top level ascendant of the window.Content.
         /// </summary>
@@ -223,7 +224,6 @@ namespace BreadPlayer.Extensions
             {
                 yield break;
             }
-
 
             if (parent is Popup popup && popup.Child != null)
             {
@@ -467,7 +467,6 @@ namespace BreadPlayer.Extensions
             //    throw new InvalidOperationException("Element not in visual tree.");
             //}
 
-
             var fe2 = dob as FrameworkElement;
             var aw2 = fe2?.ActualWidth ?? 0;
             var ah2 = fe2?.ActualHeight ?? 0;
@@ -505,6 +504,7 @@ namespace BreadPlayer.Extensions
 
             return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
+
         /// <summary>
         /// Gets the position mouse on an element.
         /// </summary>

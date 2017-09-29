@@ -7,7 +7,6 @@ namespace BreadPlayer.Extensions
 {
     public static class DependencyObjectExtensions
     {
-
         public static void AnimateBrush(this DependencyObject objAnimate, Color fromColor, Color toColor, string propPath)
         {
             ColorAnimation col = new ColorAnimation()
@@ -22,6 +21,7 @@ namespace BreadPlayer.Extensions
             zgo.Children.Add(col);
             zgo.Begin();
         }
+
         public static void ZoomAnimate(this DependencyObject obj, int from, int to, string targetPath)
         {
             Storyboard board = new Storyboard();

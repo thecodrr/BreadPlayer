@@ -1,8 +1,8 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Core.Models;
-using BreadPlayer.ViewModels;
+﻿using BreadPlayer.Core.Models;
 using BreadPlayer.Services;
+using BreadPlayer.ViewModels;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -13,11 +13,13 @@ namespace BreadPlayer.Views
     /// </summary>
     public sealed partial class SearchResultsView : Page
     {
-        Query CurrentQuery;
+        private Query CurrentQuery;
+
         public SearchResultsView()
         {
             InitializeComponent();
         }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);

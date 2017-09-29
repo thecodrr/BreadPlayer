@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -23,12 +23,12 @@ using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-	public class TrueToFalseConverter : IValueConverter
+    public class TrueToFalseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is SplitViewDisplayMode mode)
-            { 
+            {
                 return mode == SplitViewDisplayMode.CompactOverlay;
             }
             else if (value is bool boolValue && parameter == null)
@@ -38,6 +38,7 @@ namespace BreadPlayer.Converters
 
             return false;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
@@ -53,6 +54,7 @@ namespace BreadPlayer.Converters
 
             return mode.ToString();
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

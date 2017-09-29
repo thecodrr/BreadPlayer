@@ -7,37 +7,31 @@ using BreadPlayer.Database;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
 using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using BreadPlayer.Web.Lastfm;
-using SplitViewMenu;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using TagLib;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI;
-using BreadPlayer.Helpers;
 
 namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
         #region Ctor
+
         public SharedLogic()
         {
             //To define them all here is not good. This ctor is called multiple times.
@@ -49,9 +43,11 @@ namespace BreadPlayer.Core
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
-        #endregion
+
+        #endregion Ctor
 
         #region Singletons (NEED IMPROVEMENTS)
+
         /// <summary>
         /// This path is used around the codebase multiple times,
         /// so it is better to define it once and call it everywhere
@@ -77,6 +73,7 @@ namespace BreadPlayer.Core
         /// A singleton here makes most sense.
         /// </summary>
         private static IPlayerEngine _player;
+
         public static IPlayerEngine Player
         {
             get
@@ -89,7 +86,7 @@ namespace BreadPlayer.Core
                 return _player;
             }
         }
-       
+
         /// <summary>
         /// The static SettingsVM Singleton. I am still not sure if this should be here.
         /// This is bad design plain and simple. Needs improvement.
@@ -100,6 +97,7 @@ namespace BreadPlayer.Core
         //This is not a traditional singleton. Instead of making it readonly,
         //I have made this read/write capable. Can this be improved?
         private static Lastfm _lastfmScrobbler;
+
         public static Lastfm LastfmScrobbler
         {
             get => _lastfmScrobbler;
@@ -111,11 +109,13 @@ namespace BreadPlayer.Core
                 }
             }
         }
-        #endregion
+
+        #endregion Singletons (NEED IMPROVEMENTS)
 
         #region ICommands
 
         #region Definitions
+
         private RelayCommand _navigateToArtistPageCommand;
         private RelayCommand _changeAlbumArtCommand;
         private RelayCommand _showPropertiesCommand;
@@ -127,6 +127,7 @@ namespace BreadPlayer.Core
             get
             { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
         }/// <summary>
+
          /// Gets command for navigating to a page./>
          /// </summary>
         public ICommand NavigateToArtistPageCommand
@@ -134,6 +135,7 @@ namespace BreadPlayer.Core
             get
             { if (_navigateToArtistPageCommand == null) { _navigateToArtistPageCommand = new RelayCommand(param => NavigateToArtistPage(param)); } return _navigateToArtistPageCommand; }
         }
+
         /// <summary>
         /// Gets command for showing properties of a mediafile. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -142,6 +144,7 @@ namespace BreadPlayer.Core
             get
             { if (_showPropertiesCommand == null) { _showPropertiesCommand = new RelayCommand(param => ShowProperties(param)); } return _showPropertiesCommand; }
         }
+
         /// <summary>
         /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -150,6 +153,7 @@ namespace BreadPlayer.Core
             get
             { if (_opensonglocationCommand == null) { _opensonglocationCommand = new RelayCommand(param => OpenSongLocation(param)); } return _opensonglocationCommand; }
         }/// <summary>
+
          /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
          /// </summary>
         public ICommand ChangeAlbumArtCommand
@@ -157,9 +161,11 @@ namespace BreadPlayer.Core
             get
             { if (_changeAlbumArtCommand == null) { _changeAlbumArtCommand = new RelayCommand(param => ChangeAlbumArt(param)); } return _changeAlbumArtCommand; }
         }
-        #endregion
+
+        #endregion Definitions
 
         #region Implementation
+
         private async void ChangeAlbumArt(object para)
         {
             Mediafile mediaFile = para as Mediafile;
@@ -232,22 +238,26 @@ namespace BreadPlayer.Core
                     NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
             });
         }
+
         private AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+
         private async void NavigateToArtistPage(object para)
         {
             SplitViewMenu.SplitViewMenu.UnSelectAll();
             var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtist(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if(artist != null)
-                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+                if (artist != null)
+                    NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
             });
         }
-        #endregion
 
-        #endregion
+        #endregion Implementation
+
+        #endregion ICommands
 
         #region Clean up needed
+
         //these methods are badly designed and redundant.
         //should be removed and cleanup.
         //#TODO clean this up
@@ -264,6 +274,7 @@ namespace BreadPlayer.Core
             service.AddMediafile(file);
             return true;
         }
+
         public static async Task<bool> RemoveMediafile(Mediafile file)
         {
             if (file == null)
@@ -284,6 +295,7 @@ namespace BreadPlayer.Core
             }
             return true;
         }
+
         public async Task<bool> ShowPasswordDialog(string hash, string salt)
         {
             var dialog = new PasswordDialog
@@ -348,7 +360,7 @@ namespace BreadPlayer.Core
                     var colorThief = new ColorThiefDotNet.ColorThief();
                     var qColor = await colorThief.GetColor(await decoder);
 
-                    //read the color 
+                    //read the color
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
                 }
                 catch
@@ -358,6 +370,7 @@ namespace BreadPlayer.Core
             }
         }
 
-        #endregion              
+        #endregion Clean up needed
+
     }
 }

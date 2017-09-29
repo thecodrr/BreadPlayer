@@ -10,10 +10,9 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Transparent" Offset="0"/>
-                <GradientStop Color="White" Offset="2"/>
+                <GradientStop Color="Transparent" Offset="0" />
+                <GradientStop Color="White" Offset="2" />
             </LinearGradientBrush>
         </Grid.Background>
-
     </Grid>
 </Page>

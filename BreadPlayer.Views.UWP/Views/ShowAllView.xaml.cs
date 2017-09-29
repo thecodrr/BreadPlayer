@@ -2,18 +2,8 @@
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -29,6 +19,7 @@ namespace BreadPlayer.Views
         {
             this.InitializeComponent();
         }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -40,12 +31,14 @@ namespace BreadPlayer.Views
                     LibraryService libraryService = new LibraryService(documentStore);
                     searchResultsList.ItemsSource = await libraryService.Query(parameter.Item1.QueryWord);
                     break;
+
                 case "Bakers":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
                     searchResultsList.ItemTemplate = App.Current.Resources["ArtistTemplate"] as DataTemplate;
                     AlbumArtistService artistService = new AlbumArtistService(documentStore);
                     searchResultsList.ItemsSource = await artistService.QueryArtistsAsync(parameter.Item1.QueryWord);
                     break;
+
                 case "Breads":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
                     searchResultsList.ItemTemplate = App.Current.Resources["AlbumTemplate"] as DataTemplate;

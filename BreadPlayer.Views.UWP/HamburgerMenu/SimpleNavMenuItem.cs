@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,40 +16,50 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using BreadPlayer;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Services;
 
 namespace SplitViewMenu
 {
-	public class SimpleNavMenuItem :  ViewModelBase, INavigationMenuItem
+    public class SimpleNavMenuItem : ViewModelBase, INavigationMenuItem
     {
         private string _label;
-        public string Label { get => _label;
+
+        public string Label
+        {
+            get => _label;
             set => Set(ref _label, value);
         }
+
         public Symbol Symbol { get; set; }
-        public char SymbolAsChar => (char) Symbol;
+        public char SymbolAsChar => (char)Symbol;
         public string FontGlyph { get; set; }
         private object _args;
-        public object Arguments { get => _args;
+
+        public object Arguments
+        {
+            get => _args;
             set => Set(ref _args, value);
         }
+
         public Visibility HeaderVisibility
         {
             get; set;
         } = Visibility.Visible;
 
         private ElementTheme _shortcutTheme;
+
         public ElementTheme ShortcutTheme
         {
             get => _shortcutTheme;
             set => Set(ref _shortcutTheme, value);
         }
+
         public ICommand Command { get; set; }
 
         private List<Shortcut> _shortcuts = new List<Shortcut>
@@ -70,18 +80,22 @@ namespace SplitViewMenu
                 }),
                 Tooltip = "Refresh"
             },
-           
+
             new Shortcut { SymbolAsChar = "\xE094", Tooltip = "Search Tracks", ShortcutCommand = SplitViewMenu.SearchClickedCommand() }
         };
+
         public List<Shortcut> Shortcuts
         {
             get => _shortcuts;
             set => Set(ref _shortcuts, value);
         }
+
         public string Tooltip { get; set; }
 
         public Type DestinationPage { get; set; }
 
-        private void Select(object param) { }
+        private void Select(object param)
+        {
+        }
     }
 }

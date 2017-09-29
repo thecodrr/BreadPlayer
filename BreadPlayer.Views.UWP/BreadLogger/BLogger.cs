@@ -1,23 +1,25 @@
-﻿using System;
+﻿using BreadPlayer.Common;
+using BreadPlayer.Targets;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
-using BreadPlayer.Common;
-using BreadPlayer.Targets;
 using XLog;
 using XLog.Formatters;
 
 public class BLogger
 {
     private static Logger _logger;
+
     public static Logger Logger
     {
         get => _logger;
         set => _logger = value;
     }
+
     public static void InitLogger()
     {
         var formatter = new LineFormatter();
@@ -26,6 +28,7 @@ public class BLogger
         LogManager.Init(logConfig);
         Logger = LogManager.Default.GetLogger("BLogger");
     }
+
     public async static Task CopyLogAndMailAsync()
     {
         var logFile = await ApplicationData.Current.LocalFolder.CreateFileAsync("Log.log", CreationCollisionOption.OpenIfExists);
@@ -75,6 +78,7 @@ public class BLogger
 
         return errorCount;
     }
+
     //static async Task MailLogFileAsync(IReadOnlyList<StorageFile> logFiles, int exceptionCount)
     //{
     //    using (SmtpClient client = new SmtpClient("smtp.1and1.com", 587, false, "support@breadplayer.com", "Allatonce1.1"))

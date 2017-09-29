@@ -1,15 +1,13 @@
-﻿using System;
+﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Helpers;
+using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.ViewModels;
-using BreadPlayer.Helpers;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -76,7 +74,7 @@ namespace BreadPlayer.PlaylistBus
                     //{
                     //}
                 }
-               
+
                 for (int i = 0; i < noe; i++)
                 {
                     await Task.Run(async () =>
@@ -104,7 +102,6 @@ namespace BreadPlayer.PlaylistBus
                             failedFiles++;
                         }
                     });
-                   
                 }
                 return playlistSongs;
             }

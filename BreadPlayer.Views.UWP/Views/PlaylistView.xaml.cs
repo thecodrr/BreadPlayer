@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,13 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.ViewModels;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Extensions;
-using BreadPlayer.ViewModels;
-using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,6 +32,7 @@ namespace BreadPlayer
     {
         private double _maxFontSize;
         private double _minFontSize;
+
         public PlaylistView()
         {
             InitializeComponent();
@@ -50,6 +48,7 @@ namespace BreadPlayer
         }
 
         private PlaylistViewModel _playlistVm;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _playlistVm = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
@@ -57,6 +56,7 @@ namespace BreadPlayer
             DataContext = _playlistVm;
             base.OnNavigatedTo(e);
         }
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             Window.Current.SizeChanged -= Current_SizeChanged;
@@ -64,6 +64,6 @@ namespace BreadPlayer
             _playlistVm = null;
             fileBox.ItemsSource = null;
             base.OnNavigatedFrom(e);
-        }     
+        }
     }
 }

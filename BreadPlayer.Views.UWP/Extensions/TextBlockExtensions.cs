@@ -11,16 +11,18 @@ namespace BreadPlayer.Extensions
         {
             return (string)obj.GetValue(TextTypeProperty);
         }
+
         public static void SetTextType(DependencyObject obj, string value)
         {
             obj.SetValue(TextTypeProperty, value);
         }
+
         public static readonly DependencyProperty TextTypeProperty =
               DependencyProperty.Register("TextType",
                   typeof(string),
                   typeof(TextBlockExtensions),
-                  new PropertyMetadata("Normal", (sender, e) => {
-
+                  new PropertyMetadata("Normal", (sender, e) =>
+                  {
                       var textBlock = sender as TextBlock;
                       var value = (string)e.NewValue;
                       if (value == "All Capitals")
@@ -52,7 +54,6 @@ namespace BreadPlayer.Extensions
                               textBlock.SetValue(TextBlock.FontSizeProperty, 15);
                           }
                       }
-
                   }));
     }
 }

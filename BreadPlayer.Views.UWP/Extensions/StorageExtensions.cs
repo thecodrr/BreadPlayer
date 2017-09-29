@@ -23,6 +23,7 @@ namespace BreadPlayer.Extensions
             file = null;
             return false;
         }
+
         public static async Task UpdateChangedItem(this StorageLibraryChange change, IEnumerable<Mediafile> Library, LibraryService LibraryService)
         {
             if (change.IsOfType(StorageItemTypes.File))
@@ -41,6 +42,7 @@ namespace BreadPlayer.Extensions
                     await AddNewItem(change);
             }
         }
+
         public static async Task AddNewItem(this StorageLibraryChange change)
         {
             if (change.IsOfType(StorageItemTypes.File))
@@ -58,6 +60,7 @@ namespace BreadPlayer.Extensions
                 }
             }
         }
+
         public static async Task RemoveItem(this StorageLibraryChange change, IEnumerable<Mediafile> Library, LibraryService LibraryService)
         {
             if (change.IsOfType(StorageItemTypes.File))
@@ -75,6 +78,7 @@ namespace BreadPlayer.Extensions
                 await RemoveFolder(change, (ThreadSafeObservableCollection<Mediafile>)Library, LibraryService);
             }
         }
+
         public static async Task RemoveFolder(this StorageLibraryChange change, ThreadSafeObservableCollection<Mediafile> Library, LibraryService LibraryService)
         {
             int successCount = 0;
@@ -99,6 +103,7 @@ namespace BreadPlayer.Extensions
                 await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Removed. Folder Path: {1}", successCount, change.Path), 5);
             }
         }
+
         public static async Task RenameFolder(this StorageLibraryChange item, IEnumerable<Mediafile> Library, LibraryService LibraryService)
         {
             int successCount = 0;
@@ -108,7 +113,7 @@ namespace BreadPlayer.Extensions
             foreach (var mediaFile in await LibraryService.Query(item.PreviousPath.ToUpperInvariant()))
             {
                 var libraryMediafile = Library.First(t => t.Path == mediaFile.Path);
-                
+
                 //change the folder path.
                 //NOTE: this also works for subfolders
                 mediaFile.FolderPath = mediaFile.FolderPath.Replace(item.PreviousPath, item.Path);
@@ -133,6 +138,7 @@ namespace BreadPlayer.Extensions
                 await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
             }
         }
+
         public static bool IsItemPotentialMediafile(this IStorageItem file)
         {
             string[] mediaExtensions =

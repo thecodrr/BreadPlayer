@@ -5,6 +5,7 @@ namespace BreadPlayer.Core.Events
     public class MediaAboutToEndEventArgs
     {
         private Mediafile _mediaFile;
+
         public MediaAboutToEndEventArgs(Mediafile mediafile)
         {
             _mediaFile = mediafile;

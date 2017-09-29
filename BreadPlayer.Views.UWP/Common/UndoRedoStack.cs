@@ -2,7 +2,7 @@
 
 namespace BreadPlayer.MomentoPattern
 {
-	public class UndoRedoStack<T>
+    public class UndoRedoStack<T>
     {
         private Stack<T> _undo;
         private Stack<T> _redo;
@@ -14,13 +14,14 @@ namespace BreadPlayer.MomentoPattern
         {
             Reset();
         }
+
         public void Reset()
         {
             _undo = new Stack<T>();
             _redo = new Stack<T>();
         }
-	
-	    public T SemiUndo(T input)
+
+        public T SemiUndo(T input)
         {
             if (_undo.Count > 0)
             {
@@ -30,7 +31,7 @@ namespace BreadPlayer.MomentoPattern
             }
             return input;
         }
-	
+
         public T Do(T sub)
         {
             T output = sub;
@@ -38,6 +39,7 @@ namespace BreadPlayer.MomentoPattern
             _redo.Clear(); // Once we issue a new command, the redo stack clears
             return output;
         }
+
         public T Undo(T input)
         {
             if (_undo.Count > 0)
@@ -49,6 +51,7 @@ namespace BreadPlayer.MomentoPattern
             }
             return Redo(input);
         }
+
         public T Redo(T input)
         {
             if (_redo.Count > 0)

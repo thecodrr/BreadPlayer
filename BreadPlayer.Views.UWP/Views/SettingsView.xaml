@@ -13,74 +13,74 @@
         <DataTemplate x:Key="MobileSettingItemTemplate">
             <Grid Padding="0,10,10,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <FontIcon Glyph="{Binding Path=Icon}" Foreground="{ThemeResource TextBrush}" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" Grid.RowSpan="2"/>
-                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Text="{Binding Path=Title}"/>
-                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}"/>
+                <FontIcon Glyph="{Binding Path=Icon}" Foreground="{ThemeResource TextBrush}" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center" Grid.RowSpan="2" />
+                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Text="{Binding Path=Title}" />
+                <TextBlock Grid.Column="1" Foreground="{ThemeResource TextBrush}" Grid.Row="1" FontSize="11" Text="{Binding Path=Subtitle}" />
             </Grid>
         </DataTemplate>
         <Style TargetType="ListViewItem" x:Key="MobileGridViewItemStyle">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
         <ItemsPanelTemplate x:Key="MobileGridViewPanel">
-            <ItemsStackPanel Orientation="Vertical"/>
+            <ItemsStackPanel Orientation="Vertical" />
         </ItemsPanelTemplate>
-        <Converters:SelectedItemToValueConverter x:Key="ItemToValue"/>
+        <Converters:SelectedItemToValueConverter x:Key="ItemToValue" />
     </Page.Resources>
     <Grid Margin="0,0,0,0" Name="ParentGrid" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
-        <VisualStateManager.VisualStateGroups>           
+        <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="600"/>
+                        <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
+                        <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="settingsGridView.Margin" Value="0"/>
-                        <Setter Target="settingsGridView.VerticalAlignment" Value="Stretch"/>
-                        <Setter Target="settingsGridView.HorizontalAlignment" Value="Stretch"/>
-                        <Setter Target="settingsGridView.ItemTemplate" Value="{StaticResource MobileSettingItemTemplate}"/>
-                        <Setter Target="settingsGridView.ItemContainerStyle" Value="{StaticResource MobileGridViewItemStyle}"/>
-                        <Setter Target="settingsGridView.ItemsPanel" Value="{StaticResource MobileGridViewPanel}"/>
+                        <Setter Target="settingsGridView.Margin" Value="0" />
+                        <Setter Target="settingsGridView.VerticalAlignment" Value="Stretch" />
+                        <Setter Target="settingsGridView.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="settingsGridView.ItemTemplate" Value="{StaticResource MobileSettingItemTemplate}" />
+                        <Setter Target="settingsGridView.ItemContainerStyle" Value="{StaticResource MobileGridViewItemStyle}" />
+                        <Setter Target="settingsGridView.ItemsPanel" Value="{StaticResource MobileGridViewPanel}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-       
+
         <ListView x:Name="settingsGridView" ItemsSource="{Binding Path=SettingsCollection}" IsItemClickEnabled="True" ItemClick="OnSettingClicked" Margin="100,0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="200" Height="200" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <StackPanel VerticalAlignment="Center">
-                            <FontIcon Glyph="{Binding Path=Icon}" FontSize="72" Margin="0,0,0,10"/>
-                            <TextBlock Text="{Binding Path=Title}" HorizontalAlignment="Center"/>
-                            <TextBlock FontSize="11" TextAlignment="Center" TextWrapping="WrapWholeWords" Text="{Binding Path=Subtitle}" HorizontalAlignment="Stretch"/>
+                            <FontIcon Glyph="{Binding Path=Icon}" FontSize="72" Margin="0,0,0,10" />
+                            <TextBlock Text="{Binding Path=Title}" HorizontalAlignment="Center" />
+                            <TextBlock FontSize="11" TextAlignment="Center" TextWrapping="WrapWholeWords" Text="{Binding Path=Subtitle}" HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid Orientation="Horizontal"/>
+                    <ItemsWrapGrid Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

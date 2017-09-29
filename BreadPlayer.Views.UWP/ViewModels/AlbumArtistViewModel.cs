@@ -1,18 +1,18 @@
-﻿using System;
+﻿using BreadPlayer.Core;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Web.Lastfm;
+using IF.Lastfm.Core.Api;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Messengers;
-using IF.Lastfm.Core.Api;
-using BreadPlayer.Web.Lastfm;
-using BreadPlayer.Helpers;
-using BreadPlayer.Parsers.TagParser;
-using BreadPlayer.Extensions;
-using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
@@ -21,11 +21,13 @@ namespace BreadPlayer.ViewModels
         #region Database Methods
 
         private AlbumArtistService AlbumArtistService { get; set; }
+
         public void InitDb()
         {
             AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
-        }       
-        #endregion
+        }
+
+        #endregion Database Methods
 
         private async void HandleAddAlbumMessage(Message message)
         {
@@ -35,6 +37,7 @@ namespace BreadPlayer.ViewModels
                 await AddAlbumsAndArtists(message.Payload as IEnumerable<Mediafile>);
             }
         }
+
         /// <summary>
         /// The Constructor.
         /// </summary>
@@ -44,7 +47,6 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgAddAlbums, new Action<Message>(HandleAddAlbumMessage));
         }
 
-      
         public async Task LoadAlbums()
         {
             RecordsLoading = true;
@@ -91,6 +93,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _recordsLoading = true;
+
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
@@ -101,6 +104,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private ThreadSafeObservableCollection<Album> _albumcollection;
+
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
@@ -111,6 +115,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private ThreadSafeObservableCollection<Artist> _artistscollection;
+
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
@@ -119,6 +124,7 @@ namespace BreadPlayer.ViewModels
             get { if (_artistscollection == null) { _artistscollection = new ThreadSafeObservableCollection<Artist>(); } return _artistscollection; }
             set => Set(ref _artistscollection, value);
         }
+
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
         /// </summary>
@@ -141,9 +147,9 @@ namespace BreadPlayer.ViewModels
 
                         albums.Add(album);
                     }
-                    if(artists.All(t => t.Name != mediafile.LeadArtist))
+                    if (artists.All(t => t.Name != mediafile.LeadArtist))
                     {
-                         Artist artist = new Artist
+                        Artist artist = new Artist
                         {
                             Name = mediafile?.LeadArtist
                         };
@@ -157,7 +163,7 @@ namespace BreadPlayer.ViewModels
                 await AlbumArtistService.InsertArtists(artists).ConfigureAwait(false);
                 ArtistsCollection.AddRange(artists);
                 ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
-            });           
+            });
         }
 
         private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -171,6 +177,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private LastfmClient LastfmClient => new Lastfm().LastfmClient;
+
         private async Task CacheAllArtists()
         {
             if (InternetConnectivityHelper.IsInternetConnected && ArtistsCollection.Any(t => t.HasFetchedInfo == false))

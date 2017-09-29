@@ -1,7 +1,7 @@
-﻿using Windows.Storage;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
+using Windows.Storage;
 
 namespace BreadPlayer.Common
 {
@@ -11,20 +11,24 @@ namespace BreadPlayer.Common
         {
             ApplicationData.Current.RoamingSettings.Values[key] = value;
         }
+
         public static T GetRoamingSetting<T>(string key, object def)
         {
             object setting = ApplicationData.Current.RoamingSettings.Values[key] ?? def;
             return (T)setting;
         }
+
         public static void SaveLocalSetting(string key, object value)
         {
             ApplicationData.Current.LocalSettings.Values[key] = value;
         }
+
         public static T GetLocalSetting<T>(string key, object def)
         {
             object setting = ApplicationData.Current.LocalSettings.Values[key] ?? def;
             return (T)setting;
         }
+
         public (EqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
         {
             var eqJson = GetRoamingSetting<string>(eqConfigName, "{}");

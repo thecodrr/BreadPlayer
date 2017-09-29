@@ -1,22 +1,21 @@
-﻿using System;
-using System.Linq;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Data.Xml.Dom;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Models;
-using Microsoft.Toolkit.Uwp.Notifications;
-using Windows.Data.Xml.Dom;
 
 namespace BreadPlayer.NotificationManager
 {
-	public class BreadNotificationManager : ObservableObject, INotificationManager  
+    public class BreadNotificationManager : ObservableObject, INotificationManager
     {
         private DispatcherTimer _hideTimer;
         private string _status = "Nothing Baking";
+
         public string Status
         {
             get => _status;
@@ -24,11 +23,13 @@ namespace BreadPlayer.NotificationManager
         }
 
         private bool _show;
+
         public bool Show
         {
             get => _show;
             set => Set(ref _show, value);
         }
+
         public async Task ShowMessageAsync(string status, int duration = 10)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -43,6 +44,7 @@ namespace BreadPlayer.NotificationManager
                 }
             });
         }
+
         public async Task ShowMessageBoxAsync(string message, string title)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -51,6 +53,7 @@ namespace BreadPlayer.NotificationManager
                 await dialog.ShowAsync();
             });
         }
+
         public void SendUpcomingSongNotification(Mediafile mediaFile)
         {
             if (mediaFile != null)
@@ -73,10 +76,11 @@ namespace BreadPlayer.NotificationManager
                 {
                     Group = "upcoming-song"
                 };
-                
+
                 ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
             }
         }
+
         private void HideTimer_Tick(object sender, object e)
         {
             Status = "Nothing Baking!";

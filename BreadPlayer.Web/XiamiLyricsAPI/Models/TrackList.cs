@@ -1,15 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.XiamiLyricsAPI.Models
 {
     public class TrackList
     {
-
         [JsonProperty("songId")]
         public string SongId { get; set; }
 

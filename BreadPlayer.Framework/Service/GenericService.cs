@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -18,7 +18,7 @@
 
 namespace BreadPlayer.Services
 {
-	public class GenericService<T> where T : new()
+    public class GenericService<T> where T : new()
     {
         private static GenericService<T> _instance;
 

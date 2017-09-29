@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -18,7 +18,6 @@
 
 using BreadPlayer.Common;
 using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
@@ -29,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -42,8 +40,10 @@ namespace BreadPlayer
     public sealed partial class Shell : Page
     {
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
+
         private ShellViewModel _shellVm;
         private List<Mediafile> _oldFiles = new List<Mediafile>();
+
         public Shell()
         {
             InitializeComponent();
@@ -82,12 +82,14 @@ namespace BreadPlayer
 
             base.OnNavigatedTo(e);
         }
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
         }
 
         private bool _isPressed;
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
@@ -108,6 +110,7 @@ namespace BreadPlayer
                 }
             });
         }
+
         private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
         {
             if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
@@ -117,6 +120,7 @@ namespace BreadPlayer
                 CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
             }
         }
+
         private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
         {
             if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
@@ -125,6 +129,7 @@ namespace BreadPlayer
                 CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
             }
         }
+
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             if (_isPressed && !positionSlider.IsDragging())
@@ -133,7 +138,6 @@ namespace BreadPlayer
                 _isPressed = false;
             }
         }
-        
 
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {

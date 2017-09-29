@@ -2,15 +2,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 namespace BreadPlayer.Behaviours
 {
+    using Microsoft.Xaml.Interactivity;
     using System;
-    using System.Globalization;
     using System.Reflection;
     using System.Runtime.InteropServices.WindowsRuntime;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Media;
-    using Windows.UI.Xaml.Input;
     using Windows.Devices.Input;
-    using Microsoft.Xaml.Interactivity;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Input;
+    using Windows.UI.Xaml.Media;
 
     /// <summary>
     /// A behavior that listens for a specified event on its source and executes its actions when that event is fired.
@@ -46,7 +45,6 @@ namespace BreadPlayer.Behaviours
             typeof(PointerDeviceType),
             typeof(InputSpecificEventTriggerBehaviour),
             new PropertyMetadata(null));
-
 
         private object resolvedSource;
         private Delegate eventHandler;
@@ -107,6 +105,7 @@ namespace BreadPlayer.Behaviours
                 this.SetValue(InputTypeProperty, value);
             }
         }
+
         /// <summary>
         /// Called after the behavior is attached to the <see cref="Microsoft.Xaml.Interactivity.Behavior.AssociatedObject"/>.
         /// </summary>

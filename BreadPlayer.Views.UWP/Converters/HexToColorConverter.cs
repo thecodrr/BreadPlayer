@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
-using BreadPlayer.Extensions;
-using Windows.UI.Xaml.Media;
+﻿using BreadPlayer.Extensions;
+using System;
 using Windows.UI;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace BreadPlayer.Converters
 {
@@ -20,7 +16,7 @@ namespace BreadPlayer.Converters
             gradient.EndPoint = new Windows.Foundation.Point(0.5, 1);
             gradient.StartPoint = new Windows.Foundation.Point(0.5, 0);
             gradient.GradientStops.Add(new GradientStop() { Color = Colors.Transparent, Offset = 0 });
-            gradient.GradientStops.Add(new GradientStop() { Color = mainColor, Offset = 1});
+            gradient.GradientStops.Add(new GradientStop() { Color = mainColor, Offset = 1 });
             return gradient;
         }
 
