@@ -433,15 +433,7 @@ namespace SplitViewMenu
                     }
                     else if (entry.SourcePageType == typeof(LibraryView))
                     {
-                        var para = entry.Parameter;
-                        if (para != null)
-                        {
-                            item = TopNavigationItems.SingleOrDefault(t => t.Arguments == para);
-                        }
-                        else
-                        {
-                            item = TopNavigationItems[3];
-                        }
+                        item = TopNavigationItems[0];                        
                     }
                     if (item != null)
                     {
