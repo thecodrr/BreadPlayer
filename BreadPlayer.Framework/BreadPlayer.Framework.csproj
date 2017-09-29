@@ -90,6 +90,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InitializeFramework.cs" />
     <Compile Include="Interfaces\IDispatcher.cs" />
     <Compile Include="Messenger\Message.cs" />

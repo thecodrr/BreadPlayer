@@ -8,7 +8,9 @@ namespace BreadPlayer.Core.PortableAPIs
     {
         private IDispatcher _targetDispatcher;
         private long _interval;
+#pragma warning disable CS0649 // Field 'DispatcherTimer._callback' is never assigned to, and will always have its default value null
         private EventHandler _callback;
+#pragma warning restore CS0649 // Field 'DispatcherTimer._callback' is never assigned to, and will always have its default value null
         private Timer _timer;
         private object _tag;
 

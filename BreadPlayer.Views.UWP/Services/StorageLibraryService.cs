@@ -13,7 +13,9 @@ namespace BreadPlayer.Services
     {
         private StorageLibrary MusicLibrary { get; set; }
         private StorageFolder MusicLibraryParentFolder { get; set; }
+#pragma warning disable CS0169 // The field 'StorageLibraryService._updateTimer' is never used
         private DispatcherTimer _updateTimer;
+#pragma warning restore CS0169 // The field 'StorageLibraryService._updateTimer' is never used
         public StorageLibraryService()
         {
             Initialize();

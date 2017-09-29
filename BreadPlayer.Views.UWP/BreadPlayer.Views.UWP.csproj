@@ -228,6 +228,7 @@
     <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HamburgerMenu\Shortcut.cs" />
     <Compile Include="Helpers\InternetConnectivityHelper.cs" />
     <Compile Include="Helpers\LockscreenHelper.cs" />

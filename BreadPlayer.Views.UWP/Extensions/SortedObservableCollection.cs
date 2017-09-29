@@ -58,7 +58,7 @@ namespace BreadPlayer.Extensions
 
 
         public void AddSortedRange(IEnumerable<T> range)
-        {
+        { 
             try
             {
                 // get out if no new items

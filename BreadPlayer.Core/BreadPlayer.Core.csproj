@@ -118,6 +118,7 @@
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
     <Compile Include="Extensions\ObservableCollection.cs" />
     <Compile Include="Common\IDBRecord.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InitializeCore.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />

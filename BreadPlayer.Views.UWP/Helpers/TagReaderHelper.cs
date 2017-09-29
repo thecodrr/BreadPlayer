@@ -129,7 +129,9 @@ namespace BreadPlayer.Helpers
                     }
                 }
             }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
                 //await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }

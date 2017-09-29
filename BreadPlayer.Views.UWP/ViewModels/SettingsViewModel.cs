@@ -232,7 +232,9 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
             LoadFolders();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
         }
 
         public void InitSettingsCollection()
@@ -432,7 +434,9 @@ namespace BreadPlayer.ViewModels
                     if (TracksCollection.Elements.Any(t => t.Path == file.Path))
                     {
                         index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
                         SharedLogic.RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
                     await SharedLogic.NotificationManager.ShowMessageAsync(" Song(s) Loaded");

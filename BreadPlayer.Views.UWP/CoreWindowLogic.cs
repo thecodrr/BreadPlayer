@@ -52,7 +52,9 @@ namespace BreadPlayer
         private const string FoldersKey = "folders";
         private const string TimeclosedKey = "timeclosed";
         private static SystemMediaTransportControls _smtc;
+#pragma warning disable CS0414 // The field 'CoreWindowLogic._path' is assigned but its value is never used
         private static string _path = "";
+#pragma warning restore CS0414 // The field 'CoreWindowLogic._path' is assigned but its value is never used
         #endregion
 
         #region Load/Save Logic
