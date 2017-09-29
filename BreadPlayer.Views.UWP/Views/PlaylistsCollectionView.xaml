@@ -37,8 +37,8 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <toolkit:DropShadowPanel x:Name="dropShadow"
-                                                 BlurRadius="10"
-                                                 ShadowOpacity="1"
+                                                 BlurRadius="20"
+                                                 ShadowOpacity="0"
                                                  Opacity="1"
                                                  OffsetY="0"
                                                  OffsetX="0"
@@ -136,9 +136,17 @@
                                 <Media:ControlStoryboardAction ControlStoryboardOption="Play">
                                     <Media:ControlStoryboardAction.Storyboard>
                                         <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="dropShadow"
+                                                             EnableDependentAnimation="True"
+                                                             Storyboard.TargetProperty="ShadowOpacity"
+                                                             Duration="0:0:0.5"
+                                                             From="0"
+                                                             To="1" />
                                             <DoubleAnimation Storyboard.TargetName="playBtn"
-                                                                 Storyboard.TargetProperty="Opacity"
-                                                                 Duration="0:0:0.5" From="0" To="1" />
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             Duration="0:0:0.5"
+                                                             From="0"
+                                                             To="1" />
                                         </Storyboard>
                                     </Media:ControlStoryboardAction.Storyboard>
                                 </Media:ControlStoryboardAction>
@@ -147,11 +155,17 @@
                                 <Media:ControlStoryboardAction ControlStoryboardOption="Play">
                                     <Media:ControlStoryboardAction.Storyboard>
                                         <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="dropShadow"                                                               
+                                                             Storyboard.TargetProperty="ShadowOpacity"
+                                                             Duration="0:0:0.5"
+                                                             EnableDependentAnimation="True"
+                                                             From="1"
+                                                             To="0" />
                                             <DoubleAnimation Storyboard.TargetName="playBtn"
-                                                                 Storyboard.TargetProperty="Opacity"
-                                                                 Duration="0:0:0.5"
-                                                                 From="1"
-                                                                 To="0" />
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             Duration="0:0:0.5"
+                                                             From="1"
+                                                             To="0" />
                                         </Storyboard>
                                     </Media:ControlStoryboardAction.Storyboard>
                                 </Media:ControlStoryboardAction>
