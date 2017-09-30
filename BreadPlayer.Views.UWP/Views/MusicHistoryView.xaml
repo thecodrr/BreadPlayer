@@ -16,6 +16,25 @@
         <CollectionViewSource x:Key="cvs" IsSourceGrouped="True" Source="{Binding Path=CurrentCollection, UpdateSourceTrigger=PropertyChanged}" />
     </Page.Resources>
     <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="recentlyPlayedList.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Pivot x:Name="mainPivot" Margin="0,0,10,0" SelectionChanged="OnSelectionChanged">
             <PivotItem Name="recentlyPlayedPivotItem" Header="Recently Played">
                 <BPControls:AlternatingRowListView x:Name="recentlyPlayedList"
