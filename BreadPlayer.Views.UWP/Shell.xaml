@@ -414,21 +414,21 @@
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontFamily="Segoe UI Light"
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontFamily="Segoe UI Light"
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" />
                         </StackPanel>
                     </StackPanel>
 

@@ -22,6 +22,7 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using SplitViewMenu;
 using System;
@@ -59,14 +60,14 @@ namespace BreadPlayer
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
-            this.Loaded += Shell_Loaded;
+            hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
         }
 
-        private void Shell_Loaded(object sender, RoutedEventArgs e)
+        private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
         {
-            if(_arguments != null)
+            if (_arguments != null)
                 CoreWindowLogic.LoadAppWithArguments(_arguments);
-        }
+        }       
 
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
         protected async override void OnNavigatedTo(NavigationEventArgs e)

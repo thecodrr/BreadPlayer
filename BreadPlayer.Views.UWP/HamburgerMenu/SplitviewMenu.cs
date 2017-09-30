@@ -38,6 +38,7 @@ namespace SplitViewMenu
 {
     public sealed class SplitViewMenu : Control
     {
+        public event EventHandler<EventArgs> SplitViewMenuLoaded;
         public static NavigationService NavService { get; set; }
 
         internal static readonly DependencyProperty MenuItemDataTemplateSelectorProperty =
@@ -184,6 +185,7 @@ namespace SplitViewMenu
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
             await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
+           
             if (_navTopMenuListView != null)
             {
                 _navTopMenuListView.ItemInvoked += OnNavMenuItemInvoked;
@@ -211,6 +213,7 @@ namespace SplitViewMenu
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
+            SplitViewMenuLoaded?.Invoke(this, new EventArgs());
         }
 
         private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
