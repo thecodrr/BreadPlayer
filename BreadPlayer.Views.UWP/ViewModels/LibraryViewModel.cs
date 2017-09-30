@@ -214,7 +214,7 @@ namespace BreadPlayer.ViewModels
             set
             {
                 Set(ref _sort, value);
-                SettingsHelper.SaveRoamingSetting("Sort", _sort);
+                SettingsHelper.SaveLocalSetting("Sort", _sort);
             }
         }
         #endregion Properties
