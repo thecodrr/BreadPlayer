@@ -489,25 +489,25 @@ namespace BreadPlayer.ViewModels
                     {
                         if (t.Title.StartsWithLetter())
                         {
-                            return new TitleGroupKey() { Key = t.Title[0].ToString().ToUpper() };
+                            return new TitleGroupKey() { Key = t.Title[0].ToString().ToUpper(), FirstElement = t };
                         }
 
                         if (t.Title.StartsWithNumber())
                         {
-                            return new TitleGroupKey() { Key = "#" };
+                            return new TitleGroupKey() { Key = "#", FirstElement = t };
                         }
 
                         if (t.Title.StartsWithSymbol())
                         {
-                            return new TitleGroupKey() { Key = "&" };
+                            return new TitleGroupKey() { Key = "&", FirstElement = t };
                         }
 
-                        return new TitleGroupKey() { Key = t.Title };
+                        return new TitleGroupKey() { Key = t.Title, FirstElement = t };
                     };
                     break;
 
                 case "Year":
-                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year };
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Year) ? "Unknown Year" : t.Year, FirstElement = t };
                     break;
 
                 case "Length":
@@ -517,15 +517,16 @@ namespace BreadPlayer.ViewModels
                         Key = string.IsNullOrEmpty(t.Length) || t.Length == "0:00"
                     ? "Unknown Length"
                     : Math.Round(TimeSpan.ParseExact(t.Length, timeformats, CultureInfo.InvariantCulture).TotalMinutes) + " minutes"
+                    , FirstElement = t
                     };
                     break;
 
                 case "TrackNumber":
-                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber };
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber, FirstElement = t };
                     break;
 
                 case "FolderPath":
-                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName };
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.FolderPath) ? "Unknown Folder" : new DirectoryInfo(t.FolderPath).FullName, FirstElement = t };
                     break;
 
                 case "Album":
@@ -594,7 +595,7 @@ namespace BreadPlayer.ViewModels
             return item;
         }
 
-        private void FillKeys()
+        private async void FillKeys()
         {
             foreach (var group in TracksCollection)
             {
@@ -603,6 +604,14 @@ namespace BreadPlayer.ViewModels
                     titleGroupKey.TotalAlbums = group.GroupBy(t => t.Album).Count();
                     titleGroupKey.TotalArtists = group.GroupBy(t => t.LeadArtist).Count();
                     titleGroupKey.TotalPlays = group.Sum(t => t.PlayCount);
+                }
+                else if(group.Key is ArtistGroupKey artistGroupKey)
+                {
+                    artistGroupKey.FirstElement = await SharedLogic.AlbumArtistService.GetArtist(artistGroupKey.Key).ConfigureAwait(false);
+                    if(artistGroupKey.FirstElement != null)
+                    {
+
+                    }
                 }
                 else
                     return;

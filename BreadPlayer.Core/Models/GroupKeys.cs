@@ -26,9 +26,15 @@
         }
     }
 
-    public class ArtistGroupKey : IGroupKey
+    public class ArtistGroupKey : ObservableObject, IGroupKey
     {
         public string Key { get; set; }
+        Artist firstElement;
+        public Artist FirstElement
+        {
+            get => firstElement;
+            set => Set(ref firstElement, value);
+        }
 
         public int CompareTo(IGroupKey other)
         {
@@ -54,6 +60,7 @@
     public class TitleGroupKey : ObservableObject, IGroupKey
     {
         public string Key { get; set; }
+        public Mediafile FirstElement { get; set; }
         private int _totalArtists;
         private int _totalAlbums;
         private int _totalPlays;

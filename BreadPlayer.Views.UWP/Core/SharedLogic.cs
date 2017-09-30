@@ -239,7 +239,7 @@ namespace BreadPlayer.Core
             });
         }
 
-        private AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+        public AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
 
         private async void NavigateToArtistPage(object para)
         {
