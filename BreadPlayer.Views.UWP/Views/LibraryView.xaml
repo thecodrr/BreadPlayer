@@ -7,12 +7,10 @@
       xmlns:Behaviours="using:BreadPlayer.Behaviours"
       xmlns:BPControls="using:BreadPlayer.Controls"
       xmlns:Converter="using:BreadPlayer.Converters"
-      xmlns:Extensions="using:BreadPlayer.Extensions"
-      xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
-      xmlns:Models="using:BreadPlayer.Core.Models"
       xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+      xmlns:blur="using:BreadPlayer.Effects"
       xmlns:local="using:BreadPlayer"
       mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
     <Page.Resources>
@@ -44,10 +42,10 @@
                         <ImageBrush ImageSource="{Binding Path=Key.FirstElement.AttachedPicture}" Stretch="UniformToFill" />
                     </Grid.Background>
                     <Border Background="{ThemeResource EvenRowBackground}" />
-                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource ThemeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
+                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
                                                     <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.Key}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" Foreground="{ThemeResource ThemeForeground}" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
                                                     <Run FontSize="14" Text="Toasts:" />
                                                     <Run FontSize="14" Text="{Binding Path=Count}" />
                                                     <Run Text="&#x2022;" />
@@ -67,13 +65,17 @@
             <DataTemplate x:Key="ArtistGroupHeaderTemplate">
                 <Grid Height="100">
                     <Grid.Background>
-                        <ImageBrush ImageSource="{Binding Path=Key.FirstElement.Picture}" Stretch="UniformToFill" />
+                        <ImageBrush  Stretch="UniformToFill" >
+                            <ImageBrush.ImageSource>
+                                <BitmapImage UriSource="{Binding Path=Key.FirstElement.Picture}"/>
+                            </ImageBrush.ImageSource>                      
+                        </ImageBrush>
                     </Grid.Background>
-                    <Border Background="{Binding Path=Key.FirstElement.PictureColor}" />
-                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource ThemeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
+                    <Border Opacity="0.7" Background="{Binding Path=Key.FirstElement.PictureColor, TargetNullValue={ThemeResource EvenRowBackground}, FallbackValue={ThemeResource EvenRowBackground}}" />
+                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
                                                     <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.Key}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" Foreground="{ThemeResource ThemeForeground}" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
                                                     <Run FontSize="14" Text="Toasts:" />
                                                     <Run FontSize="14" Text="{Binding Path=Count}" />
                     </TextBlock>
@@ -87,12 +89,12 @@
                         <ImageBrush ImageSource="{Binding Path=Key.FirstElement.AttachedPicture}" Stretch="UniformToFill" />
                     </Grid.Background>
                     <Border Background="{ThemeResource EvenRowBackground}" />
-                    <TextBlock TextAlignment="Center" Foreground="{ThemeResource ThemeForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
+                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
                                                     <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.FirstElement.Album}" />
                                                     <LineBreak />
                                                     <Run FontWeight="Bold" Text="{Binding Path=Key.FirstElement.LeadArtist}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" Foreground="{ThemeResource ThemeForeground}" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
+                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
                                                     <Run FontSize="14" Text="Toasts:" />
                                                     <Run FontSize="14" Text="{Binding Path=Count}" />
                     </TextBlock>
