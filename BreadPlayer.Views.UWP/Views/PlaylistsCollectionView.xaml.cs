@@ -14,7 +14,6 @@ namespace BreadPlayer
         public PlaylistsCollectionView()
         {
             this.InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Required;
         }
 
         private void OnPlaylistClicked(object sender, ItemClickEventArgs e)

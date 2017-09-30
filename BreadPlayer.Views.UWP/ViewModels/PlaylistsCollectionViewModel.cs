@@ -93,11 +93,11 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadPlaylists()
         {
+            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
             var playlists = await PlaylistService.GetPlaylistsAsync().ConfigureAwait(false);
             if (playlists != null)
             {
                 Playlists.AddRange(playlists);
-                SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
                 SharedLogic.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
             }
         }
