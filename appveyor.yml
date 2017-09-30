@@ -20,7 +20,7 @@ artifacts:
   name: BreadPlayer App Package
   type: Auto
 
-- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP_2.7.0.0_x64_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.0.0_x64_FastBuild_Release.appx
   name: BreadPlayer x64 APPX Package
   type: Auto
 
@@ -28,7 +28,7 @@ artifacts:
   name: BreadPlayer X86 APPX Package
   type: Auto
   
-- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP_2.7.0.0_ARM_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.0.0_ARM_FastBuild_Release.appx
   name: BreadPlayer ARM APPX Package
   type: Auto
 
