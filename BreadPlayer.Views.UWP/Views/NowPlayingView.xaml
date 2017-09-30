@@ -567,7 +567,7 @@
                     <ListView ItemsSource="{Binding Path=NowPlayingQueue}" Margin="0,6,0,0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid x:Name="mainGrid" Background="Transparent" Padding="5,10">
+                                <Grid x:Name="mainGrid" Background="Transparent" Padding="15,10,5,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -601,6 +601,12 @@
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
                 </Grid>
             </PivotItem>
