@@ -17,6 +17,7 @@
 */
 
 using BreadPlayer;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Services;
 using System;
@@ -28,6 +29,18 @@ namespace SplitViewMenu
 {
     public class SimpleNavMenuItem : ViewModelBase, INavigationMenuItem
     {
+        public SimpleNavMenuItem()
+        {
+            if (!InitializeCore.IsMobile)
+            {
+                _shortcuts.Insert(0, new Shortcut()
+                {
+                    SymbolAsChar = "\uE76B",
+                    ShortcutCommand = new DelegateCommand(() => BreadPlayer.Services.NavigationService.Instance.NavigateBack()),
+                    Tooltip = "Go Back"
+                });
+            }
+        }
         private string _label;
 
         public string Label
