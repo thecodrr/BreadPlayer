@@ -23,6 +23,7 @@ using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -283,6 +284,29 @@ namespace BreadPlayer
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while updating tile.", ex);
+            }
+        }
+
+        public static void LoadAppWithArguments(string arguments)
+        {
+            var args = arguments.Split('=', '&');
+            string action = args[1];
+            if (action.Contains("view"))
+            {
+                string pageParameter = args[5];
+                IDbRecord record = null;
+                if (action.Contains("Album"))
+                {
+                    record = SharedLogic.Instance.AlbumArtistService.GetAlbumByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                else if (action.Contains("Artist"))
+                {
+                    record = SharedLogic.Instance.AlbumArtistService.GetArtistByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                if (record == null)
+                    return;
+                SplitViewMenu.SplitViewMenu.UnSelectAll();
+                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), record);
             }
         }
 

@@ -17,8 +17,11 @@
 */
 
 using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -113,6 +116,10 @@ namespace BreadPlayer
             {
                 LoadFrame(e, e.Arguments);
             }
+            else if (e.PreviousExecutionState == ApplicationExecutionState.Running)
+            {
+                CoreWindowLogic.LoadAppWithArguments(e.Arguments);
+            }
         }
 
         /// <summary>
@@ -144,7 +151,10 @@ namespace BreadPlayer
             await Task.Delay(500);
             deferral.Complete();
         }
-
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+        }
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(args.Files[0]);

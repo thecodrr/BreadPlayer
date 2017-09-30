@@ -25,6 +25,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.StartScreen;
 
 namespace BreadPlayer.Core
 {
@@ -121,12 +122,24 @@ namespace BreadPlayer.Core
         private RelayCommand _showPropertiesCommand;
         private RelayCommand _opensonglocationCommand;
         private RelayCommand _navigateCommand;
-
+        private RelayCommand _pinToStartCommand;
+        private RelayCommand _unpinFromStartCommand;
+        public ICommand UnpinFromStartCommand
+        {
+            get
+            { if (_unpinFromStartCommand == null) { _unpinFromStartCommand = new RelayCommand(param => UnpinFromStart(param)); } return _unpinFromStartCommand; }
+        }
+        public ICommand PinToStartCommand
+        {
+            get
+            { if (_pinToStartCommand == null) { _pinToStartCommand = new RelayCommand(param => PinToStart(param)); } return _pinToStartCommand; }
+        }
         public ICommand NavigateToAlbumPageCommand
         {
             get
             { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
-        }/// <summary>
+        }
+        /// <summary>
 
          /// Gets command for navigating to a page./>
          /// </summary>
@@ -165,7 +178,69 @@ namespace BreadPlayer.Core
         #endregion Definitions
 
         #region Implementation
+        private string AbsolutePathToRelative(string absolutePath)
+        {
+            if (absolutePath != null)
+                return "ms-appdata:///local/" + absolutePath.Replace(@"C:\Users\Arkane Elayne\AppData\Local\Packages\22102thecodrr.BreadPlayer_fknyqnmcp2942\LocalState\", "").Replace('\\', '/');
+            return "";
+        }
+        private async void UnpinFromStart(object para)
+        {
+            SecondaryTile tile = new SecondaryTile(((IPinnable)para).TileId);
+            ((IPinnable)para).IsPinned = await tile.RequestDeleteAsync();
+        }
+        private async void PinToStart(object para)
+        {
+            string tileId = "";
+            string displayName = "";
+            string arguments = "action=view{0}&pageType={1}&pageParameter={2}";
+            Uri image = null;
+            TileSize tileSize = TileSize.Default & TileSize.Square310x310 & TileSize.Square71x71 & TileSize.Square44x44 & TileSize.Square30x30;
 
+            if (para is Album album)
+            {
+                tileId = string.Format("Album={0}", album.Id);
+                displayName = album.AlbumName;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, album.Id);
+                image = new Uri(AbsolutePathToRelative(album.AlbumArt), UriKind.RelativeOrAbsolute);
+            }
+            else if (para is Artist artist)
+            {
+                tileId = string.Format("Artist={0}", artist.Id);
+                displayName = artist.Name;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, artist.Id);
+                image = new Uri(AbsolutePathToRelative(artist.Picture), UriKind.RelativeOrAbsolute);
+            }
+            else if (para is Mediafile mediaFile)
+            {
+                tileId = string.Format("Mediafile={0}", mediaFile.Id);
+                displayName = mediaFile.Title;
+                arguments = string.Format("action=play&id={0}", mediaFile.Id);
+                image = new Uri(AbsolutePathToRelative(mediaFile.AttachedPicture), UriKind.RelativeOrAbsolute);
+            }
+            if (image == null || string.IsNullOrEmpty(image.OriginalString))
+                image = new Uri("ms-appx:///Assets/Square150x150Logo.scale-100.png", UriKind.RelativeOrAbsolute);
+
+            // Initialize the tile with required arguments
+            SecondaryTile tile = new SecondaryTile(
+                tileId,
+                displayName,
+                arguments,
+                image,
+                tileSize);
+
+            tile.VisualElements.Square310x310Logo = image;
+            tile.VisualElements.Square71x71Logo = image;
+            tile.VisualElements.Square44x44Logo = image;
+            tile.VisualElements.ShowNameOnSquare150x150Logo = true;
+            tile.VisualElements.ShowNameOnSquare310x310Logo = true;
+
+            if (!SecondaryTile.Exists(tile.TileId))
+            { 
+                // Pin the tile
+                ((IPinnable)para).IsPinned = await tile.RequestCreateAsync();
+            }
+        }
         private async void ChangeAlbumArt(object para)
         {
             Mediafile mediaFile = para as Mediafile;
@@ -231,7 +306,7 @@ namespace BreadPlayer.Core
                 return;
             }
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbum(para.ToString()).ConfigureAwait(false);
+            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
                 if (album != null)
@@ -244,7 +319,7 @@ namespace BreadPlayer.Core
         private async void NavigateToArtistPage(object para)
         {
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtist(para.ToString()).ConfigureAwait(false);
+            var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtistAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
                 if (artist != null)

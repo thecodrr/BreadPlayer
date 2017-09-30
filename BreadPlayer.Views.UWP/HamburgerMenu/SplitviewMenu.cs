@@ -342,8 +342,10 @@ namespace SplitViewMenu
         public static void UnSelectAll()
         {
             _lastItem = null;
-            _navBottomMenuListView.SelectedIndex = -1;
-            _navTopMenuListView.SelectedIndex = -1;
+            if (_navBottomMenuListView != null)
+                _navBottomMenuListView.SelectedIndex = -1;
+            if (_navTopMenuListView != null)
+                _navTopMenuListView.SelectedIndex = -1;
             //_playlistsMenuListView.SelectedIndex = -1;
         }
 

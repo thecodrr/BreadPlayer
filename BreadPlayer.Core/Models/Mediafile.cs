@@ -23,7 +23,7 @@ using System;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable
+    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable, IPinnable
     {
         #region Fields
 
@@ -58,7 +58,13 @@ namespace BreadPlayer.Core.Models
         #endregion Fields
 
         #region Properties
-
+        private bool _isPinned;
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set => Set(ref _isPinned, value);
+        }
+        public string TileId => "Mediafile=" + Id;
         public long Id { get; set; }
         private DateTime _lastPlayed;
         public DateTime LastPlayed { get => _lastPlayed; set => Set(ref _lastPlayed, value); }

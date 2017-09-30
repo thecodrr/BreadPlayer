@@ -45,6 +45,7 @@ namespace BreadPlayer
 
         private ShellViewModel _shellVm;
 
+        private string _arguments = null;
         public Shell()
         {
             InitializeComponent();
@@ -58,6 +59,13 @@ namespace BreadPlayer
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
+            this.Loaded += Shell_Loaded;
+        }
+
+        private void Shell_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(_arguments != null)
+                CoreWindowLogic.LoadAppWithArguments(_arguments);
         }
 
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
@@ -81,7 +89,10 @@ namespace BreadPlayer
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { files, 0.0, true, 50.0 });
             }
-
+            else if(e.Parameter is string arguments && !string.IsNullOrEmpty(e.Parameter.ToString()))
+            {
+                _arguments = arguments;
+            }
             base.OnNavigatedTo(e);
         }
 

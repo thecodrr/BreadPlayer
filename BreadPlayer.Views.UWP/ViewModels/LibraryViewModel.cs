@@ -610,7 +610,7 @@ namespace BreadPlayer.ViewModels
                 }
                 else if(group.Key is ArtistGroupKey artistGroupKey)
                 {
-                    artistGroupKey.FirstElement = await SharedLogic.Instance.AlbumArtistService.GetArtist(artistGroupKey.Key.ToLower());
+                    artistGroupKey.FirstElement = await SharedLogic.Instance.AlbumArtistService.GetArtistAsync(artistGroupKey.Key.ToLower());
                 }
                 else
                     return;

@@ -23,22 +23,29 @@
             Glyph="&#xE768;"
             Text="Play" />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
-            CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
+            Command="{Binding Source={StaticResource Core}, Path=Instance.NavigateToArtistPageCommand}"
+            CommandParameter="{Binding Path=Artist}"
             Glyph="&#xE77B;"
             Text="Show Artist"
             Visibility="{Binding Converter={StaticResource RecordTypeToVisibility}, ConverterParameter='Album'}" />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding Path=PlayCommand}"
-            CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
-            DataContext="{StaticResource LibVM}"
+            Command="{Binding Source={StaticResource Core}, Path=Instance.PinToStartCommand}"
+            CommandParameter="{Binding}"
             Glyph="&#xE718;"
-            Text="Pin to Start" />
+            Text="Pin to Start"
+            Visibility="{Binding Path=IsPinned, Converter={StaticResource TrueToFalse}}" />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding Source={StaticResource LibVM}, Path=DeleteCommand}"
-            CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+            Command="{Binding Source={StaticResource Core}, Path=Instance.UnpinFromStartCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xE77A;"
+            Text="Unpin from Start"
+            Visibility="{Binding Path=IsPinned}" />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource AlbumArtistVM}, Path=DeleteCommand}"
+            CommandParameter="{Binding}"
             Glyph="&#xE74D;"
-            Text="Delete" />
+            Text="Delete"
+            Visibility="{Binding Converter={StaticResource RecordTypeToVisibility}, ConverterParameter='Album'}" />
     </MenuFlyout>
 
     <MenuFlyout x:Key="Flyout">

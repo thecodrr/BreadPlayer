@@ -1,10 +1,11 @@
 ﻿using BreadPlayer.Core.Common;
+using LiteDB;
 using Newtonsoft.Json;
 using System;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Album : ObservableObject, IDbRecord, IComparable<Album>, ISelectable
+    public class Album : ObservableObject, IDbRecord, IComparable<Album>, ISelectable, IPinnable
     {
         public long Id { get; set; }
         public string AlbumName { get; set; }
@@ -12,13 +13,20 @@ namespace BreadPlayer.Core.Models
         public string AlbumArt { get; set; }
         private bool _isSelected;
 
-        [JsonIgnore]
+        [BsonIgnore]
         public bool IsSelected
         {
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
 
+        private bool _isPinned;
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set => Set(ref _isPinned, value);
+        }
+        public string TileId => "Album=" + Id;
         public string TextSearchKey => GetTextSearchKey().ToLower();
 
         public string GetTextSearchKey()

@@ -1,9 +1,10 @@
 ﻿using BreadPlayer.Core.Common;
+using LiteDB;
 using Newtonsoft.Json;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Artist : ObservableObject, IDbRecord, ISelectable
+    public class Artist : ObservableObject, IDbRecord, ISelectable, IPinnable
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -28,13 +29,19 @@ namespace BreadPlayer.Core.Models
         public string TextSearchKey => GetTextSearchKey().ToLower();
         private bool _isSelected;
 
-        [JsonIgnore]
+        [BsonIgnore]
         public bool IsSelected
         {
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
-
+        private bool _isPinned;
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set => Set(ref _isPinned, value);
+        }
+        public string TileId => "Artist=" + Id;
         private bool hasFetchedInfo;
 
         public bool HasFetchedInfo
