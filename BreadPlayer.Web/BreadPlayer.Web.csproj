@@ -126,10 +126,8 @@
     <Compile Include="Lastfm\Lastfm.cs" />
     <Compile Include="LyricsFetch\LyricsFetcher.cs" />
     <Compile Include="NeteaseLyricsAPI\NeteaseHttpHelper.cs" />
-    <Compile Include="NeteaseLyricsAPI\Crypto.cs" />
     <Compile Include="NeteaseLyricsAPI\Endpoints.cs" />
     <Compile Include="NeteaseLyricsAPI\NeteaseClient.cs" />
-    <Compile Include="NeteaseLyricsAPI\JavaBigInteger.cs" />
     <Compile Include="NeteaseLyricsAPI\Models\Lrc.cs" />
     <Compile Include="NeteaseLyricsAPI\Models\Song.cs" />
     <Compile Include="NeteaseLyricsAPI\Responses\LyricsResponse.cs" />

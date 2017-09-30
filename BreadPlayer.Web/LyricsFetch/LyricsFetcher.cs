@@ -12,9 +12,10 @@ namespace BreadPlayer.Web.LyricsFetch
 {
     public class LyricsFetcher
     {
+        static ILyricAPI[] Sources = new ILyricAPI[] { new NeteaseClient(), new XiamiClient(), new BaiduClient() };
+
         public static async Task<List<string>> FetchLyrics(Mediafile file)
         {
-            ILyricAPI[] Sources = new ILyricAPI[] { new NeteaseClient(), new XiamiClient(), new BaiduClient() };
             try
             {
                 var mediaFile = new Mediafile();
