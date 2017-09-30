@@ -761,7 +761,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock
-                x:Name="Title"
+                x:Name="titleTxt"
                 Grid.Column="1"
                 Margin="0,0,0,0"
                 VerticalAlignment="Center"
@@ -775,7 +775,7 @@
                 Margin="0,0,0,0"
                 VerticalAlignment="Center"
                 FontSize="12"
-                Foreground="{Binding ElementName=Title, Path=Foreground}"
+                Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                 Text="{Binding Path=LeadArtist}"
                 TextTrimming="CharacterEllipsis" />
             <TextBlock
@@ -785,7 +785,7 @@
                 Margin="10,0,10,0"
                 VerticalAlignment="Center"
                 FontSize="13"
-                Foreground="{Binding ElementName=Title, Path=Foreground}"
+                Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                 Text="{Binding Path=Length}"
                 TextTrimming="CharacterEllipsis" />
 
@@ -869,6 +869,7 @@
                     Content="&#xEB51;"
                     DataContext="{Binding ElementName=ContentPresenter, Path=Content}"
                     FontSize="18"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                     IsChecked="{Binding Path=IsFavorite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Style="{StaticResource FavoriteButtonStyle}"
                     Visibility="Visible">
@@ -889,6 +890,7 @@
                     Content="&#xE710;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="18"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                     IsDoubleTapEnabled="False"
                     Style="{StaticResource HyperlinkBtn}"
                     ToolTipService.ToolTip="Add this song to playlist."
@@ -909,6 +911,7 @@
                     Content="&#xE74D;"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="18"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
                     IsDoubleTapEnabled="False"
                     Style="{StaticResource HyperlinkBtn}"
                     ToolTipService.ToolTip=""
@@ -946,6 +949,10 @@
                         </Media:ControlStoryboardAction.Storyboard>
                     </Media:ControlStoryboardAction>
                     <Core:ChangePropertyAction
+                        PropertyName="Foreground"
+                        TargetObject="{Binding ElementName=titleTxt}"
+                        Value="White" />
+                    <Core:ChangePropertyAction
                         PropertyName="Visibility"
                         TargetObject="{Binding ElementName=FavoriteButton}"
                         Value="Visible" />
@@ -959,6 +966,10 @@
                         PropertyName="Background"
                         TargetObject="{Binding ElementName=MainGrid}"
                         Value="Transparent" />
+                    <Core:ChangePropertyAction
+                        PropertyName="Foreground"
+                        TargetObject="{Binding ElementName=titleTxt}"
+                        Value="Black" />
                     <Core:ChangePropertyAction
                         PropertyName="Visibility"
                         TargetObject="{Binding ElementName=ButtonsStack}"
