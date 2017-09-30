@@ -536,6 +536,9 @@ namespace BreadPlayer.ViewModels
                 case "LeadArtist":
                     f = t => new ArtistGroupKey() { Key = t.LeadArtist };
                     break;
+                case "Genre":
+                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.Genre) ? "Unknown Genre" : t.Genre, FirstElement = t };
+                    break;
             }
             return f;
         }
