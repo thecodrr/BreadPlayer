@@ -17,3 +17,7 @@ artifacts:
 - path: '**/*.appxbundle'
   name: AppxBundle for BreadPlayer
   type: Auto
+  
+- path: '**/*.cer'
+  name: Certificate for appxbundle for BreadPlayer
+  type: Auto
