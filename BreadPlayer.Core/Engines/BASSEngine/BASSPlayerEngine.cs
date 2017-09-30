@@ -382,7 +382,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 //SetLoop();
             }
         }
-
+        
         #endregion Properties
 
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)

@@ -76,7 +76,7 @@ namespace BreadPlayer.Helpers
             }
             catch (Exception ex)
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
                 return null;
             }
         }
@@ -97,7 +97,7 @@ namespace BreadPlayer.Helpers
             {
                 using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
-                    if (thumbnail == null && SharedLogic.VerifyFileExists(file.Path, 150))
+                    if (thumbnail == null && SharedLogic.Instance.VerifyFileExists(file.Path, 150))
                     {
                         using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
                         {
@@ -131,7 +131,7 @@ namespace BreadPlayer.Helpers
             }
             catch (Exception ex)
             {
-                //await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                //await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
 
             return false;
@@ -181,12 +181,12 @@ namespace BreadPlayer.Helpers
                         {
                             await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                         }
-                        color = await SharedLogic.GetDominantColor(artistArt).ConfigureAwait(false);
+                        color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
                         return (artistArt.Path, color);
                     }
                 }
             }
-            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
+            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
             return (artistArtPath, color);
         }
     }

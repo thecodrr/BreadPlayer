@@ -310,7 +310,7 @@
         </Button>
         <StackPanel x:Name="lonelyTextPanel" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}">
             <TextBlock x:Uid="lonelyTextBlock" x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}" />
-            <Button x:Uid="addSomeSongsBtn" Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=SettingsVm.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}" />
+            <Button x:Uid="addSomeSongsBtn" Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}" />
         </StackPanel>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">

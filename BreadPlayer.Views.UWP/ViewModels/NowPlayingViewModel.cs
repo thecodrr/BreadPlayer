@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
 {
-    public class NowPlayingViewModel : ViewModelBase
+    public class NowPlayingViewModel : ObservableObject
     {
         #region Loading Properties
 
@@ -36,7 +36,7 @@ namespace BreadPlayer.ViewModels
         private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         private IOneLineLyric _currentLyric;
         private int _retries;
-        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
+        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
         private ThreadSafeObservableCollection<LastArtist> _similarArtists;
         private ThreadSafeObservableCollection<LastArtist> artists;
         private ThreadSafeObservableCollection<IOneLineLyric> lyrics;
@@ -48,7 +48,7 @@ namespace BreadPlayer.ViewModels
 
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
-            SharedLogic.Player.MediaChanged += OnMediaChanged;
+            SharedLogic.Instance.Player.MediaChanged += OnMediaChanged;
         }
 
         public event EventHandler LyricActivated;
@@ -124,21 +124,21 @@ namespace BreadPlayer.ViewModels
                 //Parse and make a list of all artists from title
                 //and artist strings
                 var artistsList = TagParser.ParseArtists(artistName);
-                if (SharedLogic.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "All artists")
+                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "All artists")
                 {
-                    var artistsFromTitle = TagParser.ParseArtistsFromTitle(Player.CurrentlyPlayingFile.Title);
+                    var artistsFromTitle = TagParser.ParseArtistsFromTitle(SharedLogic.Instance.Player.CurrentlyPlayingFile.Title);
                     if (artistsFromTitle != null)
                         artistsList.AddRange(artistsFromTitle);
                     artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
                 }
                 ArtistFetchFailed = false;
-                //var trackInfo = await LastfmClient.Track.GetInfoAsync(TagParser.ParseTitle(SharedLogic.Player.CurrentlyPlayingFile.Title), artistsList[0]);
-                //if (trackInfo.Success && SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture == null)
+                //var trackInfo = await LastfmClient.Track.GetInfoAsync(TagParser.ParseTitle(SharedLogic.Instance.SharedLogic.Instance.Player.CurrentlyPlayingFile.Title), artistsList[0]);
+                //if (trackInfo.Success && SharedLogic.Instance.SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture == null)
                 //{
-                //    Player.CurrentlyPlayingFile.AttachedPicture = trackInfo.Content.Images?.Large?.AbsoluteUri;
-                //    Player.CurrentlyPlayingFile.Album = trackInfo.Content.AlbumName;
-                //    Player.CurrentlyPlayingFile.LeadArtist = trackInfo.Content.ArtistName;
-                //    Player.CurrentlyPlayingFile.Title = trackInfo.Content.Name;
+                //    SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture = trackInfo.Content.Images?.Large?.AbsoluteUri;
+                //    SharedLogic.Instance.Player.CurrentlyPlayingFile.Album = trackInfo.Content.AlbumName;
+                //    SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist = trackInfo.Content.ArtistName;
+                //    SharedLogic.Instance.Player.CurrentlyPlayingFile.Title = trackInfo.Content.Name;
                 //}
                 //begin fetching all artist's info
                 foreach (var artist in artistsList)
@@ -174,7 +174,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 TaskList.Clear();
-                if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(Player.CurrentlyPlayingFile.SynchronizedLyric))
+                if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric))
                 {
                     //cancel any previous requests
                     LastfmClient.HttpClient.CancelPendingRequests();
@@ -210,7 +210,7 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                if (SharedLogic.SettingsVm.AccountSettingsVM.LyricType == "None")
+                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
                     return;
                 LyricsLoading = true;
 
@@ -219,9 +219,9 @@ namespace BreadPlayer.ViewModels
                     Interval = TimeSpan.FromMilliseconds(10)
                 };
                 string lyricsText = "";
-                if (string.IsNullOrEmpty(Player.CurrentlyPlayingFile?.SynchronizedLyric))
+                if (string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric))
                 {
-                    var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Player.CurrentlyPlayingFile).ConfigureAwait(false);
+                    var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Instance.Player.CurrentlyPlayingFile).ConfigureAwait(false);
 
                     if (list == null || list?.Any() == false)
                     {
@@ -231,12 +231,12 @@ namespace BreadPlayer.ViewModels
                     while (!LrcParser.IsLrc(list[0]))
                         list.RemoveAt(0);
                     lyricsText = list[0];
-                    Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
-                    await _service.UpdateMediafile(Player.CurrentlyPlayingFile);
+                    SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
+                    await _service.UpdateMediafile(SharedLogic.Instance.Player.CurrentlyPlayingFile);
                 }
                 else
                 {
-                    lyricsText = await Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
+                    lyricsText = await SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
                 }
                 if (!string.IsNullOrEmpty(lyricsText))
                 {
@@ -250,7 +250,7 @@ namespace BreadPlayer.ViewModels
                 LyricsLoading = false;
                 timer.Tick += (s, e) =>
                 {
-                    var currentPosition = TimeSpan.FromSeconds(Player.Position);
+                    var currentPosition = TimeSpan.FromSeconds(SharedLogic.Instance.Player.Position);
                     if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50) == true)
                     {
                         var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
@@ -273,7 +273,7 @@ namespace BreadPlayer.ViewModels
         {
             Lyrics?.Clear();
             CurrentLyric = null;
-            await GetInfo(SharedLogic.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
+            await GetInfo(SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Instance.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
         }
 
         private async void Retry(object para)
@@ -286,7 +286,7 @@ namespace BreadPlayer.ViewModels
             if (para.ToString() == "Artist")
             {
                 await GetArtistInfo(CorrectArtist);
-                SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
+                SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
             }
             else if (para.ToString() == "Album")
             {
@@ -296,10 +296,10 @@ namespace BreadPlayer.ViewModels
                 }
 
                 await GetAlbumInfo(CorrectArtist, CorrectAlbum);
-                SharedLogic.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
-                SharedLogic.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
+                SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist = CorrectArtist;
+                SharedLogic.Instance.Player.CurrentlyPlayingFile.Album = CorrectAlbum;
             }
-            await _service.UpdateMediafile(SharedLogic.Player.CurrentlyPlayingFile);
+            await _service.UpdateMediafile(SharedLogic.Instance.Player.CurrentlyPlayingFile);
         }
     }
 }

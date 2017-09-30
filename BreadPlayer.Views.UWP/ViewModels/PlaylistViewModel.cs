@@ -41,7 +41,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace BreadPlayer.ViewModels
 {
-    public class PlaylistViewModel : ViewModelBase
+    public class PlaylistViewModel : ObservableObject
     {
         private ThreadSafeObservableCollection<Mediafile> _songs;
 
@@ -138,7 +138,7 @@ namespace BreadPlayer.ViewModels
                 var mediafile = para as Mediafile;
                 if (mediafile == null)
                 {
-                    mediafile = Player.CurrentlyPlayingFile;
+                    mediafile = SharedLogic.Instance.Player.CurrentlyPlayingFile;
                 }
 
                 var pName = Playlist == null ? (para as MenuFlyoutItem).Text : Playlist.Name;
@@ -172,7 +172,7 @@ namespace BreadPlayer.ViewModels
                         PlaylistArt = image;
                         ThemeManager.SetThemeColor(Songs.FirstOrDefault(s => !string.IsNullOrEmpty(s.AttachedPicture)).AttachedPicture);
                     }
-                    var mp3 = Songs?.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path);
+                    var mp3 = Songs?.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path);
                     if (mp3 != null)
                     {
                         mp3.State = PlayerState.Playing;
@@ -232,7 +232,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                var service = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
+                var service = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
                 songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
             }
             var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
@@ -245,7 +245,7 @@ namespace BreadPlayer.ViewModels
             {
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the dictionary containing playlist and songs.
 
-                if (selectedPlaylist != null && await SharedLogic.AskForPassword(selectedPlaylist))
+                if (selectedPlaylist != null && await SharedLogic.Instance.AskForPassword(selectedPlaylist))
                 {
                     MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
                     dia.Commands.Add(new UICommand("Yes") { Id = 0 });
@@ -267,7 +267,7 @@ namespace BreadPlayer.ViewModels
                         }
 
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgRemovePlaylist, selectedPlaylist); //delete from hamburger menu
-                        SharedLogic.OptionItems.Remove(SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                        SharedLogic.Instance.OptionItems.Remove(SharedLogic.Instance.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
                         await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.
                     }
                 }
@@ -283,7 +283,7 @@ namespace BreadPlayer.ViewModels
             try
             {
                 var selectedPlaylist = playlist != null ? playlist as Playlist : Playlist; //get the playlist to delete.
-                if (await SharedLogic.AskForPassword(selectedPlaylist))
+                if (await SharedLogic.Instance.AskForPassword(selectedPlaylist))
                 {
                     var dialog = new InputDialog
                     {
@@ -301,9 +301,9 @@ namespace BreadPlayer.ViewModels
                             File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
                         }
 
-                        //SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
-                        //SharedLogic.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
-                        SharedLogic.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                        //SharedLogic.Instance.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Arguments = pl;
+                        //SharedLogic.Instance.PlaylistsItems.First(t => t.Label == selectedPlaylist.Name).Label = pl.Name; //change playlist name in the hamburgermenu
+                        SharedLogic.Instance.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
                         await PlaylistService.UpdatePlaylistAsync(pl);
                         Playlist = pl; //set this.Playlist to pl (local variable);
                     }
@@ -311,13 +311,13 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception)
             {
-                await NotificationManager.ShowMessageAsync("Cannot rename playlist. Please try again.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Cannot rename playlist. Please try again.");
             }
         }
 
         public PlaylistViewModel()
         {
-            PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Playlists"));
+            PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
         }
 
         public async void Init(object data)
@@ -344,7 +344,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadArtistSongs(Artist artist)
         {
-            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(artist.Name)));
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(artist.Name)));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
@@ -354,7 +354,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
@@ -364,7 +364,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadDb()
         {
-            if (await SharedLogic.AskForPassword(_playlist))
+            if (await SharedLogic.Instance.AskForPassword(_playlist))
             {
                 if (_playlist.IsExternal)
                 {

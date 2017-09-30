@@ -8,7 +8,7 @@
     <ScrollViewer>
         <StackPanel
             Margin="10,0,0,0"
-            DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}"
+            DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}"
             RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Uid="appearenceHeader"

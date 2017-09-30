@@ -82,7 +82,7 @@ namespace BreadPlayer
                 DataTransferManager manager = DataTransferManager.GetForCurrentView();
                 manager.DataRequested += async (s, args) =>
                 {
-                    var currentlyPlaying = SharedLogic.Player.CurrentlyPlayingFile;
+                    var currentlyPlaying = SharedLogic.Instance.Player.CurrentlyPlayingFile;
                     DataRequest dataRequest = args.Request;
                     dataRequest.Data.Properties.Title = $"{currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}";
                     dataRequest.Data.Properties.Description = "Now baking toast from BreadPlayer";

@@ -153,7 +153,7 @@
                     </Grid.ColumnDefinitions>
                     <FontIcon FontSize="16" Grid.Column="0" Glyph="&#xe721;" Margin="0,0,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="White" />
-                    <TextBlock x:Name="Text" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
+                    <TextBlock x:Name="Text" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}"
                                VerticalAlignment="Center" />
                 </Grid>
             </Setter.Value>
@@ -177,7 +177,7 @@
                     </Grid.ColumnDefinitions>
                     <FontIcon FontSize="14" Grid.Column="0" Glyph="&#x0047;" Margin="0,5,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center" Foreground="{ThemeResource ThemeForeground}" FontFamily="/Assets/breadplayer.ttf#breadplayer" />
-                    <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
+                    <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Style="{ThemeResource BodyTextBlockStyle}" Text="Playlists"
                                VerticalAlignment="Center" />
                 </Grid>
             </Setter.Value>
@@ -437,7 +437,7 @@
                       HorizontalAlignment="Center" ToolTipService.ToolTip="{Binding Path=Label}" Foreground="{ThemeResource ThemeForeground}" />-->
             <TextBlock FontSize="14" FontWeight="Normal" Text="{Binding FontGlyph}" Margin="0,0,0,0" VerticalAlignment="Center"
                       HorizontalAlignment="Center"  FontFamily="/Assets/breadplayer.ttf#breadplayer" />
-            <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center" />
         </Grid>
     </DataTemplate>
     
@@ -644,7 +644,7 @@
                                         <FontIcon Glyph="&#xe721;" />
                                     </AutoSuggestBox.QueryIcon>
                                 </AutoSuggestBox>
-                                <TextBlock x:Name="headerText" Foreground="{ThemeResource TextBrush}" Grid.Column="0" VerticalAlignment="Center" Tag="Heading" Margin="10,55,0,0" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" />
+                                <TextBlock x:Name="headerText" Foreground="{ThemeResource TextBrush}" Grid.Column="0" VerticalAlignment="Center" Tag="Heading" Margin="10,55,0,0" RequestedTheme="{Binding Path=ShortcutTheme}" Text="{Binding Path=Label}" FontSize="44" FontFamily="Segoe UI" FontWeight="Bold" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding HeaderVisibility}" />
 
                                 <!--<StackPanel>
                                         <Button FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="10,0,0,0" Background="Transparent" Content="&#xE00F;" Style="{StaticResource HyperlinkBtn}" />

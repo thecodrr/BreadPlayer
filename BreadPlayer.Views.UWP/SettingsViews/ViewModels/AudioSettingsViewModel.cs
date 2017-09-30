@@ -1,8 +1,9 @@
 ﻿using BreadPlayer.Common;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.SettingsViews.ViewModels
 {
-    public class AudioSettingsViewModel : ViewModelBase
+    public class AudioSettingsViewModel : ObservableObject
     {
         private bool crossfadeEnabled;
 
@@ -12,14 +13,14 @@ namespace BreadPlayer.SettingsViews.ViewModels
             set
             {
                 Set(ref crossfadeEnabled, value);
-                Player.CrossfadeEnabled = crossfadeEnabled;
+                SharedLogic.Instance.Player.CrossfadeEnabled = crossfadeEnabled;
                 SettingsHelper.SaveRoamingSetting("CrossfadeEnabled", value);
             }
         }
 
         public AudioSettingsViewModel()
         {
-            // CrossfadeEnabled = SettingsHelper.GetSetting<bool>("CrossfadeEnabled", true);
+            CrossfadeEnabled = SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true);
         }
     }
 }

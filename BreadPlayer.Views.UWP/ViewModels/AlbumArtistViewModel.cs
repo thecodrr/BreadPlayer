@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
 {
-    public class AlbumArtistViewModel : ViewModelBase
+    public class AlbumArtistViewModel : ObservableObject
     {
         #region Database Methods
 
@@ -24,7 +24,7 @@ namespace BreadPlayer.ViewModels
 
         public void InitDb()
         {
-            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
+            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
         }
 
         #endregion Database Methods

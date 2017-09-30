@@ -42,23 +42,23 @@ namespace BreadPlayer.Themes
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
+                if (SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVm.ChangeAccentByAlbumArt)
+                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt)
                 {
                     try
                     {
                         Color color;
                         if (!string.IsNullOrEmpty(albumartPath) && albumartPath != "default")
                         {
-                            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
+                            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
                         }
-                        else if (albumartPath == "default" && SharedLogic.Player.CurrentlyPlayingFile != null)
+                        else if (albumartPath == "default" && SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
                         {
-                            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture));
                         }
                         else
                         {
@@ -70,7 +70,7 @@ namespace BreadPlayer.Themes
                     catch (Exception ex)
                     {
                         BLogger.Logger.Error("Failed to update accent.", ex);
-                        await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message);
                     }
                     //ThemeChanged?.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }

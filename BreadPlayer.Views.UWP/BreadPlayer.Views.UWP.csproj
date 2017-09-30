@@ -308,7 +308,6 @@
     </Compile>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="HamburgerMenu\INavigationMenuItem.cs" />
     <Compile Include="HamburgerMenu\NavMenuListView.cs" />
     <Compile Include="HamburgerMenu\SimpleNavMenuItem.cs" />

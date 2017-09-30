@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources />
-    <Grid DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+    <Grid DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
         <ScrollViewer>
             <Grid Name="RootGrid">
                 <StackPanel x:Name="lastfmStackPanel" Grid.Column="1">

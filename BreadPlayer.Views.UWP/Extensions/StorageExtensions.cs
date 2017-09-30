@@ -35,7 +35,7 @@ namespace BreadPlayer.Extensions
                     createdItem.Id = id;
                     if (await LibraryService.UpdateMediafile(createdItem))
                     {
-                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", createdItem.Path), 5);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", createdItem.Path), 5);
                     }
                 }
                 else
@@ -53,9 +53,9 @@ namespace BreadPlayer.Extensions
                 {
                     var newFile = await TagReaderHelper.CreateMediafile((StorageFile)await change.GetStorageItemAsync());
                     newFile.FolderPath = Path.GetDirectoryName(newFile.Path);
-                    if (SharedLogic.AddMediafile(newFile))
+                    if (SharedLogic.Instance.AddMediafile(newFile))
                     {
-                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Added. File Path: {0}", newFile.Path), 5);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("Mediafile Added. File Path: {0}", newFile.Path), 5);
                     }
                 }
             }
@@ -67,9 +67,9 @@ namespace BreadPlayer.Extensions
             {
                 if (IsItemInLibrary(change, Library, out Mediafile movedItem))
                 {
-                    if (await SharedLogic.RemoveMediafile(movedItem))
+                    if (await SharedLogic.Instance.RemoveMediafile(movedItem))
                     {
-                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Removed. File Path: {0}", movedItem.Path), 5);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("Mediafile Removed. File Path: {0}", movedItem.Path), 5);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace BreadPlayer.Extensions
             {
                 //verify that the file was deleted because it can be a false call.
                 //we do not want to delete a file that exists.
-                if (!SharedLogic.VerifyFileExists(mediaFile.Path, 200))
+                if (!SharedLogic.Instance.VerifyFileExists(mediaFile.Path, 200))
                 {
                     RemovedMediafiles.Add(mediaFile);
                     successCount++;
@@ -100,7 +100,7 @@ namespace BreadPlayer.Extensions
             {
                 Library.RemoveRange(RemovedMediafiles);
                 await LibraryService.RemoveMediafiles(RemovedMediafiles);
-                await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Removed. Folder Path: {1}", successCount, change.Path), 5);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Removed. Folder Path: {1}", successCount, change.Path), 5);
             }
         }
 
@@ -120,7 +120,7 @@ namespace BreadPlayer.Extensions
                 mediaFile.Path = mediaFile.Path.Replace(item.PreviousPath, item.Path);
 
                 //verify that the new path exists before updating.
-                if (SharedLogic.VerifyFileExists(mediaFile.Path, 200))
+                if (SharedLogic.Instance.VerifyFileExists(mediaFile.Path, 200))
                 {
                     successCount++;
 
@@ -135,7 +135,7 @@ namespace BreadPlayer.Extensions
                 //update in bulk.
                 LibraryService.UpdateMediafiles<Mediafile>(ChangedMediafiles);
 
-                await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
             }
         }
 

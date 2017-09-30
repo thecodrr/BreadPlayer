@@ -52,7 +52,7 @@ namespace BreadPlayer.ViewModels
     /// <summary>
     /// ViewModel for Library View (Severe cleanup and documentation needed.)
     /// </summary>
-    public class LibraryViewModel : ViewModelBase
+    public class LibraryViewModel : ObservableObject
     {
         #region Fields
         private IEnumerable<Mediafile> _files;
@@ -200,13 +200,13 @@ namespace BreadPlayer.ViewModels
         private LibraryService LibraryService
         {
             get => _libraryservice ?? (_libraryservice =
-                       new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")));
+                       new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")));
             set => Set(ref _libraryservice, value);
         }
         private PlaylistService PlaylistService =>
             _playlistService ?? (_playlistService = new PlaylistService(
                 new DocumentStoreDatabaseService(
-                    SharedLogic.DatabasePath,
+                    SharedLogic.Instance.DatabasePath,
                     "Playlists")));
         private string Sort
         {
@@ -447,7 +447,7 @@ namespace BreadPlayer.ViewModels
                 if (!item.IsOfType(StorageItemTypes.File) || Path.GetExtension(item.Path) != ".mp3")
                 {
                     if (!item.IsOfType(StorageItemTypes.Folder)) continue;
-                    await SharedLogic.SettingsVm.AddFolderToLibraryAsync(
+                    await SharedLogic.Instance.SettingsVm.AddFolderToLibraryAsync(
                          ((StorageFolder)item));
                 }
                 else
@@ -459,7 +459,7 @@ namespace BreadPlayer.ViewModels
                     {
                         var mp3File = await TagReaderHelper.CreateMediafile(item as StorageFile);
                         await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File).ConfigureAwait(false);
-                        SharedLogic.AddMediafile(mp3File);
+                        SharedLogic.Instance.AddMediafile(mp3File);
                     }
                     catch (Exception ex)
                     {
@@ -553,9 +553,9 @@ namespace BreadPlayer.ViewModels
                 _source = src;
                 _libgrouped = ViewSource.IsSourceGrouped;
                 var tMediaFile = src as ThreadSafeObservableCollection<Mediafile>;
-                if (tMediaFile?.Any() == true && Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path) != null)
+                if (tMediaFile?.Any() == true && SharedLogic.Instance.Player.CurrentlyPlayingFile != null && tMediaFile.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path) != null)
                 {
-                    tMediaFile.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
+                    tMediaFile.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path).State = PlayerState.Playing;
                 }
             });
         }
@@ -610,7 +610,7 @@ namespace BreadPlayer.ViewModels
                 }
                 else if(group.Key is ArtistGroupKey artistGroupKey)
                 {
-                    artistGroupKey.FirstElement = await SharedLogic.AlbumArtistService.GetArtist(artistGroupKey.Key.ToLower());
+                    artistGroupKey.FirstElement = await SharedLogic.Instance.AlbumArtistService.GetArtist(artistGroupKey.Key.ToLower());
                 }
                 else
                     return;
@@ -803,7 +803,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                await NotificationManager.ShowMessageAsync("Unable to update jumplist due to some problem with TracksCollection. ERROR INFO: " + ex.Message);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Unable to update jumplist due to some problem with TracksCollection. ERROR INFO: " + ex.Message);
             }
         }
         #endregion Methods        
@@ -817,7 +817,7 @@ namespace BreadPlayer.ViewModels
             TracksCollection.Clear();
             GenreFlyout?.Items?.Clear();
             _oldItems = null;
-            SharedLogic.OptionItems.Clear();
+            SharedLogic.Instance.OptionItems.Clear();
             SongCount = -1;
         }
 
@@ -895,7 +895,7 @@ namespace BreadPlayer.ViewModels
                 _libraryLoaded = true;
                 await CreateGenreMenu().ConfigureAwait(false);
                 BLogger.Logger.Info("Library successfully loaded!");
-                await NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }
         }

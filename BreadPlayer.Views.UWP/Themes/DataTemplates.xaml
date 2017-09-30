@@ -12,7 +12,7 @@
 
     <Extensions:BindableFlyout
         x:Key="PlaylistsFlyout"
-        ItemsSource="{Binding Source={StaticResource Core}, Path=OptionItems}"
+        ItemsSource="{Binding Path=Instance.OptionItems, Source={StaticResource Core}}"
         Placement="Right" />
 
     <MenuFlyout x:Key="AlbumArtistFlyout">
@@ -50,7 +50,7 @@
             Glyph="&#xE768;"
             Text="Play" />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding OpenSongLocationCommand}"
+            Command="{Binding Path=Instance.OpenSongLocationCommand}"
             CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"
             DataContext="{Binding Source={StaticResource Core}}"
             Glyph="&#xE8DA;"
@@ -62,7 +62,7 @@
             Glyph="&#xE8DE;"
             Text="Relocate Song" />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding ChangeAlbumArtCommand}"
+            Command="{Binding Path=Instance.ChangeAlbumArtCommand}"
             CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"
             DataContext="{Binding Source={StaticResource Core}}"
             Glyph="&#xEE71;"
@@ -88,7 +88,7 @@
             Visibility="{Binding Path=IsPlaylistSong}" />
         <MenuFlyoutSeparator />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding ShowPropertiesCommand}"
+            Command="{Binding Instance.ShowPropertiesCommand}"
             CommandParameter="{Binding ElementName=playMenuItem, Path=CommandParameter}"
             DataContext="{Binding Source={StaticResource Core}}"
             Glyph="&#xE90B;"
@@ -500,7 +500,6 @@
                 Width="10000"
                 Margin="0,0,5,0"
                 VerticalAlignment="Center"
-                Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 x:Phase="0"
                 FontSize="14"
                 Text="{x:Bind Title}"
@@ -512,7 +511,6 @@
                 Width="50"
                 Margin="15,0,0,0"
                 VerticalAlignment="Center"
-                Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 x:Phase="3"
                 FontSize="13"
                 Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
@@ -595,7 +593,7 @@
                 VerticalAlignment="Center"
                 x:Phase="1"
                 Background="Transparent"
-                Command="{Binding Source={StaticResource Core}, Path=NavigateToArtistPageCommand}"
+                Command="{Binding Source={StaticResource Core}, Path=Instance.NavigateToArtistPageCommand}"
                 CommandParameter="{x:Bind LeadArtist}"
                 Content="{x:Bind LeadArtist}"
                 FontSize="13"
@@ -609,7 +607,7 @@
                 VerticalAlignment="Center"
                 x:Phase="2"
                 Background="Transparent"
-                Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
+                Command="{Binding Source={StaticResource Core}, Path=Instance.NavigateToAlbumPageCommand}"
                 CommandParameter="{x:Bind Album}"
                 Content="{x:Bind Album}"
                 FontSize="13"

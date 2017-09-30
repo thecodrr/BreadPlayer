@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <Grid DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <Grid DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

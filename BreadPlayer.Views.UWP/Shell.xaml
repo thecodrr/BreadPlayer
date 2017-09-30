@@ -77,7 +77,7 @@
         <BPControls:ImageEx
             x:Name="MainBackgroundImage"
             Margin="0,0,0,70"
-            Source="{Binding Source={StaticResource Core}, Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"
+            Source="{Binding Source={StaticResource Core}, Path=Instance.Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"
             Stretch="UniformToFill">
             <Image
                 x:Name="backgroundImage"
@@ -99,7 +99,7 @@
                 x:Name="hamburgerMenu"
                 Margin="0,0,0,69.5"
                 InitialPage="local:LibraryView"
-                PlaylistsItems="{Binding Source={StaticResource Core}, Path=PlaylistsItems}">
+                PlaylistsItems="{Binding Source={StaticResource Core}, Path=Instance.PlaylistsItems}">
                 <controls:SplitViewMenu.TopNavigationItems>
                     <controls:SimpleNavMenuItem
                         x:Name="LibraryItem"
@@ -167,7 +167,7 @@
                 VerticalAlignment="Bottom"
                 Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                 CornerRadius="20"
-                DataContext="{Binding Source={StaticResource Core}, Path=NotificationManager}"
+                DataContext="{Binding Source={StaticResource Core}, Path=Instance.NotificationManager}"
                 Opacity="0"
                 RenderTransformOrigin="0.5,0.5">
                 <Border.RenderTransform>
@@ -214,7 +214,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         FontWeight="SemiBold"
-                        IsOn="{Binding Source={StaticResource Core}, Path=Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        IsOn="{Binding Source={StaticResource Core}, Path=Instance.Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         OffContent=""
                         OnContent="" />
                     <StackPanel
@@ -241,7 +241,7 @@
                             Orientation="Horizontal"
                             SmallChange="0.1"
                             Style="{StaticResource CircleSlider}"
-                            Value="{Binding Path=Player.Equalizer.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Value="{Binding Path=Instance.Player.Equalizer.Preamp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock
                             Margin="10,0,0,0"
                             HorizontalAlignment="Center"
@@ -407,7 +407,7 @@
                             xmlns:Extension="using:BreadPlayer.Extensions"
                             x:Key="Flyout"
                             x:Name="contextMenu"
-                            Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=OptionItems}" />
+                            Extension:FlyoutMenuExtension.MyItems="{Binding Source={StaticResource Core}, Path=Instance.OptionItems}" />
                     </AppBarButton.Resources>
                     <StackPanel
                         Height="70"
@@ -422,7 +422,7 @@
                                 Height="50"
                                 Margin="5,5,5,5"
                                 VerticalAlignment="Center"
-                                Source="{Binding Path=Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"
+                                Source="{Binding Path=Instance.Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"
                                 Stretch="Uniform" />
                             <FontIcon
                                 FontSize="52"
@@ -466,7 +466,7 @@
                         <Core:EventTriggerBehavior EventName="Holding">
                             <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}" />
                         </Core:EventTriggerBehavior>
-                        <Core:EventTriggerBehavior EventName="MediaChanging" SourceObject="{Binding Source={StaticResource Core}, Path=Player}">
+                        <Core:EventTriggerBehavior EventName="MediaChanging" SourceObject="{Binding Source={StaticResource Core}, Path=Instance.Player}">
                             <Media:ControlStoryboardAction Storyboard="{StaticResource ImageTransition}" />
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
@@ -494,7 +494,7 @@
                     BorderBrush="#FFDBDBDB"
                     BorderThickness="0"
                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                    Maximum="{Binding Source={StaticResource Core}, Path=Player.Length, FallbackValue=100}"
+                    Maximum="{Binding Source={StaticResource Core}, Path=Instance.Player.Length, FallbackValue=100}"
                     Style="{StaticResource CircleSlider}"
                     ThumbToolTipValueConverter="{StaticResource DoubleToTime}"
                     Visibility="Visible"
@@ -507,7 +507,7 @@
                     VerticalAlignment="Center"
                     FontSize="12"
                     Foreground="{ThemeResource TextBrush}"
-                    Text="{Binding Source={StaticResource Core}, Path=Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}"
+                    Text="{Binding Source={StaticResource Core}, Path=Instance.Player.Length, Converter={StaticResource DoubleToTime}, UpdateSourceTrigger=Explicit}"
                     Visibility="{Binding ElementName=positionTxt, Path=Visibility}" />
 
                 <AppBarButton
@@ -675,7 +675,7 @@
                 VerticalAlignment="Center"
                 BorderBrush="WhiteSmoke"
                 Icon="Mute"
-                IsChecked="{Binding Path=Player.IsVolumeMuted, Mode=TwoWay}"
+                IsChecked="{Binding Path=Instance.Player.IsVolumeMuted, Mode=TwoWay}"
                 IsCompact="True"
                 Style="{StaticResource CustomAppBarToggleButtonStyle}" />
             <Slider
@@ -689,7 +689,7 @@
                 LargeChange="10"
                 Maximum="100"
                 Style="{StaticResource CircleSlider}"
-                Value="{Binding Path=Player.Volume, Mode=TwoWay}" />
+                Value="{Binding Path=Instance.Player.Volume, Mode=TwoWay}" />
             <TextBlock
                 Grid.Column="2"
                 Width="40"
@@ -698,7 +698,7 @@
                 VerticalAlignment="Center"
                 FontSize="20"
                 Foreground="#FFE0E0E0"
-                Text="{Binding Path=Player.Volume}"
+                Text="{Binding Path=Instance.Player.Volume}"
                 TextAlignment="Center" />
         </Grid>
         <Grid
@@ -811,7 +811,7 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=NotificationManager.Show}" />
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=Instance.NotificationManager.Show}" />
                     </VisualState.StateTriggers>
                     <Storyboard>
                         <DoubleAnimation
@@ -832,7 +832,7 @@
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=NotificationManager.Show, Converter={StaticResource TrueToFalse}}" />
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=Instance.NotificationManager.Show, Converter={StaticResource TrueToFalse}}" />
                     </VisualState.StateTriggers>
                     <Storyboard>
                         <DoubleAnimation
@@ -891,7 +891,7 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVm.EnableBlur}" />
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.EnableBlur}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="backgroundBlur.Visibility" Value="Visible" />
@@ -899,7 +899,7 @@
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=SettingsVm.EnableBlur, Converter={StaticResource TrueToFalse}}" />
+                        <StateTrigger IsActive="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.EnableBlur, Converter={StaticResource TrueToFalse}}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="backgroundBlur.Visibility" Value="Collapsed" />
@@ -940,7 +940,7 @@
                     DoubleKeyCommand="True"
                     PressedKey="M" />
                 <Behaviours:InvokeCommandByKeyDown
-                    Command="{Binding Source={StaticResource Core}, Path=ShowPropertiesCommand}"
+                    Command="{Binding Source={StaticResource Core}, Path=Instance.ShowPropertiesCommand}"
                     DoubleKeyCommand="True"
                     PressedKey="I" />
 

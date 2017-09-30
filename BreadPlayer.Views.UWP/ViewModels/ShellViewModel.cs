@@ -48,7 +48,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {
-    public class ShellViewModel : ViewModelBase
+    public class ShellViewModel : ObservableObject
     {
         #region Fields
 
@@ -57,7 +57,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile _songToStopAfter;
         private DispatcherTimer _timer;
         private UndoRedoStack<Mediafile> _history = new UndoRedoStack<Mediafile>();
-        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
+        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
         private int _songCount;
         private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
 
@@ -83,7 +83,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgStopAfterSong, new Action<Message>(HandleSaveSongToStopAfterMessage));
             PlayPauseIcon = new SymbolIcon(Symbol.Play);
             //PlaylistsItems = new ObservableCollection<SimpleNavMenuItem>();
-            Player.PlayerState = PlayerState.Stopped;
+            SharedLogic.Instance.Player.PlayerState = PlayerState.Stopped;
             DontUpdatePosition = false;
             _timer = new DispatcherTimer(new BreadDispatcher())
             {
@@ -91,9 +91,9 @@ namespace BreadPlayer.ViewModels
             };
             _timer.Tick += Timer_Tick;
             _timer.Stop();
-            Player.MediaEnded += Player_MediaEnded;
+            SharedLogic.Instance.Player.MediaEnded += Player_MediaEnded;
             PropertyChanged += ShellViewModel_PropertyChanged;
-            Player.MediaAboutToEnd += Player_MediaAboutToEnd;
+            SharedLogic.Instance.Player.MediaAboutToEnd += Player_MediaAboutToEnd;
 
             //these events are for detecting when the default audio
             //device is changed in PC and Mobile.
@@ -208,7 +208,7 @@ namespace BreadPlayer.ViewModels
         private async void HandleDisposeMessage()
         {
             Reset();
-            await Player.Stop();
+            await SharedLogic.Instance.Player.Stop();
         }
 
         private void HandleSaveSongToStopAfterMessage(Message songToStopAfter)
@@ -274,22 +274,22 @@ namespace BreadPlayer.ViewModels
 
         private void Mute()
         {
-            Player.IsVolumeMuted = Player.IsVolumeMuted ? false : true;
+            SharedLogic.Instance.Player.IsVolumeMuted = SharedLogic.Instance.Player.IsVolumeMuted ? false : true;
         }
 
         private void IncreaseVolume()
         {
-            if (Player.Volume < 100)
+            if (SharedLogic.Instance.Player.Volume < 100)
             {
-                Player.Volume++;
+                SharedLogic.Instance.Player.Volume++;
             }
         }
 
         private void DecreaseVolume()
         {
-            if (Player.Volume > 0)
+            if (SharedLogic.Instance.Player.Volume > 0)
             {
-                Player.Volume--;
+                SharedLogic.Instance.Player.Volume--;
             }
         }
 
@@ -324,17 +324,17 @@ namespace BreadPlayer.ViewModels
             {
                 case "No Repeat":
                     Repeat = "Repeat Song";
-                    Player.IsLoopingEnabled = true;
+                    SharedLogic.Instance.Player.IsLoopingEnabled = true;
                     break;
 
                 case "Repeat Song":
                     Repeat = "Repeat List";
-                    Player.IsLoopingEnabled = false;
+                    SharedLogic.Instance.Player.IsLoopingEnabled = false;
                     break;
 
                 case "Repeat List":
                     Repeat = "No Repeat";
-                    Player.IsLoopingEnabled = false;
+                    SharedLogic.Instance.Player.IsLoopingEnabled = false;
                     break;
 
                 default:
@@ -346,7 +346,7 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if (Player.CurrentlyPlayingFile == null && TracksCollection?.Elements?.Count > 0)
+                if (SharedLogic.Instance.Player.CurrentlyPlayingFile == null && TracksCollection?.Elements?.Count > 0)
                 {
                     await Load(TracksCollection?.Elements?.First(), true);
                 }
@@ -354,19 +354,19 @@ namespace BreadPlayer.ViewModels
                 {
                     await BreadDispatcher.InvokeAsync(async () =>
                     {
-                        switch (Player.PlayerState)
+                        switch (SharedLogic.Instance.Player.PlayerState)
                         {
                             case PlayerState.Playing:
-                                await Player.Pause();
+                                await SharedLogic.Instance.Player.Pause();
                                 _timer.Stop();
-                                Player.PlayerState = PlayerState.Stopped;
+                                SharedLogic.Instance.Player.PlayerState = PlayerState.Stopped;
                                 PlayPauseIcon = new SymbolIcon(Symbol.Play);
                                 break;
 
                             case PlayerState.Paused:
                             case PlayerState.Ended:
                             case PlayerState.Stopped:
-                                await Player.Play();
+                                await SharedLogic.Instance.Player.Play();
                                 _timer.Start();
                                 PlayPauseIcon = new SymbolIcon(Symbol.Pause);
                                 DontUpdatePosition = false;
@@ -377,7 +377,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                await NotificationManager.ShowMessageAsync("Some error occured while playing the song. ERROR INFO: " + ex.Message);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Some error occured while playing the song. ERROR INFO: " + ex.Message);
             }
         }
 
@@ -444,7 +444,7 @@ namespace BreadPlayer.ViewModels
                 catch (Exception ex)
                 {
                     BLogger.Logger.Error("An error occured while trying to play next song.", ex);
-                    await NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     ClearPlayerState();
                     PlayNext();
                 }
@@ -454,8 +454,8 @@ namespace BreadPlayer.ViewModels
 
         private Mediafile GetNextSongInGroup()
         {
-            var currentGroup = TracksCollection.FirstOrDefault(t => t.Any(c => c.Path == Player.CurrentlyPlayingFile.Path));
-            var currentSongIndex = currentGroup.IndexOf(currentGroup.FirstOrDefault(t => t.Path == Player.CurrentlyPlayingFile.Path));
+            var currentGroup = TracksCollection.FirstOrDefault(t => t.Any(c => c.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile.Path));
+            var currentSongIndex = currentGroup.IndexOf(currentGroup.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile.Path));
             var nextGroup = currentSongIndex + 1 == currentGroup.Count ? TracksCollection.ElementAt(TracksCollection.IndexOf(currentGroup) + 1) : currentGroup;
             var toPlaySongIndex = nextGroup == currentGroup ? currentSongIndex + 1 : 0;
             return nextGroup.ElementAt(toPlaySongIndex);
@@ -463,10 +463,10 @@ namespace BreadPlayer.ViewModels
 
         private async void PlayNext()
         {
-            if (Player.CurrentlyPlayingFile != null)
+            if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
             {
-                PreviousSong = Player.CurrentlyPlayingFile;
-                _history.Do(Player.CurrentlyPlayingFile);
+                PreviousSong = SharedLogic.Instance.Player.CurrentlyPlayingFile;
+                _history.Do(SharedLogic.Instance.Player.CurrentlyPlayingFile);
             }
 
             Mediafile toPlayFile = UpcomingSong;
@@ -532,7 +532,7 @@ namespace BreadPlayer.ViewModels
             if (file != null)
             {
                 var mp3File = await TagReaderHelper.CreateMediafile(file, true);
-                if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+                if (SharedLogic.Instance.Player.PlayerState == PlayerState.Paused || SharedLogic.Instance.Player.PlayerState == PlayerState.Stopped)
                 {
                     await Load(mp3File);
                 }
@@ -559,7 +559,7 @@ namespace BreadPlayer.ViewModels
             if (eventCount > 1)
             {
                 BLogger.Logger.Info($"Switching audio render device to [{currentEndpoint.ToString()}].");
-                SharedLogic.Player.ChangeDevice(currentEndpoint.ToString());
+                SharedLogic.Instance.Player.ChangeDevice(currentEndpoint.ToString());
             }
             //increase the event count
             eventCount += 1;
@@ -576,7 +576,7 @@ namespace BreadPlayer.ViewModels
 
             _audioDeviceId = args.Id;
 
-            await SharedLogic.Player.ChangeDevice(device.Name);
+            await SharedLogic.Instance.Player.ChangeDevice(device.Name);
         }
 
         private async void Player_MediaAboutToEnd(object sender, MediaAboutToEndEventArgs e)
@@ -587,8 +587,8 @@ namespace BreadPlayer.ViewModels
             }
             if (UpcomingSong != null && Repeat != "Repeat Song")
             {
-                NotificationManager.SendUpcomingSongNotification(UpcomingSong);
-                await NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
+                SharedLogic.Instance.NotificationManager.SendUpcomingSongNotification(UpcomingSong);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
             }
         }
 
@@ -603,7 +603,7 @@ namespace BreadPlayer.ViewModels
 
         private async void Player_MediaEnded(object sender, MediaEndedEventArgs e)
         {
-            var lastPlayingSong = Player.CurrentlyPlayingFile;
+            var lastPlayingSong = SharedLogic.Instance.Player.CurrentlyPlayingFile;
             if (Repeat == "Repeat List")
             {
                 PlayNext();
@@ -614,7 +614,7 @@ namespace BreadPlayer.ViewModels
                 {
                     DontUpdatePosition = true;
                     CurrentPosition = 0;
-                    Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
+                    SharedLogic.Instance.Player.PlayerState = Repeat == "Repeat Song" ? PlayerState.Stopped : PlayerState.Playing;
                     if (Repeat == "No Repeat" && GetPlayingCollection() != null && GetPlayingCollection().Any())
                     {
                         PlayNext();
@@ -640,9 +640,9 @@ namespace BreadPlayer.ViewModels
         private void Timer_Tick(object sender, object e)
         {
             double pos = 0;
-            if (Player != null)
+            if (SharedLogic.Instance.Player != null)
             {
-                pos = Player.Position;
+                pos = SharedLogic.Instance.Player.Position;
             }
             if (!DontUpdatePosition)
             {
@@ -751,7 +751,7 @@ namespace BreadPlayer.ViewModels
                 Set(ref _currentPosition, value);
                 if (DontUpdatePosition)
                 {
-                    Player.Position = _currentPosition;
+                    SharedLogic.Instance.Player.Position = _currentPosition;
                 }
             }
         }
@@ -808,16 +808,16 @@ namespace BreadPlayer.ViewModels
 
         private async Task ScrobblePlayingSong(Mediafile song)
         {
-            if (SharedLogic.LastfmScrobbler != null)
+            if (SharedLogic.Instance.LastfmScrobbler != null)
             {
-                var scrobble = await SharedLogic.LastfmScrobbler.Scrobble(song.LeadArtist, song.Album, song.Title);
+                var scrobble = await SharedLogic.Instance.LastfmScrobbler.Scrobble(song.LeadArtist, song.Album, song.Title);
                 if (scrobble.Success)
                 {
-                    await NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Song successfully scrobbled.", 4);
                 }
                 else
                 {
-                    await NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble?.Exception?.Message), "Failed to scrobble this song");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageBoxAsync(string.Format("Failed to scrobble this song due to {0}. Exception details: {1}.", scrobble.Status.ToString(), scrobble?.Exception?.Message), "Failed to scrobble this song");
                 }
             }
         }
@@ -830,7 +830,7 @@ namespace BreadPlayer.ViewModels
 
         private async Task PlayFile(Mediafile toPlayFile, bool play = false)
         {
-            if (Player.PlayerState == PlayerState.Paused || Player.PlayerState == PlayerState.Stopped)
+            if (SharedLogic.Instance.Player.PlayerState == PlayerState.Paused || SharedLogic.Instance.Player.PlayerState == PlayerState.Stopped)
             {
                 await Load(toPlayFile);
             }
@@ -884,7 +884,7 @@ namespace BreadPlayer.ViewModels
         {
             if (_songToStopAfter != null
                 && (_songToStopAfter.CompareTo(PreviousSong) == 0
-                || _songToStopAfter.CompareTo(Player.CurrentlyPlayingFile) == 0))
+                || _songToStopAfter.CompareTo(SharedLogic.Instance.Player.CurrentlyPlayingFile) == 0))
             {
                 PlayPause();
                 _songToStopAfter = null;
@@ -901,10 +901,10 @@ namespace BreadPlayer.ViewModels
         {
             applicationView.Title = string.Format("Listening to {0} by {1}", mediaFile.Title, mediaFile.LeadArtist);
 
-            ThemeManager.SetThemeColor(Player.CurrentlyPlayingFile?.AttachedPicture);
+            ThemeManager.SetThemeColor(SharedLogic.Instance.Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.UpdateTile(mediaFile);
-            if (SharedLogic.SettingsVm.ReplaceLockscreenWithAlbumArt)
+            if (SharedLogic.Instance.SettingsVm.ReplaceLockscreenWithAlbumArt)
             {
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             }
@@ -925,12 +925,12 @@ namespace BreadPlayer.ViewModels
 
             if (play)
             {
-                Player.IgnoreErrors = true;
+                SharedLogic.Instance.Player.IgnoreErrors = true;
             }
 
             mp3File.State = PlayerState.Playing;
-            Player.Volume = Player.Volume == 50 ? vol : Player.Volume;
-            if (await Player.Load(mp3File))
+            SharedLogic.Instance.Player.Volume = SharedLogic.Instance.Player.Volume == 50 ? vol : SharedLogic.Instance.Player.Volume;
+            if (await SharedLogic.Instance.Player.Load(mp3File))
             {
                 PlayPauseCommand.IsEnabled = true;
                 if (play)
@@ -954,7 +954,7 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Failed to load file. Loading next file...");
                 var playingCollection = GetPlayingCollection();
                 int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
-                Player.IgnoreErrors = false;
+                SharedLogic.Instance.Player.IgnoreErrors = false;
                 await Load(await GetUpcomingSong(true), true);
             }
 

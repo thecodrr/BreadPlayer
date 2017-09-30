@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
 {
-    public class SearchResultsViewModel : ViewModelBase
+    public class SearchResultsViewModel : ObservableObject
     {
         private bool _albumsVisible;
 
@@ -58,7 +58,7 @@ namespace BreadPlayer.ViewModels
 
         public async Task<(IEnumerable<Mediafile> Songs, IEnumerable<Album> Albums, IEnumerable<Artist> Artists)> StartSearch(string query)
         {
-            var documentStore = new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks");
+            var documentStore = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             LibraryService service = new LibraryService(documentStore);
             AlbumArtistService albumArtistService = new AlbumArtistService(documentStore);
             return (await service.Query(query, 5),

@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Name="resetHeader"
                 x:Uid="resetHeader"

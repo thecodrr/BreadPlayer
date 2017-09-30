@@ -47,40 +47,40 @@ namespace BreadPlayer.Core
         #endregion Ctor
 
         #region Singletons (NEED IMPROVEMENTS)
-
+        public static SharedLogic Instance => GSingleton<SharedLogic>.Instance.Singleton;
         /// <summary>
         /// This path is used around the codebase multiple times,
         /// so it is better to define it once and call it everywhere
         /// </summary>
-        public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
+        public string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
 
         /// <summary>
         /// These contextmenu items are used in the context menu for library
         /// items. This shouldn't be here.
         /// #TODO move this to the correct place & remove the singleton.
         /// </summary>
-        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;
+        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GSingleton<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.Singleton;
 
         /// <summary>
         /// The notification manager is used around the application many times,
         /// a global singleton is best for such a design.
         /// </summary>
-        public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
+        public BreadNotificationManager NotificationManager => GSingleton<BreadNotificationManager>.Instance.Singleton;// { get { return items; } set { Set(ref items, value); } }
 
         /// <summary>
         /// The singleton for player engine. Could this be better designed?
         /// Perhaps an Instance Singleton in the PlayerEngine itself?
         /// A singleton here makes most sense.
         /// </summary>
-        private static IPlayerEngine _player;
+        private IPlayerEngine _player;
 
-        public static IPlayerEngine Player
+        public IPlayerEngine Player
         {
             get
             {
                 if (_player == null)
                 {
-                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), SettingsVm.AudioSettingsVM.CrossfadeEnabled);
+                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true));
                 }
 
                 return _player;
@@ -92,13 +92,13 @@ namespace BreadPlayer.Core
         /// This is bad design plain and simple. Needs improvement.
         /// #TODO Clean this up and improve this to a better design.
         /// </summary>
-        public static SettingsViewModel SettingsVm => GenericService<SettingsViewModel>.Instance.GenericClass;
+        public SettingsViewModel SettingsVm => GSingleton<SettingsViewModel>.Instance.Singleton;
 
         //This is not a traditional singleton. Instead of making it readonly,
         //I have made this read/write capable. Can this be improved?
-        private static Lastfm _lastfmScrobbler;
+        private Lastfm _lastfmScrobbler;
 
-        public static Lastfm LastfmScrobbler
+        public Lastfm LastfmScrobbler
         {
             get => _lastfmScrobbler;
             set
@@ -261,7 +261,7 @@ namespace BreadPlayer.Core
         //these methods are badly designed and redundant.
         //should be removed and cleanup.
         //#TODO clean this up
-        public static bool AddMediafile(Mediafile file, int index = -1)
+        public bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file == null)
             {
@@ -275,7 +275,7 @@ namespace BreadPlayer.Core
             return true;
         }
 
-        public static async Task<bool> RemoveMediafile(Mediafile file)
+        public async Task<bool> RemoveMediafile(Mediafile file)
         {
             if (file == null)
             {
@@ -331,7 +331,7 @@ namespace BreadPlayer.Core
         /// <param name="path"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public static bool VerifyFileExists(string path, int timeout)
+        public bool VerifyFileExists(string path, int timeout)
         {
             var task = new Task<bool>(() =>
             {
@@ -349,7 +349,7 @@ namespace BreadPlayer.Core
         /// </summary>
         /// <param name="file">the image file</param>
         /// <returns>the dominant color</returns>
-        public static async Task<Color> GetDominantColor(StorageFile file)
+        public async Task<Color> GetDominantColor(StorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {

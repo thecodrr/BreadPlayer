@@ -27,7 +27,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace SplitViewMenu
 {
-    public class SimpleNavMenuItem : ViewModelBase, INavigationMenuItem
+    public class SimpleNavMenuItem : ObservableObject, INavigationMenuItem
     {
         public SimpleNavMenuItem()
         {

@@ -17,14 +17,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {
-    public class PlaylistsCollectionViewModel : ViewModelBase
+    public class PlaylistsCollectionViewModel : ObservableObject
     {
         private PlaylistService _playlistService;
 
         private PlaylistService PlaylistService =>
             _playlistService ?? (_playlistService = new PlaylistService(
                 new DocumentStoreDatabaseService(
-                    SharedLogic.DatabasePath,
+                    SharedLogic.Instance.DatabasePath,
                     "Playlists")));
         ThreadSafeObservableCollection<Playlist> playlists;
         public ThreadSafeObservableCollection<Playlist> Playlists
@@ -93,12 +93,12 @@ namespace BreadPlayer.ViewModels
 
         private async Task LoadPlaylists()
         {
-            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
+            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
             var playlists = await PlaylistService.GetPlaylistsAsync().ConfigureAwait(false);
             if (playlists != null)
             {
                 Playlists.AddRange(playlists);
-                SharedLogic.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
+                SharedLogic.Instance.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
             }
         }
 
@@ -113,7 +113,7 @@ namespace BreadPlayer.ViewModels
                 {
                     if (menu?.DataContext is Album album)
                     {
-                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks")).Query((album.AlbumName));
+                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query((album.AlbumName));
                         if (albumSongs?.Any() == true)
                             songList.AddRange(albumSongs);
                     }
@@ -122,13 +122,13 @@ namespace BreadPlayer.ViewModels
                 }
                 else
                 {
-                    songList.Add(Player.CurrentlyPlayingFile);
+                    songList.Add(SharedLogic.Instance.Player.CurrentlyPlayingFile);
                 }
                 var dictPlaylist = menu?.Text == "New Playlist" ? await ShowAddPlaylistDialogAsync() : await PlaylistService.GetPlaylistAsync(menu?.Text);
                 bool proceed;
                 if (menu?.Text != "New Playlist")
                 {
-                    proceed = await SharedLogic.AskForPassword(dictPlaylist);
+                    proceed = await SharedLogic.Instance.AskForPassword(dictPlaylist);
                 }
                 else
                 {
@@ -205,7 +205,7 @@ namespace BreadPlayer.ViewModels
                 var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
                 collectionPlaylist.SongsCount = pSongs.Count + " songs";
                 collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
-                collectionPlaylist.ImageColor = (await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
+                collectionPlaylist.ImageColor = (await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
                 collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
                 await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
             }
@@ -214,7 +214,7 @@ namespace BreadPlayer.ViewModels
         private void AddPlaylist(Playlist playlist)
         {
             Playlists.Add(playlist);
-            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
+            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
         }
     }
 }

@@ -2,9 +2,9 @@
     x:Class="BreadPlayer.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:BreadPlayerCore="using:BreadPlayer.Core"
     xmlns:Converter="using:BreadPlayer.Converters"
     xmlns:Extensions="using:BreadPlayer.Extensions"
-    xmlns:MacalifaCore="using:BreadPlayer.Core"
     xmlns:Themes="using:BreadPlayer.Themes"
     xmlns:VM="using:BreadPlayer.ViewModels"
     RequiresPointerMode="WhenRequested">
@@ -179,7 +179,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <Themes:DataTemplates />
             </ResourceDictionary.MergedDictionaries>
-            <MacalifaCore:SharedLogic x:Key="Core" />
+            <BreadPlayerCore:SharedLogic x:Key="Core" />
             <VM:LibraryViewModel x:Key="LibVM" />
             <VM:PlaylistViewModel x:Key="PlaylistVM" />
             <VM:ShellViewModel x:Key="ShellVM" />

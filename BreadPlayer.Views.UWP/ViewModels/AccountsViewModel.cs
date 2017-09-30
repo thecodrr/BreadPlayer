@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BreadPlayer.ViewModels
 {
-    public class AccountsViewModel : ViewModelBase
+    public class AccountsViewModel : ObservableObject
     {
         #region Lastfm Configuration
 
@@ -46,7 +46,7 @@ namespace BreadPlayer.ViewModels
             {
                 if ((bool)para)
                 {
-                    await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("You need to enter username and password first!");
                 }
                 return;
             }
@@ -61,17 +61,17 @@ namespace BreadPlayer.ViewModels
             {
                 await lastfm.Login(LastfmUsername, LastfmPassword);
             }
-            SharedLogic.LastfmScrobbler = lastfm;
+            SharedLogic.Instance.LastfmScrobbler = lastfm;
 
             if (lastfm.LastfmClient.Auth.Authenticated)
             {
                 LoginStatus = "(Logged In)";
                 SaveUserSession(lastfm.LastfmClient.Auth.UserSession);
-                await NotificationManager.ShowMessageAsync("Successfully logged in!");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Successfully logged in!");
             }
             else
             {
-                await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
             }
         }
 

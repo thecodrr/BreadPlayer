@@ -108,7 +108,7 @@ namespace BreadPlayer.Extensions
             DependencyProperty.Register("Glyph", typeof(string), typeof(MenuFlyoutIconItem), new PropertyMetadata(null));
     }
 
-    public class ContextMenuCommand : ViewModelBase
+    public class ContextMenuCommand : ObservableObject
     {
         public ContextMenuCommand(ICommand command, string text, string glyph = "\uE93C", object cmdPara = null)
         {
@@ -166,12 +166,11 @@ namespace BreadPlayer.Extensions
         {
             obj.SetValue(MyItemsProperty, value);
         }
-
-        private static SharedLogic _core = new SharedLogic();
+        
 
         private static void AddMenuItems(MenuFlyoutSubItem menuFlyoutSubItem, MenuFlyout menuFlyout = null)
         {
-            foreach (var menuItem in _core.OptionItems)
+            foreach (var menuItem in SharedLogic.Instance.OptionItems)
             {
                 var item = new MenuFlyoutItem
                 {
@@ -200,9 +199,9 @@ namespace BreadPlayer.Extensions
             {
                 menuFlyout.Items.Clear();
                 MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
-                MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
-                MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = _core.OpenSongLocationCommand, CommandParameter = null };
-                MenuFlyoutItem changeAlbumArt = new MenuFlyoutItem { Text = "Change Album Art", Command = _core.ChangeAlbumArtCommand, CommandParameter = null };
+                MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = SharedLogic.Instance.ShowPropertiesCommand, CommandParameter = null };
+                MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = SharedLogic.Instance.OpenSongLocationCommand, CommandParameter = null };
+                MenuFlyoutItem changeAlbumArt = new MenuFlyoutItem { Text = "Change Album Art", Command = SharedLogic.Instance.ChangeAlbumArtCommand, CommandParameter = null };
 
                 menuFlyout.Items.Add(addTo);
                 menuFlyout.Items.Add(changeAlbumArt);
@@ -210,7 +209,7 @@ namespace BreadPlayer.Extensions
                 menuFlyout.Items.Add(properties);
                 AddMenuItems(addTo, menuFlyout);
             });
-            //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
+            //SharedLogic.Instance.Player.PropertyChanged += Player_PropertyChanged;
         }
 
         private static void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -273,7 +272,7 @@ namespace BreadPlayer.Extensions
                     {
                         _menu = menuFlyout;
                         Setup(menuFlyout);
-                        _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                        SharedLogic.Instance.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                     }
                 }));
 

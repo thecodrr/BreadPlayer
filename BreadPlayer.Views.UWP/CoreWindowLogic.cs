@@ -64,7 +64,7 @@ namespace BreadPlayer
             if (!onlyVol)
             {
                 double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0.0D);
-                SharedLogic.Player.PlayerState = PlayerState.Paused;
+                SharedLogic.Instance.Player.PlayerState = PlayerState.Paused;
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
                         new List<object> { "", position, play, volume });
             }
@@ -74,16 +74,16 @@ namespace BreadPlayer
         {
             try
             {
-                if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+                if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.Path))
                 {
-                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Player.CurrentlyPlayingFile.Id);
-                    SettingsHelper.SaveLocalSetting(PathKey, SharedLogic.Player.CurrentlyPlayingFile.Path);
-                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Player.Position);
+                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Instance.Player.CurrentlyPlayingFile.Id);
+                    SettingsHelper.SaveLocalSetting(PathKey, SharedLogic.Instance.Player.CurrentlyPlayingFile.Path);
+                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Instance.Player.Position);
                 }
-                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Player.Volume);
+                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Instance.Player.Volume);
                 SettingsHelper.SaveLocalSetting(TimeclosedKey, DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 string folderPaths = "";
-                SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
+                SharedLogic.Instance.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
                 if (!string.IsNullOrEmpty(folderPaths))
                 {
                     SettingsHelper.SaveLocalSetting(FoldersKey, folderPaths.Remove(folderPaths.LastIndexOf('|')));
@@ -124,7 +124,7 @@ namespace BreadPlayer
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
 
-            SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+            SharedLogic.Instance.Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -133,7 +133,7 @@ namespace BreadPlayer
 
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Player.PlayerState != PlayerState.Paused)
+                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Instance.Player.PlayerState != PlayerState.Paused)
                 {
                     // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
@@ -152,14 +152,14 @@ namespace BreadPlayer
                 _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
                 var musicProps = _smtc.DisplayUpdater.MusicProperties;
                 _smtc.DisplayUpdater.ClearAll();
-                if (SharedLogic.Player.CurrentlyPlayingFile != null)
+                if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
                 {
-                    musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
-                    musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
-                    musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
-                    if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+                    musicProps.Title = SharedLogic.Instance.Player.CurrentlyPlayingFile.Title;
+                    musicProps.Artist = SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist;
+                    musicProps.AlbumTitle = SharedLogic.Instance.Player.CurrentlyPlayingFile.Album;
+                    if (!string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture))
                     {
-                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture));
                     }
                 }
                 _smtc.DisplayUpdater.Update();
@@ -234,7 +234,7 @@ namespace BreadPlayer
         public static void DisposeObjects()
         {
             //SharedLogic.SettingsVm.TimeClosed = DateTime.Now.ToString();
-            SharedLogic.Player.Dispose();
+            SharedLogic.Instance.Player.Dispose();
             BLogger.Logger.Info("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
             BLogger.Logger.Info("Application is being suspended, disposing everything.");
             _player?.Dispose();
