@@ -567,7 +567,7 @@
                     <ListView ItemsSource="{Binding Path=NowPlayingQueue}" Margin="0,6,0,0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="5,10">
+                                <Grid x:Name="mainGrid" Background="Transparent" Padding="5,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -590,9 +590,11 @@
                                             </Core:EventTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="True">
                                                 <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="White" />
+                                                <Core:ChangePropertyAction PropertyName="Background" TargetObject="{Binding ElementName=mainGrid}" Value="{ThemeResource PlaybarBrush}" />
                                             </Core:DataTriggerBehavior>
                                             <Core:DataTriggerBehavior Binding="{Binding State, Converter={StaticResource PlayerStateToBool}}" Value="False">
                                                 <Core:ChangePropertyAction PropertyName="Foreground" TargetObject="{Binding ElementName=Title}" Value="{ThemeResource ThemeForeground}" />
+                                                <Core:ChangePropertyAction PropertyName="Background" TargetObject="{Binding ElementName=mainGrid}" Value="Transparent" />
                                             </Core:DataTriggerBehavior>
                                         </Interactivity:Interaction.Behaviors>
                                     </Border>
