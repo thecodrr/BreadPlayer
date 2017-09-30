@@ -2,14 +2,21 @@
     x:Class="BreadPlayer.SettingsViews.AudioSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <ScrollViewer>
-        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AudioSettingsVM}">
-            <TextBlock x:Uid="generalHeader" Text="" FontSize="22" FontWeight="Bold" />
-            <ToggleSwitch x:Uid="crossfadeSwitch" Header="" IsOn="{Binding Path=CrossfadeEnabled}" />
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm.AudioSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
+                x:Uid="generalHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <ToggleSwitch
+                x:Uid="crossfadeSwitch"
+                Header=""
+                IsOn="{Binding Path=CrossfadeEnabled}" />
         </StackPanel>
     </ScrollViewer>
 </Page>

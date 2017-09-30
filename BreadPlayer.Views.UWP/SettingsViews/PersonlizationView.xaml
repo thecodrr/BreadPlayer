@@ -6,19 +6,56 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <ScrollViewer>
-        <StackPanel Margin="10,0,0,0" DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
-            <TextBlock x:Uid="appearenceHeader" Text="" FontSize="22" FontWeight="Bold" />
-            <TextBlock VerticalAlignment="Center" Margin="0,10,0,0">
-                                    <Run x:Uid="themeText" Text="" />
-                                    <LineBreak />
-                                    <Run x:Uid="themeHelpText" Text="" FontSize="11" Foreground="Gray" />
+        <StackPanel
+            Margin="10,0,0,0"
+            DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}"
+            RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
+                x:Uid="appearenceHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <TextBlock Margin="0,10,0,0" VerticalAlignment="Center">
+                <Run x:Uid="themeText" Text="" />
+                <LineBreak />
+                <Run
+                    x:Uid="themeHelpText"
+                    FontSize="11"
+                    Foreground="Gray"
+                    Text="" />
             </TextBlock>
-            <ToggleSwitch x:Uid="themeChangeToggleSwitch" Grid.Column="1" x:Name="themeChange" OffContent="" IsOn="{Binding IsThemeDark, Mode=TwoWay}" OnContent="" HorizontalAlignment="Left" VerticalAlignment="Center"></ToggleSwitch>
+            <ToggleSwitch
+                x:Name="themeChange"
+                x:Uid="themeChangeToggleSwitch"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                IsOn="{Binding IsThemeDark, Mode=TwoWay}"
+                OffContent=""
+                OnContent="" />
 
-            <CheckBox x:Uid="enableBlurCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding EnableBlur, Mode=TwoWay}" />
-            <TextBlock x:Uid="enableBlurHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray" />
-            <CheckBox x:Uid="changeAccentCheckBox" Margin="0,5,0,0" Content="" IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}" />
-            <TextBlock x:Uid="changeAccentHelpText" Text="" TextWrapping="Wrap" FontSize="11" Foreground="Gray" />
+            <CheckBox
+                x:Uid="enableBlurCheckBox"
+                Margin="0,0,0,0"
+                Content=""
+                IsChecked="{Binding EnableBlur, Mode=TwoWay}" />
+            <TextBlock
+                x:Uid="enableBlurHelpText"
+                FontSize="11"
+                Foreground="Gray"
+                Text=""
+                TextWrapping="Wrap" />
+            <CheckBox
+                x:Uid="changeAccentCheckBox"
+                Margin="0,5,0,0"
+                Content=""
+                IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}" />
+            <TextBlock
+                x:Uid="changeAccentHelpText"
+                FontSize="11"
+                Foreground="Gray"
+                Text=""
+                TextWrapping="Wrap" />
 
             <ComboBox Margin="0,5,0,0">
                 <ComboBox.HeaderTemplate>
@@ -26,7 +63,10 @@
                         <TextBlock>
                             <Run Text="Background blur overlay color:" />
                             <LineBreak />
-                            <Run Text="This is the overlay color of album art on the player background." Foreground="Gray" FontSize="11" />
+                            <Run
+                                FontSize="11"
+                                Foreground="Gray"
+                                Text="This is the overlay color of album art on the player background." />
                         </TextBlock>
                     </DataTemplate>
                 </ComboBox.HeaderTemplate>

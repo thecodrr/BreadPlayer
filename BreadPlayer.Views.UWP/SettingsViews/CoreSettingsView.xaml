@@ -2,34 +2,81 @@
     x:Class="BreadPlayer.SettingsViews.CoreSettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}">
-            <TextBlock x:Uid="resetHeader" x:Name="resetHeader" Text="" FontWeight="Bold" FontSize="22" />
-            <Button x:Uid="resetEverythingBtn" FontSize="16" Padding="0" Content="" Grid.Column="0" Margin="0,0,10,0" HorizontalContentAlignment="Left" Command="{Binding ResetCommand}" Style="{StaticResource HyperlinkBtn}" Background="{x:Null}" Height="28" HorizontalAlignment="Stretch" />
-            <TextBlock x:Uid="resetEverythingHelpText" Margin="0,-4,0,0" Text="" TextWrapping="Wrap" Foreground="Gray"  FontSize="11" />
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
+                x:Name="resetHeader"
+                x:Uid="resetHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <Button
+                x:Uid="resetEverythingBtn"
+                Grid.Column="0"
+                Height="28"
+                Margin="0,0,10,0"
+                Padding="0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Background="{x:Null}"
+                Command="{Binding ResetCommand}"
+                Content=""
+                FontSize="16"
+                Style="{StaticResource HyperlinkBtn}" />
+            <TextBlock
+                x:Uid="resetEverythingHelpText"
+                Margin="0,-4,0,0"
+                FontSize="11"
+                Foreground="Gray"
+                Text=""
+                TextWrapping="Wrap" />
 
-            <TextBlock x:Uid="notificationsHeader" Margin="0,10,0,0" Text="" FontWeight="Bold" FontSize="22" />
+            <TextBlock
+                x:Uid="notificationsHeader"
+                Margin="0,10,0,0"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
             <CheckBox x:Uid="songNotificationsCheckBox" Content="Show upcoming song notifications" />
             <CheckBox x:Uid="tileNotificationsCheckBox" Content="Show tile notifications" />
 
-            <!--Lockscreen Section-->
-            <TextBlock x:Uid="lockscreenHeader" Text="" FontWeight="Bold" FontSize="22" Margin="0,10,0,0" />
-            <CheckBox x:Uid="preventScreenLockingCheckBox" Margin="0,10,0,0" Content="" IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}" />
-            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run x:Uid="preventScreenLockingInfoText" Text="" />
-                        <LineBreak />
-                        <Run FontWeight="Bold" x:Uid="preventScreenLockingFurtherInfoText"></Run>
+            <!--  Lockscreen Section  -->
+            <TextBlock
+                x:Uid="lockscreenHeader"
+                Margin="0,10,0,0"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <CheckBox
+                x:Uid="preventScreenLockingCheckBox"
+                Margin="0,10,0,0"
+                Content=""
+                IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}" />
+            <TextBlock
+                FontSize="11"
+                Foreground="Gray"
+                TextWrapping="Wrap">
+                <Run x:Uid="preventScreenLockingInfoText" Text="" />
+                <LineBreak />
+                <Run x:Uid="preventScreenLockingFurtherInfoText" FontWeight="Bold" />
             </TextBlock>
-            <CheckBox x:Uid="replaceLockscreenCheckBox" Margin="0,0,0,0" Content="" IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}" />
-            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="Gray">
-                        <Run x:Uid="replaceLockscreenInfoText" Text="" />
-                        <LineBreak />
-                        <Run FontWeight="Bold" x:Uid="replaceLockscreenFurtherInfoText"></Run>
+            <CheckBox
+                x:Uid="replaceLockscreenCheckBox"
+                Margin="0,0,0,0"
+                Content=""
+                IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}" />
+            <TextBlock
+                FontSize="11"
+                Foreground="Gray"
+                TextWrapping="Wrap">
+                <Run x:Uid="replaceLockscreenInfoText" Text="" />
+                <LineBreak />
+                <Run x:Uid="replaceLockscreenFurtherInfoText" FontWeight="Bold" />
             </TextBlock>
         </StackPanel>
     </ScrollViewer>

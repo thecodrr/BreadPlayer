@@ -2,41 +2,83 @@
     x:Class="BreadPlayer.SettingsViews.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock x:Uid="versionHeader" Text="" FontSize="22" FontWeight="Bold" />
+        <StackPanel RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
+                x:Uid="versionHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
             <TextBlock x:Uid="version" Text="" />
-            <HyperlinkButton Content="What's New" />
-            <HyperlinkButton Content="Release notes" />
-            <TextBlock x:Uid="contributorsHeader" Text="" FontSize="22" FontWeight="Bold" />
-            <TextBlock Text="BreadPlayer is indebted to these great people for their dedication and support." FontSize="13" />
-            <HyperlinkButton Content="Become a Contributor?" Padding="0,0,0,5" NavigateUri="ContributeView.xaml" />
+            <Button Margin="0,10,0,0" Content="What's New" />
+            <Button Margin="0,10,0,0" Content="Release notes" />
+            <TextBlock
+                x:Uid="contributorsHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <TextBlock FontSize="13" Text="BreadPlayer is indebted to these great people for their dedication and support." />
+            <HyperlinkButton
+                Padding="0,0,0,5"
+                Content="Become a Contributor?"
+                NavigateUri="ContributeView.xaml" />
             <ItemsControl MaxHeight="250">
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Frank Wang (coding4u)" NavigateUri="https://github.com/coding4u" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Danny Talent" NavigateUri="https://github.com/DannyTalent" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Bond-009" NavigateUri="https://github.com/Bond-009" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="MightyK1337" NavigateUri="https://github.com/MightyK1337" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Kai Hildebrandt" NavigateUri="https://github.com/hildebrandt87" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Ammar Ahmed" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="Vladislav Sarunov" NavigateUri="https://github.com/vsarunov" />
-                <HyperlinkButton Foreground="{ThemeResource ThemeForeground}" Content="girish km" Margin="5,0,0,0" />
+                <HyperlinkButton
+                    Content="Frank Wang (coding4u)"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/coding4u" />
+                <HyperlinkButton
+                    Content="Danny Talent"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/DannyTalent" />
+                <HyperlinkButton
+                    Content="Bond-009"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/Bond-009" />
+                <HyperlinkButton
+                    Content="MightyK1337"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/MightyK1337" />
+                <HyperlinkButton
+                    Content="Kai Hildebrandt"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/hildebrandt87" />
+                <HyperlinkButton Content="Ammar Ahmed" Foreground="{ThemeResource ThemeForeground}" />
+                <HyperlinkButton
+                    Content="Vladislav Sarunov"
+                    Foreground="{ThemeResource ThemeForeground}"
+                    NavigateUri="https://github.com/vsarunov" />
+                <HyperlinkButton
+                    Margin="5,0,0,0"
+                    Content="girish km"
+                    Foreground="{ThemeResource ThemeForeground}" />
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsWrapGrid Orientation="Vertical" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            <TextBlock x:Uid="creditsHeader" Text="" FontSize="22" FontWeight="Bold" />
-            <TextBlock TextWrapping="WrapWholeWords" Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images."></TextBlock>
-            <TextBlock x:Uid="lastfmCredit" Text=""></TextBlock>
-            <TextBlock x:Uid="licenseHeader" Text="" FontSize="22" FontWeight="Bold" />
-            <TextBlock x:Uid="licenseText" TextWrapping="WrapWholeWords" TextAlignment="Justify">
-            </TextBlock>
+            <TextBlock
+                x:Uid="creditsHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <TextBlock Text="Stefano Vetere, Umar Irshad, Golden Roof, Milky - Digital innovation for icons and images." TextWrapping="WrapWholeWords" />
+            <TextBlock x:Uid="lastfmCredit" Text="" />
+            <TextBlock
+                x:Uid="licenseHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <TextBlock
+                x:Uid="licenseText"
+                TextAlignment="Justify"
+                TextWrapping="WrapWholeWords" />
         </StackPanel>
     </ScrollViewer>
 </Page>
