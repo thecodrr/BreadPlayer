@@ -70,7 +70,7 @@
                     <StackPanel
                         x:Name="headerStack"
                         Grid.Row="0"
-                        Margin="35,40,0,0">
+                        Margin="35,-15,0,0">
                         <TextBlock
                             x:Name="headerText"
                             FontFamily="Segoe UI Light"
@@ -90,7 +90,9 @@
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWholeWords" />
                     </StackPanel>
-                    <Grid Margin="15,0,15,10" VerticalAlignment="Bottom">
+                    <Grid x:Name="btnGrid"
+                          Margin="35,0,45,10"
+                          VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -208,6 +210,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="mainGrid.Margin" Value="0" />
+                        <Setter Target="btnGrid.Margin" Value="10,0,25,10" />
                         <Setter Target="headerText.TextAlignment" Value="Center" />
                         <Setter Target="headerText.FontSize" Value="34" />
                         <Setter Target="headerText.Margin" Value="0" />
