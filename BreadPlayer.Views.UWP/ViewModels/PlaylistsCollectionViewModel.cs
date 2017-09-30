@@ -26,8 +26,12 @@ namespace BreadPlayer.ViewModels
                 new DocumentStoreDatabaseService(
                     SharedLogic.DatabasePath,
                     "Playlists")));
-
-        public ThreadSafeObservableCollection<Playlist> Playlists { get; set; }
+        ThreadSafeObservableCollection<Playlist> playlists;
+        public ThreadSafeObservableCollection<Playlist> Playlists
+        {
+            get => playlists;
+            set => Set(ref playlists, value);
+        }
 
         private RelayCommand _addtoplaylistCommand;
 
@@ -196,26 +200,21 @@ namespace BreadPlayer.ViewModels
             {
                 await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
                 var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
-                list.SongsCount = pSongs.Count + " songs";
-                list.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
-                list.ImageColor = (await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
-                list.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                await PlaylistService.UpdatePlaylistAsync(list);
+
+                //update duration and songs count
+                var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
+                collectionPlaylist.SongsCount = pSongs.Count + " songs";
+                collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
+                collectionPlaylist.ImageColor = (await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
+                collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
             }
         }
 
         private void AddPlaylist(Playlist playlist)
         {
-            //SharedLogic.PlaylistsItems.Add(new SimpleNavMenuItem
-            //{
-            //    Arguments = playlist,
-            //    Label = playlist.Name,
-            //    DestinationPage = typeof(PlaylistView),
-            //    Symbol = Symbol.List,
-            //    FontGlyph = "\u0045",
-            //    ShortcutTheme = ElementTheme.Dark,
-            //    HeaderVisibility = Visibility.Collapsed
-            //});
+            Playlists.Add(playlist);
+            SharedLogic.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
         }
     }
 }

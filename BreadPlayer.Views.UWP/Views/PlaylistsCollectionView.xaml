@@ -18,7 +18,7 @@
         <Converters:ColorDarknessChanger x:Key="ColorDarknessChanger" />
     </Page.Resources>
     <Grid DataContext="{StaticResource PlaylistsCollectionVM}">
-        <ListView ItemsSource="{Binding Path=Playlists}" IsItemClickEnabled="True" ItemClick="OnPlaylistClicked">
+        <ListView ItemsSource="{Binding Path=Playlists, UpdateSourceTrigger=Explicit}" IsItemClickEnabled="True" ItemClick="OnPlaylistClicked">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid x:Name="mainGrid"

@@ -90,8 +90,20 @@ namespace BreadPlayer.Core.Models
             set => Set(ref imageColor, value);
         }
 
-        public string Duration { get; set; }
-        public string SongsCount { get; set; }
+        private string duration;
+
+        public string Duration
+        {
+            get => duration;
+            set => Set(ref duration, value);
+        }
+        private string songsCount;
+
+        public string SongsCount
+        {
+            get => songsCount;
+            set => Set(ref songsCount, value);
+        }
 
         public string GetTextSearchKey()
         {
