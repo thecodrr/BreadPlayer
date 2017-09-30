@@ -12,12 +12,10 @@ build:
   parallel: true
   verbosity: minimal
 environment:
-  UseTemporarySignCert: True  
+  UseTemporarySignCert: True
+after_build:
+- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.0.0_FastBuild_Release_Test\*
 artifacts:
-- path: '**/*.appxbundle'
-  name: AppxBundle for BreadPlayer
-  type: Auto
-  
-- path: '**/*.cer'
-  name: Certificate for appxbundle for BreadPlayer
+- path: BreadPlayer.zip
+  name: BreadPlayer Package
   type: Auto
