@@ -44,33 +44,6 @@
                     To="1"
                     Duration="0:0:0.8" />
             </Storyboard>
-            <DataTemplate x:Key="MobileEqualizerSliderTemplate">
-                <StackPanel>
-                    <Slider
-                        Height="100"
-                        Margin="0,0,0,0"
-                        Background="#FFC5C5C5"
-                        BorderBrush="{x:Null}"
-                        Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                        IsEnabled="{Binding Path=IsActive}"
-                        LargeChange="0.2"
-                        Maximum="14"
-                        Minimum="-14"
-                        Orientation="Vertical"
-                        SmallChange="0.1"
-                        SnapsTo="Ticks"
-                        Style="{StaticResource CircleSlider}"
-                        TickFrequency="0.1"
-                        TickPlacement="None"
-                        Value="{Binding Path=Gain, Mode=TwoWay}" />
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        HorizontalAlignment="Center"
-                        FontFamily="Segoe UI"
-                        FontWeight="SemiBold"
-                        Text="{Binding Path=BandCaption}" />
-                </StackPanel>
-            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -98,8 +71,7 @@
             <controls:SplitViewMenu
                 x:Name="hamburgerMenu"
                 Margin="0,0,0,69.5"
-                InitialPage="local:LibraryView"
-                PlaylistsItems="{Binding Source={StaticResource Core}, Path=Instance.PlaylistsItems}">
+                InitialPage="local:LibraryView">
                 <controls:SplitViewMenu.TopNavigationItems>
                     <controls:SimpleNavMenuItem
                         x:Name="LibraryItem"
@@ -192,7 +164,8 @@
                     Height="400"
                     Padding="50"
                     HorizontalAlignment="Center"
-                    Background="{ThemeResource ThemeBackground}">
+                    Background="{ThemeResource ThemeBackground}"
+                    DataContext="{StaticResource Core}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -204,8 +177,8 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         DisplayMemberPath="Name"
-                        ItemsSource="{Binding Path=Player.Equalizer.Presets}"
-                        SelectedIndex="{Binding Path=Player.Equalizer.SelectedPreset, Mode=TwoWay}" />
+                        ItemsSource="{Binding Path=Instance.Player.Equalizer.Presets}"
+                        SelectedIndex="{Binding Path=Instance.Player.Equalizer.SelectedPreset, Mode=TwoWay}" />
                     <ToggleSwitch
                         x:Uid="enableEqToggleSwitch"
                         Grid.Column="0"
@@ -222,7 +195,7 @@
                         Margin="0,10,0,0"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal"
-                        Visibility="{Binding Path=Player.Equalizer.IsPreampAvailable}">
+                        Visibility="{Binding Path=Instance.Player.Equalizer.IsPreampAvailable}">
                         <TextBlock
                             Margin="0,0,10,0"
                             HorizontalAlignment="Center"
@@ -254,7 +227,7 @@
                         Margin="0,20,0,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        ItemsSource="{Binding Path=Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}">
+                        ItemsSource="{Binding Path=Instance.Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="5,0">
@@ -774,14 +747,6 @@
                         <StateTriggers:DeviceFamilyStateTrigger DeviceFamily="Mobile" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="EqualizerGrid.Visibility" Value="Visible" />
-                        <Setter Target="EqualizerGrid.Height" Value="220" />
-                        <Setter Target="BandStackPanel.Margin" Value="20,0,0,-10" />
-                        <Setter Target="BandStackPanel.HorizontalAlignment" Value="Stretch" />
-                        <Setter Target="ValueIndicatorGrid.Margin" Value="0,15,-10,75" />
-                        <Setter Target="ValueIndicatorGrid2.Margin" Value="-10,15,0,75" />
-                        <Setter Target="ValueIndicatorText.FontSize" Value="9" />
-                        <Setter Target="BandPanel.ItemTemplate" Value="{StaticResource MobileEqualizerSliderTemplate}" />
                         <Setter Target="backgroundBlur.BlurAmount" Value="5" />
                         <Setter Target="backgroundBorder.Opacity" Value="1" />
                     </VisualState.Setters>
