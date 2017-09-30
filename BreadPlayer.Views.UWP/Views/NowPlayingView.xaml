@@ -447,9 +447,11 @@
                         <Setter Target="trackControlPanel.Opacity" Value="0" />
                         <Setter Target="infoPivot.Visibility" Value="Collapsed" />
                         <Setter Target="coverArtImage.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="coverArtPlaceHolder.VerticalAlignment" Value="Bottom" />
                         <Setter Target="maximizeBtn.Content" Value="&#xE73F;" />
-                        <Setter Target="trackInfoPanel.(Grid.Row)" Value="2" />
+                        <Setter Target="trackInfoPanel.(Grid.Row)" Value="2" />                        
                         <Setter Target="coverArtImage.(Grid.Row)" Value="2" />
+                        <Setter Target="coverArtPlaceHolder.(Grid.Row)" Value="2" />
                         <Setter Target="positionSlider.Margin" Value="0" />
                         <Setter Target="positionSlider.(Grid.Row)" Value="1" />
                         <Setter Target="currentLyricTxt.Visibility" Value="Visible" />
@@ -495,6 +497,7 @@
             <blur:BackDrop Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20" />
             <Border Grid.RowSpan="5" Grid.ColumnSpan="5" Margin="-20" Background="{StaticResource SystemControlHighlightAltListAccentLowBrush}" />
             <Image x:Name="coverArtImage" HorizontalAlignment="Left" Height="130" Width="130" Stretch="Fill" Source="{Binding Path=AttachedPicture}" />
+            <FontIcon x:Name="coverArtPlaceHolder" HorizontalAlignment="Left" Height="130" Width="130" Glyph="&#xE93C;" Foreground="{ThemeResource TextBrush}" FontSize="100" Visibility="{Binding ElementName=coverArtImage, Path=Source, Converter={StaticResource BoolToVisibility}}"/>
 
             <StackPanel x:Name="trackInfoPanel" Margin="10,0,0,0" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Bottom">
                 <StackPanel Margin="0,0,0,-10" BorderBrush="{ThemeResource AccentHoverBrush}" Orientation="Horizontal" DataContext="{StaticResource ShellVM}">
