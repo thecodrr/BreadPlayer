@@ -39,10 +39,11 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
+        private bool _isPressed;
+
+        private List<Mediafile> _oldFiles = new List<Mediafile>();
 
         private ShellViewModel _shellVm;
-        private List<Mediafile> _oldFiles = new List<Mediafile>();
 
         public Shell()
         {
@@ -59,6 +60,7 @@ namespace BreadPlayer
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
         }
 
+        public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
@@ -87,29 +89,22 @@ namespace BreadPlayer
         {
             Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
         }
-
-        private bool _isPressed;
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
-            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
-            NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
             {
-                if (NowPlayingFrame.Visibility == Visibility.Visible)
-                {
-                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
-                }
-            });
-            equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
-            {
-                if (equalizerOverlayGrid.Visibility == Visibility.Visible)
-                {
-                    CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
-                }
-            });
+                _isPressed = true;
+                _shellVm.DontUpdatePosition = true;
+            }
+        }
 
+        private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_isPressed && !positionSlider.IsDragging())
+            {
+                positionSlider.UpdatePosition(_shellVm, true);
+                _isPressed = false;
+            }
         }
 
         private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
@@ -131,22 +126,25 @@ namespace BreadPlayer
             }
         }
 
-        private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_isPressed && !positionSlider.IsDragging())
+            positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
+            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
+            Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
+            NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
             {
-                positionSlider.UpdatePosition(_shellVm, true);
-                _isPressed = false;
-            }
-        }
-
-        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
-        {
-            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
+                if (NowPlayingFrame.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
+                }
+            });
+            equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
             {
-                _isPressed = true;
-                _shellVm.DontUpdatePosition = true;
-            }
+                if (equalizerOverlayGrid.Visibility == Visibility.Visible)
+                {
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
+                }
+            });
         }
     }
 }
