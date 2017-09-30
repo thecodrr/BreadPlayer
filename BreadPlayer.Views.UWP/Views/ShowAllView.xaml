@@ -14,7 +14,7 @@
             <ItemsWrapGrid Orientation="Horizontal" />
         </ItemsPanelTemplate>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>        
         <ListView x:Name="searchResultsList" ItemsPanel="{StaticResource ToastsPanel}" ItemTemplate="{StaticResource MediafileTemplate}"></ListView>
     </Grid>
 </Page>

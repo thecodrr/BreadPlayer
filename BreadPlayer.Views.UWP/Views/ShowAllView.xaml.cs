@@ -18,13 +18,45 @@ namespace BreadPlayer.Views
         public ShowAllView()
         {
             this.InitializeComponent();
+            Window.Current.SizeChanged += Current_SizeChanged;
         }
-
+        string _recordType = "";
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            UpdateTemplate(e.Size.Width);
+        }
+        private void UpdateTemplate(double width)
+        {
+            if (width > 600)
+            {
+                SetTemplate(App.Current.Resources["ArtistTemplate"], App.Current.Resources["AlbumTemplate"], App.Current.Resources["MediafileTemplate"]);
+            }
+            else
+            {
+                SetTemplate(App.Current.Resources["ArtistMobileTemplate"], App.Current.Resources["AlbumMobileTemplate"], App.Current.Resources["MediafileMobileTemplate"]);
+            }
+        }
+        private void SetTemplate(object artistTemplate, object albumTemplate, object toastTemplate)
+        {
+            switch (_recordType)
+            {
+                case "Toasts":
+                    searchResultsList.ItemTemplate = toastTemplate as DataTemplate;
+                    break;
+                case "Breads":
+                    searchResultsList.ItemTemplate = albumTemplate as DataTemplate;
+                    break;
+                case "Bakers":
+                    searchResultsList.ItemTemplate = artistTemplate as DataTemplate;
+                    break;
+            }
+        }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var parameter = (ValueTuple<Query, string>)e.Parameter;
             var documentStore = new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks");
+            _recordType = parameter.Item2;
             switch (parameter.Item2)
             {
                 case "Toasts":
@@ -34,18 +66,17 @@ namespace BreadPlayer.Views
 
                 case "Bakers":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
-                    searchResultsList.ItemTemplate = App.Current.Resources["ArtistTemplate"] as DataTemplate;
                     AlbumArtistService artistService = new AlbumArtistService(documentStore);
                     searchResultsList.ItemsSource = await artistService.QueryArtistsAsync(parameter.Item1.QueryWord);
                     break;
 
                 case "Breads":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
-                    searchResultsList.ItemTemplate = App.Current.Resources["AlbumTemplate"] as DataTemplate;
                     AlbumArtistService albumService = new AlbumArtistService(documentStore);
                     searchResultsList.ItemsSource = await albumService.QueryAlbumsAsync(parameter.Item1.QueryWord);
                     break;
             }
+            UpdateTemplate(Window.Current.Bounds.Width);
         }
     }
 }
