@@ -49,9 +49,9 @@ namespace BreadPlayer.ViewModels
 
         public async Task LoadAlbums()
         {
-            RecordsLoading = true;
             if (AlbumCollection?.Count <= 0)
             {
+                RecordsLoading = true;
                 AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
                 AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
                 if (AlbumCollection.Count <= 0)
@@ -63,9 +63,9 @@ namespace BreadPlayer.ViewModels
 
         public async Task LoadArtists()
         {
-            RecordsLoading = true;
             if (ArtistsCollection?.Count != AlbumArtistService.ArtistsCount)
             {
+                RecordsLoading = true;
                 ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
                 ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
                 if (ArtistsCollection.Count <= 0)
