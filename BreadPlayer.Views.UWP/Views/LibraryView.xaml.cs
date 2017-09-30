@@ -41,7 +41,13 @@ namespace BreadPlayer
         }
 
         public LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;
-
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            LibVM.MusicLibraryLoaded += (s, a) => 
+            {
+                var pVm = App.Current.Resources["PlaylistsCollectionVM"];
+            };
+        }
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;

@@ -14,7 +14,6 @@
     xmlns:Behaviours="using:BreadPlayer.Behaviours"
     mc:Ignorable="d">
     <Page.Resources>
-        <VM:PlaylistsCollectionViewModel x:Key="PlaylistsCollectionVM" />
         <Converters:ColorDarknessChanger x:Key="ColorDarknessChanger" />
     </Page.Resources>
     <Grid DataContext="{StaticResource PlaylistsCollectionVM}">

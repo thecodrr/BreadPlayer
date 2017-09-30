@@ -45,7 +45,7 @@ namespace BreadPlayer.ViewModels
         }
 
         public PlaylistsCollectionViewModel()
-        {
+        {            
             Playlists = new ThreadSafeObservableCollection<Playlist>();
             Init();
             Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));

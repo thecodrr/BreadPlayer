@@ -109,6 +109,7 @@ namespace BreadPlayer
                     CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
                 }
             });
+
         }
 
         private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
