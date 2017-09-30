@@ -31,10 +31,13 @@
                         <VisualState.Setters>
                             <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}" />
                             <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
+                            <Setter Target="ArtistsList.ItemTemplate" Value="{StaticResource ArtistMobileTemplate}" />
                             <Setter Target="songsHeader.Margin" Value="25,15,0,0" />
                             <Setter Target="songsHeader.FontSize" Value="18" />
                             <Setter Target="albumsHeader.Margin" Value="25,15,0,0" />
                             <Setter Target="albumsHeader.FontSize" Value="18" />
+                            <Setter Target="artistsHeader.Margin" Value="25,15,0,0" />
+                            <Setter Target="artistsHeader.FontSize" Value="18" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState>
@@ -43,6 +46,8 @@
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
                             <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileTemplate}" />
+                            <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource AlbumTemplate}" />
+                            <Setter Target="ArtistsList.ItemTemplate" Value="{StaticResource ArtistTemplate}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -55,7 +60,7 @@
                     <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all" />
                 </StackPanel>
             </Button>
-            <GridView Grid.Row="1" Margin="0,20,0,20" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" ItemTemplate="{StaticResource ArtistTemplate}" ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
+            <GridView x:Name="ArtistsList" Grid.Row="1" Margin="0,20,0,20" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" ItemTemplate="{StaticResource ArtistTemplate}" ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" />
