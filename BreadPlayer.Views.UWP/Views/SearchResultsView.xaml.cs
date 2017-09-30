@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using Windows.UI.Xaml.Controls;
@@ -31,13 +32,13 @@ namespace BreadPlayer.Views
 
         private void AlbumsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (Album album in e.RemovedItems)
+            foreach (ISelectable record in e.RemovedItems)
             {
-                album.IsSelected = false;
+                record.IsSelected = false;
             }
-            foreach (Album album in e.AddedItems)
+            foreach (ISelectable record in e.AddedItems)
             {
-                album.IsSelected = true;
+                record.IsSelected = true;
             }
         }
 
