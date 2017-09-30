@@ -65,10 +65,10 @@
             <DataTemplate x:Key="ArtistGroupHeaderTemplate">
                 <Grid Height="100">
                     <Grid.Background>
-                        <ImageBrush  Stretch="UniformToFill" >
+                        <ImageBrush  Stretch="UniformToFill">
                             <ImageBrush.ImageSource>
-                                <BitmapImage UriSource="{Binding Path=Key.FirstElement.Picture}"/>
-                            </ImageBrush.ImageSource>                      
+                                <BitmapImage UriSource="{Binding Path=Key.FirstElement.Picture}" />
+                            </ImageBrush.ImageSource>
                         </ImageBrush>
                     </Grid.Background>
                     <Border Opacity="0.7" Background="{Binding Path=Key.FirstElement.PictureColor, TargetNullValue={ThemeResource EvenRowBackground}, FallbackValue={ThemeResource EvenRowBackground}}" />
@@ -113,7 +113,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <VisualStateManager.VisualStateGroups>
-          <VisualStateGroup>
+            <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600" />
@@ -157,9 +157,9 @@
                                                    Behaviours:ListViewService.FocusBeforeSelect="True"
                                                    SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}"
                                                    SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   IncrementalLoadingThreshold="10"
+                                                   IncrementalLoadingThreshold="40"
                                                    IncrementalLoadingTrigger="Edge"
-                                                   DataFetchSize="10"
+                                                   DataFetchSize="50"
                                                    ItemTemplate="{StaticResource MediafileTemplate}"
                                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                    ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}"
