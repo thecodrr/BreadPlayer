@@ -53,9 +53,9 @@
                                     TickPlacement="None"
                                     IsEnabled="{Binding Path=IsActive}"
                                     TickFrequency="0.1"
-                                    Margin="0,20,0,0"
+                                    Margin="0,0,0,0"
                                     Orientation="Vertical" Value="{Binding Path=Gain, Mode=TwoWay}" />
-                    <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="{Binding Path=BandCaption}" FontSize="9" />
+                    <TextBlock Margin="0,10,0,0" FontFamily="Segoe UI" FontWeight="SemiBold" HorizontalAlignment="Center" Text="{Binding Path=BandCaption}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -268,7 +268,7 @@
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding Path=Player.Equalizer.Bands, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" VerticalAlignment="Center" Margin="0,20,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
+                                <StackPanel Margin="5,0">
                                     <Slider
                                     Height="140"
                                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
