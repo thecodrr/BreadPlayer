@@ -40,3 +40,6 @@ artifacts:
   name: BreadPlayer AppXBundle
   type: Auto
   
+- path: BreadPlayer.Views.UWP\AppPackages\Dependencies
+  name: BreadPlayer Dependencies
+  type: Auto
