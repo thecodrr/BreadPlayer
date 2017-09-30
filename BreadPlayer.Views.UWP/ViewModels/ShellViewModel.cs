@@ -316,7 +316,6 @@ namespace BreadPlayer.ViewModels
         private void ShowEqualizer()
         {
             IsEqualizerVisible = IsEqualizerVisible ? false : true;
-            DisplayInformation.AutoRotationPreferences = DisplayInformation.AutoRotationPreferences == DisplayOrientations.Landscape ? DisplayOrientations.Portrait : DisplayOrientations.Landscape;
         }
 
         private void SetRepeat()
