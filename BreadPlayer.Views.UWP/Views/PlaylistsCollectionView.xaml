@@ -15,9 +15,193 @@
     mc:Ignorable="d">
     <Page.Resources>
         <Converters:ColorDarknessChanger x:Key="ColorDarknessChanger" />
+        <DataTemplate x:Key="NarrowPlaylistTemplate">
+            <Grid x:Name="mainGrid"
+                          Background="Transparent"
+                          Width="Auto">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <toolkit:DropShadowPanel x:Name="dropShadow"
+                                                 BlurRadius="20"
+                                                 ShadowOpacity="0"
+                                                 Opacity="1"
+                                                 OffsetY="0"
+                                                 OffsetX="0"
+                                                 Color="{Binding Path=ImageColor, Converter={StaticResource ColorDarknessChanger}, ConverterParameter='-0.5Color'}"
+                                                 HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Stretch"
+                                                 VerticalContentAlignment="Stretch"
+                                                 HorizontalContentAlignment="Stretch"
+                                                 Grid.ColumnSpan="5">
+                    <StackPanel HorizontalAlignment="Stretch"
+                                        Padding="10,20"
+                                        VerticalAlignment="Stretch">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                                <GradientStop Color="Black" Offset="-1" />
+                                <GradientStop Color="{Binding Path=ImageColor}" Offset="0.5" />
+                                <GradientStop Color="Black" Offset="2" />
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+                        <Border Background="{Binding Path=ImageColor, Converter={StaticResource ColorDarknessChanger}, ConverterParameter=-0.3}"
+                                    Opacity="1"
+                                    Width="100"
+                                    Height="5">
+                        </Border>
+                        <Border Background="{Binding Path=ImageColor, Converter={StaticResource ColorDarknessChanger}, ConverterParameter=-0.6}"
+                                       Opacity="1"
+                                       Height="5"
+                                       Width="110">
+                        </Border>
+                        <Image x:Name="playlistCover"
+                               Source="{Binding Path=ImagePath}"
+                               Stretch="UniformToFill"
+                               Height="120" Width="120" />
+                    </StackPanel>
+                </toolkit:DropShadowPanel>
+                <TextBlock Text="{Binding Path=Name}"
+                                   Grid.Row="1"
+                                   Grid.ColumnSpan="5"
+                                   Foreground="{ThemeResource TextBrush}"
+                                   Margin="10,5,0,0"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch"
+                                   FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Path=SongsCount}"
+                                   Grid.Row="2"
+                                   Grid.ColumnSpan="5"
+                                   Foreground="{ThemeResource TextBrush}"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch"
+                                   FontWeight="Normal"
+                                   FontSize="13" />
+                <TextBlock Text="{Binding Path=Duration}"
+                                   Grid.Row="3"
+                                   Grid.ColumnSpan="5"
+                                   Foreground="{ThemeResource TextBrush}"
+                                   Margin="10,0,0,5"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Stretch"
+                                   FontWeight="Normal"
+                                   FontSize="13" />
+                <AppBarButton x:Name="playBtn"
+                                      Icon="Play"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      BorderBrush="WhiteSmoke"
+                                      Foreground="White"
+                                      Background="{Binding Path=ImageColor}"
+                                      Width="40" Height="40"
+                                      Style="{StaticResource CustomAppBarButtonStyle}"
+                                      Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
+                                      CommandParameter="{Binding}"
+                                      Opacity="0" />
+                <AppBarButton x:Name="addBtn"
+                                      Grid.Column="2"
+                                      Icon="Add"
+                                      Foreground="White"
+                                      Background="{Binding Path=ImageColor}"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      BorderBrush="WhiteSmoke"
+                                      Width="40" Height="40"
+                                      Margin="10,0,10,0"
+                                      Opacity="{Binding ElementName=playBtn, Path=Opacity}"
+                                      Style="{StaticResource CustomAppBarButtonStyle}">
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=addBtn}">
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}" />
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </AppBarButton>
+                <Interactivity:Interaction.Behaviors>
+                    <Core:EventTriggerBehavior EventName="PointerEntered">
+                        <Media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="dropShadow"
+                                                             EnableDependentAnimation="True"
+                                                             Storyboard.TargetProperty="ShadowOpacity"
+                                                             Duration="0:0:0.5"
+                                                             From="0"
+                                                             To="1" />
+                                    <DoubleAnimation Storyboard.TargetName="playBtn"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             Duration="0:0:0.5"
+                                                             From="0"
+                                                             To="1" />
+                                </Storyboard>
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="PointerExited">
+                        <Media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="dropShadow"                                                               
+                                                             Storyboard.TargetProperty="ShadowOpacity"
+                                                             Duration="0:0:0.5"
+                                                             EnableDependentAnimation="True"
+                                                             From="1"
+                                                             To="0" />
+                                    <DoubleAnimation Storyboard.TargetName="playBtn"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             Duration="0:0:0.5"
+                                                             From="1"
+                                                             To="0" />
+                                </Storyboard>
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Grid>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="NarrowPlaylistPanelTemplate">
+            <ItemsStackPanel Orientation="Vertical" />
+        </ItemsPanelTemplate>
+        <Style TargetType="ListViewItem" x:Name="NarrowPlaylistItemStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
     </Page.Resources>
     <Grid DataContext="{StaticResource PlaylistsCollectionVM}">
-        <ListView ItemsSource="{Binding Path=Playlists, UpdateSourceTrigger=Explicit}" IsItemClickEnabled="True" ItemClick="OnPlaylistClicked">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="playlistsList.ItemTemplate" Value="{StaticResource NarrowPlaylistTemplate}"/>
+                        <Setter Target="playlistsList.ItemsPanel" Value="{StaticResource NarrowPlaylistPanelTemplate}"/>
+                        <Setter Target="playlistsList.ItemContainerStyle" Value="{StaticResource NarrowPlaylistItemStyle}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <ListView x:Name="playlistsList" ItemsSource="{Binding Path=Playlists, UpdateSourceTrigger=Explicit}" IsItemClickEnabled="True" ItemClick="OnPlaylistClicked">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid x:Name="mainGrid"
