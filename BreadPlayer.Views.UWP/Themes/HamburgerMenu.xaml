@@ -440,8 +440,9 @@
             <TextBlock Grid.Column="1" Extensions:TextBlockExtensions.TextType="{Binding Source={StaticResource Core}, Path=SettingsVm.UiTextType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=Label}" Margin="5,0,0,0" VerticalAlignment="Center" />
         </Grid>
     </DataTemplate>
+    
     <DataTemplate x:Key="MobileShortcutsTemplate">
-        <Button FontFamily="Segoe MDL2 Assets" FontSize="18" Background="Transparent" Margin="7,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}" />
+        <Button FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource TextBrush}" FontSize="18" Background="Transparent" Margin="7,0,0,0" ToolTipService.ToolTip="{Binding Path=Tooltip}" RequestedTheme="{Binding ElementName=headerText, Path=DataContext.ShortcutTheme}" Content="{Binding Path=SymbolAsChar}" Flyout="{Binding Path=ShortcutFlyout}" Command="{Binding Path=ShortcutCommand}" CommandParameter="{Binding Path=ShortcutCommandParameter}" Style="{StaticResource HyperlinkBtn}" />
     </DataTemplate>
 
     <Style TargetType="local:SplitViewMenu">
