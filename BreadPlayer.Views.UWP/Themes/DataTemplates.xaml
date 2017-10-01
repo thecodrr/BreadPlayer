@@ -18,7 +18,7 @@
     <MenuFlyout x:Key="AlbumArtistFlyout">
         <Extensions:MenuFlyoutIconItem
             Command="{Binding Path=PlayCommand}"
-            CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
+            CommandParameter="{Binding}"
             DataContext="{StaticResource LibVM}"
             Glyph="&#xE768;"
             Text="Play" />
@@ -48,11 +48,39 @@
             Visibility="{Binding Converter={StaticResource RecordTypeToVisibility}, ConverterParameter='Album'}" />
     </MenuFlyout>
 
+    <MenuFlyout x:Key="PlaylistFlyout">
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Path=PlayCommand}"
+            CommandParameter="{Binding}"
+            DataContext="{StaticResource LibVM}"
+            Glyph="&#xE768;"
+            Text="Play" />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource Core}, Path=Instance.PinToStartCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xE718;"
+            Text="Pin to Start"
+            Visibility="{Binding Path=IsPinned, Converter={StaticResource TrueToFalse}}" />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource Core}, Path=Instance.UnpinFromStartCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xE77A;"
+            Text="Unpin from Start"
+            Visibility="{Binding Path=IsPinned}" />
+        <MenuFlyoutSeparator />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource AlbumArtistVM}, Path=DeleteCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xE74D;"
+            Text="Delete"
+            Visibility="{Binding Converter={StaticResource RecordTypeToVisibility}, ConverterParameter='Album'}" />
+    </MenuFlyout>
+
     <MenuFlyout x:Key="Flyout">
         <Extensions:MenuFlyoutIconItem
             x:Name="playMenuItem"
             Command="{Binding Path=PlayCommand}"
-            CommandParameter="{Binding ElementName=ContentPresenter, Path=Content}"
+            CommandParameter="{Binding}"
             DataContext="{StaticResource LibVM}"
             Glyph="&#xE768;"
             Text="Play" />

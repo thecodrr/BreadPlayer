@@ -385,11 +385,11 @@
                             </Core:EventTriggerBehavior>
                             <Core:EventTriggerBehavior EventName="RightTapped">
                                 <Core:EventTriggerBehavior.Actions>
-                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
+                                    <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistFlyout}" />
                                 </Core:EventTriggerBehavior.Actions>
                             </Core:EventTriggerBehavior>
                             <Core:EventTriggerBehavior EventName="Holding">
-                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
+                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistFlyout}" />
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
                     </Grid>

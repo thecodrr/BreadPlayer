@@ -105,11 +105,7 @@ namespace BreadPlayer.Behaviours
                         }
                     }
                     var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                    if (flyout.Items[0] is MenuFlyoutItem menuFlyout && item != null)
-                    {
-                        menuFlyout.CommandParameter = item.Content;
-                    }
-
+                    
                     if (position != null)
                     {
                         flyout.ShowAt(senderElement, position.Value);
