@@ -78,6 +78,10 @@ namespace BreadPlayer.Extensions
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
+                menuItem.PropertyChanged += (s, a) => 
+                {
+                    Setup(this);
+                };
                 var item = new MenuFlyoutIconItem
                 {
                     Text = menuItem.Text,

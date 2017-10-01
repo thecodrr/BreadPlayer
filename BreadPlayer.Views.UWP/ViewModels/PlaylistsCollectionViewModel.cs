@@ -123,19 +123,13 @@ namespace BreadPlayer.ViewModels
                         Text = selectedPlaylist.Name,
                         Description = selectedPlaylist.Description
                     };
-                    var playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
                     if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                     {
-                        var pl = new Playlist { Name = dialog.Text, Description = dialog.Description, Id = selectedPlaylist.Id };
-                        string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
-                        if (File.Exists(path + selectedPlaylist.Name + ".db"))
-                        {
-                            File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
-                        }
-                        
-                        Playlists.First(t => t.Name == selectedPlaylist.Name).Name = pl.Name; //change playlist name in the hamburgermenu
-                        SharedLogic.Instance.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
-                        await PlaylistService.UpdatePlaylistAsync(pl);
+                        string oldName = selectedPlaylist.Name; //save old name
+                        selectedPlaylist.Name = dialog.Text;
+                        selectedPlaylist.Description = dialog.Description;
+                        SharedLogic.Instance.OptionItems.First(t => t.Text == oldName).Text = selectedPlaylist.Name; //change playlist name in context menu of each song.
+                        await PlaylistService.UpdatePlaylistAsync(selectedPlaylist);
                         //Playlist = pl; //set this.Playlist to pl (local variable);
                     }
                 }
