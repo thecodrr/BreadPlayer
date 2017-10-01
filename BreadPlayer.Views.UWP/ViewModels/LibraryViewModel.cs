@@ -841,7 +841,7 @@ namespace BreadPlayer.ViewModels
         {
             if (e.PointerDeviceType == PointerDeviceType.Touch && !IsMultiSelectModeEnabled)
             {
-                Play(((Border)e.OriginalSource).DataContext);
+                Play(((FrameworkElement)e.OriginalSource).DataContext);
             }
         }
 
