@@ -38,6 +38,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Foundation.Metadata;
 using Windows.Graphics.Display;
 using Windows.Media.Devices;
 using Windows.Phone.Media.Devices;
@@ -97,7 +98,7 @@ namespace BreadPlayer.ViewModels
 
             //these events are for detecting when the default audio
             //device is changed in PC and Mobile.
-            if (InitializeCore.IsMobile)
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 AudioRoutingManager.GetDefault().AudioEndpointChanged += OnAudioEndpointChanged;
             else
                 MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;

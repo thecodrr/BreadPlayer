@@ -9,13 +9,16 @@ namespace BreadPlayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var color = value.ToString().FromHexString();
-            if (parameter != null && color != null)
+            if (value != null)
             {
-                if (parameter.ToString().Contains("Color"))
-                    return color.ChangeColorBrightness(System.Convert.ToSingle(parameter.ToString().Replace("Color", "")));
-                else
-                    return new SolidColorBrush(color.ChangeColorBrightness(System.Convert.ToSingle(parameter)));
+                var color = value.ToString().FromHexString();
+                if (parameter != null && color != null)
+                {
+                    if (parameter.ToString().Contains("Color"))
+                        return color.ChangeColorBrightness(System.Convert.ToSingle(parameter.ToString().Replace("Color", "")));
+                    else
+                        return new SolidColorBrush(color.ChangeColorBrightness(System.Convert.ToSingle(parameter)));
+                }
             }
             return value;
         }
