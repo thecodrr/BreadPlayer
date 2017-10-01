@@ -413,54 +413,61 @@ namespace SplitViewMenu
 
         private async void OnNavigatingToPage(object sender, NavigatingCancelEventArgs e)
         {
-            if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
+            try
             {
-                return;
-            }
-
-            var item = GetItemFromList(e.SourcePageType);
-            if (item == null && _pageFrame.BackStackDepth > 0)
-            {
-                foreach (var entry in _pageFrame.BackStack.Reverse())
+                if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
                 {
-                    if (entry.SourcePageType == typeof(PlaylistView))
-                    {
-                        var para = entry.Parameter; //get previous entry's parameter
-                        if (para is Playlist playlist)
-                        {
-                            item = PlaylistsItems.SingleOrDefault(p => p.Label == playlist.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
-                        }
-                        else if (para is Album album)
-                        {
-                            _pageFrame.Navigate(typeof(PlaylistView), album);
-                            return;
-                        }
-                    }
-                    else if (entry.SourcePageType == typeof(LibraryView))
-                    {
-                        item = TopNavigationItems[0];                        
-                    }
-                    if (item != null)
-                    {
-                        break;  //if item is successfully got break the loop. We got what we needed.
-                    }
-                }
-            }
-            if (item != null)
-            {
-                await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
-                var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
-                if (container != null)
-                {
-                    container.IsTabStop = false;
+                    return;
                 }
 
-                GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
-                container.IsSelected = true;
-                if (container != null)
+                var item = GetItemFromList(e.SourcePageType);
+                if (item == null && _pageFrame.BackStackDepth > 0)
                 {
-                    container.IsTabStop = true;
+                    foreach (var entry in _pageFrame.BackStack.Reverse())
+                    {
+                        if (entry.SourcePageType == typeof(PlaylistView))
+                        {
+                            var para = entry.Parameter; //get previous entry's parameter
+                            if (para is Playlist playlist)
+                            {
+                                item = PlaylistsItems.SingleOrDefault(p => p.Label == playlist.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
+                            }
+                            else if (para is Album album)
+                            {
+                                _pageFrame.Navigate(typeof(PlaylistView), album);
+                                return;
+                            }
+                        }
+                        else if (entry.SourcePageType == typeof(LibraryView))
+                        {
+                            item = TopNavigationItems[0];
+                        }
+                        if (item != null)
+                        {
+                            break;  //if item is successfully got break the loop. We got what we needed.
+                        }
+                    }
                 }
+                if (item != null)
+                {
+                    await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
+                    var container = (ListViewItem)GetParentListViewFromItem(item as SimpleNavMenuItem).ContainerFromItem(item);
+                    if (container != null)
+                    {
+                        container.IsTabStop = false;
+                    }
+
+                    GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
+                    container.IsSelected = true;
+                    if (container != null)
+                    {
+                        container.IsTabStop = true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                BLogger.Logger.Error("Error while navigating back.", ex);
             }
         }
 
