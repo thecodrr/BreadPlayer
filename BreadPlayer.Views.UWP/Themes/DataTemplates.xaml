@@ -69,11 +69,21 @@
             Visibility="{Binding Path=IsPinned}" />
         <MenuFlyoutSeparator />
         <Extensions:MenuFlyoutIconItem
-            Command="{Binding Source={StaticResource AlbumArtistVM}, Path=DeleteCommand}"
+            Command="{Binding Source={StaticResource PlaylistsCollectionVM}, Path=RenamePlaylistCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xE8AC;"
+            Text="Rename" />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource PlaylistsCollectionVM}, Path=ExportPlaylistCommand}"
+            CommandParameter="{Binding}"
+            Glyph="&#xEDE1;"
+            Text="Export" />
+        <MenuFlyoutSeparator />
+        <Extensions:MenuFlyoutIconItem
+            Command="{Binding Source={StaticResource PlaylistsCollectionVM}, Path=DeletePlaylistCommand}"
             CommandParameter="{Binding}"
             Glyph="&#xE74D;"
-            Text="Delete"
-            Visibility="{Binding Converter={StaticResource RecordTypeToVisibility}, ConverterParameter='Album'}" />
+            Text="Delete" />
     </MenuFlyout>
 
     <MenuFlyout x:Key="Flyout">

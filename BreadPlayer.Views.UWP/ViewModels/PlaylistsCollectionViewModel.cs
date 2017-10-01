@@ -6,75 +6,164 @@ using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using BreadPlayer.Messengers;
+using BreadPlayer.PlaylistBus;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.ViewModels
 {
     public class PlaylistsCollectionViewModel : ObservableObject
     {
-        private PlaylistService _playlistService;
+        private RelayCommand _addtoplaylistCommand;
+        private RelayCommand _deletePlaylistCommand;
+        private RelayCommand _exportPlaylistCommand;
+        private RelayCommand _renamePlaylistCommand;
 
-        private PlaylistService PlaylistService =>
-            _playlistService ?? (_playlistService = new PlaylistService(
-                new DocumentStoreDatabaseService(
-                    SharedLogic.Instance.DatabasePath,
-                    "Playlists")));
         ThreadSafeObservableCollection<Playlist> playlists;
+
+        private PlaylistService _playlistService;
+        public PlaylistsCollectionViewModel()
+        {
+            Playlists = new ThreadSafeObservableCollection<Playlist>();
+            Init();
+            Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
+            Messenger.Instance.Register(Messengers.MessageTypes.MsgRemovePlaylist, new Action<Message>(HandleRemovePlaylistMessage));
+        }
+        
+        public ICommand AddToPlaylistCommand
+        {
+            get
+            { if (_addtoplaylistCommand == null) { _addtoplaylistCommand = new RelayCommand(param => AddToPlaylist(param)); } return _addtoplaylistCommand; }
+        }
+        public ICommand DeletePlaylistCommand
+        {
+            get
+            { if (_deletePlaylistCommand == null) { _deletePlaylistCommand = new RelayCommand(param => DeletePlaylist(param)); } return _deletePlaylistCommand; }
+        }
+
+        public ICommand ExportPlaylistCommand
+        {
+            get
+            { if (_exportPlaylistCommand == null) { _exportPlaylistCommand = new RelayCommand(param => ExportPlaylist(param)); } return _exportPlaylistCommand; }
+        }
+        public ICommand RenamePlaylistCommand
+        {
+            get
+            { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => RenamePlaylist(param)); } return _renamePlaylistCommand; }
+        }
         public ThreadSafeObservableCollection<Playlist> Playlists
         {
             get => playlists;
             set => Set(ref playlists, value);
         }
 
-        private RelayCommand _addtoplaylistCommand;
-
-        /// <summary>
-        /// Gets AddToPlaylist command. This calls the <see cref="AddToPlaylist(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
-        public ICommand AddToPlaylistCommand
+        private PlaylistService PlaylistService =>
+                                            _playlistService ?? (_playlistService = new PlaylistService(
+                new DocumentStoreDatabaseService(
+                    SharedLogic.Instance.DatabasePath,
+                    "Playlists")));
+        private void AddPlaylist(Playlist playlist)
         {
-            get
-            { if (_addtoplaylistCommand == null) { _addtoplaylistCommand = new RelayCommand(param => AddToPlaylist(param)); } return _addtoplaylistCommand; }
+            Playlists.Add(playlist);
+            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
         }
 
-        public PlaylistsCollectionViewModel()
-        {            
-            Playlists = new ThreadSafeObservableCollection<Playlist>();
-            Init();
-            Messenger.Instance.Register(Messengers.MessageTypes.MsgAddPlaylist, new Action<Message>(HandleAddPlaylistMessage));
-            Messenger.Instance.Register(Messengers.MessageTypes.MsgRemovePlaylist, new Action<Message>(HandleRemovePlaylistMessage));
-        }
-
-        private async void Init()
+        private async void RenamePlaylist(object playlist)
         {
-            await LoadPlaylists().ConfigureAwait(false);
-        }
-
-        private async void HandleAddPlaylistMessage(Message message)
-        {
-            if (message.Payload is Playlist plist)
+            try
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddPlaylistAsync(plist, false);
+                var selectedPlaylist = playlist as Playlist;
+                if (await SharedLogic.Instance.AskForPassword(selectedPlaylist))
+                {
+                    var dialog = new InputDialog
+                    {
+                        Title = "Rename this playlist",
+                        Text = selectedPlaylist.Name,
+                        Description = selectedPlaylist.Description
+                    };
+                    var playlists = new Dictionary<Playlist, IEnumerable<Mediafile>>();
+                    if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                    {
+                        var pl = new Playlist { Name = dialog.Text, Description = dialog.Description, Id = selectedPlaylist.Id };
+                        string path = ApplicationData.Current.LocalFolder.Path + @"\playlists\";
+                        if (File.Exists(path + selectedPlaylist.Name + ".db"))
+                        {
+                            File.Move(path + selectedPlaylist.Name + ".db", path + pl.Name + ".db");
+                        }
+                        
+                        Playlists.First(t => t.Name == selectedPlaylist.Name).Name = pl.Name; //change playlist name in the hamburgermenu
+                        SharedLogic.Instance.OptionItems.First(t => t.Text == selectedPlaylist.Name).Text = pl.Name; //change playlist name in context menu of each song.
+                        await PlaylistService.UpdatePlaylistAsync(pl);
+                        //Playlist = pl; //set this.Playlist to pl (local variable);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Cannot rename playlist. Please try again.");
             }
         }
-
-        private async void HandleRemovePlaylistMessage(Message message)
+        private async void ExportPlaylist(object para)
         {
-            if (message.Payload is Playlist plist)
+            var menu = para as MenuFlyoutItem;
+            var playlist = (Playlist)menu.Tag;
+            if (playlist == null)
+                return;
+            var songs = new List<Mediafile>();
+            if (playlist.IsExternal)
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddPlaylistAsync(plist, false);
+                IPlaylist extPlaylist = Path.GetExtension(playlist.Path) == ".m3u" ? new M3U() : (IPlaylist)new Pls();
+                songs.AddRange(await extPlaylist.LoadPlaylist(await StorageFile.GetFileFromPathAsync(playlist.Path)));
+            }
+            else
+            {
+                var service = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
+                songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
+            }
+            var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
+            await toExportPlaylist.SavePlaylist(songs);
+        }
+        private async void DeletePlaylist(object playlist)
+        {
+            try
+            {
+                var selectedPlaylist = playlist as Playlist;
+
+                if (selectedPlaylist != null && await SharedLogic.Instance.AskForPassword(selectedPlaylist))
+                {
+                    MessageDialog dia = new MessageDialog("Do you want to delete this playlist?", "Confirmation");
+                    dia.Commands.Add(new UICommand("Yes") { Id = 0 });
+                    dia.Commands.Add(new UICommand("No") { Id = 1 });
+                    dia.DefaultCommandIndex = 0;
+                    dia.CancelCommandIndex = 1;
+                    var result = await dia.ShowAsync();
+                    if (result.Label == "Yes")
+                    {
+                        if (NavigationService.Instance.Frame.CurrentSourcePageType != NavigationService.Instance.HomePage.GetType())
+                        {
+                            NavigationService.Instance.NavigateToHome();
+                        }
+
+                        Playlists.Remove(selectedPlaylist);
+                        SharedLogic.Instance.OptionItems.Remove(SharedLogic.Instance.OptionItems.First(t => t.Text == selectedPlaylist.Name)); //delete from context menu
+                        await PlaylistService.RemovePlaylistAsync(selectedPlaylist);//delete from database.
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogger.Logger.Error("Error occured while deleting playlist.", ex);
             }
         }
-
         private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)
         {
             await BreadDispatcher.InvokeAsync(async () =>
@@ -91,14 +180,20 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        private async Task LoadPlaylists()
+        private async Task AddSongsToPlaylist(Playlist list, IReadOnlyCollection<Mediafile> songsToadd)
         {
-            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
-            var playlists = await PlaylistService.GetPlaylistsAsync().ConfigureAwait(false);
-            if (playlists != null)
+            if (songsToadd.Any())
             {
-                Playlists.AddRange(playlists);
-                SharedLogic.Instance.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
+                await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
+                var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
+
+                //update duration and songs count
+                var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
+                collectionPlaylist.SongsCount = pSongs.Count + " songs";
+                collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
+                collectionPlaylist.ImageColor = (await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
+                collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
             }
         }
 
@@ -150,6 +245,43 @@ namespace BreadPlayer.ViewModels
             }
         }
 
+        private async void HandleAddPlaylistMessage(Message message)
+        {
+            if (message.Payload is Playlist plist)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await AddPlaylistAsync(plist, false);
+            }
+        }
+
+        private void HandleRemovePlaylistMessage(Message message)
+        {
+            if (message.Payload is Playlist plist)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                DeletePlaylist(plist);
+            }
+        }
+
+        private async void Init()
+        {
+            await LoadPlaylists().ConfigureAwait(false);
+        }
+        private bool IsHour(string length)
+        {
+            return length.Count(t => t == ':') == 2;
+        }
+
+        private async Task LoadPlaylists()
+        {
+            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, "New Playlist", "\uE710"));
+            var playlists = await PlaylistService.GetPlaylistsAsync().ConfigureAwait(false);
+            if (playlists != null)
+            {
+                Playlists.AddRange(playlists);
+                SharedLogic.Instance.OptionItems.AddRange(playlists.Select(t => new ContextMenuCommand(AddToPlaylistCommand, t.Name)));
+            }
+        }
         private async Task<Playlist> ShowAddPlaylistDialogAsync(string title = "Name this playlist", string playlistName = "", string desc = "", string password = "")
         {
             var dialog = new InputDialog
@@ -187,34 +319,6 @@ namespace BreadPlayer.ViewModels
                 return playlist;
             }
             return null;
-        }
-
-        private bool IsHour(string length)
-        {
-            return length.Count(t => t == ':') == 2;
-        }
-
-        private async Task AddSongsToPlaylist(Playlist list, IReadOnlyCollection<Mediafile> songsToadd)
-        {
-            if (songsToadd.Any())
-            {
-                await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
-                var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
-
-                //update duration and songs count
-                var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
-                collectionPlaylist.SongsCount = pSongs.Count + " songs";
-                collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
-                collectionPlaylist.ImageColor = (await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
-                collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
-            }
-        }
-
-        private void AddPlaylist(Playlist playlist)
-        {
-            Playlists.Add(playlist);
-            SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
         }
     }
 }
