@@ -20,7 +20,7 @@ using BreadPlayer.Core.Common;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Playlist : ObservableObject, IDbRecord
+    public class Playlist : ObservableObject, IDbRecord, IPinnable
     {
         public string TextSearchKey => GetTextSearchKey().ToLower();
 
@@ -104,7 +104,13 @@ namespace BreadPlayer.Core.Models
             get => songsCount;
             set => Set(ref songsCount, value);
         }
-
+        private bool _isPinned;
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set => Set(ref _isPinned, value);
+        }
+        public string TileId => "Playlist=" + Id;
         public string GetTextSearchKey()
         {
             return Name;

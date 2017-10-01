@@ -34,7 +34,11 @@ namespace BreadPlayer.Database
             Database.ChangeTable("Playlists", "PlaylistsText");
             return Database.GetRecordByQueryAsync<Playlist>(query);
         }
-
+        public Playlist GetPlaylistByIdAsync(long Id)
+        {
+            Database.ChangeTable("Playlists", "PlaylistsText");
+            return Database.GetRecordById<Playlist>(Id);
+        }
         public bool PlaylistExists(string query)
         {
             return Database.CheckExists(query);

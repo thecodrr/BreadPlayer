@@ -218,6 +218,13 @@ namespace BreadPlayer.Core
                 arguments = string.Format("action=play&id={0}", mediaFile.Id);
                 image = new Uri(AbsolutePathToRelative(mediaFile.AttachedPicture), UriKind.RelativeOrAbsolute);
             }
+            else if (para is Playlist playlist)
+            {
+                tileId = string.Format("Playlist={0}", playlist.Id);
+                displayName = playlist.Name;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, playlist.Id);
+                image = new Uri(AbsolutePathToRelative(playlist.ImagePath), UriKind.RelativeOrAbsolute);
+            }
             if (image == null || string.IsNullOrEmpty(image.OriginalString))
                 image = new Uri("ms-appx:///Assets/Square150x150Logo.scale-100.png", UriKind.RelativeOrAbsolute);
 
@@ -315,6 +322,7 @@ namespace BreadPlayer.Core
         }
 
         public AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+        public PlaylistService PlaylistService => new PlaylistService(new DocumentStoreDatabaseService(DatabasePath, "Playlists"));
 
         private async void NavigateToArtistPage(object para)
         {

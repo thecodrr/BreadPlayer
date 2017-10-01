@@ -21,6 +21,7 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
@@ -302,6 +303,10 @@ namespace BreadPlayer
                 else if (action.Contains("Artist"))
                 {
                     record = SharedLogic.Instance.AlbumArtistService.GetArtistByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                else if (action.Contains("Playlist"))
+                {
+                    record = SharedLogic.Instance.PlaylistService.GetPlaylistByIdAsync(Convert.ToInt64(pageParameter));
                 }
                 if (record == null)
                     return;
