@@ -107,27 +107,23 @@ namespace BreadPlayer.PlaylistBus
             }
         }
 
-        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs)
-        {
-            FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("PLS Playlists", new List<string> { ".pls" });
-            picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-            var file = await picker.PickSaveFileAsync();
-            using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
+        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs, Stream fileStream)
+        {           
+            using (StreamWriter writer = new StreamWriter(fileStream))
             {
-                writer.WriteLine("[playlist]");
-                writer.WriteLine("");
+                await writer.WriteLineAsync("[playlist]").ConfigureAwait(false);
+                await writer.WriteLineAsync("").ConfigureAwait(false);
                 int i = 0;
                 foreach (var track in songs)
                 {
                     i++;
-                    writer.WriteLine(string.Format("File{0}={1}", i, track.Path));
-                    writer.WriteLine(string.Format("Title{0}={1}", i, track.Title));
-                    writer.WriteLine(string.Format("Length{0}={1}", i, track.Length));
-                    writer.WriteLine("");
+                    await writer.WriteLineAsync(string.Format("File{0}={1}", i, track.Path)).ConfigureAwait(false);
+                    await writer.WriteLineAsync(string.Format("Title{0}={1}", i, track.Title)).ConfigureAwait(false);
+                    await writer.WriteLineAsync(string.Format("Length{0}={1}", i, track.Length)).ConfigureAwait(false);
+                    await writer.WriteLineAsync("");
                 }
-                writer.WriteLine("NumberOfEntries=" + i);
-                writer.WriteLine("Version=2");
+                await writer.WriteLineAsync("NumberOfEntries=" + i).ConfigureAwait(false);
+                await writer.WriteLineAsync("Version=2").ConfigureAwait(false);
             }
             return false;
         }

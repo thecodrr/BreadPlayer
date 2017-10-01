@@ -237,6 +237,7 @@
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
+    <Compile Include="PlaylistBus\PlaylistHelper.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />

@@ -15,6 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
@@ -27,6 +29,8 @@ namespace BreadPlayer.ViewModels
         private RelayCommand _deletePlaylistCommand;
         private RelayCommand _exportPlaylistCommand;
         private RelayCommand _renamePlaylistCommand;
+
+        private DelegateCommand _importPlaylistCommand;
 
         ThreadSafeObservableCollection<Playlist> playlists;
 
@@ -60,6 +64,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_renamePlaylistCommand == null) { _renamePlaylistCommand = new RelayCommand(param => RenamePlaylist(param)); } return _renamePlaylistCommand; }
         }
+        public DelegateCommand ImportPlaylistCommand { get { if (_importPlaylistCommand == null) { _importPlaylistCommand = new DelegateCommand(ImportPlaylists); } return _importPlaylistCommand; } }
         public ThreadSafeObservableCollection<Playlist> Playlists
         {
             get => playlists;
@@ -75,6 +80,34 @@ namespace BreadPlayer.ViewModels
         {
             Playlists.Add(playlist);
             SharedLogic.Instance.OptionItems.Add(new ContextMenuCommand(AddToPlaylistCommand, playlist.Name, "\uE710"));
+        }
+        private async void ImportPlaylists()
+        {
+            FileOpenPicker openPicker = new FileOpenPicker()
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.MusicLibrary
+            };
+            openPicker.FileTypeFilter.Add(".m3u");
+            openPicker.FileTypeFilter.Add(".pls");
+            StorageFile file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+            {
+                StorageApplicationPermissions.FutureAccessList.Add(file);
+
+                IPlaylist playlist = null;
+                if (Path.GetExtension(file.Path) == ".m3u")
+                {
+                    playlist = new M3U();
+                }
+                else
+                {
+                    playlist = new Pls();
+                }
+
+                var plist = new Playlist { Name = file.DisplayName, IsExternal = true, Path = file.Path };
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddPlaylist, plist);
+            }
         }
 
         private async void RenamePlaylist(object playlist)
@@ -114,8 +147,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void ExportPlaylist(object para)
         {
-            var menu = para as MenuFlyoutItem;
-            var playlist = (Playlist)menu.Tag;
+            var playlist = (Playlist)para;
             if (playlist == null)
                 return;
             var songs = new List<Mediafile>();
@@ -126,11 +158,9 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                var service = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
-                songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id));
+                songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id).ConfigureAwait(false));
             }
-            var toExportPlaylist = (menu.Text).Contains("M3U") ? new M3U() : (IPlaylist)new Pls();
-            await toExportPlaylist.SavePlaylist(songs);
+            await new PlaylistHelper().SavePlaylist(playlist, songs);
         }
         private async void DeletePlaylist(object playlist)
         {

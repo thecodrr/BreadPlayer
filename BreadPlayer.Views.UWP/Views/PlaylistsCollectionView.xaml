@@ -181,6 +181,14 @@
                             </Media:ControlStoryboardAction.Storyboard>
                         </Media:ControlStoryboardAction>
                     </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="RightTapped">
+                        <Core:EventTriggerBehavior.Actions>
+                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistFlyout}" />
+                        </Core:EventTriggerBehavior.Actions>
+                    </Core:EventTriggerBehavior>
+                    <Core:EventTriggerBehavior EventName="Holding">
+                        <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistFlyout}" />
+                    </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Grid>
         </DataTemplate>
@@ -194,6 +202,7 @@
             <Setter Property="Padding" Value="0" />
         </Style>
     </Page.Resources>
+
     <Grid DataContext="{StaticResource PlaylistsCollectionVM}">
         <ListView
             x:Name="playlistsList"
@@ -202,18 +211,35 @@
             ItemsSource="{Binding Path=Playlists, UpdateSourceTrigger=Explicit}">
             <ListView.Header>
                 <toolkit:ScrollHeader Mode="Fade" TargetListViewBase="{x:Bind playlistsList}">
-                    <Button
-                        Margin="0,0,0,20"
-                        Background="{x:Null}"
-                        BorderBrush="{ThemeResource AccentHoverBrush}"
-                        Command="{Binding AddToPlaylistCommand}"
-                        Foreground="{ThemeResource TextBrush}"
-                        Style="{StaticResource HyperlinkBtn}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE710;" />
-                            <TextBlock Margin="10,0,0,0" Text="New playlist" />
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Margin="0,0,0,20" Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,10,0"
+                            Background="{x:Null}"
+                            BorderBrush="{ThemeResource AccentHoverBrush}"
+                            Command="{Binding AddToPlaylistCommand}"
+                            Foreground="{ThemeResource TextBrush}"
+                            Style="{StaticResource HyperlinkBtn}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE710;" />
+                                <TextBlock Margin="10,0,0,0" Text="New playlist" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            VerticalContentAlignment="Center"
+                            Background="{x:Null}"
+                            BorderBrush="{ThemeResource AccentHoverBrush}"
+                            Command="{Binding ImportPlaylistCommand}"
+                            Foreground="{ThemeResource TextBrush}"
+                            Style="{StaticResource HyperlinkBtn}">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <FontIcon Margin="0,3,0,0" Glyph="&#xE8B5;" />
+                                <TextBlock
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="Import playlist" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </toolkit:ScrollHeader>
             </ListView.Header>
             <ListView.ItemTemplate>

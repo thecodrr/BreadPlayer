@@ -70,21 +70,17 @@ namespace BreadPlayer.PlaylistBus
             }
         }
 
-        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs)
+        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs, Stream fileStream)
         {
-            FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("M3U Playlists", new List<string> { ".m3u" });
-            picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-            var file = await picker.PickSaveFileAsync();
-            using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
+            using (StreamWriter writer = new StreamWriter(fileStream))
             {
-                writer.WriteLine("#EXTM3U");
-                writer.WriteLine("");
+                await writer.WriteLineAsync("#EXTM3U").ConfigureAwait(false);
+                await writer.WriteLineAsync("").ConfigureAwait(false);
                 foreach (var track in songs)
                 {
-                    writer.WriteLine(string.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title));
-                    writer.WriteLine(track.Path);
-                    writer.WriteLine("");
+                    await writer.WriteLineAsync(string.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title)).ConfigureAwait(false);
+                    await writer.WriteLineAsync(track.Path).ConfigureAwait(false);
+                    await writer.WriteLineAsync("").ConfigureAwait(false);
                 }
             }
             return false;

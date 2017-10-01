@@ -276,14 +276,7 @@ namespace BreadPlayer.ViewModels
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand LoadCommand { get { if (_loadCommand == null) { _loadCommand = new DelegateCommand(Load); } return _loadCommand; } }
-
-        private DelegateCommand _importPlaylistCommand;
-
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public DelegateCommand ImportPlaylistCommand { get { if (_importPlaylistCommand == null) { _importPlaylistCommand = new DelegateCommand(ImportPlaylists); } return _importPlaylistCommand; } }
-
+        
         private DelegateCommand _resetCommand;
 
         /// <summary>
@@ -313,35 +306,7 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private async void ImportPlaylists()
-        {
-            FileOpenPicker openPicker = new FileOpenPicker()
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.MusicLibrary
-            };
-            openPicker.FileTypeFilter.Add(".m3u");
-            openPicker.FileTypeFilter.Add(".pls");
-            StorageFile file = await openPicker.PickSingleFileAsync();
-            if (file != null)
-            {
-                StorageApplicationPermissions.FutureAccessList.Add(file);
-
-                IPlaylist playlist = null;
-                if (Path.GetExtension(file.Path) == ".m3u")
-                {
-                    playlist = new M3U();
-                }
-                else
-                {
-                    playlist = new Pls();
-                }
-
-                var plist = new Playlist { Name = file.DisplayName, IsExternal = true, Path = file.Path };
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddPlaylist, plist);
-            }
-        }
-
+        
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
         /// </summary>
