@@ -185,7 +185,6 @@
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
-    <Compile Include="Comparers\MediafileComparer.cs" />
     <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
     <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
@@ -238,7 +237,7 @@
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
-    <Compile Include="PlaylistBus\PlaylistHelper.cs" />
+    <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />

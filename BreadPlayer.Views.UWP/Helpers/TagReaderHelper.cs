@@ -56,7 +56,7 @@ namespace BreadPlayer.Helpers
                     LeadArtist = properties.Artist.GetStringForNullOrEmptyProperty("Unknown Artist"),
                     Genre = string.Join(",", properties.Genre),
                     Year = properties.Year.ToString(),
-                    TrackNumber = properties.TrackNumber.ToString(),
+                    TrackNumber = (int)properties.TrackNumber,
                     Length = new DoubleToTimeConverter().Convert(properties.Duration.TotalSeconds, typeof(double), null, "").ToString(),
                     AddedDate = DateTime.Now
                 };

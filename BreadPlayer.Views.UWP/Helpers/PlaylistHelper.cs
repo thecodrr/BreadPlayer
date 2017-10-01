@@ -9,7 +9,7 @@ using System.IO;
 using BreadPlayer.Dispatcher;
 using Windows.Storage;
 
-namespace BreadPlayer.PlaylistBus
+namespace BreadPlayer.Helper
 {
     public class PlaylistHelper
     {
