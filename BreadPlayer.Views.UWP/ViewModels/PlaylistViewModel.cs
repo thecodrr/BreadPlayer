@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Comparers;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
@@ -221,7 +222,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => Convert.ToInt32(t.TrackNumber)));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
