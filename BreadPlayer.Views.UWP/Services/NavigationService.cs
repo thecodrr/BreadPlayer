@@ -10,6 +10,7 @@ namespace BreadPlayer.Services
     public class NavigationService
     {
         public Type HomePage { get; set; }
+
         /// &lt;summary>
         /// This holds the instance to the Only NavigationService in this app.
         /// &lt;/summary>
@@ -26,6 +27,7 @@ namespace BreadPlayer.Services
         public Stack<Type> PageStack { get; protected set; }
 
         #region CTOR
+
         /// &lt;summary>
         /// The default constructor to instantiate this class with reference to a frame
         /// &lt;/summary>
@@ -58,9 +60,10 @@ namespace BreadPlayer.Services
             }
         }
 
-        #endregion
+        #endregion CTOR
 
         #region Navigation Methods
+
         public void UnregisterEvents()
         {
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
@@ -68,6 +71,7 @@ namespace BreadPlayer.Services
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
             }
         }
+
         public void RegisterEvents()
         {
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
@@ -75,6 +79,7 @@ namespace BreadPlayer.Services
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
         }
+
         public void NavigateTo(Type pageType, object parameter)
         {
             if (PageStack.Count > 0 && PageStack.Peek() == pageType)
@@ -104,42 +109,43 @@ namespace BreadPlayer.Services
             {
                 Frame.Navigate(HomePage, "Home");
             }
-        }        
+        }
+
         public bool Reload(object param)
         {
             Type type = Frame.CurrentSourcePageType;
-            
+
             try { return Frame.Navigate(type, param); }
             finally { Frame.BackStack.Remove(Frame.BackStack.Last()); }
         }
-        #endregion
 
+        #endregion Navigation Methods
 
         #region BackButtonVisibilty Region
 
         private void UpdateBackButtonVisibility()
         {
-                SystemNavigationManager.GetForCurrentView().
-                    AppViewBackButtonVisibility = Frame.CanGoBack ?
-                     AppViewBackButtonVisibility.Visible :
-                         AppViewBackButtonVisibility.Collapsed;
+            SystemNavigationManager.GetForCurrentView().
+                AppViewBackButtonVisibility = Frame.CanGoBack ?
+                 AppViewBackButtonVisibility.Visible :
+                     AppViewBackButtonVisibility.Collapsed;
         }
-        #endregion
+
+        #endregion BackButtonVisibilty Region
 
         #region Event Methods for windows and phone
 
         private void NavigationService_BackRequested
             (object sender, BackRequestedEventArgs e)
         {
-            e.Handled = NavigateBack(); 
-            
+            e.Handled = NavigateBack();
         }
 
-        private void HardwareButtons_BackPressed (object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             e.Handled = NavigateBack();
         }
 
-        #endregion
+        #endregion Event Methods for windows and phone
     }
 }

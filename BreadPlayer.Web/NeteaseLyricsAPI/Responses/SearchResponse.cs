@@ -1,10 +1,6 @@
 ﻿using BreadPlayer.Web.NeteaseLyricsAPI.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.NeteaseLyricsAPI.Responses
 {
@@ -16,9 +12,9 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI.Responses
         [JsonProperty("songCount")]
         public int SongCount { get; set; }
     }
+
     public class SearchResponse
     {
-       
         [JsonProperty("result")]
         public Result Result { get; set; }
 

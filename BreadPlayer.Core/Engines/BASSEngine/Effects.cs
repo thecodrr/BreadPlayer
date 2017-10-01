@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Core.Models;
+using ManagedBass;
+using ManagedBass.Fx;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using BreadPlayer.Core.Models;
-using ManagedBass;
-using ManagedBass.Fx;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
 {
@@ -34,10 +34,12 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         private int _fxEq;
         private float[] _defaultCenterFrequencyList = { 60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000 };
         private float[] _oldEqualizerSettings = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it  
-        #endregion
+        private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it
+
+        #endregion Fields
 
         #region Initialize
+
         public Effects()
         {
             EqualizerBands = new ObservableCollection<EqualizerBand>();
@@ -45,11 +47,13 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             LoadEqualizerSettings();
             PropertyChanged += Effects_PropertyChanged;
         }
-        #endregion
+
+        #endregion Initialize
 
         #region Properties
 
         private ObservableCollection<EqualizerBand> _bands;
+
         public ObservableCollection<EqualizerBand> EqualizerBands
         {
             get => _bands;
@@ -57,6 +61,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private float _preamp = 1f;
+
         public float Preamp
         {
             get => _preamp;
@@ -64,27 +69,32 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private bool _enableEqualizer;
+
         public bool EnableEq
         {
             get => _enableEqualizer;
             set => Set(ref _enableEqualizer, value);
         }
-        #endregion
+
+        #endregion Properties
 
         #region Private Methods
+
         private void EnableEqualizer(float[] frequencies = null)
         {
             InitializeEqualizer();
             LoadEqualizerSettings();
             SetAllEqualizerBandsFrequencies(frequencies ?? _oldEqualizerSettings);
         }
+
         private void DisableEqualizer()
         {
             Bass.ChannelRemoveFX(_handle, _fxEq);
         }
+
         private void InitializeEqualizer()
         {
-            // Set peaking equalizer effect with no bands          
+            // Set peaking equalizer effect with no bands
             PeakEQParameters eq = new PeakEQParameters();
             _fxEq = Bass.ChannelSetFX(_handle, EffectType.PeakEQ, 0);
             eq.fQ = 0f;
@@ -96,21 +106,24 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 InitializeEqualizerBands(eq);
             }
         }
+
         private void LoadEqualizerSettings()
         {
-           //// var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
-           //// OldEqualizerSettings = eqConfig.EqConfig;
-           //// EnableEq = eqConfig.IsEnabled;
-           // Preamp = eqConfig.PreAMP;
-           // for (int i = 0; i < 10; i++)
-           // {
-           //     EqualizerBands[i].Gain = OldEqualizerSettings[i];
-           // }
+            //// var eqConfig = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings();
+            //// OldEqualizerSettings = eqConfig.EqConfig;
+            //// EnableEq = eqConfig.IsEnabled;
+            // Preamp = eqConfig.PreAMP;
+            // for (int i = 0; i < 10; i++)
+            // {
+            //     EqualizerBands[i].Gain = OldEqualizerSettings[i];
+            // }
         }
+
         private void SaveEqualizerSettings()
         {
-           // InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
+            // InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(EqualizerBands.Select(t => t.Gain).ToArray(), EnableEq, Preamp);
         }
+
         private void SetAllEqualizerBandsFrequencies(float[] frequencies)
         {
             for (int i = 0; i < 10; i++)
@@ -118,6 +131,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 UpdateEqBand(i, frequencies[i]);
             }
         }
+
         private void InitializeEqualizerBands(PeakEQParameters eq)
         {
             for (int i = 0; i < 10; i++)
@@ -134,6 +148,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 EqualizerBands.Add(band);
             }
         }
+
         /// <summary>
         /// Sets Single Equalizer Band
         /// </summary>
@@ -150,9 +165,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             eq.fGain = freq;
             Bass.FXSetParameters(_fxEq, eq);
         }
-        #endregion
+
+        #endregion Private Methods
 
         #region Public Methods
+
         public void UpdateHandle(int coreHandle)
         {
             _handle = coreHandle;
@@ -161,6 +178,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             Bass.ChannelSetDSP(_handle, _myDspAddr, IntPtr.Zero, 0);
             EnableDisableEqualizer();
         }
+
         public void EnableDisableEqualizer()
         {
             SaveEqualizerSettings();
@@ -174,13 +192,16 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 DisableEqualizer();
             }
         }
+
         public void ResetEqualizer()
         {
             SetAllEqualizerBandsFrequencies(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
         }
-        #endregion
 
-        #region Events  
+        #endregion Public Methods
+
+        #region Events
+
         private void Effects_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "EnableEq")
@@ -189,6 +210,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
             SaveEqualizerSettings();
         }
+
         private void Band_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var band = sender as EqualizerBand;
@@ -198,9 +220,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
             SaveEqualizerSettings();
         }
-        #endregion
 
-        #region unsafe Methods            
+        #endregion Events
+
+        #region unsafe Methods
+
         private unsafe void SetPreamp(int handle, int channel, IntPtr buffer, int length, IntPtr user)
         {
             if (_preamp == 1f || length == 0 || buffer == IntPtr.Zero)
@@ -217,6 +241,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 pointer[i] *= _preamp;
             }
         }
-        #endregion
+
+        #endregion unsafe Methods
     }
 }

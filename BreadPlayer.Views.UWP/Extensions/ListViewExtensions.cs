@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -79,7 +76,7 @@ namespace BreadPlayer.Extensions
 
             // calculate the position object in order to know how much to scroll to
             var transform = selectorItem?.TransformToVisual((UIElement)scrollViewer?.Content);
-            var position = transform?.TransformPoint(new Point(0, 0)) ?? new Point(0,0);
+            var position = transform?.TransformPoint(new Point(0, 0)) ?? new Point(0, 0);
 
             // when virtualized, scroll back to previous position without animation
             if (isVirtualizing)
@@ -125,6 +122,7 @@ namespace BreadPlayer.Extensions
                 scrollViewer.ViewChanged -= viewChanged;
             }
         }
+
         public static ScrollViewer GetScrollViewer(this DependencyObject element)
         {
             if (element is ScrollViewer)

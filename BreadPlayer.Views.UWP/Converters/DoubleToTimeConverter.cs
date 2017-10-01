@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-	public class DoubleToTimeConverter : IValueConverter
+    public class DoubleToTimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -37,16 +37,18 @@ namespace BreadPlayer.Converters
                 else
                 {
                     formattedTime = TimeSpan.FromSeconds(time).ToString(@"mm\:ss");
-                }              
+                }
             }
             return formattedTime;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
             return string.Empty;
         }
     }
+
     public class WidthToHalfConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -68,6 +70,7 @@ namespace BreadPlayer.Converters
             }
             return value;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

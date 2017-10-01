@@ -9,6 +9,7 @@ namespace BreadPlayer.Parsers.LRCParser
     public class LrcParser : ILrcParser
     {
         private readonly List<IOneLineLyric> _lyrics;
+
         /// <summary>
         /// Gets the metadata.
         /// </summary>
@@ -16,6 +17,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The metadata.
         /// </value>
         public ILrcMetadata Metadata { get; private set; }
+
         /// <summary>
         /// Gets the lyrics.
         /// </summary>
@@ -23,7 +25,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The lyrics.
         /// </value>
         public List<IOneLineLyric> Lyrics { get { return _lyrics; } }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LrcFile"/> class.
         /// </summary>
@@ -58,7 +60,7 @@ namespace BreadPlayer.Parsers.LRCParser
 
         private static readonly Regex TimestampRegex = new Regex(@"^(?'minutes'\d+):(?'seconds'\d+(\.\d+)?)$");
         private static readonly Regex MetadataRegex = new Regex(@"^(?'title'[A-Za-z]+?):(?'content'.*)$");
-        
+
         /// <summary>
         /// Checks if the text is a valid LRC
         /// </summary>
@@ -66,8 +68,9 @@ namespace BreadPlayer.Parsers.LRCParser
         /// <returns></returns>
         public static bool IsLrc(string text)
         {
-            return !string.IsNullOrEmpty(text) ? Regex.Match(text, @"\[\d+:\d+.\d+\]|\[[a-zA-Z]+:[a-zA-Z\s]+\]").Success : false;                
+            return !string.IsNullOrEmpty(text) ? Regex.Match(text, @"\[\d+:\d+.\d+\]|\[[a-zA-Z]+:[a-zA-Z\s]+\]").Success : false;
         }
+
         /// <summary>
         /// Create a new new instance of the <see cref="ILrcFile"/> interface with the specified LRC text.
         /// </summary>
@@ -76,7 +79,7 @@ namespace BreadPlayer.Parsers.LRCParser
         public static ILrcParser FromText(string lrcText)
         {
             if (lrcText == null) throw new ArgumentNullException("lrcText");
-            
+
             var pairs = new List<KeyValuePair<string, string>>();
             var titles = new List<string>();
             var sb = new StringBuilder();
@@ -119,6 +122,7 @@ namespace BreadPlayer.Parsers.LRCParser
                             throw new FormatException(string.Format("Expect '[' at position {0}", i));
                         }
                         break;
+
                     case 1:
                         if (!unescaped && ch == ']')
                         {
@@ -135,6 +139,7 @@ namespace BreadPlayer.Parsers.LRCParser
                             sb.Append(ch); // append to title
                         }
                         break;
+
                     case 2:
                         if (!unescaped && (ch == '\r' || ch == '\n') || ended)
                         {
@@ -176,11 +181,13 @@ namespace BreadPlayer.Parsers.LRCParser
                 var match = TimestampRegex.Match(pair.Key);
                 if (match.Success)
                 {
-                    var minutes = int.Parse(match.Groups["minutes"].Value);
-                    var seconds = double.Parse(match.Groups["seconds"].Value);
-                    var timestamp = TimeSpan.FromSeconds(minutes * 60 + seconds);
-                    lyrics.Add(new OneLineLyric(timestamp, pair.Value));
-                    continue;
+                    if(double.TryParse(match.Groups["seconds"].Value, out double seconds)
+                       && int.TryParse(match.Groups["minutes"].Value, out int minutes))
+                    {
+                        var timestamp = TimeSpan.FromSeconds(minutes * 60 + seconds);
+                        lyrics.Add(new OneLineLyric(timestamp, pair.Value));
+                        continue;
+                    }                    
                 }
 
                 // Parse metadata
@@ -227,7 +234,10 @@ namespace BreadPlayer.Parsers.LRCParser
                             throw new FormatException(string.Format("Duplicate LRC metadata found. Metadata name: '{0}', Values: '{1}', '{2}'", "offset", offsetString, content));
                         }
                         offsetString = content;
-                        metadata.Offset = TimeSpan.FromMilliseconds(double.Parse(content));
+                        if(double.TryParse(content, out double offset))
+                        {
+                            metadata.Offset = TimeSpan.FromMilliseconds(offset);
+                        }
                     }
                     // ReSharper disable once RedundantIfElseBlock
                     else

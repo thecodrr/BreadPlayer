@@ -7,37 +7,32 @@ using BreadPlayer.Database;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
 using BreadPlayer.NotificationManager;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using BreadPlayer.Web.Lastfm;
-using SplitViewMenu;
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using TagLib;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI;
-using BreadPlayer.Helpers;
+using Windows.UI.StartScreen;
 
 namespace BreadPlayer.Core
 {
     public class SharedLogic
     {
         #region Ctor
+
         public SharedLogic()
         {
             //To define them all here is not good. This ctor is called multiple times.
@@ -49,58 +44,65 @@ namespace BreadPlayer.Core
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
             InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
         }
-        #endregion
+
+        #endregion Ctor
 
         #region Singletons (NEED IMPROVEMENTS)
+        public static SharedLogic Instance => GSingleton<SharedLogic>.Instance.Singleton;
         /// <summary>
         /// This path is used around the codebase multiple times,
         /// so it is better to define it once and call it everywhere
         /// </summary>
-        public static string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
+        public string DatabasePath => Path.Combine(ApplicationData.Current.LocalFolder.Path, "BreadPlayerDB");
 
         /// <summary>
         /// These contextmenu items are used in the context menu for library
         /// items. This shouldn't be here.
         /// #TODO move this to the correct place & remove the singleton.
         /// </summary>
-        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GenericService<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.GenericClass;
+        public ThreadSafeObservableCollection<ContextMenuCommand> OptionItems => GSingleton<ThreadSafeObservableCollection<ContextMenuCommand>>.Instance.Singleton;
 
         /// <summary>
         /// The notification manager is used around the application many times,
         /// a global singleton is best for such a design.
         /// </summary>
-        public static BreadNotificationManager NotificationManager => GenericService<BreadNotificationManager>.Instance.GenericClass;// { get { return items; } set { Set(ref items, value); } }
+        public BreadNotificationManager NotificationManager => GSingleton<BreadNotificationManager>.Instance.Singleton;// { get { return items; } set { Set(ref items, value); } }
 
         /// <summary>
         /// The singleton for player engine. Could this be better designed?
         /// Perhaps an Instance Singleton in the PlayerEngine itself?
         /// A singleton here makes most sense.
         /// </summary>
-        private static IPlayerEngine _player;
-        public static IPlayerEngine Player
+        private IPlayerEngine _player;
+
+        public IPlayerEngine Player
         {
             get
             {
                 if (_player == null)
                 {
-                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), SettingsVm.AudioSettingsVM.CrossfadeEnabled);
+                    _player = new BassPlayerEngine(
+                        ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), 
+                        SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true),
+                        SettingsHelper.GetRoamingSetting<int>("DeviceBufferSize", 350));
                 }
 
                 return _player;
             }
         }
-       
+
         /// <summary>
         /// The static SettingsVM Singleton. I am still not sure if this should be here.
         /// This is bad design plain and simple. Needs improvement.
         /// #TODO Clean this up and improve this to a better design.
         /// </summary>
-        public static SettingsViewModel SettingsVm => GenericService<SettingsViewModel>.Instance.GenericClass;
+        public SettingsViewModel SettingsVm => GSingleton<SettingsViewModel>.Instance.Singleton;
 
         //This is not a traditional singleton. Instead of making it readonly,
         //I have made this read/write capable. Can this be improved?
-        private static Lastfm _lastfmScrobbler;
-        public static Lastfm LastfmScrobbler
+        private Lastfm _lastfmScrobbler;
+
+        public Lastfm LastfmScrobbler
         {
             get => _lastfmScrobbler;
             set
@@ -111,22 +113,37 @@ namespace BreadPlayer.Core
                 }
             }
         }
-        #endregion
+
+        #endregion Singletons (NEED IMPROVEMENTS)
 
         #region ICommands
 
         #region Definitions
+
         private RelayCommand _navigateToArtistPageCommand;
         private RelayCommand _changeAlbumArtCommand;
         private RelayCommand _showPropertiesCommand;
         private RelayCommand _opensonglocationCommand;
         private RelayCommand _navigateCommand;
-
+        private RelayCommand _pinToStartCommand;
+        private RelayCommand _unpinFromStartCommand;
+        public ICommand UnpinFromStartCommand
+        {
+            get
+            { if (_unpinFromStartCommand == null) { _unpinFromStartCommand = new RelayCommand(param => UnpinFromStart(param)); } return _unpinFromStartCommand; }
+        }
+        public ICommand PinToStartCommand
+        {
+            get
+            { if (_pinToStartCommand == null) { _pinToStartCommand = new RelayCommand(param => PinToStart(param)); } return _pinToStartCommand; }
+        }
         public ICommand NavigateToAlbumPageCommand
         {
             get
             { if (_navigateCommand == null) { _navigateCommand = new RelayCommand(param => NavigateToAlbumPage(param)); } return _navigateCommand; }
-        }/// <summary>
+        }
+        /// <summary>
+
          /// Gets command for navigating to a page./>
          /// </summary>
         public ICommand NavigateToArtistPageCommand
@@ -134,6 +151,7 @@ namespace BreadPlayer.Core
             get
             { if (_navigateToArtistPageCommand == null) { _navigateToArtistPageCommand = new RelayCommand(param => NavigateToArtistPage(param)); } return _navigateToArtistPageCommand; }
         }
+
         /// <summary>
         /// Gets command for showing properties of a mediafile. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -142,6 +160,7 @@ namespace BreadPlayer.Core
             get
             { if (_showPropertiesCommand == null) { _showPropertiesCommand = new RelayCommand(param => ShowProperties(param)); } return _showPropertiesCommand; }
         }
+
         /// <summary>
         /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
@@ -150,6 +169,7 @@ namespace BreadPlayer.Core
             get
             { if (_opensonglocationCommand == null) { _opensonglocationCommand = new RelayCommand(param => OpenSongLocation(param)); } return _opensonglocationCommand; }
         }/// <summary>
+
          /// Gets command for open song location. This calls the <see cref="OpenSongLocation(object)"/> method. <seealso cref="ICommand"/>
          /// </summary>
         public ICommand ChangeAlbumArtCommand
@@ -157,9 +177,80 @@ namespace BreadPlayer.Core
             get
             { if (_changeAlbumArtCommand == null) { _changeAlbumArtCommand = new RelayCommand(param => ChangeAlbumArt(param)); } return _changeAlbumArtCommand; }
         }
-        #endregion
+
+        #endregion Definitions
 
         #region Implementation
+        private string AbsolutePathToRelative(string absolutePath)
+        {
+            if (absolutePath != null)
+                return "ms-appdata:///local/" + absolutePath.Replace(@"C:\Users\Arkane Elayne\AppData\Local\Packages\22102thecodrr.BreadPlayer_fknyqnmcp2942\LocalState\", "").Replace('\\', '/');
+            return "";
+        }
+        private async void UnpinFromStart(object para)
+        {
+            SecondaryTile tile = new SecondaryTile(((IPinnable)para).TileId);
+            ((IPinnable)para).IsPinned = await tile.RequestDeleteAsync();
+        }
+        private async void PinToStart(object para)
+        {
+            string tileId = "";
+            string displayName = "";
+            string arguments = "action=view{0}&pageType={1}&pageParameter={2}";
+            Uri image = null;
+            TileSize tileSize = TileSize.Default & TileSize.Square310x310 & TileSize.Square71x71 & TileSize.Square44x44 & TileSize.Square30x30;
+
+            if (para is Album album)
+            {
+                tileId = string.Format("Album={0}", album.Id);
+                displayName = album.AlbumName;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, album.Id);
+                image = new Uri(AbsolutePathToRelative(album.AlbumArt), UriKind.RelativeOrAbsolute);
+            }
+            else if (para is Artist artist)
+            {
+                tileId = string.Format("Artist={0}", artist.Id);
+                displayName = artist.Name;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, artist.Id);
+                image = new Uri(AbsolutePathToRelative(artist.Picture), UriKind.RelativeOrAbsolute);
+            }
+            else if (para is Mediafile mediaFile)
+            {
+                tileId = string.Format("Mediafile={0}", mediaFile.Id);
+                displayName = mediaFile.Title;
+                arguments = string.Format("action=play&id={0}", mediaFile.Id);
+                image = new Uri(AbsolutePathToRelative(mediaFile.AttachedPicture), UriKind.RelativeOrAbsolute);
+            }
+            else if (para is Playlist playlist)
+            {
+                tileId = string.Format("Playlist={0}", playlist.Id);
+                displayName = playlist.Name;
+                arguments = string.Format(arguments, para.GetType().Name, typeof(PlaylistView).Name, playlist.Id);
+                image = new Uri(AbsolutePathToRelative(playlist.ImagePath), UriKind.RelativeOrAbsolute);
+            }
+            if (image == null || string.IsNullOrEmpty(image.OriginalString))
+                image = new Uri("ms-appx:///Assets/Square150x150Logo.scale-100.png", UriKind.RelativeOrAbsolute);
+
+            // Initialize the tile with required arguments
+            SecondaryTile tile = new SecondaryTile(
+                tileId,
+                displayName,
+                arguments,
+                image,
+                tileSize);
+
+            tile.VisualElements.Square310x310Logo = image;
+            tile.VisualElements.Square71x71Logo = image;
+            tile.VisualElements.Square44x44Logo = image;
+            tile.VisualElements.ShowNameOnSquare150x150Logo = true;
+            tile.VisualElements.ShowNameOnSquare310x310Logo = true;
+
+            if (!SecondaryTile.Exists(tile.TileId))
+            { 
+                // Pin the tile
+                ((IPinnable)para).IsPinned = await tile.RequestCreateAsync();
+            }
+        }
         private async void ChangeAlbumArt(object para)
         {
             Mediafile mediaFile = para as Mediafile;
@@ -225,33 +316,38 @@ namespace BreadPlayer.Core
                 return;
             }
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbum(para.ToString()).ConfigureAwait(false);
+            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
                 if (album != null)
                     NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
             });
         }
-        private AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+
+        public AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
+        public PlaylistService PlaylistService => new PlaylistService(new DocumentStoreDatabaseService(DatabasePath, "Playlists"));
+
         private async void NavigateToArtistPage(object para)
         {
             SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtist(para.ToString()).ConfigureAwait(false);
+            var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtistAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if(artist != null)
-                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+                if (artist != null)
+                    NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
             });
         }
-        #endregion
 
-        #endregion
+        #endregion Implementation
+
+        #endregion ICommands
 
         #region Clean up needed
+
         //these methods are badly designed and redundant.
         //should be removed and cleanup.
         //#TODO clean this up
-        public static bool AddMediafile(Mediafile file, int index = -1)
+        public bool AddMediafile(Mediafile file, int index = -1)
         {
             if (file == null)
             {
@@ -264,7 +360,8 @@ namespace BreadPlayer.Core
             service.AddMediafile(file);
             return true;
         }
-        public static async Task<bool> RemoveMediafile(Mediafile file)
+
+        public async Task<bool> RemoveMediafile(Mediafile file)
         {
             if (file == null)
             {
@@ -284,6 +381,7 @@ namespace BreadPlayer.Core
             }
             return true;
         }
+
         public async Task<bool> ShowPasswordDialog(string hash, string salt)
         {
             var dialog = new PasswordDialog
@@ -319,7 +417,7 @@ namespace BreadPlayer.Core
         /// <param name="path"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public static bool VerifyFileExists(string path, int timeout)
+        public bool VerifyFileExists(string path, int timeout)
         {
             var task = new Task<bool>(() =>
             {
@@ -337,7 +435,7 @@ namespace BreadPlayer.Core
         /// </summary>
         /// <param name="file">the image file</param>
         /// <returns>the dominant color</returns>
-        public static async Task<Color> GetDominantColor(StorageFile file)
+        public async Task<Color> GetDominantColor(StorageFile file)
         {
             using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
@@ -348,7 +446,7 @@ namespace BreadPlayer.Core
                     var colorThief = new ColorThiefDotNet.ColorThief();
                     var qColor = await colorThief.GetColor(await decoder);
 
-                    //read the color 
+                    //read the color
                     return Color.FromArgb(qColor.Color.A, qColor.Color.R, qColor.Color.G, qColor.Color.B);
                 }
                 catch
@@ -358,6 +456,7 @@ namespace BreadPlayer.Core
             }
         }
 
-        #endregion              
+        #endregion Clean up needed
+
     }
 }

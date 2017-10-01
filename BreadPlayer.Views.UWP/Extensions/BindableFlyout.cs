@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,25 +16,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using Windows.ApplicationModel;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dispatcher;
-using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace BreadPlayer.Extensions
 {
-	public class BindableFlyout : MenuFlyout
+    public class BindableFlyout : MenuFlyout
     {
-        
         public ThreadSafeObservableCollection<ContextMenuCommand> ItemsSource
         {
             get => (ThreadSafeObservableCollection<ContextMenuCommand>)GetValue(ItemsSourceProperty);
@@ -46,7 +42,7 @@ namespace BreadPlayer.Extensions
             {
                 var obj = o as BindableFlyout;
                 obj.Setup(obj);
-                obj.ItemsSource.CollectionChanged += (e, a) => 
+                obj.ItemsSource.CollectionChanged += (e, a) =>
                 {
                     obj.Setup(obj);
                 };
@@ -66,6 +62,7 @@ namespace BreadPlayer.Extensions
                 obj.Setup(obj);
             }
         ));
+
         private void Setup(BindableFlyout menuFlyout)
         {
             if (DesignMode.DesignModeEnabled)
@@ -77,28 +74,32 @@ namespace BreadPlayer.Extensions
             {
                 return;
             }
-            
+
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
+                menuItem.PropertyChanged += (s, a) =>
+                {
+                    Setup(this);
+                };
                 var item = new MenuFlyoutIconItem
                 {
                     Text = menuItem.Text,
                     Command = menuItem.Command,
                     Glyph = menuItem.CommandIcon
                 };
-                
-                item.CommandParameter =  menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
+
+                item.CommandParameter = menuItem.CommandParameter == null ? item : menuItem.CommandParameter;
                 item.Tag = menuFlyout.DataContext as Mediafile;
-                if(menuFlyout.Items.Count == 1)
+                if (menuFlyout.Items.Count == 1)
                 {
                     menuFlyout.Items.Add(new MenuFlyoutSeparator());
                 }
                 menuFlyout.Items.Add(item);
             }
         }
-        
     }
+
     public class MenuFlyoutIconItem : MenuFlyoutItem
     {
         public string Glyph
@@ -110,7 +111,8 @@ namespace BreadPlayer.Extensions
         public static readonly DependencyProperty GlyphProperty =
             DependencyProperty.Register("Glyph", typeof(string), typeof(MenuFlyoutIconItem), new PropertyMetadata(null));
     }
-    public class ContextMenuCommand : ViewModelBase
+
+    public class ContextMenuCommand : ObservableObject
     {
         public ContextMenuCommand(ICommand command, string text, string glyph = "\uE93C", object cmdPara = null)
         {
@@ -121,21 +123,26 @@ namespace BreadPlayer.Extensions
         }
 
         private string _text;
+
         public string Text
         {
             get => _text;
             set => Set(ref _text, value);
         }
+
         public string CommandIcon { get; set; }
+
         public ICommand Command
         {
             get; private set;
         }
+
         public object CommandParameter
         {
             get; private set;
         }
     }
+
     public class CustomFlyout : MenuFlyout
     {
         public object Tag
@@ -151,21 +158,22 @@ namespace BreadPlayer.Extensions
             }
         ));
     }
-    public static class FlyoutMenuExtension 
+
+    public static class FlyoutMenuExtension
     {
         public static ThreadSafeObservableCollection<ContextMenuCommand> GetMyItems(DependencyObject obj)
         {
             return (ThreadSafeObservableCollection<ContextMenuCommand>)obj.GetValue(MyItemsProperty);
         }
+
         public static void SetMyItems(DependencyObject obj, ThreadSafeObservableCollection<ContextMenuCommand> value)
         {
             obj.SetValue(MyItemsProperty, value);
         }
 
-        private static SharedLogic _core = new SharedLogic();
         private static void AddMenuItems(MenuFlyoutSubItem menuFlyoutSubItem, MenuFlyout menuFlyout = null)
         {
-            foreach (var menuItem in _core.OptionItems)
+            foreach (var menuItem in SharedLogic.Instance.OptionItems)
             {
                 var item = new MenuFlyoutItem
                 {
@@ -185,6 +193,7 @@ namespace BreadPlayer.Extensions
                 menuFlyoutSubItem.Items.Add(item);
             }
         }
+
         private async static void Setup(MenuFlyout menuFlyout)
         {
             if (menuFlyout == null) return;
@@ -193,9 +202,9 @@ namespace BreadPlayer.Extensions
             {
                 menuFlyout.Items.Clear();
                 MenuFlyoutSubItem addTo = new MenuFlyoutSubItem { Text = "Add to" };
-                MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = _core.ShowPropertiesCommand, CommandParameter = null };
-                MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = _core.OpenSongLocationCommand, CommandParameter = null };
-                MenuFlyoutItem changeAlbumArt = new MenuFlyoutItem { Text = "Change Album Art", Command = _core.ChangeAlbumArtCommand, CommandParameter = null };
+                MenuFlyoutItem properties = new MenuFlyoutItem { Text = "Properties", Command = SharedLogic.Instance.ShowPropertiesCommand, CommandParameter = null };
+                MenuFlyoutItem openLoc = new MenuFlyoutItem { Text = "Open Song Location", Command = SharedLogic.Instance.OpenSongLocationCommand, CommandParameter = null };
+                MenuFlyoutItem changeAlbumArt = new MenuFlyoutItem { Text = "Change Album Art", Command = SharedLogic.Instance.ChangeAlbumArtCommand, CommandParameter = null };
 
                 menuFlyout.Items.Add(addTo);
                 menuFlyout.Items.Add(changeAlbumArt);
@@ -203,7 +212,7 @@ namespace BreadPlayer.Extensions
                 menuFlyout.Items.Add(properties);
                 AddMenuItems(addTo, menuFlyout);
             });
-            //SharedLogic.Player.PropertyChanged += Player_PropertyChanged;
+            //SharedLogic.Instance.Player.PropertyChanged += Player_PropertyChanged;
         }
 
         private static void Player_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -213,6 +222,7 @@ namespace BreadPlayer.Extensions
                 Refresh();
             }
         }
+
         /// <summary>
         /// Fix this later. Not very essential right now.
         /// </summary>
@@ -241,9 +251,10 @@ namespace BreadPlayer.Extensions
             //                    }
             //                }
             //            }
-            //        }                    
+            //        }
             //}
         }
+
         private static void Item_Click(object sender, RoutedEventArgs e)
         {
             //var item = sender as MenuFlyoutItem;
@@ -253,6 +264,7 @@ namespace BreadPlayer.Extensions
 
         private static MenuFlyout _menu;
         private static List<MenuFlyout> _fly = new List<MenuFlyout>();
+
         public static readonly DependencyProperty MyItemsProperty =
             DependencyProperty.Register("MyItems",
                 typeof(List<MenuFlyoutItemBase>),
@@ -263,7 +275,7 @@ namespace BreadPlayer.Extensions
                     {
                         _menu = menuFlyout;
                         Setup(menuFlyout);
-                        _core.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
+                        SharedLogic.Instance.OptionItems.CollectionChanged += OptionItems_CollectionChanged;
                     }
                 }));
 

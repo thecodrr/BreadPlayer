@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 {
@@ -31,5 +30,5 @@ namespace BreadPlayer.Web.BaiduLyricsAPI.Models
 
         [JsonProperty("artist_id")]
         public string ArtistId { get; set; }
-    }  
+    }
 }

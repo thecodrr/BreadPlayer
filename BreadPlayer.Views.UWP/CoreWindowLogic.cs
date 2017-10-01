@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Events;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,41 +41,34 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
-using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Events;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Messengers;
-using BreadPlayer.ViewModels;
-using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer
 {
     public class CoreWindowLogic
     {
         #region Fields
+
         private const string PathKey = "path";
         private const string PosKey = "position";
         private const string VolKey = "volume";
         private const string FoldersKey = "folders";
         private const string TimeclosedKey = "timeclosed";
         private static SystemMediaTransportControls _smtc;
-#pragma warning disable CS0414 // The field 'CoreWindowLogic._path' is assigned but its value is never used
         private static string _path = "";
-#pragma warning restore CS0414 // The field 'CoreWindowLogic._path' is assigned but its value is never used
-        #endregion
+
+        #endregion Fields
 
         #region Load/Save Logic
+
         public static void LoadSettings(bool onlyVol = false, bool play = false)
         {
             var volume = SettingsHelper.GetLocalSetting<double>(VolKey, 50.0);
             if (!onlyVol)
             {
-                    double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0.0D);
-                    SharedLogic.Player.PlayerState = PlayerState.Paused;
-                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
-                            new List<object> { "", position, play, volume });                
+                double position = SettingsHelper.GetLocalSetting<double>(PosKey, 0.0D);
+                SharedLogic.Instance.Player.PlayerState = PlayerState.Paused;
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd,
+                        new List<object> { "", position, play, volume });
             }
         }
 
@@ -74,31 +76,33 @@ namespace BreadPlayer
         {
             try
             {
-                if (SharedLogic.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.Path))
+                if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.Path))
                 {
-                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Player.CurrentlyPlayingFile.Id);
-                    SettingsHelper.SaveLocalSetting(PathKey,SharedLogic.Player.CurrentlyPlayingFile.Path);
-                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Player.Position);
+                    SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Instance.Player.CurrentlyPlayingFile.Id);
+                    SettingsHelper.SaveLocalSetting(PathKey, SharedLogic.Instance.Player.CurrentlyPlayingFile.Path);
+                    SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Instance.Player.Position);
                 }
-                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Player.Volume);
+                SettingsHelper.SaveLocalSetting(VolKey, SharedLogic.Instance.Player.Volume);
                 SettingsHelper.SaveLocalSetting(TimeclosedKey, DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 string folderPaths = "";
-                SharedLogic.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
+                SharedLogic.Instance.SettingsVm.LibraryFoldersCollection.ToList().ForEach(folder => { folderPaths += folder.Path + "|"; });
                 if (!string.IsNullOrEmpty(folderPaths))
                 {
                     SettingsHelper.SaveLocalSetting(FoldersKey, folderPaths.Remove(folderPaths.LastIndexOf('|')));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 BLogger.Logger.Error("Error while saving settings.", ex);
             }
         }
-        #endregion
+
+        #endregion Load/Save Logic
 
         #region SystemMediaTransportControls Methods/Events
 
         private static MediaPlayer _player;
+
         public async static void InitSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
@@ -122,19 +126,18 @@ namespace BreadPlayer
             _smtc.PlaybackStatus = MediaPlaybackStatus.Closed;
             _smtc.AutoRepeatMode = MediaPlaybackAutoRepeatMode.Track;
 
-
-            SharedLogic.Player.MediaStateChanged += Player_MediaStateChanged;
+            SharedLogic.Instance.Player.MediaStateChanged += Player_MediaStateChanged;
         }
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-           // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+            // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
 
             await BreadDispatcher.InvokeAsync(() =>
             {
-                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Player.PlayerState != PlayerState.Paused)
+                if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Instance.Player.PlayerState != PlayerState.Paused)
                 {
-                   // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+                    // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                 }
             });
@@ -151,23 +154,24 @@ namespace BreadPlayer
                 _smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
                 var musicProps = _smtc.DisplayUpdater.MusicProperties;
                 _smtc.DisplayUpdater.ClearAll();
-                if (SharedLogic.Player.CurrentlyPlayingFile != null)
+                if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
                 {
-                    musicProps.Title = SharedLogic.Player.CurrentlyPlayingFile.Title;
-                    musicProps.Artist = SharedLogic.Player.CurrentlyPlayingFile.LeadArtist;
-                    musicProps.AlbumTitle = SharedLogic.Player.CurrentlyPlayingFile.Album;
-                    if (!string.IsNullOrEmpty(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture))
+                    musicProps.Title = SharedLogic.Instance.Player.CurrentlyPlayingFile.Title;
+                    musicProps.Artist = SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist;
+                    musicProps.AlbumTitle = SharedLogic.Instance.Player.CurrentlyPlayingFile.Album;
+                    if (!string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture))
                     {
-                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                        _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture));
                     }
                 }
                 _smtc.DisplayUpdater.Update();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while updating SMTC.", ex);
             }
         }
+
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
             //we do not want to pause the background player.
@@ -181,17 +185,21 @@ namespace BreadPlayer
                     case SystemMediaTransportControlsButton.Pause:
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                         break;
+
                     case SystemMediaTransportControlsButton.Next:
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayNext");
                         break;
+
                     case SystemMediaTransportControlsButton.Previous:
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPrevious");
                         break;
+
                     default:
                         break;
                 }
             });
         }
+
         private static void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
             if (_smtc == null)
@@ -205,31 +213,37 @@ namespace BreadPlayer
                     _player?.Play();
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
+
                 case PlayerState.Paused:
-                   // BLogger.Logger?.Info("state has been changed to paused.");
+                    // BLogger.Logger?.Info("state has been changed to paused.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                     break;
+
                 case PlayerState.Stopped:
-                   // BLogger.Logger?.Info("state has been changed to stopped.");
+                    // BLogger.Logger?.Info("state has been changed to stopped.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                     break;
+
                 default:
                     break;
             }
         }
-        #endregion
+
+        #endregion SystemMediaTransportControls Methods/Events
 
         #region CoreWindow Dispose Methods
+
         public static void DisposeObjects()
         {
             //SharedLogic.SettingsVm.TimeClosed = DateTime.Now.ToString();
-            SharedLogic.Player.Dispose();
+            SharedLogic.Instance.Player.Dispose();
             BLogger.Logger.Info("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
             BLogger.Logger.Info("Application is being suspended, disposing everything.");
             _player?.Dispose();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgDispose);
         }
-        #endregion
+
+        #endregion CoreWindow Dispose Methods
 
         /// <summary>
         /// Sends a toast notification
@@ -248,6 +262,7 @@ namespace BreadPlayer
             var toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
+
         public static void UpdateTile(Mediafile mediaFile)
         {
             try
@@ -273,7 +288,35 @@ namespace BreadPlayer
             }
         }
 
+        public static void LoadAppWithArguments(string arguments)
+        {
+            var args = arguments.Split('=', '&');
+            string action = args[1];
+            if (action.Contains("view"))
+            {
+                string pageParameter = args[5];
+                IDbRecord record = null;
+                if (action.Contains("Album"))
+                {
+                    record = SharedLogic.Instance.AlbumArtistService.GetAlbumByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                else if (action.Contains("Artist"))
+                {
+                    record = SharedLogic.Instance.AlbumArtistService.GetArtistByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                else if (action.Contains("Playlist"))
+                {
+                    record = SharedLogic.Instance.PlaylistService.GetPlaylistByIdAsync(Convert.ToInt64(pageParameter));
+                }
+                if (record == null)
+                    return;
+                SplitViewMenu.SplitViewMenu.UnSelectAll();
+                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), record);
+            }
+        }
+
         #region Ctor
+
         public CoreWindowLogic()
         {
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count >= 999)
@@ -289,7 +332,7 @@ namespace BreadPlayer
         {
             InitializeCore.IsMobile = e.Size.Width <= 600;
         }
-        #endregion
 
+        #endregion Ctor
     }
 }

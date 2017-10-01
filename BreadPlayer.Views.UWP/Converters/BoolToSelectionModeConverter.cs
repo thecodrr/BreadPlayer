@@ -14,6 +14,7 @@ namespace BreadPlayer.Converters
             }
             return ListViewSelectionMode.Extended;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

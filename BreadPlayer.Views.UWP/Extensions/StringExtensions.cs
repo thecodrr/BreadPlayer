@@ -14,8 +14,11 @@ namespace BreadPlayer.Extensions
         {
             return string.IsNullOrEmpty(data) ? setInstead : data;
         }
+
         public static string ToSha1(this string text) => SHA1.Create().ComputeHash(text.ToBytes()).ToHex();
+
         public static byte[] ToBytes(this string text) => Encoding.UTF8.GetBytes(text);
+
         public static string ToHex(this byte[] bytes) => BitConverter.ToString(bytes).Replace("-", "").ToLower();
 
         public static bool StartsWithLetter(this string input)
@@ -37,18 +40,21 @@ namespace BreadPlayer.Extensions
         {
             return !string.IsNullOrEmpty(input) && Regex.IsMatch(input, "\\d");
         }
+
         public static string ScrubGarbage(this string value)
         {
             var step1 = Regex.Replace(value, @"(?i)((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*(?i)", "").Trim();
             var step2 = Regex.Replace(step1, @"\(\s\)|\(\)|\[\s\]|\[\]|\[\d+\]", "");
             return step2;
         }
+
         public static string GetTag(this string value)
         {
             var parts = value.Split('-');
             var tag = parts[parts.Length - 1];
             return tag;
         }
+
         public static string ScrubHtml(this string value)
         {
             var step1 = Regex.Replace(value, @"<(.|\n)*?>", "").Trim();

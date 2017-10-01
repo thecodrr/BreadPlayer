@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BreadPlayer.Parsers.LRCParser
 {
     public interface ILrcParser
     {
-       
         /// <summary>
         /// Gets the metadata.
         /// </summary>
@@ -14,6 +11,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The metadata.
         /// </value>
         ILrcMetadata Metadata { get; }
+
         /// <summary>
         /// Gets the lyrics.
         /// </summary>

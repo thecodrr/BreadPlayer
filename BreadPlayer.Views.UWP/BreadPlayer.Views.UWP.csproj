@@ -171,18 +171,6 @@
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
-    <PRIResource Include="Strings\es-es\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-    <PRIResource Include="Strings\pl-PL\Resources.resw" />
-    <PRIResource Include="Strings\de-DE\Resources.resw" />
-    <PRIResource Include="Strings\cs-CZ\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-    <PRIResource Include="Strings\si-LK\Resources.resw" />
-    <PRIResource Include="Strings\en-US\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviours\InputDeviceEventBehaviour.cs" />
@@ -200,11 +188,13 @@
     <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
     <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
+    <Compile Include="Converters\BrushToThemeConverter.cs" />
     <Compile Include="Converters\ColorDarknessChanger.cs" />
     <Compile Include="Converters\DoubleToTimeConverter.cs" />
     <Compile Include="Converters\HexToColorConverter.cs" />
     <Compile Include="Converters\PlayerStateToBoolConverter.cs" />
     <Compile Include="Converters\PathToImageSourceConverter.cs" />
+    <Compile Include="Converters\RecordTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\SelectedItemToValueConverter.cs" />
     <Compile Include="Converters\SortSettingToFormattedStringConverter.cs" />
     <Compile Include="Converters\StringToIconConverter.cs" />
@@ -213,12 +203,14 @@
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\SharedLogic.cs" />
     <Compile Include="Core\SimpleFileAbstraction.cs" />
+    <Compile Include="DataSources\ArtistDataSource.cs" />
     <Compile Include="Dialogs\PasswordDialog.xaml.cs">
       <DependentUpon>PasswordDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\IncrementalObservableCollection.cs" />
     <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
@@ -248,6 +240,7 @@
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
+    <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />
@@ -319,7 +312,6 @@
     </Compile>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="HamburgerMenu\INavigationMenuItem.cs" />
     <Compile Include="HamburgerMenu\NavMenuListView.cs" />
     <Compile Include="HamburgerMenu\SimpleNavMenuItem.cs" />
@@ -598,6 +590,11 @@
       <Project>{8baa2dc7-9675-480f-a9f5-8d8d6245689b}</Project>
       <Name>BreadPlayer.Web</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en-US\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

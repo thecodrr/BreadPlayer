@@ -1,11 +1,9 @@
-﻿using System;
+﻿using BreadPlayer.Core.Common;
+using BreadPlayer.ViewModels;
+using System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.ViewModels;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Core.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -17,6 +15,7 @@ namespace BreadPlayer
     public sealed partial class AlbumArtistView : Page
     {
         private string _currentState = "";
+
         public AlbumArtistView()
         {
             InitializeComponent();
@@ -28,6 +27,7 @@ namespace BreadPlayer
         {
             SetTemplate();
         }
+
         private void SetTemplate()
         {
             var albumWideTemplate = App.Current.Resources["AlbumTemplate"] as Windows.UI.Xaml.DataTemplate;
@@ -37,11 +37,11 @@ namespace BreadPlayer
 
             if (CoreWindow.GetForCurrentThread().Bounds.Width >= 800)
             {
-                if(_currentState == "AlbumView" && albumListView.ItemTemplate != albumWideTemplate)
+                if (_currentState == "AlbumView" && albumListView.ItemTemplate != albumWideTemplate)
                 {
                     albumListView.ItemTemplate = albumWideTemplate;
                 }
-                else if(_currentState == "ArtistView" && albumListView.ItemTemplate != artistWideTemplate)
+                else if (_currentState == "ArtistView" && albumListView.ItemTemplate != artistWideTemplate)
                 {
                     albumListView.ItemTemplate = artistWideTemplate;
                 }
@@ -58,6 +58,7 @@ namespace BreadPlayer
                 }
             }
         }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             _currentState = e.Parameter.ToString();
@@ -67,12 +68,12 @@ namespace BreadPlayer
                 if (e.Parameter.ToString() == "AlbumView")
                 {
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
-                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums().ConfigureAwait(false);
+                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
                 }
                 else if (e.Parameter.ToString() == "ArtistView")
                 {
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
-                    (grid.DataContext as AlbumArtistViewModel).LoadArtists().ConfigureAwait(false);
+                    (grid.DataContext as AlbumArtistViewModel).LoadArtists();
                 }
                 else if (e.Parameter.ToString() == "Clear")
                 {
@@ -83,7 +84,7 @@ namespace BreadPlayer
             });
             base.OnNavigatedTo(e);
         }
-        
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             //(grid.Resources["Source"] as CollectionViewSource).Source = null;

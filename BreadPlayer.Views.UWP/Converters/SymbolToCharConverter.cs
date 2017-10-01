@@ -7,12 +7,13 @@ namespace BreadPlayer.Converters
     public class SymbolToCharConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
-        {            
+        {
             return (char)(value as SymbolIcon).Symbol;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
-        {           
+        {
             return null;
         }
     }

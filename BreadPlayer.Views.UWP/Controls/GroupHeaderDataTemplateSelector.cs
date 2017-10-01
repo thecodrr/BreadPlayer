@@ -1,9 +1,4 @@
 ﻿using BreadPlayer.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -14,7 +9,7 @@ namespace BreadPlayer.Controls
         public DataTemplate CommonDataTemplate { get; set; }
         public DataTemplate ArtistDataTemplate { get; set; }
         public DataTemplate AlbumDataTemplate { get; set; }
-      
+
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             var group = item as Grouping<IGroupKey, Mediafile>;

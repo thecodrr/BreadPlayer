@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BreadPlayer.Core.Common;
 using DBreeze;
 using DBreeze.Objects;
 using DBreeze.Utils;
 using Newtonsoft.Json;
-using BreadPlayer.Core.Common;
-using DBreeze.Transactions;
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
@@ -16,6 +14,7 @@ namespace BreadPlayer.Database
         private static string DbPath { get; set; }
         private static DBreezeEngine _db;
         public static bool IsDisposed { get; set; }
+
         public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
             if (_db == null || DbPath != dbPath)
@@ -31,6 +30,7 @@ namespace BreadPlayer.Database
             }
             return _db;
         }
+
         public static void DisposeDatabaseEngine()
         {
             _db.Dispose();
@@ -38,12 +38,14 @@ namespace BreadPlayer.Database
             IsDisposed = true;
         }
     }
+
     public class KeyValueStoreDatabaseService : IDatabaseService
     {
         private string _dbPath;
         private DBreezeEngine _engine;
         private string _textTableName;
         private string _tableName;
+
         public KeyValueStoreDatabaseService(string dbPath, string tableName, string textTableName)
         {
             CreateDb(dbPath);
@@ -58,11 +60,13 @@ namespace BreadPlayer.Database
             CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
             CustomSerializator.ByteArrayDeSerializator = (bt, t) => JsonConvert.DeserializeObject(bt.UTF8_GetString(), t);
         }
+
         public void ChangeTable(string tableName, string textTableName)
         {
             _textTableName = textTableName;
             _tableName = tableName;
         }
+
         public bool CheckExists(long id)
         {
             using (var tran = _engine.GetTransaction())
@@ -71,6 +75,7 @@ namespace BreadPlayer.Database
                 return item.Exists;
             }
         }
+
         public bool CheckExists(string query)
         {
             using (var tran = _engine.GetTransaction())
@@ -83,6 +88,7 @@ namespace BreadPlayer.Database
             }
             return false;
         }
+
         public void Dispose()
         {
             StaticKeyValueDatabase.IsDisposed = true;
@@ -176,6 +182,7 @@ namespace BreadPlayer.Database
                 _engine = StaticKeyValueDatabase.GetDatabaseEngine(_dbPath);
             }
         }
+
         public async Task InsertRecords(IEnumerable<IDbRecord> records)
         {
             await Task.Run(() =>
@@ -295,7 +302,6 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-
                     foreach (var data in records)
                     {
                         tran.ObjectRemove(_tableName, 1.ToIndex(data.Id));
@@ -306,6 +312,7 @@ namespace BreadPlayer.Database
                 }
             });
         }
+
         public Task<IEnumerable<T>> GetRecords<T>()
         {
             return GetRangeOfRecords<T>(int.MinValue, int.MaxValue);

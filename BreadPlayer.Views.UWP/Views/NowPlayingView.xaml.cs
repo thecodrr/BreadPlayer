@@ -1,20 +1,18 @@
-﻿using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using BreadPlayer.Core;
+﻿using BreadPlayer.Core;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
-using BreadPlayer.ViewModels;
-using Windows.UI.Text;
-using System;
-using Windows.UI.Xaml.Media;
-using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 using BreadPlayer.Services;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
+using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation.Metadata;
+using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -26,6 +24,7 @@ namespace BreadPlayer
     {
         private bool _isPressed;
         private ShellViewModel _shellVm;
+
         public NowPlayingView()
         {
             InitializeComponent();
@@ -55,22 +54,27 @@ namespace BreadPlayer
             }
             catch { }
         }
-        bool isMaximized = false;
+
+        private bool isMaximized = false;
+
         private void OnMaximizeToFullScreen(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, isMaximized ? "MinimizeState" : "MaximizeState", false);
             isMaximized = !isMaximized;
         }
+
         private void OnShareSong(object sender, RoutedEventArgs e)
         {
             DataTransferManager.ShowShareUI();
         }
+
         private void RemoveLyricsList(Grid removeFrom, Grid removeTo, string foregroundColor)
         {
             removeFrom.Children.Remove(lyricsList);
             removeTo.Children.Add(lyricsList);
             ((SolidColorBrush)Resources["LyricsForeground"]).Color = ((SolidColorBrush)Application.Current.Resources[foregroundColor]).Color;
         }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataTransferManager.IsSupported())
@@ -78,11 +82,11 @@ namespace BreadPlayer
                 DataTransferManager manager = DataTransferManager.GetForCurrentView();
                 manager.DataRequested += async (s, args) =>
                 {
-                    var currentlyPlaying = SharedLogic.Player.CurrentlyPlayingFile;
+                    var currentlyPlaying = SharedLogic.Instance.Player.CurrentlyPlayingFile;
                     DataRequest dataRequest = args.Request;
                     dataRequest.Data.Properties.Title = $"{currentlyPlaying.Title} by {currentlyPlaying.LeadArtist}";
                     dataRequest.Data.Properties.Description = "Now baking toast from BreadPlayer";
-                
+
                     if (!string.IsNullOrEmpty(currentlyPlaying.AttachedPicture))
                     {
                         var albumArt = await StorageFile.GetFileFromPathAsync(currentlyPlaying.AttachedPicture);
@@ -117,6 +121,5 @@ namespace BreadPlayer
                 }
             };
         }
-       
     }
 }

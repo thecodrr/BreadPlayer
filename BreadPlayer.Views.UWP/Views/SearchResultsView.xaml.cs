@@ -1,8 +1,9 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
-using BreadPlayer.ViewModels;
 using BreadPlayer.Services;
+using BreadPlayer.ViewModels;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -13,11 +14,13 @@ namespace BreadPlayer.Views
     /// </summary>
     public sealed partial class SearchResultsView : Page
     {
-        Query CurrentQuery;
+        private Query CurrentQuery;
+
         public SearchResultsView()
         {
             InitializeComponent();
         }
+
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -29,13 +32,13 @@ namespace BreadPlayer.Views
 
         private void AlbumsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (Album album in e.RemovedItems)
+            foreach (ISelectable record in e.RemovedItems)
             {
-                album.IsSelected = false;
+                record.IsSelected = false;
             }
-            foreach (Album album in e.AddedItems)
+            foreach (ISelectable record in e.AddedItems)
             {
-                album.IsSelected = true;
+                record.IsSelected = true;
             }
         }
 

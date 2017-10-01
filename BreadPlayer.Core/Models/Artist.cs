@@ -1,45 +1,55 @@
 ﻿using BreadPlayer.Core.Common;
+using LiteDB;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Artist : ObservableObject, IDbRecord, ISelectable
+    public class Artist : ObservableObject, IDbRecord, ISelectable, IPinnable
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        string picture;
+        private string picture;
+
         public string Picture
         {
             get => picture;
             set => Set(ref picture, value);
         }
-        string pictureColor;
+
+        private string pictureColor;
+
         public string PictureColor
         {
             get => pictureColor;
             set => Set(ref pictureColor, value);
         }
+
         public string Bio { get; set; }
         public string DOB { get; set; }
         public string TextSearchKey => GetTextSearchKey().ToLower();
-        bool _isSelected;
-        [JsonIgnore]
+        private bool _isSelected;
+
+        [BsonIgnore]
         public bool IsSelected
         {
             get => _isSelected;
             set => Set(ref _isSelected, value);
         }
-        bool hasFetchedInfo;
+        private bool _isPinned;
+        public bool IsPinned
+        {
+            get => _isPinned;
+            set => Set(ref _isPinned, value);
+        }
+        public string TileId => "Artist=" + Id;
+        private bool hasFetchedInfo;
+
         public bool HasFetchedInfo
         {
             get => hasFetchedInfo;
             set => Set(ref hasFetchedInfo, value);
         }
+
         public string GetTextSearchKey()
         {
             return Name;

@@ -1,15 +1,14 @@
-﻿using System;
+﻿using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using System;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
-using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Extensions;
-using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.Themes
 {
@@ -19,7 +18,7 @@ namespace BreadPlayer.Themes
             //wp
             "PhoneAccentBrush",
             // windows
-                   
+
                    "SystemControlDisabledAccentBrush" ,
                    "SystemControlForegroundAccentBrush" ,
                    "SystemControlHighlightAccentBrush" ,
@@ -37,30 +36,29 @@ namespace BreadPlayer.Themes
                    "SystemAccentColor1",
                    "SystemControlBackgroundAccentBrush",
                    "PlaybarBrush"
-
         };
 
         public static async void SetThemeColor(string albumartPath)
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                if (SharedLogic.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
+                if (SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.SettingsVm.ChangeAccentByAlbumArt)
+                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt)
                 {
                     try
                     {
                         Color color;
                         if (!string.IsNullOrEmpty(albumartPath) && albumartPath != "default")
                         {
-                            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
+                            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(albumartPath));
                         }
-                        else if (albumartPath == "default" && SharedLogic.Player.CurrentlyPlayingFile != null)
+                        else if (albumartPath == "default" && SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
                         {
-                            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(SharedLogic.Player.CurrentlyPlayingFile.AttachedPicture));
+                            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture));
                         }
                         else
                         {
@@ -72,7 +70,7 @@ namespace BreadPlayer.Themes
                     catch (Exception ex)
                     {
                         BLogger.Logger.Error("Failed to update accent.", ex);
-                        await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message);
                     }
                     //ThemeChanged?.Invoke(null, new Events.ThemeChangedEventArgs(oldColor, color));
                 }
@@ -82,6 +80,7 @@ namespace BreadPlayer.Themes
                 }
             });
         }
+
         private static void ChangeColor(Color color)
         {
             ChangeTitleBarColor(color);
@@ -101,6 +100,7 @@ namespace BreadPlayer.Themes
                 }
             }
         }
+
         private static void ChangeTitleBarColor(Color color)
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
@@ -118,18 +118,21 @@ namespace BreadPlayer.Themes
                 ApplicationView.GetForCurrentView().TitleBar.ButtonPressedForegroundColor = Colors.White;
             }
         }
+
         private static Color GetAccentColor()
         {
             return ((Color)Application.Current.Resources["SystemAccentColor"]);
         }
+
         private static T GetThemeResource<T>(string key)
         {
             return ((T)Application.Current.Resources[key]);
         }
+
         private static void AdjustForeground(Color accentColor)
         {
             GetThemeResource<SolidColorBrush>("TextBrush").Color = accentColor.ToForeground(); //.AnimateBrush(foregroundColor.Color, foreg, "(SolidColorBrush.Color)");
             GetThemeResource<SolidColorBrush>("AccentHoverBrush").Color = accentColor.ToHoverColor();
-        }        
+        }
     }
 }

@@ -4,7 +4,6 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -23,6 +22,7 @@ namespace BreadPlayer.Helpers
                 "System.DRM.IsProtected"
             };
         }
+
         /// <summary>
         /// Create mediafile from StorageFile.
         /// </summary>
@@ -56,7 +56,7 @@ namespace BreadPlayer.Helpers
                     LeadArtist = properties.Artist.GetStringForNullOrEmptyProperty("Unknown Artist"),
                     Genre = string.Join(",", properties.Genre),
                     Year = properties.Year.ToString(),
-                    TrackNumber = properties.TrackNumber.ToString(),
+                    TrackNumber = (int)properties.TrackNumber,
                     Length = new DoubleToTimeConverter().Convert(properties.Duration.TotalSeconds, typeof(double), null, "").ToString(),
                     AddedDate = DateTime.Now
                 };
@@ -76,13 +76,13 @@ namespace BreadPlayer.Helpers
             }
             catch (Exception ex)
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
                 return null;
             }
         }
 
         /// <summary>
-        /// Asynchronously saves all the album arts in the library. 
+        /// Asynchronously saves all the album arts in the library.
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public static async Task<bool> SaveAlbumArtsAsync(StorageFile file, Mediafile mediafile)
@@ -97,7 +97,7 @@ namespace BreadPlayer.Helpers
             {
                 using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
-                    if (thumbnail == null && SharedLogic.VerifyFileExists(file.Path, 150))
+                    if (thumbnail == null && SharedLogic.Instance.VerifyFileExists(file.Path, 150))
                     {
                         using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
                         {
@@ -133,7 +133,7 @@ namespace BreadPlayer.Helpers
             catch (Exception ex)
 #pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
-                //await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                //await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
 
             return false;
@@ -183,13 +183,13 @@ namespace BreadPlayer.Helpers
                         {
                             await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                         }
-                        color = await SharedLogic.GetDominantColor(artistArt).ConfigureAwait(false);
+                        color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
                         return (artistArt.Path, color);
                     }
                 }
             }
-            color = await SharedLogic.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
-            return (artistArtPath, color);            
+            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
+            return (artistArtPath, color);
         }
     }
 }

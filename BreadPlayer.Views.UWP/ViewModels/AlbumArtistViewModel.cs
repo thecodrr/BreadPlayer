@@ -1,40 +1,42 @@
-﻿using System;
+﻿using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.DataSources;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Parsers.TagParser;
+using BreadPlayer.Web.Lastfm;
+using IF.Lastfm.Core.Api;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Messengers;
-using IF.Lastfm.Core.Api;
-using BreadPlayer.Web.Lastfm;
-using BreadPlayer.Helpers;
-using BreadPlayer.Parsers.TagParser;
-using BreadPlayer.Extensions;
-using BreadPlayer.Dispatcher;
 
 namespace BreadPlayer.ViewModels
 {
-    public class AlbumArtistViewModel : ViewModelBase
+    public class AlbumArtistViewModel : ObservableObject
     {
         #region Database Methods
 
         private AlbumArtistService AlbumArtistService { get; set; }
+
         public void InitDb()
         {
-            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Albums"));
-        }       
-        #endregion
-
-        private async void HandleAddAlbumMessage(Message message)
-        {
-            if (message != null)
-            {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                await AddAlbumsAndArtists(message.Payload as IEnumerable<Mediafile>);
-            }
+            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
         }
+
+        #endregion Database Methods
+
+        private IncrementalLoadingObservableCollection<AlbumDataSource, Album> _albumcollection;
+
+        private IncrementalLoadingObservableCollection<ArtistDataSource, Artist> _artistscollection;
+
+        private bool _recordsLoading = true;
+
         /// <summary>
         /// The Constructor.
         /// </summary>
@@ -44,53 +46,26 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgAddAlbums, new Action<Message>(HandleAddAlbumMessage));
         }
 
-      
-        public async Task LoadAlbums()
+        /// <summary>
+        /// Collection containing all albums.
+        /// </summary>
+        public IncrementalLoadingObservableCollection<AlbumDataSource, Album> AlbumCollection
         {
-            RecordsLoading = true;
-            if (AlbumCollection?.Count <= 0)
-            {
-                AlbumCollection.AddRange(await AlbumArtistService.GetAlbumsAsync().ConfigureAwait(false));//.Add(album);
-                AlbumCollection.CollectionChanged += AlbumCollection_CollectionChanged;
-                if (AlbumCollection.Count <= 0)
-                {
-                    RecordsLoading = false;
-                }
-            }
+            get { if (_albumcollection == null) { _albumcollection = new IncrementalLoadingObservableCollection<AlbumDataSource, Album>(); } return _albumcollection; }
+            set => Set(ref _albumcollection, value);
         }
 
-        public async Task LoadArtists()
+        /// <summary>
+        /// Collection containing all albums.
+        /// </summary>
+        public IncrementalLoadingObservableCollection<ArtistDataSource, Artist> ArtistsCollection
         {
-            RecordsLoading = true;
-            if (ArtistsCollection?.Count != AlbumArtistService.ArtistsCount)
-            {
-                ArtistsCollection.AddRange(await AlbumArtistService.GetArtistsAsync().ConfigureAwait(false));//.Add(album);
-                ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
-                if (ArtistsCollection.Count <= 0)
-                {
-                    RecordsLoading = false;
-                }
-            }
-            else
-            {
-                RecordsLoading = false;
-            }
+            get { if (_artistscollection == null) { _artistscollection = new IncrementalLoadingObservableCollection<ArtistDataSource, Artist>(); } return _artistscollection; }
+            set => Set(ref _artistscollection, value);
         }
 
-        private void AlbumCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            //Albums are loaded, we can now hide the progress ring.
-            if (AlbumCollection.Count > 0)
-            {
-                RecordsLoading = false;
-            }
-            else
-            {
-                RecordsLoading = true;
-            }
-        }
+        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
 
-        private bool _recordsLoading = true;
         /// <summary>
         /// Collection containing all albums.
         /// </summary>
@@ -99,25 +74,22 @@ namespace BreadPlayer.ViewModels
             get => _recordsLoading;
             set => Set(ref _recordsLoading, value);
         }
-
-        private ThreadSafeObservableCollection<Album> _albumcollection;
+        private RelayCommand _deleteCommand;
         /// <summary>
-        /// Collection containing all albums.
+        /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
         /// </summary>
-        public ThreadSafeObservableCollection<Album> AlbumCollection
+        public ICommand DeleteCommand
         {
-            get { if (_albumcollection == null) { _albumcollection = new ThreadSafeObservableCollection<Album>(); } return _albumcollection; }
-            set => Set(ref _albumcollection, value);
+            get
+            { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => Delete(param)); } return _deleteCommand; }
         }
-
-        private ThreadSafeObservableCollection<Artist> _artistscollection;
-        /// <summary>
-        /// Collection containing all albums.
-        /// </summary>
-        public ThreadSafeObservableCollection<Artist> ArtistsCollection
+        private async void Delete(object para)
         {
-            get { if (_artistscollection == null) { _artistscollection = new ThreadSafeObservableCollection<Artist>(); } return _artistscollection; }
-            set => Set(ref _artistscollection, value);
+            if (para is Album album)
+            {
+                AlbumCollection.Remove(album);
+                await AlbumArtistService.DeleteAlbumAsync(album).ConfigureAwait(false);
+            }
         }
         /// <summary>
         /// Adds all albums to <see cref="AlbumCollection"/>.
@@ -141,9 +113,9 @@ namespace BreadPlayer.ViewModels
 
                         albums.Add(album);
                     }
-                    if(artists.All(t => t.Name != mediafile.LeadArtist))
+                    if (artists.All(t => t.Name != mediafile.LeadArtist))
                     {
-                         Artist artist = new Artist
+                        Artist artist = new Artist
                         {
                             Name = mediafile?.LeadArtist
                         };
@@ -155,27 +127,42 @@ namespace BreadPlayer.ViewModels
             {
                 await AlbumArtistService.InsertAlbums(albums).ConfigureAwait(false);
                 await AlbumArtistService.InsertArtists(artists).ConfigureAwait(false);
-                ArtistsCollection.AddRange(artists);
                 ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
-            });           
+            });
+        }
+
+        public void LoadAlbums()
+        {
+            AlbumCollection.OnStartLoading = () => RecordsLoading = true;
+            AlbumCollection.OnEndLoading = () => RecordsLoading = false;
+            AlbumCollection.OnError = (ex) => RecordsLoading = false;            
+        }
+
+        public void LoadArtists()
+        {
+            ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
+            ArtistsCollection.OnStartLoading = () => RecordsLoading = true;
+            ArtistsCollection.OnEndLoading = () => RecordsLoading = false;
+            ArtistsCollection.OnError = (ex) => RecordsLoading = false;
         }
 
         private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if(e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+            {
+                await CacheArtists(e.NewItems.Cast<Artist>()).ConfigureAwait(false);
+            }
             if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
             {
                 ArtistsCollection.CollectionChanged -= ArtistsCollection_CollectionChanged;
-                RecordsLoading = false;
-                await CacheAllArtists().ConfigureAwait(false);
             }
         }
 
-        private LastfmClient LastfmClient => new Lastfm().LastfmClient;
-        private async Task CacheAllArtists()
+        private async Task CacheArtists(IEnumerable<Artist> artists)
         {
-            if (InternetConnectivityHelper.IsInternetConnected && ArtistsCollection.Any(t => t.HasFetchedInfo == false))
+            if (InternetConnectivityHelper.IsInternetConnected && artists.Any(t => t.HasFetchedInfo == false))
             {
-                foreach (var artist in ArtistsCollection.Where(t => t.HasFetchedInfo == false))
+                foreach (var artist in artists.Where(t => t.HasFetchedInfo == false))
                 {
                     //if internet is disconnected in the middle of this process,
                     //we need to take precautions.
@@ -186,24 +173,40 @@ namespace BreadPlayer.ViewModels
                         {
                             await BreadDispatcher.InvokeAsync(async () =>
                             {
-                                var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
-                                if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                                try
                                 {
-                                    var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                                    var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
+                                    if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
+                                    {
+                                        var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+                                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
+                                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                                    }
+                                    if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                                    {
+                                        string bio = await artistInfo?.Bio?.Content.ZipAsync();
+                                        ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                                    }
+                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
+                                    await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
                                 }
-                                if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                                catch(TaskCanceledException)
                                 {
-                                    string bio = await artistInfo?.Bio?.Content.ZipAsync();
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                                    //there **is** nothing to be done :D
                                 }
-                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
-                                await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
                             });
                         }
                     }
                 }
+            }
+        }
+
+        private async void HandleAddAlbumMessage(Message message)
+        {
+            if (message != null)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await AddAlbumsAndArtists(message.Payload as IEnumerable<Mediafile>);
             }
         }
     }

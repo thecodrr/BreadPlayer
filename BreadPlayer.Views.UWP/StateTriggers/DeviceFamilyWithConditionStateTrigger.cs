@@ -34,7 +34,7 @@ namespace BreadPlayer.StateTriggers
         {
             var obj = (DeviceFamilyWithConditionStateTrigger)d;
             var val = (DeviceFamily)e.NewValue;
-            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), _deviceFamily.Remove(0,8)) == val)
+            if ((DeviceFamily)Enum.Parse(typeof(DeviceFamily), _deviceFamily.Remove(0, 8)) == val)
             {
                 obj.IsActive = obj.Condition;
             }
@@ -78,6 +78,7 @@ namespace BreadPlayer.StateTriggers
             //else
             //    obj.IsActive = (val == DeviceFamily.Unknown);
         }
+
         #region ITriggerValue
 
         private bool _mIsActive;
@@ -106,5 +107,5 @@ namespace BreadPlayer.StateTriggers
         public event EventHandler IsActiveChanged;
 
         #endregion ITriggerValue
-    }    
+    }
 }

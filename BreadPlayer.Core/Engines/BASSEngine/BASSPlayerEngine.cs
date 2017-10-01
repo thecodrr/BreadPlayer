@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,13 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Threading.Tasks;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using ManagedBass;
+using System;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
 {
@@ -33,20 +33,24 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         private int _handle;
         private SyncProcedure _sync;
         private SyncProcedure _posSync;
-        #endregion
+
+        #endregion Fields
 
         #region Constructor
-        public BassPlayerEngine(bool isMobile, bool crossFade)
+
+        public BassPlayerEngine(bool isMobile, bool crossFade, int deviceBufferSize)
         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+            DeviceBufferSize = deviceBufferSize;
             Init(isMobile);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+            crossFade = CrossfadeEnabled;
             _sync = EndSync;
             _posSync = PositonReachedSync;
         }
-        #endregion
+
+        #endregion Constructor
 
         #region Initialize Methods
+
         /// <summary>
         /// Initializes the player to start playing audio
         /// </summary>
@@ -60,9 +64,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
                  if (isMobile)
                  {
-                    //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
-                    //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later. 
-                    NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+                     //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
+                     //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later.
+                     NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
                  }
                  else
                      Bass.Configure(Configuration.IncludeDefaultDevice, true);
@@ -70,9 +74,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                  Bass.Init();
              });
         }
-        #endregion
+
+        #endregion Initialize Methods
 
         #region Methods
+
         /// <summary>
         /// Swipes the player memory clean.
         /// </summary>
@@ -80,17 +86,16 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public async void Dispose()
         {
             await Task.Run(() =>
-            {                
+            {
                 Bass.ChannelStop(_handle); // Stop Playback.
                 Bass.Stop();
                 Bass.MusicFree(_handle); // Free the Stream.
-                Bass.Free(); // Frees everything (will have to call init again to play audio)              
+                Bass.Free(); // Frees everything (will have to call init again to play audio)
                 _handle = 0;
                 CurrentlyPlayingFile = null;
                 PlayerState = PlayerState.Stopped;
             });
         }
-
 
         public async Task ChangeDevice(string deviceName = null)
         {
@@ -113,7 +118,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         }
 
                         if (InitializeCore.IsMobile)
-                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
 
                         Bass.Init();
                         Bass.ChannelSetDevice(_handle, i);
@@ -176,7 +181,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     MediaChanged?.Invoke(this, new EventArgs());
-                 
+
                     return true;
                 }
                 catch (Exception ex)
@@ -199,7 +204,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             return false;
         }
 
-        
         /// <summary>
         /// Pauses the audio playback.
         /// </summary>
@@ -216,8 +220,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 //var vol = (float)Volume / 100f;
                 //Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, vol);
             });
-
         }
+
         /// <summary>
         /// Starts the audio playback.
         /// </summary>
@@ -230,11 +234,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Bass.ChannelPlay(_handle);
                 var vol = (float)Volume / 100f;
                 Bass.ChannelSlideAttribute(_handle, ChannelAttribute.Volume, vol, 1000);
-               
             });
             PlayerState = PlayerState.Playing;
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Playing));
         }
+
         /// <summary>
         /// Stops the playback if it is playing.
         /// </summary>
@@ -247,26 +251,25 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Position = -1;
                 Bass.StreamFree(_handle);
                 Bass.ChannelStop(_handle); // Stop Playback.
-                Bass.MusicFree(_handle);                
+                Bass.MusicFree(_handle);
                 _handle = 0;
                 CurrentlyPlayingFile = null;
             });
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
             PlayerState = PlayerState.Stopped;
         }
-        #endregion
+
+        #endregion Methods
 
         #region Properties
-        bool crossfadeEnabled;
+
         public bool CrossfadeEnabled
         {
-            get => crossfadeEnabled;
-            set
-            {
-                Set(ref crossfadeEnabled, value);
-            }
+            get; set;
         }
+
         private bool _isVolumeMuted;
+
         public bool IsVolumeMuted
         {
             get => _isVolumeMuted;
@@ -285,6 +288,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private Effects _effect;
+
         public Effects Effect
         {
             get => _effect;
@@ -292,17 +296,19 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private double _volume = 50;
+
         public double Volume
         {
             get => _volume;
-            set {
+            set
+            {
                 Set(ref _volume, value);
-                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, _volume / 100);               
+                Bass.ChannelSetAttribute(_handle, ChannelAttribute.Volume, _volume / 100);
             }
         }
 
-
         private double _seek;
+
         public double Position
         {
             get => Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetPosition(_handle));
@@ -313,13 +319,15 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     Set(ref _seek, value);
                     Bass.ChannelSetPosition(_handle, Bass.ChannelSeconds2Bytes(_handle, _seek));
                 });
-            }            
+            }
         }
 
         private double _length;
+
         public double Length
         {
-            get {
+            get
+            {
                 if (_length <= 0)
                 {
                     _length = 1;
@@ -328,7 +336,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 return _length;
             }
             set => Set(ref _length, value);
-        }      
+        }
 
         public PlayerState PlayerState
         {
@@ -336,6 +344,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private Mediafile _currentPlayingFile;
+
         public Mediafile CurrentlyPlayingFile
         {
             get => _currentPlayingFile;
@@ -343,6 +352,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private bool _ignoreErrors;
+
         public bool IgnoreErrors
         {
             get => _ignoreErrors;
@@ -350,12 +360,15 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         }
 
         private Equalizer _fmodEqualizer;
+
         public Equalizer Equalizer
         {
             get => _fmodEqualizer;
             set => Set(ref _fmodEqualizer, value);
         }
+
         private bool _isLoopingEnabled;
+
         public bool IsLoopingEnabled
         {
             get => _isLoopingEnabled;
@@ -364,33 +377,46 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 Set(ref _isLoopingEnabled, value);
                 //SetLoop();
             }
-        }        
-        #endregion
+        }
+
+        public int DeviceBufferSize { get; set; }
+
+        #endregion Properties
+
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)
         {
             if (Position >= Length - 15 && Position < Length - 5)
             {
                 MediaAboutToEnd?.Invoke(this, new MediaAboutToEndEventArgs(CurrentlyPlayingFile));
             }
-            else if(Position >= Length - 5 && CrossfadeEnabled)
+            else if (Position >= Length - 5 && CrossfadeEnabled)
             {
                 Bass.ChannelSlideAttribute(handle, ChannelAttribute.Volume, 0, 5000);
             }
             //MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
+
         private void EndSync(int handle, int channel, int data, IntPtr user)
         {
             MediaEnded?.Invoke(this, new MediaEndedEventArgs(PlayerState.Ended));
         }
+
         public event OnMediaStateChanged MediaStateChanged;
+
         public event OnMediaEnded MediaEnded;
+
         public event OnMediaAboutToEnd MediaAboutToEnd;
+
         public event OnMediaChanging MediaChanging;
+
         public event OnMediaChanging MediaChanged;
     }
 
     public delegate void OnMediaStateChanged(object sender, MediaStateChangedEventArgs e);
+
     public delegate void OnMediaEnded(object sender, MediaEndedEventArgs e);
+
     public delegate void OnMediaAboutToEnd(object sender, MediaAboutToEndEventArgs e);
+
     public delegate void OnMediaChanging(object sender, EventArgs e);
 }

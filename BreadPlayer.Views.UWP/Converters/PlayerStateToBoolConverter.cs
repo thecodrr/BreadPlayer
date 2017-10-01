@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -22,24 +22,27 @@ using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Converters
 {
-	public class PlayerStateToBoolConverter : IValueConverter
+    public class PlayerStateToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return value.ToString() == "Playing";
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
             return (bool)value ? "Playing" : "Stopped";
         }
     }
+
     public class PlayerStateToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return value.ToString() == "Playing" ? Visibility.Visible : Visibility.Collapsed;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

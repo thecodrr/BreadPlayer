@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace BreadPlayer.Core.Common
 {
@@ -28,7 +28,7 @@ namespace BreadPlayer.Core.Common
             Name = "Full Bass",
             Values = new[] { -20, 24, 24, 14, -4, -1, -20, -25.75f, -28, -28 }
         };
-       
+
         private Config _fullBassAndTreble = new Config
         {
             Name = "Full B&T",
@@ -55,16 +55,18 @@ namespace BreadPlayer.Core.Common
               new[] {8000f, 1f, 0f},
               new[] {16000f, 1f, 0f }
         };
+
         public EqualizerSettings MakeSetting(string name, Dictionary<string, float> bands)
         {
             var equalizerSettings = new EqualizerSettings { Name = name };
             equalizerSettings.GainValues = bands;
             return equalizerSettings;
         }
+
         public List<EqualizerSettings> GetSettings()
         {
             List<EqualizerSettings> equalizerSettings = new List<EqualizerSettings>();
-            IEnumerable<Config> listConfigs = new Config[] 
+            IEnumerable<Config> listConfigs = new Config[]
             {
                 _flat,
                 _rock,
@@ -93,13 +95,15 @@ namespace BreadPlayer.Core.Common
             }
             return equalizerSettings;
         }
+
         public string SaveSettings()
-        {           
+        {
             string json = "";
-            json += JsonConvert.SerializeObject(GetSettings());            
+            json += JsonConvert.SerializeObject(GetSettings());
             return json;
         }
     }
+
     public class Config
     {
         public float[] Values { get; set; }

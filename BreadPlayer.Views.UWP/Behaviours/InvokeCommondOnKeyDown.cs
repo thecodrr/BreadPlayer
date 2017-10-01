@@ -16,17 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Models;
+using Microsoft.Xaml.Interactivity;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Models;
-using Microsoft.Xaml.Interactivity;
 
 namespace BreadPlayer.Behaviours
 {
-  
     public class InvokeCommandByKeyDown : DependencyObject, IAction
     {
         public ICommand Command
@@ -37,6 +36,7 @@ namespace BreadPlayer.Behaviours
 
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register("Command", typeof(ICommand), typeof(InvokeCommandByKeyDown), new PropertyMetadata(null));
+
         public object CommandParameter
         {
             get => GetValue(CommandParameterProperty);
@@ -54,6 +54,7 @@ namespace BreadPlayer.Behaviours
 
         public static readonly DependencyProperty PressedKeyProperty =
             DependencyProperty.Register("PressedKey", typeof(VirtualKey), typeof(InvokeCommandByKeyDown), new PropertyMetadata(VirtualKey.None));
+
         public int PressedKeyCode
         {
             get => (int)GetValue(PressedKeyCodeProperty);
@@ -62,6 +63,7 @@ namespace BreadPlayer.Behaviours
 
         public static readonly DependencyProperty PressedKeyCodeProperty =
             DependencyProperty.Register("PressedKeyCode", typeof(int), typeof(InvokeCommandByKeyDown), new PropertyMetadata(0));
+
         public bool DoubleKeyCommand
         {
             get => (bool)GetValue(DoubleKeyCommandProperty);
@@ -85,6 +87,7 @@ namespace BreadPlayer.Behaviours
             }
             return null;
         }
+
         private void InvokeCommand(VirtualKey paramKey)
         {
             if ((int)paramKey == (PressedKeyCode == 0 ? (int)PressedKey : PressedKeyCode))
@@ -101,6 +104,7 @@ namespace BreadPlayer.Behaviours
                 }
             }
         }
+
         private bool IsControlPressed()
         {
             return Window.Current.CoreWindow.GetAsyncKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down

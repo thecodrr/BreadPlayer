@@ -1,12 +1,12 @@
-﻿using System;
+﻿using AngleSharp.Dom.Html;
+using AngleSharp.Parser.Html;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
-using Newtonsoft.Json;
 
 namespace BreadPlayer.Web._123music
 {
@@ -34,16 +34,19 @@ namespace BreadPlayer.Web._123music
             }
             return true;
         }
+
         public Task<bool> GetSongsList(DataType type)
         {
             return GetItemLists<Track>(string.Format(Endpoints.SongsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
         }
+
         public Task<bool> GetArtistsList(DataType type)
         {
             return GetItemLists<Artist>(string.Format(Endpoints.ArtistsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.Hot ? true : false);
         }
+
         private async Task<bool> GetItemLists<T>(string url, bool isJson)
-        {           
+        {
             var htmlDoc = isJson ? await GetJsonResponseDocumentAsync(url) : await GetHtmlResponseDocumentAsync(Endpoints.BaseUrl);
             if (htmlDoc != null)
             {
@@ -52,6 +55,7 @@ namespace BreadPlayer.Web._123music
             }
             return false;
         }
+
         private IEnumerable<T> GetItems<T>(IHtmlDocument htmlDoc, bool directList = false)
         {
             if (typeof(T) == typeof(Album))
@@ -71,10 +75,12 @@ namespace BreadPlayer.Web._123music
 
             return null;
         }
+
         public Task<bool> GetAlbumsList(DataType type)
         {
-            return GetItemLists<Album>(string.Format(Endpoints.AlbumsListEndpoint, type.ToString().Remove(0,1)), type == DataType.New ? true : false);
-        }       
+            return GetItemLists<Album>(string.Format(Endpoints.AlbumsListEndpoint, type.ToString().Remove(0, 1)), type == DataType.New ? true : false);
+        }
+
         private async Task<IHtmlDocument> GetJsonResponseDocumentAsync(string url)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -84,6 +90,7 @@ namespace BreadPlayer.Web._123music
                 return await new HtmlParser().ParseAsync(tmp.Html);
             }
         }
+
         private async Task<IHtmlDocument> GetHtmlResponseDocumentAsync(string url)
         {
             using (HttpClient httpClient = new HttpClient())
@@ -92,6 +99,7 @@ namespace BreadPlayer.Web._123music
                 return await new HtmlParser().ParseAsync(html);
             }
         }
+
         private IEnumerable<Track> GetSongs(IHtmlDocument htmlDoc, bool directList = false)
         {
             var items = directList ? htmlDoc.QuerySelectorAll("div.item") : htmlDoc.QuerySelector("div.song-list").QuerySelectorAll("div.item");
@@ -103,12 +111,13 @@ namespace BreadPlayer.Web._123music
                     string title = item.QuerySelector("h3").TextContent.Trim();
                     var singerNode = item.QuerySelector(".singer");
                     string artist = singerNode.FirstElementChild.GetAttribute("title").Trim();
-                    string artistId = Regex.Match(singerNode.FirstElementChild.GetAttribute("href").Replace(Endpoints.BaseUrl + "artist/", ""), @"\d+").Value; //after replacing the artist endpoint only ID digits are left. 
+                    string artistId = Regex.Match(singerNode.FirstElementChild.GetAttribute("href").Replace(Endpoints.BaseUrl + "artist/", ""), @"\d+").Value; //after replacing the artist endpoint only ID digits are left.
                     int listenCount = Convert.ToInt32(item.QuerySelector("span.item-view").TextContent);
                     yield return new Track(songId, title, artist, artistId, listenCount);
                 }
             }
         }
+
         private IEnumerable<Artist> GetArtists(IHtmlDocument htmlDoc, bool directList = false)
         {
             var items = directList ? htmlDoc.QuerySelectorAll("div.item") : htmlDoc.QuerySelector(".artist-list").QuerySelectorAll("div.item");
@@ -124,10 +133,12 @@ namespace BreadPlayer.Web._123music
                 }
             }
         }
+
         private string GetIdFromUrl(string url)
         {
             return Regex.Match(url.Substring(url.IndexOf('-') + 1), @"\d+").Value;
         }
+
         private IEnumerable<Album> GetAlbums(IHtmlDocument htmlDoc, bool directList = false)
         {
             var items = directList ? htmlDoc.QuerySelectorAll("div.item") : htmlDoc.QuerySelector("div.album-list").QuerySelectorAll("div.item");

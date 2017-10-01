@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,9 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Core.Extensions;
+using BreadPlayer.Core.Models;
+using BreadPlayer.Database;
+using BreadPlayer.Dispatcher;
+using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Models;
+using BreadPlayer.PlaylistBus;
+using BreadPlayer.Services;
+using BreadPlayer.SettingsViews;
+using BreadPlayer.SettingsViews.ViewModels;
+using BreadPlayer.Themes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,40 +43,20 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
-using Windows.System;
 using Windows.System.Display;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using BreadPlayer.Common;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
-using BreadPlayer.Core.Extensions;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.Dialogs;
-using BreadPlayer.Extensions;
-using BreadPlayer.Helpers;
-using BreadPlayer.Messengers;
-using BreadPlayer.PlaylistBus;
-using BreadPlayer.Themes;
-using BreadPlayer.Services;
-using BreadPlayer.Dispatcher;
-using BreadPlayer.Models;
-using BreadPlayer.SettingsViews;
-using BreadPlayer.SettingsViews.ViewModels;
-using System.Diagnostics;
-using System.Collections;
 using Windows.UI.Popups;
 
 namespace BreadPlayer.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ObservableObject
     {
         #region Properties
+
         public AccountsViewModel AccountSettingsVM { get; set; }
         public AudioSettingsViewModel AudioSettingsVM { get; set; }
 
-        ThreadSafeObservableCollection<SettingGroup> settingsCollection;
+        private ThreadSafeObservableCollection<SettingGroup> settingsCollection;
+
         public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
         {
             get => settingsCollection;
@@ -67,6 +64,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _enableBlur;
+
         public bool EnableBlur
         {
             get => _enableBlur;
@@ -78,6 +76,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _preventScreenFromLocking;
+
         public bool PreventScreenFromLocking
         {
             get => _preventScreenFromLocking;
@@ -96,6 +95,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _replaceLockscreenWithAlbumArt;
+
         public bool ReplaceLockscreenWithAlbumArt
         {
             get => _replaceLockscreenWithAlbumArt;
@@ -107,6 +107,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private string _uiTextType;
+
         public string UiTextType
         {
             get => _uiTextType;
@@ -118,6 +119,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _isThemeDark;
+
         public bool IsThemeDark
         {
             get => _isThemeDark;
@@ -129,7 +131,8 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+        private ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
+
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
             get
@@ -142,10 +145,12 @@ namespace BreadPlayer.ViewModels
             }
             set => Set(ref _LibraryFoldersCollection, value);
         }
+
         public static GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
 
         private string _timeClosed;
+
         public string TimeClosed
         {
             get => _timeClosed;
@@ -157,6 +162,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private string _timeOpened;
+
         public string TimeOpened
         {
             get => _timeOpened;
@@ -164,6 +170,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private List<StorageFile> _modifiedFiles = new List<StorageFile>();
+
         public List<StorageFile> ModifiedFiles
         {
             get => _modifiedFiles;
@@ -171,6 +178,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private bool _changeAccentByAlbumart;
+
         public bool ChangeAccentByAlbumArt
         {
             get => _changeAccentByAlbumart;
@@ -191,9 +199,11 @@ namespace BreadPlayer.ViewModels
         }
 
         private LibraryService LibraryService { get; set; }
-        #endregion
+
+        #endregion Properties
 
         #region MessageHandling
+
         private async void HandleLibraryLoadedMessage(Message message)
         {
             if (message.Payload is List<object> list)
@@ -210,17 +220,20 @@ namespace BreadPlayer.ViewModels
             }
             Messenger.Instance.DeRegister(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
         }
-        #endregion
+
+        #endregion MessageHandling
 
         private StorageLibraryService StorageLibraryService { get; set; }
-        #region Ctor  
+
+        #region Ctor
+
         public SettingsViewModel()
         {
             InitSettingsCollection();
             AccountSettingsVM = new AccountsViewModel();
             AudioSettingsVM = new AudioSettingsViewModel();
 
-            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
+            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
             _changeAccentByAlbumart = SettingsHelper.GetRoamingSetting<bool>("ChangeAccentByAlbumArt", true);
             _timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -232,9 +245,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
             LoadFolders();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
         }
 
         public void InitSettingsCollection()
@@ -252,33 +263,31 @@ namespace BreadPlayer.ViewModels
                 new SettingGroup("\uE789", "Contribute", "Translation, bug hunting, coding", typeof(ContributeView)),
             };
         }
-        #endregion
+
+        #endregion Ctor
 
         #region Commands
 
-        #region Definitions   
-        
+        #region Definitions
+
         private DelegateCommand _loadCommand;
+
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand LoadCommand { get { if (_loadCommand == null) { _loadCommand = new DelegateCommand(Load); } return _loadCommand; } }
-
-        private DelegateCommand _importPlaylistCommand;
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public DelegateCommand ImportPlaylistCommand { get { if (_importPlaylistCommand == null) { _importPlaylistCommand = new DelegateCommand(ImportPlaylists); } return _importPlaylistCommand; } }
-
+        
         private DelegateCommand _resetCommand;
+
         /// <summary>
         /// Gets load library command. This calls the <see cref="Load"/> method.
         /// </summary>
         public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
 
-        #endregion
+        #endregion Definitions
 
-        #region Implementation      
+        #region Implementation
+
         private async void Reset()
         {
             try
@@ -289,41 +298,15 @@ namespace BreadPlayer.ViewModels
                 ResetCommand.IsEnabled = false;
                 await Task.Delay(200);
                 ResetCommand.IsEnabled = true;
-                LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.DatabasePath, "Tracks"));
+                LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             }
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Error occured while resetting the player.", ex);
             }
         }
-        private async void ImportPlaylists()
-        {
-            FileOpenPicker openPicker = new FileOpenPicker()
-            {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.MusicLibrary
-            };
-            openPicker.FileTypeFilter.Add(".m3u");
-            openPicker.FileTypeFilter.Add(".pls");
-            StorageFile file = await openPicker.PickSingleFileAsync();
-            if (file != null)
-            {
-                StorageApplicationPermissions.FutureAccessList.Add(file);
 
-                IPlaylist playlist = null;
-                if (Path.GetExtension(file.Path) == ".m3u")
-                {
-                    playlist = new M3U();
-                }
-                else
-                {
-                    playlist = new Pls();
-                }
-
-                var plist = new Playlist { Name = file.DisplayName, IsExternal = true, Path = file.Path};
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddPlaylist, plist);
-            }
-        }
+        
         /// <summary>
         /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
         /// </summary>
@@ -351,35 +334,37 @@ namespace BreadPlayer.ViewModels
             }
             catch (UnauthorizedAccessException)
             {
-                await NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
             }
         }
 
-        #endregion
+        #endregion Implementation
 
-        #endregion
+        #endregion Commands
 
         #region Methods
 
         #region General Settings Methods
 
         private DisplayRequest _displayRequest;
+
         private void KeepScreenActive()
         {
             if (_displayRequest == null)
             {
                 _displayRequest = new DisplayRequest();
-                // This call activates a display-required request. If successful,  
-                // the screen is guaranteed not to turn off automatically due to user inactivity. 
+                // This call activates a display-required request. If successful,
+                // the screen is guaranteed not to turn off automatically due to user inactivity.
                 _displayRequest.RequestActive();
             }
         }
+
         private void ReleaseDisplayRequest()
         {
-            // This call de-activates the display-required request. If successful, the screen 
-            // might be turned off automatically due to a user inactivity, depending on the 
-            // power policy settings of the system. The requestRelease method throws an exception  
-            // if it is called before a successful requestActive call on this object. 
+            // This call de-activates the display-required request. If successful, the screen
+            // might be turned off automatically due to a user inactivity, depending on the
+            // power policy settings of the system. The requestRelease method throws an exception
+            // if it is called before a successful requestActive call on this object.
             if (_displayRequest != null)
             {
                 _displayRequest.RequestRelease();
@@ -387,9 +372,10 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        #endregion
+        #endregion General Settings Methods
 
         #region LoadFoldersCommand
+
         public async Task LoadFolders()
         {
             if (LibraryFoldersCollection.Count <= 0)
@@ -415,9 +401,11 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        #endregion
 
-        #region Add Methods        
+        #endregion LoadFoldersCommand
+
+        #region Add Methods
+
         /// <summary>
         /// Adds storage files into library.
         /// </summary>
@@ -434,25 +422,25 @@ namespace BreadPlayer.ViewModels
                     if (TracksCollection.Elements.Any(t => t.Path == file.Path))
                     {
                         index = TracksCollection.Elements.IndexOf(TracksCollection.Elements.First(t => t.Path == file.Path));
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
-                        SharedLogic.RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+                        await SharedLogic.Instance.RemoveMediafile(TracksCollection.Elements.First(t => t.Path == file.Path));
                     }
                     //this methods notifies the Player that one song is loaded. We use both 'count' and 'i' variable here to report current progress.
-                    await SharedLogic.NotificationManager.ShowMessageAsync(" Song(s) Loaded");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(" Song(s) Loaded");
                     await Task.Run(async () =>
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
                         mp3File = await TagReaderHelper.CreateMediafile(file, false); //the core of the whole method.
                         await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
                     });
-                    SharedLogic.AddMediafile(mp3File, index);
+                    SharedLogic.Instance.AddMediafile(mp3File, index);
                 }
             }
         }
-        #endregion
+
+        #endregion Add Methods
 
         #region Load Methods
+
         private async Task LoadFolderAsync(StorageFolder folder)
         {
             if (folder == null)
@@ -469,15 +457,16 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                if(KnownFolders.MusicLibrary != null)
-                    await LoadFolderAsync(KnownFolders.MusicLibrary);                
+                if (KnownFolders.MusicLibrary != null)
+                    await LoadFolderAsync(KnownFolders.MusicLibrary);
             }
             catch (Exception ex)
             {
                 BLogger.Logger.Error("Auto Loading of library failed.", ex);
-                await NotificationManager.ShowMessageAsync(ex.Message);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message);
             }
         }
+
         /// <summary>
         /// Add folder to Library asynchronously.
         /// </summary>
@@ -496,14 +485,14 @@ namespace BreadPlayer.ViewModels
             var count = await queryResult.GetItemCountAsync();
             if (count <= 0)
             {
-                await NotificationManager.ShowMessageAsync("No songs found! Please try again.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("No songs found! Please try again.");
                 await BreadDispatcher.InvokeAsync(async () =>
                 {
                     var dialog = new MessageDialog($"There were no songs in the {folder.DisplayName} folder. Do you want to try and search without using the indexer (the process might be a bit slow)?", "No songs were found!");
                     dialog.Commands.Add(new UICommand("Yes", null, "yesCmd"));
                     dialog.Commands.Add(new UICommand("No", null, "noCmd"));
                     var result = await dialog.ShowAsync();
-                    if(result.Id.ToString() == "yesCmd")
+                    if (result.Id.ToString() == "yesCmd")
                     {
                         await AddFolderToLibraryAsync(folder, false).ConfigureAwait(false);
                     }
@@ -530,7 +519,7 @@ namespace BreadPlayer.ViewModels
                                 mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
                                 await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
 
-                                await NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
+                                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
 
                                 tempList.Add(mp3File);
                             }
@@ -538,7 +527,7 @@ namespace BreadPlayer.ViewModels
                             {
                                 BLogger.Logger.Error("Loading of a song in folder failed.", ex);
                                 //we catch and report any exception without distrubing the 'foreach flow'.
-                                await NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + files[i].Path);
+                                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + files[i].Path);
                                 failedCount++;
                             }
                         }
@@ -549,16 +538,16 @@ namespace BreadPlayer.ViewModels
                 catch (Exception ex)
                 {
                     string message1 = ex.Message + "||" + ex.InnerException;
-                    await NotificationManager.ShowMessageAsync(message1);
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message1);
                 }
                 watch.Stop();
                 BLogger.Logger.Info("Time to run: " + watch.ElapsedMilliseconds + " ms");
                 Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
                 var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
-                await NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
                 await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
-                await NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
 
                 await LibraryService.AddMediafiles(uniqueFiles);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
@@ -567,14 +556,15 @@ namespace BreadPlayer.ViewModels
                 string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
 
                 BLogger.Logger.Info(message);
-                await NotificationManager.ShowMessageAsync(message);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
                 tempList.Clear();
             });
         }
 
-        #endregion
+        #endregion Load Methods
 
         #region AlbumArt Methods
+
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
         {
             if (mp3File == null || mp3File.Path == null) return;
@@ -589,7 +579,7 @@ namespace BreadPlayer.ViewModels
                 var albumartFolder = ApplicationData.Current.LocalFolder;
                 var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3File.Album + mp3File.LeadArtist).ToLower().ToSha1() + ".jpg";
 
-                if (!SharedLogic.VerifyFileExists(albumartLocation, 300))
+                if (!SharedLogic.Instance.VerifyFileExists(albumartLocation, 300))
                 {
                     bool albumSaved = await TagReaderHelper.SaveAlbumArtsAsync(file, mp3File);
                     mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
@@ -599,7 +589,7 @@ namespace BreadPlayer.ViewModels
             catch (Exception ex)
             {
                 BLogger.Logger.Info("Failed to save albumart.", ex);
-                await SharedLogic.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
             }
         }
 
@@ -610,12 +600,13 @@ namespace BreadPlayer.ViewModels
                 await SaveSingleFileAlbumArtAsync(file);
             }
         }
-        #endregion
 
+        #endregion AlbumArt Methods
 
-        #endregion
+        #endregion Methods
 
         #region Events
+
         private async void SettingsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "ReplaceLockscreenWithAlbumArt")
@@ -632,7 +623,7 @@ namespace BreadPlayer.ViewModels
         }
 
         private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
-        {  
+        {
             //tell the reader that we accept the changes
             //so that the same files are not served to us again.
             await (sender as StorageLibraryChangeTracker).GetChangeReader().AcceptChangesAsync();
@@ -640,7 +631,6 @@ namespace BreadPlayer.ViewModels
             //check if there are any updated items.
             if (e.UpdatedItems != null && e.UpdatedItems.Any())
             {
-              
                 foreach (var item in e.UpdatedItems)
                 {
                     //sometimes, the breadplayer log is also included in updated files,
@@ -662,17 +652,17 @@ namespace BreadPlayer.ViewModels
                         case StorageLibraryChangeType.Deleted:
                             await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
-                            //file was moved or renamed.
-                            //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
-                            case StorageLibraryChangeType.MovedOrRenamed:
+                        //file was moved or renamed.
+                        //NOTE: Logic for moved is the same as renamed (i.e. the path is changed.)
+                        case StorageLibraryChangeType.MovedOrRenamed:
                             if (item.IsOfType(StorageItemTypes.File))
                             {
                                 if (item.IsItemInLibrary(TracksCollection.Elements, out Mediafile renamedItem))
                                 {
                                     renamedItem.Path = item.Path;
-                                    if(await LibraryService.UpdateMediafile(renamedItem))
+                                    if (await LibraryService.UpdateMediafile(renamedItem))
                                     {
-                                        await SharedLogic.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", renamedItem.Path), 5);
+                                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("Mediafile Updated. File Path: {0}", renamedItem.Path), 5);
                                     }
                                 }
                             }
@@ -681,24 +671,24 @@ namespace BreadPlayer.ViewModels
                                 await item.RenameFolder(TracksCollection.Elements, LibraryService);
                             }
                             break;
-                            //this is almost never invoked but just in case,
-                            //we implement RemoveItem logic here.
+                        //this is almost never invoked but just in case,
+                        //we implement RemoveItem logic here.
                         case StorageLibraryChangeType.MovedOutOfLibrary:
                             await item.RemoveItem(TracksCollection.Elements, LibraryService);
                             break;
-                            //this is also never invoked but just in case,
-                            //we implement AddNewItem logic here.
+                        //this is also never invoked but just in case,
+                        //we implement AddNewItem logic here.
                         case StorageLibraryChangeType.MovedIntoLibrary:
                             await item.AddNewItem();
                             break;
-                            //file's content was changed in some manner. Can be a tag change.
+                        //file's content was changed in some manner. Can be a tag change.
                         case StorageLibraryChangeType.ContentsChanged:
                             await item.UpdateChangedItem(TracksCollection.Elements, LibraryService);
                             break;
-                            //TODO: Find a way to invoke this and then implement logic accordingly.
+                        //TODO: Find a way to invoke this and then implement logic accordingly.
                         case StorageLibraryChangeType.ContentsReplaced:
                             break;
-                            //Change was lost. According to the docs, we should Reset the Tracker here.
+                        //Change was lost. According to the docs, we should Reset the Tracker here.
                         case StorageLibraryChangeType.ChangeTrackingLost:
                             (sender as StorageLibraryChangeTracker).Reset();
                             break;
@@ -706,8 +696,7 @@ namespace BreadPlayer.ViewModels
                 }
             }
         }
-        #endregion
 
+        #endregion Events
     }
 }
-

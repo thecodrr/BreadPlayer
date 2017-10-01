@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BreadPlayer.Parsers.TagParser
@@ -34,6 +33,7 @@ namespace BreadPlayer.Parsers.TagParser
             var artistPart = title.Substring(title.IndexOf(sep) + sep.Length).TrimStart();
             return ParseArtists(artistPart);
         }
+
         public static List<string> ParseArtists(string text)
         {
             //seperate the artist string into words but keep the delimiters too.
@@ -79,6 +79,7 @@ namespace BreadPlayer.Parsers.TagParser
             return Regex.Replace(text, regex, "").Trim();
         }
     }
+
     public static class Extensions
     {
         /// <summary>
@@ -101,7 +102,7 @@ namespace BreadPlayer.Parsers.TagParser
                     {
                         if (iLast > iFirst)
                             parts.Add(s.Substring(iFirst, iLast - iFirst)); //part before the delimiter
-                        if(s[iLast] != ' ')
+                        if (s[iLast] != ' ')
                             parts.Add(new string(s[iLast], 1));//the delimiter
                         iFirst = iLast + 1;
                         continue;
@@ -110,7 +111,6 @@ namespace BreadPlayer.Parsers.TagParser
                     //No delimiters were found, but at least one character remains. Add the rest and stop.
                     parts.Add(s.Substring(iFirst, s.Length - iFirst));
                     break;
-
                 } while (iFirst < s.Length);
             }
 

@@ -1,6 +1,5 @@
 ﻿using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -46,7 +45,7 @@ namespace BreadPlayer.Controls
 
                 //support for adjusting to groups(each group should be treated individually)
 
-               var collectionViewSource = Tag as CollectionViewSource;
+                var collectionViewSource = Tag as CollectionViewSource;
                 var groups = collectionViewSource?.Source as GroupedObservableCollection<IGroupKey, Mediafile>;
                 if (groups != null)
                 {

@@ -13,13 +13,13 @@ namespace BreadPlayer.Services
     {
         private StorageLibrary MusicLibrary { get; set; }
         private StorageFolder MusicLibraryParentFolder { get; set; }
-#pragma warning disable CS0169 // The field 'StorageLibraryService._updateTimer' is never used
         private DispatcherTimer _updateTimer;
-#pragma warning restore CS0169 // The field 'StorageLibraryService._updateTimer' is never used
+
         public StorageLibraryService()
         {
             Initialize();
         }
+
         private async void Initialize()
         {
             try
@@ -36,7 +36,7 @@ namespace BreadPlayer.Services
             }
             catch
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync("Failed to initialize file system watcher.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Failed to initialize file system watcher.");
                 BLogger.Logger.Error("Failed to initialize file system watcher");
             }
         }
@@ -54,6 +54,7 @@ namespace BreadPlayer.Services
         {
             return GetStorageFilesInFolderAsync(MusicLibraryParentFolder);
         }
+
         public async Task<IEnumerable<StorageFile>> GetStorageFilesInFolderAsync(StorageFolder folder)
         {
             //Get query options with which we search for files in the specified folder
@@ -75,17 +76,18 @@ namespace BreadPlayer.Services
 
             //the event for files changed
             queryResult.ContentsChanged += QueryResult_ContentsChanged;
-          
+
             if (count == 0)
             {
                 string error = "No songs found!";
                 BLogger.Logger.Error("No songs were found!");
-                await SharedLogic.NotificationManager.ShowMessageAsync(error);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(error);
                 return null;
             }
-            await SharedLogic.NotificationManager.ShowMessageAsync("Getting files...");
+            await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Getting files...");
             return await queryResult.GetFilesAsync();
         }
+
         public void SetupDirectoryWatcher(IEnumerable<StorageFolder> folderCollection)
         {
             //await Task.Delay(10000);
@@ -96,12 +98,14 @@ namespace BreadPlayer.Services
             //    queryResult.ContentsChanged += QueryResult_ContentsChanged; ;
             //}
         }
+
         public async Task<StorageFolder> AddFolderToLibraryAsync()
         {
             if (MusicLibrary != null)
                 return await MusicLibrary.RequestAddFolderAsync();
             return null;
         }
+
         private void QueryResult_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
             //if (MusicLibrary != null)
@@ -110,12 +114,16 @@ namespace BreadPlayer.Services
             //    new StorageItemsUpdatedEventArgs(
             //        await MusicLibrary.ChangeTracker.GetChangeReader().ReadBatchAsync()));
         }
+
         public event OnStorageItemsUpdatedEventHandler StorageItemsUpdated;
     }
+
     public delegate void OnStorageItemsUpdatedEventHandler(object sender, StorageItemsUpdatedEventArgs e);
+
     public class StorageItemsUpdatedEventArgs : EventArgs
     {
         public IReadOnlyList<StorageLibraryChange> UpdatedItems { get; set; }
+
         public StorageItemsUpdatedEventArgs(IReadOnlyList<StorageLibraryChange> updatedItems)
         {
             UpdatedItems = updatedItems;

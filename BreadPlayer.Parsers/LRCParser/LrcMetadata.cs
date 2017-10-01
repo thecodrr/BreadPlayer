@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BreadPlayer.Parsers.LRCParser
 {
@@ -13,6 +11,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The title.
         /// </value>
         public string Title { get; set; }
+
         /// <summary>
         /// Gets the artist.
         /// </summary>
@@ -20,6 +19,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The artist.
         /// </value>
         public string Artist { get; set; }
+
         /// <summary>
         /// Gets the album.
         /// </summary>
@@ -27,6 +27,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The album.
         /// </value>
         public string Album { get; set; }
+
         /// <summary>
         /// Gets the lyrics maker.
         /// </summary>
@@ -34,6 +35,7 @@ namespace BreadPlayer.Parsers.LRCParser
         /// The lyrics maker.
         /// </value>
         public string Maker { get; set; }
+
         /// <summary>
         /// Gets the offset.
         /// </summary>

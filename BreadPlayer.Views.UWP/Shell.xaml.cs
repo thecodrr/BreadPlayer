@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -18,18 +18,17 @@
 
 using BreadPlayer.Common;
 using BreadPlayer.Core;
-using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
 using SplitViewMenu;
 using System;
 using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -41,9 +40,13 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
-        private ShellViewModel _shellVm;
+        private bool _isPressed;
+
         private List<Mediafile> _oldFiles = new List<Mediafile>();
+
+        private ShellViewModel _shellVm;
+
+        private string _arguments = null;
         public Shell()
         {
             InitializeComponent();
@@ -57,8 +60,16 @@ namespace BreadPlayer
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
+            hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
         }
 
+        private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
+        {
+            if (_arguments != null)
+                CoreWindowLogic.LoadAppWithArguments(_arguments);
+        }       
+
+        public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown += (sender, args) =>
@@ -72,22 +83,61 @@ namespace BreadPlayer
                     "𝐖𝐡𝐚𝐭'𝐬 𝐍𝐞𝐰:\n\n" +
                     "• Added ability to ignore DRM-Protected songs. (𝑒𝑥𝑝𝑟𝑖𝑚𝑒𝑛𝑡𝑎𝑙)\n" +
                     "• Added sorting by tracknumber for album songs.\n";
-                await SharedLogic.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
+                await SharedLogic.Instance.NotificationManager.ShowMessageBoxAsync(releaseNotes, "What's new in v2.6.2");
                 SettingsHelper.SaveLocalSetting("IsFirstTime", false);
             }
             if (e.Parameter is IReadOnlyList<IStorageItem> files)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { files, 0.0, true, 50.0 });
             }
-
+            else if(e.Parameter is string arguments && !string.IsNullOrEmpty(e.Parameter.ToString()))
+            {
+                _arguments = arguments;
+            }
             base.OnNavigatedTo(e);
         }
+
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             Window.Current.CoreWindow.KeyDown -= (sender, args) => GlobalPageKeyDown?.Invoke(sender, args);
         }
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
+        {
+            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
+            {
+                _isPressed = true;
+                _shellVm.DontUpdatePosition = true;
+            }
+        }
 
-        private bool _isPressed;
+        private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_isPressed && !positionSlider.IsDragging())
+            {
+                positionSlider.UpdatePosition(_shellVm, true);
+                _isPressed = false;
+            }
+        }
+
+        private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsEqualizerVisible = false;
+                equalizerBtn.IsChecked = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
+            }
+        }
+
+        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                _shellVm.IsPlaybarHidden = false;
+                CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
+            }
+        }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
@@ -107,41 +157,6 @@ namespace BreadPlayer
                     CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
                 }
             });
-        }
-        private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
-        {
-            if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
-            {
-                _shellVm.IsEqualizerVisible = false;
-                equalizerBtn.IsChecked = false;
-                CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
-            }
-        }
-        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
-        {
-            if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
-            {
-                _shellVm.IsPlaybarHidden = false;
-                CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
-            }
-        }
-        private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
-        {
-            if (_isPressed && !positionSlider.IsDragging())
-            {
-                positionSlider.UpdatePosition(_shellVm, true);
-                _isPressed = false;
-            }
-        }
-        
-
-        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
-        {
-            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
-            {
-                _isPressed = true;
-                _shellVm.DontUpdatePosition = true;
-            }
         }
     }
 }

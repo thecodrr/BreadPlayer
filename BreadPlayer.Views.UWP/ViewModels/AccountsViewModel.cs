@@ -1,24 +1,26 @@
-﻿using System.Linq;
-using BreadPlayer.Common;
+﻿using BreadPlayer.Common;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Objects;
+using System.Linq;
 
 namespace BreadPlayer.ViewModels
 {
-    public class AccountsViewModel : ViewModelBase
+    public class AccountsViewModel : ObservableObject
     {
         #region Lastfm Configuration
 
         private RelayCommand _lastfmLoginCommand;
         private string _lastfmUsername;
         private string _lastfmPassword;
+
         public string LastfmUsername
         {
             get => _lastfmUsername;
             set => Set(ref _lastfmUsername, value);
         }
+
         public string LastfmPassword
         {
             get => _lastfmPassword;
@@ -26,29 +28,32 @@ namespace BreadPlayer.ViewModels
         }
 
         private string _loginStatus = "(Not Logged In)";
+
         public string LoginStatus
         {
             get => _loginStatus;
             set => Set(ref _loginStatus, value);
         }
+
         public ICommand LastfmLoginCommand
         {
-            get { if(_lastfmLoginCommand == null) { _lastfmLoginCommand = new RelayCommand(LastfmLogin); } return _lastfmLoginCommand; }
+            get { if (_lastfmLoginCommand == null) { _lastfmLoginCommand = new RelayCommand(LastfmLogin); } return _lastfmLoginCommand; }
         }
+
         private async void LastfmLogin(object para)
         {
             if (!LastfmPassword.Any() || !LastfmUsername.Any())
             {
                 if ((bool)para)
                 {
-                    await NotificationManager.ShowMessageAsync("You need to enter username and password first!");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("You need to enter username and password first!");
                 }
                 return;
             }
 
             Lastfm lastfm = new Lastfm();
             var session = GetUserSessionFromSettings();
-            if(!string.IsNullOrEmpty(session.Token) && session.Username == LastfmUsername)
+            if (!string.IsNullOrEmpty(session.Token) && session.Username == LastfmUsername)
             {
                 lastfm.LastfmClient.Auth.LoadSession(session);
             }
@@ -56,24 +61,26 @@ namespace BreadPlayer.ViewModels
             {
                 await lastfm.Login(LastfmUsername, LastfmPassword);
             }
-            SharedLogic.LastfmScrobbler = lastfm;
+            SharedLogic.Instance.LastfmScrobbler = lastfm;
 
             if (lastfm.LastfmClient.Auth.Authenticated)
             {
                 LoginStatus = "(Logged In)";
                 SaveUserSession(lastfm.LastfmClient.Auth.UserSession);
-                await NotificationManager.ShowMessageAsync("Successfully logged in!");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Successfully logged in!");
             }
             else
             {
-                await NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Bad username/password. Please reenter.");
             }
         }
-        #endregion
 
-        string _noOfArtistsToFetchInfoFor;
-        string _lyricType;
-        string _lyricSource;
+        #endregion Lastfm Configuration
+
+        private string _noOfArtistsToFetchInfoFor;
+        private string _lyricType;
+        private string _lyricSource;
+
         public string NoOfArtistsToFetchInfoFor
         {
             get => _noOfArtistsToFetchInfoFor;
@@ -83,6 +90,7 @@ namespace BreadPlayer.ViewModels
                 SettingsHelper.SaveRoamingSetting("NoOfArtistsToFetchInfoFor", _noOfArtistsToFetchInfoFor);
             }
         }
+
         public string LyricType
         {
             get => _lyricType;
@@ -92,6 +100,7 @@ namespace BreadPlayer.ViewModels
                 SettingsHelper.SaveRoamingSetting("LyricType", _lyricType);
             }
         }
+
         public string LyricSource
         {
             get => _lyricSource;
@@ -101,6 +110,7 @@ namespace BreadPlayer.ViewModels
                 SettingsHelper.SaveRoamingSetting("LyricSource", _lyricSource);
             }
         }
+
         private LastUserSession GetUserSessionFromSettings()
         {
             string token = SettingsHelper.GetRoamingSetting<string>("LastfmSessionToken", "");
@@ -113,6 +123,7 @@ namespace BreadPlayer.ViewModels
                 Username = username
             };
         }
+
         private void SaveUserSession(LastUserSession usersession)
         {
             SettingsHelper.SaveRoamingSetting("LastfmSessionToken", usersession.Token);
@@ -121,6 +132,7 @@ namespace BreadPlayer.ViewModels
             SettingsHelper.SaveRoamingSetting("LastfmPassword", LastfmPassword);
             SettingsHelper.SaveRoamingSetting("LastfmUsername", LastfmUsername);
         }
+
         public AccountsViewModel()
         {
             LyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto (recommended)");
@@ -129,6 +141,6 @@ namespace BreadPlayer.ViewModels
             LastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
             LastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
             LastfmLogin(false);
-        }      
+        }
     }
 }

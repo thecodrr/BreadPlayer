@@ -13,6 +13,7 @@ namespace BreadPlayer.StateTriggers
         /// </summary>
         /// <value><c>true</c> if this trigger is active; otherwise, <c>false</c>.</value>
         bool IsActive { get; }
+
         /// <summary>
         /// Occurs when the <see cref="IsActive"/> property has changed.
         /// </summary>

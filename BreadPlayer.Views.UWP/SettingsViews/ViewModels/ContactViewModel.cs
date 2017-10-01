@@ -1,9 +1,5 @@
 ﻿using BreadPlayer.Core.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Email;
 using Windows.Storage;
 
@@ -12,12 +8,14 @@ namespace BreadPlayer.SettingsViews.ViewModels
     public class ContactViewModel : ObservableObject
     {
         public string Email { get; set; }
-        string _contentTitle = "Bug details";
+        private string _contentTitle = "Bug details";
+
         public string ContentTitle
         {
             get => _contentTitle;
             set => Set(ref _contentTitle, value);
         }
+
         public string Content { get; set; }
         public ICommand SendCommand { get; set; }
         public ICommand ChangeContactTypeCommand { get; set; }
@@ -27,6 +25,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
             SendCommand = new DelegateCommand(Send);
             ChangeContactTypeCommand = new RelayCommand(ChangeContactType);
         }
+
         private void ChangeContactType(object contactType)
         {
             switch (contactType.ToString())
@@ -34,20 +33,25 @@ namespace BreadPlayer.SettingsViews.ViewModels
                 case "Bug report":
                     ContentTitle = "Bug details:";
                     break;
+
                 case "Suggestion":
                     ContentTitle = "Your suggestion:";
                     break;
+
                 case "Question":
                     ContentTitle = "Ask anything:";
                     break;
+
                 case "Other":
                     ContentTitle = "Say anything:";
                     break;
+
                 case "Kudos":
                     ContentTitle = "Your appreciation note:";
                     break;
             }
         }
+
         private async void Send()
         {
             EmailMessage emailMessage = new EmailMessage();

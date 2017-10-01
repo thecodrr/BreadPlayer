@@ -1,16 +1,10 @@
 ﻿using BreadPlayer.Web.XiamiLyricsAPI.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BreadPlayer.Web.XiamiLyricsAPI.Responses
 {
     public class SearchResponse
     {
-
         [JsonProperty("state")]
         public int State { get; set; }
 
@@ -23,5 +17,4 @@ namespace BreadPlayer.Web.XiamiLyricsAPI.Responses
         [JsonProperty("data")]
         public Data Data { get; set; }
     }
-
 }

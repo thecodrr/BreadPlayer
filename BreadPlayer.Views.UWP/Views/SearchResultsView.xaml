@@ -2,100 +2,200 @@
     x:Class="BreadPlayer.Views.SearchResultsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer.Views"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Controls="using:BreadPlayer.Controls"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-        xmlns:Behaviours="using:BreadPlayer.Behaviours"
-        xmlns:models="using:BreadPlayer.Core.Models"
-     xmlns:Extensions="using:BreadPlayer.Extensions"
-        mc:Ignorable="d">
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="0" Name="MainGrid">
+        <Grid Name="MainGrid" Margin="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup>
-                    <VisualState>
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="0" />
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}"/>
-                            <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
-                            <Setter Target="songsHeader.Margin" Value="25,15,0,0" />
-                            <Setter Target="songsHeader.FontSize" Value="18" />
-                            <Setter Target="albumsHeader.Margin" Value="25,15,0,0" />
-                            <Setter Target="albumsHeader.FontSize" Value="18" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState>
-                        <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="600" />
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileTemplate}"/>
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
 
-            <TextBlock Name="artistsHeader" Grid.Row="0"  Text="Bakers" FontSize="22" Visibility="{Binding Path=ArtistsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" FontWeight="SemiBold"/>
-            <Button HorizontalAlignment="Right" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Bakers">
+            <TextBlock
+                Name="artistsHeader"
+                Grid.Row="0"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Foreground="{ThemeResource TextBrush}"
+                Text="Bakers"
+                Visibility="{Binding Path=ArtistsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+            <Button
+                Margin="0,0,20,0"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                Click="OnShowAllClicked"
+                Foreground="{ThemeResource TextBrush}"
+                Style="{StaticResource HyperlinkBtn}"
+                Tag="Bakers"
+                Visibility="{Binding ElementName=artistsHeader, Path=Visibility}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
-                    <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
+                    <FontIcon
+                        Margin="0,3,0,0"
+                        FontSize="11"
+                        Glyph="&#xE71D;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="11"
+                        Text="Show all" />
                 </StackPanel>
             </Button>
-            <GridView Grid.Row="1" Margin="0,20,0,20" Visibility="{Binding ElementName=artistsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" ItemTemplate="{StaticResource ArtistTemplate}" ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
+            <GridView
+                x:Name="ArtistsList"
+                Grid.Row="1"
+                Margin="0,20,0,20"
+                Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
+                IsItemClickEnabled="True"
+                ItemTemplate="{StaticResource ArtistTemplate}"
+                ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollMode="Auto"
+                SelectionChanged="AlbumsList_SelectionChanged"
+                Visibility="{Binding ElementName=artistsHeader, Path=Visibility}">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
+                        <ItemsStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
 
-            <TextBlock Name="albumsHeader" x:Uid="albumsHeader" Visibility="{Binding Path=AlbumsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}"  Grid.Row="2" Text="Breads" FontSize="22" FontWeight="SemiBold"/>
-            <Button Grid.Row="2" Visibility="{Binding ElementName=albumsHeader, Path=Visibility}" HorizontalAlignment="Right" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Breads">
+            <TextBlock
+                Name="albumsHeader"
+                x:Uid="albumsHeader"
+                Grid.Row="2"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Foreground="{ThemeResource TextBrush}"
+                Text="Breads"
+                Visibility="{Binding Path=AlbumsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+            <Button
+                Grid.Row="2"
+                Margin="0,0,20,0"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                Click="OnShowAllClicked"
+                Foreground="{ThemeResource TextBrush}"
+                Style="{StaticResource HyperlinkBtn}"
+                Tag="Breads"
+                Visibility="{Binding ElementName=albumsHeader, Path=Visibility}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
-                    <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
+                    <FontIcon
+                        Margin="0,3,0,0"
+                        FontSize="11"
+                        Glyph="&#xE71D;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="11"
+                        Text="Show all" />
                 </StackPanel>
             </Button>
-            <GridView Name="AlbumsList" Visibility="{Binding ElementName=albumsHeader, Path=Visibility}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" Margin="0,20,0,20" SelectionChanged="AlbumsList_SelectionChanged" ItemTemplate="{StaticResource AlbumTemplate}" Grid.Row="3" ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}" IsItemClickEnabled="True" Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}">
+            <GridView
+                Name="AlbumsList"
+                Grid.Row="3"
+                Margin="0,20,0,20"
+                Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
+                IsItemClickEnabled="True"
+                ItemTemplate="{StaticResource AlbumTemplate}"
+                ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollMode="Auto"
+                SelectionChanged="AlbumsList_SelectionChanged"
+                Visibility="{Binding ElementName=albumsHeader, Path=Visibility}">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
+                        <ItemsStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
 
-            <TextBlock x:Uid="songsHeader" Grid.Row="4" Name="songsHeader" Visibility="{Binding Path=ToastsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" Text="Toasts" FontSize="22" FontWeight="SemiBold"/>
-            <Button Grid.Row="4" HorizontalAlignment="Right" Visibility="{Binding ElementName=songsHeader, Path=Visibility}" Margin="0,0,20,0" Background="Transparent" Style="{StaticResource HyperlinkBtn}" Click="OnShowAllClicked" Tag="Toasts">
+            <TextBlock
+                Name="songsHeader"
+                x:Uid="songsHeader"
+                Grid.Row="4"
+                FontSize="22"
+                FontWeight="SemiBold"
+                Foreground="{ThemeResource TextBrush}"
+                Text="Toasts"
+                Visibility="{Binding Path=ToastsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+            <Button
+                Grid.Row="4"
+                Margin="0,0,20,0"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                Click="OnShowAllClicked"
+                Foreground="{ThemeResource TextBrush}"
+                Style="{StaticResource HyperlinkBtn}"
+                Tag="Toasts"
+                Visibility="{Binding ElementName=songsHeader, Path=Visibility}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="11" Margin="0,3,0,0" Glyph="&#xE71D;"/>
-                    <TextBlock Margin="5,0,0,0" FontSize="11" Text="Show all"/>
+                    <FontIcon
+                        Margin="0,3,0,0"
+                        FontSize="11"
+                        Glyph="&#xE71D;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="11"
+                        Text="Show all" />
                 </StackPanel>
             </Button>
-            <ListView Name="SongsList" Margin="0,20,0,0" Visibility="{Binding ElementName=songsHeader, Path=Visibility}" Grid.Row="5" ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource MediafileTemplate}">
+            <Controls:AlternatingRowListView
+                Name="SongsList"
+                Grid.Row="5"
+                Margin="0,20,0,0"
+                EvenRowBackground="{ThemeResource EvenRowBackground}"
+                ItemTemplate="{StaticResource MediafileTemplate}"
+                ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}"
+                OddRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                Visibility="{Binding ElementName=songsHeader, Path=Visibility}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
                     </Style>
                 </ListView.ItemContainerStyle>
-            </ListView>
-           
+            </Controls:AlternatingRowListView>
         </Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}" />
+                        <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
+                        <Setter Target="ArtistsList.ItemTemplate" Value="{StaticResource ArtistMobileTemplate}" />
+                        <Setter Target="songsHeader.Margin" Value="10,15,0,0" />
+                        <Setter Target="songsHeader.FontSize" Value="18" />
+                        <Setter Target="albumsHeader.Margin" Value="10,15,0,0" />
+                        <Setter Target="albumsHeader.FontSize" Value="18" />
+                        <Setter Target="artistsHeader.Margin" Value="10,15,0,0" />
+                        <Setter Target="artistsHeader.FontSize" Value="18" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SongsList.ItemTemplate" Value="{StaticResource MediafileTemplate}" />
+                        <Setter Target="AlbumsList.ItemTemplate" Value="{StaticResource AlbumTemplate}" />
+                        <Setter Target="ArtistsList.ItemTemplate" Value="{StaticResource ArtistTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </ScrollViewer>
 </Page>

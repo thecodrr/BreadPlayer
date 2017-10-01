@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Core.Models;
+using BreadPlayer.Dispatcher;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,13 +26,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Core;
-using BreadPlayer.Dispatcher;
+using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Extensions
 {
-	public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
+    public class GroupedObservableCollection<TKey, TElement> : ObservableCollection<Grouping<TKey, TElement>>
         where TKey : IComparable<TKey>
         where TElement : IComparable<TElement>
     {
@@ -41,12 +41,14 @@ namespace BreadPlayer.Extensions
         /// that when an item is added, then next one will be in the same grouping.
         /// </summary>
         private Grouping<TKey, TElement> _lastEffectedGroup;
+
         private bool _isObserving;
 
         public GroupedObservableCollection(Func<TElement, TKey> readKey)
         {
             _readKey = readKey;
         }
+
         public GroupedObservableCollection(Func<TElement, TKey> readKey, IEnumerable<TElement> items)
             : this(readKey)
         {
@@ -63,15 +65,18 @@ namespace BreadPlayer.Extensions
             //    this.AddItem(item, false);
             //}
         }
+
         public bool Contains(TElement item)
         {
             return Contains(item, (a, b) => a.Equals(b));
         }
+
         public new void Clear()
         {
             RemoveGroups(Keys);
             Elements.Clear();
         }
+
         public bool Contains(TElement item, Func<TElement, TElement, bool> compare)
         {
             var key = _readKey(item);
@@ -83,6 +88,7 @@ namespace BreadPlayer.Extensions
         {
             return this.SelectMany(g => g);
         }
+
         public void AddItem(TElement item, bool addToElement = false)
         {
             try
@@ -101,13 +107,14 @@ namespace BreadPlayer.Extensions
                 BLogger.Logger.Error("Error occured while adding file to grouped collection.", ex);
             }
         }
-        /// <summary> 
-        /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
-        /// </summary> 
+
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
+        /// </summary>
         public async Task AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
         {
             try
-            { 
+            {
                 // get out if no new items
                 if (range == null || !range.Any())
                 {
@@ -145,7 +152,7 @@ namespace BreadPlayer.Extensions
 
                 void AddItems(TElement[] array)
                 {
-                    for (int i = 0; i < array.Count(); i++)
+                    for (int i = 0; i < array.Length; i++)
                     {
                         AddItem(array[i]);
                     }
@@ -156,6 +163,7 @@ namespace BreadPlayer.Extensions
                 BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
             }
         }
+
         protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             try
@@ -171,6 +179,7 @@ namespace BreadPlayer.Extensions
                 Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
+
         protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             try
@@ -186,13 +195,16 @@ namespace BreadPlayer.Extensions
                 Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
+
         public void RemoveItem(TElement item)
         {
             Remove(item);
             Elements.Remove(item);
         }
+
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
         public SortedObservableCollection<TElement, string> Elements { get; set; } = new SortedObservableCollection<TElement, string>(t => (t as Mediafile).Title);
+
         public GroupedObservableCollection<TKey, TElement> ReplaceWith(GroupedObservableCollection<TKey, TElement> replacementCollection, IEqualityComparer<TElement> itemComparer)
         {
             // First make sure that the top level group containers match
@@ -295,10 +307,12 @@ namespace BreadPlayer.Extensions
                 }
             }
         }
+
         public void RemoveGroup(TKey key)
         {
             RemoveAt(IndexOf(this.First(t => t.Key.ToString() == key.ToString())));
         }
+
         public bool Remove(TElement item)
         {
             var key = _readKey(item);
@@ -347,7 +361,6 @@ namespace BreadPlayer.Extensions
                     // Group doesn't exist and the new group needs to go at the end
                     result = new Grouping<TKey, TElement>(key);
                     Add(result);
-
                 }
                 else if (!match.group.Key.Equals(key))
                 {
@@ -355,7 +368,6 @@ namespace BreadPlayer.Extensions
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
                     Insert(match.index, result);
-
                 }
                 else
                 {
@@ -384,7 +396,6 @@ public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>
     public Grouping(TKey key, IEnumerable<TElement> items)
         : this(key)
     {
-
         AddRange(items);
 
         //foreach (var item in items)

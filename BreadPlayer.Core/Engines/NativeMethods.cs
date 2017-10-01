@@ -6,6 +6,7 @@ namespace BreadPlayer.Core.Engines
     {
         [DllImport("bass.dll")]
         public static extern bool BASS_SetConfig(int config, int newValue);
+
         public const int BassConfigDevBuffer = 27;
     }
 }

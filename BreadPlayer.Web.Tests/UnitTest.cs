@@ -1,8 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using BreadPlayer.Web._123music;
 using BreadPlayer.Web.BaiduLyricsAPI;
-using BreadPlayer.Web.Lastfm;
-using BreadPlayer.Web._123music;
-using IF.Lastfm.Core.Api.Helpers;
 using Xunit;
 
 namespace MyFirstUWPTests
@@ -40,6 +37,7 @@ namespace MyFirstUWPTests
         {
             Assert.True(await new Api().SearchSongs(term));
         }
+
         [Theory]
         [InlineData(DataType.New)]
         [InlineData(DataType.Hot)]
@@ -47,6 +45,7 @@ namespace MyFirstUWPTests
         {
             Assert.True(await new Api().GetSongsList(term));
         }
+
         [Theory]
         [InlineData(DataType.New)]
         [InlineData(DataType.Hot)]
@@ -54,6 +53,7 @@ namespace MyFirstUWPTests
         {
             Assert.True(await new Api().GetArtistsList(term));
         }
+
         [Theory]
         [InlineData(DataType.New)]
         [InlineData(DataType.Hot)]
@@ -61,6 +61,7 @@ namespace MyFirstUWPTests
         {
             Assert.True(await new Api().GetAlbumsList(term));
         }
+
         //[Theory]
         //[InlineData("172072")]
         //public async void RequestSongInfoTest(string id)
@@ -73,18 +74,21 @@ namespace MyFirstUWPTests
         {
             Assert.NotNull(await new BaiduClient().RequestSongLrc(id));
         }
+
         [Theory]
         [InlineData("eminem")]
         public async void RequestMusicInfoTest(string id)
         {
             Assert.NotNull(await new BaiduClient().Search(id));
         }
+
         [Theory]
         [InlineData("eminem")]
         public async void SearchSongsTest(string id)
         {
             Assert.NotNull(await new BreadPlayer.Web.NeteaseLyricsAPI.NeteaseClient().SearchSongs(id));
         }
+
         [Theory]
         [InlineData("17572546")]
         public async void GetLyricsTest(string id)
@@ -98,6 +102,7 @@ namespace MyFirstUWPTests
         {
             Assert.NotNull(await new BreadPlayer.Web.XiamiLyricsAPI.XiamiClient().SearchAsync(id));
         }
+
         //[Theory]
         //[InlineData("eminem", "justin bieber")]
         //[InlineData("The Way I Am", "Nothing Like Us")]

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI;
 
 namespace BreadPlayer.Extensions
@@ -14,7 +10,7 @@ namespace BreadPlayer.Extensions
         /// Creates color with corrected brightness.
         /// </summary>
         /// <param name="color">Color to correct.</param>
-        /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1. 
+        /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1.
         /// Negative values produce darker colors.</param>
         /// <returns>
         /// Corrected <see cref="Color"/> structure.
@@ -41,11 +37,12 @@ namespace BreadPlayer.Extensions
 
             return Color.FromArgb(color.A, (byte)red, (byte)green, (byte)blue);
         }
+
         public static string ToHexString(this Color c)
         {
             return "#" + c.A.ToString("X2") + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
-      
+
         public static Color FromHexString(this string hexColor)
         {
             //Remove # if present
@@ -56,12 +53,12 @@ namespace BreadPlayer.Extensions
             byte red = 0;
             byte green = 0;
             byte blue = 0;
-            
+
             if (hexColor.Length == 8)
             {
                 //#AARRGGBB
                 alpha = byte.Parse(hexColor.Substring(0, 2), NumberStyles.AllowHexSpecifier);
-                red = byte.Parse(hexColor.Substring(2,2), NumberStyles.AllowHexSpecifier);
+                red = byte.Parse(hexColor.Substring(2, 2), NumberStyles.AllowHexSpecifier);
                 green = byte.Parse(hexColor.Substring(4, 2), NumberStyles.AllowHexSpecifier);
                 blue = byte.Parse(hexColor.Substring(6, 2), NumberStyles.AllowHexSpecifier);
             }
@@ -73,23 +70,26 @@ namespace BreadPlayer.Extensions
                 blue = byte.Parse(hexColor[2].ToString() + hexColor[2].ToString(), NumberStyles.AllowHexSpecifier);
             }
 
-            return Color.FromArgb(alpha,red, green, blue);
+            return Color.FromArgb(alpha, red, green, blue);
         }
+
         public static bool IsDark(this Color accentColor)
         {
             var brightness = (int)Math.Sqrt(
                accentColor.R * accentColor.R * .241 +
                accentColor.G * accentColor.G * .691 +
                accentColor.B * accentColor.B * .068);
-            return brightness < 130; // 
+            return brightness < 130; //
         }
+
         public static Color ToForeground(this Color color)
         {
             return IsDark(color) ? Colors.White : Color.FromArgb(255, 11, 11, 11);
         }
+
         public static Color ToHoverColor(this Color color)
         {
-            return IsDark(color) ? Colors.LightGray : Color.FromArgb(255, 59,59,59);
+            return IsDark(color) ? Colors.LightGray : Color.FromArgb(255, 59, 59, 59);
         }
     }
 }

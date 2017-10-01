@@ -10,12 +10,12 @@
 
     <Grid>
         <BPControls:AlternatingRowListView x:Name="favoritesListView"
-                                           OddRowBackground="{ThemeResource EvenRowBackground}" 
+                                           OddRowBackground="{ThemeResource EvenRowBackground}"
                                            EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                           ItemTemplate="{StaticResource MediafileTemplate}" 
-                                           ItemsSource="{Binding FavoriteSongsCollection}"                                                   
-                                           IncrementalLoadingThreshold="10" 
-                                           IncrementalLoadingTrigger="Edge" 
-                                           DataFetchSize="10"/>
+                                           ItemTemplate="{StaticResource MediafileTemplate}"
+                                           ItemsSource="{Binding FavoriteSongsCollection}"
+                                           IncrementalLoadingThreshold="10"
+                                           IncrementalLoadingTrigger="Edge"
+                                           DataFetchSize="10" />
     </Grid>
 </Page>

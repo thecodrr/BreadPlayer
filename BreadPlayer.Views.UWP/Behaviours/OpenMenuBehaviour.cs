@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,14 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Extensions;
+using Microsoft.Xaml.Interactivity;
+using SplitViewMenu;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using BreadPlayer.Extensions;
-using Microsoft.Xaml.Interactivity;
-using SplitViewMenu;
 
 namespace BreadPlayer.Behaviours
 {
@@ -65,8 +66,8 @@ namespace BreadPlayer.Behaviours
             {
                 FrameworkElement senderElement = sender as FrameworkElement;
                 var navList = senderElement.GetFirstAncestorOfType<NavMenuListView>() != null && senderElement.GetFirstAncestorOfType<NavMenuListView>().Name == "PlaylistsMenuList" ? senderElement.GetFirstAncestorOfType<NavMenuListView>() : null;
-                ListViewItem item = senderElement.GetFirstAncestorOfType<ListViewItem>();
-                ListView listView = item?.GetFirstAncestorOfType<ListView>();
+                SelectorItem item = senderElement.GetFirstAncestorOfType<SelectorItem>();
+                ListViewBase listView = item?.GetFirstAncestorOfType<ListViewBase>();
 
                 // if (item != null) item.IsSelected = true;
                 ListViewItem listItem = senderElement.Tag is ContentPresenter contentPresenter ? contentPresenter.Tag as ListViewItem : null;
@@ -104,11 +105,7 @@ namespace BreadPlayer.Behaviours
                         }
                     }
                     var flyout = Parameter as MenuFlyout; //.GetFirstDescendantOfType<Grid>().Resources["Flyout"] as MenuFlyout;
-                    if (flyout.Items[0] is MenuFlyoutItem menuFlyout)
-                    {
-                        menuFlyout.CommandParameter = item.Content;
-                    }
-
+                    
                     if (position != null)
                     {
                         flyout.ShowAt(senderElement, position.Value);
