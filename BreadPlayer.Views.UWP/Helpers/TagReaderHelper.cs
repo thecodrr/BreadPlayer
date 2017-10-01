@@ -171,7 +171,7 @@ namespace BreadPlayer.Helpers
             Color color = Colors.Transparent;
             if (!File.Exists(artistArtPath))
             {
-                var artistArt = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg", CreationCollisionOption.FailIfExists);
+                var artistArt = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg", CreationCollisionOption.ReplaceExisting);
 
                 using (HttpClient client = new HttpClient())
                 {
