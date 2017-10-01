@@ -26,6 +26,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Extensions
 {
@@ -151,7 +152,7 @@ namespace BreadPlayer.Extensions
 
                 void AddItems(TElement[] array)
                 {
-                    for (int i = 0; i < array.Count(); i++)
+                    for (int i = 0; i < array.Length; i++)
                     {
                         AddItem(array[i]);
                     }

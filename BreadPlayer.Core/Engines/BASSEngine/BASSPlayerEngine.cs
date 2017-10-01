@@ -38,9 +38,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
         #region Constructor
 
-        public BassPlayerEngine(bool isMobile, bool crossFade)
+        public BassPlayerEngine(bool isMobile, bool crossFade, int deviceBufferSize)
         {
+            DeviceBufferSize = deviceBufferSize;
             Init(isMobile);
+            crossFade = CrossfadeEnabled;
             _sync = EndSync;
             _posSync = PositonReachedSync;
         }
@@ -64,7 +66,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                  {
                      //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
                      //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later.
-                     NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+                     NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
                  }
                  else
                      Bass.Configure(Configuration.IncludeDefaultDevice, true);
@@ -116,7 +118,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         }
 
                         if (InitializeCore.IsMobile)
-                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, 230);
+                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
 
                         Bass.Init();
                         Bass.ChannelSetDevice(_handle, i);
@@ -261,15 +263,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
         #region Properties
 
-        private bool crossfadeEnabled;
-
         public bool CrossfadeEnabled
         {
-            get => crossfadeEnabled;
-            set
-            {
-                Set(ref crossfadeEnabled, value);
-            }
+            get; set;
         }
 
         private bool _isVolumeMuted;
@@ -382,7 +378,9 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 //SetLoop();
             }
         }
-        
+
+        public int DeviceBufferSize { get; set; }
+
         #endregion Properties
 
         private void PositonReachedSync(int handle, int channel, int data, IntPtr user)

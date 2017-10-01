@@ -25,7 +25,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Data;
 
 /// <summary>
 /// a thread safe observable collection using reader writer lock - created with the help of http://web.archive.org/web/20101105144104/http://www.deanchalk.me.uk/post/Thread-Safe-Dispatcher-Safe-Observable-Collection-for-WPF.aspx
@@ -133,7 +135,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// <summary>
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
     /// </summary>
-    public void AddRange(IEnumerable<T> range)
+    public void AddRange(IEnumerable<T> range, bool reset = true)
     {
         try
         {
@@ -156,9 +158,10 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
             // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-            //if(reset)
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
-            //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+            if (reset)
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+            else
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
         }
         catch (Exception ex)
         {
@@ -381,7 +384,8 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     public IEnumerable<T> AsLocked()
     {
         return new ThreadSafeObservableCollectionEnumerableWrapper<T>(this);
-    }
+    }       
+    
 }
 
 public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>

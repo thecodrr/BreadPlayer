@@ -181,11 +181,13 @@ namespace BreadPlayer.Parsers.LRCParser
                 var match = TimestampRegex.Match(pair.Key);
                 if (match.Success)
                 {
-                    var minutes = int.Parse(match.Groups["minutes"].Value);
-                    var seconds = double.Parse(match.Groups["seconds"].Value);
-                    var timestamp = TimeSpan.FromSeconds(minutes * 60 + seconds);
-                    lyrics.Add(new OneLineLyric(timestamp, pair.Value));
-                    continue;
+                    if(double.TryParse(match.Groups["seconds"].Value, out double seconds)
+                       && int.TryParse(match.Groups["minutes"].Value, out int minutes))
+                    {
+                        var timestamp = TimeSpan.FromSeconds(minutes * 60 + seconds);
+                        lyrics.Add(new OneLineLyric(timestamp, pair.Value));
+                        continue;
+                    }                    
                 }
 
                 // Parse metadata
@@ -232,7 +234,10 @@ namespace BreadPlayer.Parsers.LRCParser
                             throw new FormatException(string.Format("Duplicate LRC metadata found. Metadata name: '{0}', Values: '{1}', '{2}'", "offset", offsetString, content));
                         }
                         offsetString = content;
-                        metadata.Offset = TimeSpan.FromMilliseconds(double.Parse(content));
+                        if(double.TryParse(content, out double offset))
+                        {
+                            metadata.Offset = TimeSpan.FromMilliseconds(offset);
+                        }
                     }
                     // ReSharper disable once RedundantIfElseBlock
                     else

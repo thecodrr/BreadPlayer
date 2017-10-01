@@ -78,7 +78,7 @@ namespace BreadPlayer.Extensions
             menuFlyout.Items.Clear();
             foreach (var menuItem in menuFlyout.ItemsSource)
             {
-                menuItem.PropertyChanged += (s, a) => 
+                menuItem.PropertyChanged += (s, a) =>
                 {
                     Setup(this);
                 };
@@ -170,7 +170,6 @@ namespace BreadPlayer.Extensions
         {
             obj.SetValue(MyItemsProperty, value);
         }
-        
 
         private static void AddMenuItems(MenuFlyoutSubItem menuFlyoutSubItem, MenuFlyout menuFlyout = null)
         {

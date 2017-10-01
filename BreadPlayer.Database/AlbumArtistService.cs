@@ -70,7 +70,16 @@ namespace BreadPlayer.Database
             Database.ChangeTable("Artists", "ArtistsText");
             return Database.GetRecords<Artist>();
         }
-
+        public Task<IEnumerable<Artist>> GetRangeOfArtistsAsync(int index, int limit)
+        {
+            Database.ChangeTable("Artists", "ArtistsText");
+            return Database.GetRangeOfRecords<Artist>(index, limit);
+        }
+        public Task<IEnumerable<Album>> GetRangeOfAlbumsAsync(int index, int limit)
+        {
+            Database.ChangeTable("Albums", "AlbumsText");
+            return Database.GetRangeOfRecords<Album>(index, limit);
+        }
         public Task<IEnumerable<Album>> GetAlbumsAsync()
         {
             Database.ChangeTable("Albums", "AlbumsText");

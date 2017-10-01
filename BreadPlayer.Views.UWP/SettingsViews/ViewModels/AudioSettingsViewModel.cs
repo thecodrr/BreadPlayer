@@ -17,10 +17,21 @@ namespace BreadPlayer.SettingsViews.ViewModels
                 SettingsHelper.SaveRoamingSetting("CrossfadeEnabled", value);
             }
         }
-
+        private int deviceBufferSize;
+        public int DeviceBufferSize
+        {
+            get => deviceBufferSize;
+            set
+            {
+                Set(ref deviceBufferSize, value);
+                SharedLogic.Instance.Player.DeviceBufferSize = deviceBufferSize;
+                SettingsHelper.SaveRoamingSetting("DeviceBufferSize", value);
+            }
+        }
         public AudioSettingsViewModel()
         {
             CrossfadeEnabled = SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true);
+            DeviceBufferSize = SettingsHelper.GetRoamingSetting<int>("DeviceBufferSize", 350);
         }
     }
 }

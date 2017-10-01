@@ -5,6 +5,7 @@ using BreadPlayer.Database;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
+using BreadPlayer.Helper;
 using BreadPlayer.Messengers;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Services;

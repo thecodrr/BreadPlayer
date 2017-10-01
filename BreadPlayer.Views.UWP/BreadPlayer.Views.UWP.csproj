@@ -203,12 +203,14 @@
     <Compile Include="CoreWindowLogic.cs" />
     <Compile Include="Core\SharedLogic.cs" />
     <Compile Include="Core\SimpleFileAbstraction.cs" />
+    <Compile Include="DataSources\ArtistDataSource.cs" />
     <Compile Include="Dialogs\PasswordDialog.xaml.cs">
       <DependentUpon>PasswordDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dispatcher\BreadDispatcher.cs" />
     <Compile Include="Events\ThemeChangedEventArgs.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\IncrementalObservableCollection.cs" />
     <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SolidColorBrushExtensions.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />

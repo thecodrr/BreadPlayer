@@ -8,6 +8,7 @@ using Windows.Storage.Pickers;
 using System.IO;
 using BreadPlayer.Dispatcher;
 using Windows.Storage;
+using BreadPlayer.PlaylistBus;
 
 namespace BreadPlayer.Helper
 {

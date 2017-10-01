@@ -522,7 +522,7 @@ namespace BreadPlayer.ViewModels
                     break;
 
                 case "TrackNumber":
-                    f = t => new TitleGroupKey() { Key = string.IsNullOrEmpty(t.TrackNumber) ? "Unknown Track No." : t.TrackNumber, FirstElement = t };
+                    f = t => new TitleGroupKey() { Key = t.TrackNumber == 0 ? "Unknown Track No." : t.TrackNumber.ToString(), FirstElement = t };
                     break;
 
                 case "FolderPath":

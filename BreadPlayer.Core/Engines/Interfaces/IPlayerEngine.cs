@@ -22,7 +22,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
         Task ChangeDevice(string deviceName);
         //PROPERTIES
         bool CrossfadeEnabled { get; set; }
-
+        int DeviceBufferSize { get; set; }
         bool IsVolumeMuted { get; set; }
         Effects Effect { get; set; }
         Equalizer Equalizer { get; set; }

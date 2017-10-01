@@ -81,7 +81,10 @@ namespace BreadPlayer.Core
             {
                 if (_player == null)
                 {
-                    _player = new BassPlayerEngine(ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1),  SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true));
+                    _player = new BassPlayerEngine(
+                        ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1), 
+                        SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true),
+                        SettingsHelper.GetRoamingSetting<int>("DeviceBufferSize", 350));
                 }
 
                 return _player;

@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using BreadPlayer.Comparers;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
