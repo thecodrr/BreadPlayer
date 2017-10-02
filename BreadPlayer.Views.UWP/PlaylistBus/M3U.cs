@@ -1,16 +1,13 @@
-﻿using System;
+﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Helpers;
+using BreadPlayer.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using BreadPlayer.Core;
-using BreadPlayer.Core.Models;
-using BreadPlayer.Database;
-using BreadPlayer.ViewModels;
-using BreadPlayer.Messengers;
-using BreadPlayer.Helpers;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -58,7 +55,7 @@ namespace BreadPlayer.PlaylistBus
 
                                 Mediafile mp3File = await TagReaderHelper.CreateMediafile(accessFile); //prepare Mediafile
 
-                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File,accessFile);
+                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
                                 playlistSongs.Add(mp3File);
                                 StorageApplicationPermissions.FutureAccessList.Remove(token);
                             }
@@ -67,27 +64,23 @@ namespace BreadPlayer.PlaylistBus
                                 failedFiles++;
                             }
                         });
-                    }                    
+                    }
                 }
                 return playlistSongs;
             }
         }
 
-        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs)
+        public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs, Stream fileStream)
         {
-            FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("M3U Playlists", new List<string> { ".m3u" });
-            picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-            var file = await picker.PickSaveFileAsync();
-            using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
+            using (StreamWriter writer = new StreamWriter(fileStream))
             {
-                writer.WriteLine("#EXTM3U");
-                writer.WriteLine("");
+                await writer.WriteLineAsync("#EXTM3U").ConfigureAwait(false);
+                await writer.WriteLineAsync("").ConfigureAwait(false);
                 foreach (var track in songs)
                 {
-                    writer.WriteLine(string.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title));
-                    writer.WriteLine(track.Path);
-                    writer.WriteLine("");
+                    await writer.WriteLineAsync(string.Format("#EXTINF:{0},{1} - {2}", track.Length, track.LeadArtist, track.Title)).ConfigureAwait(false);
+                    await writer.WriteLineAsync(track.Path).ConfigureAwait(false);
+                    await writer.WriteLineAsync("").ConfigureAwait(false);
                 }
             }
             return false;

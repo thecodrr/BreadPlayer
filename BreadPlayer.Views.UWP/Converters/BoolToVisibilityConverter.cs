@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -34,27 +34,35 @@ namespace BreadPlayer.Converters
                 case bool boolValue:
                     flag = boolValue;
                     break;
+
                 case int intValue:
                     flag = (Int16)intValue <= 1;
                     break;
+
                 case double doubleValue:
                     flag = (Int16)doubleValue > 1;
                     break;
+
                 case ImageSource imageSource:
                     flag = ((BitmapImage)imageSource).UriSource == null;
                     break;
+
                 case string stringValue:
-                    flag = stringValue.Length < 0;
+                    flag = stringValue.Length < 0 || stringValue == null;
                     break;
+
                 case null:
                     flag = true;
                     break;
+
                 default:
+                    flag = true;
                     break;
             }
 
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

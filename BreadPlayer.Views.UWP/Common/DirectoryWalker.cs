@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Helpers;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 
@@ -23,17 +24,15 @@ namespace BreadPlayer.Common
 {
     internal static class DirectoryWalker
     {
-        public static QueryOptions GetQueryOptions(string aqsQuery = null)
+        public static QueryOptions GetQueryOptions(string aqsQuery = null, bool useIndexer = true)
         {
-            QueryOptions options = new QueryOptions(CommonFileQuery.DefaultQuery,
+            QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
             options.FolderDepth = FolderDepth.Deep;
-            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale);
-            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, new[] { "System.Music.AlbumTitle", "System.Music.Artist", "System.Music.Genre" });
-            if(aqsQuery != null)
-            {
-                options.ApplicationSearchFilter += "kind:music " + aqsQuery;
-            }
+            options.IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer;
+            options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
+            options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, TagReaderHelper.GetExtraPropertiesNames());
+            //options.ApplicationSearchFilter += "System.Kind:=System.Kind#Music" + aqsQuery;
 
             return options;
         }

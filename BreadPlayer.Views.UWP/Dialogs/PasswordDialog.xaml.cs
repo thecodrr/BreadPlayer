@@ -11,20 +11,25 @@ namespace BreadPlayer.Dialogs
         {
             InitializeComponent();
         }
+
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register(
          "Password", typeof(string), typeof(PasswordDialog), new PropertyMetadata(null));
+
         public string Password
         {
             get => (string)GetValue(PasswordProperty);
             set => SetValue(PasswordProperty, value);
         }
+
         public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
        "DialogWidth", typeof(double), typeof(PasswordDialog), new PropertyMetadata(null));
+
         public double DialogWidth
         {
             get => (double)GetValue(DialogWidthProperty);
             set => SetValue(DialogWidthProperty, value);
         }
+
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }

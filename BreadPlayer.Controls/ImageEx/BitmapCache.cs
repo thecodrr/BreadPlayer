@@ -27,6 +27,7 @@ namespace BreadPlayer.Controls
         public static TimeSpan CacheDuration { get; set; }
 
         #region ClearCacheAsync
+
         public static async Task ClearCacheAsync(TimeSpan? duration = null)
         {
             duration = duration ?? TimeSpan.FromSeconds(0);
@@ -48,7 +49,8 @@ namespace BreadPlayer.Controls
             }
             catch { }
         }
-        #endregion
+
+        #endregion ClearCacheAsync
 
         public static async Task<Uri> GetImageUriAsync(Uri uri, int maxWidth, int maxHeight)
         {
@@ -140,6 +142,7 @@ namespace BreadPlayer.Controls
         }
 
         #region GetCacheFolder
+
         private static StorageFolder _cacheFolder;
         private static SemaphoreSlim _cacheFolderSemaphore = new SemaphoreSlim(1);
 
@@ -164,9 +167,11 @@ namespace BreadPlayer.Controls
             }
             return _cacheFolder;
         }
-        #endregion
+
+        #endregion GetCacheFolder
 
         #region File Hash
+
         private static string BuildKey(Uri uri)
         {
             ulong uriHash = CreateHash64(uri);
@@ -207,9 +212,11 @@ namespace BreadPlayer.Controls
             }
             return "L";
         }
-        #endregion
+
+        #endregion File Hash
 
         #region GetSizeLevel
+
         public static int GetSizeLevel(Size size)
         {
             double width = size.Width;
@@ -220,6 +227,7 @@ namespace BreadPlayer.Controls
             }
             return 0;
         }
-        #endregion
+
+        #endregion GetSizeLevel
     }
 }

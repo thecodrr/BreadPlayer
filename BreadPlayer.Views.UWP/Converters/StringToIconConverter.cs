@@ -30,6 +30,7 @@ namespace BreadPlayer.Converters
 
             return symbol;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

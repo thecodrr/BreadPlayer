@@ -7,6 +7,7 @@ namespace BreadPlayer.StateTriggers
     public class AdaptiveTriggerWithCondition : StateTriggerBase, ITriggerValue
     {
         private static double _currentValue;
+
         #region Constructors
 
         /// <summary>
@@ -21,9 +22,10 @@ namespace BreadPlayer.StateTriggers
             _currentValue = GetCurrentValue();
         }
 
-        #endregion
+        #endregion Constructors
 
         ///////////////////////////////////////////////////////////////////
+
         #region Private Methods
 
         private double GetCurrentValue()
@@ -31,9 +33,10 @@ namespace BreadPlayer.StateTriggers
             return Window.Current.Bounds.Width;
         }
 
-        #endregion
+        #endregion Private Methods
 
         ///////////////////////////////////////////////////////////////////
+
         #region Event Handler
 
         private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs windowSizeChangedEventArgs)
@@ -41,7 +44,8 @@ namespace BreadPlayer.StateTriggers
             _currentValue = GetCurrentValue();
         }
 
-        #endregion
+        #endregion Event Handler
+
         /// <summary>
         /// Gets or sets the device family to trigger on.
         /// </summary>
@@ -58,6 +62,7 @@ namespace BreadPlayer.StateTriggers
         public static readonly DependencyProperty MinWindowWidthProperty =
             DependencyProperty.Register("MinWindowWidth", typeof(double), typeof(AdaptiveTriggerWithCondition),
             new PropertyMetadata(null));
+
         /// <summary>
         /// Gets or sets the device family to trigger on.
         /// </summary>

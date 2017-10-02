@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -39,8 +39,6 @@ namespace SplitViewMenu
             Loaded += OnLoaded;
             ItemClick += ItemClickedHandler;
         }
-
-
 
         private void OnLoaded(object o, RoutedEventArgs e)
         {
@@ -84,7 +82,7 @@ namespace SplitViewMenu
 
             foreach (
                 var cont in
-                    Items.Select(i => (ListViewItem) ContainerFromItem(i)).Where(cont => cont != null && cont != item))
+                    Items.Select(i => (ListViewItem)ContainerFromItem(i)).Where(cont => cont != null && cont != item))
             {
                 cont.IsSelected = false;
             }
@@ -163,7 +161,7 @@ namespace SplitViewMenu
                 control?.Focus(FocusState.Programmatic);
             }
         }
-      
+
         private void ItemClickedHandler(object sender, ItemClickEventArgs e)
         {
             var item = ContainerFromItem(e.ClickedItem);

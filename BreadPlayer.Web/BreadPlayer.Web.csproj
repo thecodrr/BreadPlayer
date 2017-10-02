@@ -99,50 +99,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FastBuild_Release|AnyCPU'">
-    <OutputPath>bin\FastBuild_Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <NoStdLib>true</NoStdLib>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FastBuild_Release|x64'">
-    <OutputPath>bin\x64\FastBuild_Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <NoStdLib>true</NoStdLib>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FastBuild_Release|ARM'">
-    <OutputPath>bin\ARM\FastBuild_Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <NoStdLib>true</NoStdLib>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FastBuild_Release|x86'">
-    <OutputPath>bin\x86\FastBuild_Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <NoStdLib>true</NoStdLib>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="123music\Album.cs" />
     <Compile Include="123music\API.cs" />
@@ -151,42 +107,39 @@
     <Compile Include="123music\Endpoints.cs" />
     <Compile Include="123music\ResponseMessage.cs" />
     <Compile Include="123music\Track.cs" />
-    <Compile Include="BaiduLyricsAPI\ApiMethods.cs" />
+    <Compile Include="BaiduLyricsAPI\BaiduClient.cs" />
     <Compile Include="BaiduLyricsAPI\Endpoints.cs" />
-    <Compile Include="BaiduLyricsAPI\Group\Album_info.cs" />
-    <Compile Include="BaiduLyricsAPI\Group\Artist_Info.cs" />
-    <Compile Include="BaiduLyricsAPI\Group\Song_Info.cs" />
+    <Compile Include="BaiduLyricsAPI\Group\AlbumInfoList.cs" />
+    <Compile Include="BaiduLyricsAPI\Group\ArtistInfoList.cs" />
+    <Compile Include="BaiduLyricsAPI\Group\SongInfoList.cs" />
     <Compile Include="BaiduLyricsAPI\Helpers.cs" />
-    <Compile Include="BaiduLyricsAPI\Interface\AbstractMusic.cs" />
-    <Compile Include="BaiduLyricsAPI\Interface\IQueryResult.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\Album.cs" />
     <Compile Include="BaiduLyricsAPI\Models\AlbumInfo.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\AlbumSug.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\Artist.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\ArtistInfo.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\ArtistSug.cs" />
     <Compile Include="BaiduLyricsAPI\Models\BitRate.cs" />
     <Compile Include="BaiduLyricsAPI\Models\LRC.cs" />
     <Compile Include="BaiduLyricsAPI\Models\QueryResult.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\Song.cs" />
+    <Compile Include="BaiduLyricsAPI\Models\ArtistInfo.cs" />
     <Compile Include="BaiduLyricsAPI\Models\SongInfo.cs" />
-    <Compile Include="BaiduLyricsAPI\Models\SongSug.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\AlbumDetailResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\ArtistAlbumListResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\ArtistSongListResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\BaseResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\GetAlbumInfoResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\MusicSearchSuggestionsResponse.cs" />
     <Compile Include="BaiduLyricsAPI\Response\QueryMergeResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\SongInfoResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\SongListResponse.cs" />
-    <Compile Include="BaiduLyricsAPI\Response\SongPlayResponse.cs" />
     <Compile Include="BaiduLyricsAPI\Util\Util.cs" />
+    <Compile Include="ILyricAPI.cs" />
     <Compile Include="Lastfm\BreadScrobbler.cs" />
     <Compile Include="Lastfm\Lastfm.cs" />
+    <Compile Include="LyricsFetch\LyricsFetcher.cs" />
+    <Compile Include="NeteaseLyricsAPI\NeteaseHttpHelper.cs" />
+    <Compile Include="NeteaseLyricsAPI\Endpoints.cs" />
+    <Compile Include="NeteaseLyricsAPI\NeteaseClient.cs" />
+    <Compile Include="NeteaseLyricsAPI\Models\Lrc.cs" />
+    <Compile Include="NeteaseLyricsAPI\Models\Song.cs" />
+    <Compile Include="NeteaseLyricsAPI\Responses\LyricsResponse.cs" />
+    <Compile Include="NeteaseLyricsAPI\Responses\SearchResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TagParser\BreadParser.cs" />
-    <Compile Include="TagParser\YetiLevenshtein.cs" />
+    <Compile Include="XiamiLyricsAPI\Endpoints.cs" />
+    <Compile Include="XiamiLyricsAPI\Models\Data.cs" />
+    <Compile Include="XiamiLyricsAPI\Models\Song.cs" />
+    <Compile Include="XiamiLyricsAPI\Models\TrackList.cs" />
+    <Compile Include="XiamiLyricsAPI\Response\SearchResponse.cs" />
+    <Compile Include="XiamiLyricsAPI\Response\SongDetailResponse.cs" />
+    <Compile Include="XiamiLyricsAPI\XiamiClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -197,6 +150,10 @@
       <Project>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</Project>
       <Name>BreadPlayer.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
+      <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
+      <Name>BreadPlayer.Parsers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PCLStorage">
@@ -206,6 +163,7 @@
       <HintPath>..\libs\PCLStorage.Abstractions.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

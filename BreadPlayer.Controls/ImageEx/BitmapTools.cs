@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreadPlayer.Controls.Extensions;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +7,6 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Web.Http;
-using BreadPlayer.Controls.Extensions;
 
 namespace BreadPlayer.Controls
 {
@@ -67,7 +67,7 @@ namespace BreadPlayer.Controls
             using (var stream = await sourceFile.OpenReadAsync())
             {
                 var decoder = await BitmapDecoder.CreateAsync(stream);
-                
+
                 maxWidth = Math.Min(maxWidth, (int)decoder.OrientedPixelWidth);
                 maxHeight = Math.Min(maxHeight, (int)decoder.OrientedPixelHeight);
                 var imageSize = new Size(decoder.OrientedPixelWidth, decoder.OrientedPixelHeight);
@@ -82,28 +82,7 @@ namespace BreadPlayer.Controls
                 await ResizeImageAsync(decoder, targetFile, finalSize);
             }
         }
-
-        public static async Task ResizeImageUniformToFillAsync(StorageFile sourceFile, StorageFile targetFile, int maxWidth = Int32.MaxValue, int maxHeight = Int32.MaxValue)
-        {
-            using (var stream = await sourceFile.OpenReadAsync())
-            {
-                var decoder = await BitmapDecoder.CreateAsync(stream);
-
-                maxWidth = Math.Min(maxWidth, (int)decoder.OrientedPixelWidth);
-                maxHeight = Math.Min(maxHeight, (int)decoder.OrientedPixelHeight);
-                var imageSize = new Size(decoder.OrientedPixelWidth, decoder.OrientedPixelHeight);
-                var finalSize = imageSize.ToUniformToFill(new Size(maxWidth, maxHeight));
-
-                if (finalSize.Width == decoder.OrientedPixelWidth && finalSize.Height == decoder.OrientedPixelHeight)
-                {
-                    await sourceFile.CopyAndReplaceAsync(targetFile);
-                    return;
-                }
-
-                await ResizeImageAsync(decoder, targetFile, finalSize);
-            }
-        }
-
+        
         private static async Task ResizeImageAsync(BitmapDecoder decoder, StorageFile targetFile, Size finalSize)
         {
             await _semaphore.WaitAsync();
@@ -127,6 +106,6 @@ namespace BreadPlayer.Controls
             {
                 _semaphore.Release();
             }
-        }        
+        }
     }
 }

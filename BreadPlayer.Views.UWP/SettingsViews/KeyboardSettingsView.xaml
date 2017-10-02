@@ -1,0 +1,124 @@
+﻿<Page
+    x:Class="BreadPlayer.SettingsViews.KeyboardSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer.SettingsViews"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid HorizontalAlignment="Left" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                x:Uid="commandsHeader"
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="150"
+                FontSize="22"
+                FontWeight="Bold"
+                Text=""
+                TextAlignment="Center" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="0,10,0,0"
+                FontSize="15"
+                FontWeight="Bold"
+                TextAlignment="Center">
+                <Run x:Uid="basicCommandsHeader" />
+                <LineBreak />
+                <Run
+                    x:Uid="basicCommandsInfo"
+                    FontSize="12"
+                    FontWeight="Normal"
+                    Text="" />
+            </TextBlock>
+            <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                <TextBlock x:Uid="playPauseCmd" Text="" />
+                <TextBlock x:Uid="nextCmd" />
+                <TextBlock x:Uid="prevCmd" />
+                <TextBlock x:Uid="seekForwardCmd" />
+                <TextBlock x:Uid="seekBackwardCmd" />
+                <TextBlock x:Uid="volUpCmd" />
+                <TextBlock x:Uid="volDownCmd" />
+                <TextBlock x:Uid="showEQCmd" />
+                <TextBlock x:Uid="repeatCmd" />
+                <TextBlock x:Uid="shuffleCmd" />
+                <TextBlock x:Uid="openFileCmd" />
+                <TextBlock x:Uid="muteCmd" />
+                <TextBlock x:Uid="showPropsCmd" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="20,10,0,0">
+                <TextBlock Text="Ctrl + P" />
+                <TextBlock>Ctrl + (. or &gt;)</TextBlock>
+                <TextBlock>Ctrl + (, or &lt;)</TextBlock>
+                <TextBlock>Ctrl + Right Arrow</TextBlock>
+                <TextBlock>Ctrl + Left Arrow</TextBlock>
+                <TextBlock>Ctrl + (=)</TextBlock>
+                <TextBlock>Ctrl + (-)</TextBlock>
+                <TextBlock>Ctrl + E</TextBlock>
+                <TextBlock>Ctrl + R</TextBlock>
+                <TextBlock>Ctrl + S</TextBlock>
+                <TextBlock>Ctrl + O</TextBlock>
+                <TextBlock>Ctrl + M</TextBlock>
+                <TextBlock>Ctrl + I</TextBlock>
+            </StackPanel>
+            <TextBlock
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Margin="0,20,0,0"
+                FontSize="15"
+                FontWeight="Bold"
+                TextAlignment="Center">
+                <Run x:Uid="toastLibraryCmdsHeader" />
+                <LineBreak />
+                <Run
+                    x:Uid="toastLibraryCmdsInfoText"
+                    FontSize="12"
+                    FontWeight="Normal"
+                    Text="" />
+            </TextBlock>
+            <StackPanel Grid.Row="4" Margin="0,10,0,0">
+                <TextBlock x:Uid="playSongCmd" />
+                <TextBlock x:Uid="deleteSongCmd" />
+                <!--<TextBlock>Add to queue</TextBlock>-->
+                <TextBlock x:Uid="addToFavCmd" />
+                <TextBlock x:Uid="showTagsCmd" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="20,10,0,0">
+                <TextBlock>Enter</TextBlock>
+                <TextBlock>Delete</TextBlock>
+                <!--<TextBlock>Ctrl + Q</TextBlock>-->
+                <TextBlock>Ctrl + F</TextBlock>
+                <TextBlock>Ctrl + T</TextBlock>
+            </StackPanel>
+            <TextBlock
+                x:Uid="keyBindingsHeader"
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="150"
+                Margin="20,0,0,0"
+                FontSize="22"
+                FontWeight="Bold"
+                Text=""
+                TextAlignment="Center" />
+        </Grid>
+    </ScrollViewer>
+</Page>

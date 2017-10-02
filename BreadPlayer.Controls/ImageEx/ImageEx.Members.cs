@@ -8,6 +8,7 @@ namespace BreadPlayer.Controls
     partial class ImageEx
     {
         #region Stretch
+
         public Stretch Stretch
         {
             get => (Stretch)GetValue(StretchProperty);
@@ -15,9 +16,11 @@ namespace BreadPlayer.Controls
         }
 
         public static readonly DependencyProperty StretchProperty = DependencyProperty.Register("Stretch", typeof(Stretch), typeof(ImageEx), new PropertyMetadata(Stretch.Uniform));
-        #endregion
+
+        #endregion Stretch
 
         #region NineGrid
+
         public Thickness NineGrid
         {
             get => (Thickness)GetValue(NineGridProperty);
@@ -25,7 +28,9 @@ namespace BreadPlayer.Controls
         }
 
         public static readonly DependencyProperty NineGridProperty = DependencyProperty.Register("NineGrid", typeof(Thickness), typeof(ImageEx), new PropertyMetadata(null));
-        #endregion        
+        #endregion NineGrid
+
+
 
         public ProgressRing Progress => Content as ProgressRing;
 

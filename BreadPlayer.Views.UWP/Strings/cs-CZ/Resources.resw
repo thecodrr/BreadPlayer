@@ -454,7 +454,7 @@
     <value>Kliknutím vstopíte na náš Tweeter.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.5.0-beta</value>
+    <value>v2.6.2-beta</value>
     <comment>Představujeme aktuální verzi přehrávače</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
@@ -580,7 +580,7 @@
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>Zvýšit hlasitost</value>
   </data>
-  <data name="contributeCodeBtn.Content" xml:space="preserve">
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>Pomoc s programováním</value>
     <comment>!!!NEW!!!</comment>
   </data>
@@ -588,11 +588,11 @@
     <value>Přispět</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="helpTranslateBtn.Content" xml:space="preserve">
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
     <value>Pomoz s překladem</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="testForUsBtn.Content" xml:space="preserve">
+  <data name="testForUsTxt.Text" xml:space="preserve">
     <value>Staň se beta testerem</value>
     <comment>!!!NEW!!!</comment>
   </data>

@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
+using Windows.UI.Xaml.Controls;
 
 namespace SplitViewMenu
 {
@@ -8,14 +8,19 @@ namespace SplitViewMenu
         public string Tooltip { get; set; }
         public string SymbolAsChar { get; set; }
         private ICommand _shortcutCommand;
+
         public ICommand ShortcutCommand
         {
-            get => _shortcutCommand; 
+            get => _shortcutCommand;
             set => Set(ref _shortcutCommand, value);
         }
+
         public object ShortcutCommandParameter { get; set; }
         private MenuFlyout _shortcutFlyout;
-        public MenuFlyout ShortcutFlyout { get => _shortcutFlyout; set => Set(ref _shortcutFlyout, value);
+
+        public MenuFlyout ShortcutFlyout
+        {
+            get => _shortcutFlyout; set => Set(ref _shortcutFlyout, value);
         }
     }
 }

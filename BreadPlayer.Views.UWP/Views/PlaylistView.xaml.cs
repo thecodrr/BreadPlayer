@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,13 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.ViewModels;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Extensions;
-using BreadPlayer.ViewModels;
-using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,6 +32,7 @@ namespace BreadPlayer
     {
         private double _maxFontSize;
         private double _minFontSize;
+
         public PlaylistView()
         {
             InitializeComponent();
@@ -50,6 +48,7 @@ namespace BreadPlayer
         }
 
         private PlaylistViewModel _playlistVm;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _playlistVm = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
@@ -57,46 +56,14 @@ namespace BreadPlayer
             DataContext = _playlistVm;
             base.OnNavigatedTo(e);
         }
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            _playlistVm.Songs.Clear();
+            Window.Current.SizeChanged -= Current_SizeChanged;
             _playlistVm.Reset();
             _playlistVm = null;
-            GC.Collect();
+            fileBox.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
-        private void fileBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            fileBox.FindChildOfType<ScrollViewer>().ViewChanging += PlaylistView_ViewChanging;
-        }
-     
-        private void PlaylistView_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-            if (e.NextView.VerticalOffset < 15)// > (sender as ScrollViewer).VerticalOffset)
-            {
-                if(art.Height == 264)
-                {
-                   art.ZoomAnimate(264, 354, "Height");
-                }
-                if (headerText.FontSize < _maxFontSize)
-                {
-                    headerText.FontSize = headerText.FontSize + 2;
-                    headerDesc.FontSize++;
-                }
-            }
-            else
-            {
-                if (art.Height == 354)
-                {
-                    art.ZoomAnimate(354, 264, "Height");
-                }
-                if (headerText.FontSize > _minFontSize)
-                {
-                    headerText.FontSize = headerText.FontSize - 2;
-                    headerDesc.FontSize--;
-                }
-            }
-        }
-        
     }
 }

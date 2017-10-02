@@ -3,7 +3,7 @@ pull_requests:
   do_not_increment_build_number: true
 os: Visual Studio 2017
 configuration:
-- Release
+- FastBuild_Release
 platform: x86
 before_build:
 - cmd: nuget restore BreadPlayer.NoTests.sln
@@ -11,7 +11,35 @@ build:
   project: BreadPlayer.NoTests.sln
   parallel: true
   verbosity: minimal
+environment:
+  UseTemporarySignCert: True
+after_build:
+- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.0.0_FastBuild_Release_Test\*
 artifacts:
-- path: '**/*.appxbundle'
-  name: AppxBundle for BreadPlayer
+- path: BreadPlayer.zip
+  name: BreadPlayer App Package
+  type: Auto
+
+- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.0.0_x64_FastBuild_Release.appx
+  name: BreadPlayer x64 APPX Package
+  type: Auto
+
+- path: BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.0.0_x86_FastBuild_Release.appx
+  name: BreadPlayer X86 APPX Package
+  type: Auto
+  
+- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.0.0_ARM_FastBuild_Release.appx
+  name: BreadPlayer ARM APPX Package
+  type: Auto
+
+- path: '**\*.cer'
+  name: BreadPlayer Certificate
+  type: Auto
+
+- path: '**\*.appxbundle'
+  name: BreadPlayer AppXBundle
+  type: Auto
+  
+- path: BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.0.0_FastBuild_Release_Test\Dependencies
+  name: BreadPlayer Dependencies
   type: Auto

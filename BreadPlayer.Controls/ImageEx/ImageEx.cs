@@ -44,6 +44,7 @@ namespace BreadPlayer.Controls
         }
 
         #region NormalizeSize
+
         private static Size NormalizeSize(Size size)
         {
             double width = size.Width;
@@ -60,6 +61,7 @@ namespace BreadPlayer.Controls
 
             return new Size(width, height);
         }
-        #endregion
+
+        #endregion NormalizeSize
     }
 }

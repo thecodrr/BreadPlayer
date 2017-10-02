@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Core.Common;
 using LiteDB;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
@@ -13,6 +12,7 @@ namespace BreadPlayer.Database
         private static string DbPath { get; set; }
         private static LiteDatabase _db;
         public static bool IsDisposed { get; set; }
+
         public static LiteDatabase GetDatabase(string dbPath)
         {
             if (_db == null || DbPath != dbPath)
@@ -23,6 +23,7 @@ namespace BreadPlayer.Database
             }
             return _db;
         }
+
         public static void DisposeDatabaseEngine()
         {
             _db.Dispose();
@@ -30,10 +31,12 @@ namespace BreadPlayer.Database
             IsDisposed = true;
         }
     }
+
     public class DocumentStoreDatabaseService : IDatabaseService
     {
-        LiteDatabase DB { get; set; }
-        LiteCollection<IDbRecord> currentCollection;
+        private LiteDatabase DB { get; set; }
+        private LiteCollection<IDbRecord> currentCollection;
+
         public DocumentStoreDatabaseService(string dbPath, string collectionName)
         {
             CreateDb(dbPath.ToLower() + ".db");
@@ -46,6 +49,7 @@ namespace BreadPlayer.Database
         {
             DB = StaticDocumentDatabase.GetDatabase(dbPath);
         }
+
         public void ChangeTable(string tableName, string textTableName)
         {
             currentCollection = DB.GetCollection<IDbRecord>(tableName);
@@ -72,10 +76,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                var dbRecord = currentCollection.FindOne(t => t.TextSearchKey.Contains(query));
-                if (dbRecord != null)
-                   return (T)dbRecord;
-                return default(T);
+                return (T)currentCollection.FindOne(t => t.TextSearchKey.Contains(query.ToLower()));
             });
         }
 
@@ -91,9 +92,16 @@ namespace BreadPlayer.Database
             }).ConfigureAwait(false);
         }
 
-        public Task<IEnumerable<T>> GetRecords<T>(long fromId, long toId)
+        public Task<IEnumerable<T>> GetRangeOfRecords<T>(int index, int limit)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                var records = currentCollection.Find(Query.All(), index, limit);
+                if (records.Any())
+                    return records.Cast<T>();
+                else
+                    return null;
+            });
         }
 
         public int GetRecordsCount()
@@ -103,7 +111,7 @@ namespace BreadPlayer.Database
 
         public Task InsertRecord(IDbRecord record)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
                 record.Id = Guid.NewGuid().GetHashCode();
                 currentCollection.Insert(record);
@@ -134,11 +142,11 @@ namespace BreadPlayer.Database
             });
         }
 
-        public async Task<IEnumerable<T>> QueryRecords<T>(string term)
+        public async Task<IEnumerable<T>> QueryRecords<T>(string term, int limit = int.MaxValue)
         {
             return await Task.Run(() =>
             {
-                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()));
+                var records = currentCollection.Find(t => t.TextSearchKey.Contains(term.ToLower()), 0, limit);
                 if (records.Any())
                     return records.Cast<T>();
                 else
@@ -148,7 +156,7 @@ namespace BreadPlayer.Database
 
         public Task RemoveRecord(IDbRecord record)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
                 currentCollection.Delete(record.Id);
             });
@@ -179,15 +187,40 @@ namespace BreadPlayer.Database
 
         public Task<bool> UpdateRecordAsync<T>(T record, long id)
         {
-            return Task.Run(() => 
+            return Task.Run(() =>
             {
-                return currentCollection.Update(id, (IDbRecord)record);
+                try
+                {
+                    return currentCollection.Update(id, (IDbRecord)record);
+                }
+                catch
+                {
+                    return false;
+                }
             });
         }
 
-        public void UpdateRecords<T>(IEnumerable<IDbRecord> records)
+        public Task UpdateRecords<T>(IEnumerable<IDbRecord> records)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                using (var trans = DB.BeginTrans())
+                {
+                    try
+                    {
+                        foreach (var record in records)
+                        {
+                            currentCollection.Update(record.Id, record);
+                        }
+
+                        trans.Commit();
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                    }
+                }
+            });
         }
 
         public void Dispose()

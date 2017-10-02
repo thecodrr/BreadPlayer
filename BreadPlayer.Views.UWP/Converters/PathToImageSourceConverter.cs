@@ -24,6 +24,7 @@ namespace BreadPlayer.Converters
 
             return image;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
@@ -47,6 +48,7 @@ namespace BreadPlayer.Converters
             }
             return value;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {

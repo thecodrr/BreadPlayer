@@ -10,16 +10,15 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastBuild_Release|x64'" />
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
 
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="3.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="LiteDB" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj" />
+    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DBreeze">

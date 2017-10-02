@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,15 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using BreadPlayer.Core.Common;
+using System;
 
 namespace BreadPlayer.Core.Events
 {
-
-	public class MediaStateChangedEventArgs : EventArgs
+    public class MediaStateChangedEventArgs : EventArgs
     {
         private PlayerState _newState;
+
         public MediaStateChangedEventArgs(PlayerState newState)
         {
             _newState = newState;

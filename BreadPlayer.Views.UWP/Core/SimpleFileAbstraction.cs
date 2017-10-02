@@ -14,9 +14,9 @@ namespace BreadPlayer.Core
 
         public string Name => _file.Name;
 
-        public Stream ReadStream => _file.OpenStreamForReadAsync().Result;
+        public Stream ReadStream => _file?.OpenStreamForReadAsync().Result;
 
-        public Stream WriteStream => _file.OpenStreamForWriteAsync().Result;
+        public Stream WriteStream => _file?.OpenStreamForWriteAsync().Result;
 
         public void CloseStream(Stream stream)
         {

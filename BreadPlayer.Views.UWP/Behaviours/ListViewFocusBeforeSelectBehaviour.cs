@@ -5,7 +5,7 @@ namespace BreadPlayer.Behaviours
 {
     public class ListViewService
     {
-       // private static SelectionChangedEventHandler selectionChangedEventHandler;
+        // private static SelectionChangedEventHandler selectionChangedEventHandler;
         public static readonly DependencyProperty FocusBeforeSelectProperty;
 
         static ListViewService()
@@ -42,6 +42,6 @@ namespace BreadPlayer.Behaviours
                 //listView.ScrollIntoView(listView.SelectedItem);
                 listView.Focus(FocusState.Programmatic);
             }
-        }        
+        }
     }
 }

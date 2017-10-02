@@ -15,6 +15,7 @@ namespace BreadPlayer.Controls
         private bool _isHttpSource;
 
         #region Source
+
         public object Source
         {
             get => GetValue(SourceProperty);
@@ -24,13 +25,15 @@ namespace BreadPlayer.Controls
         private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as ImageEx;
-            control.SetSource(e.NewValue);            
+            control.SetSource(e.NewValue);
         }
 
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register("Source", typeof(object), typeof(ImageEx), new PropertyMetadata(null, SourceChanged));
-        #endregion
+
+        #endregion Source
 
         #region SetSource
+
         private void SetSource(object source)
         {
             _isHttpSource = false;
@@ -42,15 +45,19 @@ namespace BreadPlayer.Controls
                 case string url:
                     SetSourceString(url);
                     break;
+
                 case BitmapImage bitmap:
                     SetImage(bitmap);
                     break;
+
                 case Uri uri:
                     SetSourceUri(uri);
                     break;
+
                 case ImageSource imageSource:
                     SetImage(imageSource);
                     break;
+
                 default:
                     ClearImage();
                     break;
@@ -113,7 +120,8 @@ namespace BreadPlayer.Controls
                 ClearImage();
             }
         }
-        #endregion
+
+        #endregion SetSource
 
         private async void RefreshSourceUri(Uri uri)
         {
@@ -201,6 +209,7 @@ namespace BreadPlayer.Controls
                 image.Source = _oldImageSource;
             }
         }
+
         private Storyboard StartAnimation(int from, int to, double seconds)
         {
             Storyboard animationBoard = new Storyboard();
@@ -218,6 +227,7 @@ namespace BreadPlayer.Controls
         }
 
         private ImageSource _oldImageSource;
+
         private void ClearProgress()
         {
             if (Progress != null)
@@ -238,6 +248,6 @@ namespace BreadPlayer.Controls
                 Image.Source = null;
                 Content = null;
             }
-        }      
+        }
     }
 }

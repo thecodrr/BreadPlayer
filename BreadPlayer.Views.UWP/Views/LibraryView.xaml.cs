@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,14 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Core.Models;
+using BreadPlayer.ViewModels;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Core.Models;
-using BreadPlayer.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -39,7 +39,15 @@ namespace BreadPlayer
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
         }
-        
+
+        public LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            LibVM.MusicLibraryLoaded += (s, a) => 
+            {
+                var pVm = App.Current.Resources["PlaylistsCollectionVM"];
+            };
+        }
         private void fileBox_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
@@ -51,16 +59,16 @@ namespace BreadPlayer
 
         private void semanticZoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
         {
-            // only interested in zoomed out->zoomed in transitions
             if (e.IsSourceZoomedInView)
             {
+                (this.FindName("alphabetList") as GridView).Visibility = Visibility.Visible;
                 return;
             }
             try
-            { 
+            {
                 // get the selected group
                 var selectedGroup = e.SourceItem.Item as string;
-                Grouping<string, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.StartsWith(selectedGroup));
+                Grouping<IGroupKey, Mediafile> myGroup = (DataContext as LibraryViewModel).TracksCollection.FirstOrDefault(g => g.Key.Key.StartsWith(selectedGroup));
                 backBtn.Visibility = Visibility.Collapsed;
                 e.DestinationItem = new SemanticZoomLocation
                 {
@@ -70,6 +78,23 @@ namespace BreadPlayer
             }
             catch { }
         }
-        
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as Pivot).SelectedIndex == 1)
+            {
+                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
+                BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");
+            }
+            else if ((sender as Pivot).SelectedIndex == 2)
+            {
+                (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Visible;
+                BakersFrame.Navigate(typeof(AlbumArtistView), "ArtistView");
+            }
+            else if ((sender as Pivot).SelectedIndex == 3)
+            {
+                (this.FindName("PlaylistsFrame") as Frame).Visibility = Visibility.Visible;
+            }
+        }
     }
 }

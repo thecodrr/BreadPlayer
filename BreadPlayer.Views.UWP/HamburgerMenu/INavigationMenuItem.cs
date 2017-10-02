@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -20,11 +20,11 @@ using System;
 
 namespace SplitViewMenu
 {
-	public interface INavigationMenuItem
+    public interface INavigationMenuItem
     {
         Type DestinationPage { get; }
         object Arguments { get; }
-        
+
         string Label { get; }
     }
 }

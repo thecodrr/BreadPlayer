@@ -1,0 +1,79 @@
+﻿<Page
+    x:Class="BreadPlayer.SettingsViews.PersonlizationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel
+            Margin="10,0,0,0"
+            DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}"
+            RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
+                x:Uid="appearenceHeader"
+                FontSize="22"
+                FontWeight="Bold"
+                Text="" />
+            <TextBlock Margin="0,10,0,0" VerticalAlignment="Center">
+                <Run x:Uid="themeText" Text="" />
+                <LineBreak />
+                <Run
+                    x:Uid="themeHelpText"
+                    FontSize="11"
+                    Foreground="Gray"
+                    Text="" />
+            </TextBlock>
+            <ToggleSwitch
+                x:Name="themeChange"
+                x:Uid="themeChangeToggleSwitch"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                IsOn="{Binding IsThemeDark, Mode=TwoWay}"
+                OffContent=""
+                OnContent="" />
+
+            <CheckBox
+                x:Uid="enableBlurCheckBox"
+                Margin="0,0,0,0"
+                Content=""
+                IsChecked="{Binding EnableBlur, Mode=TwoWay}" />
+            <TextBlock
+                x:Uid="enableBlurHelpText"
+                FontSize="11"
+                Foreground="Gray"
+                Text=""
+                TextWrapping="Wrap" />
+            <CheckBox
+                x:Uid="changeAccentCheckBox"
+                Margin="0,5,0,0"
+                Content=""
+                IsChecked="{Binding ChangeAccentByAlbumArt, Mode=TwoWay}" />
+            <TextBlock
+                x:Uid="changeAccentHelpText"
+                FontSize="11"
+                Foreground="Gray"
+                Text=""
+                TextWrapping="Wrap" />
+
+            <ComboBox Margin="0,5,0,0">
+                <ComboBox.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="Background blur overlay color:" />
+                            <LineBreak />
+                            <Run
+                                FontSize="11"
+                                Foreground="Gray"
+                                Text="This is the overlay color of album art on the player background." />
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.HeaderTemplate>
+                <x:String>Accent color</x:String>
+                <x:String>Theme color</x:String>
+                <x:String>Album art color</x:String>
+            </ComboBox>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

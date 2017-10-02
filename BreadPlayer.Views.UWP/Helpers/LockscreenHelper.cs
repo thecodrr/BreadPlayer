@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BreadPlayer.Common;
+using BreadPlayer.Core.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
@@ -9,19 +11,18 @@ using Windows.Storage.Streams;
 using Windows.System.UserProfile;
 using Windows.UI.Core;
 using Windows.UI.Popups;
-using BreadPlayer.Common;
-using BreadPlayer.Core.Models;
 
 namespace BreadPlayer.Helpers
 {
     public class LockscreenHelper
     {
         public static StorageFile DefaultImage { get; set; }
+
         public static async Task<bool> SaveCurrentLockscreenImage()
         {
-            if (RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", "") != "")
+            if (SettingsHelper.GetLocalSetting<string>("DefaultImagePath", "") != "")
             {
-                DefaultImage = await StorageFile.GetFileFromPathAsync(RoamingSettingsHelper.GetSetting<string>("DefaultImagePath", ""));
+                DefaultImage = await StorageFile.GetFileFromPathAsync(SettingsHelper.GetLocalSetting<string>("DefaultImagePath", ""));
                 return true;
             }
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
@@ -47,7 +48,7 @@ namespace BreadPlayer.Helpers
                             if (image != null)
                             {
                                 DefaultImage = await image.CopyAsync(ApplicationData.Current.LocalFolder, "lockscreen.jpg", NameCollisionOption.ReplaceExisting);
-                                RoamingSettingsHelper.SaveSetting("DefaultImagePath", DefaultImage.Path);
+                                SettingsHelper.SaveLocalSetting("DefaultImagePath", DefaultImage.Path);
                                 success = true;
                             }
                         }
@@ -72,7 +73,8 @@ namespace BreadPlayer.Helpers
                 return true;
             }
             return false;
-        }        
+        }
+
         public static async Task ChangeLockscreenImage(Mediafile mediaFile)
         {
             if (!string.IsNullOrEmpty(mediaFile.AttachedPicture))
@@ -83,9 +85,10 @@ namespace BreadPlayer.Helpers
             }
             else
             {
-               await ResetLockscreenImage();
+                await ResetLockscreenImage();
             }
         }
+
         public static async Task ResetLockscreenImage()
         {
             if (DefaultImage != null)

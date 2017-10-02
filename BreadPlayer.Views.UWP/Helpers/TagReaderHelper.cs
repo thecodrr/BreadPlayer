@@ -4,16 +4,25 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using Windows.UI;
 
 namespace BreadPlayer.Helpers
 {
     public class TagReaderHelper
     {
+        public static string[] GetExtraPropertiesNames()
+        {
+            return new string[] {
+                "System.DRM.IsProtected"
+            };
+        }
+
         /// <summary>
         /// Create mediafile from StorageFile.
         /// </summary>
@@ -29,7 +38,15 @@ namespace BreadPlayer.Helpers
                     StorageApplicationPermissions.FutureAccessList.Add(file);
                 }
 
-                var properties = await file.Properties.GetMusicPropertiesAsync();                
+                var properties = await file.Properties.GetMusicPropertiesAsync();
+                var extraProperties = await file.Properties.RetrievePropertiesAsync(GetExtraPropertiesNames());
+                if (extraProperties.TryGetValue("System.DRM.IsProtected", out object drm))
+                {
+                    if ((bool)drm)
+                    {
+                        throw new InvalidDataException("File is DRM Protected.");
+                    }
+                }
                 var mediafile = new Mediafile()
                 {
                     Path = file.Path,
@@ -39,9 +56,9 @@ namespace BreadPlayer.Helpers
                     LeadArtist = properties.Artist.GetStringForNullOrEmptyProperty("Unknown Artist"),
                     Genre = string.Join(",", properties.Genre),
                     Year = properties.Year.ToString(),
-                    TrackNumber = properties.TrackNumber.ToString(),
+                    TrackNumber = (int)properties.TrackNumber,
                     Length = new DoubleToTimeConverter().Convert(properties.Duration.TotalSeconds, typeof(double), null, "").ToString(),
-                    AddedDate = DateTime.Now.ToString()
+                    AddedDate = DateTime.Now
                 };
 
                 var albumartFolder = ApplicationData.Current.LocalFolder;
@@ -53,15 +70,19 @@ namespace BreadPlayer.Helpers
                 }
                 return mediafile;
             }
+            catch (InvalidDataException)
+            {
+                return null;
+            }
             catch (Exception ex)
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
                 return null;
             }
         }
 
         /// <summary>
-        /// Asynchronously saves all the album arts in the library. 
+        /// Asynchronously saves all the album arts in the library.
         /// </summary>
         /// <param name="Data">ID3 tag of the song to get album art data from.</param>
         public static async Task<bool> SaveAlbumArtsAsync(StorageFile file, Mediafile mediafile)
@@ -74,36 +95,45 @@ namespace BreadPlayer.Helpers
 
             try
             {
-                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 300, ThumbnailOptions.UseCurrentScale))
+                using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
-                    if (thumbnail == null)
+                    if (thumbnail == null && SharedLogic.Instance.VerifyFileExists(file.Path, 150))
                     {
-                        return false;
-                    }
-
-                    switch (thumbnail.Type)
-                    {
-                        case ThumbnailType.Image:
-                            var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
-                            IBuffer buf;
-                            Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer(1024);
-                            using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                        using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
+                        {
+                            if (tagFile.Tag.Pictures.Length >= 1)
                             {
-                                while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.None)).Length > 0)
+                                var image = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                                using (FileStream stream = new FileStream(image.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
                                 {
-                                    await albumstream.WriteAsync(buf);
+                                    await stream.WriteAsync(tagFile.Tag.Pictures[0].Data.Data, 0, tagFile.Tag.Pictures[0].Data.Data.Length);
                                 }
-
                                 return true;
                             }
-                        default:
-                            break;
+                        }
+                    }
+                    else
+                    {
+                        var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
+                        IBuffer buf;
+                        Windows.Storage.Streams.Buffer inputBuffer = new Windows.Storage.Streams.Buffer((uint)thumbnail.Size / 2);
+                        using (IRandomAccessStream albumstream = await albumart.OpenAsync(FileAccessMode.ReadWrite))
+                        {
+                            while ((buf = await thumbnail.ReadAsync(inputBuffer, inputBuffer.Capacity, InputStreamOptions.ReadAhead)).Length > 0)
+                            {
+                                await albumstream.WriteAsync(buf);
+                            }
+
+                            return true;
+                        }
                     }
                 }
             }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
             catch (Exception ex)
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
             {
-                await SharedLogic.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
+                //await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
 
             return false;
@@ -133,6 +163,33 @@ namespace BreadPlayer.Helpers
                 return (true, Path.GetFileNameWithoutExtension(GetAlbumArtPath(file)));
             }
             return (false, Path.GetFileNameWithoutExtension(GetAlbumArtPath(file)));
+        }
+
+        public static async Task<(string artistArtPath, Color dominantColor)> CacheArtistArt(string url, Artist artist)
+        {
+            var artistArtPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, @"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg");
+            Color color = Colors.Transparent;
+            if (!File.Exists(artistArtPath))
+            {
+                var artistArt = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"ArtistArts\" + (artist.Name).ToLower().ToSha1() + ".jpg", CreationCollisionOption.ReplaceExisting);
+
+                using (HttpClient client = new HttpClient())
+                {
+                    var response = await client.GetAsync(url).ConfigureAwait(false);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        byte[] buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false); // Download file
+                        using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
+                        {
+                            await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                        }
+                        color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
+                        return (artistArt.Path, color);
+                    }
+                }
+            }
+            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
+            return (artistArtPath, color);
         }
     }
 }

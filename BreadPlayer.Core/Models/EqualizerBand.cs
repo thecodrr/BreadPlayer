@@ -15,9 +15,11 @@
             }
             return num.ToString("#0");
         }
+
         public string CenterTitle => FormatNumber(Center) + "Hz";
 
         private float _center;
+
         public float Center
         {
             get => _center;
@@ -25,6 +27,7 @@
         }
 
         private float _gain;
+
         public float Gain
         {
             get => _gain;

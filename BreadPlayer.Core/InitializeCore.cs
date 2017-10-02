@@ -7,6 +7,7 @@ namespace BreadPlayer.Core
     {
         public static bool IsMobile { get; set; }
         private static INotificationManager _notificationManager;
+
         public static INotificationManager NotificationManager
         {
             get => _notificationManager;
@@ -14,6 +15,7 @@ namespace BreadPlayer.Core
         }
 
         private static IEqualizerSettingsHelper _equalizerSettingsHelper;
+
         public static IEqualizerSettingsHelper EqualizerSettingsHelper
         {
             get => _equalizerSettingsHelper;
@@ -21,6 +23,7 @@ namespace BreadPlayer.Core
         }
 
         private static IDispatcher _dispatcher;
+
         public static IDispatcher Dispatcher
         {
             get => _dispatcher;

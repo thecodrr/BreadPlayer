@@ -1,4 +1,5 @@
-﻿using Windows.ApplicationModel.Resources;
+﻿using BreadPlayer.Models;
+using BreadPlayer.Services;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -15,8 +16,11 @@ namespace BreadPlayer
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionFirst"));
-            uiTextType_ComboBox.Items.Add(ResourceLoader.GetForCurrentView().GetString("fontCapsOptionSecond"));
+        }
+
+        private void OnSettingClicked(object sender, ItemClickEventArgs e)
+        {
+            NavigationService.Instance.Frame.Navigate((e.ClickedItem as SettingGroup).Page, e.ClickedItem);
         }
     }
 }

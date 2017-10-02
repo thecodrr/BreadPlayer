@@ -12,19 +12,29 @@ namespace BreadPlayer.Database
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<Mediafile>> GetAllMediafiles();
-        Task<IEnumerable<Mediafile>> Query(string term);
+
+        Task<IEnumerable<Mediafile>> Query(string term, int limit = int.MaxValue);
+
         ///<summary>
         ///Update a customer in the data store
         ///</summary>
         ///<param name="?"></param>
         Task<bool> UpdateMediafile(Mediafile data);
+
         void UpdateMediafiles<T>(IEnumerable<Mediafile> data);
+
         void AddMediafile(Mediafile data);
+
         Task AddMediafiles(IEnumerable<Mediafile> data);
+
         void RemoveFolder(string folderPath);
+
         Task RemoveMediafile(Mediafile data);
-        Task<Mediafile> GetMediafileAsync(string query);
+
+        Mediafile GetMediafile(long id);
+
         bool CheckExists(long id);
+
         int SongCount { get; }
     }
 }

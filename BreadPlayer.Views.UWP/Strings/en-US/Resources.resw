@@ -356,17 +356,11 @@
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>Properties</value>
   </data>
-  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
-    <value>Recently Added</value>
+  <data name="musicHistoryMenuItem.Label" xml:space="preserve">
+    <value>Toast History</value>
   </data>
-  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your recently added toasts.</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
-    <value>Recently Eaten</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigate to your recently played songs.</value>
+  <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigate to your toast history.</value>
   </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click to go to our reddit profile.</value>
@@ -438,17 +432,17 @@
     <value>Theme:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
-    <value>Toast Collection</value>
+  <data name="yourMusicMenuItem.Label" xml:space="preserve">
+    <value>Toasts Collection</value>
   </data>
-  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
+  <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
     <value>Navigate to your toast collection.</value>
   </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click to go to our twitter profile.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.5.0-beta</value>
+    <value>v2.6.2-beta</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
@@ -574,23 +568,29 @@
   <data name="volUpCmd.Text" xml:space="preserve">
     <value>Volume Up</value>
   </data>
-  <data name="contributeCodeBtn.Content" xml:space="preserve">
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>Contribute Code</value>
-    <comment>!!!NEW!!!</comment>
   </data>
   <data name="contributePivot.Header" xml:space="preserve">
     <value>Contribute</value>
+  </data>
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
+    <value>Help us Translate</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="helpTranslateBtn.Content" xml:space="preserve">
-    <value>Help Us Translate</value>
+  <data name="testForUsTxt.Text" xml:space="preserve">
+    <value>Help us debug</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="testForUsBtn.Content" xml:space="preserve">
-    <value>Become A Beta Tester</value>
-    <comment>!!!NEW!!!</comment>
+  <data name="donatePatreonTxt.Text" xml:space="preserve">
+    <value>Donate via Patreon</value>
   </data>
-  <data name="donatePatreonBtn.Content" xml:space="preserve">
-    <value>Donate Via Patreon</value>
+  <data name="crossfadeSwitch.Header" xml:space="preserve">
+    <value>Crossfade when changing songs</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="generalHeader.Text" xml:space="preserve">
+    <value>General</value>
+    <comment>**NEW**</comment>
   </data>
 </root>

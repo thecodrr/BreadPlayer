@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	BreadPlayer. A music player made for Windows 10 store.
     Copyright (C) 2016  theweavrs (Abdullah Atta)
 
@@ -16,6 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Common;
+using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
+using BreadPlayer.Helpers;
+using BreadPlayer.Messengers;
+using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,9 +35,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using BreadPlayer.Common;
-using BreadPlayer.Helpers;
-using BreadPlayer.Messengers;
 
 namespace BreadPlayer
 {
@@ -45,7 +48,7 @@ namespace BreadPlayer
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
-        {           
+        {
             InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
@@ -71,7 +74,7 @@ namespace BreadPlayer
 
         private void InitializeTheme()
         {
-            var value = RoamingSettingsHelper.GetSetting<string>("SelectedTheme", "Light");
+            var value = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light");
             var theme = Enum.Parse(typeof(ApplicationTheme), value);
             RequestedTheme = (ApplicationTheme)theme;
         }
@@ -84,7 +87,7 @@ namespace BreadPlayer
         }
 
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {           
+        {
             var deferral = e.GetDeferral();
             BLogger.Logger.Info("App has entered background...");
             CoreWindowLogic.SaveSettings();
@@ -93,6 +96,7 @@ namespace BreadPlayer
         }
 
         private Stopwatch _sessionWatch;
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -111,6 +115,10 @@ namespace BreadPlayer
             if (e.PreviousExecutionState != ApplicationExecutionState.Running)
             {
                 LoadFrame(e, e.Arguments);
+            }
+            else if (e.PreviousExecutionState == ApplicationExecutionState.Running)
+            {
+                CoreWindowLogic.LoadAppWithArguments(e.Arguments);
             }
         }
 
@@ -143,20 +151,22 @@ namespace BreadPlayer
             await Task.Delay(500);
             deferral.Complete();
         }
-
-
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+        }
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(args.Files[0]);
             if (args.PreviousExecutionState == ApplicationExecutionState.Running)
             {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files[0], 0.0, true, 50.0 });
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, new List<object> { args.Files, 0.0, true, 50.0 });
                 BLogger.Logger.Info("File was loaded successfully while app was running...");
                 // ShellVM.Play(args.Files[0]);
             }
             else
             {
-                LoadFrame(args, args.Files[0]);
+                LoadFrame(args, args.Files);
                 BLogger.Logger.Info("Player opened successfully with file as argument...");
             }
         }
@@ -165,9 +175,11 @@ namespace BreadPlayer
         {
             try
             {
-               // BLogger.Logger.Info("Loading frame started...");
+                // BLogger.Logger.Info("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
 
+                var vm = Current.Resources["AlbumArtistVM"];
+                
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {
@@ -179,7 +191,7 @@ namespace BreadPlayer
                     //    //CoreWindowLogic.ShowMessage("HellO!!!!!", "we are here");
                     //    //TODO: Load state from previously suspended application
                     //}
-                    
+
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     // Place the frame in the current Window
                     Window.Current.Content = rootFrame;
@@ -194,7 +206,7 @@ namespace BreadPlayer
                     BLogger.Logger.Info("Navigating to Shell...");
                     rootFrame.Navigate(typeof(Shell), arguments);
                 }
-                
+
                 var view = ApplicationView.GetForCurrentView();
                 view.SetPreferredMinSize(new Size(360, 100));
                 if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
@@ -202,6 +214,11 @@ namespace BreadPlayer
                     BLogger.Logger.Info("Trying to hide status bar.");
                     await StatusBar.GetForCurrentView().HideAsync();
                     BLogger.Logger.Info("Status bar hidden.");
+                }
+                else
+                {
+                    CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                    coreTitleBar.ExtendViewIntoTitleBar = true;
                 }
                 if (args.Kind != ActivationKind.File)
                 {

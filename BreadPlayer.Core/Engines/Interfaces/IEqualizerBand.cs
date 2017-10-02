@@ -10,6 +10,7 @@
         /// Gain: Frequency Gain. -30 to +30. Default = 0
         /// </summary>
         float Gain { get; set; }
+
         bool IsActive { get; set; }
     }
 }

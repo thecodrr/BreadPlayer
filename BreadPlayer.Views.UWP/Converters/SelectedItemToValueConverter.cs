@@ -16,6 +16,7 @@ namespace BreadPlayer.Converters
             //}
             return value;
         }
+
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
