@@ -304,7 +304,33 @@ namespace BreadPlayer.ViewModels
                 await LibraryService.UpdateMediafile(mediafile);
             }
         }
-
+        /// <summary>
+        /// Relocates song to a new location. We only update _id, Path and Length of the song.
+        /// </summary>
+        /// <param name="para">The Mediafile to relocate</param>
+        private async void RelocateSong(object para)
+        {
+            if (para is Mediafile mediafile)
+            {
+                FileOpenPicker openPicker = new FileOpenPicker
+                {
+                    CommitButtonText = "Relocate Song"
+                };
+                foreach (var extenstion in new string[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" })
+                {
+                    openPicker.FileTypeFilter.Add(extenstion);
+                }
+                var newFile = await openPicker.PickSingleFileAsync();
+                if (newFile != null)
+                {
+                    var newMediafile = await TagReaderHelper.CreateMediafile(newFile);
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Length = newMediafile.Length;
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Id = newMediafile.Id;
+                    TracksCollection.Elements.GetSongByPath(mediafile.Path).Path = newMediafile.Path;
+                    await LibraryService.UpdateMediafile(TracksCollection.Elements.First(t => t.Id == mediafile.Id));
+                }
+            }
+        }
         private void ChangeSelectionMode()
         {
             IsMultiSelectModeEnabled = !IsMultiSelectModeEnabled;
@@ -374,7 +400,6 @@ namespace BreadPlayer.ViewModels
             if (mediaFile != null)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mediaFile, true, _isPlayingFromPlaylist });
-                //mediaFile.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
             }
         }
 
@@ -693,7 +718,7 @@ namespace BreadPlayer.ViewModels
                 {
                     ViewSource.Source = _source;
                 }
-
+                
                 ViewSource.IsSourceGrouped = _grouped;
             });
         }
