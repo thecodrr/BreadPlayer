@@ -503,7 +503,6 @@
                         <Setter Target="alphabetList.Margin" Value="0,60,0,0" />
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="lonelyTxt.FontSize" Value="44" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

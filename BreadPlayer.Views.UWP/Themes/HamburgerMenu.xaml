@@ -287,23 +287,7 @@
                         <StackPanel Orientation="Horizontal" x:Name="myback" Background="Transparent">
                             <Border x:Name="border" Opacity="0" Width="2" CornerRadius="2" Margin="0,0,3,0" VerticalAlignment="Stretch" Background="{StaticResource ThemeBackground}" />
                             <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
-                        </StackPanel>
-                        <Grid.Resources>
-                            <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                <!--<MenuFlyoutItem Text="Add to" />-->
-                                <MenuFlyoutItem Text="Delete Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                <MenuFlyoutItem Text="Rename Playlist" DataContext="{Binding Source={StaticResource PlaylistVM}}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                            </MenuFlyout>
-                        </Grid.Resources>
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:EventTriggerBehavior EventName="RightTapped">
-                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist" />
-                            </Core:EventTriggerBehavior>
-                            <Core:EventTriggerBehavior EventName="Holding">
-                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist" />
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
+                        </StackPanel>                        
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -23,12 +23,14 @@
                 <MenuFlyoutItem
                     x:Uid="deletePlaylistMenuItem"
                     Command="{Binding DeletePlaylistCommand}"
-                    DataContext="{Binding Source={StaticResource PlaylistVM}}"
+                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
+                    CommandParameter="{Binding Source={StaticResource PlaylistVM}, Path=Playlist}"
                     Text="Delete Playlist" />
                 <MenuFlyoutItem
                     x:Uid="renamePlaylistMenuItem"
                     Command="{Binding RenamePlaylistCommand}"
-                    DataContext="{Binding Source={StaticResource PlaylistVM}}"
+                    CommandParameter="{Binding Source={StaticResource PlaylistVM}, Path=Playlist}"
+                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
                     Text="Rename Playlist" />
                 <MenuFlyoutItem
                     x:Uid="enableMultiSelectMenuItem"
