@@ -364,7 +364,7 @@ namespace SplitViewMenu
                 var listView = GetParentListViewFromItem(_lastItem);
                 var item = listView.Items.First(t => (t as INavigationMenuItem).Label == _lastItem.Label);
                 var index = listView.IndexFromContainer((ListViewItem)listView.ContainerFromItem(item));
-                listView.SelectedIndex = index;
+                listView.SetValue(ListView.SelectedIndexProperty, index);
             }
         }
 

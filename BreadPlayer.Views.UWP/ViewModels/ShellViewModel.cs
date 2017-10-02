@@ -48,6 +48,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Services.Store.Engagement;
 
 namespace BreadPlayer.ViewModels
 {
@@ -283,6 +284,13 @@ namespace BreadPlayer.ViewModels
         #region Implementation
         private async void WatchAnAd()
         {
+            if (!InternetConnectivityHelper.IsInternetConnected)
+            {
+                NotifyAndDeselect("Seems you don't have an internet connection. Thanks for the support, though!");
+                return;
+            }
+            StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+
             InterstitialAd ad = new InterstitialAd();
             string myAppId = "9nblggh42srx";
             string myAdUnitId = "11701839";
@@ -290,23 +298,31 @@ namespace BreadPlayer.ViewModels
             {
                 if (InterstitialAdState.Ready == ad.State)
                 {
+                    logger.Log("WatchAnAdStarted");
                     ad.Show();
                 }
             };
             ad.Completed += async (r, a) => 
             {
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Thanks!");
+                logger.Log("WatchAnAdCompleted");
+                NotifyAndDeselect("Thanks!");
             };
             ad.Cancelled += async (r, a) => 
             {
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("No worries!");
+                NotifyAndDeselect("No worries!");
             };
             ad.ErrorOccurred += async (r, a) => 
             {
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Aw! We will try later. Thanks.");
+                NotifyAndDeselect("Aw! An error occured. We will try later. Thanks.");
             };
             ad.RequestAd(AdType.Video, myAppId, myAdUnitId);
-            await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Please continue. The ad will be shown when ready.");
+            NotifyAndDeselect("Please continue. The ad will be shown shortly.");
+
+            async void NotifyAndDeselect(string message)
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
+                SplitViewMenu.SplitViewMenu.SelectPrevious();
+            }
         }
         private void Mute()
         {
