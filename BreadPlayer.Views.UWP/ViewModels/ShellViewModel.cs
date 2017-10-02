@@ -548,7 +548,7 @@ namespace BreadPlayer.ViewModels
                 {
                     return PlaylistSongCollection;
                 }
-                else if (TracksCollection.Elements.IsPlayingCollection())
+                else if (TracksCollection?.Elements?.IsPlayingCollection() == true)
                 {
                     return TracksCollection.Elements;
                 }
