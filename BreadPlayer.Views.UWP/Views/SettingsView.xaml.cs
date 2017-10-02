@@ -1,5 +1,6 @@
 ﻿using BreadPlayer.Models;
 using BreadPlayer.Services;
+using Microsoft.Advertising.WinRT.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -12,10 +13,13 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class SettingsView : Page
     {
+        
         public SettingsView()
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+
+        
         }
 
         private void OnSettingClicked(object sender, ItemClickEventArgs e)

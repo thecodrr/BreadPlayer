@@ -60,6 +60,7 @@ namespace BreadPlayer
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
+            watchAdMenuItem.Command = _shellVm.WatchAnAdCommand;
             hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
         }
 

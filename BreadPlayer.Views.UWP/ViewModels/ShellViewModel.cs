@@ -30,6 +30,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.MomentoPattern;
 using BreadPlayer.Services;
 using BreadPlayer.Themes;
+using Microsoft.Advertising.WinRT.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -70,6 +71,7 @@ namespace BreadPlayer.ViewModels
         {
             ThemeManager.SetThemeColor(null);
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
+            WatchAnAdCommand = new DelegateCommand(WatchAnAd);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
             DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);
             SeekForwardCommand = new DelegateCommand(SeekForward);
@@ -275,11 +277,37 @@ namespace BreadPlayer.ViewModels
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) { _setRepeatCommand = new DelegateCommand(SetRepeat); } return _setRepeatCommand; } }
         public DelegateCommand ShowEqualizerCommand { get { if (_showEqualizerCommand == null) { _showEqualizerCommand = new DelegateCommand(ShowEqualizer); } return _showEqualizerCommand; } }
         public DelegateCommand NavigateToNowPlayingViewCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
-
+        public DelegateCommand WatchAnAdCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
         #endregion Definition
 
         #region Implementation
-
+        private async void WatchAnAd()
+        {
+            InterstitialAd ad = new InterstitialAd();
+            string myAppId = "9nblggh42srx";
+            string myAdUnitId = "11701839";
+            ad.AdReady += (r, a) => 
+            {
+                if (InterstitialAdState.Ready == ad.State)
+                {
+                    ad.Show();
+                }
+            };
+            ad.Completed += async (r, a) => 
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Thanks!");
+            };
+            ad.Cancelled += async (r, a) => 
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("No worries!");
+            };
+            ad.ErrorOccurred += async (r, a) => 
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Aw! We will try later. Thanks.");
+            };
+            ad.RequestAd(AdType.Video, myAppId, myAdUnitId);
+            await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Please continue. The ad will be shown when ready.");
+        }
         private void Mute()
         {
             SharedLogic.Instance.Player.IsVolumeMuted = SharedLogic.Instance.Player.IsVolumeMuted ? false : true;

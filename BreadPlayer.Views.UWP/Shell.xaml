@@ -123,6 +123,14 @@
                 </controls:SplitViewMenu.TopNavigationItems>
                 <controls:SplitViewMenu.BottomNavigationItems>
                     <controls:SimpleNavMenuItem
+                        x:Name="watchAdMenuItem"
+                        x:Uid="watchAnAdMenuItem"
+                        DestinationPage="local:LibraryView"
+                        FontGlyph="&#x004d;"
+                        Label="Help Me By Watching An Ad"
+                        Symbol="Accept"
+                        Tooltip="Watch an ad and help me make money to support BreadPlayer." />
+                    <controls:SimpleNavMenuItem
                         x:Uid="settingsMenuItem"
                         DestinationPage="local:SettingsView"
                         FontGlyph="&#x0046;"
