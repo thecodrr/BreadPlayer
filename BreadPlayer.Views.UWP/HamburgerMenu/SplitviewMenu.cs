@@ -71,7 +71,7 @@ namespace SplitViewMenu
           DependencyProperty.Register("PlaylistsItems", typeof(List<INavigationMenuItem>),
               typeof(SplitViewMenu),
               new PropertyMetadata(new List<INavigationMenuItem>(), OnPlaylistsItemsPropertyChanged));
-
+                
         private Button _backButton;
         private static NavMenuListView _navTopMenuListView;
         private static NavMenuListView _navBottomMenuListView;
@@ -181,9 +181,9 @@ namespace SplitViewMenu
             _navBottomMenuListView = GetTemplateChild("NavBottomMenuList") as NavMenuListView;
             //_playlistsMenuListView = GetTemplateChild("PlaylistsMenuList") as NavMenuListView;
             _backButton = GetTemplateChild("BackButton") as Button;
-            _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
+            _headerText = GetTemplateChild("headerText") as TextBlock;
             await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
            
             if (_navTopMenuListView != null)
