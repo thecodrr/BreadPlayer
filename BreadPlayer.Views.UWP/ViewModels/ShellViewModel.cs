@@ -34,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -495,7 +496,7 @@ namespace BreadPlayer.ViewModels
         private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
         {
             //get current group (the group in which current song is playing).
-            Grouping<string, Mediafile> currentGroup = TracksCollection.GetCurrentlyPlayingGroup();
+            Grouping<IGroupKey, Mediafile> currentGroup = TracksCollection.GetCurrentlyPlayingGroup();
 
             //get the index of the song playing in the currentGroup (with reference to the currentGroup)
             int currentSongIndex = currentGroup.GetPlayingSongIndexInGroup();
@@ -510,7 +511,7 @@ namespace BreadPlayer.ViewModels
             int nextGroupIndex = prev ? TracksCollection.IndexOf(currentGroup)  - 1 : TracksCollection.IndexOf(currentGroup) + 1;
             
             //get next/prev group.
-            Grouping<string, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
+            Grouping<IGroupKey, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
 
             //get nextSong index depending on if the group is new or old. 
             int toPlaySongIndex = nextGroup.Equals(currentGroup) ? nextSongIndex : 0;
@@ -521,7 +522,7 @@ namespace BreadPlayer.ViewModels
         {
             if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
             {
-                PreviousSong = Player.CurrentlyPlayingFile;
+                PreviousSong = SharedLogic.Instance.Player.CurrentlyPlayingFile;
             }
 
             Mediafile toPlayFile = UpcomingSong;
@@ -699,7 +700,7 @@ namespace BreadPlayer.ViewModels
                 if (TracksCollection.Elements.Contains(lastPlayingSong))
                 {
                     lastPlayingSong.PlayCount++;
-                    lastPlayingSong.LastPlayed = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+                    lastPlayingSong.LastPlayed = DateTime.Now;
                     await _service.UpdateMediafile(lastPlayingSong);
                 }
                 await ScrobblePlayingSong(lastPlayingSong);

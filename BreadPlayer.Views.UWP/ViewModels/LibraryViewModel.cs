@@ -421,33 +421,6 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        /// <summary>
-        /// Relocates song to a new location. We only update _id, Path and Length of the song.
-        /// </summary>
-        /// <param name="para">The Mediafile to relocate</param>
-        private async void RelocateSong(object para)
-        {
-            if (para is Mediafile mediafile)
-            {
-                FileOpenPicker openPicker = new FileOpenPicker
-                {
-                    CommitButtonText = "Relocate Song"
-                };
-                foreach (var extenstion in new string[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" })
-                {
-                    openPicker.FileTypeFilter.Add(extenstion);
-                }
-                var newFile = await openPicker.PickSingleFileAsync();
-                if (newFile != null)
-                {
-                    var newMediafile = await TagReaderHelper.CreateMediafile(newFile);
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Length = newMediafile.Length;
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Id = newMediafile.Id;
-                    TracksCollection.Elements.Single(t => t.Path == mediafile.Path).Path = newMediafile.Path;
-                    await LibraryService.UpdateMediafile(TracksCollection.Elements.Single(t => t.Id == mediafile.Id));
-                }
-            }
-        }
         private async void StopAfter(object path)
         {
             var mediaFile = await GetMediafileFromParameterAsync(path);

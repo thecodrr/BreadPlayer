@@ -5,7 +5,7 @@ using BreadPlayer.Database;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
-using BreadPlayer.Helper;
+using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Services;
@@ -155,7 +155,7 @@ namespace BreadPlayer.ViewModels
             {
                 songs.AddRange(await PlaylistService.GetTracksAsync(playlist.Id).ConfigureAwait(false));
             }
-            await new PlaylistHelper().SavePlaylist(playlist, songs);
+            await PlaylistHelper.SavePlaylist(playlist, songs);
         }
         private async void DeletePlaylist(object playlist)
         {

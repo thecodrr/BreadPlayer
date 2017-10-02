@@ -30,23 +30,23 @@ namespace BreadPlayer.Helpers
         {
             return collection?.Any(t => t.State == Core.Common.PlayerState.Playing) == true;
         }
-        public static Grouping<string, Mediafile> GetCurrentlyPlayingGroup(this GroupedObservableCollection<string, Mediafile> collection)
+        public static Grouping<IGroupKey, Mediafile> GetCurrentlyPlayingGroup(this GroupedObservableCollection<IGroupKey, Mediafile> collection)
         {
             return collection?.FirstOrDefault(t => t.Any(c => c.State == Core.Common.PlayerState.Playing));
         }
-        public static int GetCurrentlyPlayingGroupIndex(this GroupedObservableCollection<string, Mediafile> collection)
+        public static int GetCurrentlyPlayingGroupIndex(this GroupedObservableCollection<IGroupKey, Mediafile> collection)
         {
             return collection?.IndexOf(GetCurrentlyPlayingGroup(collection)) ?? 0;
         }
-        public static int GetPlayingSongIndexInGroup(this Grouping<string, Mediafile> group)
+        public static int GetPlayingSongIndexInGroup(this Grouping<IGroupKey, Mediafile> group)
         {
             return group?.IndexOf(group.FirstOrDefault(t => t.State == Core.Common.PlayerState.Playing)) ?? 0;
         }
-        public static Grouping<string, Mediafile> GetPreviousGroup(this GroupedObservableCollection<string, Mediafile> collection)
+        public static Grouping<IGroupKey, Mediafile> GetPreviousGroup(this GroupedObservableCollection<IGroupKey, Mediafile> collection)
         {
             return collection?.ElementAt(GetCurrentlyPlayingGroupIndex(collection) - 1);
         }
-        public static Grouping<string, Mediafile> GetNextGroup(this GroupedObservableCollection<string, Mediafile> collection)
+        public static Grouping<IGroupKey, Mediafile> GetNextGroup(this GroupedObservableCollection<IGroupKey, Mediafile> collection)
         {
             return collection?.ElementAt(GetCurrentlyPlayingGroupIndex(collection) + 1);
         }
