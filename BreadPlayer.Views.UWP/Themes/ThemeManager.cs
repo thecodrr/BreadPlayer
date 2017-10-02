@@ -42,12 +42,12 @@ namespace BreadPlayer.Themes
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                if (SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt == false || albumartPath == null)
+                if (SharedLogic.Instance.SettingsVm.PersonalizationVM.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
                     return;
                 }
-                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.Instance.SettingsVm.ChangeAccentByAlbumArt)
+                if (SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" && SharedLogic.Instance.SettingsVm.PersonalizationVM.ChangeAccentByAlbumArt)
                 {
                     try
                     {

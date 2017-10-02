@@ -8,7 +8,7 @@
     <ScrollViewer>
         <StackPanel
             Margin="10,0,0,0"
-            DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}"
+            DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.PersonalizationVM}"
             RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Uid="appearenceHeader"
@@ -57,21 +57,17 @@
                 Text=""
                 TextWrapping="Wrap" />
 
-            <ComboBox Margin="0,5,0,0">
-                <ComboBox.HeaderTemplate>
-                    <DataTemplate>
-                        <TextBlock>
-                            <Run Text="Background blur overlay color:" />
-                            <LineBreak />
-                            <Run
-                                FontSize="11"
-                                Foreground="Gray"
-                                Text="This is the overlay color of album art on the player background." />
-                        </TextBlock>
-                    </DataTemplate>
-                </ComboBox.HeaderTemplate>
-                <x:String>Accent color</x:String>
-                <x:String>Theme color</x:String>
+            <TextBlock>
+                <Run Text="Background blur overlay color:" />
+                <LineBreak />
+                <Run
+                    FontSize="11"
+                    Foreground="Gray"
+                    Text="This is the overlay color of album art on the player background." />
+            </TextBlock>
+            <ComboBox Margin="0,5,0,0" SelectedIndex="1"
+                      SelectedValue="{Binding Path=BackgroundOverlayColor, Mode=TwoWay}">
+                <x:String>Auto</x:String>
                 <x:String>Album art color</x:String>
             </ComboBox>
         </StackPanel>

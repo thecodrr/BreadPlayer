@@ -54,7 +54,7 @@ namespace BreadPlayer.ViewModels
 
         public AccountsViewModel AccountSettingsVM { get; set; }
         public AudioSettingsViewModel AudioSettingsVM { get; set; }
-
+        public PersonalizationViewModel PersonalizationVM { get; set; }
         private ThreadSafeObservableCollection<SettingGroup> settingsCollection;
 
         public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
@@ -62,19 +62,6 @@ namespace BreadPlayer.ViewModels
             get => settingsCollection;
             set => Set(ref settingsCollection, value);
         }
-
-        private bool _enableBlur;
-
-        public bool EnableBlur
-        {
-            get => _enableBlur;
-            set
-            {
-                Set(ref _enableBlur, value);
-                SettingsHelper.SaveLocalSetting("EnableBlur", value);
-            }
-        }
-
         private bool _preventScreenFromLocking;
 
         public bool PreventScreenFromLocking
@@ -104,35 +91,9 @@ namespace BreadPlayer.ViewModels
                 Set(ref _replaceLockscreenWithAlbumArt, value);
                 SettingsHelper.SaveLocalSetting("ReplaceLockscreenWithAlbumArt", value);
             }
-        }
-
-        private string _uiTextType;
-
-        public string UiTextType
-        {
-            get => _uiTextType;
-            set
-            {
-                Set(ref _uiTextType, value);
-                SettingsHelper.SaveRoamingSetting("UITextType", _uiTextType);
-            }
-        }
-
-        private bool _isThemeDark;
-
-        public bool IsThemeDark
-        {
-            get => _isThemeDark;
-            set
-            {
-                Set(ref _isThemeDark, value);
-                SettingsHelper.SaveLocalSetting("SelectedTheme", _isThemeDark ? "Light" : "Dark");
-                // SharedLogic.InitializeTheme();
-            }
-        }
+        }       
 
         private ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
-
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
         {
             get
@@ -148,58 +109,8 @@ namespace BreadPlayer.ViewModels
 
         public static GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
-
-        private string _timeClosed;
-
-        public string TimeClosed
-        {
-            get => _timeClosed;
-            set
-            {
-                Set(ref _timeClosed, value);
-                SettingsHelper.SaveLocalSetting("timeclosed", _timeClosed);
-            }
-        }
-
-        private string _timeOpened;
-
-        public string TimeOpened
-        {
-            get => _timeOpened;
-            set => Set(ref _timeOpened, value);
-        }
-
-        private List<StorageFile> _modifiedFiles = new List<StorageFile>();
-
-        public List<StorageFile> ModifiedFiles
-        {
-            get => _modifiedFiles;
-            set => Set(ref _modifiedFiles, value);
-        }
-
-        private bool _changeAccentByAlbumart;
-
-        public bool ChangeAccentByAlbumArt
-        {
-            get => _changeAccentByAlbumart;
-            set
-            {
-                Set(ref _changeAccentByAlbumart, value);
-                if (value == false)
-                {
-                    ThemeManager.SetThemeColor(null);
-                }
-                else
-                {
-                    ThemeManager.SetThemeColor("default");
-                }
-
-                SettingsHelper.SaveRoamingSetting("ChangeAccentByAlbumArt", _changeAccentByAlbumart);
-            }
-        }
-
         private LibraryService LibraryService { get; set; }
-
+        private StorageLibraryService StorageLibraryService { get; set; }
         #endregion Properties
 
         #region MessageHandling
@@ -223,7 +134,6 @@ namespace BreadPlayer.ViewModels
 
         #endregion MessageHandling
 
-        private StorageLibraryService StorageLibraryService { get; set; }
 
         #region Ctor
 
@@ -232,16 +142,11 @@ namespace BreadPlayer.ViewModels
             InitSettingsCollection();
             AccountSettingsVM = new AccountsViewModel();
             AudioSettingsVM = new AudioSettingsViewModel();
+            PersonalizationVM = new PersonalizationViewModel();
 
             LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
-            _changeAccentByAlbumart = SettingsHelper.GetRoamingSetting<bool>("ChangeAccentByAlbumArt", true);
-            _timeOpened = DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            _uiTextType = SettingsHelper.GetRoamingSetting<string>("UITextType", "Normal");
-            _isThemeDark = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
-            _enableBlur = SettingsHelper.GetLocalSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             _replaceLockscreenWithAlbumArt = SettingsHelper.GetLocalSetting<bool>("replaceLockscreenWithAlbumArt", false);
-            _timeOpened = DateTime.Now.ToString();
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
@@ -252,8 +157,7 @@ namespace BreadPlayer.ViewModels
         {
             SettingsCollection = new ThreadSafeObservableCollection<SettingGroup>()
             {
-                new SettingGroup("\uE771","Personlization","Lockscreen, font, theme", typeof(PersonlizationView)),
-                new SettingGroup("\uE8D6","Music Library","Folder import, playlists", typeof(MusicLibrarySettingsView)),
+                new SettingGroup("\uE771","Personlization","Background, font, theme", typeof(PersonlizationView)),
                 new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
                 new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
                 new SettingGroup("\uE770", "Core", "Reset, notifications, lock screen", typeof(CoreSettingsView)),

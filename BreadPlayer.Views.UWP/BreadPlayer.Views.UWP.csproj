@@ -217,7 +217,6 @@
     <Compile Include="Extensions\SortedObservableCollection.cs" />
     <Compile Include="Extensions\StorageExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\TextBlockExtensions.cs" />
     <Compile Include="Extensions\ThreadSafeObservableCollection.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -265,21 +264,19 @@
     <Compile Include="SettingsViews\KeyboardSettingsView.xaml.cs">
       <DependentUpon>KeyboardSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsViews\MusicLibrarySettingsView.xaml.cs">
-      <DependentUpon>MusicLibrarySettingsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SettingsViews\PersonlizationView.xaml.cs">
       <DependentUpon>PersonlizationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsViews\ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="SettingsViews\ViewModels\ContactViewModel.cs" />
+    <Compile Include="SettingsViews\ViewModels\PersonalizationViewModel.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />
     <Compile Include="StateTriggers\DeviceFamilyStateTrigger.cs" />
     <Compile Include="StateTriggers\ITriggerValue.cs" />
     <Compile Include="Themes\DataTemplates.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
-    <Compile Include="ViewModels\AccountsViewModel.cs" />
+    <Compile Include="SettingsViews\ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\MusicHistoryViewModel.cs" />
@@ -473,10 +470,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsViews\KeyboardSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SettingsViews\MusicLibrarySettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
