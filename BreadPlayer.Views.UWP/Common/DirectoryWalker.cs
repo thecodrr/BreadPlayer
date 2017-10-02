@@ -24,11 +24,11 @@ namespace BreadPlayer.Common
 {
     internal static class DirectoryWalker
     {
-        public static QueryOptions GetQueryOptions(string aqsQuery = null, bool useIndexer = true)
+        public static QueryOptions GetQueryOptions(string aqsQuery = null, bool useIndexer = true, FolderDepth folderDepth = FolderDepth.Deep)
         {
             QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
                 new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
-            options.FolderDepth = FolderDepth.Deep;
+            options.FolderDepth = folderDepth;
             options.IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);
             options.SetPropertyPrefetch(PropertyPrefetchOptions.MusicProperties, TagReaderHelper.GetExtraPropertiesNames());

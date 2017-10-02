@@ -1,13 +1,17 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Common;
+using BreadPlayer.Core.Models;
 using BreadPlayer.Helpers;
 using BreadPlayer.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.Storage.Search;
 
 namespace BreadPlayer.PlaylistBus
 {
@@ -17,10 +21,9 @@ namespace BreadPlayer.PlaylistBus
         {
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                List<Mediafile> playlistSongs = new List<Mediafile>();
+                List<string> playlistSongs = new List<string>();
                 string line;
                 int index = 0;
-                int failedFiles = 0;
                 bool ext = false;
                 while ((line = streamReader.ReadLine()) != null)
                 {
@@ -38,38 +41,23 @@ namespace BreadPlayer.PlaylistBus
                     }
                     else
                     {
-                        await Task.Run(async () =>
+                        await Task.Run(() =>
                         {
-                            try
+                            index++;
+                            FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
+                            string path = line;
+                            if (!File.Exists(line) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
                             {
-                                index++;
-                                FileInfo info = new FileInfo(file.Path);//get playlist file info to get directory path
-                                string path = line;
-                                if (!File.Exists(line) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
-                                {
-                                    path = info.DirectoryName + line; //add directory path to song path.
-                                }
-
-                                var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                                var token = StorageApplicationPermissions.FutureAccessList.Add(accessFile);
-
-                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(accessFile); //prepare Mediafile
-
-                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
-                                playlistSongs.Add(mp3File);
-                                StorageApplicationPermissions.FutureAccessList.Remove(token);
+                                path = info.DirectoryName + line; //add directory path to song path.
                             }
-                            catch
-                            {
-                                failedFiles++;
-                            }
-                        });
+                            playlistSongs.Add(path);
+                       });
                     }
                 }
-                return playlistSongs;
+                return await PlaylistHelper.GetSongsInAllFoldersAsync(playlistSongs).ConfigureAwait(false);
             }
         }
-
+        
         public async Task<bool> SavePlaylist(IEnumerable<Mediafile> songs, Stream fileStream)
         {
             using (StreamWriter writer = new StreamWriter(fileStream))

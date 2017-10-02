@@ -9,12 +9,15 @@ using System.IO;
 using BreadPlayer.Dispatcher;
 using Windows.Storage;
 using BreadPlayer.PlaylistBus;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Search;
+using BreadPlayer.Common;
 
-namespace BreadPlayer.Helper
+namespace BreadPlayer.Helpers
 {
     public class PlaylistHelper
     {
-        public async Task<bool> SavePlaylist(Playlist playlist, IEnumerable<Mediafile> songs)
+        public static async Task<bool> SavePlaylist(Playlist playlist, IEnumerable<Mediafile> songs)
         {
             bool saved = false;
             FileSavePicker picker = new FileSavePicker();
@@ -42,6 +45,63 @@ namespace BreadPlayer.Helper
                 }
             });
             return saved;
+        }
+
+        private static async Task<Dictionary<string, (List<string> songs, StorageFolder folder)>> GetFoldersFromSongsAsync(List<string> songPaths)
+        {
+            var folderPaths = songPaths.GroupBy(t => Path.GetDirectoryName(t));
+            Dictionary<string, (List<string> songs, StorageFolder folder)> folders = new Dictionary<string, (List<string> songs, StorageFolder folder)>();
+            foreach (var folderPath in folderPaths)
+            {
+                var folder = await StorageFolder.GetFolderFromPathAsync(folderPath.Key);
+                var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
+                folders.Add(token, (folderPath.ToList(), folder));
+            }
+            return folders;
+        }
+        public static async Task<IEnumerable<Mediafile>> GetSongsInAllFoldersAsync(List<string> songPaths)
+        {
+            List<Mediafile> songsList = new List<Mediafile>();
+            foreach (var folder in await GetFoldersFromSongsAsync(songPaths).ConfigureAwait(false))
+            {
+                songsList.AddRange(await GetSongsInFolderAsync(folder.Value.songs, folder.Value.folder).ConfigureAwait(false));
+                StorageApplicationPermissions.FutureAccessList.Remove(folder.Key);
+            }
+            return songsList;
+        }
+        private static async Task<IEnumerable<Mediafile>> GetSongsInFolderAsync(List<string> songs, StorageFolder folder)
+        {
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions(null, true, FolderDepth.Shallow));
+            uint index = 0, stepSize = 40;
+            IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
+            index += stepSize;
+            var tempList = new List<Mediafile>(songs.Count);
+
+            // Note that I'm paging in the files as described
+            while (files.Count != 0 && tempList.Count <= songs.Count)
+            {
+                var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
+                for (int i = 0; i < files.Count; i++)
+                {
+                    try
+                    {
+                        if (songs.Contains(files[i].Path))
+                        {
+                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
+                            mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                            tempList.Add(mp3File);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        BLogger.Logger.Error("Loading of a playlist song in folder failed.", ex);
+                    }
+                }
+                files = await fileTask.ConfigureAwait(false);
+                index += stepSize;
+            }
+
+            return tempList;
         }
     }
 }

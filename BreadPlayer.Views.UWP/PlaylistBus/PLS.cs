@@ -25,7 +25,7 @@ namespace BreadPlayer.PlaylistBus
                 //int count = 0;
                 string line; //a single line in stream
                 List<string> lines = new List<string>();
-                List<Mediafile> playlistSongs = new List<Mediafile>();
+                List<string> playlistSongs = new List<string>();
 
                 while ((line = reader.ReadLine()) != null)
                 {
@@ -77,7 +77,7 @@ namespace BreadPlayer.PlaylistBus
 
                 for (int i = 0; i < noe; i++)
                 {
-                    await Task.Run(async () =>
+                    await Task.Run(() =>
                     {
                         try
                         {
@@ -87,15 +87,8 @@ namespace BreadPlayer.PlaylistBus
                             if (!File.Exists(trackPath) && line[1] != ':') // if file doesn't exist then perhaps the path is relative
                             {
                                 path = info.DirectoryName + line; //add directory path to song path.
-                            }
-                            var accessFile = await StorageFile.GetFileFromPathAsync(path);
-                            var token = StorageApplicationPermissions.FutureAccessList.Add(accessFile);
-
-                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(accessFile); //prepare Mediafile
-                            await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, accessFile);
-
-                            playlistSongs.Add(mp3File);
-                            StorageApplicationPermissions.FutureAccessList.Remove(token);
+                            }                            
+                            playlistSongs.Add(path);
                         }
                         catch
                         {
@@ -103,7 +96,7 @@ namespace BreadPlayer.PlaylistBus
                         }
                     });
                 }
-                return playlistSongs;
+                return await PlaylistHelper.GetSongsInAllFoldersAsync(playlistSongs).ConfigureAwait(false);
             }
         }
 
