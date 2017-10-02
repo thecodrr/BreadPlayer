@@ -516,12 +516,13 @@ namespace BreadPlayer.ViewModels
                             {
                                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
                                 Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
-                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
-                                await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
-
-                                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
-
-                                tempList.Add(mp3File);
+                                if (mp3File != null)
+                                {
+                                    mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                    await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
+                                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
+                                    tempList.Add(mp3File);
+                                }
                             }
                             catch (Exception ex)
                             {

@@ -12,6 +12,7 @@ using BreadPlayer.PlaylistBus;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Search;
 using BreadPlayer.Common;
+using BreadPlayer.ViewModels;
 
 namespace BreadPlayer.Helpers
 {
@@ -88,8 +89,12 @@ namespace BreadPlayer.Helpers
                         if (songs.Contains(files[i].Path))
                         {
                             Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
-                            mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
-                            tempList.Add(mp3File);
+                            if (mp3File != null)
+                            {
+                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
+                                tempList.Add(mp3File);
+                            }
                         }
                     }
                     catch (Exception ex)
