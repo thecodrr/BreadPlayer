@@ -392,23 +392,6 @@
                             <Border x:Name="border" Opacity="0" Width="5" Height="20" Margin="0,0,5,0" CornerRadius="3" Background="{ThemeResource SystemControlBackgroundAccentBrush}" />
                             <ContentPresenter x:Name="Content"  Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
                         </StackPanel>
-                        <Grid.Resources>
-                            <MenuFlyout x:Name="contextMenu" x:Key="Flyout">
-                                <MenuFlyoutItem Text="Play" DataContext="{Binding Source={StaticResource LibVM}}" Command="{Binding PlayCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                <!--<MenuFlyoutItem Text="Add to" />-->
-                                <MenuFlyoutItem Text="Delete Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding DeletePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                <MenuFlyoutItem Text="Rename Playlist" DataContext="{StaticResource PlaylistVM}" Command="{Binding RenamePlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" />
-                                <MenuFlyoutSubItem Text="Export Playlist">
-                                    <MenuFlyoutItem Text="As M3U" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" DataContext="{StaticResource PlaylistVM}" Command="{Binding ExportPlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
-                                    <MenuFlyoutItem Text="As PLS" Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Arguments}" DataContext="{StaticResource PlaylistVM}" Command="{Binding ExportPlaylistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}" />
-                                </MenuFlyoutSubItem>
-                            </MenuFlyout>
-                        </Grid.Resources>
-                        <Interactivity:Interaction.Behaviors>
-                            <Core:EventTriggerBehavior EventName="RightTapped">
-                                <Behaviours:OpenMenuFlyoutAction Parameter="Playlist" />
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
