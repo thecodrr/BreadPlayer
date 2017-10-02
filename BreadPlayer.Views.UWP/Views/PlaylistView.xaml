@@ -23,14 +23,12 @@
                 <MenuFlyoutItem
                     x:Uid="deletePlaylistMenuItem"
                     Command="{Binding DeletePlaylistCommand}"
-                    CommandParameter="{Binding Source={StaticResource PlaylistVM}, Path=Playlist}"
-                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
+                    DataContext="{Binding Source={StaticResource PlaylistVM}}"
                     Text="Delete Playlist" />
                 <MenuFlyoutItem
                     x:Uid="renamePlaylistMenuItem"
                     Command="{Binding RenamePlaylistCommand}"
-                    CommandParameter="{Binding Source={StaticResource PlaylistVM}, Path=Playlist}"
-                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
+                    DataContext="{Binding Source={StaticResource PlaylistVM}}"
                     Text="Rename Playlist" />
                 <MenuFlyoutItem
                     x:Uid="enableMultiSelectMenuItem"
@@ -92,10 +90,9 @@
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWholeWords" />
                     </StackPanel>
-                    <Grid
-                        x:Name="btnGrid"
-                        Margin="35,0,45,10"
-                        VerticalAlignment="Bottom">
+                    <Grid x:Name="btnGrid"
+                          Margin="35,0,45,10"
+                          VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
