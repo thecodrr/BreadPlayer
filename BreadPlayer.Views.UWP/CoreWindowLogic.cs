@@ -78,6 +78,7 @@ namespace BreadPlayer
             {
                 if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null && !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.Path))
                 {
+                    SettingsHelper.SaveLocalSetting("NowPlayingPicture", SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture);
                     SettingsHelper.SaveLocalSetting("NowPlayingID", SharedLogic.Instance.Player.CurrentlyPlayingFile.Id);
                     SettingsHelper.SaveLocalSetting(PathKey, SharedLogic.Instance.Player.CurrentlyPlayingFile.Path);
                     SettingsHelper.SaveLocalSetting(PosKey, SharedLogic.Instance.Player.Position);

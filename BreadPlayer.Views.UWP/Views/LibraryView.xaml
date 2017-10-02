@@ -172,11 +172,6 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.Transitions>
-            <TransitionCollection>
-                <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
-            </TransitionCollection>
-        </Grid.Transitions>
         <Pivot
             x:Name="mainPivot"
             Grid.ColumnSpan="2"
@@ -203,7 +198,7 @@
                                 ItemTemplate="{StaticResource MediafileTemplate}"
                                 ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}"
                                 OddRowBackground="{ThemeResource EvenRowBackground}"
-                                Opacity="0"
+                                Opacity="1"
                                 ReorderMode="Enabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                                 SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -244,13 +239,11 @@
                                                         Margin="0,3,0,0"
                                                         Foreground="{ThemeResource TextBrush}"
                                                         Glyph="&#xE8B1;" />
-                                                    <TextBlock
-                                                        Margin="10,0,0,0"
-                                                        Foreground="{ThemeResource TextBrush}">
-                                                        <Run Text="Shuffle all"/>
-                                                        <Run Text="("/>
-                                                        <Run Text="{Binding Path=SongCount}"/>
-                                                        <Run Text=")"/>
+                                                    <TextBlock Margin="10,0,0,0" Foreground="{ThemeResource TextBrush}">
+                                                        <Run Text="Shuffle all" />
+                                                        <Run Text="(" />
+                                                        <Run Text="{Binding Path=SongCount}" />
+                                                        <Run Text=")" />
                                                     </TextBlock>
                                                 </StackPanel>
                                             </Button>
@@ -259,12 +252,26 @@
                                 </BPControls:AlternatingRowListView.Header>
                                 <BPControls:AlternatingRowListView.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <ItemsStackPanel Orientation="Vertical">
+                                        <ItemsStackPanel x:Name="libraryItemsPanel" Opacity="0" Orientation="Vertical">
                                             <ItemsStackPanel.ChildrenTransitions>
                                                 <TransitionCollection>
                                                     <EntranceThemeTransition FromHorizontalOffset="200" />
                                                 </TransitionCollection>
                                             </ItemsStackPanel.ChildrenTransitions>
+                                            <Interactivity:Interaction.Behaviors>
+                                                <Core:EventTriggerBehavior EventName="MusicLibraryLoaded" SourceObject="{StaticResource LibVM}">
+                                                    <Media:ControlStoryboardAction>
+                                                        <Media:ControlStoryboardAction.Storyboard>
+                                                            <Storyboard Storyboard.TargetName="libraryItemsPanel" Storyboard.TargetProperty="Opacity">
+                                                                <DoubleAnimation
+                                                                    FillBehavior="HoldEnd"
+                                                                    To="1"
+                                                                    Duration="0:0:0.8" />
+                                                            </Storyboard>
+                                                        </Media:ControlStoryboardAction.Storyboard>
+                                                    </Media:ControlStoryboardAction>
+                                                </Core:EventTriggerBehavior>
+                                            </Interactivity:Interaction.Behaviors>
                                         </ItemsStackPanel>
                                     </ItemsPanelTemplate>
                                 </BPControls:AlternatingRowListView.ItemsPanel>
@@ -305,18 +312,6 @@
                                     </Core:EventTriggerBehavior>
                                     <Core:EventTriggerBehavior EventName="Drop">
                                         <Core:CallMethodAction MethodName="DropFiles" TargetObject="{Binding Source={StaticResource LibVM}}" />
-                                    </Core:EventTriggerBehavior>
-                                    <Core:EventTriggerBehavior EventName="MusicLibraryLoaded" SourceObject="{StaticResource LibVM}">
-                                        <Media:ControlStoryboardAction>
-                                            <Media:ControlStoryboardAction.Storyboard>
-                                                <Storyboard Storyboard.TargetName="fileBox" Storyboard.TargetProperty="Opacity">
-                                                    <DoubleAnimation
-                                                        FillBehavior="HoldEnd"
-                                                        To="1"
-                                                        Duration="0:0:0.8" />
-                                                </Storyboard>
-                                            </Media:ControlStoryboardAction.Storyboard>
-                                        </Media:ControlStoryboardAction>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                                 <BPControls:AlternatingRowListView.GroupStyle>
@@ -477,32 +472,12 @@
                     </Core:EventTriggerBehavior.Actions>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
-        </Button>
-        <StackPanel
-            x:Name="lonelyTextPanel"
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}">
-            <TextBlock
-                x:Name="lonelyTxt"
-                x:Uid="lonelyTextBlock"
-                FontFamily="Segoe UI Light"
-                FontSize="72"
-                FontWeight="ExtraLight"
-                Foreground="{ThemeResource ThemeForeground}"
-                Text="Its lonely here :(" />
-            <Button
-                x:Uid="addSomeSongsBtn"
-                HorizontalAlignment="Center"
-                Background="Transparent"
-                Command="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.LoadCommand}"
-                Content="Add some songs"
-                FontSize="22"
-                Foreground="{ThemeResource ThemeForeground}"
-                Style="{StaticResource HyperlinkBtn}" />
-        </StackPanel>
+        </Button>        
+        <ProgressRing Width="30" 
+                      Height="30" 
+                      IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}"
+                      Grid.ColumnSpan="2"
+                      Foreground="{ThemeResource TextBrush}"/>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}" />

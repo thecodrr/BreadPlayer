@@ -22,6 +22,7 @@ using BreadPlayer.Core.Common;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
+using BreadPlayer.Themes;
 using Microsoft.Services.Store.Engagement;
 using System;
 using System.Collections.Generic;
@@ -180,7 +181,7 @@ namespace BreadPlayer
                 Frame rootFrame = Window.Current.Content as Frame;
 
                 var vm = Current.Resources["AlbumArtistVM"];
-                
+                ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {

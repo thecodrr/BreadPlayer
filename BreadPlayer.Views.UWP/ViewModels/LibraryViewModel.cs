@@ -200,7 +200,7 @@ namespace BreadPlayer.ViewModels
         /// <summary>
         /// Gets or Sets <see cref="Mediafile"/> for this ViewModel
         /// </summary>
-        private bool IsLibraryLoading
+        public bool IsLibraryLoading
         {
             get => _isLibraryLoading;
             set => Set(ref _isLibraryLoading, value);
@@ -397,7 +397,7 @@ namespace BreadPlayer.ViewModels
 
         private async void Init(object para)
         {
-            NavigationService.Instance.Frame.Navigated += Frame_Navigated;
+            IsLibraryLoading = true;
             if (ViewSource == null)
             {
                 ViewSource = ((Grid)para).Resources["Source"] as CollectionViewSource;
@@ -697,7 +697,9 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 // await SplitList(300).ConfigureAwait(false);
-                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles());
+                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false)).ConfigureAwait(false);
+
+                IsLibraryLoading = false;
             });
         }
 
@@ -888,30 +890,7 @@ namespace BreadPlayer.ViewModels
                     SelectedItems.Add(item);
                 }
             }
-        }
-
-        private async void Frame_Navigated(object sender, NavigationEventArgs e)
-        {
-            string param = (e.Parameter ?? string.Empty).ToString();    // e.Parameter can be null and throw exception
-
-            if (e.SourcePageType == typeof(LibraryView))
-            {
-                CurrentPage = param;
-                switch (param)
-                {
-                    default:
-                        await ChangeView("Music Collection", _libgrouped, TracksCollection.Elements);
-                        break;
-                }
-                await RefreshSourceAsync().ConfigureAwait(false);
-            }
-            else if (ViewSource.Source != null)
-            {
-                _source = ViewSource.Source;
-                _grouped = ViewSource.IsSourceGrouped;
-                ViewSource.Source = null;
-            }
-        }
+        }        
 
         private async void LibraryViewModel_MusicLibraryLoaded(object sender, RoutedEventArgs e)
         {

@@ -70,7 +70,6 @@ namespace BreadPlayer.ViewModels
 
         public ShellViewModel()
         {
-            ThemeManager.SetThemeColor(null);
             NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
             WatchAnAdCommand = new DelegateCommand(WatchAnAd);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
@@ -1017,6 +1016,7 @@ namespace BreadPlayer.ViewModels
 
             ThemeManager.SetThemeColor(SharedLogic.Instance.Player.CurrentlyPlayingFile?.AttachedPicture);
             CoreWindowLogic.UpdateSmtc();
+            CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateTile(mediaFile);
             if (SharedLogic.Instance.SettingsVm.ReplaceLockscreenWithAlbumArt)
             {
