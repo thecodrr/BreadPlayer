@@ -215,7 +215,6 @@
                         <Button
                             Margin="0,0,10,0"
                             Background="{x:Null}"
-                            BorderBrush="{ThemeResource AccentHoverBrush}"
                             Command="{Binding AddToPlaylistCommand}"
                             Foreground="{ThemeResource TextBrush}"
                             Style="{StaticResource HyperlinkBtn}">
@@ -227,7 +226,6 @@
                         <Button
                             VerticalContentAlignment="Center"
                             Background="{x:Null}"
-                            BorderBrush="{ThemeResource AccentHoverBrush}"
                             Command="{Binding ImportPlaylistCommand}"
                             Foreground="{ThemeResource TextBrush}"
                             Style="{StaticResource HyperlinkBtn}">

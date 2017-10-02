@@ -36,11 +36,11 @@ namespace BreadPlayer.Converters
                     break;
 
                 case int intValue:
-                    flag = (Int16)intValue <= 1;
+                    flag = (Int16)intValue < 1;
                     break;
 
                 case double doubleValue:
-                    flag = (Int16)doubleValue > 1;
+                    flag = (Int16)doubleValue > 0;
                     break;
 
                 case ImageSource imageSource:

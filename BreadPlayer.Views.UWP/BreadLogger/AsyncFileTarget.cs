@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using XLog;
@@ -33,8 +34,12 @@ namespace BreadPlayer.Targets
 
         private async void CreateFile(string filename)
         {
-            StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
-            _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+            var musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            if (musicLibrary?.Folders?.Count > 0 && musicLibrary?.SaveFolder != null)
+            {
+                StorageFolder storageFolder = await musicLibrary.SaveFolder.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
+                _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+            }
         }
 
         public async override void Write(string content)
