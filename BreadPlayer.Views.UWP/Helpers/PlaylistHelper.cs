@@ -92,7 +92,7 @@ namespace BreadPlayer.Helpers
                             if (mp3File != null)
                             {
                                 mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
-                                await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
+                                await LibraryHelper.SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
                                 tempList.Add(mp3File);
                             }
                         }

@@ -38,7 +38,9 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -77,7 +79,21 @@ namespace BreadPlayer.ViewModels
         #endregion Fields
 
         #region MessageHandling
+        private async void HandleImportFolder(Message message)
+        {
+            if (message.Payload is IEnumerable<Mediafile> songs)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
 
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
+                await TracksCollection.AddRange(songs).ConfigureAwait(false);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
+
+                IsLibraryLoading = false;
+                MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
+            }
+        }
         private void HandleDisposeMessage()
         {
             Reset();
@@ -92,22 +108,14 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private async void HandleUpdateSongCountMessage(Message message)
+        private void HandleUpdateSongCountMessage(Message message)
         {
             if (message.Payload is short || message.Payload is Int32)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 SongCount = Convert.ToInt32(message.Payload);
                 IsLibraryLoading = true;
-            }
-            else
-            {
-                IsLibraryLoading = false;
-                await BreadDispatcher.InvokeAsync(() =>
-                {
-                    MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
-                });
-            }
+            }            
         }
         #endregion MessageHandling
 
@@ -124,6 +132,7 @@ namespace BreadPlayer.ViewModels
             Messenger.Instance.Register(MessageTypes.MsgPlaySong, new Action<Message>(HandlePlaySongMessage));
             Messenger.Instance.Register(MessageTypes.MsgDispose, HandleDisposeMessage);
             Messenger.Instance.Register(MessageTypes.MsgUpdateSongCount, new Action<Message>(HandleUpdateSongCountMessage));
+            Messenger.Instance.Register(MessageTypes.MsgImportFolder, new Action<Message>(HandleImportFolder));
         }
 
         #endregion Contructor
@@ -231,6 +240,11 @@ namespace BreadPlayer.ViewModels
         private RelayCommand _refreshViewCommand;
         private RelayCommand _relocateSongCommand;
         private RelayCommand _stopAfterCommand;
+        private DelegateCommand _importFolderCommand;
+
+
+        public DelegateCommand ImportFolderCommand { get { if (_importFolderCommand == null) { _importFolderCommand = new DelegateCommand(ImportFolder); } return _importFolderCommand; } }
+
         public ICommand AddToFavoritesCommand
         {
             get
@@ -242,37 +256,25 @@ namespace BreadPlayer.ViewModels
             get
             { if (_changeSelectionModeCommand == null) { _changeSelectionModeCommand = new DelegateCommand(ChangeSelectionMode); } return _changeSelectionModeCommand; }
         }
-
-        /// <summary>
-        /// Gets Play command. This calls the <see cref="Delete(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
+        
         public ICommand DeleteCommand
         {
             get
             { if (_deleteCommand == null) { _deleteCommand = new RelayCommand(param => Delete(param)); } return _deleteCommand; }
         }
-
-        /// <summary>
-        /// Gets command for initialization. This calls the <see cref="Init(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
+        
         public ICommand InitCommand
         {
             get
             { if (_initCommand == null) { _initCommand = new RelayCommand(param => Init(param)); } return _initCommand; }
         }
 
-        /// <summary>
-        /// Gets Play command. This calls the <see cref="Play(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
         public ICommand PlayCommand
         {
             get
             { if (_playCommand == null) { _playCommand = new RelayCommand(param => Play(param)); } return _playCommand; }
         }
-
-        /// <summary>
-        /// Gets refresh command. This calls the <see cref="RefreshView(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
+        
         public ICommand RefreshViewCommand
         {
             get
@@ -284,9 +286,7 @@ namespace BreadPlayer.ViewModels
             get
             { if (_relocateSongCommand == null) { _relocateSongCommand = new RelayCommand(RelocateSong); } return _relocateSongCommand; }
         }
-        /// <summary>
-        /// Gets Stop command. This calls the <see cref="StopAfter(object)"/> method. <seealso cref="ICommand"/>
-        /// </summary>
+
         public ICommand StopAfterCommand
         {
             get
@@ -295,7 +295,35 @@ namespace BreadPlayer.ViewModels
         #endregion Definitions
 
         #region Implementations
-
+        /// <summary>
+        /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
+        /// </summary>
+        public async void ImportFolder()
+        {
+            try
+            {
+                FolderPicker picker = new FolderPicker();
+                picker.FileTypeFilter.Add(".mp3");
+                picker.FileTypeFilter.Add(".wav");
+                picker.FileTypeFilter.Add(".ogg");
+                picker.FileTypeFilter.Add(".flac");
+                picker.FileTypeFilter.Add(".m4a");
+                picker.FileTypeFilter.Add(".aif");
+                picker.FileTypeFilter.Add(".wma");
+                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+                picker.ViewMode = PickerViewMode.List;
+                picker.CommitButtonText = "Import folder";
+                StorageFolder folder = await picker.PickSingleFolderAsync();
+                if (folder != null)
+                {
+                    await LibraryHelper.ImportFolderIntoLibraryAsync(folder).ConfigureAwait(false);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
+            }
+        }
         private async void AddToFavorites(object para)
         {
             if (para is Mediafile mediafile)
@@ -445,8 +473,7 @@ namespace BreadPlayer.ViewModels
                 if (!item.IsOfType(StorageItemTypes.File) || Path.GetExtension(item.Path) != ".mp3")
                 {
                     if (!item.IsOfType(StorageItemTypes.Folder)) continue;
-                    await SharedLogic.Instance.SettingsVm.AddFolderToLibraryAsync(
-                         ((StorageFolder)item));
+                    await LibraryHelper.ImportFolderIntoLibraryAsync(((StorageFolder)item));
                 }
                 else
                 {
@@ -456,7 +483,7 @@ namespace BreadPlayer.ViewModels
                     try
                     {
                         var mp3File = await TagReaderHelper.CreateMediafile(item as StorageFile);
-                        await SettingsViewModel.SaveSingleFileAlbumArtAsync(mp3File).ConfigureAwait(false);
+                        await LibraryHelper.SaveSingleFileAlbumArtAsync(mp3File).ConfigureAwait(false);
                         SharedLogic.Instance.AddMediafile(mp3File);
                     }
                     catch (Exception ex)

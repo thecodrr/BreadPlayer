@@ -44,7 +44,7 @@ namespace BreadPlayer.Helpers
                 {
                     if ((bool)drm)
                     {
-                        throw new InvalidDataException("File is DRM Protected.");
+                        return null;
                     }
                 }
                 var mediafile = new Mediafile()
@@ -69,10 +69,6 @@ namespace BreadPlayer.Helpers
                     mediafile.AttachedPicture = albumartLocation;
                 }
                 return mediafile;
-            }
-            catch (InvalidDataException)
-            {
-                return null;
             }
             catch (Exception ex)
             {

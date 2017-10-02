@@ -270,13 +270,6 @@ namespace BreadPlayer.ViewModels
 
         #region Definitions
 
-        private DelegateCommand _loadCommand;
-
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
-        public DelegateCommand LoadCommand { get { if (_loadCommand == null) { _loadCommand = new DelegateCommand(Load); } return _loadCommand; } }
-        
         private DelegateCommand _resetCommand;
 
         /// <summary>
@@ -287,7 +280,6 @@ namespace BreadPlayer.ViewModels
         #endregion Definitions
 
         #region Implementation
-
         private async void Reset()
         {
             try
@@ -305,39 +297,6 @@ namespace BreadPlayer.ViewModels
                 BLogger.Logger.Error("Error occured while resetting the player.", ex);
             }
         }
-
-        
-        /// <summary>
-        /// Loads songs from a specified folder into the library. <seealso cref="LoadCommand"/>
-        /// </summary>
-        public async void Load()
-        {
-            try
-            {
-                FolderPicker picker = new FolderPicker();
-                picker.FileTypeFilter.Add(".mp3");
-                picker.FileTypeFilter.Add(".wav");
-                picker.FileTypeFilter.Add(".ogg");
-                picker.FileTypeFilter.Add(".flac");
-                picker.FileTypeFilter.Add(".m4a");
-                picker.FileTypeFilter.Add(".aif");
-                picker.FileTypeFilter.Add(".wma");
-                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-                picker.ViewMode = PickerViewMode.List;
-                picker.CommitButtonText = "Import";
-                StorageFolder folder = await picker.PickSingleFolderAsync();
-                if (folder != null)
-                {
-                    StorageApplicationPermissions.FutureAccessList.Add(folder);
-                    await LoadFolderAsync(folder);
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("You are not authorized to access this folder. Please choose another folder or try again.");
-            }
-        }
-
         #endregion Implementation
 
         #endregion Commands
@@ -430,7 +389,7 @@ namespace BreadPlayer.ViewModels
                     {
                         //here we load into 'mp3file' variable our processed Song. This is a long process, loading all the properties and the album art.
                         mp3File = await TagReaderHelper.CreateMediafile(file, false); //the core of the whole method.
-                        await SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
+                        await LibraryHelper.SaveSingleFileAlbumArtAsync(mp3File, file).ConfigureAwait(false);
                     });
                     SharedLogic.Instance.AddMediafile(mp3File, index);
                 }
@@ -447,7 +406,7 @@ namespace BreadPlayer.ViewModels
                 return;
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, (short)2);
             LibraryFoldersCollection.Add(folder);
-            await AddFolderToLibraryAsync(folder);
+            await LibraryHelper.ImportFolderIntoLibraryAsync(folder);
         }
 
         /// <summary>
@@ -466,143 +425,7 @@ namespace BreadPlayer.ViewModels
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message);
             }
         }
-
-        /// <summary>
-        /// Add folder to Library asynchronously.
-        /// </summary>
-        /// <param name="queryResult">The query result after querying in a specific folder.</param>
-        /// <returns></returns>
-        public async Task AddFolderToLibraryAsync(StorageFolder folder, bool useIndexer = true)
-        {
-            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions(null, useIndexer));
-            Stopwatch watch = Stopwatch.StartNew();
-            uint index = 0, stepSize = 20;
-            IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
-            index += stepSize;
-            //this is a temporary list to collect all the processed Mediafiles. We use List because it is fast. Faster than using ObservableCollection directly because of the events firing on every add.
-
-            int failedCount = 0;
-            var count = await queryResult.GetItemCountAsync();
-            if (count <= 0)
-            {
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("No songs found! Please try again.");
-                await BreadDispatcher.InvokeAsync(async () =>
-                {
-                    var dialog = new MessageDialog($"There were no songs in the {folder.DisplayName} folder. Do you want to try and search without using the indexer (the process might be a bit slow)?", "No songs were found!");
-                    dialog.Commands.Add(new UICommand("Yes", null, "yesCmd"));
-                    dialog.Commands.Add(new UICommand("No", null, "noCmd"));
-                    var result = await dialog.ShowAsync();
-                    if (result.Id.ToString() == "yesCmd")
-                    {
-                        await AddFolderToLibraryAsync(folder, false).ConfigureAwait(false);
-                    }
-                });
-                return;
-            }
-            var tempList = new List<Mediafile>((int)count);
-            short progress = 0;
-            await BreadDispatcher.InvokeAsync(async () =>
-            {
-                try
-                {
-                    // Note that I'm paging in the files as described
-                    while (files.Count != 0)
-                    {
-                        var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
-                        for (int i = 0; i < files.Count; i++)
-                        {
-                            progress++;
-                            try
-                            {
-                                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
-                                Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
-                                if (mp3File != null)
-                                {
-                                    mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
-                                    await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
-                                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
-                                    tempList.Add(mp3File);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                BLogger.Logger.Error("Loading of a song in folder failed.", ex);
-                                //we catch and report any exception without distrubing the 'foreach flow'.
-                                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + " || Occured on: " + files[i].Path);
-                                failedCount++;
-                            }
-                        }
-                        files = await fileTask;
-                        index += stepSize;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string message1 = ex.Message + "||" + ex.InnerException;
-                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message1);
-                }
-                watch.Stop();
-                BLogger.Logger.Info("Time to run: " + watch.ElapsedMilliseconds + " ms");
-                Debug.WriteLine("Time to run: " + watch.ElapsedMilliseconds + " ms");
-                var uniqueFiles = tempList.DistinctBy(f => f.OrginalFilename).ToList();
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, uniqueFiles.Count);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
-                await TracksCollection.AddRange(uniqueFiles).ConfigureAwait(false);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
-
-                await LibraryService.AddMediafiles(uniqueFiles);
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, "Done!");
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
-
-                string message = string.Format("Songs successfully imported! Total Songs: {0}; Failed: {1}; Loaded: {2}", count, failedCount, uniqueFiles.Count);
-
-                BLogger.Logger.Info(message);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
-                tempList.Clear();
-            });
-        }
-
         #endregion Load Methods
-
-        #region AlbumArt Methods
-
-        public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
-        {
-            if (mp3File == null || mp3File.Path == null) return;
-
-            try
-            {
-                if (file == null)
-                {
-                    file = await StorageFile.GetFileFromPathAsync(mp3File.Path);
-                }
-
-                var albumartFolder = ApplicationData.Current.LocalFolder;
-                var albumartLocation = albumartFolder.Path + @"\AlbumArts\" + (mp3File.Album + mp3File.LeadArtist).ToLower().ToSha1() + ".jpg";
-
-                if (!SharedLogic.Instance.VerifyFileExists(albumartLocation, 300))
-                {
-                    bool albumSaved = await TagReaderHelper.SaveAlbumArtsAsync(file, mp3File);
-                    mp3File.AttachedPicture = albumSaved ? albumartLocation : null;
-                }
-                file = null;
-            }
-            catch (Exception ex)
-            {
-                BLogger.Logger.Info("Failed to save albumart.", ex);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
-            }
-        }
-
-        private static async Task SaveMultipleAlbumArtsAsync(IEnumerable<Mediafile> files)
-        {
-            foreach (var file in files)
-            {
-                await SaveSingleFileAlbumArtAsync(file);
-            }
-        }
-
-        #endregion AlbumArt Methods
 
         #endregion Methods
 

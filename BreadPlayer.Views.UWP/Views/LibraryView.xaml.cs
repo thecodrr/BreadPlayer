@@ -24,7 +24,8 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
+using BreadPlayer.Extensions;
+using Windows.UI.Xaml.Media;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -38,6 +39,25 @@ namespace BreadPlayer
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
+            this.Loaded += LibraryView_Loaded;
+        }
+
+        private void LibraryView_Loaded(object sender, RoutedEventArgs e)
+        {
+            fileBox.GetScrollViewer().ViewChanged += LibraryView_ViewChanged;
+        }
+
+        private void LibraryView_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if((sender as ScrollViewer).VerticalOffset <= 0)
+            {
+                scrollHeaderPanel.Background = null;
+            }
+            else
+            {
+                if(scrollHeaderPanel.Background == null)
+                    scrollHeaderPanel.Background = App.Current.Resources["SystemControlBackgroundAccentBrush"] as SolidColorBrush;
+            }
         }
 
         public LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;

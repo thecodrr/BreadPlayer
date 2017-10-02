@@ -1,35 +1,56 @@
-﻿<Page x:Name="LibView"
+﻿<Page
     x:Class="BreadPlayer.LibraryView"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:Behaviours="using:BreadPlayer.Behaviours"
-      xmlns:BPControls="using:BreadPlayer.Controls"
-      xmlns:Converter="using:BreadPlayer.Converters"
-      xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
-      xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
-      xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
-      xmlns:blur="using:BreadPlayer.Effects"
-      xmlns:local="using:BreadPlayer"
-      mc:Ignorable="d" DataContext="{Binding Source={StaticResource LibVM}}">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:BPControls="using:BreadPlayer.Controls"
+    xmlns:Behaviours="using:BreadPlayer.Behaviours"
+    xmlns:Converter="using:BreadPlayer.Converters"
+    xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:blur="using:BreadPlayer.Effects"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BreadPlayer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    x:Name="LibView"
+    DataContext="{Binding Source={StaticResource LibVM}}"
+    mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <Converter:BoolToSelectionModeConverter x:Key="BoolToSelectionMode" />
 
-            <BPControls:GroupHeaderDataTemplateSelector x:Key="GroupHeaderTemplateSelector"
-                                                        CommonDataTemplate="{StaticResource CommonGroupHeaderTemplate}"
-                                                        ArtistDataTemplate="{StaticResource ArtistGroupHeaderTemplate}"
-                                                        AlbumDataTemplate="{StaticResource AlbumGroupHeaderTemplate}" />
-            <!-- Style for Windows.UI.Xaml.Controls.ListViewItem -->
+            <BPControls:GroupHeaderDataTemplateSelector
+                x:Key="GroupHeaderTemplateSelector"
+                AlbumDataTemplate="{StaticResource AlbumGroupHeaderTemplate}"
+                ArtistDataTemplate="{StaticResource ArtistGroupHeaderTemplate}"
+                CommonDataTemplate="{StaticResource CommonGroupHeaderTemplate}" />
+            <!--  Style for Windows.UI.Xaml.Controls.ListViewItem  -->
 
             <DataTemplate x:Key="MobileJumpListItemTemplate">
-                <Button x:Name="alphabet" BorderBrush="{x:Null}" Width="60" BorderThickness="0" Height="60" FontSize="28" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="SemiLight" Style="{StaticResource HyperlinkBtn}">
+                <Button
+                    x:Name="alphabet"
+                    Width="60"
+                    Height="60"
+                    Background="Transparent"
+                    BorderBrush="{x:Null}"
+                    BorderThickness="0"
+                    Content="{Binding}"
+                    FontFamily="Segoe UI Light"
+                    FontSize="28"
+                    FontWeight="SemiLight"
+                    Style="{StaticResource HyperlinkBtn}">
                     <Interactivity:Interaction.Behaviors>
                         <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
                             <Core:EventTriggerBehavior.Actions>
-                                <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}" />
-                                <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}" />
+                                <Core:ChangePropertyAction
+                                    PropertyName="Visibility"
+                                    TargetObject="{Binding ElementName=backBtn}"
+                                    Value="Collapsed" />
+                                <Core:ChangePropertyAction
+                                    PropertyName="IsZoomedInViewActive"
+                                    TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
+                                    Value="True" />
                             </Core:EventTriggerBehavior.Actions>
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
@@ -42,21 +63,33 @@
                         <ImageBrush ImageSource="{Binding Path=Key.FirstElement.AttachedPicture}" Stretch="UniformToFill" />
                     </Grid.Background>
                     <Border Background="{ThemeResource EvenRowBackground}" />
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
-                                                    <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.Key}" />
+                    <TextBlock
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI"
+                        TextAlignment="Center">
+                        <Run
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="{Binding Path=Key.Key}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
-                                                    <Run FontSize="14" Text="Toasts:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Count}" />
-                                                    <Run Text="&#x2022;" />
-                                                    <Run FontSize="14" Text="Albums:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Key.TotalAlbums}" />
-                                                    <Run Text="&#x2022;" />
-                                                    <Run FontSize="14" Text="Artists:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Key.TotalArtists}" />
-                                                    <Run Text="&#x2022;" />
-                                                    <Run FontSize="14" Text="Plays:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Key.TotalPlays}" />
+                    <TextBlock
+                        Margin="10,0,0,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        FontWeight="Bold">
+                        <Run FontSize="14" Text="Toasts:" />
+                        <Run FontSize="14" Text="{Binding Path=Count}" />
+                        <Run Text="&#x2022;" />
+                        <Run FontSize="14" Text="Albums:" />
+                        <Run FontSize="14" Text="{Binding Path=Key.TotalAlbums}" />
+                        <Run Text="&#x2022;" />
+                        <Run FontSize="14" Text="Artists:" />
+                        <Run FontSize="14" Text="{Binding Path=Key.TotalArtists}" />
+                        <Run Text="&#x2022;" />
+                        <Run FontSize="14" Text="Plays:" />
+                        <Run FontSize="14" Text="{Binding Path=Key.TotalPlays}" />
                     </TextBlock>
                 </Grid>
                 <!--<TextBlock Text='{Binding Key}' Foreground="Gray" FontSize="25" Margin="5" />-->
@@ -65,19 +98,31 @@
             <DataTemplate x:Key="ArtistGroupHeaderTemplate">
                 <Grid Height="100">
                     <Grid.Background>
-                        <ImageBrush  Stretch="UniformToFill">
+                        <ImageBrush Stretch="UniformToFill">
                             <ImageBrush.ImageSource>
                                 <BitmapImage UriSource="{Binding Path=Key.FirstElement.Picture}" />
                             </ImageBrush.ImageSource>
                         </ImageBrush>
                     </Grid.Background>
-                    <Border Opacity="0.7" Background="{Binding Path=Key.FirstElement.PictureColor, TargetNullValue={ThemeResource EvenRowBackground}, FallbackValue={ThemeResource EvenRowBackground}}" />
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
-                                                    <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.Key}" />
+                    <Border Background="{Binding Path=Key.FirstElement.PictureColor, TargetNullValue={ThemeResource EvenRowBackground}, FallbackValue={ThemeResource EvenRowBackground}}" Opacity="0.7" />
+                    <TextBlock
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI"
+                        TextAlignment="Center">
+                        <Run
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="{Binding Path=Key.Key}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
-                                                    <Run FontSize="14" Text="Toasts:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Count}" />
+                    <TextBlock
+                        Margin="10,0,0,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        FontWeight="Bold">
+                        <Run FontSize="14" Text="Toasts:" />
+                        <Run FontSize="14" Text="{Binding Path=Count}" />
                     </TextBlock>
                 </Grid>
                 <!--<TextBlock Text='{Binding Key}' Foreground="Gray" FontSize="25" Margin="5" />-->
@@ -89,14 +134,26 @@
                         <ImageBrush ImageSource="{Binding Path=Key.FirstElement.AttachedPicture}" Stretch="UniformToFill" />
                     </Grid.Background>
                     <Border Background="{ThemeResource EvenRowBackground}" />
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" Margin="0,0,0,0">
-                                                    <Run FontSize="20" FontWeight="Bold" Text="{Binding Path=Key.FirstElement.Album}" />
-                                                    <LineBreak />
-                                                    <Run FontWeight="Bold" Text="{Binding Path=Key.FirstElement.LeadArtist}" />
+                    <TextBlock
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI"
+                        TextAlignment="Center">
+                        <Run
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="{Binding Path=Key.FirstElement.Album}" />
+                        <LineBreak />
+                        <Run FontWeight="Bold" Text="{Binding Path=Key.FirstElement.LeadArtist}" />
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Bottom" Margin="10,0,0,5">
-                                                    <Run FontSize="14" Text="Toasts:" />
-                                                    <Run FontSize="14" Text="{Binding Path=Count}" />
+                    <TextBlock
+                        Margin="10,0,0,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        FontWeight="Bold">
+                        <Run FontSize="14" Text="Toasts:" />
+                        <Run FontSize="14" Text="{Binding Path=Count}" />
                     </TextBlock>
                 </Grid>
                 <!--<TextBlock Text='{Binding Key}' Foreground="Gray" FontSize="25" Margin="5" />-->
@@ -106,71 +163,106 @@
 
     <Grid x:Name="Grid" DataContext="{Binding Source={StaticResource LibVM}}">
         <Grid.Resources>
-            <CollectionViewSource IsSourceGrouped="False" x:Key="Source" Source="{Binding TracksCollection.Elements}" />
+            <CollectionViewSource
+                x:Key="Source"
+                IsSourceGrouped="False"
+                Source="{Binding TracksCollection.Elements}" />
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="600" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileTemplate}" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}" />
-                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}" />
-                        <Setter Target="alphabetList.Margin" Value="0,60,0,0" />
-                        <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
-                        <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
-                        <Setter Target="lonelyTxt.FontSize" Value="44" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
         <Grid.Transitions>
             <TransitionCollection>
-                <EntranceThemeTransition IsStaggeringEnabled="True"
-                            FromHorizontalOffset="200" />
+                <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
             </TransitionCollection>
         </Grid.Transitions>
-        <Pivot x:Name="mainPivot" Foreground="{ThemeResource TextBrush}" Grid.ColumnSpan="2" SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem Header="Toasts" Foreground="{ThemeResource TextBrush}">
+        <Pivot
+            x:Name="mainPivot"
+            Grid.ColumnSpan="2"
+            Foreground="{ThemeResource TextBrush}"
+            SelectionChanged="Pivot_SelectionChanged">
+            <PivotItem Foreground="{ThemeResource TextBrush}" Header="Toasts">
                 <Grid Margin="0,0,0,0">
-                    <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb" />
-                    <SemanticZoom x:Name="semanticZoom" Margin="0,6,0,0" ViewChangeStarted="semanticZoom_ViewChangeStarted" ScrollViewer.ZoomMode="Enabled">
+                    <SemanticZoom
+                        x:Name="semanticZoom"
+                        ScrollViewer.ZoomMode="Enabled"
+                        ViewChangeStarted="semanticZoom_ViewChangeStarted">
                         <SemanticZoom.ZoomedInView>
-                            <BPControls:AlternatingRowListView x:Name="fileBox" CanReorderItems="True"
-                                                   ReorderMode="Enabled" Tag="{StaticResource Source}"
-                                                   OddRowBackground="{ThemeResource EvenRowBackground}"
-                                                   EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                                   AllowDrop="True" Opacity="0" IsMultiSelectCheckBoxEnabled="True"
-                                                   Behaviours:ListViewService.FocusBeforeSelect="True"
-                                                   SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}"
-                                                   SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   IncrementalLoadingThreshold="40"
-                                                   IncrementalLoadingTrigger="Edge"
-                                                   DataFetchSize="50"
-                                                   ItemTemplate="{StaticResource MediafileTemplate}"
-                                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                   ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}"
-                                                   DragOver="fileBox_DragOver">
+                            <BPControls:AlternatingRowListView
+                                x:Name="fileBox"
+                                Behaviours:ListViewService.FocusBeforeSelect="True"
+                                AllowDrop="True"
+                                CanReorderItems="True"
+                                DataFetchSize="50"
+                                DragOver="fileBox_DragOver"
+                                EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                IncrementalLoadingThreshold="40"
+                                IncrementalLoadingTrigger="Edge"
+                                IsMultiSelectCheckBoxEnabled="True"
+                                ItemTemplate="{StaticResource MediafileTemplate}"
+                                ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}"
+                                OddRowBackground="{ThemeResource EvenRowBackground}"
+                                Opacity="0"
+                                ReorderMode="Enabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}"
+                                Tag="{StaticResource Source}">
+                                <BPControls:AlternatingRowListView.Header>
+                                    <toolkit:ScrollHeader Mode="QuickReturn" TargetListViewBase="{x:Bind fileBox}">
+                                        <StackPanel
+                                            x:Name="scrollHeaderPanel"
+                                            Padding="10"
+                                            Orientation="Horizontal">
+                                            <Button
+                                                Margin="0,0,10,0"
+                                                Background="{x:Null}"
+                                                BorderBrush="{ThemeResource AccentHoverBrush}"
+                                                Command="{Binding Path=ImportFolderCommand}"
+                                                Style="{StaticResource HyperlinkBtn}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon
+                                                        Margin="0,3,0,0"
+                                                        Foreground="{ThemeResource TextBrush}"
+                                                        Glyph="&#xE8B5;" />
+                                                    <TextBlock
+                                                        Margin="10,0,0,0"
+                                                        Foreground="{ThemeResource TextBrush}"
+                                                        Text="Import folder" />
+                                                </StackPanel>
+                                            </Button>
+                                            <Button
+                                                Margin="0,0,10,0"
+                                                Background="{x:Null}"
+                                                BorderBrush="{ThemeResource AccentHoverBrush}"
+                                                Command="{Binding AddToPlaylistCommand}"
+                                                Foreground="{ThemeResource TextBrush}"
+                                                Style="{StaticResource HyperlinkBtn}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon
+                                                        Margin="0,3,0,0"
+                                                        Foreground="{ThemeResource TextBrush}"
+                                                        Glyph="&#xE8B1;" />
+                                                    <TextBlock
+                                                        Margin="10,0,0,0"
+                                                        Foreground="{ThemeResource TextBrush}">
+                                                        <Run Text="Shuffle all"/>
+                                                        <Run Text="("/>
+                                                        <Run Text="{Binding Path=SongCount}"/>
+                                                        <Run Text=")"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </toolkit:ScrollHeader>
+                                </BPControls:AlternatingRowListView.Header>
                                 <BPControls:AlternatingRowListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel Orientation="Vertical">
                                             <ItemsStackPanel.ChildrenTransitions>
                                                 <TransitionCollection>
-                                                    <EntranceThemeTransition
-                            FromHorizontalOffset="200" />
+                                                    <EntranceThemeTransition FromHorizontalOffset="200" />
                                                 </TransitionCollection>
                                             </ItemsStackPanel.ChildrenTransitions>
                                         </ItemsStackPanel>
@@ -179,14 +271,30 @@
                                 <Interactivity:Interaction.Behaviors>
                                     <Core:EventTriggerBehavior EventName="KeyUp" SourceObject="{Binding ElementName=fileBox}">
                                         <Core:EventTriggerBehavior.Actions>
-                                            <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding PlayCommand}" PressedKey="Enter" DoubleKeyCommand="False" />
+                                            <Behaviours:InvokeCommandByKeyDown
+                                                Command="{Binding PlayCommand}"
+                                                CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}"
+                                                DoubleKeyCommand="False"
+                                                PressedKey="Enter" />
                                         </Core:EventTriggerBehavior.Actions>
                                     </Core:EventTriggerBehavior>
                                     <Core:EventTriggerBehavior EventName="KeyDown" SourceObject="{Binding ElementName=fileBox}">
                                         <Core:EventTriggerBehavior.Actions>
-                                            <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox}" Command="{Binding DeleteCommand}" PressedKey="Delete" DoubleKeyCommand="False" />
-                                            <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding Source={StaticResource Core}, Path=ShowPropertiesCommand}" PressedKey="T" DoubleKeyCommand="True" />
-                                            <Behaviours:InvokeCommandByKeyDown CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}" Command="{Binding Path=AddToFavoritesCommand}" PressedKey="F" DoubleKeyCommand="True" />
+                                            <Behaviours:InvokeCommandByKeyDown
+                                                Command="{Binding DeleteCommand}"
+                                                CommandParameter="{Binding ElementName=fileBox}"
+                                                DoubleKeyCommand="False"
+                                                PressedKey="Delete" />
+                                            <Behaviours:InvokeCommandByKeyDown
+                                                Command="{Binding Source={StaticResource Core}, Path=ShowPropertiesCommand}"
+                                                CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}"
+                                                DoubleKeyCommand="True"
+                                                PressedKey="T" />
+                                            <Behaviours:InvokeCommandByKeyDown
+                                                Command="{Binding Path=AddToFavoritesCommand}"
+                                                CommandParameter="{Binding ElementName=fileBox, Path=SelectedItem}"
+                                                DoubleKeyCommand="True"
+                                                PressedKey="F" />
                                         </Core:EventTriggerBehavior.Actions>
                                     </Core:EventTriggerBehavior>
                                     <Core:EventTriggerBehavior EventName="SelectionChanged">
@@ -202,16 +310,19 @@
                                         <Media:ControlStoryboardAction>
                                             <Media:ControlStoryboardAction.Storyboard>
                                                 <Storyboard Storyboard.TargetName="fileBox" Storyboard.TargetProperty="Opacity">
-                                                    <DoubleAnimation To="1" Duration="0:0:0.8" FillBehavior="HoldEnd" />
+                                                    <DoubleAnimation
+                                                        FillBehavior="HoldEnd"
+                                                        To="1"
+                                                        Duration="0:0:0.8" />
                                                 </Storyboard>
                                             </Media:ControlStoryboardAction.Storyboard>
                                         </Media:ControlStoryboardAction>
                                     </Core:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>
                                 <BPControls:AlternatingRowListView.GroupStyle>
-                                    <GroupStyle HidesIfEmpty="True" HeaderTemplateSelector="{StaticResource GroupHeaderTemplateSelector}">
+                                    <GroupStyle HeaderTemplateSelector="{StaticResource GroupHeaderTemplateSelector}" HidesIfEmpty="True">
                                         <GroupStyle.HeaderContainerStyle>
-                                            <!-- Default style for Windows.UI.Xaml.Controls.ListViewHeaderItem -->
+                                            <!--  Default style for Windows.UI.Xaml.Controls.ListViewHeaderItem  -->
                                             <Style TargetType="ListViewHeaderItem">
                                                 <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
                                                 <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
@@ -225,14 +336,18 @@
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="ListViewHeaderItem">
-                                                            <StackPanel  Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                                                <ContentPresenter x:Name="ContentPresenter"
-                            Margin="{TemplateBinding Padding}"
-                            Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                            ContentTransitions="{TemplateBinding ContentTransitions}"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch" />
+                                                            <StackPanel
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                                                <ContentPresenter
+                                                                    x:Name="ContentPresenter"
+                                                                    Margin="{TemplateBinding Padding}"
+                                                                    HorizontalContentAlignment="Stretch"
+                                                                    VerticalContentAlignment="Stretch"
+                                                                    Content="{TemplateBinding Content}"
+                                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                    ContentTransitions="{TemplateBinding ContentTransitions}" />
                                                                 <!--<Rectangle Stroke="{ThemeResource ListViewHeaderItemDividerStroke}"
                             StrokeThickness="0.5"
                             Height="1"
@@ -258,15 +373,38 @@
                             </BPControls:AlternatingRowListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <GridView x:Name="alphabetList" VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="660" ItemsSource="{Binding AlphabetList}" Margin="0">
+                            <GridView
+                                x:Name="alphabetList"
+                                MaxWidth="660"
+                                Margin="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                ItemsSource="{Binding AlphabetList}">
                                 <GridView.ItemTemplate>
                                     <DataTemplate>
-                                        <Button x:Name="alphabet" BorderBrush="{x:Null}" MinWidth="90" BorderThickness="0" Height="60" FontSize="36" Background="Transparent" Content="{Binding}" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Style="{StaticResource HyperlinkBtn}">
+                                        <Button
+                                            x:Name="alphabet"
+                                            Height="60"
+                                            MinWidth="90"
+                                            Background="Transparent"
+                                            BorderBrush="{x:Null}"
+                                            BorderThickness="0"
+                                            Content="{Binding}"
+                                            FontFamily="Segoe UI Light"
+                                            FontSize="36"
+                                            FontWeight="ExtraLight"
+                                            Style="{StaticResource HyperlinkBtn}">
                                             <Interactivity:Interaction.Behaviors>
                                                 <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=alphabet}">
                                                     <Core:EventTriggerBehavior.Actions>
-                                                        <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}" />
-                                                        <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}" />
+                                                        <Core:ChangePropertyAction
+                                                            PropertyName="Visibility"
+                                                            TargetObject="{Binding ElementName=backBtn}"
+                                                            Value="Collapsed" />
+                                                        <Core:ChangePropertyAction
+                                                            PropertyName="IsZoomedInViewActive"
+                                                            TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
+                                                            Value="True" />
                                                     </Core:EventTriggerBehavior.Actions>
                                                 </Core:EventTriggerBehavior>
                                             </Interactivity:Interaction.Behaviors>
@@ -279,13 +417,23 @@
                 </Grid>
             </PivotItem>
             <PivotItem Header="Breads">
-                <Frame Name="BreadsFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" />
+                <Frame
+                    Name="BreadsFrame"
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed" />
             </PivotItem>
             <PivotItem Header="Bakers">
-                <Frame Name="BakersFrame" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" />
+                <Frame
+                    Name="BakersFrame"
+                    x:DeferLoadStrategy="Lazy"
+                    Visibility="Collapsed" />
             </PivotItem>
             <PivotItem Header="Playlists">
-                <Frame Name="PlaylistsFrame" SourcePageType="local:PlaylistsCollectionView" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" />
+                <Frame
+                    Name="PlaylistsFrame"
+                    x:DeferLoadStrategy="Lazy"
+                    SourcePageType="local:PlaylistsCollectionView"
+                    Visibility="Collapsed" />
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
@@ -298,24 +446,92 @@
                 </Style>
             </Pivot.Resources>
         </Pivot>
-        <Button x:Uid="backBtn" x:Name="backBtn" ToolTipService.ToolTip="" Background="{x:Null}" x:DeferLoadStrategy="Lazy" Visibility="Collapsed" FontSize="30" BorderThickness="0" Content="&#xE72B;" FontFamily="Segoe MDL2 Assets" Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center"  Style="{StaticResource HyperlinkBtn}">
+        <Button
+            x:Name="backBtn"
+            x:Uid="backBtn"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            x:DeferLoadStrategy="Lazy"
+            Background="{x:Null}"
+            BorderThickness="0"
+            Content="&#xE72B;"
+            FontFamily="Segoe MDL2 Assets"
+            FontSize="30"
+            Style="{StaticResource HyperlinkBtn}"
+            ToolTipService.ToolTip=""
+            Visibility="Collapsed">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
                     <Core:EventTriggerBehavior.Actions>
-                        <Core:ChangePropertyAction PropertyName="IsZoomedInViewActive" Value="True" TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}" />
-                        <Core:ChangePropertyAction PropertyName="Visibility" Value="Collapsed" TargetObject="{Binding ElementName=backBtn}" />
+                        <Core:ChangePropertyAction
+                            PropertyName="IsZoomedInViewActive"
+                            TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
+                            Value="True" />
+                        <Core:ChangePropertyAction
+                            PropertyName="Visibility"
+                            TargetObject="{Binding ElementName=backBtn}"
+                            Value="Collapsed" />
                     </Core:EventTriggerBehavior.Actions>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </Button>
-        <StackPanel x:Name="lonelyTextPanel" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}">
-            <TextBlock x:Uid="lonelyTextBlock" x:Name="lonelyTxt" Text="Its lonely here :(" FontSize="72" FontFamily="Segoe UI Light" FontWeight="ExtraLight" Foreground="{ThemeResource ThemeForeground}" />
-            <Button x:Uid="addSomeSongsBtn" Content="Add some songs" Background="Transparent" HorizontalAlignment="Center" FontSize="22" Command="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.LoadCommand}" Foreground="{ThemeResource ThemeForeground}" Style="{StaticResource HyperlinkBtn}" />
+        <StackPanel
+            x:Name="lonelyTextPanel"
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding Path=SongCount, UpdateSourceTrigger=Explicit, Converter={StaticResource BoolToVisibility}}">
+            <TextBlock
+                x:Name="lonelyTxt"
+                x:Uid="lonelyTextBlock"
+                FontFamily="Segoe UI Light"
+                FontSize="72"
+                FontWeight="ExtraLight"
+                Foreground="{ThemeResource ThemeForeground}"
+                Text="Its lonely here :(" />
+            <Button
+                x:Uid="addSomeSongsBtn"
+                HorizontalAlignment="Center"
+                Background="Transparent"
+                Command="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.LoadCommand}"
+                Content="Add some songs"
+                FontSize="22"
+                Foreground="{ThemeResource ThemeForeground}"
+                Style="{StaticResource HyperlinkBtn}" />
         </StackPanel>
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}" />
             </Core:EventTriggerBehavior>
         </Interactivity:Interaction.Behaviors>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}" />
+                        <Setter Target="alphabetList.ItemTemplate" Value="{StaticResource MobileJumpListItemTemplate}" />
+                        <Setter Target="alphabetList.Margin" Value="0,60,0,0" />
+                        <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
+                        <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="lonelyTxt.FontSize" Value="44" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
