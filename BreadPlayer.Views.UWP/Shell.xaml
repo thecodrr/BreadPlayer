@@ -14,6 +14,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BreadPlayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rma="using:RateMyApp.UWP.Controls"
     x:Name="ShellView"
     DataContext="{StaticResource ShellVM}"
     Loaded="Page_Loaded"
@@ -687,6 +688,14 @@
                 SourcePageType="local:NowPlayingView"
                 Visibility="Collapsed" />
         </Grid>
+        <rma:FeedbackOverlay
+            x:Name="FeedbackOverlay"
+            x:Uid="RMA"
+            ApplicationName="BreadPlayer"
+            CompanyName="thecodrr"
+            FeedbackTo="support@breadplayer.com"
+            FirstCount="2"
+            SecondCount="5" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
