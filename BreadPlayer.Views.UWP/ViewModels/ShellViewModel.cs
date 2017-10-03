@@ -285,7 +285,7 @@ namespace BreadPlayer.ViewModels
         {
             if (!InternetConnectivityHelper.IsInternetConnected)
             {
-                NotifyAndDeselect("Seems you don't have an internet connection. Thanks for the support, though!");
+                await NotifyAndDeselect("Seems you don't have an internet connection. Thanks for the support, though!");
                 return;
             }
             StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
@@ -304,20 +304,20 @@ namespace BreadPlayer.ViewModels
             ad.Completed += async (r, a) => 
             {
                 logger.Log("WatchAnAdCompleted");
-                NotifyAndDeselect("Thanks!");
+                await NotifyAndDeselect("Thanks!");
             };
             ad.Cancelled += async (r, a) => 
             {
-                NotifyAndDeselect("No worries!");
+                await NotifyAndDeselect("No worries!");
             };
             ad.ErrorOccurred += async (r, a) => 
             {
-                NotifyAndDeselect("Aw! An error occured. We will try later. Thanks.");
+                await NotifyAndDeselect("Aw! An error occured. We will try later. Thanks.");
             };
             ad.RequestAd(AdType.Video, myAppId, myAdUnitId);
-            NotifyAndDeselect("Please continue. The ad will be shown shortly.");
+            await NotifyAndDeselect("Please continue. The ad will be shown shortly.");
 
-            async void NotifyAndDeselect(string message)
+            async Task NotifyAndDeselect(string message)
             {
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
                 SplitViewMenu.SplitViewMenu.SelectPrevious();
