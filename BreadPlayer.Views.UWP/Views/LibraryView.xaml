@@ -471,6 +471,7 @@
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Left"
                 Margin="0,90,0,0"
+                Command="{Binding Path=ImportFolderCommand}"
                 Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibility}}"
                 Padding="20,10,0,10">
             <Grid HorizontalAlignment="Left">

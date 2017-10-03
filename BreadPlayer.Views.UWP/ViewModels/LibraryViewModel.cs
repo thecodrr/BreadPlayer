@@ -91,7 +91,10 @@ namespace BreadPlayer.ViewModels
                 await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
 
                 IsLibraryLoading = false;
-                MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
+                await BreadDispatcher.InvokeAsync(() =>
+                {
+                    MusicLibraryLoaded?.Invoke(this, new RoutedEventArgs());
+                });
             }
         }
         private void HandleDisposeMessage()
