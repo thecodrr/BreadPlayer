@@ -150,6 +150,9 @@ namespace BreadPlayer.ViewModels
         {
             if(e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
             {
+                // delay by 2 seconds so as not to hang up UI
+                await Task.Delay(2000);
+                
                 await CacheArtists(e.NewItems.Cast<Artist>()).ConfigureAwait(false);
             }
             if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
