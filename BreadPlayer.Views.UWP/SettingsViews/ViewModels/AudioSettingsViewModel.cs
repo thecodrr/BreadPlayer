@@ -25,13 +25,13 @@ namespace BreadPlayer.SettingsViews.ViewModels
             {
                 Set(ref deviceBufferSize, value);
                 SharedLogic.Instance.Player.DeviceBufferSize = deviceBufferSize;
-                SettingsHelper.SaveRoamingSetting("DeviceBufferSize", value);
+                SettingsHelper.SaveLocalSetting("DeviceBufferSize", value);
             }
         }
         public AudioSettingsViewModel()
         {
             CrossfadeEnabled = SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true);
-            DeviceBufferSize = SettingsHelper.GetRoamingSetting<double>("DeviceBufferSize", 350.00);
+            DeviceBufferSize = SettingsHelper.GetLocalSetting<double>("DeviceBufferSize", 350.00);
         }
     }
 }

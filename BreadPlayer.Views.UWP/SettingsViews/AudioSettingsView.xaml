@@ -24,6 +24,7 @@
         <rad:RadNumericBox
             x:Uid="deviceBufferSizeBox"
             AcceptsDecimalSeparator="False"
+            Header="Device Buffer Size:"
             InputScope="Number"
             Maximum="1000"
             Minimum="250"
@@ -31,7 +32,7 @@
             <rad:RadNumericBox.HeaderTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="Device Buffer Size:" />
+                        <TextBlock Text="Device Buffer Size:" Foreground="{ThemeResource ThemeForeground}"/>
                         <TextBlock
                             FontSize="12"
                             Foreground="Gray"
