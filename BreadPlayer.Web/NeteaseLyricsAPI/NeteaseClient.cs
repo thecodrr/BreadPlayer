@@ -28,7 +28,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
             {
                 var bSong = results.Result.Songs.FirstOrDefault(t => t.Name.ToLower().Contains(mediaFile.Title.ToLower()));
                 if (bSong != null)
-                    return (await GetLyrics(bSong.Id.ToString()).ConfigureAwait(false)).Lrc.Lyric;
+                    return (await GetLyrics(bSong.Id.ToString()).ConfigureAwait(false))?.Lrc?.Lyric;
             }
             return null;
         }
