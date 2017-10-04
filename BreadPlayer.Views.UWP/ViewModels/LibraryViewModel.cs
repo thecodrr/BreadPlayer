@@ -319,6 +319,7 @@ namespace BreadPlayer.ViewModels
                 StorageFolder folder = await picker.PickSingleFolderAsync();
                 if (folder != null)
                 {
+                    StorageApplicationPermissions.FutureAccessList.Add(folder);
                     await LibraryHelper.ImportFolderIntoLibraryAsync(folder).ConfigureAwait(false);
                 }
             }

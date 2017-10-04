@@ -71,11 +71,11 @@ namespace BreadPlayer.Helpers
             return tempList.DistinctBy(f => f.OrginalFilename);
         }
         public static async Task ImportFolderIntoLibraryAsync(StorageFolder folder)
-        {        
+        {
+            var songs = await GetSongsFromFolderAsync(folder).ConfigureAwait(false);
+
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                var songs = await GetSongsFromFolderAsync(folder).ConfigureAwait(false);
-
                 if (songs == null)
                 {
                     var dialog = new MessageDialog($"There were no songs in the {folder.DisplayName} folder. Do you want to try and search without using the indexer (the process might be a bit slow)?", "No songs were found!");
