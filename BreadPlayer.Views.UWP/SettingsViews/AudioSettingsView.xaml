@@ -6,23 +6,57 @@
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:BreadPlayer.SettingsViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rad="using:Telerik.UI.Xaml.Controls.Input"
     mc:Ignorable="d">
-    <ScrollViewer>
-        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AudioSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
-            <TextBlock
-                x:Uid="generalHeader"
-                FontSize="22"
-                FontWeight="Bold"
-                Text="" />
-            <ToggleSwitch
-                x:Uid="crossfadeSwitch"
-                Header=""
-                IsOn="{Binding Path=CrossfadeEnabled, Mode=TwoWay}" />
-
-            <TextBox
-                x:Uid="deviceBufferSize"
-                Header=""
-                Text="" />
-        </StackPanel>
-    </ScrollViewer>
+    <StackPanel
+        x:Name="mainPanel"
+        DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AudioSettingsVM}"
+        RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <TextBlock
+            x:Uid="generalHeader"
+            FontSize="22"
+            FontWeight="Bold"
+            Text="" />
+        <ToggleSwitch
+            x:Uid="crossfadeSwitch"
+            Header=""
+            IsOn="{Binding Path=CrossfadeEnabled, Mode=TwoWay}" />
+        <rad:RadNumericBox
+            x:Uid="deviceBufferSizeBox"
+            AcceptsDecimalSeparator="False"
+            InputScope="Number"
+            Maximum="1000"
+            Minimum="250"
+            Value="{Binding Path=DeviceBufferSize, Mode=TwoWay, UpdateSourceTrigger=Default}">
+            <rad:RadNumericBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="Device Buffer Size:" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="Gray"
+                            Text="Restart is needed for this change to take effect." />
+                    </StackPanel>
+                </DataTemplate>
+            </rad:RadNumericBox.HeaderTemplate>
+        </rad:RadNumericBox>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainPanel.Margin" Value="10,0,20,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters />
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </StackPanel>
 </Page>

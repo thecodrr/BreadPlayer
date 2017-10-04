@@ -17,8 +17,8 @@ namespace BreadPlayer.SettingsViews.ViewModels
                 SettingsHelper.SaveRoamingSetting("CrossfadeEnabled", value);
             }
         }
-        private int deviceBufferSize;
-        public int DeviceBufferSize
+        private double deviceBufferSize;
+        public double DeviceBufferSize
         {
             get => deviceBufferSize;
             set
@@ -31,7 +31,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
         public AudioSettingsViewModel()
         {
             CrossfadeEnabled = SettingsHelper.GetRoamingSetting<bool>("CrossfadeEnabled", true);
-            DeviceBufferSize = SettingsHelper.GetRoamingSetting<int>("DeviceBufferSize", 350);
+            DeviceBufferSize = SettingsHelper.GetRoamingSetting<double>("DeviceBufferSize", 350.00);
         }
     }
 }

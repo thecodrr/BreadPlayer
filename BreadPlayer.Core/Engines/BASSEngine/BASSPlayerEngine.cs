@@ -38,7 +38,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
         #region Constructor
 
-        public BassPlayerEngine(bool isMobile, bool crossFade, int deviceBufferSize)
+        public BassPlayerEngine(bool isMobile, bool crossFade, double deviceBufferSize)
         {
             DeviceBufferSize = deviceBufferSize;
             Init(isMobile);
@@ -66,7 +66,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                  {
                      //we set it to a high value so that there are no cuts and breaks in the audio when the app is in background.
                      //This produces latency issue. When pausing a song, it will take 230ms. But I am sure, we can find a way around this later.
-                     NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
+                     NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, (int)DeviceBufferSize);
                  }
                  else
                      Bass.Configure(Configuration.IncludeDefaultDevice, true);
@@ -118,7 +118,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         }
 
                         if (InitializeCore.IsMobile)
-                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, DeviceBufferSize);
+                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, (int)DeviceBufferSize);
 
                         Bass.Init();
                         Bass.ChannelSetDevice(_handle, i);
@@ -379,7 +379,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
         }
 
-        public int DeviceBufferSize { get; set; }
+        public double DeviceBufferSize { get; set; }
 
         #endregion Properties
 

@@ -10,6 +10,7 @@
     "RateMyApp.UWP": "2.1.0",
     "System.ValueTuple": "4.4.0",
     "TagLib.Portable": "1.0.4",
+    "Telerik.UI.for.UniversalWindowsPlatform": "1.0.0.6",
     "Win2D.uwp": "1.21.0"
   },
   "frameworks": {
