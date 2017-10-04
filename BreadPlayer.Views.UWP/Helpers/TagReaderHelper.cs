@@ -93,7 +93,7 @@ namespace BreadPlayer.Helpers
             {
                 using (StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached))
                 {
-                    if (thumbnail == null && SharedLogic.Instance.VerifyFileExists(file.Path, 150))
+                    if (thumbnail == null && file.IsAvailable)
                     {
                         using (TagLib.File tagFile = TagLib.File.Create(new SimpleFileAbstraction(file), TagLib.ReadStyle.Average))
                         {
@@ -108,7 +108,7 @@ namespace BreadPlayer.Helpers
                             }
                         }
                     }
-                    else
+                    else if(thumbnail != null)
                     {
                         var albumart = await ApplicationData.Current.LocalFolder.CreateFileAsync(@"AlbumArts\" + albumArt.FileName + ".jpg", CreationCollisionOption.FailIfExists);
                         IBuffer buf;

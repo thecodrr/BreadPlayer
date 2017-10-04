@@ -24,7 +24,7 @@ namespace BreadPlayer.Helpers
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public static async Task<List<Mediafile>> GetSongsFromFolderAsync(StorageFolder folder, bool useIndexer = true)
+        public static async Task<IEnumerable<Mediafile>> GetSongsFromFolderAsync(StorageFolder folder, bool useIndexer = true)
         {
             StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions(null, useIndexer));
 
@@ -68,14 +68,14 @@ namespace BreadPlayer.Helpers
                 string message1 = ex.Message + "||" + ex.InnerException;
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message1);
             }        
-            return tempList;
+            return tempList.DistinctBy(f => f.OrginalFilename);
         }
         public static async Task ImportFolderIntoLibraryAsync(StorageFolder folder)
-        {
-            var songs = await GetSongsFromFolderAsync(folder).ConfigureAwait(false);
-
+        {        
             await BreadDispatcher.InvokeAsync(async () =>
             {
+                var songs = await GetSongsFromFolderAsync(folder).ConfigureAwait(false);
+
                 if (songs == null)
                 {
                     var dialog = new MessageDialog($"There were no songs in the {folder.DisplayName} folder. Do you want to try and search without using the indexer (the process might be a bit slow)?", "No songs were found!");
@@ -87,10 +87,9 @@ namespace BreadPlayer.Helpers
                         songs = await GetSongsFromFolderAsync(folder, false).ConfigureAwait(false);
                     }
                 }
-                var uniqueFiles = songs.DistinctBy(f => f.OrginalFilename);
 
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgImportFolder, uniqueFiles);
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, uniqueFiles);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgImportFolder, songs);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, songs);
 
                 string message = string.Format("Songs successfully imported!");
                 BLogger.Logger.Info(message);
