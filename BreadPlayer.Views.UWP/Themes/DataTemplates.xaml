@@ -141,7 +141,7 @@
             x:Name="LayoutRoot"
             Width="200"
             Height="290"
-            Background="White">
+            Background="{ThemeResource ThemeBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -324,7 +324,7 @@
             x:Name="LayoutRoot"
             Width="130"
             Height="200"
-            Background="White">
+            Background="{ThemeResource ThemeBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -679,7 +679,7 @@
                     <Core:ChangePropertyAction
                         PropertyName="Foreground"
                         TargetObject="{Binding ElementName=titleTxt}"
-                        Value="Black" />
+                        Value="{ThemeResource ThemeForeground}" />
                 </Core:DataTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="PointerExited">
                     <Core:ChangePropertyAction
@@ -918,7 +918,7 @@
                     <Core:ChangePropertyAction
                         PropertyName="Foreground"
                         TargetObject="{Binding ElementName=titleTxt}"
-                        Value="Black" />
+                        Value="{ThemeResource ThemeForeground}" />
                     <Core:ChangePropertyAction
                         PropertyName="Visibility"
                         TargetObject="{Binding ElementName=ButtonsStack}"

@@ -685,7 +685,7 @@
         </Grid>
         <Grid
             x:Name="NowPlayingGrid"
-            Background="#ccdbdbdb"
+            Background="{ThemeResource ThemeBackground}"
             Opacity="0"
             Visibility="Collapsed">
             <Frame

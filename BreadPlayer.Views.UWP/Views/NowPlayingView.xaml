@@ -518,7 +518,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid VerticalAlignment="Stretch" Background="WhiteSmoke">
+    <Grid VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -1064,7 +1064,7 @@
             </PivotItem>
             <Pivot.Resources>
                 <Style BasedOn="{StaticResource DefaultPivotHeaderItemStyle}" TargetType="PivotHeaderItem">
-                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="Foreground" Value="{ThemeResource ThemeForeground}" />
                 </Style>
             </Pivot.Resources>
         </Pivot>
