@@ -11,11 +11,10 @@ namespace BreadPlayer.Core.Engines.BASSEngine
     public class BassEqualizer : Equalizer
     {
         private int _handle;
-        private int _fxEq;
         private DSPProcedure _myDspAddr; // make it global, so that the GC can not remove it
         private PeakEQParameters _eq;
-
-        public BassEqualizer(int coreHandle)
+        private int _fxEq;
+        public BassEqualizer(ref int coreHandle)
         {
             _handle = coreHandle;
             var version = BassFx.Version;
@@ -28,7 +27,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             Init();
         }
 
-        public void ReInit(int coreHandle)
+        public void ReInit(ref int coreHandle)
         {
             DeInit();
             _handle = coreHandle;
@@ -40,7 +39,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
 
         public override void DeInit()
         {
-            Bass.ChannelRemoveFX(_handle, _fxEq);
+            Bass.ChannelRemoveFX(_handle, _fxEq);          
         }
 
         public override void Dispose()
@@ -74,7 +73,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 _eq.lBand = i;
                 _eq.fCenter = EqDefaultValues[i][0];
                 var res = Bass.FXSetParameters(_fxEq, _eq);
-                var band = new BassEqualizerBand(_fxEq, i, EqDefaultValues[i][0], EqDefaultValues[i][1], IsEnabled);
+                var band = new BassEqualizerBand(ref _fxEq, ref _eq, EqDefaultValues[i][0], EqDefaultValues[i][1], IsEnabled);
 
                 if (band == null)
                 {

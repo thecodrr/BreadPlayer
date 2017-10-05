@@ -258,7 +258,7 @@
                                         Style="{StaticResource CircleSlider}"
                                         TickFrequency="0.1"
                                         TickPlacement="None"
-                                        Value="{Binding Path=Gain, Mode=TwoWay}" />
+                                        Value="{Binding Path=Gain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <TextBlock
                                         Margin="0,10,0,0"
                                         HorizontalAlignment="Center"

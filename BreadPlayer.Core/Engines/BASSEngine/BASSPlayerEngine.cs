@@ -172,12 +172,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         await ChangeDevice();
                     if (Equalizer == null)
                     {
-                        Equalizer = new BassEqualizer(_handle);
+                        Equalizer = new BassEqualizer(ref _handle);
                     }
                     else
                     {
-                        //Crash here.
-                        (Equalizer as BassEqualizer).ReInit(_handle);
+                        (Equalizer as BassEqualizer).ReInit(ref _handle);
                     }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     MediaChanged?.Invoke(this, new EventArgs());
@@ -203,6 +202,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
             return false;
         }
+
+        
 
         /// <summary>
         /// Pauses the audio playback.
