@@ -240,11 +240,18 @@ namespace BreadPlayer.ViewModels
                 }
                 if (!string.IsNullOrEmpty(lyricsText))
                 {
-                    var parser = LrcParser.FromText(lyricsText);
-                    if (parser.Lyrics.Any())
+                    try
                     {
-                        Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
-                        timer.Start();
+                        var parser = LrcParser.FromText(lyricsText);
+                        if (parser?.Lyrics?.Any() == true)
+                        {
+                            Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+                            timer.Start();
+                        }
+                    }
+                    catch (FormatException)
+                    {
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Cannot parse this lyric.");
                     }
                 }
                 LyricsLoading = false;

@@ -52,7 +52,8 @@ namespace BreadPlayer.Parsers.LRCParser
                 }
                 if (i > 0 && array[i].Timestamp == array[i - 1].Timestamp)
                 {
-                    throw new FormatException(string.Format("Found duplicate timestamp '{0}' with lyric '{1}' and '{2}'.", array[i].Timestamp, array[i - 1].Content, array[i].Content));
+                    //ignore.
+                    //throw new FormatException(string.Format("Found duplicate timestamp '{0}' with lyric '{1}' and '{2}'.", array[i].Timestamp, array[i - 1].Content, array[i].Content));
                 }
             }
             _lyrics = array;
