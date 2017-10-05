@@ -31,7 +31,7 @@ namespace BreadPlayer.Core.Models
 
         public string GetTextSearchKey()
         {
-            return string.Format("{0} {1}", AlbumName, Artist);
+            return string.Format("album={0}&artist={1}", AlbumName, Artist);
         }
 
         public int CompareTo(Album other)

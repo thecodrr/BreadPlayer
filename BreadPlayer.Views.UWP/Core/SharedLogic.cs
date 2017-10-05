@@ -437,11 +437,14 @@ namespace BreadPlayer.Core
         /// <returns>the dominant color</returns>
         public async Task<Color> GetDominantColor(StorageFile file)
         {
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
+            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
+                if (stream.Size <= 0)
+                    return Colors.Transparent;
                 try
                 {
                     //Create a decoder for the image
+                    stream.Seek(0);
                     var decoder = BitmapDecoder.CreateAsync(stream);
                     var colorThief = new ColorThiefDotNet.ColorThief();
                     var qColor = await colorThief.GetColor(await decoder);

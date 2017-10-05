@@ -52,7 +52,7 @@ namespace BreadPlayer.Core.Models
 
         public string GetTextSearchKey()
         {
-            return Name;
+            return "artist=" + Name;
         }
     }
 }

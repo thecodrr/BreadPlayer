@@ -19,7 +19,6 @@ namespace BreadPlayer
         public AlbumArtistView()
         {
             InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
             CoreWindow.GetForCurrentThread().SizeChanged += OnWindowSizeChanged;
         }
 

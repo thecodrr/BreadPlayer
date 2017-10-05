@@ -178,13 +178,23 @@ namespace BreadPlayer.Helpers
                         {
                             await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                         }
-                        color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
+                        color = await SharedLogic.Instance.GetDominantColor(artistArt);
                         return (artistArt.Path, color);
                     }
                 }
+                return (artistArtPath, color);
             }
-            color = await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(artistArtPath)).ConfigureAwait(false);
-            return (artistArtPath, color);
+            else
+            {
+                var artistArt = await StorageFile.GetFileFromPathAsync(artistArtPath);
+                var size = (await artistArt.GetBasicPropertiesAsync()).Size;
+                if (size > 0)
+                {
+                    color = await SharedLogic.Instance.GetDominantColor(artistArt);
+                    return (artistArtPath, color);
+                }
+            }
+            return (null, color);
         }
     }
 }

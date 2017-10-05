@@ -41,13 +41,13 @@ namespace BreadPlayer.Database
         public Task<Artist> GetArtistAsync(string query)
         {
             Database.ChangeTable("Artists", "ArtistsText");
-            return Database.GetRecordByQueryAsync<Artist>(query);
+            return Database.GetRecordByQueryAsync<Artist>("artist=" + query);
         }
 
         public Task<Album> GetAlbumAsync(string query)
         {
             Database.ChangeTable("Albums", "AlbumsText");
-            return Database.GetRecordByQueryAsync<Album>(query);
+            return Database.GetRecordByQueryAsync<Album>("album=" + query);
         }
         public Artist GetArtistByIdAsync(long id)
         {
@@ -89,13 +89,13 @@ namespace BreadPlayer.Database
         public Task<IEnumerable<Artist>> QueryArtistsAsync(string term, int limit = int.MaxValue)
         {
             Database.ChangeTable("Artists", "ArtistsText");
-            return Database.QueryRecords<Artist>(term, limit);
+            return Database.QueryRecords<Artist>("artist=" + term, limit);
         }
 
         public Task<IEnumerable<Album>> QueryAlbumsAsync(string term, int limit = int.MaxValue)
         {
             Database.ChangeTable("Albums", "AlbumsText");
-            return Database.QueryRecords<Album>(term, limit);
+            return Database.QueryRecords<Album>("album=" + term, limit);
         }
 
         public Task UpdateArtistAsync(Artist artist)

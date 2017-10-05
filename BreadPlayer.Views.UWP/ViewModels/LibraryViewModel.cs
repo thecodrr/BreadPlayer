@@ -669,7 +669,7 @@ namespace BreadPlayer.ViewModels
             }
             else if (path is Album album)
             {
-                var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query(album.AlbumName + " " + album.Artist));
+                var songList = new ThreadSafeObservableCollection<Mediafile>(await LibraryService.Query("album=" + album.AlbumName + "&artist=" + album.Artist));
                 SendLibraryLoadedMessage(songList, sendUpdateMessage);
                 return songList[0];
             }

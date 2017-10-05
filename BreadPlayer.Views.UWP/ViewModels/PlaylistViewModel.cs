@@ -221,7 +221,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadAlbumSongs(Album album)
         {
-            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(album.AlbumName)).OrderBy(t => t.TrackNumber));
+            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query("album=" + album.AlbumName)).OrderBy(t => t.TrackNumber));
             await Refresh().ContinueWith(task =>
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
