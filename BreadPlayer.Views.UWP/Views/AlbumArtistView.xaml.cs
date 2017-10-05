@@ -61,24 +61,21 @@ namespace BreadPlayer
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             _currentState = e.Parameter.ToString();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 SetTemplate();
                 if (e.Parameter.ToString() == "AlbumView")
                 {
+                    albumListView.ItemsSource = null;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
+                    await (grid.DataContext as AlbumArtistViewModel).AlbumCollection.RefreshAsync();
                     (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
                 }
                 else if (e.Parameter.ToString() == "ArtistView")
                 {
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
+                    await (grid.DataContext as AlbumArtistViewModel).ArtistsCollection.RefreshAsync();
                     (grid.DataContext as AlbumArtistViewModel).LoadArtists();
-                }
-                else if (e.Parameter.ToString() == "Clear")
-                {
-                    albumListView.ItemsSource = null;
-                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
-                    GC.Collect();
                 }
             });
             base.OnNavigatedTo(e);
@@ -86,8 +83,9 @@ namespace BreadPlayer
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            //(grid.Resources["Source"] as CollectionViewSource).Source = null;
-            //(grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
+            albumListView.ItemsSource = null;
+            albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
+            GC.Collect();
             base.OnNavigatedFrom(e);
         }
 

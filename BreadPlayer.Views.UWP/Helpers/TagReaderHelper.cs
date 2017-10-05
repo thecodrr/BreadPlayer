@@ -174,7 +174,7 @@ namespace BreadPlayer.Helpers
                     if (response.IsSuccessStatusCode)
                     {
                         byte[] buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false); // Download file
-                        using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.None, 51200, FileOptions.WriteThrough))
+                        using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite, 51200, FileOptions.WriteThrough))
                         {
                             await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                         }
