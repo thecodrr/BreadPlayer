@@ -21,7 +21,6 @@
                 <Run
                     x:Uid="themeHelpText"
                     FontSize="11"
-                    Foreground="Gray"
                     Text="" />
             </TextBlock>
             <ToggleSwitch
@@ -42,7 +41,6 @@
             <TextBlock
                 x:Uid="enableBlurHelpText"
                 FontSize="11"
-                Foreground="Gray"
                 Text=""
                 TextWrapping="Wrap" />
             <CheckBox
@@ -53,7 +51,6 @@
             <TextBlock
                 x:Uid="changeAccentHelpText"
                 FontSize="11"
-                Foreground="Gray"
                 Text=""
                 TextWrapping="Wrap" />
 
@@ -62,7 +59,6 @@
                 <LineBreak />
                 <Run
                     FontSize="11"
-                    Foreground="Gray"
                     Text="This is the overlay color of album art on the player background." />
             </TextBlock>
             <ComboBox Margin="0,5,0,0" SelectedIndex="1"

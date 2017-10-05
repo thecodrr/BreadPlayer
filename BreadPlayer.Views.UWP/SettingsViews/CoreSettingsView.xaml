@@ -32,7 +32,6 @@
                 x:Uid="resetEverythingHelpText"
                 Margin="0,-4,0,0"
                 FontSize="11"
-                Foreground="Gray"
                 Text=""
                 TextWrapping="Wrap" />
 
@@ -59,7 +58,6 @@
                 IsChecked="{Binding Path=PreventScreenFromLocking, Mode=TwoWay}" />
             <TextBlock
                 FontSize="11"
-                Foreground="Gray"
                 TextWrapping="Wrap">
                 <Run x:Uid="preventScreenLockingInfoText" Text="" />
                 <LineBreak />
@@ -72,7 +70,6 @@
                 IsChecked="{Binding Path=ReplaceLockscreenWithAlbumArt, Mode=TwoWay}" />
             <TextBlock
                 FontSize="11"
-                Foreground="Gray"
                 TextWrapping="Wrap">
                 <Run x:Uid="replaceLockscreenInfoText" Text="" />
                 <LineBreak />

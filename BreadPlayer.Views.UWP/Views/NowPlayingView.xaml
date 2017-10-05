@@ -765,10 +765,9 @@
             Grid.ColumnSpan="5"
             Margin="10,0"
             Style="{StaticResource CustomPivot}">
-            <PivotItem Margin="0,-8,0,0" Header="Now Playing">
+            <PivotItem Margin="0,0,0,0" Header="Now Playing">
                 <Grid>
-                    <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb" />
-                    <ListView Margin="0,6,0,0" ItemsSource="{Binding Path=NowPlayingQueue}">
+                    <ListView Margin="0,0,0,0" ItemsSource="{Binding Path=NowPlayingQueue}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid
@@ -864,14 +863,13 @@
                     </ListView>
                 </Grid>
             </PivotItem>
-            <PivotItem Margin="0,-8,0,0" Header="Lyrics">
+            <PivotItem Margin="0,0,0,0" Header="Lyrics">
                 <Grid x:Name="lyricsGrid">
-                    <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb" />
                     <ListView
                         x:Name="lyricsList"
                         Grid.Row="0"
                         Grid.ColumnSpan="5"
-                        Margin="0,6,0,0"
+                        Margin="0,0,0,0"
                         ItemsSource="{Binding Source={StaticResource NowPlayingVM}, Path=Lyrics}"
                         SelectionMode="None">
                         <ListView.ItemTemplate>
@@ -940,14 +938,13 @@
                 </Grid>
             </PivotItem>
             <PivotItem
-                Margin="0,-8,0,0"
+                Margin="0,0,0,0"
                 DataContext="{StaticResource NowPlayingVM}"
                 Header="Artists Info">
                 <Grid>
-                    <MenuFlyoutSeparator VerticalAlignment="Top" Background="#dbdbdb" />
                     <ListView
                         x:Name="artistInfoList"
-                        Margin="0,6,0,0"
+                        Margin="0,0,0,0"
                         ItemsSource="{Binding Path=Artists}"
                         SelectionMode="None"
                         Visibility="{Binding Path=ArtistInfoLoading, Converter={StaticResource TrueToFalse}}">

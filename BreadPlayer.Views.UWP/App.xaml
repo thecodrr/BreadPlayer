@@ -305,7 +305,7 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Bottom"
                                     Opacity="0"
-                                    Stroke="{ThemeResource TextBrush}"
+                                    Stroke="{Binding ElementName=ContentPresenter, Path=Foreground}"
                                     StrokeThickness="0.5" />
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="SelectionStates">

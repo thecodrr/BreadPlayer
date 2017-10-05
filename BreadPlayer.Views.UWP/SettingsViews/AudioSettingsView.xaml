@@ -35,7 +35,6 @@
                         <TextBlock Text="Device Buffer Size:" Foreground="{ThemeResource ThemeForeground}"/>
                         <TextBlock
                             FontSize="12"
-                            Foreground="Gray"
                             Text="Restart is needed for this change to take effect." />
                     </StackPanel>
                 </DataTemplate>
