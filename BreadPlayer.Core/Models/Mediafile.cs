@@ -49,7 +49,7 @@ namespace BreadPlayer.Core.Models
         private string _orginalFilename;
         private string _leadArtist;
         private string _publisher;
-        private int? _trackNumber;
+        private int _trackNumber;
         private string _size;
         private string _year;
         private string _naN = "NaN";
@@ -107,7 +107,11 @@ namespace BreadPlayer.Core.Models
         public string Album { get => _album; set => _album = string.IsNullOrEmpty(value) ? _album = "Unknown Album" : value; }
         public string Genre { get => _genre; set => _genre = string.IsNullOrEmpty(value) ? _genre = "Other" : value; }
         public string Title { get => _title; set => _title = string.IsNullOrEmpty(value) ? _title = System.IO.Path.GetFileNameWithoutExtension(_path) : value; }
-        public int? TrackNumber { get => _trackNumber; set => _trackNumber = _trackNumber == null ? _trackNumber = 0 : value; }
+        public int TrackNumber
+        {
+            get => _trackNumber;
+            set => _trackNumber = value;
+        }
         public string Year { get => _year; set => _year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
         public string LeadArtist { get => _leadArtist; set => _leadArtist = string.IsNullOrEmpty(value) ? _leadArtist = _naN : value; }
         public string OrginalFilename { get => _orginalFilename; set => _orginalFilename = string.IsNullOrEmpty(value) ? _orginalFilename = _naN : value; }
