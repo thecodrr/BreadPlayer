@@ -167,13 +167,13 @@
             <Grid
                 x:Name="equalizerOverlayGrid"
                 Margin="0,0,0,69.5"
-                Background="#ccdbdbdb">
+                Background="{ThemeResource ThemeBackground}">
                 <Grid
                     x:Name="equalizerGrid"
                     Height="400"
                     Padding="50"
                     HorizontalAlignment="Center"
-                    Background="{ThemeResource ThemeBackground}"
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                     DataContext="{StaticResource Core}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -186,6 +186,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         DisplayMemberPath="Name"
+                        IsEnabled="{Binding Source={StaticResource Core}, Path=Instance.Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                         ItemsSource="{Binding Path=Instance.Player.Equalizer.Presets}"
                         SelectedIndex="{Binding Path=Instance.Player.Equalizer.SelectedPreset, Mode=TwoWay}" />
                     <ToggleSwitch
@@ -213,12 +214,13 @@
                             Text="0dB" />
                         <Slider
                             Width="140"
-                            Background="#FFC5C5C5"
-                            BorderBrush="{x:Null}"
+                            Background="#FFDBDBDB"
+                            BorderBrush="#FFDBDBDB"
                             DataContext="{StaticResource Core}"
                             Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
                             LargeChange="1"
                             Maximum="12"
+                            IsEnabled="{Binding Source={StaticResource Core}, Path=Instance.Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                             Minimum="0"
                             Orientation="Horizontal"
                             SmallChange="0.1"
@@ -243,10 +245,10 @@
                                     <Slider
                                         Height="140"
                                         Margin="0,0,0,0"
-                                        Background="#FFC5C5C5"
-                                        BorderBrush="{x:Null}"
+                                        Background="#FFDBDBDB"
+                                        BorderBrush="#FFDBDBDB"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                        IsEnabled="{Binding Path=IsActive}"
+                                        IsEnabled="{Binding Source={StaticResource Core}, Path=Instance.Player.Equalizer.IsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                         LargeChange="0.2"
                                         Maximum="14"
                                         Minimum="-14"
