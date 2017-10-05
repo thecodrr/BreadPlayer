@@ -292,6 +292,10 @@ namespace BreadPlayer
         public static void LoadAppWithArguments(string arguments)
         {
             var args = arguments.Split('=', '&');
+
+            if (!args?.Any() == null || string.IsNullOrEmpty(arguments))
+                return;
+
             string action = args[1];
             if (action.Contains("view"))
             {

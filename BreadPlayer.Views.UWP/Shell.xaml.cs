@@ -66,7 +66,7 @@ namespace BreadPlayer
 
         private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
         {
-            if (_arguments != null)
+            if (!string.IsNullOrEmpty(_arguments))
                 CoreWindowLogic.LoadAppWithArguments(_arguments);
         }       
 
