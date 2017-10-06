@@ -99,7 +99,7 @@
                         Arguments="Recent"
                         DestinationPage="local:MusicHistoryView"
                         FontGlyph="&#x0042;"
-                        Label="Your Music History"
+                        Label=""
                         Symbol="Accept"
                         Tooltip="" />
                     <controls:SimpleNavMenuItem
@@ -127,9 +127,9 @@
                         x:Uid="watchAnAdMenuItem"
                         DestinationPage="local:LibraryView"
                         FontGlyph="&#x004d;"
-                        Label="Help Me By Watching An Ad"
+                        Label=""
                         Symbol="Accept"
-                        Tooltip="Watch an ad and help me make money to support BreadPlayer." />
+                        Tooltip="" />
                     <controls:SimpleNavMenuItem
                         x:Uid="settingsMenuItem"
                         DestinationPage="local:SettingsView"

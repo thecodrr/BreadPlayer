@@ -24,6 +24,7 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using BreadPlayer.Themes;
 using Microsoft.Services.Store.Engagement;
+using SharpRaven;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -593,4 +593,10 @@
     <value>General</value>
     <comment>**NEW**</comment>
   </data>
+  <data name="watchAnAdMenuItem.Label" xml:space="preserve">
+    <value>Support Me By Watching An Ad</value>
+  </data>
+  <data name="watchAnAdMenuItem.Tooltip" xml:space="preserve">
+    <value>Watch an ad and help me make money to support BreadPlayer.</value>
+  </data>
 </root>
