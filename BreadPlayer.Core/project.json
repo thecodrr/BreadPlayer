@@ -3,7 +3,7 @@
   "dependencies": {
     "LiteDB": "3.1.4",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
-    "NETStandard.Library": "2.0.0",
+    "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "10.0.3",
     "System.ValueTuple": "4.4.0"
   },

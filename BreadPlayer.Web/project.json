@@ -5,7 +5,7 @@
     "Inflatable.Lastfm": "1.0.1.307",
     "LiteDB": "3.1.4",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
-    "NETStandard.Library": "2.0.0",
+    "NETStandard.Library": "1.6.1",
     "System.Security.Cryptography.Algorithms": "4.3.0",
     "System.Security.Cryptography.Primitives": "4.3.0"
   },

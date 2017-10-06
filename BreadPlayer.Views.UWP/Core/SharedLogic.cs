@@ -198,7 +198,7 @@ namespace BreadPlayer.Core
             string displayName = "";
             string arguments = "action=view{0}&pageType={1}&pageParameter={2}";
             Uri image = null;
-            TileSize tileSize = TileSize.Default & TileSize.Square310x310 & TileSize.Square71x71 & TileSize.Square44x44 & TileSize.Square30x30;
+            TileSize tileSize = TileSize.Default & TileSize.Square310x310 & TileSize.Square71x71 & TileSize.Square44x44;
 
             if (para is Album album)
             {
