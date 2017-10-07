@@ -13,7 +13,8 @@ namespace BreadPlayer.Helpers
         {
             IReadOnlyList<User> users = await User.FindAllAsync();
 
-            if(users != null)
+            if(users != null && users.Any(p => p.AuthenticationStatus == UserAuthenticationStatus.LocallyAuthenticated &&
+                                         p.Type == UserType.LocalUser))
                return users.Where(p => p.AuthenticationStatus == UserAuthenticationStatus.LocallyAuthenticated &&
                                          p.Type == UserType.LocalUser).FirstOrDefault();
             return null;
