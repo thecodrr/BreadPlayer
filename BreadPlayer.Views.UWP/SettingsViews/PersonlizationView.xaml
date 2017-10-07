@@ -7,6 +7,7 @@
     mc:Ignorable="d">
     <ScrollViewer>
         <StackPanel
+            x:Name="mainPanel"
             Margin="10,0,0,0"
             DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.PersonalizationVM}"
             RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
@@ -68,5 +69,24 @@
                 <x:String>Album art color</x:String>
             </ComboBox>
         </StackPanel>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainPanel.Margin" Value="10,0,20,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </ScrollViewer>
 </Page>

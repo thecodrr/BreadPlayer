@@ -8,10 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources />
-    <Grid DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
-        <ScrollViewer>
-            <Grid Name="RootGrid">
-                <StackPanel x:Name="lastfmStackPanel" Grid.Column="1">
+    <ScrollViewer>
+            <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
                     <TextBlock
                         x:Name="lastfmHeader"
                         FontSize="22"
@@ -95,23 +93,13 @@
                         <x:String>Xiami</x:String>
                     </ComboBox>
                 </StackPanel>
-            </Grid>
-        </ScrollViewer>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="500" />
+                        <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0" />
-                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3" />
-                        <Setter Target="RootGrid.Margin" Value="25,50,25,0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -119,12 +107,10 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="lastfmStackPanel.(Grid.Column)" Value="0" />
-                        <Setter Target="lastfmStackPanel.(Grid.ColumnSpan)" Value="3" />
-                        <Setter Target="lastfmHeader.FontSize" Value="18" />
+                        <Setter Target="mainPanel.Margin" Value="10,0,20,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </ScrollViewer>
 </Page>

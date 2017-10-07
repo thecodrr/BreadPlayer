@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Uid="versionHeader"
                 FontSize="22"
@@ -88,5 +88,23 @@
                 TextAlignment="Justify"
                 TextWrapping="WrapWholeWords" />
         </StackPanel>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainPanel.Margin" Value="10,0,20,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters />
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </ScrollViewer>
 </Page>
