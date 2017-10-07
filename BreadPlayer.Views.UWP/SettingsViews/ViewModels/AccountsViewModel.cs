@@ -12,6 +12,7 @@ namespace BreadPlayer.ViewModels
         #region Lastfm Configuration
 
         private RelayCommand _lastfmLoginCommand;
+        private RelayCommand _lastfmLogoutCommand;
         private string _lastfmUsername;
         private string _lastfmPassword;
 
@@ -25,21 +26,23 @@ namespace BreadPlayer.ViewModels
         {
             get => _lastfmPassword;
             set => Set(ref _lastfmPassword, value);
-        }
-
-        private string _loginStatus = "(Not Logged In)";
-
-        public string LoginStatus
-        {
-            get => _loginStatus;
-            set => Set(ref _loginStatus, value);
-        }
+        }        
 
         public ICommand LastfmLoginCommand
         {
             get { if (_lastfmLoginCommand == null) { _lastfmLoginCommand = new RelayCommand(LastfmLogin); } return _lastfmLoginCommand; }
         }
-
+        public ICommand LastfmLogoutCommand
+        {
+            get { if (_lastfmLogoutCommand == null) { _lastfmLogoutCommand = new RelayCommand(LastfmLogout); } return _lastfmLogoutCommand; }
+        }
+        private async void LastfmLogout(object para)
+        {
+            LastfmPassword = "";
+            LastfmUsername = "";
+            ClearUserSessionFromSettings();
+            await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Successfully logged out!");
+        }
         private async void LastfmLogin(object para)
         {
             if (!LastfmPassword.Any() || !LastfmUsername.Any())
@@ -65,7 +68,6 @@ namespace BreadPlayer.ViewModels
 
             if (lastfm.LastfmClient.Auth.Authenticated)
             {
-                LoginStatus = "(Logged In)";
                 SaveUserSession(lastfm.LastfmClient.Auth.UserSession);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Successfully logged in!");
             }
@@ -110,7 +112,14 @@ namespace BreadPlayer.ViewModels
                 SettingsHelper.SaveRoamingSetting("LyricSource", _lyricSource);
             }
         }
-
+        private void ClearUserSessionFromSettings()
+        {
+            SettingsHelper.SaveRoamingSetting("LastfmSessionToken", null);
+            SettingsHelper.SaveRoamingSetting("LastfmIsSubscriber", null);
+            SettingsHelper.SaveRoamingSetting("LastfmSessionUsername", null);
+            SettingsHelper.SaveRoamingSetting("LastfmPassword", null);
+            SettingsHelper.SaveRoamingSetting("LastfmUsername", null);
+        }
         private LastUserSession GetUserSessionFromSettings()
         {
             string token = SettingsHelper.GetRoamingSetting<string>("LastfmSessionToken", "");
@@ -135,11 +144,11 @@ namespace BreadPlayer.ViewModels
 
         public AccountsViewModel()
         {
-            LyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto (recommended)");
-            LyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced (scrollable)");
-            NoOfArtistsToFetchInfoFor = SettingsHelper.GetRoamingSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
-            LastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
-            LastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
+            _lyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto (recommended)");
+            _lyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced (scrollable)");
+            _noOfArtistsToFetchInfoFor = SettingsHelper.GetRoamingSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
+            _lastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
+            _lastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
             LastfmLogin(false);
         }
     }

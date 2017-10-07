@@ -117,6 +117,8 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
+                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "None")
+                    return;
                 ArtistInfoLoading = true;
                 Artists = new ThreadSafeObservableCollection<LastArtist>();
                 SimilarArtists = null;
@@ -208,10 +210,10 @@ namespace BreadPlayer.ViewModels
 
         private async Task GetLyrics()
         {
+            if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
+                return;
             await BreadDispatcher.InvokeAsync(async () =>
-            {
-                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
-                    return;
+            {               
                 LyricsLoading = true;
 
                 timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
@@ -221,17 +223,17 @@ namespace BreadPlayer.ViewModels
                 string lyricsText = "";
                 if (string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric))
                 {
-                    var list = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(SharedLogic.Instance.Player.CurrentlyPlayingFile).ConfigureAwait(false);
+                    var lrcLyric = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(
+                        SharedLogic.Instance.Player.CurrentlyPlayingFile,
+                        SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricSource).ConfigureAwait(false);
 
-                    if (list == null || list?.Any() == false)
+                    if (string.IsNullOrEmpty(lrcLyric))
                     {
                         LyricsLoading = false;
                         return;
-                    }
-                    while (!LrcParser.IsLrc(list[0]))
-                        list.RemoveAt(0);
-                    lyricsText = list[0];
-                    SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric = await list[0].ZipAsync();
+                    }                    
+                    lyricsText = lrcLyric;
+                    SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric = await lyricsText.ZipAsync();
                     await _service.UpdateMediafile(SharedLogic.Instance.Player.CurrentlyPlayingFile);
                 }
                 else

@@ -54,6 +54,8 @@
                 FontSize="15"
                 FontWeight="SemiBold"
                 Foreground="White"
+                Command="{Binding Path=NavigateToUriCommand}"
+                CommandParameter="https://www.patreon.com/bePatron?u=2815941"
                 Style="{StaticResource DateTimePickerFlyoutButtonStyle}" />
 
             <PathIcon
@@ -89,6 +91,8 @@
                 Background="#1cc7d0"
                 Content=""
                 FontSize="15"
+                Command="{Binding Path=NavigateToUriCommand}"
+                CommandParameter="https://github.com/theweavrs/BreadPlayer/issues/144"
                 FontWeight="SemiBold"
                 Foreground="White"
                 Style="{StaticResource DateTimePickerFlyoutButtonStyle}" />
@@ -121,6 +125,8 @@
                 Background="#6e5494"
                 Content="Become a Coder"
                 FontSize="15"
+                Command="{Binding Path=NavigateToUriCommand}"
+                CommandParameter="https://github.com/theweavrs/BreadPlayer/blob/master/CONTRIBUTING.md"
                 FontWeight="SemiBold"
                 Foreground="White"
                 Style="{StaticResource DateTimePickerFlyoutButtonStyle}" />
@@ -161,6 +167,8 @@
                 FontSize="15"
                 FontWeight="SemiBold"
                 Foreground="White"
+                Command="{Binding Path=NavigateToUriCommand}"
+                CommandParameter="https://github.com/theweavrs/BreadPlayer/wiki/Guide-For-Testers"
                 Style="{StaticResource DateTimePickerFlyoutButtonStyle}" />
         </Grid>
     </ScrollViewer>

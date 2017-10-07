@@ -158,7 +158,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
             // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
             // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-            if (reset)
+            if (!reset)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
             else
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));

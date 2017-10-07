@@ -14,7 +14,7 @@ namespace BreadPlayer.Web.LyricsFetch
     {
         static ILyricAPI[] Sources = new ILyricAPI[] { new NeteaseClient(), new XiamiClient(), new BaiduClient() };
 
-        public static async Task<List<string>> FetchLyrics(Mediafile file)
+        public static async Task<string> FetchLyrics(Mediafile file, string lyricSource)
         {
             try
             {
@@ -29,15 +29,29 @@ namespace BreadPlayer.Web.LyricsFetch
                     parsedArtists.RemoveAt(0);
                 }
                 mediaFile.LeadArtist = !parsedArtists.Any() ? file.LeadArtist : TagParser.ParseTitle(parsedArtists[0]);
-                List<string> Lyrics = new List<string>();
-                for (int i = 0; i < Sources.Length; i++)
+                string Lyrics = "";
+                switch (lyricSource)
                 {
-                    var lyrics = await Sources[i].FetchLyrics(mediaFile).ConfigureAwait(false);
-                    if (LrcParser.IsLrc(lyrics))
-                    {
-                        Lyrics.Add(lyrics);
+                    case "Auto":
+                        for (int i = 0; i < Sources.Length; i++)
+                        {
+                            var lrc = await Sources[i].FetchLyrics(mediaFile).ConfigureAwait(false);
+                            if (LrcParser.IsLrc(lrc))
+                            {
+                                Lyrics = lrc;
+                                break;
+                            }
+                        }
                         break;
-                    }
+                    case "Netease":
+                        Lyrics = await Sources[0].FetchLyrics(mediaFile).ConfigureAwait(false);
+                        break;
+                    case "Baidu":
+                        Lyrics = await Sources[2].FetchLyrics(mediaFile).ConfigureAwait(false);
+                        break;
+                    case "Xiami":
+                        Lyrics = await Sources[1].FetchLyrics(mediaFile).ConfigureAwait(false);
+                        break;
                 }
                 return Lyrics;
             }

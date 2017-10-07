@@ -50,11 +50,8 @@
                             x:Uid="lastfmLogoutBtn"
                             Width="200"
                             Margin="5,0,0,0"
-                            Command="{Binding Path=LastfmLoginCommand}"
+                            Command="{Binding Path=LastfmLogoutCommand}"
                             Content="Logout">
-                            <Button.CommandParameter>
-                                <x:Boolean>false</x:Boolean>
-                            </Button.CommandParameter>
                         </Button>
                     </StackPanel>
                     <TextBlock
@@ -84,7 +81,7 @@
                         Margin="0,5,0,0"
                         Header=""
                         SelectedItem="{Binding Path=LyricType, Mode=TwoWay}">
-                        <x:String>Synced (scrollable)</x:String>
+                        <x:String>Synced</x:String>
                         <x:String>None</x:String>
                     </ComboBox>
                     <ComboBox
@@ -92,11 +89,10 @@
                         Margin="0,5,0,0"
                         Header=""
                         SelectedItem="{Binding Path=LyricSource, Mode=TwoWay}">
-                        <x:String>Auto (recommended)</x:String>
-                        <x:String>All (for best accuracy)</x:String>
-                        <x:String>Netease (fastest)</x:String>
-                        <x:String>Baidu (fast)</x:String>
-                        <x:String>Xiami (slowest)</x:String>
+                        <x:String>Auto</x:String>
+                        <x:String>Netease</x:String>
+                        <x:String>Baidu</x:String>
+                        <x:String>Xiami</x:String>
                     </ComboBox>
                 </StackPanel>
             </Grid>

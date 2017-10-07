@@ -44,6 +44,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
+using Windows.System;
 using Windows.System.Display;
 using Windows.UI.Popups;
 
@@ -135,7 +136,6 @@ namespace BreadPlayer.ViewModels
 
         #endregion MessageHandling
 
-
         #region Ctor
 
         public SettingsViewModel()
@@ -175,16 +175,21 @@ namespace BreadPlayer.ViewModels
 
         #region Definitions
 
-        private DelegateCommand _resetCommand;
-
-        /// <summary>
-        /// Gets load library command. This calls the <see cref="Load"/> method.
-        /// </summary>
+        private DelegateCommand _resetCommand;        
         public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
+        private ICommand _navigateToUriCommand;
+        public ICommand NavigateToUriCommand { get { if (_navigateToUriCommand == null) { _navigateToUriCommand = new RelayCommand(NavigateToUri); } return _navigateToUriCommand; } }
+        private ICommand _showWhatsNewDialogCommand;
+        public ICommand ShowWhatsNewDialogCommand { get { if (_showWhatsNewDialogCommand == null) { _showWhatsNewDialogCommand = new DelegateCommand(ShowWhatsNewDialog); } return _showWhatsNewDialogCommand; } }
 
         #endregion Definitions
 
         #region Implementation
+        private async void ShowWhatsNewDialog() => await WhatsNewDialogHelper.ShowWhatsNewDialogAsync();
+        private async void NavigateToUri(object para)
+        {
+            await Launcher.LaunchUriAsync(new Uri(para.ToString()));
+        }
         private async void Reset()
         {
             try

@@ -8,21 +8,29 @@
     mc:Ignorable="d">
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-        <StackPanel RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <StackPanel DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Uid="versionHeader"
                 FontSize="22"
                 FontWeight="Bold"
                 Text="" />
             <TextBlock x:Uid="version" Text="" />
-            <Button Margin="0,10,0,0" Content="What's New" />
-            <Button Margin="0,10,0,0" Content="Release notes" />
+            <Button Margin="0,10,0,0" 
+                    Content="What's New" 
+                    Command="{Binding Path=ShowWhatsNewDialogCommand}"/>
+            <Button Margin="0,10,0,0" 
+                    Content="Release notes" 
+                    Command="{Binding Path=NavigateToUriCommand}" 
+                    CommandParameter="https://github.com/theweavrs/BreadPlayer/blob/master/RELEASENOTES.md"/>
             <TextBlock
                 x:Uid="contributorsHeader"
                 FontSize="22"
                 FontWeight="Bold"
                 Text="" />
-            <TextBlock x:Uid="indebtedTB" FontSize="13" Text="" />
+            <TextBlock
+                x:Uid="indebtedTB"
+                FontSize="13"
+                Text="" />
             <HyperlinkButton
                 Padding="0,0,0,5"
                 Content="Become a Contributor"
