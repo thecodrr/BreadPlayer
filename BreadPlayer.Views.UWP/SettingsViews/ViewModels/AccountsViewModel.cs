@@ -144,8 +144,8 @@ namespace BreadPlayer.ViewModels
 
         public AccountsViewModel()
         {
-            _lyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto (recommended)");
-            _lyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced (scrollable)");
+            _lyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto");
+            _lyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced");
             _noOfArtistsToFetchInfoFor = SettingsHelper.GetRoamingSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
             _lastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
             _lastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
