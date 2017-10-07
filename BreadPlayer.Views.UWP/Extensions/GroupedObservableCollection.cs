@@ -104,7 +104,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while adding file to grouped collection.", ex);
+                BLogger.E("Error occured while adding file to grouped collection.", ex);
             }
         }
 
@@ -160,7 +160,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while adding range to grouped collection.", ex);
+                BLogger.E("Error occured while adding range to grouped collection.", ex);
             }
         }
 
@@ -175,7 +175,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating collection on collectionchanged.", ex);
+                BLogger.E("Error occured while updating collection on collectionchanged.", ex);
                 Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
@@ -191,7 +191,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating grouped collection on property changed.", ex);
+                BLogger.E("Error occured while updating grouped collection on property changed.", ex);
                 Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
             }
         }
@@ -378,7 +378,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while finding or creating a group.", ex);
+                BLogger.E("Error occured while finding or creating a group.", ex);
             }
 
             return result;

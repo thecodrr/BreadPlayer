@@ -146,7 +146,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while deleting song from playlist.", ex);
+                BLogger.E("Error occured while deleting song from playlist.", ex);
             }
         }
 
@@ -178,7 +178,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    BLogger.Logger.Error("Error occured while refreshing playlist.", ex);
+                    BLogger.E("Error occured while refreshing playlist.", ex);
                 }
             });
         }

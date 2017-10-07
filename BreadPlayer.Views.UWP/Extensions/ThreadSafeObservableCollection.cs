@@ -119,7 +119,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+                BLogger.E("Error occured while updating TSCollection on collectionchanged.", ex);
             }
         });
     }
@@ -165,7 +165,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         }
         catch (Exception ex)
         {
-            BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
+            BLogger.E("Error occured while adding range to TSCollection.", ex);
         }
     }
 

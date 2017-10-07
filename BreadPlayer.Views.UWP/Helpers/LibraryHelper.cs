@@ -92,7 +92,7 @@ namespace BreadPlayer.Helpers
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, songs);
 
                 string message = string.Format("Songs successfully imported!");
-                BLogger.Logger.Info(message);
+                BLogger.I(message);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
             });
         }
@@ -119,7 +119,7 @@ namespace BreadPlayer.Helpers
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Info("Failed to save albumart.", ex);
+                BLogger.E("Failed to save albumart.", ex);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Failed to save album art of " + mp3File.OrginalFilename);
             }
         }

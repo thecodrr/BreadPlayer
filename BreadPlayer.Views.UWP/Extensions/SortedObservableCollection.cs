@@ -87,7 +87,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while adding range to TSCollection.", ex);
+                BLogger.E("Error occured while adding range to TSCollection.", ex);
             }
         }
 
@@ -102,7 +102,7 @@ namespace BreadPlayer.Extensions
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating TSCollection on collectionchanged.", ex);
+                BLogger.E("Error occured while updating TSCollection on collectionchanged.", ex);
             }
         }
 

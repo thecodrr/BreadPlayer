@@ -94,7 +94,7 @@ namespace BreadPlayer
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error while saving settings.", ex);
+                BLogger.E("Error while saving settings.", ex);
             }
         }
 
@@ -132,13 +132,13 @@ namespace BreadPlayer
 
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
-            // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+            // BLogger.I("state has been changed (PLAYBACK SESSION).");
 
             await BreadDispatcher.InvokeAsync(() =>
             {
                 if (sender.PlaybackState == MediaPlaybackState.Paused && SharedLogic.Instance.Player.PlayerState != PlayerState.Paused)
                 {
-                    // BLogger.Logger?.Info("state has been changed (PLAYBACK SESSION).");
+                    // BLogger.I("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                 }
             });
@@ -169,7 +169,7 @@ namespace BreadPlayer
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating SMTC.", ex);
+                BLogger.E("Error occured while updating SMTC.", ex);
             }
         }
 
@@ -216,12 +216,12 @@ namespace BreadPlayer
                     break;
 
                 case PlayerState.Paused:
-                    // BLogger.Logger?.Info("state has been changed to paused.");
+                    // BLogger.I("state has been changed to paused.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                     break;
 
                 case PlayerState.Stopped:
-                    // BLogger.Logger?.Info("state has been changed to stopped.");
+                    // BLogger.I("state has been changed to stopped.");
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                     break;
 
@@ -238,8 +238,8 @@ namespace BreadPlayer
         {
             //SharedLogic.SettingsVm.TimeClosed = DateTime.Now.ToString();
             SharedLogic.Instance.Player.Dispose();
-            BLogger.Logger.Info("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
-            BLogger.Logger.Info("Application is being suspended, disposing everything.");
+            BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
+            BLogger.I("Application is being suspended, disposing everything.");
             _player?.Dispose();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgDispose);
         }
@@ -285,7 +285,7 @@ namespace BreadPlayer
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while updating tile.", ex);
+                BLogger.E("Error occured while updating tile.", ex);
             }
         }
 

@@ -199,7 +199,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while resetting the player.", ex);
+                BLogger.E("Error occured while resetting the player.", ex);
             }
         }
         #endregion Implementation
@@ -326,7 +326,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Auto Loading of library failed.", ex);
+                BLogger.E("Auto Loading of library failed.", ex);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message);
             }
         }

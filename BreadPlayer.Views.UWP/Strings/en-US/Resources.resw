@@ -545,9 +545,6 @@
   <data name="lastfmLogoutBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Log out of your Last.fm account</value>
   </data>
-  <data name="bakersHeader" xml:space="preserve">
-    <value>Bakers</value>
-  </data>
   <data name="breadsHeader" xml:space="preserve">
     <value>Breads</value>
   </data>
@@ -655,5 +652,8 @@
   </data>
   <data name="lyricSourceCB.Header" xml:space="preserve">
     <value>Choose lyric source:</value>
+  </data>
+  <data name="notificationsHeader.Text" xml:space="preserve">
+    <value>Notifications</value>
   </data>
 </root>

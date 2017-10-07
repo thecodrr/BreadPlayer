@@ -467,7 +467,7 @@ namespace SplitViewMenu
             }
             catch(Exception ex)
             {
-                BLogger.Logger.Error("Error while navigating back.", ex);
+                BLogger.E("Error while navigating back.", ex);
             }
         }
 

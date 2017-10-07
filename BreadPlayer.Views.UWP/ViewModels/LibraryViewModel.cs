@@ -395,7 +395,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while deleting a song from collection and list.", ex);
+                BLogger.E("Error occured while deleting a song from collection and list.", ex);
             }
         }
 
@@ -492,7 +492,7 @@ namespace BreadPlayer.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        BLogger.Logger.Error("Error occured while drag/drop operation.", ex);
+                        BLogger.E("Error occured while drag/drop operation.", ex);
                     }
                 }
             }
@@ -902,7 +902,7 @@ namespace BreadPlayer.ViewModels
             {
                 _libraryLoaded = true;
                 await CreateGenreMenu().ConfigureAwait(false);
-                BLogger.Logger.Info("Library successfully loaded!");
+                BLogger.I("Library successfully loaded!");
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }

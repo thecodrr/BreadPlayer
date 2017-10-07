@@ -186,7 +186,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
-                BLogger.Logger.Error("Error occured while deleting playlist.", ex);
+                BLogger.E("Error occured while deleting playlist.", ex);
             }
         }
         private async Task AddPlaylistAsync(Playlist plist, bool addsongs, IEnumerable<Mediafile> songs = null)

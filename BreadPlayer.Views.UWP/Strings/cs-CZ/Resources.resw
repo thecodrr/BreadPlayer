@@ -470,4 +470,7 @@
     <value>Staň se beta testerem</value>
     <comment>!!!NEW!!!</comment>
   </data>
+  <data name="notificationsHeader.Text" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

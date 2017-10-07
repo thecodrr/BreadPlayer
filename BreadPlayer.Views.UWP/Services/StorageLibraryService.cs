@@ -37,7 +37,7 @@ namespace BreadPlayer.Services
             catch
             {
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Failed to initialize file system watcher.");
-                BLogger.Logger.Error("Failed to initialize file system watcher");
+                BLogger.I("Failed to initialize file system watcher");
             }
         }
 
@@ -80,7 +80,7 @@ namespace BreadPlayer.Services
             if (count == 0)
             {
                 string error = "No songs found!";
-                BLogger.Logger.Error("No songs were found!");
+                BLogger.I("No songs were found!");
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(error);
                 return null;
             }

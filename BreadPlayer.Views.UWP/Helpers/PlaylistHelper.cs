@@ -99,7 +99,7 @@ namespace BreadPlayer.Helpers
                     }
                     catch (Exception ex)
                     {
-                        BLogger.Logger.Error("Loading of a playlist song in folder failed.", ex);
+                        BLogger.E("Loading of a playlist song in folder failed.", ex);
                     }
                 }
                 files = await fileTask.ConfigureAwait(false);

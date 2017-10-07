@@ -497,7 +497,7 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    BLogger.Logger.Error("An error occured while trying to play next song.", ex);
+                    BLogger.E("An error occured while trying to play next song.", ex);
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     ClearPlayerState();
                     PlayNext();
@@ -662,7 +662,7 @@ namespace BreadPlayer.ViewModels
             //to avoid changing the device at that time, we use this statement.
             if (eventCount > 1)
             {
-                BLogger.Logger.Info($"Switching audio render device to [{currentEndpoint.ToString()}].");
+                BLogger.I($"Switching audio render device to [{currentEndpoint.ToString()}].");
                 SharedLogic.Instance.Player.ChangeDevice(currentEndpoint.ToString());
             }
             //increase the event count
@@ -676,7 +676,7 @@ namespace BreadPlayer.ViewModels
 
             var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
             var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.Logger.Info($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+            BLogger.I($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
 
             _audioDeviceId = args.Id;
 
@@ -1066,7 +1066,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                BLogger.Logger.Error("Failed to load file. Loading next file...");
+                BLogger.I("Failed to load file. Loading next file...");
                 var playingCollection = GetPlayingCollection();
                 int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
                 SharedLogic.Instance.Player.IgnoreErrors = false;
