@@ -210,10 +210,11 @@ namespace BreadPlayer.ViewModels
 
         private async Task GetLyrics()
         {
-            if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
-                return;
+           
             await BreadDispatcher.InvokeAsync(async () =>
-            {               
+            {
+                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
+                    return;
                 LyricsLoading = true;
 
                 timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())

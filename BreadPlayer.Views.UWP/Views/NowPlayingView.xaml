@@ -934,7 +934,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <ProgressRing IsActive="{Binding LyricsLoading}" />
+                    <ProgressRing IsActive="{Binding Source={StaticResource NowPlayingVM}, Path=LyricsLoading}" />
                 </Grid>
             </PivotItem>
             <PivotItem
