@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Common;
 using BreadPlayer.Targets;
 using SharpRaven;
+using SharpRaven.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,25 +35,28 @@ public class BLogger
     public static async void E(string message, Exception exception)
     {
         Logger.Error(message, exception);
-        var result = await ravenClient.CaptureAsync(
-            new SharpRaven.Data.SentryEvent(
-                new SharpRaven.Data.SentryMessage(
-                    string.Format(
-                        "Message:{0} \r\n\r\nException:{1}", 
-                        message, 
-                        exception.ToString())))).ConfigureAwait(false);
+        var sentryMessage = new SentryMessage(string.Format(
+                        "Message: {0} \r\n\r\nException:{1}",
+                        message,
+                        exception.ToString()));
+        var sentryEvent = new SentryEvent(sentryMessage)
+        {
+            Level = ErrorLevel.Error
+        };
+        var result = await ravenClient.CaptureAsync(sentryEvent).ConfigureAwait(false);
     }
     public static async void F(string message, Exception exception)
     {
         Logger.Fatal(message, exception);
-        var result = await ravenClient.CaptureAsync(
-            new SharpRaven.Data.SentryEvent(
-                new SharpRaven.Data.SentryMessage(
-                    string.Format(
-                        "Message:{0} \r\n\r\nException:{1}", 
-                        message, 
-                        exception.ToString()))))
-                        .ConfigureAwait(false);
+        var sentryMessage = new SentryMessage(string.Format(
+                        "Message: {0} \r\n\r\nException:{1}",
+                        message,
+                        exception.ToString()));
+        var sentryEvent = new SentryEvent(sentryMessage)
+        {
+            Level = ErrorLevel.Fatal
+        };
+        var result = await ravenClient.CaptureAsync(sentryEvent).ConfigureAwait(false);
     }
     public static void I(string message)
     {
