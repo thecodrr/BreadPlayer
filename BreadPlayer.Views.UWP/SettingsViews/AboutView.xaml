@@ -22,10 +22,10 @@
                 FontSize="22"
                 FontWeight="Bold"
                 Text="" />
-            <TextBlock FontSize="13" Text="BreadPlayer is indebted to these great people for their dedication and support." />
+            <TextBlock x:Uid="indebtedTB" FontSize="13" Text="" />
             <HyperlinkButton
                 Padding="0,0,0,5"
-                Content="Become a Contributor?"
+                Content="Become a Contributor"
                 NavigateUri="ContributeView.xaml" />
             <ItemsControl MaxHeight="250">
                 <HyperlinkButton

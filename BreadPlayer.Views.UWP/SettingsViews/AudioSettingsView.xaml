@@ -32,10 +32,11 @@
             <rad:RadNumericBox.HeaderTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="Device Buffer Size:" Foreground="{ThemeResource ThemeForeground}"/>
+                        <TextBlock x:Uid="deviceBufferSizeTB" Text="" Foreground="{ThemeResource ThemeForeground}"/>
                         <TextBlock
+                            x:Uid="deviceBufferSizeHelpText"
                             FontSize="12"
-                            Text="Restart is needed for this change to take effect." />
+                            Text="" />
                     </StackPanel>
                 </DataTemplate>
             </rad:RadNumericBox.HeaderTemplate>

@@ -38,17 +38,19 @@
                 FontWeight="SemiBold"
                 Text="Donate via Patreon" />
             <TextBlock
+                x:Uid="donationTipTB"
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 FontSize="13"
-                Text="Support me financially by becoming my Patron on Patreon. Patrons will get awesome rewards like early betas, ability to vote on ideas, and access to my Patreon post stream."
+                Text=""
                 TextWrapping="WrapWholeWords" />
             <Button
+                x:Uid="patronBtn"
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
                 Margin="0,5,0,10"
                 Background="#E6461A"
-                Content="Become a Patron"
+                Content=""
                 FontSize="15"
                 FontWeight="SemiBold"
                 Foreground="White"
@@ -73,17 +75,19 @@
                 FontWeight="SemiBold"
                 Text="Help us translate" />
             <TextBlock
+                x:Uid="translationTipTB"
                 Grid.Row="4"
                 Grid.ColumnSpan="3"
                 FontSize="13"
-                Text="Help me translate this beast into your native language and make BreadPlayer easy for your countrymen to use. All translators get their name in the contributors list."
+                Text=""
                 TextWrapping="WrapWholeWords" />
             <Button
+                x:Uid="translatorBtn"
                 Grid.Row="5"
                 Grid.ColumnSpan="3"
                 Margin="0,5,0,10"
                 Background="#1cc7d0"
-                Content="Become a Translator"
+                Content=""
                 FontSize="15"
                 FontWeight="SemiBold"
                 Foreground="White"
@@ -103,12 +107,14 @@
                 FontWeight="SemiBold"
                 Text="Contribute code" />
             <TextBlock
+                x:Uid="codeContributionTipTB"
                 Grid.Row="7"
                 Grid.ColumnSpan="3"
                 FontSize="13"
-                Text="If you are a developer, I would tremendously appreciate your help. No need to worry, you will have my help all the way. All developers get their names in the contributors list."
+                Text=""
                 TextWrapping="WrapWholeWords" />
             <Button
+                x:Uid="becomeACoderBtn"
                 Grid.Row="8"
                 Grid.ColumnSpan="3"
                 Margin="0,5,0,10"
@@ -139,12 +145,14 @@
                 FontWeight="SemiBold"
                 Text="Help us debug" />
             <TextBlock
+                x:Uid="testingTipTB"
                 Grid.Row="10"
                 Grid.ColumnSpan="3"
                 FontSize="13"
-                Text="Become a tester and help us debug. Debugging is really easy; just play around and report the bugs you encounter."
+                Text=""
                 TextWrapping="WrapWholeWords" />
             <Button
+                x:Uid="testerBtn"
                 Grid.Row="11"
                 Grid.ColumnSpan="3"
                 Margin="0,5,0,10"

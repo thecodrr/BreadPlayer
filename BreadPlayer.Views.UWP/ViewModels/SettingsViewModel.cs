@@ -38,6 +38,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -157,14 +158,14 @@ namespace BreadPlayer.ViewModels
         {
             SettingsCollection = new ThreadSafeObservableCollection<SettingGroup>()
             {
-                new SettingGroup("\uE771","Personlization","Background, font, theme", typeof(PersonlizationView)),
-                new SettingGroup("\uE910","Accounts","Last.fm, lyrics", typeof(AccountsView)),
-                new SettingGroup("\uE144", "Keyboard Bindings", "Keyboard shortcuts", typeof(KeyboardSettingsView)),
-                new SettingGroup("\uE770", "Core", "Reset, notifications, lock screen", typeof(CoreSettingsView)),
-                new SettingGroup("\uE7F6", "Audio", "Equalizer, volume, cross-fade", typeof(AudioSettingsView)),
-                new SettingGroup("\uE779", "Contact", "Facebook, email, github", typeof(ContactView)),
-                new SettingGroup("\uE946", "About", "Version info, license, credits", typeof(AboutView)),
-                new SettingGroup("\uE789", "Contribute", "Translation, bug hunting, coding", typeof(ContributeView)),
+                new SettingGroup("\uE771", SharedLogic.Instance.ResourceLoader.GetString("personlizationSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("personalizationSettingsSubtitle"), typeof(PersonlizationView)),
+                new SettingGroup("\uE910", SharedLogic.Instance.ResourceLoader.GetString("accountsSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("accountsSettingsSubtitle"), typeof(AccountsView)),
+                new SettingGroup("\uE144", SharedLogic.Instance.ResourceLoader.GetString("keyboardSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("keyboardSettingsSubtitle"), typeof(KeyboardSettingsView)),
+                new SettingGroup("\uE770", SharedLogic.Instance.ResourceLoader.GetString("coreSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("coreSettingsSubtitle"), typeof(CoreSettingsView)),
+                new SettingGroup("\uE7F6", SharedLogic.Instance.ResourceLoader.GetString("audioSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("audioSettingsSubtitle"), typeof(AudioSettingsView)),
+                new SettingGroup("\uE779", SharedLogic.Instance.ResourceLoader.GetString("contactSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("contactSettingsSubtitle"), typeof(ContactView)),
+                new SettingGroup("\uE946", SharedLogic.Instance.ResourceLoader.GetString("aboutSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("aboutSettingsSubtitle"), typeof(AboutView)),
+                new SettingGroup("\uE789", SharedLogic.Instance.ResourceLoader.GetString("contributeSettingsText"), SharedLogic.Instance.ResourceLoader.GetString("contributeSettingsSubtitle"), typeof(ContributeView)),
             };
         }
 

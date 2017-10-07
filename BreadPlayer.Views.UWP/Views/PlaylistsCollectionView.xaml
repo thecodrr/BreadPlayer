@@ -220,7 +220,7 @@
                             Style="{StaticResource HyperlinkBtn}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE710;" />
-                                <TextBlock Margin="10,0,0,0" Text="New playlist" />
+                                <TextBlock x:Uid="newPlaylistTB" Margin="10,0,0,0" Text="New playlist" />
                             </StackPanel>
                         </Button>
                         <Button
@@ -232,6 +232,7 @@
                             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
                                 <FontIcon Margin="0,3,0,0" Glyph="&#xE8B5;" />
                                 <TextBlock
+                                    x:Uid="importPlaylistTB"
                                     Margin="10,0,0,0"
                                     VerticalAlignment="Center"
                                     Text="Import playlist" />

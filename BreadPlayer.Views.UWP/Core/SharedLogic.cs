@@ -26,6 +26,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.StartScreen;
+using Windows.ApplicationModel.Resources;
 
 namespace BreadPlayer.Core
 {
@@ -48,6 +49,8 @@ namespace BreadPlayer.Core
         #endregion Ctor
 
         #region Singletons (NEED IMPROVEMENTS)
+
+        public ResourceLoader ResourceLoader => GSingleton<ResourceLoader>.Instance.Singleton;
         public static SharedLogic Instance => GSingleton<SharedLogic>.Instance.Singleton;
         /// <summary>
         /// This path is used around the codebase multiple times,

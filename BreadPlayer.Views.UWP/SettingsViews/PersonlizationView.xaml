@@ -55,11 +55,12 @@
                 TextWrapping="Wrap" />
 
             <TextBlock>
-                <Run Text="Background blur overlay color:" />
+                <Run x:Uid="backgroundOverlayHeader" Text="" />
                 <LineBreak />
                 <Run
+                    x:Uid="backgroundOverlayHelpText"
                     FontSize="11"
-                    Text="This is the overlay color of album art on the player background." />
+                    Text="" />
             </TextBlock>
             <ComboBox Margin="0,5,0,0" SelectedIndex="1"
                       SelectedValue="{Binding Path=BackgroundOverlayColor, Mode=TwoWay}">

@@ -41,8 +41,8 @@
                 FontSize="22"
                 FontWeight="Bold"
                 Text="" />
-            <CheckBox x:Uid="songNotificationsCheckBox" Content="Show upcoming song notifications" />
-            <CheckBox x:Uid="tileNotificationsCheckBox" Content="Show tile notifications" />
+            <CheckBox x:Uid="songNotificationsCheckBox" Content="" />
+            <CheckBox x:Uid="tileNotificationsCheckBox" Content="" />
 
             <!--  Lockscreen Section  -->
             <TextBlock

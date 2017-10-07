@@ -117,14 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="aboutPivot.Header" xml:space="preserve">
+  <data name="aboutSettingsText" xml:space="preserve">
     <value>පිළිබඳ.</value>
-  </data>
-  <data name="addSomeSongsBtn.Content" xml:space="preserve">
-    <value>ගීත එකතු කරන්න.</value>
-  </data>
-  <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ඔබගේ ගීත ගබඩාවට ගීත ආයාත කරන්න.</value>
   </data>
   <data name="albumsHeader.Text" xml:space="preserve">
     <value>බ්‍රෙඩ්ස්.</value>
@@ -135,16 +129,16 @@
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>ටෝස්ට් ලැයිස්තුව වෙත ආපසු යන්න.</value>
   </data>
-  <data name="byEmailHeader.Text" xml:space="preserve">
-    <value>ඊ-මේල් මගින්:</value>
+  <data name="suggestionRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="byGithubHeader.Text" xml:space="preserve">
-    <value>ගිට් හබ්  මගින්:</value>
+  <data name="questionRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="byStoreHeader.Text" xml:space="preserve">
-    <value>ගබඩාව මගින්:</value>
+  <data name="kudosRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="changeAccentCheckBox.Content" xml:space="preserve">
@@ -156,8 +150,8 @@
   <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
     <value>ඇල්බම් චිත්‍රය වෙනස් කිරීම</value>
   </data>
-  <data name="contactUsHereHeader.Text" xml:space="preserve">
-    <value>ඔබට මෙහිදීද අප හා සම්බන්ධ විය හැකිය:</value>
+  <data name="contactMeTB.Text" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="contributorsHeader.Text" xml:space="preserve">
@@ -199,42 +193,8 @@
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>ඔබගේ ප්‍රියතම ටෝස්ට් වෙත යොමු වන්න.</value>
   </data>
-  <data name="fontCapsHelpText.Text" xml:space="preserve">
-    <value>මෙය පරිශීලක අතුරු මුහුණතේ අකුරු මහප්‍රාණ කරන්න.</value>
-  </data>
-  <data name="fontCapsOptionFirst" xml:space="preserve">
-    <value>සාමාන්ය.</value>
-  </data>
-  <data name="fontCapsOptionSecond" xml:space="preserve">
-    <value>සියල්ල මහප්‍රාණ.</value>
-  </data>
-  <data name="fontCapsText.Text" xml:space="preserve">
-    <value>අකුරු මහප්‍රාණ කිරීම:</value>
-    <comment>(Do not omit the semi colon here.)</comment>
-  </data>
-  <data name="generalPivot.Header" xml:space="preserve">
-    <value>පොදු</value>
-  </data>
   <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>අපගේ ගිට් හබ් ව්යාපෘති පිටුව යන්න ක්ලික් කරන්න.</value>
-  </data>
-  <data name="importFolderBtn.Content" xml:space="preserve">
-    <value>ෆොල්ඩර් ගීත ගොනුවට ආයාත කිරීම.</value>
-  </data>
-  <data name="importHelpText.Text" xml:space="preserve">
-    <value>ආයාත කල ෆයිල් වර්ග: MP3, WAV, OGG, FLAC, M4A, AIF, WMA</value>
-  </data>
-  <data name="importPlaylistBtn.Content" xml:space="preserve">
-    <value>ගීත ධාවන ලැයිස්තු ආයාත කිරීම.</value>
-  </data>
-  <data name="importPlaylistHelpText.Text" xml:space="preserve">
-    <value>සහාය ධාවන ලැයිස්තුව M3U හා PLS.</value>
-  </data>
-  <data name="importShowMoreLabel.Text" xml:space="preserve">
-    <value>තව පෙන්වන්න</value>
-  </data>
-  <data name="importToastsHeader.Text" xml:space="preserve">
-    <value>ටෝස්ට් ආයාත කරන්න.</value>
   </data>
   <data name="lastfmCredit.Text" xml:space="preserve">
     <value>කලාකරුවා සහ ඇල්බමය තොරතුරු සඳහා - Last.fm</value>
@@ -264,9 +224,6 @@
   <data name="leaveReviewBtn.Content" xml:space="preserve">
     <value>සමාලෝචනයක් තබන්න.</value>
   </data>
-  <data name="libraryPivot.Header" xml:space="preserve">
-    <value>ගීත ගොනු ගබඩාව.</value>
-  </data>
   <data name="licenseHeader.Text" xml:space="preserve">
     <value>බලපත්රය</value>
   </data>
@@ -289,38 +246,11 @@
   <data name="lockscreenHeader.Text" xml:space="preserve">
     <value>තිරය අගුලු දමන්න.</value>
   </data>
-  <data name="loggedInStatus" xml:space="preserve">
-    <value>ලොගින් වී සිටී.</value>
-  </data>
-  <data name="loggedOutStatus" xml:space="preserve">
-    <value>ලොග්ඩ් අවුට් වී සිටී.</value>
-  </data>
-  <data name="lonelyTextBlock.Text" xml:space="preserve">
-    <value>මෙහි පාළුයි :(</value>
-  </data>
   <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>අපට තැපැල් කිරීමට ක්ලික් කරන්න.</value>
   </data>
-  <data name="mostEatenMenuItem.Label" xml:space="preserve">
-    <value>බොහෝ අනුභවයට ගත් දේ.</value>
-  </data>
-  <data name="mostEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>ඔබ වඩාත්ම අනුභවයට ගත් ටෝස්ට.</value>
-  </data>
   <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>ශබ්දය වසන්න</value>
-  </data>
-  <data name="myBakeriesMenuItem.Label" xml:space="preserve">
-    <value>මාගේ බේකරි.</value>
-  </data>
-  <data name="myBakeriesMenuItem.Tooltip" xml:space="preserve">
-    <value>මාගේ බේකරි සඳහා යොමු වන්න. (SoundCloud, Last.fm ....).</value>
-  </data>
-  <data name="myBreadsMenuItem.Label" xml:space="preserve">
-    <value>මාගේ බ්‍රෙඩ්ස්.</value>
-  </data>
-  <data name="myBreadsMenuItem.Tooltip" xml:space="preserve">
-    <value>මාගේ බ්‍රෙඩ්ස් සඳහා යොමු වන්න.</value>
   </data>
   <data name="nowBakingMenuItem.Label" xml:space="preserve">
     <value>දැන් බේක් වන</value>
@@ -333,9 +263,6 @@
   </data>
   <data name="openSongLocationMenuItem.Text" xml:space="preserve">
     <value>ටෝස්ට ඇති ස්ථානය විවෘත කරන්න.</value>
-  </data>
-  <data name="personalizationPivot.Header" xml:space="preserve">
-    <value>පුද්ගලාරෝපණය.</value>
   </data>
   <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
     <value>වඩා විකල්ප පෙන්වන්න.</value>
@@ -361,18 +288,6 @@
   </data>
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>ප්‍රොපර්ටීස්</value>
-  </data>
-  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
-    <value>මෑතකදී එකතු කරන ලද</value>
-  </data>
-  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
-    <value>මෑතකදී එකතු කරන ලද ඒවාට යොමු වන්න.</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
-    <value>මෑතකදී අනුභව කරන ලද</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>මෑතකදී වාදනය කරන ලද ගීත වලට යොමු වන්න.</value>
   </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>අපගේ Reddit ගිණුම වෙත යන්න ක්ලික් කරන්න.</value>
@@ -444,12 +359,6 @@
     <value>තේමාව:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
-    <value>ටෝස්ට එකතුව.</value>
-  </data>
-  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
-    <value>ටෝස්ට එකතුව වෙත යොමුවන්න.</value>
-  </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>අපගේ ට්විටර් ගිණුම වෙත යන්න ක්ලික් කරන්න.</value>
   </data>
@@ -464,43 +373,11 @@
   <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>ශබ්දය</value>
   </data>
-  <data name="albumRetryText.Text" xml:space="preserve">
-    <value>බ්‍රෙඩ් ටෝස්ට් ලබා ගැනීමට අසමත් විය. නැවත උත්සාහ කරන්න.</value>
-  </data>
-  <data name="albumTracksPivot.Header" xml:space="preserve">
-    <value>බ්‍රෙඩ් ටෝස්ට්.</value>
-  </data>
-  <data name="artistBioPivot.Header" xml:space="preserve">
+  <data name="bakerInfoPivot.Header" xml:space="preserve">
     <value>බේකර් චරිතාපදානය.</value>
-  </data>
-  <data name="artistRetryText.Text" xml:space="preserve">
-    <value>බේකර් චරිතාපදානය ලබා ගැනීමට අසමත් විය. නැවත උත්සාහ කරන්න.</value>
-  </data>
-  <data name="correctAlbumTextBox.PlaceholderText" xml:space="preserve">
-    <value>මෙහි නිවැරදි ගීත ඇල්බමය ඇතුලත් කරන්න...</value>
-    <comment>(Respect the ellipsis at the end.)</comment>
-  </data>
-  <data name="correctArtistNameTextBox.PlaceholderText" xml:space="preserve">
-    <value>මෙහි නිවැරදි ටෝස්ට් බේකරය ඇතුලත් කරන්න...</value>
-    <comment>(Respect the ellipsis at the end.)</comment>
-  </data>
-  <data name="goBackBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>නැවත පෙර පිටුවට යන්න.</value>
-  </data>
-  <data name="lyricsPivot.Header" xml:space="preserve">
-    <value>ගී පද</value>
-  </data>
-  <data name="lyricsText.Text" xml:space="preserve">
-    <value>ළඟදීම සමමුහුර්ත පද රචනය සඳහා සහයෝගය! භුක්ති විඳින්න.</value>
   </data>
   <data name="nowPlayingPivot.Header" xml:space="preserve">
     <value>දැන් බේක් වන</value>
-  </data>
-  <data name="retryBtn.Content" xml:space="preserve">
-    <value>නැවත උත්සාහ කරන්න</value>
-  </data>
-  <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>දැන් බේක් වන ටෝස්ට ලැයිස්තුව පෙන්වන්න.</value>
   </data>
   <data name="addToFavCmd.Text" xml:space="preserve">
     <value>ප්‍රියතමයන්ට එකතු කරන්න.</value>
@@ -513,9 +390,6 @@
   </data>
   <data name="commandsHeader.Text" xml:space="preserve">
     <value>විධානයන්</value>
-  </data>
-  <data name="contactUsPivot.Header" xml:space="preserve">
-    <value>අප හා සම්බන්ධ වන්න</value>
   </data>
   <data name="deleteSongCmd.Text" xml:space="preserve">
     <value>ගීතය මකන්න.</value>
@@ -585,7 +459,7 @@
     <value>ප්‍රභවය කේතනය කිරීමට දායක වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="contributePivot.Header" xml:space="preserve">
+  <data name="contributeSettingsText" xml:space="preserve">
     <value>දායක වන්න</value>
     <comment>!!!NEW!!!</comment>
   </data>

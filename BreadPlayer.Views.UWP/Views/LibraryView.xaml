@@ -177,7 +177,7 @@
             Grid.ColumnSpan="2"
             Foreground="{ThemeResource TextBrush}"
             SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem Foreground="{ThemeResource TextBrush}" Header="Toasts">
+            <PivotItem x:Uid="toastsPivot" Foreground="{ThemeResource TextBrush}" Header="Toasts">
                 <Grid Margin="0,-10,0,0">
                     <SemanticZoom
                         x:Name="semanticZoom"
@@ -221,6 +221,7 @@
                                                         Margin="0,3,0,0"
                                                         Glyph="&#xE8B5;" />
                                                     <TextBlock
+                                                        x:Uid="importFolderTB"
                                                         Margin="10,0,0,0"
                                                         Text="Import folder" />
                                                 </StackPanel>
@@ -236,7 +237,7 @@
                                                         Margin="0,3,0,0"
                                                         Glyph="&#xE8B1;" />
                                                     <TextBlock Margin="10,0,0,0">
-                                                        <Run Text="Shuffle all" />
+                                                        <Run x:Uid="shuffleAllRun" Text="Shuffle all" />
                                                         <Run Text="(" />
                                                         <Run Text="{Binding Path=SongCount}" />
                                                         <Run Text=")" />
@@ -401,19 +402,19 @@
                     </SemanticZoom>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="Breads">
+            <PivotItem x:Uid="breadsPivot" Header="Breads">
                 <Frame
                     Name="BreadsFrame"
                     x:DeferLoadStrategy="Lazy"
                     Visibility="Collapsed" />
             </PivotItem>
-            <PivotItem Header="Bakers">
+            <PivotItem x:Uid="bakersPivot" Header="Bakers">
                 <Frame
                     Name="BakersFrame"
                     x:DeferLoadStrategy="Lazy"
                     Visibility="Collapsed" />
             </PivotItem>
-            <PivotItem Header="Playlists">
+            <PivotItem x:Uid="playlistsPivot" Header="Playlists">
                 <Frame
                     Name="PlaylistsFrame"
                     x:DeferLoadStrategy="Lazy"
@@ -487,9 +488,9 @@
                           Grid.RowSpan="2"
                           VerticalAlignment="Center"
                           Margin="0,0,15,0"/>
-                <TextBlock Text="There are no toasts in your collection."
+                <TextBlock x:Uid="noToastsTB" Text=""
                            Grid.Column="1"/>
-                <TextBlock Text="Click here to import some."
+                <TextBlock x:Uid="importToastsTB" Text=""
                            FontWeight="SemiBold"
                            Grid.Column="1"
                            Grid.Row="1"/>

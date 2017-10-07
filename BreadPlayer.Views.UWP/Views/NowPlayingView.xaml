@@ -765,7 +765,7 @@
             Grid.ColumnSpan="5"
             Margin="10,0"
             Style="{StaticResource CustomPivot}">
-            <PivotItem Margin="0,0,0,0" Header="Now Playing">
+            <PivotItem x:Uid="nowPlayingPivot" Margin="0,0,0,0" Header="Now Baking">
                 <Grid>
                     <ListView Margin="0,0,0,0" ItemsSource="{Binding Path=NowPlayingQueue}">
                         <ListView.ItemTemplate>
@@ -863,7 +863,7 @@
                     </ListView>
                 </Grid>
             </PivotItem>
-            <PivotItem Margin="0,0,0,0" Header="Lyrics">
+            <PivotItem x:Uid="lyricsPivot" Margin="0,0,0,0" Header="Lyrics">
                 <Grid x:Name="lyricsGrid">
                     <ListView
                         x:Name="lyricsList"
@@ -938,9 +938,10 @@
                 </Grid>
             </PivotItem>
             <PivotItem
+                x:Uid="bakerInfoPivot"
                 Margin="0,0,0,0"
                 DataContext="{StaticResource NowPlayingVM}"
-                Header="Artists Info">
+                Header="">
                 <Grid>
                     <ListView
                         x:Name="artistInfoList"

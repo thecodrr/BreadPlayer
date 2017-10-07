@@ -117,14 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="aboutPivot.Header" xml:space="preserve">
+  <data name="aboutSettingsText" xml:space="preserve">
     <value>Über</value>
-  </data>
-  <data name="addSomeSongsBtn.Content" xml:space="preserve">
-    <value>Füge ein paar Songs hinzu</value>
-  </data>
-  <data name="addSomeSongsBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Importierte Songs in deine Bibliothek</value>
   </data>
   <data name="albumsHeader.Text" xml:space="preserve">
     <value>Brote</value>
@@ -135,16 +129,16 @@
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Zurück zur Brotscheiben Liste</value>
   </data>
-  <data name="byEmailHeader.Text" xml:space="preserve">
-    <value>via Email:</value>
+  <data name="suggestionRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the colon here.)</comment>
   </data>
-  <data name="byGithubHeader.Text" xml:space="preserve">
-    <value>via Github:</value>
+  <data name="questionRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the colon here.)</comment>
   </data>
-  <data name="byStoreHeader.Text" xml:space="preserve">
-    <value>via Store:</value>
+  <data name="kudosRB.Content" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the colon here.)</comment>
   </data>
   <data name="changeAccentCheckBox.Content" xml:space="preserve">
@@ -156,8 +150,8 @@
   <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
     <value>Albumcover ändern</value>
   </data>
-  <data name="contactUsHereHeader.Text" xml:space="preserve">
-    <value>Du kannst uns ebenfalls hier kontaktieren:</value>
+  <data name="contactMeTB.Text" xml:space="preserve">
+    <value></value>
     <comment>(Do not omit the colon here.)</comment>
   </data>
   <data name="contributorsHeader.Text" xml:space="preserve">
@@ -199,42 +193,8 @@
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigiere zu deinen favorisierten Songs.</value>
   </data>
-  <data name="fontCapsHelpText.Text" xml:space="preserve">
-    <value>This changes the text capitalization of the UI.</value>
-  </data>
-  <data name="fontCapsOptionFirst" xml:space="preserve">
-    <value>Normal</value>
-  </data>
-  <data name="fontCapsOptionSecond" xml:space="preserve">
-    <value>All Capitals</value>
-  </data>
-  <data name="fontCapsText.Text" xml:space="preserve">
-    <value>Font Capitilization:</value>
-    <comment>(Do not omit the semi colon here.)</comment>
-  </data>
-  <data name="generalPivot.Header" xml:space="preserve">
-    <value>Allgemein</value>
-  </data>
   <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Klicke hier, um unsere Github-Projektseite zu besuchen.</value>
-  </data>
-  <data name="importFolderBtn.Content" xml:space="preserve">
-    <value>Importiere Ordner zu deiner Musik-Bibliothek</value>
-  </data>
-  <data name="importHelpText.Text" xml:space="preserve">
-    <value>Unterstützt werden die Dateitypen MP3, WAV, OGG, FLAC, M4A, AIF, WMA</value>
-  </data>
-  <data name="importPlaylistBtn.Content" xml:space="preserve">
-    <value>Importiere Playlists</value>
-  </data>
-  <data name="importPlaylistHelpText.Text" xml:space="preserve">
-    <value>Unterstützte Playlistformate sind M3U and PLS.</value>
-  </data>
-  <data name="importShowMoreLabel.Text" xml:space="preserve">
-    <value>Zeige mehr</value>
-  </data>
-  <data name="importToastsHeader.Text" xml:space="preserve">
-    <value>Importiere Brotscheiben</value>
   </data>
   <data name="lastfmCredit.Text" xml:space="preserve">
     <value>Last.fm für Künstler &amp;amp; Album Informationen.</value>
@@ -264,9 +224,6 @@
   <data name="leaveReviewBtn.Content" xml:space="preserve">
     <value>Hinterlasse deine Bewertung</value>
   </data>
-  <data name="libraryPivot.Header" xml:space="preserve">
-    <value>Bibliothek</value>
-  </data>
   <data name="licenseHeader.Text" xml:space="preserve">
     <value>Lizent</value>
   </data>
@@ -283,38 +240,11 @@
   <data name="lockscreenHeader.Text" xml:space="preserve">
     <value>Sperrbildschirm</value>
   </data>
-  <data name="loggedInStatus" xml:space="preserve">
-    <value>Angemeldet</value>
-  </data>
-  <data name="loggedOutStatus" xml:space="preserve">
-    <value>Ausgeloggt</value>
-  </data>
-  <data name="lonelyTextBlock.Text" xml:space="preserve">
-    <value>Es ist einsam hier :(</value>
-  </data>
   <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Sende eine Email an uns.</value>
   </data>
-  <data name="mostEatenMenuItem.Label" xml:space="preserve">
-    <value>Am meisten gegessen</value>
-  </data>
-  <data name="mostEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu deinen am meisten abgespielten Songs.</value>
-  </data>
   <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Ton stummschalten</value>
-  </data>
-  <data name="myBakeriesMenuItem.Label" xml:space="preserve">
-    <value>Meine Bäckereien</value>
-  </data>
-  <data name="myBakeriesMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu deiner Bäckerei (SoundCloud, Last.fm etc.).</value>
-  </data>
-  <data name="myBreadsMenuItem.Label" xml:space="preserve">
-    <value>Meine Brote</value>
-  </data>
-  <data name="myBreadsMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu deinen Broten.</value>
   </data>
   <data name="nowBakingMenuItem.Label" xml:space="preserve">
     <value>Wird gebacken</value>
@@ -327,9 +257,6 @@
   </data>
   <data name="openSongLocationMenuItem.Text" xml:space="preserve">
     <value>Öffne Brotscheiben Ordnerpfad</value>
-  </data>
-  <data name="personalizationPivot.Header" xml:space="preserve">
-    <value>Personalisierung</value>
   </data>
   <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
     <value>Zeige mehr Optionen.</value>
@@ -355,18 +282,6 @@
   </data>
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>Eigenschaften</value>
-  </data>
-  <data name="recentlyAddedMenuItem.Label" xml:space="preserve">
-    <value>Kürzlich hinzugefügt</value>
-  </data>
-  <data name="recentlyAddedMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu deinen kürzlich hinzugefügten Brotscheiben.</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Label" xml:space="preserve">
-    <value>Zuletzt gegessen</value>
-  </data>
-  <data name="recentlyEatenMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu den zuletzt abgespielten Songs.</value>
   </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Klicke hier, um unser Reddit-Profil zu besuchen.</value>
@@ -438,12 +353,6 @@
     <value>Design:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
-  <data name="toastCollectionMenuItem.Label" xml:space="preserve">
-    <value>Brotscheiben Sammlung</value>
-  </data>
-  <data name="toastCollectionMenuItem.Tooltip" xml:space="preserve">
-    <value>Deine Song-Sammlung.</value>
-  </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Besuche unser Twitter Profil.</value>
   </data>
@@ -458,43 +367,11 @@
   <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Lautstärke</value>
   </data>
-  <data name="albumRetryText.Text" xml:space="preserve">
-    <value>Failed to fetch Bread's Toasts. Bitte versuche es erneut.</value>
-  </data>
-  <data name="albumTracksPivot.Header" xml:space="preserve">
-    <value>Bread Toasts</value>
-  </data>
-  <data name="artistBioPivot.Header" xml:space="preserve">
+  <data name="bakerInfoPivot.Header" xml:space="preserve">
     <value>Bäcker Biographie</value>
-  </data>
-  <data name="artistRetryText.Text" xml:space="preserve">
-    <value>Failed to fetch baker biography. Please retry.</value>
-  </data>
-  <data name="correctAlbumTextBox.PlaceholderText" xml:space="preserve">
-    <value>Enter the correct song album here...</value>
-    <comment>(Respect the ellipsis at the end.)</comment>
-  </data>
-  <data name="correctArtistNameTextBox.PlaceholderText" xml:space="preserve">
-    <value>Gebe den korrekten Brotscheiben Bäcker hier ein...</value>
-    <comment>(Respect the ellipsis at the end.)</comment>
-  </data>
-  <data name="goBackBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>zurück zur vorherigen Seite.</value>
-  </data>
-  <data name="lyricsPivot.Header" xml:space="preserve">
-    <value>Songtext</value>
-  </data>
-  <data name="lyricsText.Text" xml:space="preserve">
-    <value>Support für synchrone Songtexte kommt bald! .</value>
   </data>
   <data name="nowPlayingPivot.Header" xml:space="preserve">
     <value>wird gebacken</value>
-  </data>
-  <data name="retryBtn.Content" xml:space="preserve">
-    <value>erneut versuchen</value>
-  </data>
-  <data name="showNowBakingListBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zeige eine Liste der aktuell gebackenden Brotscheiben.</value>
   </data>
   <data name="addToFavCmd.Text" xml:space="preserve">
     <value>zu Favoriten hinzufügen</value>
@@ -507,9 +384,6 @@
   </data>
   <data name="commandsHeader.Text" xml:space="preserve">
     <value>Befehle</value>
-  </data>
-  <data name="contactUsPivot.Header" xml:space="preserve">
-    <value>Kontaktiere uns</value>
   </data>
   <data name="deleteSongCmd.Text" xml:space="preserve">
     <value>Song löschen</value>
@@ -578,7 +452,7 @@
     <value>Contribute Code</value>
     <comment>!!!NEW!!!</comment>
   </data>
-  <data name="contributePivot.Header" xml:space="preserve">
+  <data name="contributeSettingsText" xml:space="preserve">
     <value>Contribute</value>
     <comment>!!!NEW!!!</comment>
   </data>

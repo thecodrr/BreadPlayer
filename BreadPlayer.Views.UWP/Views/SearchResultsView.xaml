@@ -23,6 +23,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock
+                x:Uid="bakersHeader"
                 Name="artistsHeader"
                 Grid.Row="0"
                 FontSize="22"
@@ -45,6 +46,7 @@
                         FontSize="11"
                         Glyph="&#xE71D;" />
                     <TextBlock
+                        x:Uid="showAllTB"
                         Margin="5,0,0,0"
                         FontSize="11"
                         Text="Show all" />
@@ -94,6 +96,7 @@
                         FontSize="11"
                         Glyph="&#xE71D;" />
                     <TextBlock
+                        x:Uid="showAllTB"
                         Margin="5,0,0,0"
                         FontSize="11"
                         Text="Show all" />
@@ -143,6 +146,7 @@
                         FontSize="11"
                         Glyph="&#xE71D;" />
                     <TextBlock
+                        x:Uid="showAllTB"
                         Margin="5,0,0,0"
                         FontSize="11"
                         Text="Show all" />

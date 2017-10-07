@@ -171,6 +171,11 @@
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
     <None Include="project.json" />
+    <PRIResource Include="Strings\si-LK\Resources.resw" />
+    <PRIResource Include="Strings\es-es\Resources.resw" />
+    <PRIResource Include="Strings\pl-PL\Resources.resw" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
+    <PRIResource Include="Strings\cs-CZ\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviours\InputDeviceEventBehaviour.cs" />

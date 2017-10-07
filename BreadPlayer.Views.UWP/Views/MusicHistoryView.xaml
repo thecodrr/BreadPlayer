@@ -36,7 +36,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Pivot x:Name="mainPivot" Margin="0,0,10,0" SelectionChanged="OnSelectionChanged">
-            <PivotItem Name="recentlyPlayedPivotItem" Header="Recently Played">
+            <PivotItem x:Uid="recentlyPlayedPivot" Name="recentlyPlayedPivotItem" Header="Recently Played">
                 <BPControls:AlternatingRowListView x:Name="recentlyPlayedList"
                                                    OddRowBackground="{ThemeResource EvenRowBackground}"
                                                    EvenRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -71,9 +71,9 @@
                     </Interactivity:Interaction.Behaviors>
                 </BPControls:AlternatingRowListView>
             </PivotItem>
-            <PivotItem Name="recentlyAddedPivotItem" Header="Recently Added">
+            <PivotItem x:Uid="recentlyAddedPivot" Name="recentlyAddedPivotItem" Header="Recently Added">
             </PivotItem>
-            <PivotItem Name="mostPlayedPivotItem" Header="Most Played">
+            <PivotItem x:Uid="mostPlayedPivot" Name="mostPlayedPivotItem" Header="Most Played">
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
