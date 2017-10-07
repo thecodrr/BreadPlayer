@@ -1,5 +1,34 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.0-beta:
+### What's New:
+1. Added "Bakers" menu for artists.
+2. Reworked "Toast Collection" user interface
+3. Reworked "Settings" user interface
+4. Added better "Equalizer" and new "Presets".
+5. Added new "Now Baking" screen with "Lyrics" & "Artist Info".
+6. Added "Pin to Start" for almost everything.
+7. Added ability to "Share" now baking song.
+8. Added new "Playlists" user interface.
+9. Added better logging and crash analytics.
+10. Added more ways you can SUPPORT ME!
+
+### What's Fixed:
+**The issues fixed weren't counted nor recorded. But I can assure you, they were MANY.**
+
+### What's Improved:
+1. Improved navigation performance.
+2. Improved backward navigation.
+3. Improved overall performance of the app.
+4. Improved User Experience.
+5. Improved playlist import performance.
+
+### What's Removed:
+1. "Playlists" were removed from HamburgerMenu to "Toast Collection".
+2. "Import folders" and "Import playlists" were removed to "Toast Collection".
+3. "Recently Played", "Recently Added" & "Most Played" were removed to "Toast History".
+4. "My Bakeries" was removed to Settings > Accounts
+
 ## Version 2.6.2-beta:
 ### What's Fixed:
 - Fixed issue where library import took too much time.
