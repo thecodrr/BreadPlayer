@@ -31,6 +31,7 @@ using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace BreadPlayer
@@ -62,6 +63,16 @@ namespace BreadPlayer
             NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
             watchAdMenuItem.Command = _shellVm.WatchAnAdCommand;
             hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
+            if (SharedLogic.Instance.SettingsVm.PersonalizationVM.BackgroundOverlayColor == "Auto")
+            {
+                backgroundBorder.Background = Application.Current.Resources["BackgroundOverlay"] as SolidColorBrush;
+                backgroundBorder.Opacity = 0.6;
+            }
+            else
+            {
+                backgroundBorder.Background = Application.Current.Resources["PlaybarBrush"] as SolidColorBrush;
+                backgroundBorder.Opacity = 0.8;
+            }
         }
 
         private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)

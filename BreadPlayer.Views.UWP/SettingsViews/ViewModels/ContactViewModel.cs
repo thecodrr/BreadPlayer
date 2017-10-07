@@ -66,15 +66,18 @@ namespace BreadPlayer.SettingsViews.ViewModels
             emailMessage.Subject = ContentTitle.Replace(":", "");
             if (ContentTitle.Contains("Bug"))
             {
-                StorageFolder storageFolder = await KnownFolders.MusicLibrary.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
-                var attachmentFile = await storageFolder.GetFileAsync("Log.log");
-                if (attachmentFile != null)
+                StorageFolder storageFolder = await KnownFolders.MusicLibrary.GetFolderAsync(".breadplayerLogs");
+                if (storageFolder != null)
                 {
-                    var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(attachmentFile);
-                    var attachment = new Windows.ApplicationModel.Email.EmailAttachment(
-                             attachmentFile.Name,
-                             stream);
-                    emailMessage.Attachments.Add(attachment);
+                    var attachmentFile = await storageFolder.GetFileAsync("Log.log");
+                    if (attachmentFile != null)
+                    {
+                        var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(attachmentFile);
+                        var attachment = new Windows.ApplicationModel.Email.EmailAttachment(
+                                 attachmentFile.Name,
+                                 stream);
+                        emailMessage.Attachments.Add(attachment);
+                    }
                 }
             }
             await EmailManager.ShowComposeNewEmailAsync(emailMessage);

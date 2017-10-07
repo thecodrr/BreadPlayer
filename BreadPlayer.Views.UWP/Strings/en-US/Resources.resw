@@ -525,7 +525,7 @@
     <value>Send</value>
   </data>
   <data name="backgroundOverlayHelpText.Text" xml:space="preserve">
-    <value>This is the overlay color of album art on the player background.</value>
+    <value>This is the overlay color of album art on the player background. Restart is required for this change to take effect.</value>
   </data>
   <data name="backgroundOverlayHeader.Text" xml:space="preserve">
     <value>Background blur overlay color:</value>
