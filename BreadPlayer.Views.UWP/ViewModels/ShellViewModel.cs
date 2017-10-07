@@ -241,6 +241,9 @@ namespace BreadPlayer.ViewModels
         private DelegateCommand _playPauseCommand;
         private DelegateCommand _setRepeatCommand;
         private DelegateCommand _showEqualizerCommand;
+        private DelegateCommand _shuffleAllCommand;
+
+        public DelegateCommand ShuffleAllCommand { get { if (_shuffleAllCommand == null) { _shuffleAllCommand = new DelegateCommand(ShuffleAll); } return _shuffleAllCommand; } }
 
         public ICommand MuteCommand { get; set; }
         public ICommand IncreaseVolumeCommand { get; set; }
@@ -281,6 +284,11 @@ namespace BreadPlayer.ViewModels
         #endregion Definition
 
         #region Implementation
+        private async void ShuffleAll()
+        {
+            Shuffle = true;
+            await PlayFile((await ShuffledCollection().ConfigureAwait(false))[0], true).ConfigureAwait(false);
+        }
         private async void WatchAnAd()
         {
             if (!InternetConnectivityHelper.IsInternetConnected)

@@ -234,7 +234,6 @@ namespace BreadPlayer.ViewModels
         #region Commands
 
         #region Definitions
-
         private RelayCommand _addToFavoritesCommand;
         private DelegateCommand _changeSelectionModeCommand;
         private RelayCommand _deleteCommand;
@@ -244,8 +243,6 @@ namespace BreadPlayer.ViewModels
         private RelayCommand _relocateSongCommand;
         private RelayCommand _stopAfterCommand;
         private DelegateCommand _importFolderCommand;
-
-
         public DelegateCommand ImportFolderCommand { get { if (_importFolderCommand == null) { _importFolderCommand = new DelegateCommand(ImportFolder); } return _importFolderCommand; } }
 
         public ICommand AddToFavoritesCommand

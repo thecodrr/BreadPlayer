@@ -229,7 +229,7 @@
                                             <Button
                                                 Margin="0,0,10,0"
                                                 Background="{x:Null}"
-                                                Command="{Binding AddToPlaylistCommand}"
+                                                Command="{Binding Source={StaticResource ShellVM}, Path=ShuffleAllCommand}"
                                                 Foreground="{ThemeResource TextBrush}"
                                                 Style="{StaticResource HyperlinkBtn}">
                                                 <StackPanel Orientation="Horizontal">
