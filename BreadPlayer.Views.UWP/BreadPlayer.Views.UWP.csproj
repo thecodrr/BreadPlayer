@@ -186,7 +186,7 @@
     <Compile Include="BreadLogger\AsyncFileTarget.cs" />
     <Compile Include="BreadLogger\BLogger.cs" />
     <Compile Include="Common\BackDrop.cs" />
-    <Compile Include="Common\DeviceInfoHelper.cs" />
+    <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
     <Compile Include="Common\RoamingSettingsHelper.cs" />
@@ -244,12 +244,15 @@
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
     <Compile Include="Helpers\TrackCollectionHelper.cs" />
+    <Compile Include="Helpers\UserInfoHelper.cs" />
     <Compile Include="Helpers\WhatsNewDialogHelper.cs" />
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
+    <Compile Include="SentryAPI\BPSentryUserFactory.cs" />
+    <Compile Include="SentryAPI\SentryMessageSender.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\StorageLibraryService.cs" />
