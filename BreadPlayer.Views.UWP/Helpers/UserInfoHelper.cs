@@ -13,8 +13,10 @@ namespace BreadPlayer.Helpers
         {
             IReadOnlyList<User> users = await User.FindAllAsync();
 
-            return users.Where(p => p.AuthenticationStatus == UserAuthenticationStatus.LocallyAuthenticated &&
+            if(users != null)
+               return users.Where(p => p.AuthenticationStatus == UserAuthenticationStatus.LocallyAuthenticated &&
                                          p.Type == UserType.LocalUser).FirstOrDefault();
+            return null;
         }
         public static async Task<string> GetUsernameAsync()
         {
