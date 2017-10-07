@@ -161,7 +161,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             if (!reset)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
             else
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, objectArray));
         }
         catch (Exception ex)
         {
