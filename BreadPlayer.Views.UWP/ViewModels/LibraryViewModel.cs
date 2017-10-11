@@ -381,6 +381,8 @@ namespace BreadPlayer.ViewModels
                         index = TracksCollection.Elements.IndexOf(item);
                         TracksCollection.RemoveItem(item);
                         await LibraryService.RemoveMediafile(item);
+                        SongCount--;
+                        break;
                     }
                 }
 
