@@ -95,7 +95,7 @@ namespace BreadPlayer.Extensions
                     Elements.AddSorted(item, false);
                 }
                 var s = FindOrCreateGroup(key);
-                s.Add(item);
+                s?.Add(item);
             }
             catch (Exception ex)
             {
@@ -131,6 +131,7 @@ namespace BreadPlayer.Extensions
 
                 NotifyProperties();
                 OnCollectionReset();
+
                 Elements.NotifyProperties();
                 Elements.OnCollectionReset();
             }
@@ -304,8 +305,10 @@ namespace BreadPlayer.Extensions
             try
             {
                 var group = this.FirstOrDefault(t => t.Key.CompareTo(key) >= 0);
-                var index = IndexOf(group);
-                
+                int? index = null;
+                if (group != null)
+                    index = IndexOf(group);
+
                 if (group == null)
                 {
                     // Group doesn't exist and the new group needs to go at the end
@@ -316,7 +319,7 @@ namespace BreadPlayer.Extensions
                 {
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
-                    Items.Insert(index, result);
+                    Items.Insert(index.Value, result);
                 }
                 else
                 {
