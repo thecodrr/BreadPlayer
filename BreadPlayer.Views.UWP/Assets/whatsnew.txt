@@ -8,3 +8,4 @@
 7. Fixed Show All Toasts Search results UI.
 8. Fixed random crashes when navigating around pages with lists.
 9. Fixed a critical thread allocation bug.
+10. Fixed hang and crash when deleting songs.
