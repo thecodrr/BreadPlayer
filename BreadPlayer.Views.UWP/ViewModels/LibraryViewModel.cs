@@ -86,7 +86,7 @@ namespace BreadPlayer.ViewModels
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
 
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
-                await TracksCollection.AddRange(songs).ConfigureAwait(false);
+                TracksCollection.AddRange(songs);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
                 await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
 
@@ -500,7 +500,7 @@ namespace BreadPlayer.ViewModels
         {
             for (int i = 0; i < SongCount; i += nSize)
             {
-                await TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false), false, false);
+                TracksCollection.AddRange(await LibraryService.GetRangeOfMediafiles(i, Math.Min(nSize, SongCount - i)).ConfigureAwait(false));
             }
         }
 
@@ -698,7 +698,7 @@ namespace BreadPlayer.ViewModels
 
                 ViewSource.IsSourceGrouped = group;
                 // await SplitList(300).ConfigureAwait(false);
-                await TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false)).ConfigureAwait(false);
+                TracksCollection.AddRange(await LibraryService.GetAllMediafiles().ConfigureAwait(false));
 
                 IsLibraryLoading = false;
             });
@@ -747,7 +747,7 @@ namespace BreadPlayer.ViewModels
                         TracksCollection = new GroupedObservableCollection<IGroupKey, Mediafile>(GetSortFunction(propName));
                         ViewSource.Source = TracksCollection;
                         ViewSource.IsSourceGrouped = true;
-                        await TracksCollection.AddRange(_files);
+                        TracksCollection.AddRange(_files);
                         UpdateJumplist(propName);
                         await RemoveDuplicateGroups();
                     });

@@ -4,3 +4,5 @@
 3. Fixed crash when navigating to Bakers (artists).
 4. Fixed app hang when navigating to Bakers (artists).
 5. Fixed app crash when library was loading.
+6. Fixed crash when searching songs.
+7. Fixed Show All Toasts Search results UI.

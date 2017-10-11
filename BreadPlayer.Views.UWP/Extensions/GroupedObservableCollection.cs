@@ -35,7 +35,8 @@ namespace BreadPlayer.Extensions
         where TElement : IComparable<TElement>
     {
         private readonly Func<TElement, TKey> _readKey;
-
+    private const string CountName = nameof(Count);
+    private const string IndexerName = "Item[]";
         /// <summary>
         /// This is used as an optimisation for when items are likely to be added in key order and there is a good probability
         /// that when an item is added, then next one will be in the same grouping.
@@ -83,12 +84,7 @@ namespace BreadPlayer.Extensions
             var group = TryFindGroup(key);
             return group != null && group.Any(i => compare(item, i));
         }
-
-        public IEnumerable<TElement> EnumerateItems()
-        {
-            return this.SelectMany(g => g);
-        }
-
+        
         public void AddItem(TElement item, bool addToElement = false)
         {
             try
@@ -96,9 +92,8 @@ namespace BreadPlayer.Extensions
                 var key = _readKey(item);
                 if (addToElement)
                 {
-                    Elements.AddSorted(item);
+                    Elements.AddSorted(item, false);
                 }
-
                 var s = FindOrCreateGroup(key);
                 s.Add(item);
             }
@@ -107,101 +102,56 @@ namespace BreadPlayer.Extensions
                 BLogger.E("Error occured while adding file to grouped collection.", ex);
             }
         }
-
         /// <summary>
         /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
         /// </summary>
-        public async Task AddRange(IEnumerable<TElement> range, bool addkey = false, bool async = true)
+        public void AddRange(IEnumerable<TElement> collection)
         {
             try
             {
                 // get out if no new items
-                if (range == null || !range.Any())
+                if (collection == null)
                 {
                     return;
                 }
 
-                if (!addkey)
+                if (collection is ICollection<TElement> list)
                 {
-                    Elements.AddSortedRange(range);
+                    if (list.Count == 0) return;
                 }
-                // add the items, making sure no events are fired
-                _isObserving = false;
+                else if (!collection.Any()) return;
+                else list = new List<TElement>(collection);
 
-                var objectArray = range.ToArray();
-                if (async)
+                CheckReentrancy();
+
+                foreach (var item in collection)
                 {
-                    await Task.Run(() =>
-                    {
-                        AddItems(objectArray);
-                    });
-                }
-                else
-                {
-                    AddItems(objectArray);
+                    AddItem(item, true);
                 }
 
-                _isObserving = true;
-                // fire the events
-                OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-                // LOLLO NOTE I took out the following so the list viewers don't lose the position.
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                //OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
-
-                void AddItems(TElement[] array)
-                {
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        AddItem(array[i]);
-                    }
-                }
+                NotifyProperties();
+                OnCollectionReset();
+                Elements.NotifyProperties();
+                Elements.OnCollectionReset();
             }
             catch (Exception ex)
             {
                 BLogger.E("Error occured while adding range to grouped collection.", ex);
             }
         }
+        void OnCollectionReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
-        protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        void NotifyProperties(bool count = true)
         {
-            try
-            {
-                if (_isObserving)
-                {
-                    await BreadDispatcher.InvokeAsync(() => base.OnCollectionChanged(e));
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogger.E("Error occured while updating collection on collectionchanged.", ex);
-                Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
-            }
+            if (count)
+                OnPropertyChanged(new PropertyChangedEventArgs(CountName));
+            OnPropertyChanged(new PropertyChangedEventArgs(IndexerName));
         }
-
-        protected async override void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            try
-            {
-                if (_isObserving)
-                {
-                    await BreadDispatcher.InvokeAsync(() => base.OnPropertyChanged(e));
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogger.E("Error occured while updating grouped collection on property changed.", ex);
-                Debug.Write("Error Code: " + ex.HResult + ";  Error Message: " + ex.Message + "\r\n");
-            }
-        }
-
         public void RemoveItem(TElement item)
         {
             Remove(item);
             Elements.Remove(item);
         }
-
         public IEnumerable<TKey> Keys => this.Select(i => i.Key);
         public SortedObservableCollection<TElement, string> Elements { get; set; } = new SortedObservableCollection<TElement, string>(t => (t as Mediafile).Title);
 
@@ -353,25 +303,24 @@ namespace BreadPlayer.Extensions
 
             try
             {
-                var match = this.Select((group, index) => new { group, index }).FirstOrDefault(i => i.group.Key.CompareTo(key) >= 0);
-
-                if (match == null)
+                var group = this.FirstOrDefault(t => t.Key.CompareTo(key) >= 0);
+                var index = IndexOf(group);
+                
+                if (group == null)
                 {
-                    //_isObserving = true;
                     // Group doesn't exist and the new group needs to go at the end
                     result = new Grouping<TKey, TElement>(key);
-                    Add(result);
+                    Items.Add(result);
                 }
-                else if (!match.group.Key.Equals(key))
+                else if (!group.Key.Equals(key))
                 {
-                    //_isObserving = true;
                     // Group doesn't exist, but needs to be inserted before an existing one
                     result = new Grouping<TKey, TElement>(key);
-                    Insert(match.index, result);
+                    Items.Insert(index, result);
                 }
                 else
                 {
-                    result = match.group;
+                    result = group;
                 }
 
                 _lastEffectedGroup = result;
@@ -397,11 +346,6 @@ public class Grouping<TKey, TElement> : ThreadSafeObservableCollection<TElement>
         : this(key)
     {
         AddRange(items);
-
-        //foreach (var item in items)
-        //{
-        //    this.Add(item);
-        //}
     }
 
     public TKey Key { get; }

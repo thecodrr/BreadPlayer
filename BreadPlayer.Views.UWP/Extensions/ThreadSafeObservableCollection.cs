@@ -37,7 +37,8 @@ using Windows.UI.Xaml.Data;
 public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotifyCollectionChanged
 {
     protected volatile bool _isObserving = true;
-
+    private const string CountName = nameof(Count);
+    private const string IndexerName = "Item[]";
     public bool IsObserving
     {
         get => _isObserving;
@@ -105,70 +106,51 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
         }
     }
-
-    protected async override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-    {
-        await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-        {
-            try
-            {
-                if (_isObserving)
-                {
-                    base.OnCollectionChanged(e);
-                }
-            }
-            catch (Exception ex)
-            {
-                BLogger.E("Error occured while updating TSCollection on collectionchanged.", ex);
-            }
-        });
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        if (_isObserving)
-        {
-            base.OnPropertyChanged(e);
-        }
-    }
-
+    
     /// <summary>
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
     /// </summary>
-    public void AddRange(IEnumerable<T> range, bool reset = true)
+    public void AddRange(IEnumerable<T> collection, bool reset = true)
     {
         try
         {
-            // get out if no new items
-            if (range == null || !range.Any())
-            {
+            if (collection == null)
                 return;
-            }
 
-            _isObserving = false;
-            var objectArray = range.ToArray();
-            for (int i = 0; i < objectArray.Count(); i++)
+            if (collection is ICollection<T> list)
             {
-                Add(objectArray[i]);
+                if (list.Count == 0) return;
             }
-            _isObserving = true;
+            else if (!collection.Any()) return;
+            else list = new List<T>(collection);
 
-            // fire the events
-            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-            // this is tricky: call Reset first to make sure the controls will respond properly and not only add one item
-            // LOLLO NOTE I took out the following so the list viewers don't lose the position.
+            CheckReentrancy();
+
+            int startIndex = Count;
+            
+            foreach (var i in collection)
+                Items.Add(i);
+            
+            NotifyProperties();
+
             if (reset)
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
+                OnCollectionReset();
             else
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, objectArray));
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList ?? list.ToList(), startIndex));
         }
         catch (Exception ex)
         {
             BLogger.E("Error occured while adding range to TSCollection.", ex);
         }
     }
+    void OnCollectionReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
+    void NotifyProperties(bool count = true)
+    {
+        if (count)
+            OnPropertyChanged(new PropertyChangedEventArgs(CountName));
+        OnPropertyChanged(new PropertyChangedEventArgs(IndexerName));
+    }
     /// <summary>
     /// Removes the first occurence of each item in the specified collection from ObservableCollection(Of T).
     /// </summary>

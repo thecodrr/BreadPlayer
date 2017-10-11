@@ -4,6 +4,7 @@ using BreadPlayer.Database;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -23,7 +24,7 @@ namespace BreadPlayer.Views
         string _recordType = "";
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
-            UpdateTemplate(e.Size.Width);
+            //UpdateTemplate(e.Size.Width);
         }
         private void UpdateTemplate(double width)
         {
@@ -42,6 +43,7 @@ namespace BreadPlayer.Views
             {
                 case "Toasts":
                     searchResultsList.ItemTemplate = toastTemplate as DataTemplate;
+                    searchResultsList.ItemContainerStyle = Resources["ToastItemStyle"] as Style;
                     break;
                 case "Breads":
                     searchResultsList.ItemTemplate = albumTemplate as DataTemplate;
