@@ -708,7 +708,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-            if (Repeat != "Repeat Song")
+            if (Repeat != "Repeat Song" && UpcomingSong != null)
             {
                 SharedLogic.Instance.NotificationManager.SendUpcomingSongNotification(UpcomingSong);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
