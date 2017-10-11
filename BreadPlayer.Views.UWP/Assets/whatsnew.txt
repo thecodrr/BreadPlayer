@@ -6,3 +6,5 @@
 5. Fixed app crash when library was loading.
 6. Fixed crash when searching songs.
 7. Fixed Show All Toasts Search results UI.
+8. Fixed random crashes when navigating around pages with lists.
+9. Fixed a critical thread allocation bug.

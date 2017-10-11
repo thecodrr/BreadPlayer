@@ -12,12 +12,12 @@ namespace BreadPlayer.Dispatcher
 
         public async Task RunAsync(Action action)
         {
-            await ParentDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         public static async Task InvokeAsync(Action action)
         {
-            await ParentDispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         public bool HasThreadAccess => ParentDispatcher.HasThreadAccess;
