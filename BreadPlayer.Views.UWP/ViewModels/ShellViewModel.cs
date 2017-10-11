@@ -49,6 +49,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Services.Store.Engagement;
+using Windows.Phone.UI.Input;
 
 namespace BreadPlayer.ViewModels
 {
@@ -372,13 +373,13 @@ namespace BreadPlayer.ViewModels
             IsPlaybarHidden = true;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
-                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
             }
         }
-
-        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             e.Handled = true;
+            Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
             NavigationService.Instance.RegisterEvents();
             IsPlaybarHidden = false;
         }

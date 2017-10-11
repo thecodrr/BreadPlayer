@@ -54,10 +54,7 @@ namespace BreadPlayer.Services
             //SystemNavigationManager.GetForCurrentView().BackRequested +=
             //               NavigationService_BackRequested;
 
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
+            RegisterEvents();
         }
 
         #endregion CTOR
@@ -76,6 +73,7 @@ namespace BreadPlayer.Services
         {
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
             }
         }
