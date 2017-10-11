@@ -34,6 +34,8 @@ namespace BreadPlayer.Helpers
                 string a = (string)await current.GetPropertyAsync(KnownUserProperties.FirstName);
                 string b = (string)await current.GetPropertyAsync(KnownUserProperties.LastName);
                 displayName = string.Format("{0} {1}", a, b);
+                if(string.IsNullOrEmpty(displayName) || string.IsNullOrWhiteSpace(displayName))
+                    displayName = (string)await current.GetPropertyAsync(KnownUserProperties.DisplayName);
             }
 
             return displayName;

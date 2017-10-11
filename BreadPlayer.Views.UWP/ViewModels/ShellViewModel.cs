@@ -370,6 +370,17 @@ namespace BreadPlayer.ViewModels
         {
             NavigationService.Instance.UnregisterEvents();
             IsPlaybarHidden = true;
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+            }
+        }
+
+        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            NavigationService.Instance.RegisterEvents();
+            IsPlaybarHidden = false;
         }
 
         private void ShowEqualizer()

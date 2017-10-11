@@ -52,7 +52,7 @@ namespace BreadPlayer.Services
             //Hooking up the events for BackRequest both for Big Windows and for Phone.
 
             //SystemNavigationManager.GetForCurrentView().BackRequested +=
-            //                NavigationService_BackRequested;
+            //               NavigationService_BackRequested;
 
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
@@ -96,8 +96,6 @@ namespace BreadPlayer.Services
             if (Frame.CanGoBack)
             {
                 Frame.GoBack();
-                //PageStack.Pop();
-                //UpdateBackButtonVisibility();
                 return true;
             }
             return false;
@@ -134,13 +132,7 @@ namespace BreadPlayer.Services
         #endregion BackButtonVisibilty Region
 
         #region Event Methods for windows and phone
-
-        private void NavigationService_BackRequested
-            (object sender, BackRequestedEventArgs e)
-        {
-            e.Handled = NavigateBack();
-        }
-
+      
         private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             e.Handled = NavigateBack();

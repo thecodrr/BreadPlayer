@@ -277,29 +277,7 @@ namespace SplitViewMenu
         {
             _navBottomMenuListView.SelectedIndex = -1;
         }
-
-        private void OnBackButtonClick(object sender, RoutedEventArgs e)
-        {
-            var ignored = false;
-            BackRequested(ref ignored);
-        }
-
-        public void BackRequested(ref bool handled)
-        {
-            if (_pageFrame == null)
-            {
-                return;
-            }
-
-            if (!_pageFrame.CanGoBack || handled)
-            {
-                return;
-            }
-
-            handled = true;
-            _pageFrame.GoBack();
-        }
-
+        
         private static void OnContainerContextChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (!args.InRecycleQueue && args.Item is INavigationMenuItem navigationMenu)
@@ -403,7 +381,7 @@ namespace SplitViewMenu
             if (item.DestinationPage == typeof(LibraryView) || item.DestinationPage == typeof(AlbumArtistView))
             {
                 return _navTopMenuListView;
-            }
+            }            
             //if (item.DestinationPage == typeof(PlaylistView))
             //{
             //    return _playlistsMenuListView;
@@ -415,7 +393,7 @@ namespace SplitViewMenu
         {
             try
             {
-                if (e.NavigationMode != NavigationMode.Back || !TopNavigationItems.Any())
+                if (e.NavigationMode != NavigationMode.Back)
                 {
                     return;
                 }
@@ -441,6 +419,10 @@ namespace SplitViewMenu
                         else if (entry.SourcePageType == typeof(LibraryView))
                         {
                             item = TopNavigationItems[0];
+                        }
+                        else if (entry.SourcePageType == typeof(SettingsView))
+                        {
+                            item = BottomNavigationItems[1];
                         }
                         if (item != null)
                         {

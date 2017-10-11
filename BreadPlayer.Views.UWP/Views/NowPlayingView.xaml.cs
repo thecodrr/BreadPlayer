@@ -32,18 +32,6 @@ namespace BreadPlayer
             (Resources["NowPlayingVM"] as NowPlayingViewModel).LyricActivated += NowPlayingView_LyricActivated;
 
             _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
-
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-            }
-        }
-
-        private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            NavigationService.Instance.RegisterEvents();
-            _shellVm.IsPlaybarHidden = false;
         }
 
         private async void NowPlayingView_LyricActivated(object sender, EventArgs e)
