@@ -170,19 +170,26 @@ namespace BreadPlayer.Helpers
 
                 using (HttpClient client = new HttpClient())
                 {
-                    var response = await client.GetAsync(url).ConfigureAwait(false);
-                    if (response.IsSuccessStatusCode)
+                    try
                     {
-                        byte[] buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false); // Download file
-                        using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite, 51200, FileOptions.WriteThrough))
+                        var response = await client.GetAsync(url).ConfigureAwait(false);
+                        if (response.IsSuccessStatusCode)
                         {
-                            await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                            byte[] buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false); // Download file
+                            using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite, 51200, FileOptions.WriteThrough))
+                            {
+                                await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                            }
+                            color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
+                            return (artistArt.Path, color);
                         }
-                        color = await SharedLogic.Instance.GetDominantColor(artistArt);
-                        return (artistArt.Path, color);
+                    }
+                    catch(Exception ex)
+                    {
+                        BLogger.E("Error while caching artist art.", ex);
+                        return (null, color);
                     }
                 }
-                return (artistArtPath, color);
             }
             else
             {
@@ -190,7 +197,7 @@ namespace BreadPlayer.Helpers
                 var size = (await artistArt.GetBasicPropertiesAsync()).Size;
                 if (size > 0)
                 {
-                    color = await SharedLogic.Instance.GetDominantColor(artistArt);
+                    color = await SharedLogic.Instance.GetDominantColor(artistArt).ConfigureAwait(false);
                     return (artistArtPath, color);
                 }
             }

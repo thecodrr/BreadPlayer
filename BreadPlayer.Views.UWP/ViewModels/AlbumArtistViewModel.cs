@@ -96,6 +96,9 @@ namespace BreadPlayer.ViewModels
         /// </summary>
         public async Task AddAlbumsAndArtists(IEnumerable<Mediafile> mediafiles)
         {
+            if (mediafiles == null)
+                return;
+
             List<Album> albums = new List<Album>();
             List<Artist> artists = new List<Artist>();
             await Task.Run(() =>
@@ -151,9 +154,9 @@ namespace BreadPlayer.ViewModels
             if(e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
             {
                 // delay by 2 seconds so as not to hang up UI
-                await Task.Delay(2000);
+                await Task.Delay(2000).ConfigureAwait(false);
                 
-                await CacheArtists(e.NewItems.Cast<Artist>());
+                await CacheArtists(e.NewItems.Cast<Artist>()).ConfigureAwait(false);
             }
             if (ArtistsCollection.Count == AlbumArtistService.ArtistsCount)
             {
@@ -174,26 +177,33 @@ namespace BreadPlayer.ViewModels
                         var artistName = TagParser.ParseArtists(artist.Name)[0];
                         if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
                         {
+                            var collectionArtist = ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name);
                             try
                             {
                                 var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
                                 if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
                                 {
-                                    var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist);
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Picture = cached.artistArtPath;
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).PictureColor = cached.dominantColor.ToHexString();
+                                    var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+
+                                    if (cached.artistArtPath == null)
+                                        throw new TaskCanceledException();
+
+                                    collectionArtist.Picture = cached.artistArtPath;
+                                    collectionArtist.PictureColor = cached.dominantColor.ToHexString();
                                 }
                                 if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
                                 {
                                     string bio = await artistInfo?.Bio?.Content.ZipAsync();
-                                    ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).Bio = bio ?? "";
+                                    collectionArtist.Bio = bio ?? "";
                                 }
-                                ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name).HasFetchedInfo = true;
-                                await AlbumArtistService.UpdateArtistAsync(ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name)).ConfigureAwait(false);
+                                collectionArtist.HasFetchedInfo = true;
+                                await AlbumArtistService.UpdateArtistAsync(collectionArtist).ConfigureAwait(false);
                             }
                             catch (TaskCanceledException)
                             {
-                                //there **is** nothing to be done :D
+                                collectionArtist.HasFetchedInfo = false;
+                                await AlbumArtistService.UpdateArtistAsync(collectionArtist).ConfigureAwait(false);
+                                BLogger.I("Task was cancelled during artist caching. Will try next time.");
                             }
                         }
                     }
