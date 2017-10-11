@@ -696,7 +696,7 @@
                 Margin="0,100"
                 RenderTransformOrigin="0.5,0.5"
                 SourcePageType="local:NowPlayingView"
-                Visibility="Collapsed" />
+                Visibility="Visible" />
         </Grid>
         <rma:FeedbackOverlay
             x:Name="FeedbackOverlay"
