@@ -25,3 +25,6 @@ _[Write in detail what you were expecting from BreadPlayer when the problem occu
 
 ### Additional Comments:
 _[Any additional information to help us hunt down and fix the bug?]_
+
+<!-- Love BreadPlayer? Please consider supporting our collective:
+👉  https://opencollective.com/BreadPlayer/donate -->
