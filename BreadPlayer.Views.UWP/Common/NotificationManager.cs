@@ -16,9 +16,14 @@ namespace BreadPlayer.NotificationManager
     public class BreadNotificationManager : ObservableObject, INotificationManager
     {
         private Queue<string> NotificationQueue => new Queue<string>();
+        private ICommand _closeCommand;
         private DispatcherTimer _hideTimer;
         private string _status = string.Empty;
 
+        public ICommand CloseCommand
+        {
+            get => _closeCommand ?? (_closeCommand = new DelegateCommand(HideStaticMessage));
+        }
         public string Status
         {
             get => _status;

@@ -156,12 +156,27 @@
                 </Border.RenderTransform>
                 <!--  Opacity="0" Visibility="{Binding Path=Show, Converter={StaticResource BoolToVisibility}}"  -->
                 <Grid Margin="20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     <TextBlock
                         FontSize="14"
                         Foreground="White"
-                        Text="{Binding Path=Status, FallbackValue='Nothing Baking'}"
+                        Text="{Binding Path=Status}"
                         TextAlignment="Center"
                         TextWrapping="WrapWholeWords" />
+                    <Button
+                        Grid.Column="1"
+                        Command="{Binding Path=CloseCommand}"
+                        Foreground="{ThemeResource TextBrush}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Content="&#xE8BB;"
+                        FontFamily="Segoe MDL2 Assets"
+                        Background="Transparent" 
+                        Style="{StaticResource HyperlinkBtn}"/>
                 </Grid>
             </Border>
             <Grid
