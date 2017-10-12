@@ -132,6 +132,7 @@ namespace BreadPlayer.Extensions
                 NotifyProperties();
                 OnCollectionReset();
 
+                //notify the child element collection to update
                 Elements.NotifyProperties();
                 Elements.OnCollectionReset();
             }
@@ -140,7 +141,7 @@ namespace BreadPlayer.Extensions
                 BLogger.E("Error occured while adding range to grouped collection.", ex);
             }
         }
-        void OnCollectionReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        async void OnCollectionReset() => await BreadDispatcher.InvokeAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
         void NotifyProperties(bool count = true)
         {
