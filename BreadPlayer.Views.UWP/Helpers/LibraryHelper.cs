@@ -35,6 +35,7 @@ namespace BreadPlayer.Helpers
             var count = await queryResult.GetItemCountAsync();
             if (count <= 0)
             {
+                BLogger.I("No songs found.");
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("No songs found! Please try again.");
                 return null;
             }
@@ -48,15 +49,18 @@ namespace BreadPlayer.Helpers
                     var fileTask = queryResult.GetFilesAsync(index, stepSize).AsTask();
                     for (int i = 0; i < files.Count; i++)
                     {
-                        progress++;
-                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
-                        Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
-                        if (mp3File != null)
+                        if (files[i]?.IsAvailable == true)
                         {
-                            mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
-                            await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
-                            await SharedLogic.Instance.NotificationManager.ShowMessageAsync(progress + "\\" + count + " Song(s) Loaded", 0);
-                            tempList.Add(mp3File);
+                            progress++;
+                            Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, progress);
+                            Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
+                            if (mp3File != null)
+                            {
+                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
+                                SharedLogic.Instance.NotificationManager.ShowStaticMessage(progress + "\\" + count + " Song(s) Loaded");
+                                tempList.Add(mp3File);
+                            }
                         }
                     }
                     files = await fileTask;
@@ -65,8 +69,9 @@ namespace BreadPlayer.Helpers
             }
             catch (Exception ex)
             {
-                string message1 = ex.Message + "||" + ex.InnerException;
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message1);
+                string message = ex.Message + "||" + ex.InnerException;
+                BLogger.E("Error while importing folder.", ex);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
             }        
             return tempList.DistinctBy(f => f.OrginalFilename);
         }
@@ -90,6 +95,8 @@ namespace BreadPlayer.Helpers
 
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgImportFolder, songs);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgAddAlbums, songs);
+
+                SharedLogic.Instance.NotificationManager.HideStaticMessage();
 
                 string message = string.Format("Songs successfully imported!");
                 BLogger.I(message);

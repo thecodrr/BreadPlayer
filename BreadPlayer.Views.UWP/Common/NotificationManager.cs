@@ -1,6 +1,8 @@
 ﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Xml.Dom;
@@ -13,8 +15,9 @@ namespace BreadPlayer.NotificationManager
 {
     public class BreadNotificationManager : ObservableObject, INotificationManager
     {
+        private Queue<string> NotificationQueue => new Queue<string>();
         private DispatcherTimer _hideTimer;
-        private string _status = "Nothing Baking";
+        private string _status = string.Empty;
 
         public string Status
         {
@@ -29,18 +32,33 @@ namespace BreadPlayer.NotificationManager
             get => _show;
             set => Set(ref _show, value);
         }
-
+        public void HideStaticMessage()
+        {
+            HideTimer_Tick(_hideTimer, null);
+        }
+        public void ShowStaticMessage(string message)
+        {
+            Status = message;
+            Show = true;
+        }
         public async Task ShowMessageAsync(string status, int duration = 10)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                Status = status;
-                Show = true;
-                if (duration > 0)
+                if (!Show)
                 {
-                    _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(duration) };
-                    _hideTimer.Start();
-                    _hideTimer.Tick += HideTimer_Tick;
+                    Status = status;
+                    Show = true;
+                    if (duration > 0)
+                    {
+                        _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(duration) };
+                        _hideTimer.Start();
+                        _hideTimer.Tick += HideTimer_Tick;
+                    }
+                }
+                else
+                {
+                    NotificationQueue.Enqueue(status);
                 }
             });
         }
@@ -83,9 +101,13 @@ namespace BreadPlayer.NotificationManager
 
         private void HideTimer_Tick(object sender, object e)
         {
-            Status = "Nothing Baking!";
+            Status = string.Empty;
             Show = false;
             _hideTimer.Stop();
+            if (NotificationQueue.Count > 0)
+            {
+                ShowMessageAsync(NotificationQueue.Dequeue()).Wait();
+            }
         }
     }
 }
