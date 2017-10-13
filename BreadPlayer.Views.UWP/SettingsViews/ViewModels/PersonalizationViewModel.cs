@@ -1,5 +1,6 @@
 ﻿using BreadPlayer.Common;
 using BreadPlayer.Core;
+using BreadPlayer.Helpers;
 using BreadPlayer.Themes;
 using System;
 using System.Collections.Generic;

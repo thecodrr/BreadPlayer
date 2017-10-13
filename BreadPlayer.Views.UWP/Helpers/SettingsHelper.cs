@@ -3,7 +3,7 @@ using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
 using Windows.Storage;
 
-namespace BreadPlayer.Common
+namespace BreadPlayer.Helpers
 {
     public class SettingsHelper : IEqualizerSettingsHelper
     {

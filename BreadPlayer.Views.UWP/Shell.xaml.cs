@@ -51,6 +51,8 @@ namespace BreadPlayer
         public Shell()
         {
             InitializeComponent();
+            string a = SettingsHelper.GetRoamingSetting<string>("LastOpenedPage", typeof(LibraryView).AssemblyQualifiedName);
+            hamburgerMenu.InitialPage = Type.GetType(a, false, true);
             //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             new CoreWindowLogic();
             _shellVm = DataContext as ShellViewModel;
@@ -79,6 +81,7 @@ namespace BreadPlayer
         {
             if (!string.IsNullOrEmpty(_arguments))
                 CoreWindowLogic.LoadAppWithArguments(_arguments);
+
         }       
 
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;

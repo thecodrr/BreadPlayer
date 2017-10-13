@@ -19,6 +19,7 @@
 using BreadPlayer;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Helpers;
 using BreadPlayer.Models;
 using BreadPlayer.Services;
 using BreadPlayer.Views;
@@ -142,8 +143,9 @@ namespace SplitViewMenu
             {
                 return;
             }
-
-            _pageFrame.Navigate(InitialPage);
+            var appSession = ApplicationHelper.GetAppSession();
+            InitialPage = appSession.PageType;
+            _pageFrame.Navigate(InitialPage, appSession.NavigationParameter);
         }
 
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -184,7 +186,7 @@ namespace SplitViewMenu
             _headerText = GetTemplateChild("headerText") as TextBlock;
             _togglePaneButton = GetTemplateChild("TogglePaneButton") as ToggleButton;
             _shortcuts = GetTemplateChild("Shortcuts") as ItemsControl;
-            await UpdateHeaderAndShortCuts(_navTopMenuListView.SelectedItem as SimpleNavMenuItem);
+            await UpdateHeaderAndShortCuts(GetItemFromList(InitialPage) as SimpleNavMenuItem);
            
             if (_navTopMenuListView != null)
             {
@@ -213,6 +215,9 @@ namespace SplitViewMenu
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
+
+            var item = GetItemFromList(InitialPage);
+            GetParentListViewFromItem(item).SelectedItem = item;
             SplitViewMenuLoaded?.Invoke(this, new EventArgs());
         }
 
@@ -363,7 +368,7 @@ namespace SplitViewMenu
         {
             if (sourcePagetype == typeof(LibraryView) || sourcePagetype == typeof(PlaylistView))
             {
-                return null;
+                return TopNavigationItems[0];
             }
             if (sourcePagetype == typeof(SettingsView))
             {
@@ -472,22 +477,9 @@ namespace SplitViewMenu
             if ((item as SimpleNavMenuItem).Command == null)
             {
                 await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
-                if (((NavMenuListView)sender).Name != "PlaylistsMenuList" && ((NavMenuListView)sender).Tag.ToString() != "NavTopMenuList")
-                {
-                    if (item?.DestinationPage != null &&
-                        item.DestinationPage != _pageFrame.CurrentSourcePageType)
-                    {
-                        _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-                    }
-                }
-                else
-                {
-                    if (item?.DestinationPage != null &&
-                        item.Label != _lastItem?.Label)
-                    {
-                        _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-                    }
-                }
+                _pageFrame.Navigate(item.DestinationPage, item.Arguments);
+                ApplicationHelper.SaveAppSession(item.DestinationPage, item.Arguments);
+                
                 _lastItem = item;
             }
             else

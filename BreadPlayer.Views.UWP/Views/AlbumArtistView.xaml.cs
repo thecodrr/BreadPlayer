@@ -63,7 +63,6 @@ namespace BreadPlayer
             _currentState = e.Parameter.ToString();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                SetTemplate();
                 if (e.Parameter.ToString() == "AlbumView")
                 {
                     albumListView.ItemsSource = null;
@@ -73,12 +72,13 @@ namespace BreadPlayer
                 }
                 else if (e.Parameter.ToString() == "ArtistView")
                 {
+                    albumListView.ItemsSource = null;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
                     await (grid.DataContext as AlbumArtistViewModel).ArtistsCollection.RefreshAsync();
                     (grid.DataContext as AlbumArtistViewModel).LoadArtists();
                 }
+                SetTemplate();
             });
-            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

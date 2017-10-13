@@ -27,6 +27,8 @@ using Windows.UI.Xaml.Navigation;
 using BreadPlayer.Extensions;
 using Windows.UI.Xaml.Media;
 using BreadPlayer.Helpers;
+using System;
+using Windows.UI.Xaml.Data;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace BreadPlayer
@@ -50,21 +52,26 @@ namespace BreadPlayer
 
         private void LibraryView_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if((sender as ScrollViewer).VerticalOffset <= 0)
+            if ((sender as ScrollViewer).VerticalOffset <= 0)
             {
                 scrollHeaderPanel.Background = null;
             }
             else
             {
-                if(scrollHeaderPanel.Background == null)
+                if (scrollHeaderPanel.Background == null)
                     scrollHeaderPanel.Background = App.Current.Resources["SystemControlBackgroundAccentBrush"] as SolidColorBrush;
             }
         }
-
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            fileBox.ItemsSource = null;
+            GC.Collect();
+            base.OnNavigatedFrom(e);
+        }
         private LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            LibVM.MusicLibraryLoaded += (s, a) => 
+            LibVM.MusicLibraryLoaded += (s, a) =>
             {
                 var pVm = App.Current.Resources["PlaylistsCollectionVM"];
             };
@@ -102,7 +109,11 @@ namespace BreadPlayer
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((sender as Pivot).SelectedIndex == 1)
+            if((sender as Pivot).SelectedIndex == 0)
+            {
+                fileBox.SetBinding(ListView.ItemsSourceProperty, new Binding() { Source = Grid.Resources["Source"], UpdateSourceTrigger = UpdateSourceTrigger.Explicit });
+            }
+            else if ((sender as Pivot).SelectedIndex == 1)
             {
                 (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
                 BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");

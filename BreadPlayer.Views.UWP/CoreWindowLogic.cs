@@ -23,6 +23,7 @@ using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using System;

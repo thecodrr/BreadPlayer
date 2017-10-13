@@ -2,6 +2,7 @@
 using BreadPlayer.Core;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
+using BreadPlayer.Helpers;
 using System;
 using Windows.Foundation.Metadata;
 using Windows.Storage;

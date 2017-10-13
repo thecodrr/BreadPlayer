@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Dispatcher;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,24 +40,13 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     protected volatile bool _isObserving = true;
     private const string CountName = nameof(Count);
     private const string IndexerName = "Item[]";
-    public bool IsObserving
-    {
-        get => _isObserving;
-        set => _isObserving = value;
-    }
-
+    
     //public static readonly int MAX_CAPACITY = int.MaxValue - 1; // MS limit
     //private readonly int _capacity = MAX_CAPACITY;
     //public int Capacity { get { return _capacity; } }
-    private CoreDispatcher _dispatcher;
 
     internal ReaderWriterLockSlim Sync = new ReaderWriterLockSlim();
-
-    public ThreadSafeObservableCollection()
-    {
-        _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-    }
-
+    public ThreadSafeObservableCollection() { }
     public ThreadSafeObservableCollection(IEnumerable<T> collection = null)
     {
         //copy the collection to ourself
@@ -64,24 +54,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
         {
             AddRange(collection);
         }
-        _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
     }
 
     public async new void Add(T item)
     {
-        if (_dispatcher == null)
-        {
-            _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-        }
-
-        if (_dispatcher.HasThreadAccess)
-        {
-            DoAdd(item);
-        }
-        else
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoAdd(item));
-        }
+        await BreadDispatcher.InvokeAsync(() => DoAdd(item));        
     }
 
     private void DoAdd(T item)
@@ -97,14 +74,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public async new void Clear()
     {
-        if (_dispatcher.HasThreadAccess)
-        {
-            DoClear();
-        }
-        else
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, DoClear);
-        }
+        await BreadDispatcher.InvokeAsync(DoClear);        
     }
     
     /// <summary>
@@ -143,7 +113,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             BLogger.E("Error occured while adding range to TSCollection.", ex);
         }
     }
-    void OnCollectionReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    async void OnCollectionReset() => await BreadDispatcher.InvokeAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
     void NotifyProperties(bool count = true)
     {
@@ -258,17 +228,12 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public new bool Remove(T item)
     {
-        if (_dispatcher.HasThreadAccess)
-        {
-            return DoRemove(item);
-        }
-
         bool? op = null;
-        var removeTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        var removeTask = BreadDispatcher.InvokeAsync(() =>
         {
             op = DoRemove(item);
         });
-        removeTask.AsTask().Wait();
+        removeTask.Wait();
         if (op == null)
         {
             return false;
@@ -295,14 +260,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public new async void Insert(int index, T item)
     {
-        if (_dispatcher.HasThreadAccess)
-        {
-            DoInsert(index, item);
-        }
-        else
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoInsert(index, item));
-        }
+        await BreadDispatcher.InvokeAsync(() => DoInsert(index, item));
     }
 
     private void DoInsert(int index, T item)
@@ -318,14 +276,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public new async void RemoveAt(int index)
     {
-        if (_dispatcher.HasThreadAccess)
-        {
-            DoRemoveAt(index);
-        }
-        else
-        {
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DoRemoveAt(index));
-        }
+        await BreadDispatcher.InvokeAsync(() => DoRemoveAt(index));
     }
 
     private void DoRemoveAt(int index)

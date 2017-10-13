@@ -1,23 +1,41 @@
 ﻿using BreadPlayer.Core.Interfaces;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace BreadPlayer.Dispatcher
 {
     public class BreadDispatcher : IDispatcher
     {
-        public static CoreDispatcher ParentDispatcher { get => CoreApplication.MainView.CoreWindow.Dispatcher; }
+        private static CoreApplicationView ApplicationView = CoreApplication.GetCurrentView();
+        public static CoreDispatcher ParentDispatcher {
+            get
+            {
+                return ApplicationView.Dispatcher;
+            }
+        }
 
         public async Task RunAsync(Action action)
         {
-            await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
+            if (action == null)
+                return;
+            if (ParentDispatcher.HasThreadAccess)
+                action();
+            else
+                await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         public static async Task InvokeAsync(Action action)
         {
-            await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
+            if (action == null)
+                return;
+            if (ParentDispatcher.HasThreadAccess)
+                action();
+            else
+                await ParentDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () => action());
         }
 
         public bool HasThreadAccess => ParentDispatcher.HasThreadAccess;

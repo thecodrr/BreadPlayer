@@ -183,7 +183,7 @@
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
-    <Compile Include="Common\RoamingSettingsHelper.cs" />
+    <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
     <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />

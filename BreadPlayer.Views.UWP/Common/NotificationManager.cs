@@ -108,7 +108,7 @@ namespace BreadPlayer.NotificationManager
         {
             Status = string.Empty;
             Show = false;
-            _hideTimer.Stop();
+            _hideTimer?.Stop();
             if (NotificationQueue.Count > 0)
             {
                 ShowMessageAsync(NotificationQueue.Dequeue()).Wait();

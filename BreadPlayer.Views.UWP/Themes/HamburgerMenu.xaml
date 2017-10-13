@@ -554,8 +554,7 @@
 
                                     <local:NavMenuListView x:Name="NavTopMenuList" Tag="NavTopMenuList"
                                                        ItemsSource="{TemplateBinding TopNavigationItems}"
-                                                       TabIndex="3" SelectedIndex="0" Grid.Row="1"
-                                                               VerticalAlignment="Stretch" Margin="0,20,0,0"
+                                                       TabIndex="3" Grid.Row="1" VerticalAlignment="Stretch" Margin="0,20,0,0"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">

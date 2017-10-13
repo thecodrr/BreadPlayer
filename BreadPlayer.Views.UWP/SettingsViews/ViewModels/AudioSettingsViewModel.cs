@@ -1,5 +1,6 @@
 ﻿using BreadPlayer.Common;
 using BreadPlayer.Core;
+using BreadPlayer.Helpers;
 
 namespace BreadPlayer.SettingsViews.ViewModels
 {
