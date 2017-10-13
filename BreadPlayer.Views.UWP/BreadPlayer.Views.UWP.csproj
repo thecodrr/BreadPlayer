@@ -180,6 +180,9 @@
     <Compile Include="BreadLogger\AsyncFileTarget.cs" />
     <Compile Include="BreadLogger\BLogger.cs" />
     <Compile Include="Common\BackDrop.cs" />
+    <Compile Include="Dialogs\DonateDialog.xaml.cs">
+      <DependentUpon>DonateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
@@ -442,6 +445,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dialogs\DonateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -440,7 +440,7 @@ namespace BreadPlayer.Core
         /// <returns>the dominant color</returns>
         public async Task<Color> GetDominantColor(StorageFile file)
         {
-            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            using (var stream = await file.OpenAsync(FileAccessMode.Read))
             {
                 if (stream.Size <= 0)
                     return Colors.Transparent;
