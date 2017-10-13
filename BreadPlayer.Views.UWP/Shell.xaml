@@ -710,7 +710,6 @@
                 Width="700"
                 Margin="0,100"
                 RenderTransformOrigin="0.5,0.5"
-                SourcePageType="local:NowPlayingView"
                 Visibility="Visible" />
         </Grid>
         <rma:FeedbackOverlay

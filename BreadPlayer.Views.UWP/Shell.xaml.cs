@@ -18,6 +18,7 @@
 
 using BreadPlayer.Common;
 using BreadPlayer.Core;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
@@ -62,7 +63,11 @@ namespace BreadPlayer
                 Tooltip = "Enable Multiselection",
                 ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
             });
-            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
+            NowPlayingItem.Command = new DelegateCommand(() =>
+            {
+                NowPlayingFrame.Navigate(typeof(NowPlayingView));
+                _shellVm.NavigateToNowPlayingViewCommand.Execute(null);
+            });
             watchAdMenuItem.Command = _shellVm.WatchAnAdCommand;
             hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
             if (SharedLogic.Instance.SettingsVm.PersonalizationVM.BackgroundOverlayColor == "Auto")

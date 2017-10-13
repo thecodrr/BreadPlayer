@@ -62,12 +62,7 @@ namespace BreadPlayer
                     scrollHeaderPanel.Background = App.Current.Resources["SystemControlBackgroundAccentBrush"] as SolidColorBrush;
             }
         }
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            fileBox.ItemsSource = null;
-            GC.Collect();
-            base.OnNavigatedFrom(e);
-        }
+        
         private LibraryViewModel LibVM => App.Current.Resources["LibVM"] as LibraryViewModel;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -109,11 +104,7 @@ namespace BreadPlayer
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if((sender as Pivot).SelectedIndex == 0)
-            {
-                fileBox.SetBinding(ListView.ItemsSourceProperty, new Binding() { Source = Grid.Resources["Source"], UpdateSourceTrigger = UpdateSourceTrigger.Explicit });
-            }
-            else if ((sender as Pivot).SelectedIndex == 1)
+            if ((sender as Pivot).SelectedIndex == 1)
             {
                 (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
                 BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");

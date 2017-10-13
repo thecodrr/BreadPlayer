@@ -83,8 +83,9 @@ namespace BreadPlayer
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            (grid.DataContext as AlbumArtistViewModel).ArtistsCollection = null;
+            (grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
             albumListView.ItemsSource = null;
-            albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
             GC.Collect();
             base.OnNavigatedFrom(e);
         }

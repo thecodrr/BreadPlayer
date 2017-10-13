@@ -17,6 +17,7 @@
 */
 
 using BreadPlayer.ViewModels;
+using System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
@@ -30,23 +31,10 @@ namespace BreadPlayer
     /// </summary>
     public sealed partial class PlaylistView
     {
-        private double _maxFontSize;
-        private double _minFontSize;
-
         public PlaylistView()
         {
             InitializeComponent();
-            Window.Current.SizeChanged += Current_SizeChanged;
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
-            _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
         }
-
-        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            _maxFontSize = Window.Current.Bounds.Width < 600 ? 34 : 60;
-            _minFontSize = Window.Current.Bounds.Width < 600 ? 24 : 50;
-        }
-
         private PlaylistViewModel _playlistVm;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -54,16 +42,12 @@ namespace BreadPlayer
             _playlistVm = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
             _playlistVm.Init(e.Parameter);
             DataContext = _playlistVm;
-            base.OnNavigatedTo(e);
         }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            Window.Current.SizeChanged -= Current_SizeChanged;
             _playlistVm.Reset();
             _playlistVm = null;
-            fileBox.ItemsSource = null;
-            base.OnNavigatedFrom(e);
-        }
+            //fileBox.ItemsSource = null;
+        }        
     }
 }

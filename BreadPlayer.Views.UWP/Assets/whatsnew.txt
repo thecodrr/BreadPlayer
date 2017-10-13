@@ -1,2 +1,5 @@
 ﻿What's Changed:
 1. Bug fixes
+2. Notifications are now queued.
+3. Notifications now include a "Close" button.
+4. Improved performance.

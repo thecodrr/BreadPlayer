@@ -18,7 +18,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-
             <MenuFlyout x:Key="ExtraMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem
                     x:Uid="deletePlaylistMenuItem"
@@ -42,10 +41,6 @@
                     IsEnabled="{Binding Source={StaticResource LibVM}, Path=IsMultiSelectModeEnabled}"
                     Text="Disable Multi Selection" />
             </MenuFlyout>
-            <CollectionViewSource
-                x:Key="Source"
-                IsSourceGrouped="False"
-                Source="{Binding Songs}" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -61,7 +56,7 @@
             Margin="0,-154,0,0"
             VerticalAlignment="Top">
             <Border.Background>
-                <ImageBrush ImageSource="{Binding PlaylistArt}" Stretch="UniformToFill" />
+                <ImageBrush ImageSource="{Binding Path=Songs[0].AttachedPicture}" Stretch="UniformToFill" />
             </Border.Background>
             <Grid>
                 <Border Background="#99000000" />
@@ -164,13 +159,11 @@
             Grid.RowSpan="3"
             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
             ItemTemplate="{StaticResource MediafileTemplate}"
-            ItemsSource="{Binding Source={StaticResource Source}, UpdateSourceTrigger=Explicit}"
-            ScrollViewer.IsScrollInertiaEnabled="True"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ShowsScrollingPlaceholders="True">
+            ItemsSource="{Binding Path=Songs, UpdateSourceTrigger=Explicit}"
+            ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsStackPanel CacheLength="0" Orientation="Vertical" />
+                    <ItemsStackPanel CacheLength="1" Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
