@@ -12,6 +12,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,20 +29,11 @@ namespace BreadPlayer
         public NowPlayingView()
         {
             InitializeComponent();
-
-            (Resources["NowPlayingVM"] as NowPlayingViewModel).LyricActivated += NowPlayingView_LyricActivated;
-
-            _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
         }
-
-        private async void NowPlayingView_LyricActivated(object sender, EventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            try
-            {
-                await lyricsList.ScrollToItem(sender);
-            }
-            catch { }
-        }
+            _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
+        }        
 
         private bool isMaximized = false;
 

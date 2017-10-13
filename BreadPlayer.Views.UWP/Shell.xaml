@@ -169,7 +169,7 @@
                     <Button
                         Grid.Column="1"
                         Command="{Binding Path=CloseCommand}"
-                        Foreground="{ThemeResource TextBrush}"
+                        Foreground="White"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         FontSize="14"
