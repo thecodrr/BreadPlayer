@@ -143,9 +143,7 @@ namespace SplitViewMenu
             {
                 return;
             }
-            var appSession = ApplicationHelper.GetAppSession();
-            InitialPage = appSession.PageType;
-            _pageFrame.Navigate(InitialPage, appSession.NavigationParameter);
+            _pageFrame.Navigate(InitialPage);
         }
 
         private static void OnTopNavigationItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -477,9 +475,7 @@ namespace SplitViewMenu
             if ((item as SimpleNavMenuItem).Command == null)
             {
                 await UpdateHeaderAndShortCuts(item as SimpleNavMenuItem);
-                _pageFrame.Navigate(item.DestinationPage, item.Arguments);
-                ApplicationHelper.SaveAppSession(item.DestinationPage, item.Arguments);
-                
+                _pageFrame.Navigate(item.DestinationPage, item.Arguments);                
                 _lastItem = item;
             }
             else
