@@ -387,7 +387,7 @@
     <value>Click to go to our twitter profile.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.7.1.0-beta</value>
+    <value>v2.7.2.0-beta</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
@@ -510,10 +510,10 @@
     <comment>**NEW**</comment>
   </data>
   <data name="watchAnAdMenuItem.Label" xml:space="preserve">
-    <value>Support Me By Watching An Ad</value>
+    <value>Donate</value>
   </data>
   <data name="watchAnAdMenuItem.Tooltip" xml:space="preserve">
-    <value>Watch an ad and help me make money to support BreadPlayer.</value>
+    <value>Tap to see donation options.</value>
   </data>
   <data name="bugReportRB.Content" xml:space="preserve">
     <value>Bug report</value>
