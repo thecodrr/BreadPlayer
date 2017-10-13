@@ -288,7 +288,7 @@ namespace BreadPlayer.ViewModels
         private async void ShuffleAll()
         {
             Shuffle = true;
-            await PlayFile((await ShuffledCollection().ConfigureAwait(false))[0], true).ConfigureAwait(false);
+            await Load((await ShuffledCollection().ConfigureAwait(false))[0], true).ConfigureAwait(false);
         }
         private async void WatchAnAd()
         {
