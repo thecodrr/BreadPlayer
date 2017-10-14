@@ -63,7 +63,7 @@ namespace BreadPlayer.Dialogs
             Guid trackingId = Guid.NewGuid();
             
             StoreConsumableResult result = await context.ReportConsumableFulfillmentAsync(
-                addOnStoreId, quantity, trackingId);
+                addOnStoreId.ToUpperInvariant(), quantity, trackingId);
 
             // Capture the error message for the operation, if any.
             string extendedError = string.Empty;
