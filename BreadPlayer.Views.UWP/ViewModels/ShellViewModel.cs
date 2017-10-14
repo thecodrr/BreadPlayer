@@ -514,7 +514,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else if (IsSourceGrouped)
                     {
-                        toPlayFile = GetNextOrPrevSongInGroup(false);
+                        toPlayFile = GetNextOrPrevSongInGroup(false) ?? throw new NullReferenceException("Cannot get next song in group.");
                     }
                     else
                     {
@@ -569,27 +569,34 @@ namespace BreadPlayer.ViewModels
         }
         private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
         {
-            //get current group (the group in which current song is playing).
-            Grouping<IGroupKey, Mediafile> currentGroup = TracksCollection.GetCurrentlyPlayingGroup();
+            try
+            {
+                //get current group (the group in which current song is playing).
+                Grouping<IGroupKey, Mediafile> currentGroup = TracksCollection.GetCurrentlyPlayingGroup();
 
-            //get the index of the song playing in the currentGroup (with reference to the currentGroup)
-            int currentSongIndex = currentGroup.GetPlayingSongIndexInGroup();
-            
-            //get next song index (depending on the parameters).
-            int nextSongIndex = prev ? currentSongIndex - 1 : currentSongIndex + 1;
+                //get the index of the song playing in the currentGroup (with reference to the currentGroup)
+                int currentSongIndex = currentGroup.GetPlayingSongIndexInGroup();
 
-            //get condition for next/prev group.
-            bool nextGroupCondition = nextSongIndex.Equals(prev ? -1 : currentGroup.Count);
+                //get next song index (depending on the parameters).
+                int nextSongIndex = prev ? currentSongIndex - 1 : currentSongIndex + 1;
 
-            //get next/prev group index
-            int nextGroupIndex = prev ? TracksCollection.IndexOf(currentGroup)  - 1 : TracksCollection.IndexOf(currentGroup) + 1;
-            
-            //get next/prev group.
-            Grouping<IGroupKey, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
+                //get condition for next/prev group.
+                bool nextGroupCondition = nextSongIndex.Equals(prev ? -1 : currentGroup.Count);
 
-            //get nextSong index depending on if the group is new or old. 
-            int toPlaySongIndex = nextGroup.Equals(currentGroup) ? nextSongIndex : 0;
-            return nextGroup.ElementAt(toPlaySongIndex);
+                //get next/prev group index
+                int nextGroupIndex = prev ? TracksCollection.IndexOf(currentGroup) - 1 : TracksCollection.IndexOf(currentGroup) + 1;
+
+                //get next/prev group.
+                Grouping<IGroupKey, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
+
+                //get nextSong index depending on if the group is new or old. 
+                int toPlaySongIndex = nextGroup.Equals(currentGroup) ? nextSongIndex : 0;
+                return nextGroup.ElementAt(toPlaySongIndex);
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
         }
         
         private async void PlayNext()

@@ -3,3 +3,7 @@
 2. Notifications are now queued.
 3. Notifications now include a "Close" button.
 4. Improved performance.
+5. Fixed playlist import.
+6. Added donate dialog
+7. Made Bread Player Free in the store again.
+8. Please show your support by Donating! Love you all!
