@@ -6,11 +6,11 @@
   <p>Bread Player, a free and open source music player powered by UWP and C#/.NET with a sleek and polished design built for, and by, the people seeking a better alternative to Groove and Windows Media Player by Microsoft.</p>
 </dl> 
 
-| Gitter                                                                                                                                                                                                                   | Build                                                                                                                                                                                                                                                                                      | Suggestions                                                                                                                                         | Social                                                                                                                  | Help us translate! |
+| Gitter                                                                                                                                                                                                                   | Build                                                                                                                                                                                                                                                                                      | Suggestions                                                                                                                                         | Support us                                                                                                                  | Help us translate! |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------| ------------- |
 | [![Join the chat at https://gitter.im/BreadPlayer/Lobby](https://badges.gitter.im/BreadPlayer/Lobby.svg)](https://gitter.im/BreadPlayer/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) | [![beta](https://img.shields.io/badge/beta-v2.7.0-orange.svg)](https://github.com/theweavrs/BreadPlayer/releases/tag/v2.7.0)                                                                                                                                                               | [![suggestions here](https://img.shields.io/badge/give%20your-suggestions%20here-orange.svg)](https://github.com/theweavrs/BreadPlayer/issues/17)   | [![Facebook](https://img.shields.io/badge/like%20us%20on-facebook-blue.svg)](https://www.facebook.com/yourbreadplayer/) | [![Guide here!](https://img.shields.io/badge/follow%20the-guide%20here-green.svg)](https://github.com/theweavrs/BreadPlayer/wiki/I-Want-To-Translate!)
-|                                                                                                                                                                                                                          | [![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e/branch/master?svg=true)](https://ci.appveyor.com/project/theweavrs/breadplayer)                                                                                                                                            | [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21) |                                                                                                                         |
-|                                                                                                                                                                                                                          | [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/project/theweavrs/breadplayer/build/artifacts) |                                                                                                                                                    |                                                                                                                         | 
+|                                                                                                                                                                                                                          | [![build-status](https://ci.appveyor.com/api/projects/status/hphdwx2riesha37e/branch/master?svg=true)](https://ci.appveyor.com/project/theweavrs/breadplayer)                                                                                                                                            | [![ui related issues](https://img.shields.io/badge/ui%20related-issues%20here-brightgreen.svg)](https://github.com/theweavrs/BreadPlayer/issues/21)                                                                                                                          | [![Backers on Open Collective](https://opencollective.com/BreadPlayer/backers/badge.svg)](#backers)
+|                                                                                                                                                                                                                          | [![Nightly-Builds](https://img.shields.io/badge/download-nightly%20build-brightgreen.svg)](https://ci.appveyor.com/project/theweavrs/breadplayer/build/artifacts) |                                                                                                                                                    | [![Sponsors on Open Collective](https://opencollective.com/BreadPlayer/sponsors/badge.svg)](#sponsors)                                                                                                                        | 
 
 ## Current Status:
 #### Beta version has been released and development on the second Beta has started! You can [download the nightly build from here](https://ci.appveyor.com/project/theweavrs/breadplayer/build/artifacts) to check out the new features! 
@@ -83,3 +83,33 @@ _If you encounter any error during installation or building please follow [this 
 
 ## Help us translate Bread Player
 If you would like to translate Bread Player into your language, please [follow the guide here](https://github.com/theweavrs/BreadPlayer/wiki/I-Want-To-Translate!)
+
+## Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute]](CONTRIBUTING.md).
+<a href="graphs/contributors"><img src="https://opencollective.com/BreadPlayer/contributors.svg?width=890" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/BreadPlayer#backer)]
+
+<a href="https://opencollective.com/BreadPlayer#backers" target="_blank"><img src="https://opencollective.com/BreadPlayer/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/BreadPlayer#sponsor)]
+
+<a href="https://opencollective.com/BreadPlayer/sponsor/0/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/1/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/2/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/3/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/4/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/5/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/6/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/7/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/8/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/BreadPlayer/sponsor/9/website" target="_blank"><img src="https://opencollective.com/BreadPlayer/sponsor/9/avatar.svg"></a>
+
+
