@@ -1,5 +1,6 @@
 ﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace BreadPlayer.NotificationManager
 {
     public class BreadNotificationManager : ObservableObject, INotificationManager
     {
-        private Queue<string> NotificationQueue => new Queue<string>();
+        private Queue<string> NotificationQueue => GSingleton<Queue<string>>.Instance.Singleton;
         private ICommand _closeCommand;
         private DispatcherTimer _hideTimer;
         private string _status = string.Empty;
@@ -104,14 +105,14 @@ namespace BreadPlayer.NotificationManager
             }
         }
 
-        private void HideTimer_Tick(object sender, object e)
+        private async void HideTimer_Tick(object sender, object e)
         {
             Status = string.Empty;
             Show = false;
             _hideTimer?.Stop();
             if (NotificationQueue.Count > 0)
             {
-                ShowMessageAsync(NotificationQueue.Dequeue()).Wait();
+               await ShowMessageAsync(NotificationQueue.Dequeue()).ConfigureAwait(false);
             }
         }
     }

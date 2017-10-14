@@ -13,6 +13,7 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.Search;
 using BreadPlayer.Common;
 using BreadPlayer.ViewModels;
+using BreadPlayer.Core;
 
 namespace BreadPlayer.Helpers
 {
@@ -52,12 +53,21 @@ namespace BreadPlayer.Helpers
         {
             var folderPaths = songPaths.GroupBy(t => Path.GetDirectoryName(t));
             Dictionary<string, (List<string> songs, StorageFolder folder)> folders = new Dictionary<string, (List<string> songs, StorageFolder folder)>();
+
             foreach (var folderPath in folderPaths)
             {
-                var folder = await StorageFolder.GetFolderFromPathAsync(folderPath.Key);
-                var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
-                folders.Add(token, (folderPath.ToList(), folder));
+                try
+                {
+                    var folder = await StorageFolder.GetFolderFromPathAsync(folderPath.Key);
+                    var token = StorageApplicationPermissions.FutureAccessList.Add(folder);
+                    folders.Add(token, (folderPath.ToList(), folder));
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("We cannot import songs due to access problems. Please import {0} to Bread Player library.", folderPath.Key), 5);
+                }
             }
+            
             return folders;
         }
         public static async Task<IEnumerable<Mediafile>> GetSongsInAllFoldersAsync(List<string> songPaths)
@@ -65,6 +75,8 @@ namespace BreadPlayer.Helpers
             List<Mediafile> songsList = new List<Mediafile>();
             foreach (var folder in await GetFoldersFromSongsAsync(songPaths).ConfigureAwait(false))
             {
+                if (folder.Key == null)
+                    break;
                 songsList.AddRange(await GetSongsInFolderAsync(folder.Value.songs, folder.Value.folder).ConfigureAwait(false));
                 StorageApplicationPermissions.FutureAccessList.Remove(folder.Key);
             }

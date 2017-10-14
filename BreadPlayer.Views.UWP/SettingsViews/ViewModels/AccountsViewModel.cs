@@ -46,7 +46,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void LastfmLogin(object para)
         {
-            if (!LastfmPassword.Any() || !LastfmUsername.Any())
+            if (string.IsNullOrEmpty(LastfmPassword) || string.IsNullOrEmpty(LastfmUsername))
             {
                 if ((bool)para)
                 {
@@ -148,8 +148,8 @@ namespace BreadPlayer.ViewModels
             _lyricSource = SettingsHelper.GetRoamingSetting<string>("LyricSource", "Auto");
             _lyricType = SettingsHelper.GetRoamingSetting<string>("LyricType", "Synced");
             _noOfArtistsToFetchInfoFor = SettingsHelper.GetRoamingSetting<string>("NoOfArtistsToFetchInfoFor", "Lead artist");
-            _lastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", "");
-            _lastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", "");
+            _lastfmPassword = SettingsHelper.GetRoamingSetting<string>("LastfmPassword", null);
+            _lastfmUsername = SettingsHelper.GetRoamingSetting<string>("LastfmUsername", null);
             LastfmLogin(false);
         }
     }
