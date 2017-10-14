@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BreadPlayer.Parsers", "Brea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Web.Tests", "BreadPlayer.Web.Tests\BreadPlayer.Web.Tests.csproj", "{23538FC1-D438-48EB-B0D7-832A401E5247}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Views.Android", "BreadPlayer.Views.Android\BreadPlayer.Views.Android.csproj", "{1241A6F7-0E20-4F20-A50F-E701C6089D6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -249,13 +251,49 @@ Global
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.Release|x86.ActiveCfg = Release|x86
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.Release|x86.Build.0 = Release|x86
 		{23538FC1-D438-48EB-B0D7-832A401E5247}.Release|x86.Deploy.0 = Release|x86
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|ARM.Deploy.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x64.Build.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x86.Build.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|Any CPU.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|ARM.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|ARM.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|ARM.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x64.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x64.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x64.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x86.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x86.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.FastBuild_Release|x86.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|ARM.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|ARM.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x64.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x64.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x64.Deploy.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x86.ActiveCfg = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x86.Build.0 = Release|Any CPU
+		{1241A6F7-0E20-4F20-A50F-E701C6089D6B}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C2A3DB32-E571-4937-B0D9-E74756EE207D}
-		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key"},{"Extensions":".cshtml,.vbhtml","Patterns":"@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>"},{"Extensions":".xaml","Patterns":"x:Uid=\"$Key\""}]}
 		RESX_CodeReferences = {"Items":[{"Expression":"\\W($File.$Key)\\W","Extensions":".cs,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"GetString\\(\"($Key)\"\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},{"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"<%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%>","Extensions":".aspx,.ascx","IsCaseSensitive":true,"SingleLineComment":null},{"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"$Resource","Extensions":".xaml","IsCaseSensitive":true,"SingleLineComment":null}]}
+		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key"},{"Extensions":".cshtml,.vbhtml","Patterns":"@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>"},{"Extensions":".xaml","Patterns":"x:Uid=\"$Key\""}]}
+		SolutionGuid = {C2A3DB32-E571-4937-B0D9-E74756EE207D}
 	EndGlobalSection
 EndGlobal
