@@ -1,5 +1,28 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.2-beta:
+### What's Changed:
+1. Bug fixes
+2. Notifications are now queued.
+3. Notifications now include a "Close" button.
+4. Improved performance.
+5. Fixed playlist import.
+6. Added donate dialog
+7. Made Bread Player Free in the store again.
+
+## Version 2.7.1-beta:
+### What's Fixed:
+1. Fixed issue where navigating backwards through settings minimized the app.
+2. Fixed issue where app crashed when song reached the end.
+3. Fixed crash when navigating to Bakers (artists).
+4. Fixed app hang when navigating to Bakers (artists).
+5. Fixed app crash when library was loading.
+6. Fixed crash when searching songs.
+7. Fixed Show All Toasts Search results UI.
+8. Fixed random crashes when navigating around pages with lists.
+9. Fixed a critical thread allocation bug.
+10. Fixed hang and crash when deleting songs.
+
 ## Version 2.7.0-beta:
 ### What's New:
 1. Added "Bakers" menu for artists.
