@@ -581,7 +581,6 @@
                     <Button
                         VerticalAlignment="Stretch"
                         Background="Transparent"
-                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Command="{Binding PlayPreviousCommand}"
                         Content="&#xE892;"
                         FontFamily="Segoe MDL2 Assets"
@@ -594,7 +593,6 @@
                         Margin="5,0,5,0"
                         VerticalAlignment="Stretch"
                         Background="Transparent"
-                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Command="{Binding PlayPauseCommand}"
                         Foreground="{StaticResource TextBrush}"
                         Style="{StaticResource HyperlinkBtn}">
@@ -608,7 +606,6 @@
                         Margin="0,0,5,0"
                         VerticalAlignment="Stretch"
                         Background="Transparent"
-                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Command="{Binding PlayNextCommand}"
                         Content="&#xE893;"
                         FontFamily="Segoe MDL2 Assets"
