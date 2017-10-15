@@ -20,6 +20,7 @@ using BreadPlayer.Common;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
@@ -52,24 +53,9 @@ namespace BreadPlayer
         public Shell()
         {
             InitializeComponent();
-            string a = SettingsHelper.GetRoamingSetting<string>("LastOpenedPage", typeof(LibraryView).AssemblyQualifiedName);
-            hamburgerMenu.InitialPage = Type.GetType(a, false, true);
-            //SurfaceLoader.Initialize(ElementCompositionPreview.GetElementVisual(this).Compositor);
             new CoreWindowLogic();
             _shellVm = DataContext as ShellViewModel;
-            LibraryItem.Shortcuts.Add(new Shortcut
-            {
-                SymbolAsChar = "\uE762",
-                Tooltip = "Enable Multiselection",
-                ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
-            });
-            NowPlayingItem.Command = new DelegateCommand(() =>
-            {
-                NowPlayingFrame.Navigate(typeof(NowPlayingView));
-                _shellVm.NavigateToNowPlayingViewCommand.Execute(null);
-            });
-            watchAdMenuItem.Command = _shellVm.WatchAnAdCommand;
-            hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
+            SetupMenu();
             if (SharedLogic.Instance.SettingsVm.PersonalizationVM.BackgroundOverlayColor == "Auto")
             {
                 backgroundBorder.Background = Application.Current.Resources["BackgroundOverlay"] as SolidColorBrush;
@@ -81,12 +67,38 @@ namespace BreadPlayer
                 backgroundBorder.Opacity = 0.8;
             }
         }
+        private void SetupMenu()
+        {
+            _shellVm.PropertyChanged += OnShellVMPropertyChanged;
+            LibraryItem.Shortcuts.Add(new Shortcut
+            {
+                SymbolAsChar = "\uE762",
+                Tooltip = "Enable Multiselection",
+                ShortcutCommand = (Application.Current.Resources["LibVM"] as LibraryViewModel).ChangeSelectionModeCommand
+            });
+            NowPlayingItem.Command = _shellVm.NavigateToNowPlayingViewCommand;
+            watchAdMenuItem.Command = new DelegateCommand(async () => 
+            {
+                DonateDialog dialog = new DonateDialog();
+                await dialog.ShowAsync();
+            });
+        }
+
+        private void OnShellVMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsPlaybarHidden")
+            {
+                if (_shellVm.IsPlaybarHidden && NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
+                {
+                    NowPlayingFrame.Navigate(typeof(NowPlayingView));
+                }
+            }
+        }
 
         private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(_arguments))
                 CoreWindowLogic.LoadAppWithArguments(_arguments);
-
         }       
 
         public event EventHandler<KeyEventArgs> GlobalPageKeyDown;
@@ -105,6 +117,7 @@ namespace BreadPlayer
             }
             else if(e.Parameter is string arguments && !string.IsNullOrEmpty(e.Parameter.ToString()))
             {
+                hamburgerMenu.SplitViewMenuLoaded += HamburgerMenu_SplitViewMenuLoaded;
                 _arguments = arguments;
             }
             base.OnNavigatedTo(e);
@@ -134,33 +147,53 @@ namespace BreadPlayer
 
         private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
         {
-            if (_shellVm.IsEqualizerVisible && equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            if (equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            {
+                HideEquilizer();
+            }
+        }
+
+        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
+        {
+            if (!NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
+                HideNowPlaying();
+        }
+        private void HideEquilizer()
+        {
+            if (_shellVm.IsEqualizerVisible)
             {
                 _shellVm.IsEqualizerVisible = false;
                 equalizerBtn.IsChecked = false;
                 CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
             }
         }
-
-        private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
+        private void HideNowPlaying()
         {
-            if (_shellVm.IsPlaybarHidden && !NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
+            if (_shellVm.IsPlaybarHidden)
             {
                 _shellVm.IsPlaybarHidden = false;
                 CoreWindow.GetForCurrentThread().PointerReleased -= OnNowPlayingHide;
             }
         }
-
+        private void OnKeyUp(CoreWindow sender, KeyEventArgs args)
+        {
+            if (args.VirtualKey == Windows.System.VirtualKey.Escape)
+            {
+                HideNowPlaying();
+                HideEquilizer();
+            }
+        }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             positionSlider.InitEvents(() => { positionSlider.UpdatePosition(_shellVm); }, () => { _shellVm.DontUpdatePosition = true; });
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
-            NowPlayingFrame.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            CoreWindow.GetForCurrentThread().KeyUp += OnKeyUp;
+            NowPlayingGrid.RegisterPropertyChangedCallback(OpacityProperty, (d, obj) =>
             {
-                if (NowPlayingFrame.Visibility == Visibility.Visible)
+                if (NowPlayingGrid.Opacity == 1)
                 {
-                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;
+                    CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;                   
                 }
             });
             equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
@@ -171,5 +204,7 @@ namespace BreadPlayer
                 }
             });
         }
+
+       
     }
 }
