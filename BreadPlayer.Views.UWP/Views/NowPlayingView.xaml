@@ -581,6 +581,7 @@
                     <Button
                         VerticalAlignment="Stretch"
                         Background="Transparent"
+                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Command="{Binding PlayPreviousCommand}"
                         Content="&#xE892;"
                         FontFamily="Segoe MDL2 Assets"
@@ -591,6 +592,7 @@
                         x:Name="playBtn"
                         Height="60"
                         Margin="5,0,5,0"
+                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         VerticalAlignment="Stretch"
                         Background="Transparent"
                         Command="{Binding PlayPauseCommand}"
@@ -606,6 +608,7 @@
                         Margin="0,0,5,0"
                         VerticalAlignment="Stretch"
                         Background="Transparent"
+                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Command="{Binding PlayNextCommand}"
                         Content="&#xE893;"
                         FontFamily="Segoe MDL2 Assets"
@@ -619,6 +622,7 @@
                         Content="&#xE767;"
                         FontFamily="Segoe MDL2 Assets"
                         FontSize="20"
+                        BorderBrush="{ThemeResource AccentHoverBrush}"
                         Foreground="{StaticResource TextBrush}"
                         Style="{StaticResource HyperlinkToggleBtn}" />
                 </StackPanel>
@@ -701,12 +705,9 @@
             <!--<Button x:Name="addBtn" Content="&#xE710;" Grid.Row="1" Margin="0,0,0,0" Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource TextBrush}" Background="Transparent" FontSize="20" Command="{Binding PlayPreviousCommand}" Style="{StaticResource HyperlinkBtn}" />-->
             <Grid
                 Name="volumeGrid"
-                Grid.Row="0"
-                Grid.RowSpan="3"
                 Grid.Column="1"
-                Grid.ColumnSpan="4"
-                Margin="215,45,0,-30"
                 HorizontalAlignment="Left"
+                Margin="135,50,0,-30"
                 Background="{ThemeResource SystemControlHighlightAltListAccentHighBrush}"
                 DataContext="{StaticResource Core}"
                 Visibility="{Binding ElementName=volumeBtn, Path=IsChecked}">
