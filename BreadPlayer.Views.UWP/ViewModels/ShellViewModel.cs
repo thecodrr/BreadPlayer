@@ -319,20 +319,9 @@ namespace BreadPlayer.ViewModels
             {
                 await NotifyAndDeselect("No worries!");
             };
-            int retryCount = 0;
             ad.ErrorOccurred += async (r, a) => 
             {
-                if (retryCount < 2)
-                {
-                    retryCount++;
-                    await NotifyAndDeselect("Aw! An error occured. Trying something else. Please wait.");
-                    myAdUnitId = "1100000276";
-                    ad.RequestAd(AdType.Display, myAppId, myAdUnitId);
-                }
-                else
-                {
-                    await NotifyAndDeselect("Aw! An error occured. Thanks anyway.");
-                }
+                await NotifyAndDeselect("Aw! An error occured. We will try later. Thanks.");
             };
             ad.RequestAd(AdType.Video, myAppId, myAdUnitId);
             await NotifyAndDeselect("Please continue. The ad will be shown shortly.");

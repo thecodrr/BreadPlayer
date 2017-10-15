@@ -707,10 +707,10 @@
             Visibility="Collapsed">
             <Frame
                 x:Name="NowPlayingFrame"
-                Visibility="Visible"
                 Width="700"
                 Margin="0,100"
-                RenderTransformOrigin="0.5,0.5"/>
+                RenderTransformOrigin="0.5,0.5"
+                Visibility="Visible" />
         </Grid>
         <rma:FeedbackOverlay
             x:Name="FeedbackOverlay"
