@@ -19,17 +19,8 @@ namespace BreadPlayer.ViewModels
 {
     public class NowPlayingViewModel : ObservableObject
     {
-        #region Loading Properties
-
-        private bool _albumFetchFailed;
-        private bool _albumInfoLoading;
-        private bool _artistFetchFailed;
-        private bool _artistInfoLoading;
+        #region Loading Properties        
         private bool _lyricsLoading;
-        public bool AlbumFetchFailed { get => _albumFetchFailed; set => Set(ref _albumFetchFailed, value); }
-        public bool AlbumInfoLoading { get => _albumInfoLoading; set => Set(ref _albumInfoLoading, value); }
-        public bool ArtistFetchFailed { get => _artistFetchFailed; set => Set(ref _artistFetchFailed, value); }
-        public bool ArtistInfoLoading { get => _artistInfoLoading; set => Set(ref _artistInfoLoading, value); }
         public bool LyricsLoading { get => _lyricsLoading; set => Set(ref _lyricsLoading, value); }
         #endregion Loading Properties
 
@@ -90,26 +81,13 @@ namespace BreadPlayer.ViewModels
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
-                AlbumInfoLoading = true;
                 AlbumTracks?.Clear();
-                AlbumFetchFailed = false;
                 var albumInfoResponse = await LastfmClient.Album.GetInfoAsync(artistName, albumName, true).ConfigureAwait(false);
                 if (albumInfoResponse.Success)
                 {
                     LastAlbum album = albumInfoResponse.Content;
                     AlbumTracks = new ThreadSafeObservableCollection<LastTrack>(album.Tracks);
                 }
-                else
-                {
-                    AlbumFetchFailed = true;
-                    AlbumInfoLoading = false;
-                }
-                if (AlbumTracks?.Any() == false)
-                {
-                    AlbumFetchFailed = true;
-                }
-
-                AlbumInfoLoading = false;
             });
         }
 
@@ -119,7 +97,6 @@ namespace BreadPlayer.ViewModels
             {
                 if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.NoOfArtistsToFetchInfoFor == "None")
                     return;
-                ArtistInfoLoading = true;
                 Artists = new ThreadSafeObservableCollection<LastArtist>();
                 SimilarArtists = null;
 
@@ -133,7 +110,6 @@ namespace BreadPlayer.ViewModels
                         artistsList.AddRange(artistsFromTitle);
                     artistsList = artistsList.DistinctBy(t => t.Trim().ToLower()).ToList();
                 }
-                ArtistFetchFailed = false;
                 //var trackInfo = await LastfmClient.Track.GetInfoAsync(TagParser.ParseTitle(SharedLogic.Instance.SharedLogic.Instance.Player.CurrentlyPlayingFile.Title), artistsList[0]);
                 //if (trackInfo.Success && SharedLogic.Instance.SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture == null)
                 //{
@@ -159,15 +135,6 @@ namespace BreadPlayer.ViewModels
                             SimilarArtists = new ThreadSafeObservableCollection<LastArtist>(artistInfoResponse.Content.Similar);
                     }
                 }
-
-                //fail if no artist info is fetched
-                if (!Artists.Any())
-                {
-                    ArtistFetchFailed = true;
-                    ArtistInfoLoading = false;
-                }
-
-                ArtistInfoLoading = false;
             });
         }
 
@@ -175,20 +142,17 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
+                LastfmClient.HttpClient.CancelPendingRequests();
+                //cancel any previous requests
                 TaskList.Clear();
                 if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric))
                 {
-                    //cancel any previous requests
-                    LastfmClient.HttpClient.CancelPendingRequests();
                     TaskList.Add(GetLyrics());
-                    if(InternetConnectivityHelper.IsInternetConnected)
+                    if (InternetConnectivityHelper.IsInternetConnected)
+                    {
                         TaskList.Add(GetArtistInfo(artistName.GetTag()));
+                    }
                 }
-                else
-                {
-                    AlbumFetchFailed = true;
-                    ArtistFetchFailed = true;
-                } 
                 //start all tasks   
                 if (TaskList.Any())
                     await Task.WhenAll(TaskList).ConfigureAwait(false);

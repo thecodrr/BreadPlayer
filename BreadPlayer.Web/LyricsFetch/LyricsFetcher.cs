@@ -16,49 +16,42 @@ namespace BreadPlayer.Web.LyricsFetch
 
         public static async Task<string> FetchLyrics(Mediafile file, string lyricSource)
         {
-            try
+            var mediaFile = new Mediafile();
+            mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
+            var cleanedArtist = TagParser.ParseTitle(file.LeadArtist.ToString());
+            List<string> parsedArtists = TagParser.ParseArtists(cleanedArtist);
+            if (string.IsNullOrEmpty(cleanedArtist))
             {
-                var mediaFile = new Mediafile();
-                mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
-                var cleanedArtist = TagParser.ParseTitle(file.LeadArtist.ToString());
-                List<string> parsedArtists = TagParser.ParseArtists(cleanedArtist);
-                if (string.IsNullOrEmpty(cleanedArtist))
-                {
-                    cleanedArtist = file.Title;
-                    parsedArtists = TagParser.ParseArtists(cleanedArtist);
-                    parsedArtists.RemoveAt(0);
-                }
-                mediaFile.LeadArtist = !parsedArtists.Any() ? file.LeadArtist : TagParser.ParseTitle(parsedArtists[0]);
-                string Lyrics = "";
-                switch (lyricSource)
-                {
-                    case "Auto":
-                        for (int i = 0; i < Sources.Length; i++)
+                cleanedArtist = file.Title;
+                parsedArtists = TagParser.ParseArtists(cleanedArtist);
+                parsedArtists.RemoveAt(0);
+            }
+            mediaFile.LeadArtist = !parsedArtists.Any() ? file.LeadArtist : TagParser.ParseTitle(parsedArtists[0]);
+            string Lyrics = "";
+            switch (lyricSource)
+            {
+                case "Auto":
+                    for (int i = 0; i < Sources.Length; i++)
+                    {
+                        var lrc = await Sources[i].FetchLyrics(mediaFile).ConfigureAwait(false);
+                        if (LrcParser.IsLrc(lrc))
                         {
-                            var lrc = await Sources[i].FetchLyrics(mediaFile).ConfigureAwait(false);
-                            if (LrcParser.IsLrc(lrc))
-                            {
-                                Lyrics = lrc;
-                                break;
-                            }
+                            Lyrics = lrc;
+                            break;
                         }
-                        break;
-                    case "Netease":
-                        Lyrics = await Sources[0].FetchLyrics(mediaFile).ConfigureAwait(false);
-                        break;
-                    case "Baidu":
-                        Lyrics = await Sources[2].FetchLyrics(mediaFile).ConfigureAwait(false);
-                        break;
-                    case "Xiami":
-                        Lyrics = await Sources[1].FetchLyrics(mediaFile).ConfigureAwait(false);
-                        break;
-                }
-                return Lyrics;
+                    }
+                    break;
+                case "Netease":
+                    Lyrics = await Sources[0].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    break;
+                case "Baidu":
+                    Lyrics = await Sources[2].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    break;
+                case "Xiami":
+                    Lyrics = await Sources[1].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    break;
             }
-            catch
-            {
-                return null;
-            }
+            return Lyrics;
         }
     }
 }
