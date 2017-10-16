@@ -4,6 +4,8 @@ using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
@@ -43,6 +45,8 @@ namespace BreadPlayer.Themes
         {
             await BreadDispatcher.InvokeAsync(async () =>
             {
+                if (!SharedLogic.Instance.VerifyFileExists(albumartPath, 100))
+                    return;
                 if (SharedLogic.Instance.SettingsVm.PersonalizationVM.ChangeAccentByAlbumArt == false || albumartPath == null)
                 {
                     ChangeColor(GetAccentColor());
