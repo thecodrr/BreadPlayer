@@ -9,90 +9,92 @@
     mc:Ignorable="d">
     <Page.Resources />
     <ScrollViewer>
-            <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
-                    <TextBlock
+        <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.AccountSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+            <TextBlock
                         x:Name="lastfmHeader"
                         FontSize="22"
                         FontWeight="Bold"
                         Text="Last.fm" />
-                    <TextBox
+            <TextBox
                         x:Uid="lastfmUsernameTextBlock"
                         Grid.Row="1"
                         Margin="0,10,0,0"
                         Header="Username:"
                         PlaceholderText=""
                         Text="{Binding Path=LastfmUsername, Mode=TwoWay}" />
-                    <PasswordBox
+            <PasswordBox
                         x:Uid="lastfmPasswordTextBlock"
                         Grid.Row="2"
                         Margin="0,10,0,0"
                         Header=""
                         Password="{Binding Path=LastfmPassword, Mode=TwoWay}"
                         PlaceholderText="" />
-                    <StackPanel
+            <StackPanel
                         Grid.Row="3"
                         Margin="0,10,0,0"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
-                        <Button
+                <Button
                             x:Uid="lastfmLoginBtn"
                             Width="200"
                             Margin="0,0,0,0"
                             Command="{Binding Path=LastfmLoginCommand}"
                             Content="Login">
-                            <Button.CommandParameter>
-                                <x:Boolean>true</x:Boolean>
-                            </Button.CommandParameter>
-                        </Button>
-                        <Button
+                    <Button.CommandParameter>
+                        <x:Boolean>true</x:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
                             x:Uid="lastfmLogoutBtn"
                             Width="200"
                             Margin="5,0,0,0"
                             Command="{Binding Path=LastfmLogoutCommand}"
                             Content="Logout">
-                        </Button>
-                    </StackPanel>
-                    <TextBlock
+                </Button>
+            </StackPanel>
+            <TextBlock
                         x:Uid="bakersInfoTB"
                         Margin="0,5,0,0"
                         FontSize="18"
                         FontWeight="SemiBold"
                         Text="" />
-                    <ComboBox
+            <ComboBox
                         x:Uid="bakersInfoCB"
                         Margin="0,5,0,0"
                         Header=""
                         SelectedItem="{Binding Path=NoOfArtistsToFetchInfoFor, Mode=TwoWay}">
-                        <x:String>Lead artist</x:String>
-                        <x:String>All artists</x:String>
-                        <x:String>None</x:String>
-                    </ComboBox>
+                <x:String>Lead artist</x:String>
+                <x:String>All artists</x:String>
+                <x:String>None</x:String>
+            </ComboBox>
 
-                    <TextBlock
+            <TextBlock
                         x:Uid="lyricsTB"
                         Margin="0,10,0,0"
                         FontSize="22"
                         FontWeight="Bold"
                         Text="Lyrics" />
-                    <ComboBox
+            <ComboBox
                         x:Uid="lyricTypeCB"
                         Margin="0,5,0,0"
                         Header=""
                         SelectedItem="{Binding Path=LyricType, Mode=TwoWay}">
-                        <x:String>Synced</x:String>
-                        <x:String>None</x:String>
-                    </ComboBox>
-                    <ComboBox
+                <x:String>Synced</x:String>
+                <x:String>None</x:String>
+            </ComboBox>
+            <ComboBox
                         x:Uid="lyricSourceCB"
                         Margin="0,5,0,0"
                         Header=""
                         SelectedItem="{Binding Path=LyricSource, Mode=TwoWay}">
-                        <x:String>Auto</x:String>
-                        <x:String>Netease</x:String>
-                        <x:String>Baidu</x:String>
-                        <x:String>Xiami</x:String>
-                    </ComboBox>
-                </StackPanel>
+                <x:String>Auto</x:String>
+                <x:String>Musixmatch</x:String>
+
+                <x:String>Netease</x:String>
+                <x:String>Baidu</x:String>
+                <x:String>Xiami</x:String>
+            </ComboBox>
+        </StackPanel>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

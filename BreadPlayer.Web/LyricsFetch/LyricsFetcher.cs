@@ -42,14 +42,17 @@ namespace BreadPlayer.Web.LyricsFetch
                         }
                     }
                     break;
-                case "Netease":
+                case "Musixmatch":
                     Lyrics = await Sources[0].FetchLyrics(mediaFile).ConfigureAwait(false);
                     break;
+                case "Netease":
+                    Lyrics = await Sources[1].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    break;
                 case "Baidu":
-                    Lyrics = await Sources[2].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    Lyrics = await Sources[3].FetchLyrics(mediaFile).ConfigureAwait(false);
                     break;
                 case "Xiami":
-                    Lyrics = await Sources[1].FetchLyrics(mediaFile).ConfigureAwait(false);
+                    Lyrics = await Sources[2].FetchLyrics(mediaFile).ConfigureAwait(false);
                     break;
             }
             return Lyrics;
