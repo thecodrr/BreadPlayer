@@ -875,12 +875,15 @@
                                 <TextBlock
                                     Name="lyricTxt"
                                     Margin="5,0,0,0"
-                                    FontSize="15"
+                                    FontSize="18"
                                     FontWeight="Normal"
                                     Foreground="{StaticResource LyricsForeground}"
                                     Text="{Binding Path=Content}"
                                     TextAlignment="Center"
-                                    TextWrapping="WrapWholeWords">
+                                    TextWrapping="WrapWholeWords" RenderTransformOrigin="0.5,0.5">
+                                    <TextBlock.RenderTransform>
+                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                    </TextBlock.RenderTransform>
                                     <Interactivity:Interaction.Behaviors>
                                         <Core:DataTriggerBehavior
                                             Binding="{Binding Path=IsActive}"
@@ -888,13 +891,7 @@
                                             Value="True">
                                             <Media:ControlStoryboardAction ControlStoryboardOption="Play">
                                                 <Media:ControlStoryboardAction.Storyboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                            EnableDependentAnimation="True"
-                                                            Storyboard.TargetName="lyricTxt"
-                                                            Storyboard.TargetProperty="FontSize"
-                                                            To="18"
-                                                            Duration="0:0:0.5" />
+                                                    <Storyboard>                                                        
                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lyricTxt" Storyboard.TargetProperty="FontWeight">
                                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Bold" />
                                                         </ObjectAnimationUsingKeyFrames>
@@ -908,13 +905,7 @@
                                             Value="False">
                                             <Media:ControlStoryboardAction ControlStoryboardOption="Play">
                                                 <Media:ControlStoryboardAction.Storyboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                            EnableDependentAnimation="True"
-                                                            Storyboard.TargetName="lyricTxt"
-                                                            Storyboard.TargetProperty="FontSize"
-                                                            To="15"
-                                                            Duration="0:0:0.3" />
+                                                    <Storyboard>                                                        
                                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="lyricTxt" Storyboard.TargetProperty="FontWeight">
                                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Normal" />
                                                         </ObjectAnimationUsingKeyFrames>

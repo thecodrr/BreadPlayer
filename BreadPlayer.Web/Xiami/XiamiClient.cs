@@ -41,8 +41,11 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
 
         public async Task<SearchResponse> SearchAsync(string query)
         {
-            var response = await XiamiHttpClient.GetStringAsync(string.Format(Endpoints.SearchURI, query, 10)).ConfigureAwait(false);
-            return JsonConvert.DeserializeObject<SearchResponse>(response);
+            var response = await XiamiHttpClient.GetAsync(string.Format(Endpoints.SearchURI, query, 10)).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<SearchResponse>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+            else
+                return null;
         }
     }
 }

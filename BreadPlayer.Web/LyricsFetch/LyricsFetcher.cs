@@ -2,6 +2,7 @@
 using BreadPlayer.Parsers.LRCParser;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Web.BaiduLyricsAPI;
+using BreadPlayer.Web.Musixmatch;
 using BreadPlayer.Web.NeteaseLyricsAPI;
 using BreadPlayer.Web.XiamiLyricsAPI;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace BreadPlayer.Web.LyricsFetch
 {
     public class LyricsFetcher
     {
-        static ILyricAPI[] Sources = new ILyricAPI[] { new NeteaseClient(), new XiamiClient(), new BaiduClient() };
+        static ILyricAPI[] Sources = new ILyricAPI[] { new MusixmatchClient(), new NeteaseClient(), new XiamiClient(), new BaiduClient() };
 
         public static async Task<string> FetchLyrics(Mediafile file, string lyricSource)
         {
