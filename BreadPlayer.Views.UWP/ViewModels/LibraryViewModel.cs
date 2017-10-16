@@ -85,9 +85,9 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
 
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...", 3);
                 TracksCollection.AddRange(songs);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...", 3);
                 await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
 
                 IsLibraryLoading = false;

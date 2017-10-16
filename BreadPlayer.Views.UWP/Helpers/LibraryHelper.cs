@@ -100,7 +100,7 @@ namespace BreadPlayer.Helpers
 
                 string message = string.Format("Songs successfully imported!");
                 BLogger.I(message);
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message, 3);
             });
         }
         public static async Task SaveSingleFileAlbumArtAsync(Mediafile mp3File, StorageFile file = null)
