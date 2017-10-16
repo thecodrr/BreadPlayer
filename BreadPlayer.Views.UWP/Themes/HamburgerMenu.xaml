@@ -561,7 +561,7 @@
                                     </local:NavMenuListView>
                                     <local:NavMenuListView Grid.Row="2" VerticalAlignment="Bottom" x:Name="NavBottomMenuList" Tag="NavBottomMenuList"
                                                        ItemsSource="{TemplateBinding BottomNavigationItems}"
-                                                       TabIndex="3"
+                                                       TabIndex="3" Margin="0,0,0,20"
                                                        ItemContainerStyle="{TemplateBinding NavMenuItemContainerStyle}"
                                                        ItemTemplateSelector="{TemplateBinding MenuItemDataTemplateSelector}"
                                                        ItemTemplate="{StaticResource NavMenuItemTemplate}">
