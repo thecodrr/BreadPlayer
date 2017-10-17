@@ -13,20 +13,20 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <RadioButton x:Name="donate1" 
                      Content="Donate $2"
                      IsChecked="True"/>
-        <RadioButton x:Name="donate2" Grid.Column="1"
+        <RadioButton x:Name="donate2" Grid.Row="1"
                      Content="Donate $5"/>
-        <RadioButton x:Name="donate3" Grid.Column="2"
+        <RadioButton x:Name="donate3" Grid.Row="2"
                      Content="Donate $10"/>
-        <RadioButton x:Name="watchAnAdRadioBtn" Grid.Column="3"
+        <RadioButton x:Name="watchAnAdRadioBtn" Grid.Row="3"
                      Content="Watch an ad instead"/>
     </Grid>
 </ContentDialog>

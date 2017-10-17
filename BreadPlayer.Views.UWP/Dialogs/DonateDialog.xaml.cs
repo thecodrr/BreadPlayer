@@ -48,22 +48,63 @@ namespace BreadPlayer.Dialogs
             }
             if (productID != null)
             {
-                ConsumeAddOn(productID, 1);
+                PurchaseAddOn(productID);
             }
         }
         private StoreContext context = null;
 
-        public async void ConsumeAddOn(string addOnStoreId, uint quantity)
+        public async void PurchaseAddOn(string addOnStoreId)
         {
             if (context == null)
             {
                 context = StoreContext.GetDefault();
             }
 
+            StorePurchaseResult result = await context.RequestPurchaseAsync(addOnStoreId);
+            
+            // Capture the error message for the operation, if any.
+            string extendedError = string.Empty;
+            if (result.ExtendedError != null)
+            {
+                extendedError = result.ExtendedError.Message;
+            }
+
+            switch (result.Status)
+            {
+                case StorePurchaseStatus.Succeeded:
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Thanks for the donation! Love you!");
+                    ConsumeAddOn(addOnStoreId);
+                    this.Hide();
+                    SplitViewMenu.SplitViewMenu.SelectPrevious();
+                    break;
+                case StorePurchaseStatus.NetworkError:
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The purchase was unsuccessful due to a network error. " +
+                        "ExtendedError: " + extendedError);
+                    break;
+                case StorePurchaseStatus.ServerError:
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The purchase was unsuccessful due to a server error. " +
+                        "ExtendedError: " + extendedError);
+                    break;
+                default:
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The purchase was unsuccessful due to an unknown error. " +
+                         "ExtendedError: " + extendedError);
+                    break;
+            }
+        }
+
+        public async void ConsumeAddOn(string storeId)
+        {
+            if (context == null)
+            {
+                context = StoreContext.GetDefault();
+                // If your app is a desktop app that uses the Desktop Bridge, you
+                // may need additional code to configure the StoreContext object.
+                // For more info, see https://aka.ms/storecontext-for-desktop.
+            }
             Guid trackingId = Guid.NewGuid();
             
             StoreConsumableResult result = await context.ReportConsumableFulfillmentAsync(
-                addOnStoreId.ToUpperInvariant(), quantity, trackingId);
+                storeId, 1, trackingId);
 
             // Capture the error message for the operation, if any.
             string extendedError = string.Empty;
@@ -75,7 +116,7 @@ namespace BreadPlayer.Dialogs
             switch (result.Status)
             {
                 case StoreConsumableStatus.Succeeded:
-                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Thanks for the donation! Love you!");
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Purchase fullfilled successfully.");
                     this.Hide();
                     SplitViewMenu.SplitViewMenu.SelectPrevious();
                     break;

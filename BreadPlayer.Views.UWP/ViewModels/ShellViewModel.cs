@@ -302,12 +302,14 @@ namespace BreadPlayer.ViewModels
             InterstitialAd ad = new InterstitialAd();
             string myAppId = "9nblggh42srx";
             string myAdUnitId = "11701839";
-            ad.AdReady += (r, a) => 
+            ad.Keywords = "music,software,apps";
+            ad.AdReady += async (r, a) => 
             {
                 if (InterstitialAdState.Ready == ad.State)
                 {
                     logger.Log("WatchAnAdStarted");
                     ad.Show();
+                    await SharedLogic.Instance.NotificationManager.ShowMessageBoxAsync("Please click at least one link to help me more! Thanks!", "Thank you so much!");
                 }
             };
             ad.Completed += async (r, a) => 
