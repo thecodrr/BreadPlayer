@@ -84,6 +84,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is IEnumerable<Mediafile> songs)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                Messenger.Instance.DeRegister(MessageTypes.MsgImportFolder, new Action<Message>(HandleImportFolder));
 
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...", 3);
                 TracksCollection.AddRange(songs);
@@ -908,6 +909,7 @@ namespace BreadPlayer.ViewModels
                 _libraryLoaded = true;
                 await CreateGenreMenu().ConfigureAwait(false);
                 BLogger.I("Library successfully loaded!");
+                Messenger.Instance.Register(MessageTypes.MsgImportFolder, new Action<Message>(HandleImportFolder));
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Library successfully loaded!", 4);
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new List<object> { TracksCollection, _grouped });
             }
