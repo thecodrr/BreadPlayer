@@ -26,7 +26,6 @@ namespace BreadPlayer.ViewModels
 
         private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         private IOneLineLyric _currentLyric;
-        private int _retries;
         private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
         private ThreadSafeObservableCollection<LastArtist> _similarArtists;
         private ThreadSafeObservableCollection<LastArtist> artists;
@@ -40,6 +39,7 @@ namespace BreadPlayer.ViewModels
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
             SharedLogic.Instance.Player.MediaChanged += OnMediaChanged;
+            OnMediaChanged(this, new EventArgs());
         }
 
         public event EventHandler LyricActivated;
@@ -140,41 +140,19 @@ namespace BreadPlayer.ViewModels
 
         private async Task GetInfo(string artistName, string albumName)
         {
-            try
+            if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric))
             {
-                LastfmClient.HttpClient.CancelPendingRequests();
-                //cancel any previous requests
-                TaskList.Clear();
-                if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric))
+                await GetLyrics().ConfigureAwait(false);
+                if (InternetConnectivityHelper.IsInternetConnected)
                 {
-                    TaskList.Add(GetLyrics());
-                    if (InternetConnectivityHelper.IsInternetConnected)
-                    {
-                        TaskList.Add(GetArtistInfo(artistName.GetTag()));
-                    }
-                }
-                //start all tasks   
-                if (TaskList.Any())
-                    await Task.WhenAll(TaskList).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                //we use this simple logic to avoid too many retries.
-                //MAX_RETRIES = 10;
-                if (_retries == 10)
-                {
-                    //increase retry count
-                    _retries++;
-
-                    //retry
-                    await GetInfo(artistName, albumName);
+                    LastfmClient.HttpClient.CancelPendingRequests();
+                    await GetArtistInfo(artistName.GetTag()).ConfigureAwait(false);
                 }
             }
         }
 
         private async Task GetLyrics()
-        {
-           
+        {           
             await BreadDispatcher.InvokeAsync(async () =>
             {
                 if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")

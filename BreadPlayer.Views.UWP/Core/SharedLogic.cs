@@ -422,6 +422,8 @@ namespace BreadPlayer.Core
         /// <returns></returns>
         public bool VerifyFileExists(string path, int timeout)
         {
+            if (path == null)
+                return false;
             var task = new Task<bool>(() =>
             {
                 var fi = new FileInfo(path);
