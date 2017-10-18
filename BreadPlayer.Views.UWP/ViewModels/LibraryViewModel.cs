@@ -86,10 +86,12 @@ namespace BreadPlayer.ViewModels
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 Messenger.Instance.DeRegister(MessageTypes.MsgImportFolder, new Action<Message>(HandleImportFolder));
 
-                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...", 3);
-                TracksCollection.AddRange(songs);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...", 3);
                 await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
+
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Adding songs into library. Please wait...", 3);
+                TracksCollection.AddRange(songs);
+               
 
                 IsLibraryLoading = false;
                 await BreadDispatcher.InvokeAsync(() =>
