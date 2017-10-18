@@ -10,3 +10,4 @@
 What's New:
 1. Added Musixmatch as a new Lyric source.
 2. Added support for Fall Creators Update
+3. Added Russian Translation
