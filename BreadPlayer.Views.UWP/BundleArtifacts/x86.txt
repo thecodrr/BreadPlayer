@@ -1,2 +1,2 @@
-MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.2.0_x86.appx
-SymbolPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.2.0_Test\BreadPlayer.Views.UWP_2.7.2.0_x86.appxsym
+MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.3.0_x86.appx
+SymbolPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.3.0_Test\BreadPlayer.Views.UWP_2.7.3.0_x86.appxsym

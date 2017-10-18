@@ -37,8 +37,12 @@ namespace BreadPlayer.Targets
             var musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             if (musicLibrary?.Folders?.Count > 0 && musicLibrary?.SaveFolder != null)
             {
-                StorageFolder storageFolder = await musicLibrary.SaveFolder.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
-                _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+                try
+                {
+                    StorageFolder storageFolder = await musicLibrary.SaveFolder.CreateFolderAsync(".breadplayerLogs", CreationCollisionOption.OpenIfExists);
+                    _file = await storageFolder.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
+                }
+                catch { }
             }
         }
 

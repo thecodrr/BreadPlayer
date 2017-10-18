@@ -19,6 +19,8 @@ namespace BreadPlayer.Web.LyricsFetch
         {
             var mediaFile = new Mediafile();
             mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
+            if (mediaFile.Title == null)
+                return null;
             var cleanedArtist = TagParser.ParseTitle(file.LeadArtist.ToString());
             List<string> parsedArtists = TagParser.ParseArtists(cleanedArtist);
             if (string.IsNullOrEmpty(cleanedArtist))
@@ -28,6 +30,8 @@ namespace BreadPlayer.Web.LyricsFetch
                 parsedArtists.RemoveAt(0);
             }
             mediaFile.LeadArtist = !parsedArtists.Any() ? file.LeadArtist : TagParser.ParseTitle(parsedArtists[0]);
+            if (mediaFile.LeadArtist == null || mediaFile.LeadArtist.Equals("Unknown Artist", System.StringComparison.CurrentCultureIgnoreCase))
+                return null;
             string Lyrics = "";
             switch (lyricSource)
             {

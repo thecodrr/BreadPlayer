@@ -472,20 +472,17 @@ namespace BreadPlayer.ViewModels
 
             if (TracksCollection.Elements.Any(t => t.State == PlayerState.Playing))
             {
-                if (TracksCollection.Elements.IsPlayingCollection())
+                var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
+                foreach (var mp3 in sa)
                 {
-                    var sa = TracksCollection.Elements.Where(l => l.State == PlayerState.Playing);
-                    foreach (var mp3 in sa)
-                    {
-                        mp3.State = PlayerState.Stopped;
-                    }
+                    mp3.State = PlayerState.Stopped;
                 }
-                if (TracksCollection.Elements.Any(t => t.Path == path))
-                {
-                    TracksCollection.Elements.GetSongByPath(path).State = PlayerState.Playing;
-                    UpdateCurrentlyPlayingSongIndex();
-                }
-            }        
+            }
+            if (TracksCollection.Elements.Any(t => t.Path == path))
+            {
+                TracksCollection.Elements.GetSongByPath(path).State = PlayerState.Playing;
+                UpdateCurrentlyPlayingSongIndex();
+            }
         }
 
         public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
