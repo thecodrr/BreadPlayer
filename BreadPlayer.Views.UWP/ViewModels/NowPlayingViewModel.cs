@@ -142,83 +142,83 @@ namespace BreadPlayer.ViewModels
         {
             if (InternetConnectivityHelper.IsInternetConnected || !string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric))
             {
-                await GetLyrics().ConfigureAwait(false);
-                if (InternetConnectivityHelper.IsInternetConnected)
+                await BreadDispatcher.InvokeAsync(async () =>
                 {
-                    LastfmClient.HttpClient.CancelPendingRequests();
-                    await GetArtistInfo(artistName.GetTag()).ConfigureAwait(false);
-                }
+                    await GetLyrics().ConfigureAwait(false);
+                    if (InternetConnectivityHelper.IsInternetConnected)
+                    {
+                        LastfmClient.HttpClient.CancelPendingRequests();
+                        await GetArtistInfo(artistName.GetTag()).ConfigureAwait(false);
+                    }
+                });
             }
         }
 
         private async Task GetLyrics()
-        {           
-            await BreadDispatcher.InvokeAsync(async () =>
+        {
+            if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
+                return;
+            LyricsLoading = true;
+
+            timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
             {
-                if (SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricType == "None")
+                Interval = TimeSpan.FromMilliseconds(10)
+            };
+            string lyricsText = "";
+            if (string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric))
+            {
+                var lrcLyric = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(
+                    SharedLogic.Instance.Player.CurrentlyPlayingFile,
+                    SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricSource).ConfigureAwait(false);
+
+                if (string.IsNullOrEmpty(lrcLyric))
+                {
+                    LyricsLoading = false;
                     return;
-                LyricsLoading = true;
-
-                timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
+                }
+                lyricsText = lrcLyric;
+                SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric = await lyricsText.ZipAsync();
+                await _service.UpdateMediafile(SharedLogic.Instance.Player.CurrentlyPlayingFile);
+            }
+            else
+            {
+                lyricsText = await SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
+            }
+            if (!string.IsNullOrEmpty(lyricsText))
+            {
+                try
                 {
-                    Interval = TimeSpan.FromMilliseconds(10)
-                };
-                string lyricsText = "";
-                if (string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric))
-                {
-                    var lrcLyric = await Web.LyricsFetch.LyricsFetcher.FetchLyrics(
-                        SharedLogic.Instance.Player.CurrentlyPlayingFile,
-                        SharedLogic.Instance.SettingsVm.AccountSettingsVM.LyricSource).ConfigureAwait(false);
-
-                    if (string.IsNullOrEmpty(lrcLyric))
+                    var parser = LrcParser.FromText(lyricsText);
+                    if (parser?.Lyrics?.Any() == true)
                     {
-                        LyricsLoading = false;
+                        Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
+                        timer.Start();
+                    }
+                }
+                catch (FormatException)
+                {
+                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Cannot parse this lyric.");
+                }
+            }
+            LyricsLoading = false;
+            timer.Tick += (s, e) =>
+            {
+                var currentPosition = TimeSpan.FromSeconds(SharedLogic.Instance.Player.Position);
+                if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50) == true)
+                {
+                    var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                    if (currentLyric == null)
                         return;
-                    }                    
-                    lyricsText = lrcLyric;
-                    SharedLogic.Instance.Player.CurrentlyPlayingFile.SynchronizedLyric = await lyricsText.ZipAsync();
-                    await _service.UpdateMediafile(SharedLogic.Instance.Player.CurrentlyPlayingFile);
-                }
-                else
-                {
-                    lyricsText = await SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric?.UnzipAsync();
-                }
-                if (!string.IsNullOrEmpty(lyricsText))
-                {
-                    try
-                    {
-                        var parser = LrcParser.FromText(lyricsText);
-                        if (parser?.Lyrics?.Any() == true)
-                        {
-                            Lyrics = new ThreadSafeObservableCollection<IOneLineLyric>(parser.Lyrics);
-                            timer.Start();
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Cannot parse this lyric.");
-                    }
-                }
-                LyricsLoading = false;
-                timer.Tick += (s, e) =>
-                {
-                    var currentPosition = TimeSpan.FromSeconds(SharedLogic.Instance.Player.Position);
-                    if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50) == true)
-                    {
-                        var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
-                        if (currentLyric == null)
-                            return;
 
-                        var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
-                        if (previousLyric != null && previousLyric.IsActive == true)
-                            previousLyric.IsActive = false;
-                        currentLyric.IsActive = true;
+                    var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                    if (previousLyric != null && previousLyric.IsActive == true)
+                        previousLyric.IsActive = false;
+                    currentLyric.IsActive = true;
 
-                        CurrentLyric = currentLyric;
-                        LyricActivated?.Invoke(currentLyric, new EventArgs());
-                    }
-                };
-            });
+                    CurrentLyric = currentLyric;
+                    LyricActivated?.Invoke(currentLyric, new EventArgs());
+                }
+            };
         }
 
         private async void OnMediaChanged(object sender, EventArgs e)

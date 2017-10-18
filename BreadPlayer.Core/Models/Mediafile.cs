@@ -116,19 +116,15 @@ namespace BreadPlayer.Core.Models
         public string LeadArtist { get => _leadArtist; set => _leadArtist = string.IsNullOrEmpty(value) ? _leadArtist = _naN : value; }
         public string OrginalFilename { get => _orginalFilename; set => _orginalFilename = string.IsNullOrEmpty(value) ? _orginalFilename = _naN : value; }
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
-
+        public string SynchronizedLyric
+        {
+            get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
+        }
         #region JsonIgnore Properties
 
         [BsonIgnore]
         [JsonIgnore]
         public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }
-
-        [BsonIgnore]
-        [JsonIgnore]
-        public string SynchronizedLyric
-        {
-            get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
-        }
 
         [BsonIgnore]
         [JsonIgnore]
