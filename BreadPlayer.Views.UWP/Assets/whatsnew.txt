@@ -5,6 +5,8 @@
 4. Fixed UI Glitches in Playbar.
 5. Fixed Donate options.
 6. Fixed duplicate songs appearing on auto library load.
+7. Fixed many other minor bugs.
 
 What's New:
 1. Added Musixmatch as a new Lyric source.
+2. Added support for Fall Creators Update
