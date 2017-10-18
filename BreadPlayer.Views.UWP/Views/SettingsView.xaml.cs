@@ -16,9 +16,6 @@ namespace BreadPlayer
         public SettingsView()
         {
             InitializeComponent();
-            NavigationCacheMode = NavigationCacheMode.Enabled;
-
-        
         }
 
         private void OnSettingClicked(object sender, ItemClickEventArgs e)

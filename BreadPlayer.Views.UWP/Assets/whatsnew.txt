@@ -8,6 +8,7 @@
 7. Fixed many other minor bugs.
 8. Fixed issue where Now Playing list was always empty on startup.
 9. Fixed issue where now playing song wasn't highlighted on startup.
+10. Fixed issue where lyrics weren't being cached.
 
 What's New:
 1. Added Musixmatch as a new Lyric source.
