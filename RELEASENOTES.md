@@ -1,5 +1,21 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.3-beta:
+
+### What's Fixed:
+1. Fixed bug where Play button on Artist Tile did nothing.
+2. Fixed issue where importing songs casued OverflowException
+3. Fixed startup crash
+4. Fixed UI Glitches in Playbar.
+5. Fixed Donate options.
+6. Fixed duplicate songs appearing on auto library load.
+7. Fixed many other minor bugs.
+
+### What's New:
+1. Added Musixmatch as a new Lyric source.
+2. Added support for Fall Creators Update
+3. Added Russian Translation
+
 ## Version 2.7.2-beta:
 ### What's Changed:
 1. Bug fixes
