@@ -409,6 +409,7 @@
                     </AppBarButton.Resources>
                     <StackPanel
                         Height="70"
+                        Width="{Binding ElementName=infoBar, Path=Width}"
                         Margin="0,-15,0,-30"
                         VerticalAlignment="Stretch"
                         DataContext="{StaticResource Core}"
