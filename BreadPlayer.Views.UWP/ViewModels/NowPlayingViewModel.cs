@@ -225,6 +225,8 @@ namespace BreadPlayer.ViewModels
         {
             Lyrics?.Clear();
             CurrentLyric = null;
+            if (SharedLogic.Instance.Player.CurrentlyPlayingFile == null)
+                return;
             await GetInfo(SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist, SharedLogic.Instance.Player.CurrentlyPlayingFile.Album).ConfigureAwait(false);
         }
 
