@@ -80,7 +80,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     /// <summary>
     /// Adds the elements of the specified collection to the end of the ObservableCollection(Of T).
     /// </summary>
-    public void AddRange(IEnumerable<T> collection, bool reset = true)
+    public async void AddRange(IEnumerable<T> collection, bool reset = true)
     {
         try
         {
@@ -106,7 +106,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             if (reset)
                 OnCollectionReset();
             else
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList ?? list.ToList(), startIndex));
+                await BreadDispatcher.InvokeAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList ?? list.ToList(), startIndex)));
         }
         catch (Exception ex)
         {
