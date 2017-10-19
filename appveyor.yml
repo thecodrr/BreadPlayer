@@ -8,6 +8,27 @@ platform: x86
 before_build:
 - ps: >-
     nuget restore BreadPlayer.NoTests.sln
+
+    Write-Host "Installing Microsoft Store Services SDK..." 
+ 
+    $msiPath = "$($env:USERPROFILE)\MicrosoftStoreServicesSDK.msi" 
+ 
+    (New-Object Net.WebClient).DownloadFile('https://visualstudiogallery.msdn.microsoft.com/229b7858-2c6a-4073-886e-cbb79e851211/file/206533/6/MicrosoftStoreServicesSDK.msi', $msiPath) 
+ 
+    cmd /c start /wait msiexec /i $msiPath /quiet 
+ 
+    Write-Host "Installed" -ForegroundColor green 
+ 
+ 
+    Write-Host "Installing Microsoft Advertising SDK..." 
+ 
+    $msiPath = "$($env:USERPROFILE)\MicrosoftAdvertisingSDK.msi" 
+ 
+    (New-Object Net.WebClient).DownloadFile('https://visualstudiogallery.msdn.microsoft.com/345ed584-cc35-4ff0-bbcf-25b31515ae8d/file/258419/5/MicrosoftAdvertisingSDK.msi', $msiPath) 
+ 
+    cmd /c start /wait msiexec /i $msiPath /quiet 
+ 
+    Write-Host "Installed" -ForegroundColor green 
 build:
   project: BreadPlayer.NoTests.sln
   parallel: true
@@ -15,21 +36,21 @@ build:
 environment:
   UseTemporarySignCert: True
 after_build:
-- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.3.0_FastBuild_Release_Test\*
+- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.4.0_FastBuild_Release_Test\*
 artifacts:
 - path: BreadPlayer.zip
   name: BreadPlayer App Package
   type: Auto
 
-- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.3.0_x64_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.4.0_x64_FastBuild_Release.appx
   name: BreadPlayer x64 APPX Package
   type: Auto
 
-- path: BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.3.0_x86_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.4.0_x86_FastBuild_Release.appx
   name: BreadPlayer X86 APPX Package
   type: Auto
   
-- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.3.0_ARM_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.4.0_ARM_FastBuild_Release.appx
   name: BreadPlayer ARM APPX Package
   type: Auto
 
@@ -41,6 +62,6 @@ artifacts:
   name: BreadPlayer AppXBundle
   type: Auto
   
-- path: BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.3.0_FastBuild_Release_Test\Dependencies
+- path: BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.4.0_FastBuild_Release_Test\Dependencies
   name: BreadPlayer Dependencies
   type: Auto

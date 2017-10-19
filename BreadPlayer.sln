@@ -1,11 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadPlayer.Views.UWP", "BreadPlayer.Views.UWP\BreadPlayer.Views.UWP.csproj", "{6528FC18-6EF0-40C8-A9FB-858AC62E5B4A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94239CE0-2915-4C43-B4C9-0754E344ED5C}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		BreadPlayer.NoTests.sln = BreadPlayer.NoTests.sln
 		LICENSE.txt = LICENSE.txt
 	EndProjectSection
@@ -292,8 +293,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_CodeReferences = {"Items":[{"Expression":"\\W($File.$Key)\\W","Extensions":".cs,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"GetString\\(\"($Key)\"\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},{"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"<%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%>","Extensions":".aspx,.ascx","IsCaseSensitive":true,"SingleLineComment":null},{"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"$Resource","Extensions":".xaml","IsCaseSensitive":true,"SingleLineComment":null}]}
-		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key"},{"Extensions":".cshtml,.vbhtml","Patterns":"@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>"},{"Extensions":".xaml","Patterns":"x:Uid=\"$Key\""}]}
 		SolutionGuid = {C2A3DB32-E571-4937-B0D9-E74756EE207D}
+		RESX_MoveToResources = {"Items":[{"Extensions":".cs,.vb","Patterns":"$Namespace.$File.$Key|$File.$Key|StringResourceKey.$Key|$Namespace.StringResourceKey.$Key"},{"Extensions":".cshtml,.vbhtml","Patterns":"@$Namespace.$File.$Key|@$File.$Key|@StringResourceKey.$Key|@$Namespace.StringResourceKey.$Key"},{"Extensions":".cpp,.c,.hxx,.h","Patterns":"$File::$Key"},{"Extensions":".aspx,.ascx","Patterns":"<%$ Resources:$File,$Key %>"},{"Extensions":".xaml","Patterns":"x:Uid=\"$Key\""}]}
+		RESX_CodeReferences = {"Items":[{"Expression":"\\W($File.$Key)\\W","Extensions":".cs,.cshtml","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"GetString\\(\"($Key)\"\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"typeof\\((\\w+\\.)*($File)\\).+\"($Key)\"|\"($Key)\".+typeof\\((\\w+\\.)*($File)\\)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"\\W($Key)\\W","Extensions":".vb","IsCaseSensitive":false,"SingleLineComment":"'"},{"Expression":"\\W($File::$Key)\\W","Extensions":".cpp,.c,.hxx,.h","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"<%\\$\\s+Resources:\\s*($File)\\s*,\\s*($Key)\\s*%>","Extensions":".aspx,.ascx","IsCaseSensitive":true,"SingleLineComment":null},{"Expression":"StringResourceKey\\.($Key)","Extensions":".cs","IsCaseSensitive":true,"SingleLineComment":"\/\/"},{"Expression":"$Resource","Extensions":".xaml","IsCaseSensitive":true,"SingleLineComment":null}]}
 	EndGlobalSection
 EndGlobal
