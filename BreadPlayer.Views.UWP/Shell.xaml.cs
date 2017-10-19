@@ -196,9 +196,9 @@ namespace BreadPlayer
                     CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;                   
                 }
             });
-            equalizerOverlayGrid.RegisterPropertyChangedCallback(VisibilityProperty, (d, obj) =>
+            equalizerOverlayGrid.RegisterPropertyChangedCallback(OpacityProperty, (d, obj) =>
             {
-                if (equalizerOverlayGrid.Visibility == Visibility.Visible)
+                if (equalizerOverlayGrid.Opacity == 1)
                 {
                     CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
                 }
