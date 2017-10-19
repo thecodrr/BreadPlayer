@@ -144,15 +144,7 @@ namespace BreadPlayer
                 _isPressed = false;
             }
         }
-
-        private void OnEqualizerHide(CoreWindow sender, PointerEventArgs args)
-        {
-            if (equalizerOverlayGrid.GetBoundingRect().Contains(args.CurrentPoint.Position) && !equalizerGrid.GetBoundingRect().Contains(args.CurrentPoint.Position))
-            {
-                HideEquilizer();
-            }
-        }
-
+        
         private void OnNowPlayingHide(CoreWindow sender, PointerEventArgs args)
         {
             if (!NowPlayingFrame.GetBoundingRect().Contains(args.CurrentPoint.Position))
@@ -164,8 +156,11 @@ namespace BreadPlayer
             {
                 _shellVm.IsEqualizerVisible = false;
                 equalizerBtn.IsChecked = false;
-                CoreWindow.GetForCurrentThread().PointerReleased -= OnEqualizerHide;
             }
+        }
+        private void OnEqualizerHide(object sender, RoutedEventArgs e)
+        {
+            HideEquilizer();
         }
         private void HideNowPlaying()
         {
@@ -194,13 +189,6 @@ namespace BreadPlayer
                 if (NowPlayingGrid.Opacity == 1)
                 {
                     CoreWindow.GetForCurrentThread().PointerReleased += OnNowPlayingHide;                   
-                }
-            });
-            equalizerOverlayGrid.RegisterPropertyChangedCallback(OpacityProperty, (d, obj) =>
-            {
-                if (equalizerOverlayGrid.Opacity == 1)
-                {
-                    CoreWindow.GetForCurrentThread().PointerReleased += OnEqualizerHide;
                 }
             });
         }

@@ -300,6 +300,15 @@
                             </ControlTemplate>
                         </ItemsControl.Template>
                     </ItemsControl>
+                    <Button x:Name="equalizerHideBtn"
+                            Click="OnEqualizerHide"
+                            Margin="-40"
+                            Content="&#xE8BB;"
+                            FontFamily="Segoe MDL2 Assets"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="Transparent"
+                            Style="{StaticResource HyperlinkBtn}"/>
                 </Grid>
             </Grid>
 
@@ -769,6 +778,7 @@
                         <Setter Target="NowPlayingFrame.Margin" Value="0" />
                         <Setter Target="NowPlayingFrame.Width" Value="Auto" />
 
+                        <Setter Target="equalizerHideBtn.Margin" Value="-20" />
                         <Setter Target="equalizerGrid.Padding" Value="20" />
                         <Setter Target="equalizerGrid.Height" Value="320" />
                     </VisualState.Setters>
