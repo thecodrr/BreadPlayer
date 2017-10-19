@@ -124,11 +124,8 @@ namespace BreadPlayer.Helpers
                     }
                 }
             }
-#pragma warning disable CS0168 // The variable 'ex' is declared but never used
-            catch (Exception ex)
-#pragma warning restore CS0168 // The variable 'ex' is declared but never used
+            catch
             {
-                //await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message + "||" + file.Path);
             }
 
             return false;
@@ -176,7 +173,7 @@ namespace BreadPlayer.Helpers
                         if (response.IsSuccessStatusCode)
                         {
                             byte[] buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false); // Download file
-                            using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.ReadWrite, 51200, FileOptions.WriteThrough))
+                            using (FileStream stream = new FileStream(artistArt.Path, FileMode.Open, FileAccess.Write, FileShare.Read, 51200, FileOptions.WriteThrough))
                             {
                                 await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                             }
