@@ -122,23 +122,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var trans = DB.BeginTrans())
-                {
-                    try
-                    {
-                        foreach (var record in records.ToList())
-                        {
-                            record.Id = Guid.NewGuid().GetHashCode();
-                            currentCollection.Insert(record);
-                        }
-
-                        trans.Commit();
-                    }
-                    catch
-                    {
-                        trans.Rollback();
-                    }
-                }
+                currentCollection.InsertBulk(records);
             });
         }
 
@@ -166,21 +150,9 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var trans = DB.BeginTrans())
+                foreach (var record in records)
                 {
-                    try
-                    {
-                        foreach (var record in records)
-                        {
-                            currentCollection.Delete(record.Id);
-                        }
-
-                        trans.Commit();
-                    }
-                    catch
-                    {
-                        trans.Rollback();
-                    }
+                    currentCollection.Delete(record.Id);
                 }
             });
         }
@@ -204,22 +176,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var trans = DB.BeginTrans())
-                {
-                    try
-                    {
-                        foreach (var record in records)
-                        {
-                            currentCollection.Update(record.Id, record);
-                        }
-
-                        trans.Commit();
-                    }
-                    catch
-                    {
-                        trans.Rollback();
-                    }
-                }
+                currentCollection.Update(records);                
             });
         }
 
