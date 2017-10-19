@@ -172,11 +172,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         await ChangeDevice();
                     if (Equalizer == null)
                     {
-                        Equalizer = new BassEqualizer(ref _handle);
+                        Equalizer = new BassEqualizer(_handle);
                     }
                     else
                     {
-                        (Equalizer as BassEqualizer).ReInit(ref _handle);
+                        (Equalizer as BassEqualizer).ReInit(_handle);
                     }
                     MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
                     MediaChanged?.Invoke(this, new EventArgs());

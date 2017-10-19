@@ -11,10 +11,13 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         private PeakEQParameters _eq;
         private int _fxEq;
 
-        public BassEqualizerBand(ref int fxEqHandle, ref PeakEQParameters peakEQ, float centerValue, float gainValue, bool active)
+        public BassEqualizerBand(int fxEqHandle, int bandNo, float centerValue, float gainValue, bool active)
         {
             _fxEq = fxEqHandle;
-            _eq = peakEQ;
+            _eq = new PeakEQParameters()
+            {
+                lBand = bandNo,
+            };
             if (centerValue >= 1000)
             {
                 BandCaption = string.Format("{0}KHz", (centerValue / 1000));
