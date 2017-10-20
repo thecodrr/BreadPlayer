@@ -24,11 +24,11 @@ namespace BreadPlayer.Helpers
         /// </summary>
         /// <param name="queryResult">The query result after querying in a specific folder.</param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Mediafile>> GetSongsFromFolderAsync(StorageFolder folder, bool useIndexer = true)
+        public static async Task<IEnumerable<Mediafile>> GetSongsFromFolderAsync(StorageFolder folder, bool useIndexer = true, uint stepSize = 20)
         {
             StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(DirectoryWalker.GetQueryOptions(null, useIndexer));
 
-            uint index = 0, stepSize = 20;
+            uint index = 0;
             IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
             index += stepSize;
             
@@ -89,7 +89,7 @@ namespace BreadPlayer.Helpers
                     var result = await dialog.ShowAsync();
                     if (result.Id.ToString() == "yesCmd")
                     {
-                        songs = await GetSongsFromFolderAsync(folder, false).ConfigureAwait(false);
+                        songs = await GetSongsFromFolderAsync(folder, false, 400).ConfigureAwait(false);
                     }
                 }
 

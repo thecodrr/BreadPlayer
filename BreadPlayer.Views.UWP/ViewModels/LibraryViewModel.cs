@@ -305,21 +305,25 @@ namespace BreadPlayer.ViewModels
         {
             try
             {
-                FolderPicker picker = new FolderPicker();
-                picker.FileTypeFilter.Add(".mp3");
-                picker.FileTypeFilter.Add(".wav");
-                picker.FileTypeFilter.Add(".ogg");
-                picker.FileTypeFilter.Add(".flac");
-                picker.FileTypeFilter.Add(".m4a");
-                picker.FileTypeFilter.Add(".aif");
-                picker.FileTypeFilter.Add(".wma");
-                picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-                picker.ViewMode = PickerViewMode.List;
-                picker.CommitButtonText = "Import folder";
-                StorageFolder folder = await picker.PickSingleFolderAsync();
+                //FolderPicker picker = new FolderPicker();
+                //picker.FileTypeFilter.Add(".mp3");
+                //picker.FileTypeFilter.Add(".wav");
+                //picker.FileTypeFilter.Add(".ogg");
+                //picker.FileTypeFilter.Add(".flac");
+                //picker.FileTypeFilter.Add(".m4a");
+                //picker.FileTypeFilter.Add(".aif");
+                //picker.FileTypeFilter.Add(".wma");
+                //picker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+                //picker.ViewMode = PickerViewMode.List;
+                //picker.CommitButtonText = "Import folder";
+                var musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+                StorageFolder folder = null; 
+                if (musicLibrary != null)
+                    folder = await musicLibrary.RequestAddFolderAsync();
                 if (folder != null)
                 {
                     StorageApplicationPermissions.FutureAccessList.Add(folder);
+                    
                     await LibraryHelper.ImportFolderIntoLibraryAsync(folder).ConfigureAwait(false);
                 }
             }
