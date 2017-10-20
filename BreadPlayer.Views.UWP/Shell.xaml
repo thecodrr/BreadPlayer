@@ -727,8 +727,8 @@
             ApplicationName="BreadPlayer"
             CompanyName="thecodrr"
             FeedbackTo="support@breadplayer.com"
-            FirstCount="2"
-            SecondCount="5" />
+            FirstCount="5"
+            SecondCount="10" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
