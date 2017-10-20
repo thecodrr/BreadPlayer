@@ -144,7 +144,6 @@ namespace BreadPlayer.ViewModels
         #endregion Contructor
 
         #region Properties
-        private string CurrentPage { get; set; } = "MusicCollection";
         private List<Mediafile> SelectedItems { get; } = new List<Mediafile>();
         public List<string> AlphabetList
         {
@@ -646,8 +645,6 @@ namespace BreadPlayer.ViewModels
             if (path is Mediafile mediaFile)
             {
                 _isPlayingFromPlaylist = false;
-                if (CurrentPage != "MusicCollection")
-                    SendLibraryLoadedMessage(_source, true);
                 return mediaFile;
             }
             else if (path is IEnumerable<Mediafile> tmediaFile)
