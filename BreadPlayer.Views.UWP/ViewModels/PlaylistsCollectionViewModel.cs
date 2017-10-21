@@ -74,7 +74,7 @@ namespace BreadPlayer.ViewModels
 
         private PlaylistService PlaylistService =>
                                             _playlistService ?? (_playlistService = new PlaylistService(
-                new DocumentStoreDatabaseService(
+                new KeyValueStoreDatabaseService(
                     SharedLogic.Instance.DatabasePath,
                     "Playlists")));
         private void AddPlaylist(Playlist playlist)
@@ -195,12 +195,21 @@ namespace BreadPlayer.ViewModels
             {
                 if (!PlaylistService.PlaylistExists(plist.Name))
                 {
-                    AddPlaylist(plist);
                     await PlaylistService.AddPlaylistAsync(plist);
+                    AddPlaylist(plist);
                 }
                 if (addsongs)
                 {
-                    await AddSongsToPlaylist(plist, songs.ToList());
+                    IEnumerable<ChildSong> playlistSongs
+                   = songs.Select(x => new ChildSong()
+                   {
+                       SongId = x.Id,
+                       PlaylistId = plist.Id
+                   });
+                    var db = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "PlaylistSongs");
+                    await db.InsertRecords(playlistSongs);
+                    var s = await db.GetRecords<ChildSong>();
+                    //await AddSongsToPlaylist(plist, songs.ToList());
                 }
             });
         }
@@ -233,7 +242,7 @@ namespace BreadPlayer.ViewModels
                 {
                     if (menu?.DataContext is Album album)
                     {
-                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query((album.AlbumName));
+                        var albumSongs = await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query((album.AlbumName));
                         if (albumSongs?.Any() == true)
                             songList.AddRange(albumSongs);
                     }

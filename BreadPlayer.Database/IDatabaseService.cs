@@ -24,7 +24,7 @@ namespace BreadPlayer.Database
 
         Task RemoveRecord(IDbRecord record);
 
-        Task<IEnumerable<T>> GetRangeOfRecords<T>(int index, int limit);
+        Task<IEnumerable<T>> GetRangeOfRecords<T>(long index, long limit);
 
         Task UpdateRecords<T>(IEnumerable<IDbRecord> records);
 

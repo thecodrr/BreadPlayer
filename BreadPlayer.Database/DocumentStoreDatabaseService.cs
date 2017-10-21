@@ -87,11 +87,11 @@ namespace BreadPlayer.Database
             }).ConfigureAwait(false);
         }
 
-        public Task<IEnumerable<T>> GetRangeOfRecords<T>(int index, int limit)
+        public Task<IEnumerable<T>> GetRangeOfRecords<T>(long index, long limit)
         {
             return Task.Run(() =>
             {
-                var records = currentCollection.Find(Query.All(), index, limit);
+                var records = currentCollection.Find(Query.All(), (int)index, (int)limit);
                 if (records.Any())
                     return records.Cast<T>();
                 else

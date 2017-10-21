@@ -26,7 +26,7 @@ namespace BreadPlayer.ViewModels
 
         private ThreadSafeObservableCollection<LastTrack> _albumTracks;
         private IOneLineLyric _currentLyric;
-        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+        private LibraryService _service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
         private ThreadSafeObservableCollection<LastArtist> _similarArtists;
         private ThreadSafeObservableCollection<LastArtist> artists;
         private ThreadSafeObservableCollection<IOneLineLyric> lyrics;

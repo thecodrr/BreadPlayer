@@ -160,13 +160,13 @@ namespace BreadPlayer.ViewModels
             try
             {
                 PlaylistArt = null;
-                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                TotalSongs = Songs.Count + " Songs";
-                var mp3 = Songs?.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path);
-                if (mp3 != null)
-                {
-                    mp3.State = PlayerState.Playing;
-                }
+                //TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                TotalSongs = Songs.FastCount + " Songs";
+                //var mp3 = Songs?.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path);
+                //if (mp3 != null)
+                //{
+                //    mp3.State = PlayerState.Playing;
+                //}                
             }
             catch (Exception ex)
             {
@@ -175,7 +175,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
-            PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
+            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
         }
 
         public async void Init(object data)
@@ -204,7 +204,7 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadArtistSongs(Artist artist)
         {
-            Songs.AddRange((await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(artist.Name)));
+            Songs.AddRange((await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(artist.Name)));
             Refresh();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
             IsPlaylistLoading = false;
@@ -212,8 +212,8 @@ namespace BreadPlayer.ViewModels
 
         private async void LoadAlbumSongs(Album album)
         {
-            var s = (await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query("album=" + album.AlbumName)).OrderBy(t => t.TrackNumber);
-            Songs.AddRange(s.ToList());
+            var s = (await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query("album=" + album.AlbumName)).OrderBy(t => t.TrackNumber);
+            Songs.AddRange(s);
             Refresh();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
             IsPlaylistLoading = false;

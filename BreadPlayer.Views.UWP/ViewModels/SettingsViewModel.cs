@@ -145,7 +145,7 @@ namespace BreadPlayer.ViewModels
             AudioSettingsVM = new AudioSettingsViewModel();
             PersonalizationVM = new PersonalizationViewModel();
 
-            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             PropertyChanged += SettingsViewModel_PropertyChanged;
             _replaceLockscreenWithAlbumArt = SettingsHelper.GetLocalSetting<bool>("replaceLockscreenWithAlbumArt", false);
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
@@ -200,7 +200,7 @@ namespace BreadPlayer.ViewModels
                 ResetCommand.IsEnabled = false;
                 await Task.Delay(200);
                 ResetCommand.IsEnabled = true;
-                LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+                LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             }
             catch (Exception ex)
             {

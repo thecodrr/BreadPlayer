@@ -21,7 +21,7 @@ namespace BreadPlayer.DataSources
     {
         public Task<IEnumerable<Album>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return SharedLogic.Instance.AlbumArtistService.GetRangeOfAlbumsAsync(pageIndex * pageSize, pageSize);
+            return SharedLogic.Instance.AlbumArtistService.GetRangeOfAlbumsAsync(pageIndex * pageSize, (pageIndex * pageSize) + pageSize);
         }
     }
 }

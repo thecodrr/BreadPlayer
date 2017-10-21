@@ -225,7 +225,13 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             return result;
         }
     }
-
+    public int FastCount
+    {
+        get
+        {
+            return Items.Count;
+        }
+    }
     public new bool Remove(T item)
     {
         bool? op = null;

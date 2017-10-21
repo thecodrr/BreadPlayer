@@ -26,7 +26,7 @@ namespace BreadPlayer.ViewModels
 
         public void InitDb()
         {
-            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
+            AlbumArtistService = new AlbumArtistService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
         }
 
         #endregion Database Methods

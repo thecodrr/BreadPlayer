@@ -118,7 +118,8 @@ namespace BreadPlayer.Core.Models
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
         public string SynchronizedLyric
         {
-            get => _synchronizedLyric; set => _synchronizedLyric = string.IsNullOrEmpty(value) ? _synchronizedLyric = _naN : value;
+            get => _synchronizedLyric;
+            set => _synchronizedLyric = value;
         }
         #region JsonIgnore Properties
 

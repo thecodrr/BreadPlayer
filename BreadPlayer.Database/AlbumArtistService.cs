@@ -16,7 +16,7 @@ namespace BreadPlayer.Database
         {
             get
             {
-                Database.ChangeTable("Artists", "ArtistsText");
+                Database.ChangeContext("Artists");
                 return Database.GetRecordsCount();
             }
         }
@@ -28,79 +28,79 @@ namespace BreadPlayer.Database
 
         public async Task InsertAlbums(IEnumerable<Album> albums)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             await Database.InsertRecords(albums);
         }
 
         public async Task InsertArtists(IEnumerable<Artist> artists)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             await Database.InsertRecords(artists);
         }
 
         public Task<Artist> GetArtistAsync(string query)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.GetRecordByQueryAsync<Artist>("artist=" + query);
         }
 
         public Task<Album> GetAlbumAsync(string query)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.GetRecordByQueryAsync<Album>("album=" + query);
         }
         public Artist GetArtistByIdAsync(long id)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.GetRecordById<Artist>(id);
         }
 
         public Album GetAlbumByIdAsync(long id)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.GetRecordById<Album>(id);
         }
         public Task DeleteAlbumAsync(Album album)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.RemoveRecord(album);
         }
         public Task<IEnumerable<Artist>> GetArtistsAsync()
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.GetRecords<Artist>();
         }
         public Task<IEnumerable<Artist>> GetRangeOfArtistsAsync(int index, int limit)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.GetRangeOfRecords<Artist>(index, limit);
         }
         public Task<IEnumerable<Album>> GetRangeOfAlbumsAsync(int index, int limit)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.GetRangeOfRecords<Album>(index, limit);
         }
         public Task<IEnumerable<Album>> GetAlbumsAsync()
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.GetRecords<Album>();
         }
 
         public Task<IEnumerable<Artist>> QueryArtistsAsync(string term, int limit = int.MaxValue)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.QueryRecords<Artist>("artist=" + term, limit);
         }
 
         public Task<IEnumerable<Album>> QueryAlbumsAsync(string term, int limit = int.MaxValue)
         {
-            Database.ChangeTable("Albums", "AlbumsText");
+            Database.ChangeContext("Albums");
             return Database.QueryRecords<Album>("album=" + term, limit);
         }
 
         public Task UpdateArtistAsync(Artist artist)
         {
-            Database.ChangeTable("Artists", "ArtistsText");
+            Database.ChangeContext("Artists");
             return Database.UpdateRecordAsync(artist, artist.Id);
         }
 

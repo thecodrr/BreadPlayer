@@ -58,7 +58,7 @@ namespace BreadPlayer.ViewModels
 
         public async Task<(IEnumerable<Mediafile> Songs, IEnumerable<Album> Albums, IEnumerable<Artist> Artists)> StartSearch(string query)
         {
-            var documentStore = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
+            var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             LibraryService service = new LibraryService(documentStore);
             AlbumArtistService albumArtistService = new AlbumArtistService(documentStore);
             return (await service.Query(query, 5),

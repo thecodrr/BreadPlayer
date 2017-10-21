@@ -57,7 +57,7 @@ namespace BreadPlayer.Views
         {
             base.OnNavigatedTo(e);
             var parameter = (ValueTuple<Query, string>)e.Parameter;
-            var documentStore = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
+            var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             _recordType = parameter.Item2;
             switch (parameter.Item2)
             {

@@ -31,26 +31,26 @@ namespace BreadPlayer.Database
                     PlaylistId = pList.Id
                 });
 
-            Database.ChangeTable(_tablename, _texttablename);
+            Database.ChangeContext(_tablename);
             await Database.InsertRecords(playlistSongs);
         }
 
         public void InsertSong(ChildSong file)
         {
-            Database.ChangeTable(_tablename, _texttablename);
+            Database.ChangeContext(_tablename);
             Database.InsertRecord(file);
         }
 
         public async Task RemoveSongAsync(Mediafile file)
         {
-            Database.ChangeTable(_tablename, _texttablename);
+            Database.ChangeContext(_tablename);
             var record = await Database.GetRecordByQueryAsync<ChildSong>(string.Format("songid={0}", file.Id));
             await Database.RemoveRecord(record);
         }
 
         public bool Exists(long id)
         {
-            Database.ChangeTable(_tablename, _texttablename);
+            Database.ChangeContext(_tablename);
             return Database.CheckExists(id);
         }
 
@@ -58,7 +58,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(async () =>
             {
-                Database.ChangeTable(_tablename, _texttablename);
+                Database.ChangeContext(_tablename);
                 var trackIds = (await Database.QueryRecords<ChildSong>(string.Format("pId={0}", parentId)))
                                 ?.Select(t => t.SongId);
                 if (trackIds != null)

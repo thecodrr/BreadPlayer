@@ -58,8 +58,8 @@ namespace BreadPlayer.Database
 
         public void ChangeContext(string context)
         {
-            _textTableName = tableName + "Text";
-            _tableName = tableName;
+            _textTableName = context + "Text";
+            _tableName = context;
         }
 
         public bool CheckExists(long id)
@@ -204,7 +204,7 @@ namespace BreadPlayer.Database
                             },
                                 true);
                             //Using text-search engine for the free text search
-                            tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
+                            tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.TextSearchKey);
                         }
 
                         tran.Commit();
@@ -220,7 +220,7 @@ namespace BreadPlayer.Database
                 using (var tran = _engine.GetTransaction())
                 {
                     var recordList = new List<T>();
-                    foreach (var record in tran.TextSearch(_textTableName).Block(term).GetDocumentIDs())
+                    foreach (var record in tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs())
                     {
                         var o = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(record)).ObjectGet<T>();
                         recordList.Add(o.Entity);
@@ -313,15 +313,15 @@ namespace BreadPlayer.Database
             return GetRangeOfRecords<T>(int.MinValue, int.MaxValue);
         }
 
-        public Task<IEnumerable<T>> GetRangeOfRecords<T>(int fromId, int toId)
+        public Task<IEnumerable<T>> GetRangeOfRecords<T>(long fromId, long toId)
         {
             return Task.Run(() =>
             {
                 IEnumerable<T> recordList;
                 using (var tran = _engine.GetTransaction())
                 {
-                    recordList = tran.SelectForwardStartFrom<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true)
-                            .Select(x => x.ObjectGet<T>().Entity).ToList().AsReadOnly();
+                    recordList = tran.SelectForwardFromTo<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true, 1.ToIndex(toId), false)
+                    .Select(x => x.ObjectGet<T>().Entity).ToList();
                 }
                 return recordList;
             });
