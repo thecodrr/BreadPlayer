@@ -39,18 +39,13 @@ namespace BreadPlayer.Database
 
         public DocumentStoreDatabaseService(string dbPath, string collectionName)
         {
-            CreateDb(dbPath.ToLower() + ".db");
+            DB = StaticDocumentDatabase.GetDatabase(dbPath.ToLower() + ".db");
             currentCollection = DB.GetCollection<IDbRecord>(collectionName);
             currentCollection.EnsureIndex(t => t.Id);
             currentCollection.EnsureIndex(t => t.TextSearchKey);
         }
 
-        public void CreateDb(string dbPath)
-        {
-            DB = StaticDocumentDatabase.GetDatabase(dbPath);
-        }
-
-        public void ChangeTable(string tableName, string textTableName)
+        public void ChangeContext(string tableName)
         {
             currentCollection = DB.GetCollection<IDbRecord>(tableName);
             currentCollection.EnsureIndex(t => t.Id);
@@ -84,7 +79,7 @@ namespace BreadPlayer.Database
         {
             return await Task.Run(() =>
             {
-                var records = currentCollection.Find(Query.All());
+                var records = currentCollection.FindAll();
                 if (records.Any())
                     return records.Cast<T>();
                 else

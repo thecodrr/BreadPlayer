@@ -15,11 +15,11 @@ namespace BreadPlayer.Database
             get; set;
         }
 
-        public ChildSongsService(IDatabaseService database, string tableName, string textTableName)
+        public ChildSongsService(IDatabaseService database, string tableName)
         {
             Database = database;
             _tablename = tableName;
-            _texttablename = textTableName;
+            _texttablename = tableName + "Text";
         }
 
         public async Task InsertTracksAsync(IEnumerable<Mediafile> fileCol, IDbRecord pList)
@@ -63,7 +63,7 @@ namespace BreadPlayer.Database
                                 ?.Select(t => t.SongId);
                 if (trackIds != null)
                 {
-                    Database.ChangeTable("Tracks", "TracksText");
+                    Database.ChangeContext("Tracks");
                     return trackIds.Select(x => Database.GetRecordById<Mediafile>(x));
                 }
                 return null;

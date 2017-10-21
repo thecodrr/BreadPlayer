@@ -12,47 +12,48 @@ namespace BreadPlayer.Database
             get; set;
         }
 
-        public PlaylistService(IDatabaseService database) : base(database, "PlaylistSongs", "PlaylistSongsText")
+        public PlaylistService(IDatabaseService database) : base(database, "PlaylistSongs")
         {
             Database = database;
         }
 
         public async Task AddPlaylistAsync(Playlist pList)
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             await Database.InsertRecord(pList);
         }
 
         public Task<IEnumerable<Playlist>> GetPlaylistsAsync()
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             return Database.GetRecords<Playlist>();
         }
 
         public Task<Playlist> GetPlaylistAsync(string query)
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             return Database.GetRecordByQueryAsync<Playlist>(query);
         }
         public Playlist GetPlaylistByIdAsync(long Id)
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             return Database.GetRecordById<Playlist>(Id);
         }
         public bool PlaylistExists(string query)
         {
+            Database.ChangeContext("Playlists");
             return Database.CheckExists(query);
         }
 
         public async Task RemovePlaylistAsync(Playlist list)
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             await Database.RemoveRecord(list);
         }
 
         public async Task UpdatePlaylistAsync(Playlist list)
         {
-            Database.ChangeTable("Playlists", "PlaylistsText");
+            Database.ChangeContext("Playlists");
             await Database.UpdateRecordAsync(list, list.Id);
         }
 

@@ -7,9 +7,7 @@ namespace BreadPlayer.Database
 {
     public interface IDatabaseService : IDisposable
     {
-        void ChangeTable(string tableName, string textTableName);
-
-        void CreateDb(string dbPath);
+        void ChangeContext(string context);        
 
         Task InsertRecord(IDbRecord record);
 

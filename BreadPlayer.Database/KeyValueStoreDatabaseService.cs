@@ -46,24 +46,19 @@ namespace BreadPlayer.Database
         private string _textTableName;
         private string _tableName;
 
-        public KeyValueStoreDatabaseService(string dbPath, string tableName, string textTableName)
-        {
-            CreateDb(dbPath);
-            _textTableName = textTableName;
-            _tableName = tableName;
-        }
-
-        public void CreateDb(string dbPath)
+        public KeyValueStoreDatabaseService(string dbPath, string tableName)
         {
             _dbPath = dbPath;
             _engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
             CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
             CustomSerializator.ByteArrayDeSerializator = (bt, t) => JsonConvert.DeserializeObject(bt.UTF8_GetString(), t);
-        }
+            _textTableName = tableName + "Text";
+            _tableName = tableName;
+        } 
 
-        public void ChangeTable(string tableName, string textTableName)
+        public void ChangeContext(string context)
         {
-            _textTableName = textTableName;
+            _textTableName = tableName + "Text";
             _tableName = tableName;
         }
 
