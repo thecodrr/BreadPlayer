@@ -170,9 +170,9 @@
     <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
-    <PRIResource Include="Strings\fa-ir\Resources.resw" />
-    <PRIResource Include="Strings\pl-PL\Resources.resw" />
-    <PRIResource Include="Strings\ru-ru\Resources.resw">
+    <PRIResource Include="Strings\fa\Resources.resw" />
+    <PRIResource Include="Strings\pl\Resources.resw" />
+    <PRIResource Include="Strings\ru\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
   </ItemGroup>
@@ -622,7 +622,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\en-US\Resources.resw">
+    <PRIResource Include="Strings\en\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
   </ItemGroup>
