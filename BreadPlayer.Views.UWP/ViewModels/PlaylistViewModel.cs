@@ -202,17 +202,17 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        private async void LoadArtistSongs(Artist artist)
+        private void LoadArtistSongs(Artist artist)
         {
-            Songs.AddRange((await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query(artist.Name)));
+            Songs.AddRange(SettingsViewModel.TracksCollection.Elements.Where(t => t.LeadArtist == artist.Name));
             Refresh();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
             IsPlaylistLoading = false;
         }
 
-        private async void LoadAlbumSongs(Album album)
+        private void LoadAlbumSongs(Album album)
         {
-            var s = (await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query("album=" + album.AlbumName)).OrderBy(t => t.TrackNumber);
+            var s = SettingsViewModel.TracksCollection.Elements.Where(t => t.Album == album.AlbumName).OrderBy(t => t.TrackNumber);
             Songs.AddRange(s);
             Refresh();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
