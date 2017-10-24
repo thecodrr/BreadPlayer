@@ -130,15 +130,15 @@
     <value>Wróć do listy tostów</value>
   </data>
   <data name="suggestionRB.Content" xml:space="preserve">
-    <value></value>
+    <value>Sugestia</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="questionRB.Content" xml:space="preserve">
-    <value></value>
+    <value>Zadaj pytanie</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="kudosRB.Content" xml:space="preserve">
-    <value></value>
+    <value>Pochwal</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="changeAccentCheckBox.Content" xml:space="preserve">
@@ -151,7 +151,7 @@
     <value>Zmień okładkę albumu</value>
   </data>
   <data name="contactMeTB.Text" xml:space="preserve">
-    <value></value>
+    <value>Napisz do mnie:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="contributorsHeader.Text" xml:space="preserve">
@@ -185,7 +185,7 @@
     <value>Włącz multi-wybór</value>
   </data>
   <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Kliknij, aby przejść do naszego Facebook'a</value>
+    <value>Kliknij, aby przejść do naszego Facebooka</value>
   </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
     <value>Ulubione tosty</value>
@@ -449,7 +449,7 @@
     <value>Zwiększ głośność</value>
   </data>
   <data name="becomeACoderBtn.Content" xml:space="preserve">
-    <value></value>
+    <value>Zostań koderem</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="contributeSettingsText" xml:space="preserve">
@@ -457,11 +457,11 @@
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="translatorBtn.Content" xml:space="preserve">
-    <value></value>
+    <value>Zostań tłumaczem</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="testerBtn.Content" xml:space="preserve">
-    <value></value>
+    <value>Zostań beta-testerem</value>
     <comment>!!!NEW!!!</comment>
   </data>
 </root>
