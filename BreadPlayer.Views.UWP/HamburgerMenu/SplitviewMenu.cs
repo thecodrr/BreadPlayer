@@ -206,7 +206,8 @@ namespace SplitViewMenu
             //}
             if (_searchBox != null)
             {
-                _searchBox.TextChanged += _searchBox_TextChanged;
+                _searchBox.KeyUp += OnSearchBoxKeyPressed;
+                _searchBox.QuerySubmitted += OnQuerySubmitted;
             }
             if (_pageFrame != null)
             {
@@ -219,7 +220,7 @@ namespace SplitViewMenu
             SplitViewMenuLoaded?.Invoke(this, new EventArgs());
         }
 
-        private void _searchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private void OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             _focusPageOnLoad = false;
             if (sender.Text.Any())
@@ -227,10 +228,13 @@ namespace SplitViewMenu
                 UnSelectAll();
                 NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query { QueryWord = sender.Text });
             }
-            else
+        }
+
+        private void OnSearchBoxKeyPressed(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                NavigationService.Instance.NavigateToHome();
-                _focusPageOnLoad = true;
+                
             }
         }
 

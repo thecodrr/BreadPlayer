@@ -62,6 +62,8 @@
                 ItemsSource="{Binding Path=QueryArtists, UpdateSourceTrigger=PropertyChanged}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.HorizontalScrollMode="Auto"
+                ScrollViewer.VerticalScrollMode="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
                 SelectionChanged="AlbumsList_SelectionChanged"
                 Visibility="{Binding ElementName=artistsHeader, Path=Visibility}">
                 <GridView.ItemsPanel>
@@ -112,6 +114,8 @@
                 ItemsSource="{Binding Path=QueryAlbums, UpdateSourceTrigger=PropertyChanged}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.HorizontalScrollMode="Auto"
+                ScrollViewer.VerticalScrollMode="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
                 SelectionChanged="AlbumsList_SelectionChanged"
                 Visibility="{Binding ElementName=albumsHeader, Path=Visibility}">
                 <GridView.ItemsPanel>

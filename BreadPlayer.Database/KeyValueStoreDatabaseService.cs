@@ -219,13 +219,16 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetTransaction())
                 {
-                    var recordList = new List<T>();
-                    foreach (var record in tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs())
+                    var recordList = new List<T>(limit);
+                    var ids = tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs().ToArray();
+                    for (int i =0; i<= limit; i++)
                     {
-                        var o = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(record)).ObjectGet<T>();
+                        if (i > ids.Length - 1)
+                            break;
+                        var o = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(ids[i])).ObjectGet<T>();
                         recordList.Add(o.Entity);
                     }
-                    return recordList;
+                    return recordList.Take(limit);
                 }
             });
         }

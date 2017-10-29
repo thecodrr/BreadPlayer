@@ -89,13 +89,13 @@ namespace BreadPlayer.Database
         public Task<IEnumerable<Artist>> QueryArtistsAsync(string term, int limit = int.MaxValue)
         {
             Database.ChangeContext("Artists");
-            return Database.QueryRecords<Artist>("artist=" + term, limit);
+            return Database.QueryRecords<Artist>(term, limit);
         }
 
         public Task<IEnumerable<Album>> QueryAlbumsAsync(string term, int limit = int.MaxValue)
         {
             Database.ChangeContext("Albums");
-            return Database.QueryRecords<Album>("album=" + term, limit);
+            return Database.QueryRecords<Album>(term, limit);
         }
 
         public Task UpdateArtistAsync(Artist artist)

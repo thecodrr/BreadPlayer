@@ -61,9 +61,9 @@ namespace BreadPlayer.ViewModels
             var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             LibraryService service = new LibraryService(documentStore);
             AlbumArtistService albumArtistService = new AlbumArtistService(documentStore);
-            return (await service.Query(query, 5),
-                    await albumArtistService.QueryAlbumsAsync(query, 10),
-                    await albumArtistService.QueryArtistsAsync(query, 10));
+            return (await service.Query(query, 10),
+                    await albumArtistService.QueryAlbumsAsync(query, 5),
+                    await albumArtistService.QueryArtistsAsync(query, 5));
         }
 
         public async Task GetAlbumsAndTracks(string query)
