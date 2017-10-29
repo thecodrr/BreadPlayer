@@ -503,7 +503,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else if (IsSourceGrouped)
                     {
-                        toPlayFile = GetNextOrPrevSongInGroup(false) ?? throw new NullReferenceException("Cannot get next song in group.");
+                        toPlayFile = GetNextOrPrevSongInGroup(false);
                     }
                     else
                     {
@@ -659,6 +659,8 @@ namespace BreadPlayer.ViewModels
             openPicker.FileTypeFilter.Add(".m4a");
             openPicker.FileTypeFilter.Add(".aif");
             openPicker.FileTypeFilter.Add(".wma");
+            openPicker.FileTypeFilter.Add(".aac");
+            openPicker.FileTypeFilter.Add(".mp4");
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {

@@ -288,14 +288,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             }
         }
 
-        private Effects _effect;
-
-        public Effects Effect
-        {
-            get => _effect;
-            set => Set(ref _effect, value);
-        }
-
         private double _volume = 50;
 
         public double Volume

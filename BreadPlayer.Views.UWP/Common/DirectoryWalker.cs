@@ -27,7 +27,7 @@ namespace BreadPlayer.Common
         public static QueryOptions GetQueryOptions(string aqsQuery = null, bool useIndexer = true, FolderDepth folderDepth = FolderDepth.Deep)
         {
             QueryOptions options = new QueryOptions(CommonFileQuery.OrderByName,
-                new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" });
+                new[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma", ".aac", ".mp4" });
             options.FolderDepth = folderDepth;
             options.IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer;
             options.SetThumbnailPrefetch(ThumbnailMode.MusicView, 512, ThumbnailOptions.ReturnOnlyIfCached);

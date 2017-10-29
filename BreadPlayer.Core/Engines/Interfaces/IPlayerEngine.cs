@@ -24,7 +24,6 @@ namespace BreadPlayer.Core.Engines.Interfaces
         bool CrossfadeEnabled { get; set; }
         double DeviceBufferSize { get; set; }
         bool IsVolumeMuted { get; set; }
-        Effects Effect { get; set; }
         Equalizer Equalizer { get; set; }
         double Volume { get; set; }
         double Position { get; set; }
