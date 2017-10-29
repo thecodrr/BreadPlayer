@@ -44,7 +44,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid x:Name="mainGrid" Margin="-35,0,-10,0">
+    <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -52,8 +52,8 @@
         </Grid.RowDefinitions>
         <Border
             x:Name="art"
-            Height="354"
-            Margin="0,-154,0,0"
+            Height="254"
+            Margin="0,0,0,0"
             VerticalAlignment="Top">
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Path=Songs[0].AttachedPicture}" Stretch="UniformToFill" />

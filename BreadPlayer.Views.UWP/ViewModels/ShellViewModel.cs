@@ -71,7 +71,7 @@ namespace BreadPlayer.ViewModels
 
         public ShellViewModel()
         {
-            NavigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView);
+            NavigateToNowPlayingViewCommand = new RelayCommand(NavigateToNowPlayingView);
             WatchAnAdCommand = new DelegateCommand(WatchAnAd);
             IncreaseVolumeCommand = new DelegateCommand(IncreaseVolume);
             DecreaseVolumeCommand = new DelegateCommand(DecreaseVolume);
@@ -280,7 +280,7 @@ namespace BreadPlayer.ViewModels
         public DelegateCommand PlayPreviousCommand { get { if (_playPreviousCommand == null) { _playPreviousCommand = new DelegateCommand(PlayPrevious); } return _playPreviousCommand; } }
         public DelegateCommand SetRepeatCommand { get { if (_setRepeatCommand == null) { _setRepeatCommand = new DelegateCommand(SetRepeat); } return _setRepeatCommand; } }
         public DelegateCommand ShowEqualizerCommand { get { if (_showEqualizerCommand == null) { _showEqualizerCommand = new DelegateCommand(ShowEqualizer); } return _showEqualizerCommand; } }
-        public DelegateCommand NavigateToNowPlayingViewCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
+        public ICommand NavigateToNowPlayingViewCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
         public DelegateCommand WatchAnAdCommand { get; set; }// { if (navigateToNowPlayingViewCommand == null) navigateToNowPlayingViewCommand = new DelegateCommand(NavigateToNowPlayingView); return navigateToNowPlayingViewCommand; } }
         #endregion Definition
 
@@ -380,9 +380,11 @@ namespace BreadPlayer.ViewModels
             DontUpdatePosition = false;
         }
 
-        private void NavigateToNowPlayingView()
+        private void NavigateToNowPlayingView(object para)
         {
             NavigationService.Instance.UnregisterEvents();
+            NavigationType = para.ToString() == "NowPlayingView" ? typeof(NowPlayingView) : typeof(PlaylistView);
+            NavigationParameter = para;
             IsPlaybarHidden = true;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
@@ -805,7 +807,8 @@ namespace BreadPlayer.ViewModels
         #region Properties
 
         private bool _isPlaybarHidden;
-
+        public Type NavigationType { get; set; }
+        public object NavigationParameter { get; set; }
         public bool IsPlaybarHidden
         {
             get => _isPlaybarHidden;
@@ -1092,7 +1095,7 @@ namespace BreadPlayer.ViewModels
                     //navigate to now playing view automatically if on mobile.
                     if (InitializeCore.IsMobile)
                     {
-                        NavigateToNowPlayingView();
+                        NavigateToNowPlayingView("NowPlayingView");
                     }
                 }
                 else

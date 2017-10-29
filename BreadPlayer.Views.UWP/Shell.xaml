@@ -408,7 +408,8 @@
                     VerticalAlignment="Stretch"
                     Background="{x:Null}"
                     BorderBrush="{x:Null}"
-                    Command="{Binding Path=NavigateToNowPlayingViewCommand}">
+                    Command="{Binding Path=NavigateToNowPlayingViewCommand}"
+                    CommandParameter="NowPlayingView">
                     <AppBarButton.Resources>
                         <MenuFlyout
                             xmlns:Extension="using:BreadPlayer.Extensions"

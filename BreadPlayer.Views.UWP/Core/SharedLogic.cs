@@ -313,18 +313,18 @@ namespace BreadPlayer.Core
         {
             //because the gridview for both artists and albums is the same we need to handle,
             //item selection this way.
-            if (para is Artist artist)
-            {
-                NavigateToArtistPage(artist);
-                return;
-            }
-            SplitViewMenu.SplitViewMenu.UnSelectAll();
-            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
-            await BreadDispatcher.InvokeAsync(() =>
-            {
-                if (album != null)
-                    NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), album);
-            });
+            //if (para is Artist artist)
+            //{
+            //    NavigateToArtistPage(artist);
+            //    return;
+            //}
+            //SplitViewMenu.SplitViewMenu.UnSelectAll();
+            //var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
+            //await BreadDispatcher.InvokeAsync(() =>
+            //{
+            //    if (album != null)
+            //        NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), (Album)para);
+            //});
         }
 
         public AlbumArtistService AlbumArtistService => new AlbumArtistService(new KeyValueStoreDatabaseService(DatabasePath, "Artists"));

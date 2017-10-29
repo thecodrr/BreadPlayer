@@ -88,9 +88,13 @@ namespace BreadPlayer
         {
             if (e.PropertyName == "IsPlaybarHidden")
             {
-                if (_shellVm.IsPlaybarHidden && NowPlayingFrame.CurrentSourcePageType != typeof(NowPlayingView))
+                if (_shellVm.IsPlaybarHidden)
                 {
-                    NowPlayingFrame.Navigate(typeof(NowPlayingView));
+                    if(!(_shellVm.NavigationParameter is string))
+                    {
+                        NowPlayingFrame.Width = 900;
+                    }
+                    NowPlayingFrame.Navigate(_shellVm.NavigationType, _shellVm.NavigationParameter);
                 }
             }
         }
