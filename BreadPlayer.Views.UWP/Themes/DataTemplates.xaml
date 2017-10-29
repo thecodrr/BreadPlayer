@@ -271,11 +271,11 @@
                         <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
-                            Value="{StaticResource SystemAccentForeground}" />
+                            Value="{StaticResource ThemeForeground}" />
                         <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumArtist}"
-                            Value="{StaticResource SystemAccentForeground}" />
+                            Value="{StaticResource ThemeForeground}" />
                         <Media:ControlStoryboardAction>
                             <Media:ControlStoryboardAction.Storyboard>
                                 <Storyboard>
@@ -454,11 +454,11 @@
                         <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
-                            Value="{StaticResource SystemControlBackgroundAccentBrush}" />
+                            Value="{StaticResource ThemeForeground}" />
                         <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumArtist}"
-                            Value="{StaticResource SystemControlBackgroundAccentBrush}" />
+                            Value="{StaticResource ThemeForeground}" />
                         <Media:ControlStoryboardAction>
                             <Media:ControlStoryboardAction.Storyboard>
                                 <Storyboard>

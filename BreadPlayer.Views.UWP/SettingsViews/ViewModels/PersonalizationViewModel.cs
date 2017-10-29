@@ -22,7 +22,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
         public PersonalizationViewModel()
         {
             _changeAccentByAlbumart = SettingsHelper.GetRoamingSetting<bool>("ChangeAccentByAlbumArt", true);
-            _isThemeDark = SettingsHelper.GetLocalSetting<string>("SelectedTheme", "Light") == "Light" ? true : false;
+            _isThemeDark = SettingsHelper.GetLocalSetting<string>("SelectedTheme", null) == "Light" ? true : false;
             _enableBlur = SettingsHelper.GetLocalSetting<bool>("EnableBlur", !InitializeCore.IsMobile);
             _backgroundOverlayColor = SettingsHelper.GetLocalSetting<string>("BackgroundOverlayColor", "Album art color");
         }
