@@ -130,7 +130,7 @@ namespace BreadPlayer
 
             SharedLogic.Instance.Player.MediaStateChanged += Player_MediaStateChanged;
         }
-
+        static bool externalPaused = false;
         private async static void PlaybackSession_PlaybackStateChanged(MediaPlaybackSession sender, object args)
         {
             // BLogger.I("state has been changed (PLAYBACK SESSION).");
@@ -142,6 +142,7 @@ namespace BreadPlayer
                     // BLogger.I("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
                     _player.Pause();
+                    externalPaused = true;
                 }
             });
         }
@@ -219,6 +220,11 @@ namespace BreadPlayer
             {
                 case PlayerState.Playing:
                     _player?.Play();
+                    if (externalPaused)
+                    {
+                        UpdateSmtc();
+                        externalPaused = false;
+                    }
                     _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                     break;
 
