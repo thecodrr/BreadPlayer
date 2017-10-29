@@ -55,7 +55,7 @@ namespace BreadPlayer
             ((SolidColorBrush)Resources["LyricsForeground"]).Color = ((SolidColorBrush)Application.Current.Resources[foregroundColor]).Color;
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataTransferManager.IsSupported())
             {
@@ -100,6 +100,7 @@ namespace BreadPlayer
                     _isPressed = false;
                 }
             };
+            await ((NowPlayingViewModel)Resources["NowPlayingVM"]).Init().ConfigureAwait(false);
         }
     }
 }

@@ -35,13 +35,15 @@ namespace BreadPlayer.ViewModels
         public NowPlayingViewModel()
         {
             RetryCommand = new RelayCommand(Retry);
-
+        }
+        public async Task Init()
+        {
+            await Task.Delay(1000);
             //the work around to knowing when the new song has started.
             //the event is needed to update the bio etc.
             SharedLogic.Instance.Player.MediaChanged += OnMediaChanged;
             OnMediaChanged(this, new EventArgs());
         }
-
         public event EventHandler LyricActivated;
 
         public ThreadSafeObservableCollection<LastTrack> AlbumTracks

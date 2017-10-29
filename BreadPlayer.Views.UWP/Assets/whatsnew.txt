@@ -1,6 +1,8 @@
 ﻿What's Fixed:
 1. Fixed issue with logger.
 2. Fixed issue where equalizer settings were not saved.
+3. Fixed a memory leak when opening playlists, albums, artists etc.
+4. Fixed issue where notification settings weren't working.
 
 What's New:
 1. Added ability to save customized presets.
