@@ -19,7 +19,30 @@ namespace BreadPlayer
         public AlbumArtistView()
         {
             InitializeComponent();
+            this.Loaded += OnPageLoaded;
             CoreWindow.GetForCurrentThread().SizeChanged += OnWindowSizeChanged;
+        }
+
+        private async void OnPageLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                if (_currentState == "AlbumView")
+                {
+                    albumListView.ItemsSource = null;
+                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
+                    await (grid.DataContext as AlbumArtistViewModel).AlbumCollection.RefreshAsync();
+                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
+                }
+                else if (_currentState == "ArtistView")
+                {
+                    albumListView.ItemsSource = null;
+                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
+                    await (grid.DataContext as AlbumArtistViewModel).ArtistsCollection.RefreshAsync();
+                    (grid.DataContext as AlbumArtistViewModel).LoadArtists();
+                }
+                SetTemplate();
+            });
         }
 
         private void OnWindowSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
@@ -58,36 +81,20 @@ namespace BreadPlayer
             }
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected  override void OnNavigatedTo(NavigationEventArgs e)
         {
             _currentState = e.Parameter.ToString();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                if (e.Parameter.ToString() == "AlbumView")
-                {
-                    albumListView.ItemsSource = null;
-                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
-                    await (grid.DataContext as AlbumArtistViewModel).AlbumCollection.RefreshAsync();
-                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
-                }
-                else if (e.Parameter.ToString() == "ArtistView")
-                {
-                    albumListView.ItemsSource = null;
-                    albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
-                    await (grid.DataContext as AlbumArtistViewModel).ArtistsCollection.RefreshAsync();
-                    (grid.DataContext as AlbumArtistViewModel).LoadArtists();
-                }
-                SetTemplate();
-            });
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            base.OnNavigatedFrom(e);
+            this.Loaded -= OnPageLoaded;
+            CoreWindow.GetForCurrentThread().SizeChanged -= OnWindowSizeChanged;
             (grid.DataContext as AlbumArtistViewModel).ArtistsCollection = null;
             (grid.DataContext as AlbumArtistViewModel).AlbumCollection = null;
             albumListView.ItemsSource = null;
             GC.Collect();
-            base.OnNavigatedFrom(e);
         }
 
         private void albumListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
