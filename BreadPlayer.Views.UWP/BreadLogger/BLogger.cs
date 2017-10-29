@@ -29,9 +29,10 @@ public class BLogger
         I("Logger initialized.");
         ravenClient = new RavenClient(
             "https://0517ff9dd4c84fe7a1922377ae0568c8:9fe0a9ffb8e84118881c26b42919ca56@sentry.io/226984",
-            null, null, new BPSentryUserFactory())
+            null, null, new SentryUserFactory())
         {
-            Logger = "user"
+            Logger = "user",
+            Release = "v2.7.5.0"
         };
         I("Raven initialized.");
     }

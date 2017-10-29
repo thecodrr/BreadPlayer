@@ -97,7 +97,7 @@ namespace BreadPlayer
                 {
                     NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
                 }
-                NowPlayingFrame.Navigate(payload.pageType, payload.parameter);
+                NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
 
                 _shellVm.IsPlaybarHidden = true;
             }
@@ -105,9 +105,17 @@ namespace BreadPlayer
         private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             e.Handled = true;
-            Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
-            NavigationService.Instance.RegisterEvents();
-            _shellVm.IsPlaybarHidden = false;
+            if (!NowPlayingFrame.CanGoBack)
+            {
+                NowPlayingFrame.BackStack.Clear();
+                Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
+                NavigationService.Instance.RegisterEvents();
+                _shellVm.IsPlaybarHidden = false;
+            }
+            else
+            {
+                NowPlayingFrame.GoBack(new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+            }
         }
         private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
         {

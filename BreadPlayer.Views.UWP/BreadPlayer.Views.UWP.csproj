@@ -245,14 +245,12 @@
     <Compile Include="Helpers\SliderHelper.cs" />
     <Compile Include="Helpers\TagReaderHelper.cs" />
     <Compile Include="Helpers\TrackCollectionHelper.cs" />
-    <Compile Include="Helpers\UserInfoHelper.cs" />
     <Compile Include="Helpers\WhatsNewDialogHelper.cs" />
     <Compile Include="Models\SettingGroup.cs" />
     <Compile Include="PlaylistBus\IPlaylist.cs" />
     <Compile Include="PlaylistBus\M3U.cs" />
     <Compile Include="Helpers\PlaylistHelper.cs" />
     <Compile Include="PlaylistBus\PLS.cs" />
-    <Compile Include="SentryAPI\BPSentryUserFactory.cs" />
     <Compile Include="SentryAPI\SentryMessageSender.cs" />
     <Compile Include="Services\MTPDeviceService.cs" />
     <Compile Include="Services\NavigationService.cs" />
