@@ -98,14 +98,14 @@ namespace BreadPlayer
                     NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
                 }
                 NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
-
+                
                 _shellVm.IsPlaybarHidden = true;
             }
         }
         private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             e.Handled = true;
-            if (!NowPlayingFrame.CanGoBack)
+            if (NowPlayingFrame.BackStackDepth <= 1)
             {
                 NowPlayingFrame.BackStack.Clear();
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
