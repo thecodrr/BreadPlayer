@@ -144,7 +144,7 @@ namespace BreadPlayer.Extensions
             string[] mediaExtensions =
             {
                 ".WAV", ".MID", ".MIDI", ".WMA", ".MP3", ".OGG", ".RMA", ".OGG",
-                ".FLAC", ".M4A", ".AIF"
+                ".FLAC", ".M4A", ".AIF", ".AAC"
             };
             return -1 != Array.IndexOf(mediaExtensions, Path.GetExtension(file.Path).ToUpperInvariant());
         }

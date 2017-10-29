@@ -340,7 +340,7 @@ namespace BreadPlayer.ViewModels
                 {
                     CommitButtonText = "Relocate Song"
                 };
-                foreach (var extenstion in new string[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma" })
+                foreach (var extenstion in new string[] { ".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aif", ".wma", ".aac" })
                 {
                     openPicker.FileTypeFilter.Add(extenstion);
                 }
@@ -468,7 +468,7 @@ namespace BreadPlayer.ViewModels
             if (!items.Any()) return;
             foreach (var item in items)
             {
-                if (!item.IsOfType(StorageItemTypes.File) || Path.GetExtension(item.Path) != ".mp3")
+                if (!item.IsOfType(StorageItemTypes.File) || StorageExtensions.IsItemPotentialMediafile(item))
                 {
                     if (!item.IsOfType(StorageItemTypes.Folder)) continue;
                     await LibraryHelper.ImportFolderIntoLibraryAsync(((StorageFolder)item));
