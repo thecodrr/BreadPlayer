@@ -131,7 +131,6 @@
     <Compile Include="Models\ChildSong.cs" />
     <Compile Include="Models\Query.cs" />
     <Compile Include="Engines\BASSEngine\BASSPlayerEngine.cs" />
-    <Compile Include="Engines\BASSEngine\Effects.cs" />
     <Compile Include="Models\EqualizerSettings.cs" />
     <Compile Include="Engines\Interfaces\IEqualizer.cs" />
     <Compile Include="Engines\Interfaces\IEqualizerBand.cs" />

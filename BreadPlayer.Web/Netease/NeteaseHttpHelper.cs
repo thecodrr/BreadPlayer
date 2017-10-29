@@ -33,7 +33,7 @@ namespace BreadPlayer.Web.NeteaseLyricsAPI
                 {
                     CookieContainer cookieJar = new CookieContainer();
                     cookieJar.Add(new Uri("http://music.163.com/"), new Cookie("appver", "1.5.2"));
-                    return new HttpClientHandler()
+                    neteaseHttpClientHandler = new HttpClientHandler()
                     {
                         CookieContainer = cookieJar,
                         UseCookies = true,
