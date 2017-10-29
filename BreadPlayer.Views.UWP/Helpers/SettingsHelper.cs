@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Core.Common;
+﻿using System.Collections.Generic;
+using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
 using Windows.Storage;
@@ -28,19 +29,30 @@ namespace BreadPlayer.Helpers
             object setting = ApplicationData.Current.LocalSettings.Values[key] ?? def;
             return (T)setting;
         }
-
         public (EqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
         {
             var eqJson = GetRoamingSetting<string>(eqConfigName, "{}");
             var settings = JsonConvert.DeserializeObject<EqualizerSettings>(eqJson);
-            return (settings, GetRoamingSetting<float>("PreAMP", 0.0f));
+            return (settings, GetRoamingSetting<float>("PreAMP", 1.0f));
         }
 
         public void SaveEqualizerSettings(EqualizerSettings settings, float preAmp)
         {
             var eqJson = JsonConvert.SerializeObject(settings);
-            SaveRoamingSetting(settings.Name, eqJson);
+            SaveRoamingSetting("CustomEq", eqJson);
             SaveRoamingSetting("PreAMP", preAmp);
+        }
+
+        public void SaveEqualizerPresets(IEnumerable<EqualizerSettings> presets)
+        {
+            var presetJson = JsonConvert.SerializeObject(presets);
+            SaveLocalSetting("Presets", presetJson);
+        }
+
+        public IEnumerable<EqualizerSettings> LoadEqualizerPresets()
+        {
+            var presets = JsonConvert.DeserializeObject<IEnumerable<EqualizerSettings>>(GetLocalSetting<string>("Presets", "[]"));
+            return presets;
         }
     }
 }

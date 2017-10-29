@@ -5,6 +5,7 @@ using ManagedBass;
 using ManagedBass.Fx;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
 {
@@ -19,12 +20,24 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             _handle = coreHandle;
             var version = BassFx.Version;
             IsPreampAvailable = true;
-            Name = "DefaultEqualizer";
+            
             Bands = new ObservableCollection<IEqualizerBand>();
-            Presets = new ObservableCollection<EqualizerSettings>(new ConfigSaver().GetSettings());
-            EqualizerSettings = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings(Name).settings;
+            Presets = new ObservableCollection<EqualizerSettings>(new ConfigSaver().GetSettings());           
+            EqualizerSettings = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings("CustomEq").settings;
+            Name = EqualizerSettings.Name;
+            SelectedPreset = Presets.IndexOf(Presets.FirstOrDefault(t => t.Name == EqualizerSettings.Name));
+            
             IsEnabled = EqualizerSettings == null || EqualizerSettings.IsEnabled;
             Init();
+            this.PropertyChanged += OnPropertyChanged;
+        }
+
+        private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "SelectedPreset")
+            {
+                ChangePreset(SelectedPreset);
+            }
         }
 
         public void ReInit(int coreHandle)
@@ -78,6 +91,11 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 if (band == null)
                 {
                     continue;
+                }                
+
+                if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))
+                {
+                    band.Gain = savedValue;
                 }
                 band.PropertyChanged += (sender, e) =>
                 {
@@ -86,11 +104,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         SaveEqualizerSettings();
                     }
                 };
-
-                if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))
-                {
-                    band.Gain = savedValue;
-                }
                 Bands.Add(band);
             }
         }

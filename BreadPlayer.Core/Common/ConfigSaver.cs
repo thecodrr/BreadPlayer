@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BreadPlayer.Core.Common
 {
@@ -42,7 +43,7 @@ namespace BreadPlayer.Core.Common
         private Config _party = new Config { Name = "Party", Values = new float[] { 18, 18, 0, 0, 0, 0, 0, 0, 18, 18 } };
         private Config _pop = new Config { Name = "Pop", Values = new float[] { -4, 12, 18, 20, 14, 0, -6, -6, -4, -4 } };
         private Config _rock = new Config { Name = "Rock", Values = new float[] { 20, 12, -14, -20, -8, -10, 22, 28, 28, 28 } };
-
+        private Config _custom = new Config { Name = "Custom", Values = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
         public static readonly float[][] EqDefaultValues = {
               new[] {32f, 1f, 0f},
               new[] {64f, 1f, 0f},
@@ -63,11 +64,17 @@ namespace BreadPlayer.Core.Common
             return equalizerSettings;
         }
 
-        public List<EqualizerSettings> GetSettings()
+        public IEnumerable<EqualizerSettings> GetSettings()
         {
+            var savedPresets = InitializeCore.EqualizerSettingsHelper.LoadEqualizerPresets();
+            if(savedPresets?.Any() == true)
+            {
+                return savedPresets;
+            }
             List<EqualizerSettings> equalizerSettings = new List<EqualizerSettings>();
             IEnumerable<Config> listConfigs = new Config[]
             {
+                _custom,
                 _flat,
                 _rock,
                 _classical,
@@ -94,13 +101,6 @@ namespace BreadPlayer.Core.Common
                 equalizerSettings.Add(MakeSetting(config.Name, bands));
             }
             return equalizerSettings;
-        }
-
-        public string SaveSettings()
-        {
-            string json = "";
-            json += JsonConvert.SerializeObject(GetSettings());
-            return json;
         }
     }
 

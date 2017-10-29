@@ -28,19 +28,15 @@ namespace BreadPlayer.Core.Engines.Interfaces
         public int SelectedPreset
         {
             get => _selectedPreset;
-            set
-            {
-                _selectedPreset = value;
-                if (_selectedPreset == -1)
-                {
-                    return;
-                }
-
-                var preset = Presets[_selectedPreset];
-                EqualizerSettings = preset;
-                DeInit();
-                Init();
-            }
+            set => Set(ref _selectedPreset, value);
+        }
+        public void ChangePreset(int presetIndex)
+        {
+            var preset = Presets[presetIndex];
+            EqualizerSettings = preset;
+            DeInit();
+            Init();
+            SaveEqualizerSettings();
         }
         ObservableCollection<IEqualizerBand> bands;
         public ObservableCollection<IEqualizerBand> Bands
@@ -96,6 +92,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
             equalizerSettings.GainValues = Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
             equalizerSettings.IsEnabled = IsEnabled;
             InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
+            InitializeCore.EqualizerSettingsHelper.SaveEqualizerPresets(Presets);
         }
 
         public void SetToDefault()
