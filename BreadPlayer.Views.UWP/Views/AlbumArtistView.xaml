@@ -35,7 +35,7 @@
             x:Name="albumListView"
             Grid.Row="2"
             HorizontalContentAlignment="Center"
-            Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource ShellVM}, Path=NavigateToNowPlayingViewCommand}"
+            Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource AlbumTemplate}"
             SelectionChanged="albumListView_SelectionChanged">

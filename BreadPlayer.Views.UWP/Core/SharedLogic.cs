@@ -27,6 +27,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.StartScreen;
 using Windows.ApplicationModel.Resources;
+using BreadPlayer.Messengers;
 
 namespace BreadPlayer.Core
 {
@@ -313,18 +314,19 @@ namespace BreadPlayer.Core
         {
             //because the gridview for both artists and albums is the same we need to handle,
             //item selection this way.
-            //if (para is Artist artist)
-            //{
-            //    NavigateToArtistPage(artist);
-            //    return;
-            //}
-            //SplitViewMenu.SplitViewMenu.UnSelectAll();
-            //var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
-            //await BreadDispatcher.InvokeAsync(() =>
-            //{
-            //    if (album != null)
-            //        NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), (Album)para);
-            //});
+            if (para is Artist artist)
+                {
+                    NavigateToArtistPage(artist);
+                    return;
+                }
+            var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
+            await BreadDispatcher.InvokeAsync(() =>
+            {
+                if (album != null)
+                {
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgNavigate, new { pageType = typeof(PlaylistView), parameter = album });
+                }
+            });
         }
 
         public AlbumArtistService AlbumArtistService => new AlbumArtistService(new KeyValueStoreDatabaseService(DatabasePath, "Artists"));
@@ -332,12 +334,13 @@ namespace BreadPlayer.Core
 
         private async void NavigateToArtistPage(object para)
         {
-            SplitViewMenu.SplitViewMenu.UnSelectAll();
             var artist = para is Artist ? (Artist)para : await AlbumArtistService.GetArtistAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
                 if (artist != null)
-                    NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), artist);
+                {
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgNavigate, new { pageType = typeof(PlaylistView), parameter = artist });
+                }
             });
         }
 

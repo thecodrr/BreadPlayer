@@ -16,7 +16,8 @@
         MsgUpdateSongCount,
         MsgSearchStarted,
         MsgStopAfterSong,
-        MsgImportFolder
+        MsgImportFolder,
+        MsgNavigate
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
     }
 }

@@ -22,8 +22,8 @@
                 <MenuFlyoutItem
                     x:Uid="deletePlaylistMenuItem"
                     Command="{Binding DeletePlaylistCommand}"
-                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
                     CommandParameter="{Binding Source={StaticResource PlaylistVM}, Path=Playlist}"
+                    DataContext="{Binding Source={StaticResource PlaylistsCollectionVM}}"
                     Text="Delete Playlist" />
                 <MenuFlyoutItem
                     x:Uid="renamePlaylistMenuItem"
@@ -58,97 +58,92 @@
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Path=Songs[0].AttachedPicture}" Stretch="UniformToFill" />
             </Border.Background>
-            <Grid>
-                <Border Background="#99000000" />
-                <Grid
+            <Grid Padding="0,60,0,0" RequestedTheme="Dark" Background="#99000000">
+                <StackPanel
+                    x:Name="headerStack"
                     Grid.Row="0"
-                    Margin="0,0,0,0"
-                    RequestedTheme="Dark">
+                    Margin="35,-15,0,0">
+                    <TextBlock
+                        x:Name="headerText"
+                        FontFamily="Segoe UI Light"
+                        FontSize="44"
+                        FontWeight="Bold"
+                        MaxLines="3"
+                        Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Name, Mode=OneWay, FallbackValue='Unknown Playlist'}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        x:Name="headerDesc"
+                        FontFamily="Segoe UI Light"
+                        FontSize="20"
+                        FontWeight="Normal"
+                        MaxLines="2"
+                        Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Description, Mode=OneWay, FallbackValue='No Description'}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="WrapWholeWords" />
+                </StackPanel>
+                <Grid
+                    x:Name="btnGrid"
+                    Margin="35,0,45,10"
+                    VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <StackPanel
-                        x:Name="headerStack"
-                        Grid.Row="0"
-                        Margin="35,-15,0,0">
+                        Grid.Column="0"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <TextBlock FontSize="15" Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalSongs, Mode=OneWay, FallbackValue='0 Songs'}" />
                         <TextBlock
-                            x:Name="headerText"
-                            FontFamily="Segoe UI Light"
-                            FontSize="60"
-                            FontWeight="Bold"
-                            MaxLines="3"
-                            Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Name, Mode=OneWay, FallbackValue='Unknown Playlist'}"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="Wrap" />
+                            Margin="5,0,0,0"
+                            FontSize="15"
+                            Text="&#x2022;" />
                         <TextBlock
-                            x:Name="headerDesc"
-                            FontFamily="Segoe UI Light"
-                            FontSize="24"
-                            FontWeight="Normal"
-                            MaxLines="2"
-                            Text="{x:Bind ((VM:PlaylistViewModel)DataContext).Playlist.Description, Mode=OneWay, FallbackValue='No Description'}"
-                            TextTrimming="CharacterEllipsis"
-                            TextWrapping="WrapWholeWords" />
+                            Margin="5,0,0,0"
+                            FontSize="15"
+                            Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalMinutes, Mode=OneWay, FallbackValue='0 Minutes'}" />
                     </StackPanel>
-                    <Grid x:Name="btnGrid"
-                          Margin="35,0,45,10"
-                          VerticalAlignment="Bottom">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel
-                            Grid.Column="0"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Left"
-                            Orientation="Horizontal">
-                            <TextBlock FontSize="15" Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalSongs, Mode=OneWay, FallbackValue='0 Songs'}" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                FontSize="15"
-                                Text="&#x2022;" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                FontSize="15"
-                                Text="{x:Bind ((VM:PlaylistViewModel)DataContext).TotalMinutes, Mode=OneWay, FallbackValue='0 Minutes'}" />
-                        </StackPanel>
-                        <StackPanel
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                            <Button
-                                x:Uid="playlistPlayAllBtn"
-                                Height="20"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Center"
-                                Background="{x:Null}"
-                                Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
-                                CommandParameter="{Binding Path=Songs[0], Mode=OneWay}"
-                                RequestedTheme="Dark"
-                                Style="{StaticResource HyperlinkBtn}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        FontSize="15"
-                                        Text="&#xE102;" />
-                                    <TextBlock
-                                        x:Uid="playlistPlayAllTextBlock"
-                                        FontFamily="Segoe UI"
-                                        Text=" Play all" />
-                                </StackPanel>
-                            </Button>
-                            <Button
-                                x:Uid="playlistMore"
-                                Margin="10,0,0,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Center"
-                                Background="{x:Null}"
-                                Content="&#x2022;&#x2022;&#x2022;"
-                                Flyout="{StaticResource ExtraMenuFlyout}"
-                                RequestedTheme="Dark"
-                                Style="{StaticResource HyperlinkBtn}"
-                                Visibility="{x:Bind ((VM:PlaylistViewModel)DataContext).IsMenuVisible, Converter={StaticResource BoolToVisibility}}" />
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Uid="playlistPlayAllBtn"
+                            Height="20"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            Background="{x:Null}"
+                            Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
+                            CommandParameter="{Binding Path=Songs[0], Mode=OneWay}"
+                            RequestedTheme="Dark"
+                            Style="{StaticResource HyperlinkBtn}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    FontSize="15"
+                                    Text="&#xE102;" />
+                                <TextBlock
+                                    x:Uid="playlistPlayAllTextBlock"
+                                    FontFamily="Segoe UI"
+                                    Text=" Play all" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            x:Uid="playlistMore"
+                            Margin="10,0,0,0"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            Background="{x:Null}"
+                            Content="&#x2022;&#x2022;&#x2022;"
+                            Flyout="{StaticResource ExtraMenuFlyout}"
+                            RequestedTheme="Dark"
+                            Style="{StaticResource HyperlinkBtn}"
+                            Visibility="{x:Bind ((VM:PlaylistViewModel)DataContext).IsMenuVisible, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Border>
@@ -184,8 +179,8 @@
         </ListView>
         <ProgressRing
             Grid.Row="1"
-            Width="40"
-            Height="40"
+            Width="20"
+            Height="20"
             IsActive="{x:Bind ((VM:PlaylistViewModel)DataContext).IsPlaylistLoading, Mode=OneWay}" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -194,8 +189,8 @@
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="headerText.FontSize" Value="60" />
-                        <Setter Target="headerDesc.FontSize" Value="24" />
+                        <Setter Target="headerText.FontSize" Value="44" />
+                        <Setter Target="headerDesc.FontSize" Value="20" />
                         <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileTemplate}" />
                     </VisualState.Setters>
                 </VisualState>

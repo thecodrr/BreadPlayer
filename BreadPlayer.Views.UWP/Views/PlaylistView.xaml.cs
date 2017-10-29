@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Dispatcher;
 using BreadPlayer.ViewModels;
 using System;
 using Windows.UI.Core;
@@ -34,19 +35,33 @@ namespace BreadPlayer
         public PlaylistView()
         {
             InitializeComponent();
+            this.Loaded += OnPageLoaded;
         }
-        private PlaylistViewModel _playlistVm;
 
+        private async void OnPageLoaded(object sender, RoutedEventArgs e)
+        {
+            if (parameter != null)
+            {
+                await BreadDispatcher.InvokeAsync(async() =>
+                {
+                    await _playlistVm.Init(parameter).ConfigureAwait(false);
+                });
+            }
+        }
+
+        private PlaylistViewModel _playlistVm;
+        private object parameter;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            parameter = e.Parameter;
             _playlistVm = Application.Current.Resources["PlaylistVM"] as PlaylistViewModel;
-            _playlistVm.Init(e.Parameter);
             DataContext = _playlistVm;
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             _playlistVm.Reset();
             _playlistVm = null;
+            this.Loaded -= OnPageLoaded;
             //fileBox.ItemsSource = null;
         }        
     }

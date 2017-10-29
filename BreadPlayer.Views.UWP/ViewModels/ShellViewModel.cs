@@ -383,21 +383,9 @@ namespace BreadPlayer.ViewModels
         private void NavigateToNowPlayingView(object para)
         {
             NavigationService.Instance.UnregisterEvents();
-            NavigationType = para.ToString() == "NowPlayingView" ? typeof(NowPlayingView) : typeof(PlaylistView);
-            NavigationParameter = para;
-            IsPlaybarHidden = true;
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
-            }
+            Messenger.Instance.NotifyColleagues(MessageTypes.MsgNavigate, new { pageType = typeof(NowPlayingView), parameter = "NowPlayingView" });
         }
-        private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
-        {
-            e.Handled = true;
-            Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
-            NavigationService.Instance.RegisterEvents();
-            IsPlaybarHidden = false;
-        }
+
 
         private void ShowEqualizer()
         {
@@ -807,8 +795,6 @@ namespace BreadPlayer.ViewModels
         #region Properties
 
         private bool _isPlaybarHidden;
-        public Type NavigationType { get; set; }
-        public object NavigationParameter { get; set; }
         public bool IsPlaybarHidden
         {
             get => _isPlaybarHidden;

@@ -29,6 +29,7 @@ using BreadPlayer.ViewModels;
 using SplitViewMenu;
 using System;
 using System.Collections.Generic;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -69,7 +70,7 @@ namespace BreadPlayer
         }
         private void SetupMenu()
         {
-            _shellVm.PropertyChanged += OnShellVMPropertyChanged;
+            Messenger.Instance.Register(MessageTypes.MsgNavigate, new Action<Message>(HandleNavigationMessage));
             LibraryItem.Shortcuts.Add(new Shortcut
             {
                 SymbolAsChar = "\uE762",
@@ -83,22 +84,31 @@ namespace BreadPlayer
                 await dialog.ShowAsync();
             });
         }
-
-        private void OnShellVMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void HandleNavigationMessage(Message message)
         {
-            if (e.PropertyName == "IsPlaybarHidden")
+            if (message.Payload != null)
             {
-                if (_shellVm.IsPlaybarHidden)
+                if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
                 {
-                    if(!(_shellVm.NavigationParameter is string) && !InitializeCore.IsMobile)
-                    {
-                        NowPlayingFrame.Width = 900;
-                    }
-                    NowPlayingFrame.Navigate(_shellVm.NavigationType, _shellVm.NavigationParameter);
+                    Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
                 }
+                dynamic payload = message.Payload;
+                if (!InitializeCore.IsMobile)
+                {
+                    NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                }
+                NowPlayingFrame.Navigate(payload.pageType, payload.parameter);
+
+                _shellVm.IsPlaybarHidden = true;
             }
         }
-
+        private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            Windows.Phone.UI.Input.HardwareButtons.BackPressed -= BackButtonPressed;
+            NavigationService.Instance.RegisterEvents();
+            _shellVm.IsPlaybarHidden = false;
+        }
         private void HamburgerMenu_SplitViewMenuLoaded(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(_arguments))

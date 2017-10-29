@@ -160,13 +160,13 @@ namespace BreadPlayer.ViewModels
             try
             {
                 PlaylistArt = null;
-                //TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+                TotalMinutes = string.Format("{0:0.0}", Math.Truncate(Songs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
                 TotalSongs = Songs.FastCount + " Songs";
-                //var mp3 = Songs?.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path);
-                //if (mp3 != null)
-                //{
-                //    mp3.State = PlayerState.Playing;
-                //}                
+                var mp3 = Songs?.FirstOrDefault(t => t.Path == SharedLogic.Instance.Player.CurrentlyPlayingFile?.Path);
+                if (mp3 != null)
+                {
+                    mp3.State = PlayerState.Playing;
+                }
             }
             catch (Exception ex)
             {
@@ -178,7 +178,7 @@ namespace BreadPlayer.ViewModels
             PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
         }
 
-        public async void Init(object data)
+        public async Task Init(object data)
         {
             IsPlaylistLoading = true;
             if (data is Playlist playlist)
