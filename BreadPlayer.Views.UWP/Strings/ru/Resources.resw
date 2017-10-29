@@ -387,7 +387,7 @@
     <value>Нажать для перехода на наш профиль в twitter.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>версия2.7.3.0-бета</value>
+    <value>версия2.7.5.0-бета</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">

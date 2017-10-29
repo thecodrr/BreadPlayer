@@ -54,6 +54,7 @@ namespace BreadPlayer
         {
             InitializeComponent();
             BLogger.InitLogger();
+            BLogger.I("App started.");
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
             Suspending += OnSuspending;

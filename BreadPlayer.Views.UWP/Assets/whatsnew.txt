@@ -1,7 +1,2 @@
 ﻿What's Fixed:
-1. Fixed issue where equalizer could only be opened once
-2. Fixed issues with equalizer
-3. Fixed issues when caching artist art.
-4. Added Polish, German and Persian translations
-5. Fixed several memory leaks.
-6. Fixed choppy audio issue.
+1. Fixed issue with logger.
