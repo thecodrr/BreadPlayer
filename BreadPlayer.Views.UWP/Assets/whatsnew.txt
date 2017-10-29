@@ -8,3 +8,4 @@
 What's New:
 1. Added ability to save customized presets.
 2. Updated app's requested capabilites.
+3. Added Fast Forward (Hold next song button) and Rewind (Hold previous song button) capabilites to SMTC (the thing that appears when you press volume buttons).
