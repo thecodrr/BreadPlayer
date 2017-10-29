@@ -734,6 +734,7 @@
                 Foreground="{ThemeResource TextBrush}"
                 Text="{Binding Source={StaticResource NowPlayingVM}, Path=CurrentLyric.Content}"
                 TextWrapping="WrapWholeWords"
+                Opacity="0"
                 Visibility="Collapsed">
                 <Interactivity:Interaction.Behaviors>
                     <Core:DataTriggerBehavior

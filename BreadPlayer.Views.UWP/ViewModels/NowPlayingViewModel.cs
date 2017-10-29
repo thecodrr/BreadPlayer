@@ -215,7 +215,8 @@ namespace BreadPlayer.ViewModels
                     var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
                     if (previousLyric != null && previousLyric.IsActive == true)
                         previousLyric.IsActive = false;
-                    currentLyric.IsActive = true;
+                    if(!currentLyric.IsActive)
+                        currentLyric.IsActive = true;
 
                     CurrentLyric = currentLyric;
                     LyricActivated?.Invoke(currentLyric, new EventArgs());
