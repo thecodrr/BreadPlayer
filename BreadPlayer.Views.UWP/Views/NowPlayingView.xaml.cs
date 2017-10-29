@@ -29,11 +29,7 @@ namespace BreadPlayer
         public NowPlayingView()
         {
             InitializeComponent();
-        }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
-        }        
+        }     
 
         private bool isMaximized = false;
 
@@ -57,6 +53,8 @@ namespace BreadPlayer
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            _shellVm = Application.Current.Resources["ShellVM"] as ShellViewModel;
+
             if (DataTransferManager.IsSupported())
             {
                 DataTransferManager manager = DataTransferManager.GetForCurrentView();

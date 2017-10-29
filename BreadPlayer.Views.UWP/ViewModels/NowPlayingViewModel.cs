@@ -215,11 +215,12 @@ namespace BreadPlayer.ViewModels
                     var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
                     if (previousLyric != null && previousLyric.IsActive == true)
                         previousLyric.IsActive = false;
-                    if(!currentLyric.IsActive)
+                    if (!currentLyric.IsActive)
+                    {
                         currentLyric.IsActive = true;
-
-                    CurrentLyric = currentLyric;
-                    LyricActivated?.Invoke(currentLyric, new EventArgs());
+                        CurrentLyric = currentLyric;
+                        LyricActivated?.Invoke(currentLyric, new EventArgs());
+                    }
                 }
             };
         }
