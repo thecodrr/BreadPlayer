@@ -1,5 +1,7 @@
 MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_ARM.appx
 SymbolPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.4.0_Test\BreadPlayer.Views.UWP_2.7.4.0_ARM.appxsym
+ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_language-fa.appx
+ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_language-pl.appx
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_language-ru.appx
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_scale-100.appx
 ResourcePack=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\ARM\Release\BreadPlayer.Views.UWP_2.7.4.0_scale-125.appx
