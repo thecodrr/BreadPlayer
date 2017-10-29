@@ -7,3 +7,4 @@
 
 What's New:
 1. Added ability to save customized presets.
+2. Updated app's requested capabilites.

@@ -16,10 +16,10 @@ public class BLogger
     }
     private static RavenClient ravenClient;
     private static ILogger _logger;
-    public static void InitLogger()
+    public async static void InitLogger()
     {
         const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}";
-        var logPath = Path.Combine((StorageLibrary.GetLibraryAsync(KnownLibraryId.Music).AsTask().Result).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
+        var logPath = Path.Combine(await (StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
 
         Log.Logger = new LoggerConfiguration()
                                 .MinimumLevel.Verbose()
@@ -39,16 +39,16 @@ public class BLogger
 
     public static async void E(string message, Exception exception, params object[] propertyValues)
     {
-        Logger.Error(exception, message, propertyValues);
+        Logger?.Error(exception, message, propertyValues);
         await SentryMessageSender.SendMessageAsync(ravenClient, message, exception, ErrorLevel.Error).ConfigureAwait(false);
     }
     public static async void F(string message, Exception exception, params object[] propertyValues)
     {
-        Logger.Fatal(exception, message, propertyValues);
+        Logger?.Fatal(exception, message, propertyValues);
         await SentryMessageSender.SendMessageAsync(ravenClient, message, exception, ErrorLevel.Fatal).ConfigureAwait(false);
     }
     public static void I(string message, params object[] propertyValues)
     {
-        Logger.Information(message, propertyValues);
+        Logger?.Information(message, propertyValues);
     }
 }
