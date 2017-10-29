@@ -237,12 +237,9 @@ namespace BreadPlayer
 
         public static void DisposeObjects()
         {
-            //SharedLogic.SettingsVm.TimeClosed = DateTime.Now.ToString();
-            SharedLogic.Instance.Player.Dispose();
             BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
-            BLogger.I("Application is being suspended, disposing everything.");
+            _smtc.DisplayUpdater.ClearAll();
             _player?.Dispose();
-            Messenger.Instance.NotifyColleagues(MessageTypes.MsgDispose);
         }
 
         #endregion CoreWindow Dispose Methods

@@ -158,6 +158,7 @@ namespace BreadPlayer
             BLogger.I("App suspending. Saving state.");
             await LockscreenHelper.ResetLockscreenImage();            
             CoreWindowLogic.SaveSettings();
+            CoreWindowLogic.DisposeObjects();
             _sessionWatch.Stop();
             BLogger.I("App suspended and session terminated. Session length: {length}.", _sessionWatch.Elapsed.TotalMinutes);
             deferral.Complete();

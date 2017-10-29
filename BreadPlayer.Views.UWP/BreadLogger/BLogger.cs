@@ -15,9 +15,9 @@ public class BLogger
     }
     private static RavenClient ravenClient;
     private static ILogger _logger;
-    public static void InitLogger()
+    public async static void InitLogger()
     {
-        const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}{NewLine}{Properties}";
+        const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}";
         var logPath = Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
 
         Log.Logger = new LoggerConfiguration()
