@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
+        <StackPanel x:Name="mainPanel" DataContext="{Binding Source={StaticResource Core}, Path=Instance.SettingsVm.CoreSettingsVM}" RequestedTheme="{Binding Source={StaticResource TextBrush}, Converter={StaticResource BrushToTheme}}">
             <TextBlock
                 x:Name="resetHeader"
                 x:Uid="resetHeader"
@@ -41,8 +41,11 @@
                 FontSize="22"
                 FontWeight="Bold"
                 Text="" />
-            <CheckBox x:Uid="songNotificationsCheckBox" Content="" />
-            <CheckBox x:Uid="tileNotificationsCheckBox" Content="" />
+            <CheckBox x:Uid="songNotificationsCheckBox"
+                      IsChecked="{Binding Path=UpcomingSongNotificationsEnabled}"
+                      Content="" />
+            <CheckBox x:Uid="tileNotificationsCheckBox" Content="" 
+                      IsChecked="{Binding Path=TileNotificationsEnabled}"/>
 
             <!--  Lockscreen Section  -->
             <TextBlock

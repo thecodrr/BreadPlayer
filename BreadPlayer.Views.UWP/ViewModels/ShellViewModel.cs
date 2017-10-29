@@ -726,7 +726,7 @@ namespace BreadPlayer.ViewModels
             {
                 UpcomingSong = await GetUpcomingSong(true);
             }
-            if (Repeat != "Repeat Song" && UpcomingSong != null)
+            if (Repeat != "Repeat Song" && UpcomingSong != null && SharedLogic.Instance.SettingsVm.CoreSettingsVM.UpcomingSongNotifcationsEnabled)
             {
                 SharedLogic.Instance.NotificationManager.SendUpcomingSongNotification(UpcomingSong);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Upcoming Song: " + UpcomingSong.Title + " by " + UpcomingSong.LeadArtist, 15);
@@ -1055,7 +1055,7 @@ namespace BreadPlayer.ViewModels
             CoreWindowLogic.UpdateSmtc();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.UpdateTile(mediaFile);
-            if (SharedLogic.Instance.SettingsVm.ReplaceLockscreenWithAlbumArt)
+            if (SharedLogic.Instance.SettingsVm.CoreSettingsVM.ReplaceLockscreenWithAlbumArt)
             {
                 await LockscreenHelper.ChangeLockscreenImage(mediaFile);
             }

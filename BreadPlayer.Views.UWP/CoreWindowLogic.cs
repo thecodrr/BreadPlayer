@@ -264,6 +264,10 @@ namespace BreadPlayer
 
         public static void UpdateTile(Mediafile mediaFile)
         {
+            if (!SharedLogic.Instance.SettingsVm.CoreSettingsVM.TileNotifcationsEnabled)
+            {
+                return;
+            }
             try
             {
                 string title = WebUtility.HtmlEncode(mediaFile.Title);

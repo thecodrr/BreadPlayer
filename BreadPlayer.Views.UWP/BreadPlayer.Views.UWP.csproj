@@ -280,6 +280,7 @@
     </Compile>
     <Compile Include="SettingsViews\ViewModels\AudioSettingsViewModel.cs" />
     <Compile Include="SettingsViews\ViewModels\ContactViewModel.cs" />
+    <Compile Include="SettingsViews\ViewModels\CoreSettingsViewModel.cs" />
     <Compile Include="SettingsViews\ViewModels\PersonalizationViewModel.cs" />
     <Compile Include="StateTriggers\AdaptiveTriggerWithCondition.cs" />
     <Compile Include="StateTriggers\DeviceFamilyWithConditionStateTrigger.cs" />

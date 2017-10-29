@@ -57,6 +57,7 @@ namespace BreadPlayer.ViewModels
         public AccountsViewModel AccountSettingsVM { get; set; }
         public AudioSettingsViewModel AudioSettingsVM { get; set; }
         public PersonalizationViewModel PersonalizationVM { get; set; }
+        public CoreSettingsViewModel CoreSettingsVM { get; set; }
         private ThreadSafeObservableCollection<SettingGroup> settingsCollection;
 
         public ThreadSafeObservableCollection<SettingGroup> SettingsCollection
@@ -64,36 +65,7 @@ namespace BreadPlayer.ViewModels
             get => settingsCollection;
             set => Set(ref settingsCollection, value);
         }
-        private bool _preventScreenFromLocking;
-
-        public bool PreventScreenFromLocking
-        {
-            get => _preventScreenFromLocking;
-            set
-            {
-                Set(ref _preventScreenFromLocking, value);
-                if (value)
-                {
-                    KeepScreenActive();
-                }
-                else
-                {
-                    ReleaseDisplayRequest();
-                }
-            }
-        }
-
-        private bool _replaceLockscreenWithAlbumArt;
-
-        public bool ReplaceLockscreenWithAlbumArt
-        {
-            get => _replaceLockscreenWithAlbumArt;
-            set
-            {
-                Set(ref _replaceLockscreenWithAlbumArt, value);
-                SettingsHelper.SaveLocalSetting("ReplaceLockscreenWithAlbumArt", value);
-            }
-        }       
+             
 
         private ThreadSafeObservableCollection<StorageFolder> _LibraryFoldersCollection;
         public ThreadSafeObservableCollection<StorageFolder> LibraryFoldersCollection
@@ -144,14 +116,13 @@ namespace BreadPlayer.ViewModels
             AccountSettingsVM = new AccountsViewModel();
             AudioSettingsVM = new AudioSettingsViewModel();
             PersonalizationVM = new PersonalizationViewModel();
+            CoreSettingsVM = new CoreSettingsViewModel();
 
             LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
-            PropertyChanged += SettingsViewModel_PropertyChanged;
-            _replaceLockscreenWithAlbumArt = SettingsHelper.GetLocalSetting<bool>("replaceLockscreenWithAlbumArt", false);
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;
-            LoadFolders();
+            //LoadFolders();
         }
 
         public void InitSettingsCollection()
@@ -175,8 +146,6 @@ namespace BreadPlayer.ViewModels
 
         #region Definitions
 
-        private DelegateCommand _resetCommand;        
-        public DelegateCommand ResetCommand { get { if (_resetCommand == null) { _resetCommand = new DelegateCommand(Reset); } return _resetCommand; } }
         private ICommand _navigateToUriCommand;
         public ICommand NavigateToUriCommand { get { if (_navigateToUriCommand == null) { _navigateToUriCommand = new RelayCommand(NavigateToUri); } return _navigateToUriCommand; } }
         private ICommand _showWhatsNewDialogCommand;
@@ -190,58 +159,13 @@ namespace BreadPlayer.ViewModels
         {
             await Launcher.LaunchUriAsync(new Uri(para.ToString()));
         }
-        private async void Reset()
-        {
-            try
-            {
-                Messenger.Instance.NotifyColleagues(MessageTypes.MsgDispose);
-                LibraryFoldersCollection.Clear();
-                await ApplicationData.Current.ClearAsync();
-                ResetCommand.IsEnabled = false;
-                await Task.Delay(200);
-                ResetCommand.IsEnabled = true;
-                LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
-            }
-            catch (Exception ex)
-            {
-                BLogger.E("Error occured while resetting the player.", ex);
-            }
-        }
+       
         #endregion Implementation
 
         #endregion Commands
 
         #region Methods
 
-        #region General Settings Methods
-
-        private DisplayRequest _displayRequest;
-
-        private void KeepScreenActive()
-        {
-            if (_displayRequest == null)
-            {
-                _displayRequest = new DisplayRequest();
-                // This call activates a display-required request. If successful,
-                // the screen is guaranteed not to turn off automatically due to user inactivity.
-                _displayRequest.RequestActive();
-            }
-        }
-
-        private void ReleaseDisplayRequest()
-        {
-            // This call de-activates the display-required request. If successful, the screen
-            // might be turned off automatically due to a user inactivity, depending on the
-            // power policy settings of the system. The requestRelease method throws an exception
-            // if it is called before a successful requestActive call on this object.
-            if (_displayRequest != null)
-            {
-                _displayRequest.RequestRelease();
-                _displayRequest = null;
-            }
-        }
-
-        #endregion General Settings Methods
 
         #region LoadFoldersCommand
 
@@ -340,22 +264,7 @@ namespace BreadPlayer.ViewModels
         #endregion Methods
 
         #region Events
-
-        private async void SettingsViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "ReplaceLockscreenWithAlbumArt")
-            {
-                if (ReplaceLockscreenWithAlbumArt)
-                {
-                    _replaceLockscreenWithAlbumArt = await LockscreenHelper.SaveCurrentLockscreenImage();
-                }
-                else
-                {
-                    await LockscreenHelper.ResetLockscreenImage();
-                }
-            }
-        }
-
+        
         private async void StorageLibraryService_StorageItemsUpdated(object sender, StorageItemsUpdatedEventArgs e)
         {
             //tell the reader that we accept the changes
