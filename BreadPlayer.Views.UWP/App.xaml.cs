@@ -88,9 +88,7 @@ namespace BreadPlayer
                 RequestedTheme = (ApplicationTheme)theme;
                 BLogger.I("Theme set: {theme}", RequestedTheme);
             }
-            var vm = Current.Resources["AlbumArtistVM"];
-            ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
-        }
+         }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
@@ -185,6 +183,9 @@ namespace BreadPlayer
             {
                 BLogger.I("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
+
+                var vm = Current.Resources["AlbumArtistVM"];
+                ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)

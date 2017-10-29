@@ -37,9 +37,6 @@ namespace BreadPlayer.Core
 
         public SharedLogic()
         {
-            //To define them all here is not good. This ctor is called multiple times.
-            //should remove this to a better place.
-            //#TODO Move these properties to a better place perhaps the App Ctor?
             InitializeCore.Dispatcher = new BreadDispatcher();
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new SettingsHelper();

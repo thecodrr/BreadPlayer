@@ -141,6 +141,7 @@ namespace BreadPlayer
                 {
                     // BLogger.I("state has been changed (PLAYBACK SESSION).");
                     Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPause");
+                    _player.Pause();
                 }
             });
         }
@@ -195,7 +196,12 @@ namespace BreadPlayer
                     case SystemMediaTransportControlsButton.Previous:
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "PlayPrevious");
                         break;
-
+                    case SystemMediaTransportControlsButton.FastForward:
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "SeekForward");
+                        break;
+                    case SystemMediaTransportControlsButton.Rewind:
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgExecuteCmd, "SeekBackward");
+                        break;
                     default:
                         break;
                 }
