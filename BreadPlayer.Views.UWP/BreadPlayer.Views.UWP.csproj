@@ -170,6 +170,7 @@
     <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
+    <PRIResource Include="Strings\de\Resources.resw" />
     <PRIResource Include="Strings\fa\Resources.resw" />
     <PRIResource Include="Strings\pl\Resources.resw" />
     <PRIResource Include="Strings\ru\Resources.resw">
@@ -621,9 +622,6 @@
   <ItemGroup>
     <PackageReference Include="ksemenenko.ColorThief">
       <Version>1.1.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="ManagedBass">
-      <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Advertising.XAML">
       <Version>10.1705.16001</Version>

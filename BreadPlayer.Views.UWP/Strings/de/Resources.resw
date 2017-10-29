@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -120,6 +120,12 @@
   <data name="aboutSettingsText" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="noToastsTB.Text" xml:space="preserve">
+    <value>Wir konnten keine Songs in deiner Musikbibliothek finden.</value>
+  </data>
+  <data name="importToastsTB.Text" xml:space="preserve">
+    <value>Hier klicken um welche zu importieren.</value>
+  </data>
   <data name="albumsHeader.Text" xml:space="preserve">
     <value>Brote</value>
   </data>
@@ -127,32 +133,32 @@
     <value>Aussehen</value>
   </data>
   <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zurück zur Brotscheiben Liste</value>
+    <value>Zurück zur Toast-Liste</value>
   </data>
   <data name="suggestionRB.Content" xml:space="preserve">
-    <value></value>
-    <comment>(Do not omit the colon here.)</comment>
+    <value>Vorschlag</value>
+    <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="questionRB.Content" xml:space="preserve">
-    <value></value>
-    <comment>(Do not omit the colon here.)</comment>
+    <value>Frage</value>
+    <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="kudosRB.Content" xml:space="preserve">
-    <value></value>
-    <comment>(Do not omit the colon here.)</comment>
+    <value>Kudos</value>
+    <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="changeAccentCheckBox.Content" xml:space="preserve">
     <value>Akzentfarbe an Albumcover anpassen</value>
   </data>
   <data name="changeAccentHelpText.Text" xml:space="preserve">
-    <value>Wenn du diese Option aktivierst, dann passt sich die Farbe des Musik-Players den des Albumcovers des aktuell gespielten Songs an.</value>
+    <value>Wenn du diese Option aktivierst, dann passt sich die Farbe des Musik-Players an die Farbe des Albumcovers vom aktuell spielenden Songs an.</value>
   </data>
   <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
     <value>Albumcover ändern</value>
   </data>
   <data name="contactMeTB.Text" xml:space="preserve">
-    <value></value>
-    <comment>(Do not omit the colon here.)</comment>
+    <value>Kontaktiere mich:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
   </data>
   <data name="contributorsHeader.Text" xml:space="preserve">
     <value>Mitwirkende</value>
@@ -170,10 +176,10 @@
     <value>Auswahl aufheben</value>
   </data>
   <data name="enableBlurCheckBox.Content" xml:space="preserve">
-    <value>Aktiviere unschärfe Effekt</value>
+    <value>Aktiviere Unschärfe-Effekt</value>
   </data>
   <data name="enableBlurHelpText.Text" xml:space="preserve">
-    <value>Der unschärfe Effekt benötigt viel Leistung. Es wird nicht empfohlen, diese Option auf schwachen Geräten zu aktivieren.</value>
+    <value>Der Unschärfe-Effekt benötigt viel Leistung. Es wird nicht empfohlen, diese Option auf schwächeren Geräten zu aktivieren.</value>
   </data>
   <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
     <value>Equalizer aus</value>
@@ -188,22 +194,31 @@
     <value>Klicke hier, um unsere Facebook-Seite zu besuchen.</value>
   </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
-    <value>favorisierte Brotscheiben</value>
+    <value>favorisierte Toasts</value>
   </data>
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigiere zu deinen favorisierten Songs.</value>
   </data>
   <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Klicke hier, um unsere Github-Projektseite zu besuchen.</value>
+    <value>Klicke hier um unsere Github-Projektseite zu besuchen.</value>
+  </data>
+  <data name="importFolderTB.Text" xml:space="preserve">
+    <value>Importiere Ordner</value>
+  </data>
+  <data name="importPlaylistTB.Text" xml:space="preserve">
+    <value>Importiere Playlists</value>
+  </data>
+  <data name="newPlaylistTB.Text" xml:space="preserve">
+    <value>Neue Playlist</value>
   </data>
   <data name="lastfmCredit.Text" xml:space="preserve">
-    <value>Last.fm für Künstler &amp;amp; Album Informationen.</value>
+    <value>Last.fm für Künstler- &amp;amp; Album-Informationen.</value>
   </data>
   <data name="lastfmLoginBtn.Content" xml:space="preserve">
-    <value>Anmelden</value>
+    <value>Einloggen</value>
   </data>
   <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Log in to your Last.fm account</value>
+    <value>Logge dich in dein Last.fm Account ein</value>
   </data>
   <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
     <value>Dein Last.fm Passwort kommt hierhin...</value>
@@ -222,50 +237,53 @@
     <comment>(Do not omit the semicolon at the end.)</comment>
   </data>
   <data name="leaveReviewBtn.Content" xml:space="preserve">
-    <value>Hinterlasse deine Bewertung</value>
+    <value>Bewerten</value>
+  </data>
+  <data name="toastsPivot.Header" xml:space="preserve">
+    <value>Toasts</value>
   </data>
   <data name="licenseHeader.Text" xml:space="preserve">
-    <value>Lizent</value>
+    <value>Lizenz</value>
   </data>
   <data name="licenseText.Text" xml:space="preserve">
     <value>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</value>
     <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
   </data>
   <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Füge diese Brotscheibe zu einer Playlist oder der aktuell gebackenen Liste hinzu</value>
+    <value>Füge diesen Toast zu einer Playlist oder der aktuellen Wiedergabe hinzu</value>
   </data>
   <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Spiele Brotscheibe</value>
+    <value>Toast abspielen</value>
   </data>
   <data name="lockscreenHeader.Text" xml:space="preserve">
     <value>Sperrbildschirm</value>
   </data>
   <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sende eine Email an uns.</value>
+    <value>Klicke hier um uns eine E-Mail zu schreiben.</value>
   </data>
   <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ton stummschalten</value>
+    <value>Stummschalten</value>
   </data>
   <data name="nowBakingMenuItem.Label" xml:space="preserve">
     <value>Wird gebacken</value>
   </data>
   <data name="nowBakingMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiere zu deinen aktuell spielenden Songs.</value>
+    <value>Navigiere zu deiner aktuellen Wiedergabeliste.</value>
   </data>
   <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Öffne eine Datei zum abspielen</value>
   </data>
   <data name="openSongLocationMenuItem.Text" xml:space="preserve">
-    <value>Öffne Brotscheiben Ordnerpfad</value>
+    <value>Öffne Toast-Dateipfad</value>
   </data>
   <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
     <value>Zeige mehr Optionen.</value>
   </data>
   <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Spiele alle Brotscheiben in dieser Playlist ab</value>
+    <value>Spiele alle Toasts von dieser Playlist</value>
   </data>
   <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
-    <value> Alle abspielen</value>
+    <value> alle abspielen</value>
     <comment>(Respect the whitespace at the beginning.)</comment>
   </data>
   <data name="playMenuItem.Text" xml:space="preserve">
@@ -283,23 +301,29 @@
   <data name="propertiesMenuItem.Text" xml:space="preserve">
     <value>Eigenschaften</value>
   </data>
+  <data name="musicHistoryMenuItem.Label" xml:space="preserve">
+    <value>Toast Verlauf</value>
+  </data>
+  <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigiere zum Verlauf der kürzlich abgespielten und hinzugefügten Songs.</value>
+  </data>
   <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Klicke hier, um unser Reddit-Profil zu besuchen.</value>
+    <value>Klicke hier um zu unserem Reddit-Profil zu gelangen.</value>
   </data>
   <data name="relocateSongMenuItem.Text" xml:space="preserve">
-    <value>Pfad des Songs ändern</value>
+    <value>Dateipfad ändern</value>
   </data>
   <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
-    <value>Playlist umbennenen.</value>
+    <value>Playlist umbenennen.</value>
   </data>
   <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
-    <value>Hintergrundbild des Sperrbildschirm mit Albumcover ersetzen.</value>
+    <value>Albumcover auf Sperrbildschirm anzeigen.</value>
   </data>
   <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
     <value>Dein bisheriges Hintergrundbild wird beim beenden der App wiederhergestellt.</value>
   </data>
   <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
-    <value>Diese Option ersetzt den Hintergrund deines Sperrbildschirms mit dem Albumcover, des aktuell abgespielten Songs.</value>
+    <value>Diese Option ersetzt das Hintergrundbild deines Sperrbildschirms mit dem Albumcover, des aktuell abgespielten Songs.</value>
   </data>
   <data name="reportIssueBtn.Content" xml:space="preserve">
     <value>Ein Problem melden</value>
@@ -311,7 +335,7 @@
     <value>Alles zurücksetzen</value>
   </data>
   <data name="resetEverythingHelpText.Text" xml:space="preserve">
-    <value>Das wird deine Bibliothek, Playlisten, Einstellungen, Verlauf usw. zurücksetzen.</value>
+    <value>Deine Bibliothek, Playlists, Einstellungen, Verlauf usw. zurücksetzen</value>
   </data>
   <data name="resetHeader.Text" xml:space="preserve">
     <value>BreadPlayer zurücksetzen</value>
@@ -335,10 +359,10 @@
     <value>Zufallswiedergabe</value>
   </data>
   <data name="songsHeader.Text" xml:space="preserve">
-    <value>Brotscheiben</value>
+    <value>Toasts</value>
   </data>
   <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
-    <value>Wiedergabe nach dieser Brotscheibe stoppen</value>
+    <value>Wiederagbe stoppen nach diesem Song</value>
   </data>
   <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
     <value>Dunkel</value>
@@ -350,14 +374,20 @@
     <value>Damit diese Änderung wirksam wird, muss die App neugestartet werden.</value>
   </data>
   <data name="themeText.Text" xml:space="preserve">
-    <value>Design:</value>
+    <value>Theme:</value>
     <comment>(Do not omit the semi colon here.)</comment>
   </data>
+  <data name="yourMusicMenuItem.Label" xml:space="preserve">
+    <value>Toast-Sammlung</value>
+  </data>
+  <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigiert zu deiner Song-Sammlung.</value>
+  </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Besuche unser Twitter Profil.</value>
+    <value>Klicke hier um auf unser Twitter-Profil zu gelangen.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.6.2-beta</value>
+    <value>v2.7.4.0-beta</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">
@@ -368,13 +398,16 @@
     <value>Lautstärke</value>
   </data>
   <data name="bakerInfoPivot.Header" xml:space="preserve">
-    <value>Bäcker Biographie</value>
+    <value>Bäcker Biografie</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>Songtext</value>
   </data>
   <data name="nowPlayingPivot.Header" xml:space="preserve">
     <value>wird gebacken</value>
   </data>
   <data name="addToFavCmd.Text" xml:space="preserve">
-    <value>zu Favoriten hinzufügen</value>
+    <value>Zu favoriten hinzufügen</value>
   </data>
   <data name="basicCommandsHeader.Text" xml:space="preserve">
     <value>Allgemeine Befehle</value>
@@ -385,11 +418,14 @@
   <data name="commandsHeader.Text" xml:space="preserve">
     <value>Befehle</value>
   </data>
+  <data name="contactSettingsText" xml:space="preserve">
+    <value>Kontakt</value>
+  </data>
   <data name="deleteSongCmd.Text" xml:space="preserve">
-    <value>Song löschen</value>
+    <value>Toast löschen</value>
   </data>
   <data name="helpfulLinksHeader.Text" xml:space="preserve">
-    <value>praktische Links</value>
+    <value>Nützliche Links</value>
   </data>
   <data name="keyBindingsHeader.Text" xml:space="preserve">
     <value>Tastenkürzel</value>
@@ -398,25 +434,25 @@
     <value>Tastenkürzel</value>
   </data>
   <data name="muteCmd.Text" xml:space="preserve">
-    <value>stummschalten</value>
+    <value>Stummschalten</value>
   </data>
   <data name="nextCmd.Text" xml:space="preserve">
-    <value>nächster</value>
+    <value>Nächster</value>
   </data>
   <data name="openFileCmd.Text" xml:space="preserve">
     <value>Datei öffnen</value>
   </data>
   <data name="playPauseCmd.Text" xml:space="preserve">
-    <value>abspielen/pausieren</value>
+    <value>Play/Pause</value>
   </data>
   <data name="playSongCmd.Text" xml:space="preserve">
-    <value>Song abspielen</value>
+    <value>Toast abspielen</value>
   </data>
   <data name="prevCmd.Text" xml:space="preserve">
-    <value>Vorheriger</value>
+    <value>vorheriger</value>
   </data>
   <data name="repeatCmd.Text" xml:space="preserve">
-    <value>Wiederholen</value>
+    <value>wiederholen</value>
   </data>
   <data name="seekBackwardCmd.Text" xml:space="preserve">
     <value>Seek Backward</value>
@@ -425,46 +461,199 @@
     <value>Seek Forward</value>
   </data>
   <data name="showEQCmd.Text" xml:space="preserve">
-    <value>Zeige Equalizer</value>
+    <value>Equalizer</value>
   </data>
   <data name="showPropsCmd.Text" xml:space="preserve">
-    <value>Zeige Eigenschaften</value>
+    <value>Eigenschaften</value>
   </data>
   <data name="showTagsCmd.Text" xml:space="preserve">
-    <value>Zeige Tags</value>
+    <value>Tags</value>
   </data>
   <data name="shuffleCmd.Text" xml:space="preserve">
     <value>Zufallswiedergabe</value>
   </data>
   <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
-    <value>Brotscheiben Biliothek Tastenkürzel</value>
+    <value>Toast Library Befehle</value>
   </data>
   <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
-    <value>Funktionieren nur, wenn ein Brotscheibe ausgewählt ist.</value>
+    <value>Funktionieren nur, wenn ein Song ausgewählt ist.</value>
   </data>
   <data name="volDownCmd.Text" xml:space="preserve">
-    <value>Lautstärke runter</value>
+    <value>leiser</value>
   </data>
   <data name="volUpCmd.Text" xml:space="preserve">
-    <value>Lautstärke hoch</value>
+    <value>lauter</value>
   </data>
   <data name="contributeCodeTxt.Text" xml:space="preserve">
     <value>Contribute Code</value>
-    <comment>!!!NEW!!!</comment>
   </data>
   <data name="contributeSettingsText" xml:space="preserve">
-    <value>Contribute</value>
-    <comment>!!!NEW!!!</comment>
+    <value>mitwirken</value>
   </data>
   <data name="helpTranslateTxt.Text" xml:space="preserve">
-    <value>Helfe uns bei der Übersetzung</value>
+    <value>Helfe bei der Übersetzung</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="testForUsTxt.Text" xml:space="preserve">
-    <value>Werde ein Beta Tester</value>
+    <value>Helfe uns Fehler zu beseitigen</value>
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="donatePatreonTxt.Text" xml:space="preserve">
     <value>Spenden via Patreon</value>
+  </data>
+  <data name="crossfadeSwitch.Header" xml:space="preserve">
+    <value>Crossfade beim Songwechsel</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="generalHeader.Text" xml:space="preserve">
+    <value>Allgemein</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="watchAnAdMenuItem.Label" xml:space="preserve">
+    <value>Spenden</value>
+  </data>
+  <data name="watchAnAdMenuItem.Tooltip" xml:space="preserve">
+    <value>Antippen um Möglichkeiten zum spenden anzuzeigen.</value>
+  </data>
+  <data name="bugReportRB.Content" xml:space="preserve">
+    <value>Fehler beheben</value>
+  </data>
+  <data name="otherRB.Content" xml:space="preserve">
+    <value>Weiteres</value>
+  </data>
+  <data name="sendBtn.Content" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="backgroundOverlayHelpText.Text" xml:space="preserve">
+    <value>This is the overlay color of album art on the player background. Ein Neustart wird benötigt um diese Änderungen wirksam zu machen.</value>
+  </data>
+  <data name="backgroundOverlayHeader.Text" xml:space="preserve">
+    <value>Hintergrundfarbe des Unschärfe-Effekts:</value>
+  </data>
+  <data name="personlizationSettingsText" xml:space="preserve">
+    <value>Anpassung</value>
+  </data>
+  <data name="indebtedTB.Text" xml:space="preserve">
+    <value>BreadPlayer is indebted to these great people for their dedication and support.</value>
+  </data>
+  <data name="shuffleAllRun.Text" xml:space="preserve">
+    <value>Zufallswiedergabe</value>
+  </data>
+  <data name="lastfmLogoutBtn.Content" xml:space="preserve">
+    <value>Ausloggen</value>
+  </data>
+  <data name="lastfmLogoutBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mit deinem Last.fm Account ausloggen</value>
+  </data>
+  <data name="breadsHeader" xml:space="preserve">
+    <value>Brote</value>
+  </data>
+  <data name="playlistsHeader" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="donationTipTB.Text" xml:space="preserve">
+    <value>Unterstütze mich finanziell mit Spenden auf Patreon und werde zu einem Patron. Patrons werden coole extras erhalten, wie Zugang zu frühen Beta-Versionen, die Möglichkeit über Ideen abzustimmen und der Zugang zu allen Beiträgen auf meiner Patreon-Seite.</value>
+  </data>
+  <data name="patronBtn.Content" xml:space="preserve">
+    <value>Auf Patreon unterstützen</value>
+  </data>
+  <data name="translationTipTB.Text" xml:space="preserve">
+    <value>Helfe mir bei der Übersetzung von Breadplayer, um es einfacher zugänglich für Menschen aus deinem Land zu machen. Alle Übersetzer werden selbstverständlich zur der Liste der Mitwirkenden hinzugefügt.</value>
+  </data>
+  <data name="translatorBtn.Content" xml:space="preserve">
+    <value>Übersetzer werden</value>
+  </data>
+  <data name="becomeACoderBtn.Content" xml:space="preserve">
+    <value>Entwickler werden</value>
+  </data>
+  <data name="codeContributionTipTB.Text" xml:space="preserve">
+    <value>Falls du ein Entwickler bist, würde ich deine Hilfe wirklich schätzen. Keine Sorge, ich werde dich dabei unterstützen. Alle Entwickler werden selbstverständlich zur Liste der Mitwirkenden hinzugefügt.</value>
+  </data>
+  <data name="testerBtn.Content" xml:space="preserve">
+    <value>Beta-Tester werden</value>
+  </data>
+  <data name="testingTipTB.Text" xml:space="preserve">
+    <value>Werde ein Beta-Tester und helfe uns Fehler zu beseitigen. Fehler zu finden ist sehr einfach; Spiele einfach etwas mit der App herum und melde uns die Fehler die du dabei findest.</value>
+  </data>
+  <data name="deviceBufferSizeTB.Text" xml:space="preserve">
+    <value>Gerät Buffer-Größe:</value>
+  </data>
+  <data name="deviceBufferSizeHelpText.Text" xml:space="preserve">
+    <value>Erhöhe den Wert falls die Wiedergabe nicht flüssig läuft. Neustart ist erforderlich damit Änderungen wirksam werden.</value>
+  </data>
+  <data name="songNotificationsCheckBox.Content" xml:space="preserve">
+    <value>Zeige folgende Songs als Benachrichtigung</value>
+  </data>
+  <data name="tileNotificationsCheckBox.Content" xml:space="preserve">
+    <value>Zeige Benachrichtigungen auf Live-Kachel</value>
+  </data>
+  <data name="keyboardSettingsText" xml:space="preserve">
+    <value>Tastatenkürzel</value>
+  </data>
+  <data name="coreSettingsText" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="audioSettingsText" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="accountsSettingsText" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="accountsSettingsSubtitle" xml:space="preserve">
+    <value>Last.fm, Songtexte</value>
+  </data>
+  <data name="personalizationSettingsSubtitle" xml:space="preserve">
+    <value>Hintergrund, Schrift, Theme</value>
+  </data>
+  <data name="coreSettingsSubtitle" xml:space="preserve">
+    <value>Zurücksetzen, Benachrichtigungen, Sperrbildschirm</value>
+  </data>
+  <data name="audioSettingsSubtitle" xml:space="preserve">
+    <value>Equalizer, Lautstärke, Cross-Fade</value>
+  </data>
+  <data name="keyboardSettingsSubtitle" xml:space="preserve">
+    <value>Tastenkürzel</value>
+  </data>
+  <data name="contactSettingsSubtitle" xml:space="preserve">
+    <value>Facebook, E-Mail, Github</value>
+  </data>
+  <data name="aboutSettingsSubtitle" xml:space="preserve">
+    <value>Version Info, Lizenz, Mitwirkende</value>
+  </data>
+  <data name="contributeSettingsSubtitle" xml:space="preserve">
+    <value>Übersetzen, Fehler finden, programmieren</value>
+  </data>
+  <data name="recentlyPlayedPivot.Header" xml:space="preserve">
+    <value>Kürzlich abgespielt</value>
+  </data>
+  <data name="mostPlayedPivot.Header" xml:space="preserve">
+    <value>Meistgespielt</value>
+  </data>
+  <data name="recentlyAddedPivot.Header" xml:space="preserve">
+    <value>Kürzlich hinzugefügt</value>
+  </data>
+  <data name="bakersHeader.Text" xml:space="preserve">
+    <value>Bäcker</value>
+  </data>
+  <data name="showAllTB.Text" xml:space="preserve">
+    <value>Zeige alle</value>
+  </data>
+  <data name="bakersInfoTB.Text" xml:space="preserve">
+    <value>Künstler Informationen</value>
+  </data>
+  <data name="bakersInfoCB.Header" xml:space="preserve">
+    <value>Choose no. of artist(s) to fetch info for:</value>
+  </data>
+  <data name="lyricsTB.Text" xml:space="preserve">
+    <value>Songtexte</value>
+  </data>
+  <data name="lyricTypeCB.Header" xml:space="preserve">
+    <value>Wähle eine Darstellungsart:</value>
+  </data>
+  <data name="lyricSourceCB.Header" xml:space="preserve">
+    <value>Wähle eine Quelle für Songtexte:</value>
+  </data>
+  <data name="notificationsHeader.Text" xml:space="preserve">
+    <value>Benachrichtigungen</value>
   </data>
 </root>
