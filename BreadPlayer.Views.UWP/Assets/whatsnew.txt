@@ -1,2 +1,6 @@
 ﻿What's Fixed:
 1. Fixed issue with logger.
+2. Fixed issue where equalizer settings were not saved.
+
+What's New:
+1. Added ability to save customized presets.
