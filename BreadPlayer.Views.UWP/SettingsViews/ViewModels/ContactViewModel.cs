@@ -69,7 +69,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
                 StorageFolder storageFolder = await KnownFolders.MusicLibrary.GetFolderAsync(".breadplayerLogs");
                 if (storageFolder != null)
                 {
-                    var attachmentFile = await storageFolder.GetFileAsync("Log.log");
+                    var attachmentFile = await storageFolder.GetFileAsync("BreadPlayer.log");
                     if (attachmentFile != null)
                     {
                         var stream = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromFile(attachmentFile);

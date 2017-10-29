@@ -18,7 +18,7 @@ public class BLogger
     public static void InitLogger()
     {
         const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}{NewLine}{Properties}";
-        var logPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Logs", "BreadPlayer.log");
+        var logPath = Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
 
         Log.Logger = new LoggerConfiguration()
                                 .MinimumLevel.Verbose()
