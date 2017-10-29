@@ -62,7 +62,7 @@
                 <Border Background="#99000000" />
                 <Grid
                     Grid.Row="0"
-                    Margin="0,100,0,0"
+                    Margin="0,0,0,0"
                     RequestedTheme="Dark">
                     <StackPanel
                         x:Name="headerStack"
@@ -209,7 +209,7 @@
                         <Setter Target="headerText.TextAlignment" Value="Center" />
                         <Setter Target="headerText.FontSize" Value="34" />
                         <Setter Target="headerText.Margin" Value="0" />
-                        <Setter Target="headerStack.Margin" Value="0,60,0,0" />
+                        <Setter Target="headerStack.Margin" Value="0,0,0,0" />
                         <Setter Target="headerDesc.Margin" Value="0" />
                         <Setter Target="headerDesc.TextAlignment" Value="Center" />
                         <Setter Target="fileBox.ItemTemplate" Value="{StaticResource MediafileMobileTemplate}" />

@@ -166,49 +166,73 @@ namespace BreadPlayer.ViewModels
 
         private async Task CacheArtists(IEnumerable<Artist> artists)
         {
-            if (InternetConnectivityHelper.IsInternetConnected && artists.Any(t => t.HasFetchedInfo == false))
+            BLogger.I("Starting artist art caching...");
+            if (!InternetConnectivityHelper.IsInternetConnected || !artists.Any(t => t.HasFetchedInfo == false))
             {
-                foreach (var artist in artists.Where(t => t.HasFetchedInfo == false))
+                //No internet or no artists to fetch info for. Stop!
+                BLogger.I("Stopping artist art caching. Internet state: {state}", InternetConnectivityHelper.IsInternetConnected);
+                return;
+            }
+            foreach (var artist in artists.Where(t => t.HasFetchedInfo == false))
+            {
+                if (!InternetConnectivityHelper.IsInternetConnected)
                 {
-                    //if internet is disconnected in the middle of this process,
-                    //we need to take precautions.
-                    if (InternetConnectivityHelper.IsInternetConnected)
+                    //if internet is disconnected in the middle of this process, stop!
+                    BLogger.I("Stopping artist art caching. No internet connection.");
+                    break;
+                }
+                var collectionArtist = ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name);
+                if(collectionArtist == null)
+                {
+                    BLogger.I("No artist found for: {name}", artist.Name);
+                    continue;
+                }
+
+                var artistName = TagParser.ParseArtists(artist.Name.ToString())[0];
+                BLogger.I("Artist name parsed: {name}", artistName);
+
+                if (string.IsNullOrEmpty(artistName))
+                {
+                    BLogger.I("Invalid parsed artist name: {original}. Using original.", artist.Name);
+                    artistName = artist.Name;
+                }
+
+                try
+                {
+                    var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
+
+                    BLogger.I("Info fetched for artist {artist}. Info: {info}", artistName, artistInfo);
+
+                    if (artistInfo?.MainImage?.Large != null)
                     {
-                        var artistName = TagParser.ParseArtists(artist.Name)[0];
-                        if (!string.IsNullOrEmpty(artistName) && string.IsNullOrEmpty(artist.Picture))
+                        var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
+
+                        if (cached.artistArtPath == null)
                         {
-                            var collectionArtist = ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name);
-                            try
-                            {
-                                var artistInfo = (await LastfmClient.Artist.GetInfoAsync(artistName, "en", true).ConfigureAwait(false))?.Content;
-                                if (artistInfo?.MainImage != null && artistInfo?.MainImage?.Large != null)
-                                {
-                                    var cached = await TagReaderHelper.CacheArtistArt(artistInfo.MainImage.Large.AbsoluteUri, artist).ConfigureAwait(false);
-
-                                    if (cached.artistArtPath == null)
-                                        throw new TaskCanceledException();
-
-                                    collectionArtist.Picture = cached.artistArtPath;
-                                    collectionArtist.PictureColor = cached.dominantColor.ToHexString();
-                                }
-                                if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
-                                {
-                                    string bio = await artistInfo?.Bio?.Content.ZipAsync();
-                                    collectionArtist.Bio = bio ?? "";
-                                }
-                                collectionArtist.HasFetchedInfo = true;
-                                await AlbumArtistService.UpdateArtistAsync(collectionArtist).ConfigureAwait(false);
-                            }
-                            catch (TaskCanceledException)
-                            {
-                                collectionArtist.HasFetchedInfo = false;
-                                await AlbumArtistService.UpdateArtistAsync(collectionArtist).ConfigureAwait(false);
-                                BLogger.I("Task was cancelled during artist caching. Will try next time.");
-                            }
+                            BLogger.I("Artist art for {artist} failed to cache.", artist.Name);
+                            throw new TaskCanceledException();
                         }
+                        BLogger.I("Artist art for {artist} cached.", artist.Name);
+
+                        collectionArtist.Picture = cached.artistArtPath;
+                        collectionArtist.PictureColor = cached.dominantColor.ToHexString();
                     }
+                    if (!string.IsNullOrEmpty(artistInfo?.Bio?.Content))
+                    {
+                        string bio = await artistInfo?.Bio?.Content.ZipAsync();
+                        collectionArtist.Bio = bio ?? "";
+                    }
+                    collectionArtist.HasFetchedInfo = true;
+
+                    BLogger.I("Saving changes for {artist} into database.", artist.Name);
+                    await AlbumArtistService.UpdateArtistAsync(collectionArtist).ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    BLogger.I("Task was cancelled during artist caching. Will try next time.");
                 }
             }
+            BLogger.I("Artist art caching completed.");
         }
 
         private async void HandleAddAlbumMessage(Message message)

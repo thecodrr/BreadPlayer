@@ -5,21 +5,24 @@ namespace BreadPlayer.Helpers
     public class InternetConnectivityHelper
     {
         //public static event EventHandler InternetConnectivityChanged;
+        static bool isInternetConnected;
         public static bool IsInternetConnected
         {
-            get { return IsInternetAvailable(); }
+            get { return isInternetConnected; }
+            set { isInternetConnected = value; }
         }
 
-        private static bool IsInternetAvailable()
+        private InternetConnectivityHelper()
         {
             ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
-            // NetworkInformation.NetworkStatusChanged += NetworkInformation_NetworkStatusChanged;
-            return internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
+            NetworkInformation.NetworkStatusChanged += OnInternetStatusChanged;
+            IsInternetConnected = internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
         }
 
-        //private static void NetworkInformation_NetworkStatusChanged(object sender)
-        //{
-        //    InternetConnectivityChanged?.Invoke(sender, new EventArgs());
-        //}
+        private static void OnInternetStatusChanged(object sender)
+        {
+            ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+            IsInternetConnected = internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
+        }
     }
 }

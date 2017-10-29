@@ -52,9 +52,8 @@ namespace BreadPlayer
         /// </summary>
         public App()
         {
-            InitializeComponent();
             BLogger.InitLogger();
-            BLogger.I("App started.");
+            InitializeComponent();
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
             Suspending += OnSuspending;
@@ -62,6 +61,7 @@ namespace BreadPlayer
             LeavingBackground += App_LeavingBackground;
             UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            BLogger.I("App started.");
             BLogger.I("Events initialized.");
         }
 
