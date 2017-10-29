@@ -90,7 +90,7 @@ namespace BreadPlayer
             {
                 if (_shellVm.IsPlaybarHidden)
                 {
-                    if(!(_shellVm.NavigationParameter is string))
+                    if(!(_shellVm.NavigationParameter is string) && !InitializeCore.IsMobile)
                     {
                         NowPlayingFrame.Width = 900;
                     }
