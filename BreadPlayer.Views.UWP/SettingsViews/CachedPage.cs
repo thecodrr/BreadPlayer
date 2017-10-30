@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace BreadPlayer.SettingsViews
 {
@@ -11,7 +12,7 @@ namespace BreadPlayer.SettingsViews
     {
         public CachedPage()
         {
-            NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
     }
 }

@@ -80,7 +80,7 @@ namespace SplitViewMenu
         //private static NavMenuListView _playlistsMenuListView;
         private static bool _focusPageOnLoad = true;
 
-        public static Frame _pageFrame;
+        private static Frame _pageFrame;
         private static SplitView _splitView;
         private static ToggleButton _togglePaneButton;
         private static AutoSuggestBox _searchBox;
@@ -411,20 +411,7 @@ namespace SplitViewMenu
                 {
                     foreach (var entry in _pageFrame.BackStack.Reverse())
                     {
-                        if (entry.SourcePageType == typeof(PlaylistView))
-                        {
-                            var para = entry.Parameter; //get previous entry's parameter
-                            if (para is Playlist playlist)
-                            {
-                                item = PlaylistsItems.SingleOrDefault(p => p.Label == playlist.Name); //search for the item in PlaylistItems with the same label as in parameters Name.
-                            }
-                            else if (para is Album album)
-                            {
-                                _pageFrame.Navigate(typeof(PlaylistView), album);
-                                return;
-                            }
-                        }
-                        else if (entry.SourcePageType == typeof(LibraryView))
+                        if (entry.SourcePageType == typeof(LibraryView))
                         {
                             item = TopNavigationItems[0];
                         }
@@ -434,6 +421,7 @@ namespace SplitViewMenu
                         }
                         if (item != null)
                         {
+                            _pageFrame.BackStack.Remove(entry);
                             break;  //if item is successfully got break the loop. We got what we needed.
                         }
                     }
@@ -455,7 +443,7 @@ namespace SplitViewMenu
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 BLogger.E("Error while navigating back.", ex);
             }
