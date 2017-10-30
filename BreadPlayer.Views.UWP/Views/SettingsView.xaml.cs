@@ -20,7 +20,7 @@ namespace BreadPlayer
 
         private void OnSettingClicked(object sender, ItemClickEventArgs e)
         {
-            NavigationService.Instance.Frame.Navigate((e.ClickedItem as SettingGroup).Page, e.ClickedItem);
+            SplitViewMenu.SplitViewMenu._pageFrame?.Navigate((e.ClickedItem as SettingGroup).Page, e.ClickedItem);
         }
     }
 }

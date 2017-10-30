@@ -88,18 +88,21 @@ namespace BreadPlayer
         {
             if (message.Payload != null)
             {
-                if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-                {
-                    Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
-                }
                 dynamic payload = message.Payload;
-                if (!InitializeCore.IsMobile)
+                if (NowPlayingFrame.CurrentSourcePageType != payload.pageType)
                 {
-                    NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                    if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                    {
+                        Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
+                    }
+                    if (!InitializeCore.IsMobile)
+                    {
+                        NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                    }
+                    NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+
+                    _shellVm.IsPlaybarHidden = true;
                 }
-                NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
-                
-                _shellVm.IsPlaybarHidden = true;
             }
         }
         private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)

@@ -80,7 +80,7 @@ namespace SplitViewMenu
         //private static NavMenuListView _playlistsMenuListView;
         private static bool _focusPageOnLoad = true;
 
-        private static Frame _pageFrame;
+        public static Frame _pageFrame;
         private static SplitView _splitView;
         private static ToggleButton _togglePaneButton;
         private static AutoSuggestBox _searchBox;
@@ -211,6 +211,7 @@ namespace SplitViewMenu
             }
             if (_pageFrame != null)
             {
+                _pageFrame.CacheSize = 15;
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }

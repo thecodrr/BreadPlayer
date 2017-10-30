@@ -262,6 +262,7 @@
     <Compile Include="SettingsViews\AudioSettingsView.xaml.cs">
       <DependentUpon>AudioSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsViews\CachedPage.cs" />
     <Compile Include="SettingsViews\ContactView.xaml.cs">
       <DependentUpon>ContactView.xaml</DependentUpon>
     </Compile>
