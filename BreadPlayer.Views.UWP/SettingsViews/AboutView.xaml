@@ -1,4 +1,4 @@
-﻿<Page
+﻿<local:CachedPage
     x:Class="BreadPlayer.SettingsViews.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -107,4 +107,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </ScrollViewer>
-</Page>
+</local:CachedPage>
