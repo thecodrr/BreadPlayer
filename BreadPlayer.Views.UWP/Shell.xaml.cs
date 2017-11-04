@@ -100,9 +100,8 @@ namespace BreadPlayer
                         NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
                     }
                     NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
-
-                    _shellVm.IsPlaybarHidden = true;
                 }
+                _shellVm.IsPlaybarHidden = true;
             }
         }
         private void BackButtonPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
