@@ -74,7 +74,7 @@ Thanks to these awesome people Project Bread has come this far:
 _Note: I am not an expert developer and as a result the code-base isn't as professional as it could be. Hence, I will highly appreciate any contribution in any field regarding this project. All suggestions and issue reporting are welcome._
 
 ## Build Notes:
-1. Make sure you have the necessary tools for building [Windows Universal Apps](https://dev.windows.com/en-us/develop/building-universal-Windows-apps).
+1. Make sure you have the necessary tools for building [Windows Universal Apps](https://developer.microsoft.com/en-us/windows/apps).
 2. Clone this repo:  `git clone https://github.com/theweavrs/BreadPlayer/`
 3. Run `msbuild.cmd` in `scripts` folder.
 4. Enjoy!
