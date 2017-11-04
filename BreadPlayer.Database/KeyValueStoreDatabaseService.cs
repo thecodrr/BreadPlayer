@@ -1,8 +1,10 @@
 ﻿using BreadPlayer.Core.Common;
 using DBreeze;
 using DBreeze.Objects;
+using DBreeze.Transactions;
 using DBreeze.Utils;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +35,7 @@ namespace BreadPlayer.Database
 
         public static void DisposeDatabaseEngine()
         {
+            DbPath = null;
             _db.Dispose();
             _db = null;
             IsDisposed = true;
@@ -41,17 +44,13 @@ namespace BreadPlayer.Database
 
     public class KeyValueStoreDatabaseService : IDatabaseService
     {
-        private string _dbPath;
         private DBreezeEngine _engine;
         private string _textTableName;
         private string _tableName;
 
         public KeyValueStoreDatabaseService(string dbPath, string tableName)
         {
-            _dbPath = dbPath;
-            _engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
-            CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
-            CustomSerializator.ByteArrayDeSerializator = (bt, t) => JsonConvert.DeserializeObject(bt.UTF8_GetString(), t);
+            _engine = this.Initialize(dbPath);
             _textTableName = tableName + "Text";
             _tableName = tableName;
         } 
@@ -64,7 +63,7 @@ namespace BreadPlayer.Database
 
         public bool CheckExists(long id)
         {
-            using (var tran = _engine.GetTransaction())
+            using (var tran = _engine.GetSafeTransaction())
             {
                 var item = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id));//.ObjectGet<T>().Entity;
                 return item.Exists;
@@ -73,7 +72,7 @@ namespace BreadPlayer.Database
 
         public bool CheckExists(string query)
         {
-            using (var tran = _engine.GetTransaction())
+            using (var tran = _engine.GetSafeTransaction())
             {
                 var records = tran.TextSearch(_textTableName).Block(query).GetDocumentIDs();
                 if (records.Any())
@@ -95,7 +94,7 @@ namespace BreadPlayer.Database
         {
             try
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     var entity = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id)).ObjectGet<T>();
                     if (entity != null)
@@ -116,7 +115,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     var records = tran.TextSearch(_textTableName).Block(query).GetDocumentIDs();
                     var enumerable = records as IList<byte[]> ?? records.ToList();
@@ -134,7 +133,7 @@ namespace BreadPlayer.Database
         {
             try
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     var count = (int)tran.Count(_tableName);
                     return count - 1;
@@ -150,8 +149,7 @@ namespace BreadPlayer.Database
         {
             await Task.Run(() =>
             {
-                ReinitEngine();
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
 
@@ -165,25 +163,17 @@ namespace BreadPlayer.Database
                     },
                         true);
                     tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                    tran.Commit();
+                    tran.TryCommit();
                 }
             });
         }
-
-        private void ReinitEngine()
-        {
-            if (StaticKeyValueDatabase.IsDisposed || _engine == null)
-            {
-                _engine = StaticKeyValueDatabase.GetDatabaseEngine(_dbPath);
-            }
-        }
+       
 
         public async Task InsertRecords(IEnumerable<IDbRecord> records)
         {
             await Task.Run(() =>
             {
-                //ReinitEngine();
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     if (records.Any())
                     {
@@ -207,7 +197,7 @@ namespace BreadPlayer.Database
                             tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.TextSearchKey);
                         }
 
-                        tran.Commit();
+                        tran.TryCommit();
                     }
                 }
             });
@@ -217,7 +207,7 @@ namespace BreadPlayer.Database
         {
             return await Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     var recordList = new List<T>(limit);
                     var ids = tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs().ToArray();
@@ -237,7 +227,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     var row = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id));
                     if (row.Exists)
@@ -248,7 +238,7 @@ namespace BreadPlayer.Database
                         getRecord.Indexes = new List<DBreezeIndex> { new DBreezeIndex(1, id) { PrimaryIndex = true } }; //PI Primary Index
                         if (tran.ObjectInsert(_tableName, getRecord, true).EntityWasInserted)
                         {
-                            tran.Commit();
+                            tran.TryCommit();
                             return true;
                         }
                     }
@@ -261,7 +251,7 @@ namespace BreadPlayer.Database
         {
             return Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     foreach (var data in records)
                     {
@@ -275,7 +265,7 @@ namespace BreadPlayer.Database
                             tran.ObjectInsert(_tableName, getRecord, true);
                         }
                     }
-                    tran.Commit();
+                    tran.TryCommit();
                 }
             });
         }
@@ -284,12 +274,12 @@ namespace BreadPlayer.Database
         {
             await Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     tran.ObjectRemove(_tableName, 1.ToIndex(record.Id));
                     //remove from text engine too
                     tran.TextRemove(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.GetTextSearchKey());
-                    tran.Commit();
+                    tran.TryCommit();
                 }
             });
         }
@@ -298,7 +288,7 @@ namespace BreadPlayer.Database
         {
             await Task.Run(() =>
             {
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     foreach (var data in records)
                     {
@@ -306,7 +296,7 @@ namespace BreadPlayer.Database
                         //remove from text engine too
                         tran.TextRemove(_textTableName, data.Id.To_8_bytes_array_BigEndian(), data.GetTextSearchKey());
                     }
-                    tran.Commit();
+                    tran.TryCommit();
                 }
             });
         }
@@ -321,7 +311,7 @@ namespace BreadPlayer.Database
             return Task.Run(() =>
             {
                 IEnumerable<T> recordList;
-                using (var tran = _engine.GetTransaction())
+                using (var tran = _engine.GetSafeTransaction())
                 {
                     recordList = tran.SelectForwardFromTo<byte[], byte[]>(_tableName, 1.ToIndex(fromId), true, 1.ToIndex(toId), false)
                     .Select(x => x.ObjectGet<T>().Entity).ToList();
