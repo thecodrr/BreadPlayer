@@ -21,6 +21,7 @@ namespace BreadPlayer.Database
         {
             if (_db == null || DbPath != dbPath)
             {
+                BLogger.I("Initializing db engine. Path: {path}", dbPath);
                 DbPath = dbPath;
                 var dbConfig = new DBreezeConfiguration
                 {
@@ -29,16 +30,19 @@ namespace BreadPlayer.Database
                 };
                 _db = new DBreezeEngine(dbConfig);
                 IsDisposed = false;
+                BLogger.I("Db engine initialized. Path: {path}", dbPath);
             }
             return _db;
         }
 
         public static void DisposeDatabaseEngine()
         {
+            BLogger.I("Disposing db engine.");
             DbPath = null;
             _db.Dispose();
             _db = null;
             IsDisposed = true;
+            BLogger.I("Db engine disposed.");
         }
     }
 
@@ -59,6 +63,7 @@ namespace BreadPlayer.Database
         {
             _textTableName = context + "Text";
             _tableName = context;
+            BLogger.I("Tables changed. Old table: {oldtable}; New table: {newtable}", _tableName, context);
         }
 
         public bool CheckExists(long id)
@@ -85,7 +90,6 @@ namespace BreadPlayer.Database
 
         public void Dispose()
         {
-            StaticKeyValueDatabase.IsDisposed = true;
             StaticKeyValueDatabase.DisposeDatabaseEngine();
             _engine = null;
         }

@@ -24,12 +24,14 @@ namespace BreadPlayer.Database
             {
                 _dbPath = dbPath;
                 engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
+                BLogger.I("Engine reintialized. Path: {path}", dbPath);
             }
         }
         public static Transaction GetSafeTransaction(this DBreezeEngine engine)
         {
             try
             {
+                BLogger.I("Getting transaction.");
                 engine.Reinitialize(_dbPath);
                 return engine.GetTransaction();
             }
@@ -43,14 +45,19 @@ namespace BreadPlayer.Database
         {
             try
             {
+                BLogger.I("Comitting changes to transaction. Time created: {timecreated}.", FromUDT(transaction.CreatedUdt).ToString());
                 transaction.Commit();
             }
             catch (Exception ex)
             {
-                BLogger.E("Error while committing transaction.", ex);
+                BLogger.E("Error while committing transaction. Time created: {timecreated}.", ex, FromUDT(transaction.CreatedUdt).ToString());
                 transaction.Rollback();
             }
         }
-
+        private static DateTime FromUDT(long unixDateTime)
+        {
+            DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return start.AddMilliseconds(unixDateTime).ToLocalTime();
+        }
     }
 }
