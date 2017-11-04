@@ -420,7 +420,6 @@ namespace SplitViewMenu
                         }
                         if (item != null)
                         {
-                            _pageFrame.BackStack.Remove(entry);
                             break;  //if item is successfully got break the loop. We got what we needed.
                         }
                     }
