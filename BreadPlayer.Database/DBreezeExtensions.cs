@@ -20,8 +20,9 @@ namespace BreadPlayer.Database
         }
         public static void Reinitialize(this DBreeze.DBreezeEngine engine, string dbPath)
         {
-            if (StaticKeyValueDatabase.IsDisposed || engine == null)
+            if (StaticKeyValueDatabase.IsDisposed || engine == null || !engine.IsDatabaseOperable)
             {
+                BLogger.I("Database is not operable or it was disposed. Reinitializing. Message: {message}", engine.DatabaseNotOperableReason);
                 _dbPath = dbPath;
                 engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
                 BLogger.I("Engine reintialized. Path: {path}", dbPath);
