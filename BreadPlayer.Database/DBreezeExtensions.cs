@@ -5,26 +5,27 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BreadPlayer.Database
 {
     public static class DBreezeExtensions
     {
         static string _dbPath;
-        public static DBreezeEngine Initialize(this KeyValueStoreDatabaseService service, string dbPath)
+        public static Task<DBreezeEngine> InitializeAsync(this KeyValueStoreDatabaseService service, string dbPath)
         {
             _dbPath = dbPath;
             CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
             CustomSerializator.ByteArrayDeSerializator = (bt, t) => JsonConvert.DeserializeObject(bt.UTF8_GetString(), t);
-            return StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
+            return StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
         }
-        public static void Reinitialize(this DBreeze.DBreezeEngine engine, string dbPath)
+        public static async void Reinitialize(this DBreeze.DBreezeEngine engine, string dbPath)
         {
             if (StaticKeyValueDatabase.IsDisposed || engine == null || !engine.IsDatabaseOperable)
             {
                 BLogger.I("Database is not operable or it was disposed. Reinitializing. Message: {message}", engine.DatabaseNotOperableReason);
                 _dbPath = dbPath;
-                engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
+                engine = await StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
                 BLogger.I("Engine reintialized. Path: {path}", dbPath);
             }
         }
