@@ -84,7 +84,7 @@ namespace BreadPlayer
                 await dialog.ShowAsync();
             });
         }
-        private void HandleNavigationMessage(Message message)
+        private async void HandleNavigationMessage(Message message)
         {
             if (message.Payload != null)
             {
@@ -97,7 +97,10 @@ namespace BreadPlayer
                     }
                     if (!InitializeCore.IsMobile)
                     {
-                        NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                        });
                     }
                     NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
                 }
