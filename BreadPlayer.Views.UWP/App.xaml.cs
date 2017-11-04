@@ -183,7 +183,7 @@ namespace BreadPlayer
             {
                 BLogger.I("Loading frame started...");
                 Frame rootFrame = Window.Current.Content as Frame;
-
+                new InternetConnectivityHelper();
                 var vm = Current.Resources["AlbumArtistVM"];
                 ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
