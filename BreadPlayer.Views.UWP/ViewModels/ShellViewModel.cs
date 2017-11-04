@@ -615,7 +615,7 @@ namespace BreadPlayer.ViewModels
 
                 //get next song index (depending on the parameters).
                 int nextSongIndex = prev ? currentSongIndex - 1 : currentSongIndex + 1;
-                
+
                 //get condition for next/prev group.
                 bool nextGroupCondition = nextSongIndex.Equals(prev ? -1 : currentGroup.Count);
 
@@ -627,7 +627,11 @@ namespace BreadPlayer.ViewModels
 
                 //get nextSong index depending on if the group is new or old. 
                 int toPlaySongIndex = nextGroup.Equals(currentGroup) ? nextSongIndex : 0;
-                return nextGroup.ElementAt(toPlaySongIndex);
+
+                if ((nextGroup.Count - 1) >= toPlaySongIndex)
+                    return nextGroup.ElementAt(toPlaySongIndex);
+
+                return null;
             }
             catch (NullReferenceException)
             {
