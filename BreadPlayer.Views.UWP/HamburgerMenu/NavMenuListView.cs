@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace SplitViewMenu
+namespace BreadPlayer.Controls
 {
     public sealed class NavMenuListView : ListView
     {

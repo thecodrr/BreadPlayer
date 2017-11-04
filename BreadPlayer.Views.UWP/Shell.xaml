@@ -10,7 +10,6 @@
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:blur="using:BreadPlayer.Effects"
-    xmlns:controls="using:SplitViewMenu"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BreadPlayer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -69,12 +68,12 @@
                 <CompositeTransform TranslateY="0" />
             </Grid.RenderTransform>
 
-            <controls:SplitViewMenu
+            <BPControls:SplitViewMenu
                 x:Name="hamburgerMenu"
                 Margin="0,0,0,69.5"
                 InitialPage="local:LibraryView">
-                <controls:SplitViewMenu.TopNavigationItems>
-                    <controls:SimpleNavMenuItem
+                <BPControls:SplitViewMenu.TopNavigationItems>
+                    <BPControls:SimpleNavMenuItem
                         x:Name="LibraryItem"
                         x:Uid="yourMusicMenuItem"
                         Arguments="MusicCollection"
@@ -83,18 +82,18 @@
                         Label=""
                         Symbol="Accept"
                         Tooltip="">
-                        <controls:SimpleNavMenuItem.Shortcuts>
-                            <controls:Shortcut
+                        <BPControls:SimpleNavMenuItem.Shortcuts>
+                            <BPControls:Shortcut
                                 ShortcutFlyout="{StaticResource GenreFlyout}"
                                 SymbolAsChar="&#xE71C;"
                                 Tooltip="Filter" />
-                            <controls:Shortcut
+                            <BPControls:Shortcut
                                 ShortcutFlyout="{StaticResource SortMenuFlyout}"
                                 SymbolAsChar="&#xE174;"
                                 Tooltip="Sort" />
-                        </controls:SimpleNavMenuItem.Shortcuts>
-                    </controls:SimpleNavMenuItem>
-                    <controls:SimpleNavMenuItem
+                        </BPControls:SimpleNavMenuItem.Shortcuts>
+                    </BPControls:SimpleNavMenuItem>
+                    <BPControls:SimpleNavMenuItem
                         x:Uid="musicHistoryMenuItem"
                         Arguments="Recent"
                         DestinationPage="local:MusicHistoryView"
@@ -102,7 +101,7 @@
                         Label=""
                         Symbol="Accept"
                         Tooltip="" />
-                    <controls:SimpleNavMenuItem
+                    <BPControls:SimpleNavMenuItem
                         x:Uid="favoritesMenuItem"
                         Arguments="Favorites"
                         DestinationPage="local:FavoritesView"
@@ -110,7 +109,7 @@
                         Label=""
                         Symbol="Accept"
                         Tooltip="" />
-                    <controls:SimpleNavMenuItem
+                    <BPControls:SimpleNavMenuItem
                         x:Name="NowPlayingItem"
                         x:Uid="nowBakingMenuItem"
                         Arguments="MusicCollection"
@@ -120,9 +119,9 @@
                         Label=""
                         Symbol="Accept"
                         Tooltip="" />
-                </controls:SplitViewMenu.TopNavigationItems>
-                <controls:SplitViewMenu.BottomNavigationItems>
-                    <controls:SimpleNavMenuItem
+                </BPControls:SplitViewMenu.TopNavigationItems>
+                <BPControls:SplitViewMenu.BottomNavigationItems>
+                    <BPControls:SimpleNavMenuItem
                         x:Name="watchAdMenuItem"
                         x:Uid="watchAnAdMenuItem"
                         DestinationPage="local:LibraryView"
@@ -130,15 +129,15 @@
                         Label=""
                         Symbol="Accept"
                         Tooltip="" />
-                    <controls:SimpleNavMenuItem
+                    <BPControls:SimpleNavMenuItem
                         x:Uid="settingsMenuItem"
                         DestinationPage="local:SettingsView"
                         FontGlyph="&#x0046;"
                         Label=""
                         Symbol="Accept"
                         Tooltip="" />
-                </controls:SplitViewMenu.BottomNavigationItems>
-            </controls:SplitViewMenu>
+                </BPControls:SplitViewMenu.BottomNavigationItems>
+            </BPControls:SplitViewMenu>
 
             <Border
                 x:Name="notification"

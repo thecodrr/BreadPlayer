@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using BreadPlayer.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -75,7 +76,7 @@ namespace BreadPlayer.Dialogs
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Thanks for the donation! Love you!");
                     ConsumeAddOn(addOnStoreId);
                     this.Hide();
-                    SplitViewMenu.SplitViewMenu.SelectPrevious();
+                    SplitViewMenu.SelectPrevious();
                     break;
                 case StorePurchaseStatus.NetworkError:
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The purchase was unsuccessful due to a network error. " +
@@ -118,7 +119,7 @@ namespace BreadPlayer.Dialogs
                 case StoreConsumableStatus.Succeeded:
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Purchase fullfilled successfully.");
                     this.Hide();
-                    SplitViewMenu.SplitViewMenu.SelectPrevious();
+                    SplitViewMenu.SelectPrevious();
                     break;
                 case StoreConsumableStatus.NetworkError:
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The fulfillment was unsuccessful due to a network error. " +
@@ -137,7 +138,7 @@ namespace BreadPlayer.Dialogs
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             this.Hide();
-            SplitViewMenu.SplitViewMenu.SelectPrevious();
+            SplitViewMenu.SelectPrevious();
         }
     }
 }

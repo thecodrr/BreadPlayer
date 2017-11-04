@@ -51,6 +51,7 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Services.Store.Engagement;
 using Windows.Phone.UI.Input;
 using System.IO;
+using BreadPlayer.Controls;
 
 namespace BreadPlayer.ViewModels
 {
@@ -388,7 +389,7 @@ namespace BreadPlayer.ViewModels
             async Task NotifyAndDeselect(string message)
             {
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
-                SplitViewMenu.SplitViewMenu.SelectPrevious();
+                SplitViewMenu.SelectPrevious();
             }
         }
         private void Mute()
@@ -1133,6 +1134,7 @@ namespace BreadPlayer.ViewModels
                 BLogger.I("Failed to load file. Loading next file...");
                 var playingCollection = GetPlayingCollection();
                 int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
+                UpdateCurrentlyPlayingSongIndex();
                 SharedLogic.Instance.Player.IgnoreErrors = false;
                 await Load(await GetUpcomingSong(true), true);
             }

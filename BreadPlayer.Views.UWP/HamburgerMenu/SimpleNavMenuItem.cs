@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace SplitViewMenu
+namespace BreadPlayer.Controls
 {
     public class SimpleNavMenuItem : ObservableObject, INavigationMenuItem
     {

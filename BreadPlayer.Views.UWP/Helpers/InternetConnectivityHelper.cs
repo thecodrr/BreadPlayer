@@ -12,7 +12,7 @@ namespace BreadPlayer.Helpers
             set { isInternetConnected = value; }
         }
 
-        private InternetConnectivityHelper()
+        public InternetConnectivityHelper()
         {
             ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
             NetworkInformation.NetworkStatusChanged += OnInternetStatusChanged;

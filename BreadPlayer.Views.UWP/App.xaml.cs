@@ -38,7 +38,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
+using Windows.Storage;
 namespace BreadPlayer
 {
     /// <summary>
@@ -53,7 +53,12 @@ namespace BreadPlayer
         public App()
         {
             InitializeComponent();
-            BLogger.InitLogger();
+            InitializeEverything();
+        }
+        private async void InitializeEverything()
+        {
+            var logPath = System.IO.Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
+            BLogger.InitLogger(logPath, new SentryAPI.SentryMessageSender());
             CoreApplication.EnablePrelaunch(true);
             InitializeTheme();
             Suspending += OnSuspending;
@@ -64,7 +69,6 @@ namespace BreadPlayer
             BLogger.I("App started.");
             BLogger.I("Events initialized.");
         }
-
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             BLogger.E(string.Format("Task ({0}) terminating...", e.Exception.Source), e.Exception);

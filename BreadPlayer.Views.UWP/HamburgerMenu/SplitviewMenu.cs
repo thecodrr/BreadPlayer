@@ -19,7 +19,6 @@
 using BreadPlayer;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
-using BreadPlayer.Helpers;
 using BreadPlayer.Models;
 using BreadPlayer.Services;
 using BreadPlayer.Views;
@@ -35,7 +34,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace SplitViewMenu
+namespace BreadPlayer.Controls
 {
     public sealed class SplitViewMenu : Control
     {

@@ -1,4 +1,5 @@
-﻿using BreadPlayer.Services;
+﻿using BreadPlayer.Controls;
+using BreadPlayer.Services;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,7 +21,7 @@ namespace BreadPlayer
         {
             if (e.ClickedItem != null)
             {
-                SplitViewMenu.SplitViewMenu.UnSelectAll();
+                SplitViewMenu.UnSelectAll();
                 NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), e.ClickedItem);
             }
         }

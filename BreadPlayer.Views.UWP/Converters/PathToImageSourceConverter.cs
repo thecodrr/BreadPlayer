@@ -14,11 +14,24 @@ namespace BreadPlayer.Converters
         {
             await image.SetSourceAsync(stream.AsRandomAccessStream());
         }
+        private void SetSource(BitmapImage bitmapImage, string uriSource, object para)
+        {
+            if (!string.IsNullOrEmpty(uriSource))
+            {
+                // string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
+                if (para == null)
+                {
+                    bitmapImage.DecodePixelHeight = 200;
+                    bitmapImage.DecodePixelWidth = 200;
+                }
+                bitmapImage.UriSource = new Uri(uriSource, UriKind.RelativeOrAbsolute);
+            }
+        }
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            BitmapImage image = new BitmapImage();
             if (value is Mediafile mediaFile)
             {
-                BitmapImage image = new BitmapImage();
                 if (mediaFile.AttachedPictureBytes != null)
                 {
                     using (MemoryStream stream = new MemoryStream(mediaFile.AttachedPictureBytes))
@@ -28,18 +41,13 @@ namespace BreadPlayer.Converters
                 }
                 else if (!string.IsNullOrEmpty(mediaFile.AttachedPicture))
                 {
-                    // string def = Windows.UI.Xaml.Application.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light ? "ms-appx:///Assets/albumart.png" : "ms-appx:///Assets/albumart_black.png";
-                    if (parameter == null)
-                    {
-                        image.DecodePixelHeight = 200;
-                        image.DecodePixelWidth = 200;
-                    }
-                    if (value is string stringValue && !string.IsNullOrEmpty(stringValue))
-                    {
-                        image.UriSource = new Uri(stringValue, UriKind.RelativeOrAbsolute);
-                    }
+                    SetSource(image, mediaFile.AttachedPicture, parameter);
                 }
                 return image ?? null;
+            }
+            else if (value is string stringValue)
+            {
+                SetSource(image, stringValue, parameter);
             }
             return null;
         }

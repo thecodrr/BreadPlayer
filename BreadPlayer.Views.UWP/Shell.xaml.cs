@@ -26,7 +26,7 @@ using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using BreadPlayer.ViewModels;
-using SplitViewMenu;
+using BreadPlayer.Controls;
 using System;
 using System.Collections.Generic;
 using Windows.Foundation.Metadata;

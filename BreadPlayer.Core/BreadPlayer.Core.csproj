@@ -102,6 +102,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BreadLogger\BLogger.cs" />
+    <Compile Include="BreadLogger\ISentryMessageSender.cs" />
     <Compile Include="Common\Collections.cs" />
     <Compile Include="Common\ConfigSaver.cs" />
     <Compile Include="Common\DelegateCommand.cs" />

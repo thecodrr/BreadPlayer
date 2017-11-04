@@ -46,8 +46,7 @@ namespace BreadPlayer.Controls
                 //support for adjusting to groups(each group should be treated individually)
 
                 var collectionViewSource = Tag as CollectionViewSource;
-                var groups = collectionViewSource?.Source as GroupedObservableCollection<IGroupKey, Mediafile>;
-                if (groups != null)
+                if (collectionViewSource?.Source is GroupedObservableCollection<IGroupKey, Mediafile> groups)
                 {
                     var o = Items?[index];
                     if (o != null)

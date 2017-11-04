@@ -1,18 +1,13 @@
-﻿using BreadPlayer.Dispatcher;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 
 namespace BreadPlayer.Extensions
 {
     public class SortedObservableCollection<T, TKey>
         : ThreadSafeObservableCollection<T>
     {
-        private CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private const string CountName = nameof(Count);
         private const string IndexerName = "Item[]";
         /// <summary>
@@ -57,7 +52,7 @@ namespace BreadPlayer.Extensions
                 Items.Insert(i, item);
         }
         
-        public async void OnCollectionReset() => await BreadDispatcher.InvokeAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+        public async void OnCollectionReset() => await Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
         public void NotifyProperties(bool count = true)
         {

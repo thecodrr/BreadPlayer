@@ -18,7 +18,7 @@
 
 using System;
 
-namespace SplitViewMenu
+namespace BreadPlayer.Controls
 {
     public interface INavigationMenuItem
     {

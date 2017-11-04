@@ -6,7 +6,7 @@
     xmlns:StateTriggers="using:BreadPlayer.StateTriggers"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:SplitViewMenu">
+    xmlns:local="using:BreadPlayer.Controls">
 
     <!--Generic-->
     <SolidColorBrush x:Key="SystemAccentBrush" Color="{StaticResource SystemAccentColor}" />

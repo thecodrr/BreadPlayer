@@ -18,7 +18,7 @@
 
 using BreadPlayer.Extensions;
 using Microsoft.Xaml.Interactivity;
-using SplitViewMenu;
+using BreadPlayer.Controls;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;

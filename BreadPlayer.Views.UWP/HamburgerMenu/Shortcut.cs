@@ -1,7 +1,7 @@
 ﻿using BreadPlayer.Core.Common;
 using Windows.UI.Xaml.Controls;
 
-namespace SplitViewMenu
+namespace BreadPlayer.Controls
 {
     public class Shortcut : ObservableObject
     {

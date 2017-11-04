@@ -1,11 +1,6 @@
-﻿using BreadPlayer.SentryAPI;
+﻿using BreadPlayer.Core;
 using Serilog;
-using SharpRaven;
-using SharpRaven.Data;
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 public class BLogger
 {
@@ -14,38 +9,33 @@ public class BLogger
         get => _logger;
         set => _logger = value;
     }
-    private static RavenClient ravenClient;
+   
     private static ILogger _logger;
-    public async static void InitLogger()
+    static ISentryMessageSender SentryMessageSender;
+    public static void InitLogger(string path, ISentryMessageSender sentryMessageSender)
     {
+        SentryMessageSender = sentryMessageSender;
         const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}";
-        var logPath = Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
 
         Log.Logger = new LoggerConfiguration()
                                 .MinimumLevel.Verbose()
-                                .WriteTo.File(logPath, outputTemplate: fileOutputTemplate, shared: true)
+                                .WriteTo.File(path, outputTemplate: fileOutputTemplate, shared: true)
                                 .CreateLogger();
         Logger = Log.Logger;
         I("Logger initialized.");
-        ravenClient = new RavenClient(
-            "https://0517ff9dd4c84fe7a1922377ae0568c8:9fe0a9ffb8e84118881c26b42919ca56@sentry.io/226984",
-            null, null, new SentryUserFactory())
-        {
-            Logger = "user",
-            Release = "v2.7.5.0"
-        };
+        SentryMessageSender.InitSentry();
         I("Raven initialized.");
     }
 
     public static async void E(string message, Exception exception, params object[] propertyValues)
     {
         Logger?.Error(exception, message, propertyValues);
-        await SentryMessageSender.SendMessageAsync(ravenClient, message, exception, ErrorLevel.Error).ConfigureAwait(false);
+        await SentryMessageSender.SendMessageAsync(message, exception, "Error").ConfigureAwait(false);
     }
     public static async void F(string message, Exception exception, params object[] propertyValues)
     {
         Logger?.Fatal(exception, message, propertyValues);
-        await SentryMessageSender.SendMessageAsync(ravenClient, message, exception, ErrorLevel.Fatal).ConfigureAwait(false);
+        await SentryMessageSender.SendMessageAsync(message, exception, "Fatal").ConfigureAwait(false);
     }
     public static void I(string message, params object[] propertyValues)
     {

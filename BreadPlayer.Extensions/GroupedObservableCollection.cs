@@ -17,16 +17,12 @@
 */
 
 using BreadPlayer.Core.Models;
-using BreadPlayer.Dispatcher;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
 
 namespace BreadPlayer.Extensions
 {
@@ -141,7 +137,7 @@ namespace BreadPlayer.Extensions
                 BLogger.E("Error occured while adding range to grouped collection.", ex);
             }
         }
-        async void OnCollectionReset() => await BreadDispatcher.InvokeAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+        async void OnCollectionReset() => await Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
         void NotifyProperties(bool count = true)
         {

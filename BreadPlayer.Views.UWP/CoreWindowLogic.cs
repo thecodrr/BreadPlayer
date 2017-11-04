@@ -17,6 +17,7 @@
 */
 
 using BreadPlayer.Common;
+using BreadPlayer.Controls;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Events;
@@ -329,7 +330,7 @@ namespace BreadPlayer
                 }
                 if (record == null)
                     return;
-                SplitViewMenu.SplitViewMenu.UnSelectAll();
+                SplitViewMenu.UnSelectAll();
                 NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), record);
             }
         }

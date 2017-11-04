@@ -7,6 +7,8 @@
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "10.0.3",
+    "Serilog": "2.6.0-dev-00915",
+    "Serilog.Sinks.File": "4.0.0",
     "System.ValueTuple": "4.4.0",
     "Taglib-Sharp-NetStandard": "1.0.0"
   },
