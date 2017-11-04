@@ -106,7 +106,7 @@ namespace BreadPlayer
 
         private static MediaPlayer _player;
 
-        public async static void InitSmtc()
+        public async void InitSmtc()
         {
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
             {
@@ -210,37 +210,45 @@ namespace BreadPlayer
             });
         }
 
-        private static void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
+        private void Player_MediaStateChanged(object sender, MediaStateChangedEventArgs e)
         {
             if (_smtc == null)
             {
                 return;
             }
-
-            switch (e.NewState)
+            try
             {
-                case PlayerState.Playing:
-                    _player?.Play();
-                    if (externalPaused)
-                    {
-                        UpdateSmtc();
-                        externalPaused = false;
-                    }
-                    _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
-                    break;
+                switch (e.NewState)
+                {
+                    case PlayerState.Playing:
+                        _player?.Play();
 
-                case PlayerState.Paused:
-                    // BLogger.I("state has been changed to paused.");
-                    _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
-                    break;
+                        //check if the player was paused by another app
+                        if (externalPaused)
+                        {
+                            UpdateSmtc();
+                            externalPaused = false;
+                        }
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        break;
 
-                case PlayerState.Stopped:
-                    // BLogger.I("state has been changed to stopped.");
-                    _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
-                    break;
+                    case PlayerState.Paused:
+                        // BLogger.I("state has been changed to paused.");
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
+                        break;
 
-                default:
-                    break;
+                    case PlayerState.Stopped:
+                        // BLogger.I("state has been changed to stopped.");
+                        _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                BLogger.E("CoreWindowLogic.Player_MediaStateChanged PlayerState: {state}.", ex, e.NewState.ToString());
             }
         }
 

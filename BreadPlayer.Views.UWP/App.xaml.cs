@@ -76,7 +76,7 @@ namespace BreadPlayer
 
         private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            BLogger.F("Something caused the app to crash!", e.Exception);
+            BLogger.F("Something caused the app to crash! Sender: {sender}", e.Exception, sender);
         }
 
         private void InitializeTheme()
