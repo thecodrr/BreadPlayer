@@ -211,7 +211,6 @@ namespace SplitViewMenu
             }
             if (_pageFrame != null)
             {
-                _pageFrame.CacheSize = 15;
                 _pageFrame.Navigating += OnNavigatingToPage;
                 _pageFrame.Navigated += OnNavigatedToPage;
             }
