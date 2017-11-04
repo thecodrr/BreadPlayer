@@ -28,6 +28,7 @@ namespace BreadPlayer.Core.Models
         #region Fields
 
         private PlayerState _state = PlayerState.Stopped;
+        private bool _isSelected = false;
         private string _path;
         private string _encryptedMetaFile;
         private string _attachedPicture;
@@ -86,17 +87,6 @@ namespace BreadPlayer.Core.Models
             get => _isPlaylistSong;
             set => Set(ref _isPlaylistSong, value);
         }
-
-        private bool _isSelected = false;
-
-        [BsonIgnore]
-        [JsonIgnore]
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => Set(ref _isSelected, value);
-        }
-
         public int PlayCount { get => _playCount; set => Set(ref _playCount, value); }
         public string Path { get => _path; set => Set(ref _path, value); }
 
@@ -122,7 +112,22 @@ namespace BreadPlayer.Core.Models
             set => _synchronizedLyric = value;
         }
         #region JsonIgnore Properties
-
+        [BsonIgnore]
+        [JsonIgnore]
+        public byte[] AttachedPictureBytes { get; set; }
+        [BsonIgnore]
+        [JsonIgnore]
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => Set(ref _isSelected, value);
+        }
+        [BsonIgnore]
+        [JsonIgnore]
+        public byte[] ByteArray { get; set; }
+        [BsonIgnore]
+        [JsonIgnore]
+        public long FileLength { get; set; }
         [BsonIgnore]
         [JsonIgnore]
         public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }

@@ -106,17 +106,11 @@ namespace BreadPlayer
         {
             if ((sender as Pivot).SelectedIndex == 1)
             {
-                (this.FindName("BreadsFrame") as Frame).Visibility = Visibility.Visible;
                 BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");
             }
             else if ((sender as Pivot).SelectedIndex == 2)
             {
-                (this.FindName("BakersFrame") as Frame).Visibility = Visibility.Visible;
                 BakersFrame.Navigate(typeof(AlbumArtistView), "ArtistView");
-            }
-            else if ((sender as Pivot).SelectedIndex == 3)
-            {
-                (this.FindName("PlaylistsFrame") as Frame).Visibility = Visibility.Visible;
             }
         }
     }

@@ -22,6 +22,8 @@ using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using ManagedBass;
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
@@ -135,7 +137,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             if (deviceName != null)
                 await InitializeCore.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
-
         /// <summary>
         /// Loads the specified file into the player.
         /// </summary>
@@ -143,12 +144,10 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         /// <returns>Boolean</returns>
         public async Task<bool> Load(Mediafile mediaFile)
         {
-            if (mediaFile != null && mediaFile.Length != "00:00")
+            if ((mediaFile != null && mediaFile.Length != "00:00") || mediaFile.ByteArray != null)
             {
                 try
                 {
-                    string path = mediaFile.Path;
-
                     await InitializeCore.Dispatcher.RunAsync(() =>
                     {
                         MediaChanging?.Invoke(this, new EventArgs());
@@ -156,7 +155,15 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     await Stop();
                     await Task.Run(() =>
                         {
-                            _handle = Bass.CreateStream(path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                            if (mediaFile.ByteArray == null)
+                                _handle = Bass.CreateStream(mediaFile.Path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                            else
+                            {
+                                var buffer = mediaFile.ByteArray;
+                                _handle = Bass.CreateStream(buffer, 0, mediaFile.FileLength, BassFlags.Float);
+                                if(mediaFile.LeadArtist == null)
+                                    WriteTagsToMediafile(mediaFile);
+                            }
                             PlayerState = PlayerState.Stopped;
                             Length = 0;
                             Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
@@ -203,7 +210,28 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             return false;
         }
 
-        
+        private void WriteTagsToMediafile(Mediafile mediaFile)
+        {
+            using (MemoryStream stream = new MemoryStream(mediaFile.ByteArray))
+            {
+                try
+                {
+                    var file = TagLib.File.Create(new TagLib.StreamFileAbstraction(mediaFile.Title, stream, stream));
+                    mediaFile.Title = file.Tag.Title ?? mediaFile.Title;
+                    mediaFile.LeadArtist = file.Tag.FirstPerformer ?? "Unknown Artist";
+                    mediaFile.Album = file.Tag.Album ?? "Unknown Album";
+                    mediaFile.TrackNumber = Convert.ToInt32(file.Tag.Track);
+                    mediaFile.Year = file.Tag.Year.ToString();
+                    mediaFile.OrginalFilename = "Playing from Network.";
+                    mediaFile.Path = "Playing from Network.";
+                    mediaFile.Genre = file.Tag.FirstGenre;
+                    if (file.Tag.Pictures.Length > 0)
+                        mediaFile.AttachedPictureBytes = file.Tag.Pictures[0].Data.Data;
+                    mediaFile.ByteArray = null;
+                }
+                catch { }
+            }
+        }
 
         /// <summary>
         /// Pauses the audio playback.

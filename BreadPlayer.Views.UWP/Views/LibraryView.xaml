@@ -404,22 +404,21 @@
             </PivotItem>
             <PivotItem x:Uid="breadsPivot" Header="Breads">
                 <Frame
-                    Name="BreadsFrame"
-                    x:DeferLoadStrategy="Lazy"
-                    Visibility="Collapsed" />
+                    Name="BreadsFrame"/>
             </PivotItem>
             <PivotItem x:Uid="bakersPivot" Header="Bakers">
                 <Frame
-                    Name="BakersFrame"
-                    x:DeferLoadStrategy="Lazy"
-                    Visibility="Collapsed" />
+                    Name="BakersFrame"/>
             </PivotItem>
             <PivotItem x:Uid="playlistsPivot" Header="Playlists">
                 <Frame
                     Name="PlaylistsFrame"
-                    x:DeferLoadStrategy="Lazy"
-                    SourcePageType="local:PlaylistsCollectionView"
-                    Visibility="Collapsed" />
+                    SourcePageType="local:PlaylistsCollectionView"/>
+            </PivotItem>
+            <PivotItem x:Uid="foldersPivot" Header="Folders">
+                <Frame
+                    x:Name="FoldersFrame"
+                    SourcePageType="local:FoldersView"/>
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">

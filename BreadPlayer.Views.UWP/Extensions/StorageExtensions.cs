@@ -138,7 +138,18 @@ namespace BreadPlayer.Extensions
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(string.Format("{0} Mediafiles Updated. Folder Path: {1}", successCount, item.Path), 5);
             }
         }
-
+        public static async Task<bool> TryDeleteItemAsync(this IStorageItem item)
+        {
+            try
+            {
+                await item.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static bool IsItemPotentialMediafile(this IStorageItem file)
         {
             string[] mediaExtensions =

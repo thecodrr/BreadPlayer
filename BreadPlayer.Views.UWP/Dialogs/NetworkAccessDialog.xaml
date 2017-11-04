@@ -1,0 +1,19 @@
+﻿<ContentDialog
+    x:Name="accessDialog"
+    x:Class="BreadPlayer.Dialogs.NetworkAccessDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BreadPlayer.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Please enter the network credentials"
+    PrimaryButtonText="Okay"
+    SecondaryButtonText="Cancel">
+
+    <StackPanel>
+        <TextBox x:Name="text" Padding="14,6,14,8"  Header="IP Address or Hostname:" Text="{Binding ElementName=accessDialog, Path=Hostname, Mode=TwoWay}" />
+        <TextBox x:Name="desc" Padding="14,6,14,8"  Header="Username (if applicable):" Text="{Binding ElementName=accessDialog, Path=Username, Mode=TwoWay}" Margin="0,5,0,0" />
+        <PasswordBox x:Name="password" Padding="14,6,14,8" Visibility="{Binding ElementName=isPrivate, Path=IsChecked, Converter={StaticResource BoolToVisibility}}" Header="Password (if applicable):" Password="{Binding ElementName=accessDialog, Path=Password, Mode=TwoWay}" Margin="0,5,0,0" />
+    </StackPanel>
+</ContentDialog>

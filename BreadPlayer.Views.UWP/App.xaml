@@ -192,7 +192,6 @@
             <Converter:PlayerStateToVisibilityConverter x:Key="PlayerStateToVisibility" />
             <Converter:DoubleToTimeConverter x:Key="DoubleToTime" />
             <Converter:StringToIconConverter x:Key="StringToIcon" />
-            <Converter:ColorToBrushConverter x:Key="ColorToBrush" />
             <Converter:TrueToFalseConverter x:Key="TrueToFalse" />
             <Converter:SymbolToCharConverter x:Key="SymbolToChar" />
             <Converter:HexToColorConverter x:Key="HexToColor" />

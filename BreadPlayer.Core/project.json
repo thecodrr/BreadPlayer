@@ -2,12 +2,13 @@
   "supports": {},
   "dependencies": {
     "LiteDB": "4.0.0",
-    "ManagedBass": "2.0.3",
-    "ManagedBass.Fx": "2.0.0",
+    "ManagedBass": "2.0.4",
+    "ManagedBass.Fx": "2.0.1",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "10.0.3",
-    "System.ValueTuple": "4.4.0"
+    "System.ValueTuple": "4.4.0",
+    "Taglib-Sharp-NetStandard": "1.0.0"
   },
   "frameworks": {
     "netstandard1.4": {}

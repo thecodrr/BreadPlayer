@@ -422,22 +422,21 @@
                         Width="{Binding ElementName=infoBar, Path=Width}"
                         Margin="0,-15,0,-30"
                         VerticalAlignment="Stretch"
-                        DataContext="{StaticResource Core}"
+                        DataContext="{Binding Source={StaticResource Core}, Path=Instance}"
                         Orientation="Horizontal">
                         <Grid x:Name="AlbumArtGrid">
+                            <FontIcon
+                                FontSize="32"
+                                Foreground="{ThemeResource TextBrush}"
+                                Glyph="&#xE93C;"/>
                             <Image
                                 x:Name="albumArt"
                                 Width="60"
                                 Height="50"
                                 Margin="5,5,5,5"
                                 VerticalAlignment="Center"
-                                Source="{Binding Path=Instance.Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter=null}"
+                                Source="{Binding Path=Player.CurrentlyPlayingFile, Converter={StaticResource PathToImage}, ConverterParameter=null}"
                                 Stretch="Uniform" />
-                            <FontIcon
-                                FontSize="52"
-                                Foreground="{ThemeResource TextBrush}"
-                                Glyph="&#xE93C;"
-                                Visibility="{Binding ElementName=albumArt, Path=Source, Converter={StaticResource BoolToVisibility}}" />
                         </Grid>
                         <StackPanel
                             x:Name="tagsPanel"
@@ -450,21 +449,21 @@
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Player.CurrentlyPlayingFile.Title, UpdateSourceTrigger=Explicit}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontFamily="Segoe UI Light"
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Player.CurrentlyPlayingFile.LeadArtist, UpdateSourceTrigger=Explicit}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 FontFamily="Segoe UI Light"
                                 FontSize="13"
                                 FontWeight="Normal"
                                 Foreground="{ThemeResource TextBrush}"
-                                Text="{Binding Path=Instance.Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" />
+                                Text="{Binding Path=Player.CurrentlyPlayingFile.Album, UpdateSourceTrigger=Explicit}" />
                         </StackPanel>
                     </StackPanel>
 
@@ -475,7 +474,7 @@
                         <Core:EventTriggerBehavior EventName="Holding">
                             <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource Flyout}" />
                         </Core:EventTriggerBehavior>
-                        <Core:EventTriggerBehavior EventName="MediaChanging" SourceObject="{Binding Source={StaticResource Core}, Path=Instance.Player}">
+                        <Core:EventTriggerBehavior EventName="MediaChanging" SourceObject="{Binding Source={StaticResource Core}, Path=Player}">
                             <Media:ControlStoryboardAction Storyboard="{StaticResource ImageTransition}" />
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>

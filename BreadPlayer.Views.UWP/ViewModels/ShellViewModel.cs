@@ -50,6 +50,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Services.Store.Engagement;
 using Windows.Phone.UI.Input;
+using System.IO;
 
 namespace BreadPlayer.ViewModels
 {
@@ -98,13 +99,23 @@ namespace BreadPlayer.ViewModels
             SharedLogic.Instance.Player.MediaEnded += Player_MediaEnded;
             PropertyChanged += ShellViewModel_PropertyChanged;
             SharedLogic.Instance.Player.MediaAboutToEnd += Player_MediaAboutToEnd;
-
+            SharedLogic.Instance.Player.MediaChanging += OnMediaChanging;
             //these events are for detecting when the default audio
             //device is changed in PC and Mobile.
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 AudioRoutingManager.GetDefault().AudioEndpointChanged += OnAudioEndpointChanged;
             else
                 MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
+        }
+
+        private async void OnMediaChanging(object sender, EventArgs e)
+        {
+            var lastPlayingFile = SharedLogic.Instance.Player.CurrentlyPlayingFile;
+            if (IsPlayingFromNetwork && lastPlayingFile != null
+                && await Task.Run(() => File.Exists(lastPlayingFile.Path)))
+            {
+                await (await StorageFile.GetFileFromPathAsync(lastPlayingFile.Path)).TryDeleteItemAsync();
+            }
         }
 
         #endregion Constructor
@@ -167,7 +178,32 @@ namespace BreadPlayer.ViewModels
                 var file = obj[0] as Mediafile;
                 var play = (bool)obj[1];
                 IsPlayingFromPlaylist = (bool)obj[2];
+                if (obj.Count > 3)
+                {
+                    IsPlayingFromNetwork = (bool)obj[3];
+                }
                 await Load(file, play);
+            }
+            else if (message.Payload is string path)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                var mediaFile = await TagReaderHelper.CreateMediafile(await StorageFile.GetFileFromPathAsync(path));
+                await Load(mediaFile, true);
+            }
+            else if (message.Payload is StorageFile file)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                var mediaFile = await TagReaderHelper.CreateMediafile(file);
+                using (var stream = await file.OpenStreamForReadAsync())
+                {
+                    using (MemoryStream memStream = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(memStream);
+                        mediaFile.ByteArray = memStream.ToArray();
+                        mediaFile.FileLength = stream.Length;
+                        await Load(mediaFile, true);
+                    }
+                }
             }
         }
 
@@ -205,7 +241,17 @@ namespace BreadPlayer.ViewModels
                 {
                     var id = SettingsHelper.GetLocalSetting<long>("NowPlayingID", 0L);
                     libraryMediaFile = _service.GetMediafile(id);
+                    if (libraryMediaFile == null)
+                    {
+                        var path = SettingsHelper.GetLocalSetting<string>("path", null);
+                        if (path != null)
+                        {
+                            if (await Task.Run(() => File.Exists(path)))
+                                libraryMediaFile = await TagReaderHelper.CreateMediafile(await StorageFile.GetFileFromPathAsync(path));
+                        }
+                    }
                 }
+                
                 await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }
             else
@@ -562,13 +608,14 @@ namespace BreadPlayer.ViewModels
             {
                 //get current group (the group in which current song is playing).
                 Grouping<IGroupKey, Mediafile> currentGroup = TracksCollection.GetCurrentlyPlayingGroup();
-
+                if (currentGroup == null)
+                    return null;
                 //get the index of the song playing in the currentGroup (with reference to the currentGroup)
                 int currentSongIndex = currentGroup.GetPlayingSongIndexInGroup();
 
                 //get next song index (depending on the parameters).
                 int nextSongIndex = prev ? currentSongIndex - 1 : currentSongIndex + 1;
-
+                
                 //get condition for next/prev group.
                 bool nextGroupCondition = nextSongIndex.Equals(prev ? -1 : currentGroup.Count);
 
@@ -821,19 +868,12 @@ namespace BreadPlayer.ViewModels
 
         private bool _isPlayingFromPlaylist;
 
-        public bool IsPlayingFromPlaylist
-        {
-            get => _isPlayingFromPlaylist;
-            set => Set(ref _isPlayingFromPlaylist, value);
-        }
+        public bool IsPlayingFromPlaylist { get; set; }
+        public bool IsPlayingFromNetwork { get; set; }
 
         private bool _isSourceGrouped;
 
-        public bool IsSourceGrouped
-        {
-            get => _isSourceGrouped;
-            set => Set(ref _isSourceGrouped, value);
-        }
+        public bool IsSourceGrouped { get; set; }
 
         public GroupedObservableCollection<IGroupKey, Mediafile> TracksCollection
         { get; set; }
@@ -847,15 +887,7 @@ namespace BreadPlayer.ViewModels
         {
             get => _nowPlayingQueue;
             set => Set(ref _nowPlayingQueue, value);
-        }
-
-        private string _queryWord = "";
-
-        public string QueryWord
-        {
-            get => _queryWord;
-            set => Set(ref _queryWord, value);
-        }
+        }        
 
         private string _repeat = "No Repeat";
 
