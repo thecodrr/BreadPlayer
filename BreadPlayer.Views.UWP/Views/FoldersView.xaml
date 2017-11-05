@@ -9,14 +9,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:Models="using:BreadPlayer.Core.Models"
+    xmlns:VM="using:BreadPlayer.ViewModels"
     mc:Ignorable="d">
-
-    <Grid>
+    <Page.Resources>
+        <VM:FoldersViewModel x:Key="FoldersVM"/>
+    </Page.Resources>
+    <Grid DataContext="{StaticResource FoldersVM}">
         <ListView x:Name="foldersList" 
                   ItemsSource="{Binding Path=StorageItems}"
                   helpers:ListViewBase.StretchItemContainerDirection="Both"
                   IsItemClickEnabled="True"
-                  ItemClick="OnItemTapped"
+                  ItemClick="OnItemClicked"
                   helpers:ListViewBase.AlternateColor="{ThemeResource OddRowBackground}">
             <ListView.Header>
                 <controls:ScrollHeader Mode="QuickReturn" TargetListViewBase="{x:Bind foldersList}">
@@ -27,7 +31,7 @@
                         <Button
                             Margin="0,0,0,0"
                             Background="{x:Null}"
-                            Click="OnGoBack"
+                            Command="{Binding Path=GoBackCommand}"
                             Foreground="{ThemeResource TextBrush}"
                             Style="{StaticResource HyperlinkBtn}">
                             <StackPanel Orientation="Horizontal">
@@ -35,11 +39,33 @@
                                 <TextBlock x:Uid="goBackTB" Margin="10,0,0,0" Text="Go back" />
                             </StackPanel>
                         </Button>
+                        <Button
+                            Margin="10,0,0,0"
+                            Background="{x:Null}"
+                            Command="{Binding Path=GoHomeCommand}"
+                            Foreground="{ThemeResource TextBrush}"
+                            Style="{StaticResource HyperlinkBtn}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE80F;" />
+                                <TextBlock x:Uid="goHomeTB" Margin="10,0,0,0" Text="Go home" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            Margin="10,0,0,0"
+                            Background="{x:Null}"
+                            Command="{Binding Path=RefreshCommand}"
+                            Foreground="{ThemeResource TextBrush}"
+                            Style="{StaticResource HyperlinkBtn}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE72C;" />
+                                <TextBlock x:Uid="refreshTB" Margin="10,0,0,0" Text="Refresh" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </controls:ScrollHeader>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="local:DiskItem">
+                <DataTemplate x:DataType="Models:DiskItem">
                     <Grid x:Name="mainGrid"
                           Height="60" 
                           Padding="10"
@@ -98,5 +124,6 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+        <ProgressRing IsActive="{Binding Path=IsBusy}"/>
     </Grid>
 </Page>

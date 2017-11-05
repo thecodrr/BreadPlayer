@@ -17,7 +17,7 @@ namespace BreadPlayer.Database
         private static DBreezeEngine _db;
         public static bool IsDisposed { get; set; }
 
-        public static async Task<DBreezeEngine> GetDatabaseEngineAsync(string dbPath)
+        public static DBreezeEngine GetDatabaseEngineAsync(string dbPath)
         {
             if (_db == null || DbPath != dbPath)
             {
@@ -28,10 +28,7 @@ namespace BreadPlayer.Database
                     DBreezeDataFolderName = dbPath,
                     Storage = DBreezeConfiguration.eStorage.DISK
                 };
-                await Task.Run(() =>
-                {
-                    _db = new DBreezeEngine(dbConfig);
-                });
+                _db = new DBreezeEngine(dbConfig);
                 IsDisposed = false;
                 BLogger.I("Db engine initialized. Path: {path}", dbPath);
             }
@@ -57,12 +54,8 @@ namespace BreadPlayer.Database
 
         public KeyValueStoreDatabaseService(string dbPath, string tableName)
         {
-            Init(dbPath);  
+            _engine = this.Initialize(dbPath);
             ChangeContext(tableName);
-        } 
-        private async void Init(string dbPath)
-        {
-            _engine = await this.InitializeAsync(dbPath);
         }
         public void ChangeContext(string context)
         {

@@ -291,6 +291,7 @@
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="SettingsViews\ViewModels\AccountsViewModel.cs" />
     <Compile Include="ViewModels\AlbumArtistViewModel.cs" />
+    <Compile Include="ViewModels\FoldersViewModel.cs" />
     <Compile Include="ViewModels\LibraryViewModel.cs" />
     <Compile Include="ViewModels\MusicHistoryViewModel.cs" />
     <Compile Include="ViewModels\NowPlayingViewModel.cs" />

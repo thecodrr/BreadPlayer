@@ -12,7 +12,7 @@ namespace BreadPlayer.Database
     public static class DBreezeExtensions
     {
         static string _dbPath;
-        public static Task<DBreezeEngine> InitializeAsync(this KeyValueStoreDatabaseService service, string dbPath)
+        public static DBreezeEngine Initialize(this KeyValueStoreDatabaseService service, string dbPath)
         {
             _dbPath = dbPath;
             CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
@@ -25,7 +25,7 @@ namespace BreadPlayer.Database
             {
                 BLogger.I("Database is not operable or it was disposed. Reinitializing. Message: {message}", engine.DatabaseNotOperableReason);
                 _dbPath = dbPath;
-                engine = await StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
+                engine = StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
                 BLogger.I("Engine reintialized. Path: {path}", dbPath);
             }
         }
@@ -59,7 +59,7 @@ namespace BreadPlayer.Database
         private static DateTime FromUDT(long unixDateTime)
         {
             DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return start.AddMilliseconds(unixDateTime).ToLocalTime();
+            return start.AddTicks(unixDateTime).ToLocalTime();
         }
     }
 }

@@ -1,28 +1,37 @@
-﻿using Windows.Networking.Connectivity;
+﻿using System.Linq;
+using Windows.Networking.Connectivity;
 
 namespace BreadPlayer.Helpers
 {
     public class InternetConnectivityHelper
-    {
-        //public static event EventHandler InternetConnectivityChanged;
-        static bool isInternetConnected;
-        public static bool IsInternetConnected
-        {
-            get { return isInternetConnected; }
-            set { isInternetConnected = value; }
-        }
-
+    { 
+        public static string LocalIp { get; set; }
+        public static bool IsInternetConnected { get; set; }
+        public static bool IsConnectedToNetwork { get; set; }
         public InternetConnectivityHelper()
         {
-            ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+            RefreshConnection();
             NetworkInformation.NetworkStatusChanged += OnInternetStatusChanged;
-            IsInternetConnected = internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
         }
-
-        private static void OnInternetStatusChanged(object sender)
+        private static void RefreshConnection()
         {
             ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+            if (internetConnectionProfile?.NetworkAdapter != null)
+            {
+                var hostname =
+                  NetworkInformation.GetHostNames()
+                      .SingleOrDefault(
+                          hn =>
+                              hn.IPInformation?.NetworkAdapter != null && hn.IPInformation.NetworkAdapter.NetworkAdapterId
+                              == internetConnectionProfile.NetworkAdapter.NetworkAdapterId);
+                LocalIp = hostname?.CanonicalName;
+            }
             IsInternetConnected = internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
+            IsConnectedToNetwork = internetConnectionProfile != null;
+        }
+        private static void OnInternetStatusChanged(object sender)
+        {
+            RefreshConnection();
         }
     }
 }
