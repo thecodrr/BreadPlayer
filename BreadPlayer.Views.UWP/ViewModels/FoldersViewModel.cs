@@ -5,6 +5,7 @@ using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Messengers;
+using Microsoft.Toolkit.Uwp.Services.OneDrive;
 using SharpCifs.Smb;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Controls;
+using static Microsoft.Toolkit.Uwp.Services.OneDrive.OneDriveEnums;
 
 namespace BreadPlayer.ViewModels
 {
@@ -49,7 +51,7 @@ namespace BreadPlayer.ViewModels
             RefreshCommand = new DelegateCommand(Refresh);
 
             NavigationStack = new Stack<DiskItem>();
-            GoHome();
+            GoHome();           
         }
         private void Clear()
         {
@@ -85,6 +87,12 @@ namespace BreadPlayer.ViewModels
                     Title = "Browse my network",
                     Icon = "\uEC27",
                     Path = "Network",
+                },
+                new DiskItem
+                {
+                    Title = "Browse my OneDrive",
+                    Icon = "\uE753",
+                    Path = "OneDrive",
                 },
                 new DiskItem
                 {
@@ -133,16 +141,19 @@ namespace BreadPlayer.ViewModels
             {
                 case "Music Library":
                     await GetLibraryItemsAsync();
-                    return;
+                    break;
                 case "Other":
                     await BrowseForFolder(item);
-                    return;
+                    break;
                 case "Network":
                     await BrowseNetworkAsync(item);
-                    return;
+                    break;
+                case "OneDrive":
+                    await BrowseOneDriveAsync(item);
+                    break;
                 case "Devices":
                     await GetDevicesAsync();
-                    return;
+                    break;
                 default:
                     await OpenFolderAsync(item);
                     break;
@@ -154,23 +165,44 @@ namespace BreadPlayer.ViewModels
             {
                 StorageItems.FirstOrDefault(t => t.IsPlaying).IsPlaying = false;
             }
-            if (!item.IsNetworkItem)
+            if (item.DiskItemLocation == DiskItemLocationType.Local)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, string.IsNullOrEmpty(item.Path) ? item.Cache : item.Path);
             }
-            else
+            else if(item.DiskItemLocation == DiskItemLocationType.OneDrive)
+            {
+                var oneDriveFile = (OneDriveStorageFile)item.Cache;
+                var array = oneDriveFile.OneDriveItem.WebUrl;
+                var requestMessage = OneDriveService.Instance.Provider.Drive.Items[oneDriveFile.OneDriveItem.Id].Content.Request().GetHttpRequestMessage();
+                await OneDriveService.Instance.Provider.AuthenticationProvider.AuthenticateRequestAsync(requestMessage).AsAsyncAction().AsTask();
+                string headerStr = "\r\n";
+                foreach (var header in requestMessage.Headers)
+                {
+                    headerStr += header.Key + ": " + header.Value.First() + "\r\n";
+                }
+                string url = requestMessage.RequestUri.AbsoluteUri.Replace("https","http") + headerStr;
+                var mp3File = new Mediafile
+                {
+                    Path = url,
+                    Title = oneDriveFile.DisplayName,
+                    MediaLocation = MediaLocationType.Internet,
+                    Size = oneDriveFile.OneDriveItem.Size.ToString()
+                };
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mp3File, true, false });
+            }
+            else if (item.DiskItemLocation == DiskItemLocationType.Network)
             {
                 var networkFile = (SmbFile)item.Cache;
                 if (networkFile.Exists() && networkFile.CanRead())
                 {
-                    var bufferedStream = await ((Stream)(await networkFile.GetInputStreamAsync().ConfigureAwait(false))).ToByteArray();
-                    if (bufferedStream.buffer != null)
+                    var buffer = await ((Stream)(await networkFile.GetInputStreamAsync().ConfigureAwait(false))).ToByteArray();
+                    if (buffer != null)
                     {
                         var mp3File = new Mediafile
                         {
                             Title = item.Title,
-                            ByteArray = bufferedStream.buffer,
-                            FileLength = bufferedStream.length,
+                            ByteArray = buffer,
+                            MediaLocation = MediaLocationType.Network,
                         };
                         Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mp3File, true, false });                       
                     }
@@ -181,7 +213,20 @@ namespace BreadPlayer.ViewModels
         private async Task OpenFolderAsync(DiskItem item)
         {
             Clear();
-            var items = item.IsNetworkItem ? await BrowseNetworkFolderAsync((SmbFile)item.Cache) : await GetStorageItemsInFolderAsync((StorageFolder)item.Cache);
+            IEnumerable<DiskItem> items = null;
+            switch (item.DiskItemLocation)
+            {
+                case DiskItemLocationType.Network:
+                    items = await BrowseNetworkFolderAsync((SmbFile)item.Cache);
+                    break;
+                case DiskItemLocationType.OneDrive:
+                    items = await GetOneDriveFolderItemsAsync((OneDriveStorageFolder)item.Cache);
+                    break;
+                default:
+                case DiskItemLocationType.Local:
+                    items = await GetStorageItemsInFolderAsync((StorageFolder)item.Cache);
+                    break;
+            }
             if (items != null)
             {
                 StorageItems.AddRange(items);
@@ -256,6 +301,7 @@ namespace BreadPlayer.ViewModels
                             Icon = "\uE8B7",
                             Path = folderInformation.Path,
                             Cache = item,
+                            DiskItemLocation = DiskItemLocationType.Local,
                         });
                     }
                     else if (item is StorageFile fileInformation)
@@ -269,7 +315,8 @@ namespace BreadPlayer.ViewModels
                             Artist = musicProperties?.Artist.GetStringForNullOrEmptyProperty("Unknown Artist"),
                             Album = musicProperties?.Album.GetStringForNullOrEmptyProperty("Unkonwn Album"),
                             IsFile = true,
-                            Cache = item
+                            Cache = item,
+                            DiskItemLocation = DiskItemLocationType.Local,
                         });
                     }
                 }));
@@ -299,6 +346,10 @@ namespace BreadPlayer.ViewModels
                 if (result == ContentDialogResult.Primary)
                 {
                     items = await GetItemsOnNetworkPCAsync(accessDialog.Hostname, accessDialog.Username, accessDialog.Password);
+                }
+                else
+                {
+                    currentDiskItem = null;
                 }
             }
             if (items != null)
@@ -344,7 +395,7 @@ namespace BreadPlayer.ViewModels
                             Path = item.GetPath(),
                             Title = item.GetName(),
                             Cache = item,
-                            IsNetworkItem = true,
+                            DiskItemLocation = DiskItemLocationType.Network
                         });
                     }
                     else if (item.IsFile())
@@ -355,7 +406,7 @@ namespace BreadPlayer.ViewModels
                             Title = item.GetName(),
                             Cache = item,
                             IsFile = true,
-                            IsNetworkItem = true,
+                            DiskItemLocation = DiskItemLocationType.Network
                         });
                     }
                 }
@@ -378,6 +429,57 @@ namespace BreadPlayer.ViewModels
                 return null;
             return await BrowseNetworkFolderAsync(lanStorage);
         }
-        
+       
+        private async Task BrowseOneDriveAsync(DiskItem item)
+        {
+            Clear();
+            if (item.Cache == null)
+            {
+                OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite);
+                if (!await OneDriveService.Instance.LoginAsync())
+                {
+                    throw new Exception("Unable to sign in");
+                }
+                var folder = await OneDriveService.Instance.RootFolderAsync();
+                StorageItems.AddRange(await GetOneDriveFolderItemsAsync(folder));
+            }
+            else
+            {
+                StorageItems.AddRange(await GetOneDriveFolderItemsAsync((OneDriveStorageFolder)item.Cache));
+            }
+        }
+        private async Task<IEnumerable<DiskItem>> GetOneDriveFolderItemsAsync(OneDriveStorageFolder folder)
+        {
+            List<DiskItem> oneDriveStorageItems = new List<DiskItem>();
+            foreach (var item in await folder.GetItemsAsync(folder.OneDriveItem.Folder.ChildCount ?? short.MaxValue))
+            {
+                if (!item.IsOneNote())
+                {
+                    if (item.IsFolder())
+                    {
+                        oneDriveStorageItems.Add(new DiskItem
+                        {
+                            Path = item.Path,
+                            Title = item.DisplayName,
+                            Cache = item,
+                            DiskItemLocation = DiskItemLocationType.OneDrive
+                        });
+                    }
+                    else if (item.IsFile())
+                    {
+                        oneDriveStorageItems.Add(new DiskItem
+                        {
+                            Path = item.Path,
+                            Title = item.DisplayName,
+                            Cache = item,
+                            IsFile = true,
+                            DiskItemLocation = DiskItemLocationType.OneDrive
+                        });
+                    }
+                }
+            }
+            return oneDriveStorageItems.OrderBy(t => t.IsFile);
+        }
+
     }
 }

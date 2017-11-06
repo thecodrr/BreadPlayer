@@ -156,7 +156,7 @@ namespace BreadPlayer
         }
         private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging())
+            if (positionSlider.GetBoundingRect().Contains(args.CurrentPoint.Position) && !positionSlider.IsDragging() && SharedLogic.Instance.Player.IsSeekable)
             {
                 _isPressed = true;
                 _shellVm.DontUpdatePosition = true;
@@ -165,7 +165,7 @@ namespace BreadPlayer
 
         private void CoreWindow_PointerReleased(CoreWindow sender, PointerEventArgs args)
         {
-            if (_isPressed && !positionSlider.IsDragging())
+            if (_isPressed && !positionSlider.IsDragging() && SharedLogic.Instance.Player.IsSeekable)
             {
                 positionSlider.UpdatePosition(_shellVm, true);
                 _isPressed = false;
@@ -219,7 +219,5 @@ namespace BreadPlayer
                 }
             });
         }
-
-       
     }
 }

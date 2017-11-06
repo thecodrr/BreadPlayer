@@ -22,8 +22,11 @@ using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
 using ManagedBass;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.Core.Engines.BASSEngine
@@ -137,97 +140,181 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             if (deviceName != null)
                 await InitializeCore.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
-        /// <summary>
-        /// Loads the specified file into the player.
-        /// </summary>
-        /// <param name="fileName">Path to the music file.</param>
-        /// <returns>Boolean</returns>
-        public async Task<bool> Load(Mediafile mediaFile)
+        public async Task<bool> LoadURLAsync(Mediafile mediafile, string uri)
         {
-            if ((mediaFile != null && mediaFile.Length != "00:00") || mediaFile.ByteArray != null)
+            if (string.IsNullOrEmpty(uri))
+                return false;
+            return await LoadMusicAsync(() => 
             {
-                try
+                int metaSize = 1024 * 200; //1MB
+                MemoryStream metadataStream = new MemoryStream();
+                BinaryWriter bw = new BinaryWriter(metadataStream);
+                bool done = false;
+                CurrentlyPlayingFile = mediafile;
+                _handle = Bass.CreateStream(uri, 0, BassFlags.Default | BassFlags.Float | BassFlags.AutoFree, new DownloadProcedure((buffer, length, user) =>
                 {
-                    await InitializeCore.Dispatcher.RunAsync(() =>
+                    if (done)
                     {
-                        MediaChanging?.Invoke(this, new EventArgs());
-                    });
-                    await Stop();
-                    await Task.Run(() =>
+                        return; //we are done here.
+                    }
+                    if (metadataStream.Length <= metaSize)
+                    {
+                        unsafe
                         {
-                            if (mediaFile.ByteArray == null)
-                                _handle = Bass.CreateStream(mediaFile.Path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
-                            else
+                            // simply cast the given IntPtr to a native pointer to short values
+                            // assuming you receive 16-bit sample data here
+                            short* data = (short*)buffer;
+                            for (int a = 0; a < length / 2; a++)
                             {
-                                var buffer = mediaFile.ByteArray;
-                                _handle = Bass.CreateStream(buffer, 0, mediaFile.FileLength, BassFlags.Float);
-                                if(mediaFile.LeadArtist == null)
-                                    WriteTagsToMediafile(mediaFile);
+                                // write the received sample data to a local file
+                                bw.Write(data[a]);
                             }
-                            PlayerState = PlayerState.Stopped;
-                            Length = 0;
-                            Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
-                            Bass.FloatingPointDSP = true;
-                            Bass.ChannelSetDevice(_handle, 1);
-                            Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
-                            Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
-                            Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
-
-                            CurrentlyPlayingFile = mediaFile;
-                        });
-                    if (InitializeCore.IsMobile)
-                        await ChangeDevice();
-                    if (Equalizer == null)
-                    {
-                        Equalizer = new BassEqualizer(_handle);
+                        }
                     }
                     else
                     {
-                        (Equalizer as BassEqualizer).ReInit(_handle);
-                    }
-                    MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                    MediaChanged?.Invoke(this, new EventArgs());
+                        //there are HTTP Headers in the start of the recieved stream.
+                        //we need to skip those so that we can parse ID3 tags.                        
+                        //HTTP HEADER Removal START
+                        var array = metadataStream.ToArray();
+                        string str = Encoding.UTF8.GetString(array);
+                        int l = str.IndexOf("ID3");
+                        string headers = str.Substring(0, l);
+                        byte[] id3TagArray = new byte[array.Length - l];
+                        Buffer.BlockCopy(array, l, id3TagArray, 0, id3TagArray.Length);
+                        //HTTP HEADER Removal END
 
-                    return true;
-                }
-                catch (Exception ex)
+                        var h = StringToHttpHeaders(headers);
+                        WriteTagsToMediafile(mediafile, id3TagArray);
+                        CurrentlyPlayingFile = mediafile;
+
+                        done = true;
+                        metadataStream.Dispose();
+                        bw.Dispose();
+                    }
+                }));
+            });
+        }
+        private Dictionary<string, string> StringToHttpHeaders(string headerString)
+        {
+            var headers = headerString.Split(new string[] { ": ", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            Dictionary<string, string> Headers = new Dictionary<string, string>();
+            for (int i = 1; i < headers.Length; i++)
+            {
+                var key = headers[i];
+                i++;
+                if (i < headers.Length)
                 {
-                    await InitializeCore.NotificationManager.ShowMessageAsync(ex.Message + "||" + mediaFile.OrginalFilename);
+                    var value = headers[i];
+                    Headers.Add(key, value);
                 }
+            }
+            return Headers;
+        }
+        public async Task<bool> LoadStreamAsync(Mediafile mediafile, byte[] array)
+        {
+            if (array?.Length <= 0)
+                return false;
+            return await LoadMusicAsync(() =>
+            {
+                _handle = Bass.CreateStream(array, 0, array.Length, BassFlags.Float);
+                if (mediafile.MediaLocation != MediaLocationType.Local)
+                {
+                    WriteTagsToMediafile(mediafile, array);
+                    CurrentlyPlayingFile = mediafile;
+                }
+            });
+        }
+        public async Task<bool> LoadLocalFileAsync(Mediafile mediaFile)
+        {
+            if ((mediaFile != null && mediaFile.Length != "00:00"))
+            {
+                return await LoadMusicAsync(() =>
+                {
+                    _handle = Bass.CreateStream(mediaFile.Path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
+                    CurrentlyPlayingFile = mediaFile;
+                });
             }
             else
             {
                 string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-                if (IgnoreErrors)
+                await InitializeCore.NotificationManager.ShowMessageAsync(error);                
+                return false;
+            }
+        }
+        /// <summary>
+        /// Loads the specified file into the player.
+        /// </summary>
+        /// <returns>Boolean</returns>
+        private async Task<bool> LoadMusicAsync(Action LoadMusicAction)
+        {
+            try
+            {
+                await InitializeCore.Dispatcher.RunAsync(() =>
                 {
-                    await InitializeCore.NotificationManager.ShowMessageAsync(error);
+                    MediaChanging?.Invoke(this, new EventArgs());
+                });
+                await Stop();
+                await Task.Run(() =>
+                    {
+                        PlayerState = PlayerState.Stopped;
+
+                        LoadMusicAction(); //loads the respective stream
+                        if(Length <= 1)
+                            Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
+                        IsSeekable = Bass.ChannelGetLength(_handle) != -1;
+                        Bass.FloatingPointDSP = true;
+                        Bass.ChannelSetDevice(_handle, 1);
+                        Bass.ChannelSetSync(_handle, SyncFlags.End | SyncFlags.Mixtime, 0, _sync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 5), _posSync);
+                        Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
+
+                    });
+                if (InitializeCore.IsMobile)
+                    await ChangeDevice();
+                if (Equalizer == null)
+                {
+                    Equalizer = new BassEqualizer(_handle);
                 }
                 else
                 {
-                    await InitializeCore.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
+                    (Equalizer as BassEqualizer).ReInit(_handle);
                 }
-            }
-            return false;
-        }
+                MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                MediaChanged?.Invoke(this, new EventArgs());
 
-        private void WriteTagsToMediafile(Mediafile mediaFile)
+                return true;
+            }
+            catch (Exception ex)
+            {
+                BLogger.E("An error occured while loading music. Action {action}", ex, LoadMusicAction.ToString());
+                await InitializeCore.NotificationManager.ShowMessageAsync(ex.Message);
+                return false;
+            }
+        }
+        private void WriteTagsToMediafile(Mediafile mediaFile, byte[] array)
         {
-            using (MemoryStream stream = new MemoryStream(mediaFile.ByteArray))
+            using (var stream = new MemoryStream(array))
             {
                 try
                 {
                     var file = TagLib.File.Create(new TagLib.StreamFileAbstraction(mediaFile.Title, stream, stream));
+                    mediaFile.OrginalFilename = mediaFile.Title;
                     mediaFile.Title = file.Tag.Title ?? mediaFile.Title;
                     mediaFile.LeadArtist = file.Tag.FirstPerformer ?? "Unknown Artist";
                     mediaFile.Album = file.Tag.Album ?? "Unknown Album";
                     mediaFile.TrackNumber = Convert.ToInt32(file.Tag.Track);
                     mediaFile.Year = file.Tag.Year.ToString();
-                    mediaFile.OrginalFilename = "Playing from Network.";
                     mediaFile.Path = "Playing from Network.";
                     mediaFile.Genre = file.Tag.FirstGenre;
                     if (file.Tag.Pictures.Length > 0)
                         mediaFile.AttachedPictureBytes = file.Tag.Pictures[0].Data.Data;
-                    mediaFile.ByteArray = null;
+                    if (Length <= 1)
+                    {
+                        int intKiloBitFileSize = (int)((8 * Convert.ToInt64(mediaFile.Size)) / 1000);
+                        Length = intKiloBitFileSize / file.Properties.AudioBitrate;
+                    }
+                    mediaFile.Length = TimeSpan.FromSeconds(Length).ToString(@"mm\:ss");
                 }
                 catch { }
             }
@@ -370,15 +457,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             get => _currentPlayingFile;
             set => Set(ref _currentPlayingFile, value);
-        }
-
-        private bool _ignoreErrors;
-
-        public bool IgnoreErrors
-        {
-            get => _ignoreErrors;
-            set => Set(ref _ignoreErrors, value);
-        }
+        }        
 
         private Equalizer _fmodEqualizer;
 
@@ -399,7 +478,12 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 //SetLoop();
             }
         }
-
+        bool _isSeekable;
+        public bool IsSeekable
+        {
+            get => _isSeekable;
+            set => Set(ref _isSeekable, value);
+        }
         public double DeviceBufferSize { get; set; }
 
         #endregion Properties

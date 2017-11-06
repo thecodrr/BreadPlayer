@@ -195,13 +195,13 @@ namespace BreadPlayer.ViewModels
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 var mediaFile = await TagReaderHelper.CreateMediafile(file);
+                mediaFile.MediaLocation = MediaLocationType.Local;
                 using (var stream = await file.OpenStreamForReadAsync())
                 {
                     using (MemoryStream memStream = new MemoryStream())
                     {
                         await stream.CopyToAsync(memStream);
                         mediaFile.ByteArray = memStream.ToArray();
-                        mediaFile.FileLength = stream.Length;
                         await Load(mediaFile, true);
                     }
                 }
@@ -1091,26 +1091,29 @@ namespace BreadPlayer.ViewModels
             UpcomingSong = await GetUpcomingSong(true);
             PreviousSong = GetPreviousSong();            
         }
-
+        private Task<bool> DynamicLoadMusicAsync(Mediafile mediafile)
+        {
+            switch (mediafile.MediaLocation)
+            {
+                case MediaLocationType.Network:
+                    return SharedLogic.Instance.Player.LoadStreamAsync(mediafile, mediafile.ByteArray);
+                case MediaLocationType.Internet:
+                    return SharedLogic.Instance.Player.LoadURLAsync(mediafile, mediafile.Path);
+                default:
+                case MediaLocationType.Local:
+                    return SharedLogic.Instance.Player.LoadLocalFileAsync(mediafile);
+            }
+        }
         public async Task Load(Mediafile mp3File, bool play = false, double currentPos = 0, double vol = 50)
         {
-            ClearPlayerState();
-
             if (mp3File == null) return;
+            if (IsSongToStopAfter()) return;
 
-            if (IsSongToStopAfter())
-            {
-                return;
-            }
-
-            if (play)
-            {
-                SharedLogic.Instance.Player.IgnoreErrors = true;
-            }
+            ClearPlayerState();
 
             mp3File.State = PlayerState.Playing;
             SharedLogic.Instance.Player.Volume = SharedLogic.Instance.Player.Volume == 50 ? vol : SharedLogic.Instance.Player.Volume;
-            if (await SharedLogic.Instance.Player.Load(mp3File))
+            if (await DynamicLoadMusicAsync(mp3File))
             {
                 PlayPauseCommand.IsEnabled = true;
                 if (play)
@@ -1135,7 +1138,6 @@ namespace BreadPlayer.ViewModels
                 var playingCollection = GetPlayingCollection();
                 int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
                 UpdateCurrentlyPlayingSongIndex();
-                SharedLogic.Instance.Player.IgnoreErrors = false;
                 await Load(await GetUpcomingSong(true), true);
             }
 

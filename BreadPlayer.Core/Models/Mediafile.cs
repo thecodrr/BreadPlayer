@@ -94,16 +94,28 @@ namespace BreadPlayer.Core.Models
         public string AttachedPicture { get => _attachedPicture; set => Set(ref _attachedPicture, value); }
 
         public string FolderPath { get => _folderPath; set => _folderPath = string.IsNullOrEmpty(value) ? _folderPath = "" : value; }
-        public string Album { get => _album; set => _album = string.IsNullOrEmpty(value) ? _album = "Unknown Album" : value; }
+        public string Album
+        {
+            get => _album;
+            set => Set(ref _album, value);
+        }
         public string Genre { get => _genre; set => _genre = string.IsNullOrEmpty(value) ? _genre = "Other" : value; }
-        public string Title { get => _title; set => _title = string.IsNullOrEmpty(value) ? _title = System.IO.Path.GetFileNameWithoutExtension(_path) : value; }
+        public string Title
+        {
+            get => _title;
+            set => Set(ref _title, value);
+        }
         public int TrackNumber
         {
             get => _trackNumber;
             set => _trackNumber = value;
         }
         public string Year { get => _year; set => _year = value == "0" || string.IsNullOrEmpty(value) ? "" : value; }
-        public string LeadArtist { get => _leadArtist; set => _leadArtist = string.IsNullOrEmpty(value) ? _leadArtist = _naN : value; }
+        public string LeadArtist
+        {
+            get => _leadArtist;
+            set => Set(ref _leadArtist, value);
+        }
         public string OrginalFilename { get => _orginalFilename; set => _orginalFilename = string.IsNullOrEmpty(value) ? _orginalFilename = _naN : value; }
         public string Length { get => _length; set => _length = string.IsNullOrEmpty(value) ? _length = _naN : value; }
         public string SynchronizedLyric
@@ -111,6 +123,7 @@ namespace BreadPlayer.Core.Models
             get => _synchronizedLyric;
             set => _synchronizedLyric = value;
         }
+        public MediaLocationType MediaLocation { get; set; }
         #region JsonIgnore Properties
         [BsonIgnore]
         [JsonIgnore]
@@ -125,9 +138,6 @@ namespace BreadPlayer.Core.Models
         [BsonIgnore]
         [JsonIgnore]
         public byte[] ByteArray { get; set; }
-        [BsonIgnore]
-        [JsonIgnore]
-        public long FileLength { get; set; }
         [BsonIgnore]
         [JsonIgnore]
         public string Comment { get => _comment; set => _comment = string.IsNullOrEmpty(value) ? _comment = _naN : value; }

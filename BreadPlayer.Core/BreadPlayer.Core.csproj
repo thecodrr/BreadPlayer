@@ -126,10 +126,12 @@
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\DiskItem.cs" />
+    <Compile Include="Models\DiskItemLocationType.cs" />
     <Compile Include="Models\EqualizerBand.cs" />
     <Compile Include="Models\GroupKeys.cs" />
     <Compile Include="Models\IGroupKey.cs" />
     <Compile Include="Models\Mediafile.cs" />
+    <Compile Include="Models\MediaLocationType.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\ChildSong.cs" />
     <Compile Include="Models\Query.cs" />
@@ -146,6 +148,10 @@
     <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
       <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
       <Name>BreadPlayer.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
+      <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
+      <Name>BreadPlayer.Parsers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

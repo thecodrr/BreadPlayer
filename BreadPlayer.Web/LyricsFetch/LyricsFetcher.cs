@@ -21,7 +21,7 @@ namespace BreadPlayer.Web.LyricsFetch
             mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
             if (mediaFile.Title == null)
                 return null;
-            var cleanedArtist = TagParser.ParseTitle(file.LeadArtist.ToString());
+            var cleanedArtist = TagParser.ParseTitle(file.LeadArtist?.ToString());
             List<string> parsedArtists = TagParser.ParseArtists(cleanedArtist);
             if (string.IsNullOrEmpty(cleanedArtist))
             {

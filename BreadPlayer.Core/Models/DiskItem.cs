@@ -16,7 +16,7 @@ namespace BreadPlayer.Core.Models
         public string Path { get; set; }
         public object Cache { get; set; }
         public bool IsFile { get; set; }
-        public bool IsNetworkItem { get; set; }
+        public DiskItemLocationType DiskItemLocation { get; set; }
         bool isPlaying;
         public bool IsPlaying
         {

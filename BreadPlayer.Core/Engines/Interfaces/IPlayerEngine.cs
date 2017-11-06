@@ -10,9 +10,9 @@ namespace BreadPlayer.Core.Engines.Interfaces
     {
         //METHODS
         Task Init(bool isMobile);
-
-        Task<bool> Load(Mediafile mediaFile);
-
+        Task<bool> LoadLocalFileAsync(Mediafile mediaFile);
+        Task<bool> LoadURLAsync(Mediafile mediafile, string uri);
+        Task<bool> LoadStreamAsync(Mediafile mediafile, byte[] array);
         Task Pause();
 
         Task Stop();
@@ -28,10 +28,10 @@ namespace BreadPlayer.Core.Engines.Interfaces
         double Volume { get; set; }
         double Position { get; set; }
         double Length { get; set; }
+        bool IsSeekable { get; set; }
         bool IsLoopingEnabled { get; set; }
         PlayerState PlayerState { get; set; }
         Mediafile CurrentlyPlayingFile { get; set; }
-        bool IgnoreErrors { get; set; }
 
         //EVENTS
         event OnMediaStateChanged MediaStateChanged;

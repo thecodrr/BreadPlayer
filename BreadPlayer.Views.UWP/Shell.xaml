@@ -500,6 +500,7 @@
                     Background="#FFDBDBDB"
                     BorderBrush="#FFDBDBDB"
                     BorderThickness="0"
+                    IsEnabled="{Binding Source={StaticResource Core}, Path=Instance.Player.IsSeekable, UpdateSourceTrigger=Explicit}"
                     Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
                     Maximum="{Binding Source={StaticResource Core}, Path=Instance.Player.Length, FallbackValue=100}"
                     Style="{StaticResource CircleSlider}"

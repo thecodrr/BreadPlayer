@@ -8,14 +8,14 @@ namespace BreadPlayer.Extensions
 {
     public static class StreamExtensions
     {
-        public static async Task<(byte[] buffer, long length)> ToByteArray(this Stream stream)
+        public static async Task<byte[]> ToByteArray(this Stream stream)
         {
             using (stream)
             {
                 using (MemoryStream byteStream = new MemoryStream())
                 {
                     await stream.CopyToAsync(byteStream);
-                    return (byteStream.ToArray(), byteStream.Length);
+                    return byteStream.ToArray();
                 }
             }
         }
