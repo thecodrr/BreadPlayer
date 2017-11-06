@@ -160,6 +160,7 @@ namespace BreadPlayer.ViewModels
                     break;
             }
         }
+        ThreadSafeObservableCollection<DiskItem> _nowPlayingItems;
         private async Task OpenFileAsync(DiskItem item)
         {
             if (StorageItems.Any(t => t.IsPlaying))
@@ -169,26 +170,28 @@ namespace BreadPlayer.ViewModels
             if (item.DiskItemLocation == DiskItemLocationType.Local)
             {
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, string.IsNullOrEmpty(item.Path) ? item.Cache : item.Path);
+                if (_nowPlayingItems != storageItems)
+                {
+                    _nowPlayingItems = StorageItems;
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new object[] { _nowPlayingItems, MediaLocationType.Local });
+                }
             }
-            else if(item.DiskItemLocation == DiskItemLocationType.OneDrive)
+            else if (item.DiskItemLocation == DiskItemLocationType.OneDrive)
             {
                 var oneDriveFile = (OneDriveStorageFile)item.Cache;
-                var requestMessage = OneDriveService.Instance.Provider.Drive.Items[oneDriveFile.OneDriveItem.Id].Content.Request().GetHttpRequestMessage();
-                await OneDriveService.Instance.Provider.AuthenticationProvider.AuthenticateRequestAsync(requestMessage).AsAsyncAction().AsTask();
-                string headerStr = "\r\n";
-                foreach (var header in requestMessage.Headers)
-                {
-                    headerStr += header.Key + ": " + header.Value.First() + "\r\n";
-                }
-                string url = requestMessage.RequestUri.AbsoluteUri.Replace("https","http") + headerStr;
                 var mp3File = new Mediafile
                 {
-                    Path = url,
+                    Path = item.Path,
                     Title = oneDriveFile.DisplayName,
                     MediaLocation = MediaLocationType.Internet,
-                    Size = oneDriveFile.OneDriveItem.Size.ToString()
+                    Size = item.Size
                 };
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mp3File, true, false });
+                if (_nowPlayingItems != storageItems)
+                {
+                    _nowPlayingItems = StorageItems;
+                    Messenger.Instance.NotifyColleagues(MessageTypes.MsgLibraryLoaded, new object[] { _nowPlayingItems, MediaLocationType.Internet });
+                }
             }
             else if (item.DiskItemLocation == DiskItemLocationType.Network)
             {
@@ -204,7 +207,7 @@ namespace BreadPlayer.ViewModels
                             ByteArray = buffer,
                             MediaLocation = MediaLocationType.Network,
                         };
-                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mp3File, true, false });                       
+                        Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaySong, new List<object> { mp3File, true, false });
                     }
                 }
             }
@@ -244,6 +247,7 @@ namespace BreadPlayer.ViewModels
                     Icon = "\uE8B7",
                     Path = item.Path,
                     Cache = item,
+                    DiskItemLocation = DiskItemLocationType.Local,
                 });
             }
         }
@@ -439,9 +443,8 @@ namespace BreadPlayer.ViewModels
                 Clear();
                 if (item.Cache == null)
                 {
-                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadOnly | OneDriveScopes.WlSignin))
+                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite))
                     {
-
                         if (!await OneDriveService.Instance.LoginAsync())
                         {
                             throw new Exception("Unable to sign in");
@@ -481,10 +484,11 @@ namespace BreadPlayer.ViewModels
                     {
                         oneDriveStorageItems.Add(new DiskItem
                         {
-                            Path = item.Path,
+                            Path = await ((OneDriveStorageFile)item).GetDownloadURL(),
                             Title = item.DisplayName,
                             Cache = item,
                             IsFile = true,
+                            Size = item.OneDriveItem.Size.Value.ToString(),
                             DiskItemLocation = DiskItemLocationType.OneDrive
                         });
                     }

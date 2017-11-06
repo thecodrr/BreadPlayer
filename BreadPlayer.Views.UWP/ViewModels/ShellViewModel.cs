@@ -52,6 +52,7 @@ using Microsoft.Services.Store.Engagement;
 using Windows.Phone.UI.Input;
 using System.IO;
 using BreadPlayer.Controls;
+using Microsoft.Toolkit.Uwp.Services.OneDrive;
 
 namespace BreadPlayer.ViewModels
 {
@@ -131,13 +132,39 @@ namespace BreadPlayer.ViewModels
                 PlayPauseCommand.IsEnabled = true;
             }
         }
-
-        private void HandleLibraryLoadedMessage(Message message)
+        private Task<IEnumerable<Mediafile>> ToMediafileCollection(IEnumerable<DiskItem> folderFiles, MediaLocationType mediaLocationType)
         {
+            return Task.Run<IEnumerable<Mediafile>>(async () =>
+            {
+                List<Mediafile> mediaFiles = new List<Mediafile>();
+                foreach (var file in folderFiles)
+                {
+                    if (file.IsFile)
+                    {
+                        mediaFiles.Add(new Mediafile
+                        {
+                            Title = file.Title,
+                            LeadArtist = file.Artist,
+                            Path = file.Path,
+                            MediaLocation = mediaLocationType,
+                            Album = file.Album,
+                            Size = file.Size
+                        });
+                    }
+                }
+                return mediaFiles;
+            });
+        }
+        private async void HandleLibraryLoadedMessage(Message message)
+        {
+            message.HandledStatus = MessageHandledStatus.HandledCompleted;
             if (message.Payload is ThreadSafeObservableCollection<Mediafile> tMediaFile)
             {
-                message.HandledStatus = MessageHandledStatus.HandledCompleted;
                 PlaylistSongCollection = tMediaFile;
+            }
+            else if (message.Payload is object[] array)
+            {
+                NowPlayingQueue = new ThreadSafeObservableCollection<Mediafile>(await ToMediafileCollection((IEnumerable<DiskItem>)array[0], (MediaLocationType)array[1]).ConfigureAwait(false));
             }
             else
             {
@@ -194,20 +221,16 @@ namespace BreadPlayer.ViewModels
             else if (message.Payload is StorageFile file)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                var mediaFile = await TagReaderHelper.CreateMediafile(file);
-                mediaFile.MediaLocation = MediaLocationType.Local;
-                using (var stream = await file.OpenStreamForReadAsync())
-                {
-                    using (MemoryStream memStream = new MemoryStream())
-                    {
-                        await stream.CopyToAsync(memStream);
-                        mediaFile.ByteArray = memStream.ToArray();
-                        await Load(mediaFile, true);
-                    }
-                }
+                await Load(await FromNetworkStorageFile(file).ConfigureAwait(false), true);
             }
         }
-
+        private async Task<Mediafile> FromNetworkStorageFile(StorageFile file)
+        {
+            var mediaFile = await TagReaderHelper.CreateMediafile(file);
+            mediaFile.MediaLocation = MediaLocationType.Local;
+            mediaFile.ByteArray = await(await file.OpenStreamForReadAsync()).ToByteArray();
+            return mediaFile;
+        }
         private async void HandleExecuteCmdMessage(Message message)
         {
             if (message.Payload == null) return;

@@ -90,11 +90,7 @@ namespace BreadPlayer
             {
                 dynamic payload = message.Payload;
                 if (NowPlayingFrame.CurrentSourcePageType != payload.pageType)
-                {
-                    if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-                    {
-                        Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
-                    }
+                {                    
                     if (!InitializeCore.IsMobile)
                     {
                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -103,6 +99,10 @@ namespace BreadPlayer
                         });
                     }
                     NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+                }
+                if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
                 }
                 _shellVm.IsPlaybarHidden = true;
             }

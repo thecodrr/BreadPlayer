@@ -193,6 +193,7 @@
     <Compile Include="Dialogs\NetworkAccessDialog.xaml.cs">
       <DependentUpon>NetworkAccessDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\OneDriveExtensions.cs" />
     <Compile Include="HamburgerMenu\INavigationMenuItem.cs" />
     <Compile Include="HamburgerMenu\NavMenuListView.cs" />
     <Compile Include="HamburgerMenu\Shortcut.cs" />

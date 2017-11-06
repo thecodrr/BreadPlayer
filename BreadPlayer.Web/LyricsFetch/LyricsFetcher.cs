@@ -18,7 +18,7 @@ namespace BreadPlayer.Web.LyricsFetch
         public static async Task<string> FetchLyrics(Mediafile file, string lyricSource)
         {
             var mediaFile = new Mediafile();
-            mediaFile.Title = TagParser.ParseTitle(file.Title.ToString());
+            mediaFile.Title = TagParser.ParseTitle(file.Title?.ToString());
             if (mediaFile.Title == null)
                 return null;
             var cleanedArtist = TagParser.ParseTitle(file.LeadArtist?.ToString());

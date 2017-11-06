@@ -53,6 +53,7 @@ namespace BreadPlayer
         public App()
         {
             InitializeComponent();
+            InitializeTheme();
             InitializeEverything();
         }
         private async void InitializeEverything()
@@ -60,7 +61,6 @@ namespace BreadPlayer
             var logPath = System.IO.Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
             BLogger.InitLogger(logPath, new SentryAPI.SentryMessageSender());
             CoreApplication.EnablePrelaunch(true);
-            InitializeTheme();
             Suspending += OnSuspending;
             EnteredBackground += App_EnteredBackground;
             LeavingBackground += App_LeavingBackground;
@@ -87,10 +87,9 @@ namespace BreadPlayer
                 BLogger.I("Setting theme: {theme}.", value);
 
                 var theme = Enum.Parse(typeof(ApplicationTheme), value);
-                BLogger.I("Theme enum parsed: {theme}.", theme);
 
                 RequestedTheme = (ApplicationTheme)theme;
-                BLogger.I("Theme set: {theme}", RequestedTheme);
+                BLogger.I("Theme set: {theme}", theme);
             }
          }
 

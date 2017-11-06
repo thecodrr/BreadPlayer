@@ -187,6 +187,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         var h = StringToHttpHeaders(headers);
                         WriteTagsToMediafile(mediafile, id3TagArray);
                         CurrentlyPlayingFile = mediafile;
+                        MediaChanged?.Invoke(this, new EventArgs());
 
                         done = true;
                         metadataStream.Dispose();
@@ -222,6 +223,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 {
                     WriteTagsToMediafile(mediafile, array);
                     CurrentlyPlayingFile = mediafile;
+                    MediaChanged?.Invoke(this, new EventArgs());
                 }
             });
         }
@@ -233,6 +235,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 {
                     _handle = Bass.CreateStream(mediaFile.Path, 0, 0, BassFlags.AutoFree | BassFlags.Float);
                     CurrentlyPlayingFile = mediaFile;
+                    MediaChanged?.Invoke(this, new EventArgs());
                 });
             }
             else
@@ -281,7 +284,6 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                     (Equalizer as BassEqualizer).ReInit(_handle);
                 }
                 MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
-                MediaChanged?.Invoke(this, new EventArgs());
 
                 return true;
             }

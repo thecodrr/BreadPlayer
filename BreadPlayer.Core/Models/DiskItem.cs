@@ -8,7 +8,7 @@ namespace BreadPlayer.Core.Models
 {
     public class DiskItem : ObservableObject
     {
-        public double Size { get; set; }
+        public string Size { get; set; }
         public string Icon { get; set; }
         public string Artist { get; set; }
         public string Album { get; set; }

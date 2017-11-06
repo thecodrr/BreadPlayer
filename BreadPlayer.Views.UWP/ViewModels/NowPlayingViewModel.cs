@@ -146,11 +146,14 @@ namespace BreadPlayer.ViewModels
             {
                 await BreadDispatcher.InvokeAsync(async () =>
                 {
-                    await GetLyrics().ConfigureAwait(false);
-                    if (InternetConnectivityHelper.IsInternetConnected)
+                    if (artistName != null)
                     {
-                        LastfmClient.HttpClient.CancelPendingRequests();
-                        await GetArtistInfo(artistName.GetTag()).ConfigureAwait(false);
+                        await GetLyrics().ConfigureAwait(false);
+                        if (InternetConnectivityHelper.IsInternetConnected)
+                        {
+                            LastfmClient.HttpClient.CancelPendingRequests();
+                            await GetArtistInfo(artistName.GetTag()).ConfigureAwait(false);
+                        }
                     }
                 });
             }
