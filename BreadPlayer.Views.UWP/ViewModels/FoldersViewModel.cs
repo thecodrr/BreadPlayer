@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Common;
+using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dialogs;
@@ -172,7 +173,6 @@ namespace BreadPlayer.ViewModels
             else if(item.DiskItemLocation == DiskItemLocationType.OneDrive)
             {
                 var oneDriveFile = (OneDriveStorageFile)item.Cache;
-                var array = oneDriveFile.OneDriveItem.WebUrl;
                 var requestMessage = OneDriveService.Instance.Provider.Drive.Items[oneDriveFile.OneDriveItem.Id].Content.Request().GetHttpRequestMessage();
                 await OneDriveService.Instance.Provider.AuthenticationProvider.AuthenticateRequestAsync(requestMessage).AsAsyncAction().AsTask();
                 string headerStr = "\r\n";
@@ -332,7 +332,7 @@ namespace BreadPlayer.ViewModels
         }
         private async Task BrowseNetworkAsync(DiskItem item)
         {
-            if (!InternetConnectivityHelper.IsConnectedToNetwork)
+            if (!await InternetConnectivityHelper.CheckAndNotifyAsync())
                 return;
             IEnumerable<DiskItem> items = null;
             if (item.Cache is IEnumerable<DiskItem> cachedItems)
@@ -429,23 +429,35 @@ namespace BreadPlayer.ViewModels
                 return null;
             return await BrowseNetworkFolderAsync(lanStorage);
         }
-       
+        
         private async Task BrowseOneDriveAsync(DiskItem item)
         {
-            Clear();
-            if (item.Cache == null)
+            if (!await InternetConnectivityHelper.CheckAndNotifyAsync())
+                return;
+            try
             {
-                OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite);
-                if (!await OneDriveService.Instance.LoginAsync())
+                Clear();
+                if (item.Cache == null)
                 {
-                    throw new Exception("Unable to sign in");
+                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadOnly | OneDriveScopes.WlSignin))
+                    {
+
+                        if (!await OneDriveService.Instance.LoginAsync())
+                        {
+                            throw new Exception("Unable to sign in");
+                        }
+                        var folder = await OneDriveService.Instance.RootFolderAsync();
+                        StorageItems.AddRange(await GetOneDriveFolderItemsAsync(folder));
+                    }
                 }
-                var folder = await OneDriveService.Instance.RootFolderAsync();
-                StorageItems.AddRange(await GetOneDriveFolderItemsAsync(folder));
+                else
+                {
+                    StorageItems.AddRange(await GetOneDriveFolderItemsAsync((OneDriveStorageFolder)item.Cache));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                StorageItems.AddRange(await GetOneDriveFolderItemsAsync((OneDriveStorageFolder)item.Cache));
+                BLogger.E("Error while browsing OneDrive folder.", ex);
             }
         }
         private async Task<IEnumerable<DiskItem>> GetOneDriveFolderItemsAsync(OneDriveStorageFolder folder)
