@@ -1,5 +1,31 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.5-beta:
+### What's Fixed:
+1. Fixed issue with logger.
+2. Fixed issue where equalizer settings were not saved.
+3. Fixed a memory leak when opening playlists, albums, artists etc.
+4. Fixed issue where notification settings weren't working.
+5. Fixed glitches when navigating.
+6. Fixed search.
+
+### What's New:
+1. Added support for AAC & .MP4
+2. Added ability to save customized presets.
+3. Updated app's requested capabilites.
+4. Added Fast Forward (Hold next song button) and Rewind (Hold previous song button) capabilites to SMTC (the thing that appears when you press volume buttons).
+5. Search is now on-demand instead of auto i.e. you will have to press enter when done entering the query.
+6. Added German translation.
+
+## Version 2.7.4-beta:
+### What's Fixed:
+1. Fixed issue where equalizer could only be opened once
+2. Fixed issues with equalizer
+3. Fixed issues when caching artist art.
+4. Added Polish, German and Persian translations
+5. Fixed several memory leaks.
+6. Fixed choppy audio issue.
+
 ## Version 2.7.3-beta:
 
 ### What's Fixed:
