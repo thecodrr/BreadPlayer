@@ -446,7 +446,7 @@ namespace BreadPlayer.ViewModels
                 return null;
             return await BrowseNetworkFolderAsync(lanStorage);
         }
-        
+
         private async Task BrowseOneDriveAsync(DiskItem item)
         {
             if (!await InternetConnectivityHelper.CheckAndNotifyAsync())
@@ -456,7 +456,11 @@ namespace BreadPlayer.ViewModels
                 Clear();
                 if (item.Cache == null)
                 {
-                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite))
+#if DEBUG
+                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite))           
+#else
+                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadOnly | OneDriveScopes.WlSignin))                  
+#endif
                     {
                         if (!await OneDriveService.Instance.LoginAsync())
                         {
