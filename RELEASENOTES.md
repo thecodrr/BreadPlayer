@@ -1,5 +1,29 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.6-beta:
+### What's Fixed:
+1. Fixed all audio glitches. #191
+2. Fixed crash on resetting player. #193
+3. Fixed issue where playing next song gave an error. #194
+4. Fixed crash due to out of memory exceptions. #195
+5. Fixed issues with database which caused many crashes. #196
+6. Fixed issue where internet status was always not connected causing Lyrics/Bio to not work. #197
+7. Fixed crash when opening Now Playing screen. #199
+8. Fixed crash when opening app with arguments i.e. playing a song from File Explorer. #201
+9. Fixed other crashes and issues.
+
+### What's New:
+1. Added FOLDER NAVIGATION.\**
+2. Added OneDrive streaming support.*
+3. Added Media Server/LAN streaming support.\**
+
+What's Improved:
+1. The usual things: performance, UI, animations etc.
+
+_* Currently only streaming is possible no download or anything like that._
+
+_\** LAN/FOLDER NAVIGATION support is largely experimental so expect some bugs and crashes._
+
 ## Version 2.7.5-beta:
 ### What's Fixed:
 1. Fixed issue with logger.
