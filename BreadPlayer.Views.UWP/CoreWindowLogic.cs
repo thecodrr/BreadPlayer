@@ -316,12 +316,13 @@ namespace BreadPlayer
         {
             var args = arguments.Split('=', '&');
 
-            if (!args?.Any() == null || string.IsNullOrEmpty(arguments))
+            if (!args?.Any() == null || string.IsNullOrEmpty(arguments) || args.Length < 2)
                 return;
-
             string action = args[1];
             if (action.Contains("view"))
             {
+                if (args.Length < 6)
+                    return;
                 string pageParameter = args[5];
                 IDbRecord record = null;
                 if (action.Contains("Album"))
