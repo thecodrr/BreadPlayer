@@ -2,32 +2,118 @@
     x:Class="BreadPlayer.FoldersView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BreadPlayer"
-    xmlns:helpers="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:Models="using:BreadPlayer.Core.Models"
     xmlns:VM="using:BreadPlayer.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:BreadPlayer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
-        <VM:FoldersViewModel x:Key="FoldersVM"/>
+        <VM:FoldersViewModel x:Key="FoldersVM" />
+        <DataTemplate x:Key="StorageItemMobileDataTemplate" x:DataType="Models:DiskItem">
+            <Grid
+                x:Name="mainGrid"
+                Height="60"
+                Padding="10"
+                Background="{ThemeResource EvenRowBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <FontIcon
+                    Grid.RowSpan="3"
+                    VerticalAlignment="Center"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                    Glyph="{Binding Path=Icon}" />
+                <TextBlock
+                    x:Name="titleTxt"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="4"
+                    Margin="15,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Path=Title}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Margin="15,0,0,0"
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}" 
+                    Visibility="{x:Bind Artist, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter='Inverse'}"
+                    Text="{x:Bind Path=Artist}" />
+                <TextBlock
+                    Grid.Column="2"
+                    Grid.Row="1"
+                    FontSize="12"
+                    Margin="5,0,5,0"
+                    VerticalAlignment="Center"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                    Visibility="{x:Bind Album, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter='Inverse'}"
+                    Text="&#x2022;"/>
+                <TextBlock
+                    Grid.Column="3"
+                    Grid.Row="1"
+                    FontSize="12"
+                    VerticalAlignment="Center"                    
+                    Visibility="{x:Bind Album, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter='Inverse'}"
+                    Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                    Text="{x:Bind Path=Album}" />
+                <i:Interaction.Behaviors>
+                    <Core:DataTriggerBehavior
+                        Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
+                        ComparisonCondition="Equal"
+                        Value="True">
+                        <Core:ChangePropertyAction
+                            PropertyName="Background"
+                            TargetObject="{Binding ElementName=mainGrid}"
+                            Value="{ThemeResource PlaybarBrush}" />
+                        <Core:ChangePropertyAction
+                            PropertyName="Foreground"
+                            TargetObject="{Binding ElementName=titleTxt}"
+                            Value="{ThemeResource TextBrush}" />
+                    </Core:DataTriggerBehavior>
+                    <Core:DataTriggerBehavior
+                        Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
+                        ComparisonCondition="Equal"
+                        Value="False">
+                        <Core:ChangePropertyAction
+                            PropertyName="Background"
+                            TargetObject="{Binding ElementName=mainGrid}"
+                            Value="{ThemeResource EvenRowBackground}" />
+                        <Core:ChangePropertyAction
+                            PropertyName="Foreground"
+                            TargetObject="{Binding ElementName=titleTxt}"
+                            Value="{ThemeResource ThemeForeground}" />
+                    </Core:DataTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid DataContext="{StaticResource FoldersVM}">
-        <ListView x:Name="foldersList" 
-                  ItemsSource="{Binding Path=StorageItems}"
-                  helpers:ListViewBase.StretchItemContainerDirection="Both"
-                  IsItemClickEnabled="True"
-                  ItemClick="OnItemClicked"
-                  helpers:ListViewBase.AlternateColor="{ThemeResource OddRowBackground}">
+        <ListView
+            x:Name="foldersList"
+            helpers:ListViewBase.AlternateColor="{ThemeResource OddRowBackground}"
+            helpers:ListViewBase.StretchItemContainerDirection="Both"
+            IsItemClickEnabled="True"
+            ItemClick="OnItemClicked"
+            ItemsSource="{Binding Path=StorageItems}">
             <ListView.Header>
                 <controls:ScrollHeader Mode="QuickReturn" TargetListViewBase="{x:Bind foldersList}">
-                    <StackPanel Margin="0,0,0,0"
-                                Padding="15"
-                                Orientation="Horizontal"
-                                Background="{ThemeResource SystemControlBackgroundAccentBrush}">
+                    <StackPanel
+                        Margin="0,0,0,0"
+                        Padding="15"
+                        Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                        Orientation="Horizontal">
                         <Button
                             Margin="0,0,0,0"
                             Background="{x:Null}"
@@ -36,7 +122,10 @@
                             Style="{StaticResource HyperlinkBtn}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE72B;" />
-                                <TextBlock x:Uid="goBackTB" Margin="10,0,0,0" Text="Go back" />
+                                <TextBlock
+                                    x:Uid="goBackTB"
+                                    Margin="10,0,0,0"
+                                    Text="Go back" />
                             </StackPanel>
                         </Button>
                         <Button
@@ -47,7 +136,10 @@
                             Style="{StaticResource HyperlinkBtn}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE80F;" />
-                                <TextBlock x:Uid="goHomeTB" Margin="10,0,0,0" Text="Go home" />
+                                <TextBlock
+                                    x:Uid="goHomeTB"
+                                    Margin="10,0,0,0"
+                                    Text="Go home" />
                             </StackPanel>
                         </Button>
                         <Button
@@ -58,7 +150,10 @@
                             Style="{StaticResource HyperlinkBtn}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE72C;" />
-                                <TextBlock x:Uid="refreshTB" Margin="10,0,0,0" Text="Refresh" />
+                                <TextBlock
+                                    x:Uid="refreshTB"
+                                    Margin="10,0,0,0"
+                                    Text="Refresh" />
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -66,53 +161,62 @@
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="Models:DiskItem">
-                    <Grid x:Name="mainGrid"
-                          Height="60" 
-                          Padding="10"
-                          Background="{ThemeResource EvenRowBackground}">
+                    <Grid
+                        x:Name="mainGrid"
+                        Height="60"
+                        Padding="10"
+                        Background="{ThemeResource EvenRowBackground}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <FontIcon Glyph="{Binding Path=Icon}"
-                                  Foreground="{Binding ElementName=titleTxt, Path=Foreground}"/>
-                        <TextBlock x:Name="titleTxt"
-                                   Text="{x:Bind Path=Title}"
-                                   Grid.Column="1"
-                                   Padding="15,0,0,0"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="{x:Bind Path=Artist}"
-                                   Grid.Column="2"
-                                   Padding="15,0,0,0"
-                                   Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="{x:Bind Path=Album}"
-                                   Grid.Column="3"
-                                   Padding="15,0,0,0"
-                                   VerticalAlignment="Center"
-                                   Foreground="{Binding ElementName=titleTxt, Path=Foreground}"/>
+                        <FontIcon Foreground="{Binding ElementName=titleTxt, Path=Foreground}" Glyph="{Binding Path=Icon}" />
+                        <TextBlock
+                            x:Name="titleTxt"
+                            Grid.Column="1"
+                            Padding="15,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind Path=Title}" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Padding="15,0,0,0"
+                            VerticalAlignment="Center"
+                            Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                            Text="{x:Bind Path=Artist}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            Padding="15,0,0,0"
+                            VerticalAlignment="Center"
+                            Foreground="{Binding ElementName=titleTxt, Path=Foreground}"
+                            Text="{x:Bind Path=Album}" />
                         <i:Interaction.Behaviors>
-                            <Core:DataTriggerBehavior Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
-                                                      ComparisonCondition="Equal"
-                                                      Value="True">
-                                <Core:ChangePropertyAction PropertyName="Background"
-                                                           TargetObject="{Binding ElementName=mainGrid}"
-                                                           Value="{ThemeResource PlaybarBrush}"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground"
-                                                           TargetObject="{Binding ElementName=titleTxt}"
-                                                           Value="{ThemeResource TextBrush}"/>
+                            <Core:DataTriggerBehavior
+                                Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
+                                ComparisonCondition="Equal"
+                                Value="True">
+                                <Core:ChangePropertyAction
+                                    PropertyName="Background"
+                                    TargetObject="{Binding ElementName=mainGrid}"
+                                    Value="{ThemeResource PlaybarBrush}" />
+                                <Core:ChangePropertyAction
+                                    PropertyName="Foreground"
+                                    TargetObject="{Binding ElementName=titleTxt}"
+                                    Value="{ThemeResource TextBrush}" />
                             </Core:DataTriggerBehavior>
-                            <Core:DataTriggerBehavior Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
-                                                      ComparisonCondition="Equal"
-                                                      Value="False">
-                                <Core:ChangePropertyAction PropertyName="Background"
-                                                           TargetObject="{Binding ElementName=mainGrid}"
-                                                           Value="{ThemeResource EvenRowBackground}"/>
-                                <Core:ChangePropertyAction PropertyName="Foreground"
-                                                           TargetObject="{Binding ElementName=titleTxt}"
-                                                           Value="{ThemeResource ThemeForeground}"/>
+                            <Core:DataTriggerBehavior
+                                Binding="{x:Bind Path=IsPlaying, Mode=OneWay}"
+                                ComparisonCondition="Equal"
+                                Value="False">
+                                <Core:ChangePropertyAction
+                                    PropertyName="Background"
+                                    TargetObject="{Binding ElementName=mainGrid}"
+                                    Value="{ThemeResource EvenRowBackground}" />
+                                <Core:ChangePropertyAction
+                                    PropertyName="Foreground"
+                                    TargetObject="{Binding ElementName=titleTxt}"
+                                    Value="{ThemeResource ThemeForeground}" />
                             </Core:DataTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </Grid>
@@ -120,10 +224,35 @@
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Padding" Value="0" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ProgressRing IsActive="{Binding Path=IsBusy}"/>
+        <ProgressRing
+            Width="30"
+            Height="30"
+            Foreground="{ThemeResource ThemeForeground}"
+            IsActive="{Binding Path=IsBusy}" />
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                        <StateTrigger IsActive="{Binding Path=UseMobileTemplate}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="foldersList.ItemTemplate" Value="{StaticResource StorageItemMobileDataTemplate}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                        <StateTrigger IsActive="{Binding Path=UseMobileTemplate, Converter={StaticResource TrueToFalse}}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>                        
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

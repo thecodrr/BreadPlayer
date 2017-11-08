@@ -40,6 +40,12 @@ namespace BreadPlayer.ViewModels
             get => isBusy;
             set => Set(ref isBusy, value);
         }
+        bool useMobileTemplate;
+        public bool UseMobileTemplate
+        {
+            get => useMobileTemplate;
+            set => Set(ref useMobileTemplate, value);
+        }
         public ICommand OpenItemCommand { get; set; }
         public ICommand GoBackCommand { get; set; }
         public ICommand GoHomeCommand { get; set; }
@@ -80,7 +86,7 @@ namespace BreadPlayer.ViewModels
                 new DiskItem
                 {
                     Title = "Browse other locations",
-                    Icon = "\uE8DA",
+                    Icon = "\uEDA2",
                     Path = "Other",
                 },
                 new DiskItem
@@ -106,12 +112,13 @@ namespace BreadPlayer.ViewModels
         private async void OpenItem(object para)
         {            
             var item = (DiskItem)para;
-            if (item == null)
+            if (item == null || item.Path == "Empty")
                 return;
             if (!item.IsFile) //i.e. it is a folder
             {
                 IsBusy = true;
                 NavigationStack.Push(currentDiskItem);
+                UseMobileTemplate = false;
                 await BrowseItemAsync(item);
                 IsBusy = false;
             }
@@ -142,21 +149,27 @@ namespace BreadPlayer.ViewModels
             {
                 case "Music Library":
                     await GetLibraryItemsAsync();
+                    CheckFolderEmpty("There are no folders in your music library.", "Try again after adding some folders in your music library.");
                     break;
                 case "Other":
                     await BrowseForFolder(item);
+                    CheckFolderEmpty("There are no folders or files in this directory.", "Try opening some other directory.");
                     break;
                 case "Network":
                     await BrowseNetworkAsync(item);
+                    CheckFolderEmpty("There are no shared folders on this PC.", "Try accessing some other network PC.");
                     break;
                 case "OneDrive":
                     await BrowseOneDriveAsync(item);
+                    CheckFolderEmpty("There are no folders in your OneDrive.", "Try again after adding some music to your OneDrive.");
                     break;
                 case "Devices":
                     await GetDevicesAsync();
+                    CheckFolderEmpty("There are no Media Servers/SD Cards connected.", "Try again after connecting a device.");
                     break;
                 default:
                     await OpenFolderAsync(item);
+                    CheckFolderEmpty("There is nothing is this folder.", "Try another folder.");
                     break;
             }
         }
@@ -496,6 +509,18 @@ namespace BreadPlayer.ViewModels
             }
             return oneDriveStorageItems.OrderBy(t => t.IsFile);
         }
-
+        private void CheckFolderEmpty(string message, string subtitle)
+        {
+            if (StorageItems.Any())
+                return;
+            UseMobileTemplate = true;
+            StorageItems.Add(new DiskItem()
+            {
+                Icon = "\uEA8F",
+                Title = message,
+                Artist = subtitle,
+                Path = "Empty"
+            });
+        }
     }
 }

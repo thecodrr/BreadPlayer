@@ -59,7 +59,10 @@ namespace BreadPlayer.Converters
                     flag = true;
                     break;
             }
-
+            if(parameter?.ToString() == "Inverse")
+            {
+                flag = !flag;
+            }
             return (flag ? Visibility.Visible : Visibility.Collapsed);
         }
 
