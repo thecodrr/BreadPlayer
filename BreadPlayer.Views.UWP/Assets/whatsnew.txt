@@ -1,15 +1,23 @@
 ﻿What's Fixed:
-1. Fixed issue with logger.
-2. Fixed issue where equalizer settings were not saved.
-3. Fixed a memory leak when opening playlists, albums, artists etc.
-4. Fixed issue where notification settings weren't working.
-5. Fixed glitches when navigating.
-6. Fixed search.
+1. Fixed all audio glitches. #191
+2. Fixed crash on resetting player. #193
+3. Fixed issue where playing next song gave an error. #194
+4. Fixed crash due to out of memory exceptions. #195
+5. Fixed issues with database which caused many crashes. #196
+6. Fixed issue where internet status was always not connected causing Lyrics/Bio to not work. #197
+7. Fixed crash when opening Now Playing screen. #199
+8. Fixed crash when opening app with arguments i.e. playing a song from File Explorer. #201
+9. Fixed other crashes and issues.
 
 What's New:
-1. Added support for AAC & .MP4
-2. Added ability to save customized presets.
-3. Updated app's requested capabilites.
-4. Added Fast Forward (Hold next song button) and Rewind (Hold previous song button) capabilites to SMTC (the thing that appears when you press volume buttons).
-5. Search is now on-demand instead of auto i.e. you will have to press enter when done entering the query.
-6. Added German translation.
+1. Added FOLDER NAVIGATION.**
+2. Added OneDrive streaming support.*
+3. Added Media Server/LAN streaming support.**
+
+What's Improved:
+1. The usual things: performance, UI, animations etc.
+
+* Currently only streaming is possible no download or anything like that.
+** LAN/FOLDER NAVIGATION support is largely experimental so expect some bugs and crashes.
+
+Support by donating!
