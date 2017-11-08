@@ -621,9 +621,10 @@ namespace BreadPlayer.ViewModels
         }
         private void UpdateCurrentlyPlayingSongIndex()
         {
-            if (GetPlayingCollection() != null)
+            var playingCollection = GetPlayingCollection();
+            if (playingCollection != null)
             {
-                _indexOfCurrentlyPlayingFile = GetPlayingCollection().GetCurrentlyPlayingIndex();
+                _indexOfCurrentlyPlayingFile = playingCollection.GetCurrentlyPlayingIndex();
             }            
         }
         private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
@@ -689,7 +690,7 @@ namespace BreadPlayer.ViewModels
             }
             else
             {
-                if (PlaylistSongCollection.IsPlayingCollection() || IsPlayingFromPlaylist)
+                if (PlaylistSongCollection?.IsPlayingCollection() == true || IsPlayingFromPlaylist)
                 {
                     return PlaylistSongCollection;
                 }
