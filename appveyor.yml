@@ -7,7 +7,7 @@ configuration:
 platform: x86
 before_build:
 - ps: >-
-    nuget sources add -Name UWPTOOLKIT -Source https://dotnet.myget.org/F/uwpcommunitytoolkit/api/v3/index.json
+    NuGet sources Add -Name UWPTOOLKIT -Source https://dotnet.myget.org/F/uwpcommunitytoolkit/api/v3/index.json
     nuget restore BreadPlayer.NoTests.sln
 
     Write-Host "Installing Microsoft Store Services SDK..." 
