@@ -6,6 +6,7 @@ using BreadPlayer.DataSources;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Web.Lastfm;

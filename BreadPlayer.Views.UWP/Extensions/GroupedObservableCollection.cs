@@ -137,7 +137,7 @@ namespace BreadPlayer.Extensions
                 BLogger.E("Error occured while adding range to grouped collection.", ex);
             }
         }
-        async void OnCollectionReset() => await Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+        async void OnCollectionReset() => await InitializeSwitch.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
         void NotifyProperties(bool count = true)
         {

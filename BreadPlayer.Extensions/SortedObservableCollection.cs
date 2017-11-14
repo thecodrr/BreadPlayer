@@ -52,7 +52,7 @@ namespace BreadPlayer.Extensions
                 Items.Insert(i, item);
         }
         
-        public async void OnCollectionReset() => await Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+        public async void OnCollectionReset() => await InitializeSwitch.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
         public void NotifyProperties(bool count = true)
         {

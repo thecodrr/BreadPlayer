@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using DBreeze;
 using DBreeze.Objects;
 using DBreeze.Transactions;

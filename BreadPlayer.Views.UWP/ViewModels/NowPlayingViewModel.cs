@@ -5,6 +5,7 @@ using BreadPlayer.Database;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Parsers.LRCParser;
 using BreadPlayer.Parsers.TagParser;
 using BreadPlayer.Web.Lastfm;

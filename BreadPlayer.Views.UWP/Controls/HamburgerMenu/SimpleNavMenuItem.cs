@@ -19,6 +19,7 @@
 using BreadPlayer;
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Services;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace BreadPlayer.Controls
     {
         public SimpleNavMenuItem()
         {
-            if (!InitializeCore.IsMobile)
+            if (!InitializeSwitch.IsMobile)
             {
                 _shortcuts.Insert(0, new Shortcut()
                 {

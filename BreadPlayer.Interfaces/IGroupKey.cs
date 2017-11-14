@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BreadPlayer.Core.Models
+namespace BreadPlayer.Interfaces
 {
     public interface IGroupKey : IComparable<IGroupKey>
     {

@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,9 +65,9 @@ namespace BreadPlayer.Core.Common
             return equalizerSettings;
         }
 
-        public IEnumerable<EqualizerSettings> GetSettings()
+        public IEnumerable<IEqualizerSettings> GetSettings()
         {
-            var savedPresets = InitializeCore.EqualizerSettingsHelper.LoadEqualizerPresets();
+            var savedPresets = InitializeSwitch.EqualizerSettingsHelper.LoadEqualizerPresets();
             if(savedPresets?.Any() == true)
             {
                 return savedPresets;

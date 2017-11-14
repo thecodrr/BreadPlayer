@@ -1,4 +1,6 @@
 ﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Interfaces;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +14,7 @@ namespace BreadPlayer.Controls
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            var group = item as Grouping<IGroupKey, Mediafile>;
+            var group = item as IGrouping<IGroupKey, Mediafile>;
             if (group.Key is AlbumGroupKey)
                 return AlbumDataTemplate;
             else if (group.Key is ArtistGroupKey)

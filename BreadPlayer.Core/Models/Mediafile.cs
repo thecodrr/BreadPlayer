@@ -17,13 +17,14 @@
 */
 
 using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using LiteDB;
 using Newtonsoft.Json;
 using System;
 
 namespace BreadPlayer.Core.Models
 {
-    public class Mediafile : ObservableObject, IComparable<Mediafile>, IDbRecord, ISelectable, IPinnable
+    public class Mediafile : ObservableObject, IComparable<IMediafile>, IDbRecord, ISelectable, IPinnable, IMediafile
     {
         #region Fields
 
@@ -196,7 +197,7 @@ namespace BreadPlayer.Core.Models
 
         public string TextSearchKey => GetTextSearchKey().ToLower();
 
-        public int CompareTo(Mediafile compareTo)
+        public int CompareTo(IMediafile compareTo)
         {
             return Title.CompareTo(compareTo.Title);
         }

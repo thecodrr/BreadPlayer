@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj" />
+    <ProjectReference Include="..\BreadPlayer.Common\BreadPlayer.Common.csproj" />
   </ItemGroup>
 
 </Project>

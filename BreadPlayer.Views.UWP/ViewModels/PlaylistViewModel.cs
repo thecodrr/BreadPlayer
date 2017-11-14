@@ -23,6 +23,7 @@ using BreadPlayer.Database;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
 using BreadPlayer.PlaylistBus;
 using BreadPlayer.Services;

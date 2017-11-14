@@ -25,6 +25,7 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using System;
@@ -360,7 +361,7 @@ namespace BreadPlayer
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            InitializeCore.IsMobile = e.Size.Width <= 600;
+            InitializeSwitch.IsMobile = e.Size.Width <= 600;
         }
 
         #endregion Ctor

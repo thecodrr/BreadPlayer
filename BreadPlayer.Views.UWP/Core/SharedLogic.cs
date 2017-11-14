@@ -28,6 +28,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.StartScreen;
 using Windows.ApplicationModel.Resources;
 using BreadPlayer.Messengers;
+using BreadPlayer.Interfaces;
 
 namespace BreadPlayer.Core
 {
@@ -37,10 +38,7 @@ namespace BreadPlayer.Core
 
         public SharedLogic()
         { 
-            InitializeCore.NotificationManager = NotificationManager;
-            InitializeCore.EqualizerSettingsHelper = new SettingsHelper();
-            InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);
-            InitializeCore.IsMobile = Window.Current?.Bounds.Width <= 600;
+
         }
 
         #endregion Ctor

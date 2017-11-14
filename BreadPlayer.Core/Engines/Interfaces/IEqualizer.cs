@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Models;
+using BreadPlayer.Interfaces;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -21,8 +22,8 @@ namespace BreadPlayer.Core.Engines.Interfaces
               new[] {8000f, 1f, 0f},
               new[] {16000f, 1f, 0f }
         };
-        public EqualizerSettings EqualizerSettings { get; set; }
-        public ObservableCollection<EqualizerSettings> Presets { get; set; }
+        public IEqualizerSettings EqualizerSettings { get; set; }
+        public ObservableCollection<IEqualizerSettings> Presets { get; set; }
         private int _selectedPreset = -1;
 
         public int SelectedPreset
@@ -91,8 +92,8 @@ namespace BreadPlayer.Core.Engines.Interfaces
             }
             equalizerSettings.GainValues = Bands.ToDictionary(b => b.BandCaption, b => b.Gain);
             equalizerSettings.IsEnabled = IsEnabled;
-            InitializeCore.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
-            InitializeCore.EqualizerSettingsHelper.SaveEqualizerPresets(Presets);
+            InitializeSwitch.EqualizerSettingsHelper.SaveEqualizerSettings(equalizerSettings, 1);
+            InitializeSwitch.EqualizerSettingsHelper.SaveEqualizerPresets(Presets);
         }
 
         public void SetToDefault()

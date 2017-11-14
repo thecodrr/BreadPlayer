@@ -1,4 +1,6 @@
-﻿namespace BreadPlayer.Core.Models
+﻿using BreadPlayer.Interfaces;
+
+namespace BreadPlayer.Core.Models
 {
     public class AlbumGroupKey : IGroupKey
     {

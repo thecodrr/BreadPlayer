@@ -18,7 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj" />
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj" />
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DBreeze">

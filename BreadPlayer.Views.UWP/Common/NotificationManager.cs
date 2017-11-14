@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Services;
 using System;
 using System.Collections;
@@ -79,7 +80,7 @@ namespace BreadPlayer.NotificationManager
             });
         }
 
-        public void SendUpcomingSongNotification(Mediafile mediaFile)
+        public void SendUpcomingSongNotification(IMediafile mediaFile)
         {
             if (mediaFile != null)
             {

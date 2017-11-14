@@ -187,18 +187,27 @@
     <Compile Include="Behaviours\ListViewFocusBeforeSelectBehaviour.cs" />
     <Compile Include="Behaviours\OpenMenuBehaviour.cs" />
     <Compile Include="Common\BackDrop.cs" />
+    <Compile Include="Controls\AlternativeRowListView\AlternateRowListView.cs" />
+    <Compile Include="Controls\GroupHeaderDataTemplateSelector.cs" />
+    <Compile Include="Controls\ImageEx\BitmapCache.cs" />
+    <Compile Include="Controls\ImageEx\BitmapTools.cs" />
+    <Compile Include="Controls\ImageEx\ImageEx.cs" />
+    <Compile Include="Controls\ImageEx\ImageEx.Members.cs" />
+    <Compile Include="Controls\ImageEx\ImageEx.Source.cs" />
+    <Compile Include="Controls\ImageEx\SizeExtensions.cs" />
     <Compile Include="Dialogs\DonateDialog.xaml.cs">
       <DependentUpon>DonateDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\NetworkAccessDialog.xaml.cs">
       <DependentUpon>NetworkAccessDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\GroupedObservableCollection.cs" />
     <Compile Include="Extensions\OneDriveExtensions.cs" />
-    <Compile Include="HamburgerMenu\INavigationMenuItem.cs" />
-    <Compile Include="HamburgerMenu\NavMenuListView.cs" />
-    <Compile Include="HamburgerMenu\Shortcut.cs" />
-    <Compile Include="HamburgerMenu\SimpleNavMenuItem.cs" />
-    <Compile Include="HamburgerMenu\SplitviewMenu.cs" />
+    <Compile Include="Controls\HamburgerMenu\INavigationMenuItem.cs" />
+    <Compile Include="Controls\HamburgerMenu\NavMenuListView.cs" />
+    <Compile Include="Controls\HamburgerMenu\Shortcut.cs" />
+    <Compile Include="Controls\HamburgerMenu\SimpleNavMenuItem.cs" />
+    <Compile Include="Controls\HamburgerMenu\SplitviewMenu.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
@@ -588,9 +597,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BreadPlayer.Controls\BreadPlayer.Controls.csproj">
-      <Project>{240c9992-f77c-4d3b-bac2-788111b6b67b}</Project>
-      <Name>BreadPlayer.Controls</Name>
+    <ProjectReference Include="..\BreadPlayer.Common\BreadPlayer.Common.csproj">
+      <Project>{47af841a-4b78-490d-8915-7f58cdbdbeb3}</Project>
+      <Name>BreadPlayer.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Core\BreadPlayer.Core.csproj">
       <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
@@ -604,13 +613,17 @@
       <Project>{e5851a02-a8ce-4f4d-8b5f-0986013ae830}</Project>
       <Name>BreadPlayer.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
-      <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
-      <Name>BreadPlayer.Framework</Name>
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj">
+      <Project>{412718bb-903f-482f-8577-99b8efcd96d2}</Project>
+      <Name>BreadPlayer.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
       <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
       <Name>BreadPlayer.Parsers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Services\BreadPlayer.Services.csproj">
+      <Project>{94270040-8853-4616-b14b-11196bda8cc9}</Project>
+      <Name>BreadPlayer.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Web\BreadPlayer.Web.csproj">
       <Project>{8baa2dc7-9675-480f-a9f5-8d8d6245689b}</Project>

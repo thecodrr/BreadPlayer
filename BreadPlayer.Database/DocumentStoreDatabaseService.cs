@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using LiteDB;
 using System;
 using System.Collections.Generic;

@@ -91,17 +91,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="InitializeFramework.cs" />
-    <Compile Include="Interfaces\IDispatcher.cs" />
-    <Compile Include="Messenger\Message.cs" />
-    <Compile Include="Messenger\MessageTypes.cs" />
-    <Compile Include="Messenger\Messenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\GenericService.cs" />
-    <Compile Include="ViewModels\BaseClasses\BaseViewData.cs" />
-    <Compile Include="ViewModels\BaseClasses\BaseViewModel.cs" />
-    <Compile Include="ViewModels\BaseClasses\IView.cs" />
-    <Compile Include="ViewModels\BaseClasses\ObservableObject.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj">
+      <Project>{412718bb-903f-482f-8577-99b8efcd96d2}</Project>
+      <Name>BreadPlayer.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Switch\BreadPlayer.Switch.csproj">
+      <Project>{6217da14-bf8f-48b5-ad04-1ae47fc74986}</Project>
+      <Name>BreadPlayer.Switch</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

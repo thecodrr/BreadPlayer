@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Core.Models;
 using Newtonsoft.Json;
 using Windows.Storage;
@@ -29,29 +29,29 @@ namespace BreadPlayer.Helpers
             object setting = ApplicationData.Current.LocalSettings.Values[key] ?? def;
             return (T)setting;
         }
-        public (EqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
+        public (IEqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
         {
             var eqJson = GetRoamingSetting<string>(eqConfigName, "{}");
-            var settings = JsonConvert.DeserializeObject<EqualizerSettings>(eqJson);
+            var settings = JsonConvert.DeserializeObject<IEqualizerSettings>(eqJson);
             return (settings, GetRoamingSetting<float>("PreAMP", 1.0f));
         }
 
-        public void SaveEqualizerSettings(EqualizerSettings settings, float preAmp)
+        public void SaveEqualizerSettings(IEqualizerSettings settings, float preAmp)
         {
             var eqJson = JsonConvert.SerializeObject(settings);
             SaveRoamingSetting("CustomEq", eqJson);
             SaveRoamingSetting("PreAMP", preAmp);
         }
 
-        public void SaveEqualizerPresets(IEnumerable<EqualizerSettings> presets)
+        public void SaveEqualizerPresets(IEnumerable<IEqualizerSettings> presets)
         {
             var presetJson = JsonConvert.SerializeObject(presets);
             SaveLocalSetting("Presets", presetJson);
         }
 
-        public IEnumerable<EqualizerSettings> LoadEqualizerPresets()
+        public IEnumerable<IEqualizerSettings> LoadEqualizerPresets()
         {
-            var presets = JsonConvert.DeserializeObject<IEnumerable<EqualizerSettings>>(GetLocalSetting<string>("Presets", "[]"));
+            var presets = JsonConvert.DeserializeObject<IEnumerable<IEqualizerSettings>>(GetLocalSetting<string>("Presets", "[]"));
             return presets;
         }
     }

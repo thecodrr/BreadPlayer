@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using System;
 using Windows.ApplicationModel.Email;
 using Windows.Storage;

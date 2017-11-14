@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 using BreadPlayer.ViewModels;
 using System;
 using Windows.UI.Core;

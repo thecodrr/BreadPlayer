@@ -5,6 +5,7 @@ using BreadPlayer.Core.Models;
 using BreadPlayer.Dialogs;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
 using Microsoft.Toolkit.Uwp.Services.OneDrive;
 using SharpCifs.Smb;

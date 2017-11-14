@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Interfaces;
 using ManagedBass;
 using ManagedBass.Fx;
 using System;
@@ -22,8 +23,8 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             IsPreampAvailable = true;
             
             Bands = new ObservableCollection<IEqualizerBand>();
-            Presets = new ObservableCollection<EqualizerSettings>(new ConfigSaver().GetSettings());           
-            EqualizerSettings = InitializeCore.EqualizerSettingsHelper.LoadEqualizerSettings("CustomEq").settings;
+            Presets = new ObservableCollection<IEqualizerSettings>(new ConfigSaver().GetSettings());           
+            EqualizerSettings = InitializeSwitch.EqualizerSettingsHelper.LoadEqualizerSettings("CustomEq").settings;
             Name = EqualizerSettings.Name;
             SelectedPreset = Presets.IndexOf(Presets.FirstOrDefault(t => t.Name == EqualizerSettings.Name));
             

@@ -102,17 +102,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BreadLogger\BLogger.cs" />
-    <Compile Include="BreadLogger\ISentryMessageSender.cs" />
     <Compile Include="Common\Collections.cs" />
     <Compile Include="Common\ConfigSaver.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Enums.cs" />
-    <Compile Include="Common\ICommand.cs" />
-    <Compile Include="Common\INotificationManager.cs" />
-    <Compile Include="Common\IEqualizerSettingsHelper.cs" />
-    <Compile Include="Common\IPinnable.cs" />
-    <Compile Include="Common\ISelectable.cs" />
     <Compile Include="Common\PasswordStorage.cs" />
     <Compile Include="Engines\BASSEngine\BassEqualizer.cs" />
     <Compile Include="Engines\BASSEngine\BassEqualizerBand.cs" />
@@ -120,16 +113,13 @@
     <Compile Include="Events\MediaEndedEventArgs.cs" />
     <Compile Include="Events\MediaStateChangedEventArgs.cs" />
     <Compile Include="Extensions\ObservableCollection.cs" />
-    <Compile Include="Common\IDBRecord.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="InitializeCore.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
     <Compile Include="Models\DiskItem.cs" />
     <Compile Include="Models\DiskItemLocationType.cs" />
     <Compile Include="Models\EqualizerBand.cs" />
     <Compile Include="Models\GroupKeys.cs" />
-    <Compile Include="Models\IGroupKey.cs" />
     <Compile Include="Models\Mediafile.cs" />
     <Compile Include="Models\MediaLocationType.cs" />
     <Compile Include="Models\Playlist.cs" />
@@ -145,9 +135,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
-      <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
-      <Name>BreadPlayer.Framework</Name>
+    <ProjectReference Include="..\BreadPlayer.Common\BreadPlayer.Common.csproj">
+      <Project>{47af841a-4b78-490d-8915-7f58cdbdbeb3}</Project>
+      <Name>BreadPlayer.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Extensions\BreadPlayer.Extensions.csproj">
+      <Project>{e5851a02-a8ce-4f4d-8b5f-0986013ae830}</Project>
+      <Name>BreadPlayer.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj">
+      <Project>{412718bb-903f-482f-8577-99b8efcd96d2}</Project>
+      <Name>BreadPlayer.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\BreadPlayer.Parsers\BreadPlayer.Parsers.csproj">
       <Project>{ec3f27a8-ab79-420f-aef2-8d3316abab3c}</Project>
@@ -156,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BreadLogger\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

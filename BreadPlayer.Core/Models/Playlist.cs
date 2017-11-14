@@ -17,6 +17,7 @@
 */
 
 using BreadPlayer.Core.Common;
+using BreadPlayer.Interfaces;
 
 namespace BreadPlayer.Core.Models
 {

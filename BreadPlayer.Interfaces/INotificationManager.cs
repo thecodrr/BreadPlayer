@@ -1,7 +1,7 @@
-﻿using BreadPlayer.Core.Models;
+﻿using BreadPlayer.Interfaces;
 using System.Threading.Tasks;
 
-namespace BreadPlayer.Core.Common
+namespace BreadPlayer.Interfaces
 {
     public interface INotificationManager
     {
@@ -9,6 +9,6 @@ namespace BreadPlayer.Core.Common
 
         Task ShowMessageAsync(string message, int duration = 10);
 
-        void SendUpcomingSongNotification(Mediafile mediaFile);
+        void SendUpcomingSongNotification(IMediafile mediaFile);
     }
 }

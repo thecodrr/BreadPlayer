@@ -91,7 +91,7 @@ namespace BreadPlayer
                 dynamic payload = message.Payload;
                 if (NowPlayingFrame.CurrentSourcePageType != payload.pageType)
                 {                    
-                    if (!InitializeCore.IsMobile)
+                    if (!InitializeSwitch.IsMobile)
                     {
                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                         {

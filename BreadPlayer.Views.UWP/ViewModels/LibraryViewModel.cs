@@ -25,6 +25,7 @@ using BreadPlayer.Database;
 using BreadPlayer.Dispatcher;
 using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using System;

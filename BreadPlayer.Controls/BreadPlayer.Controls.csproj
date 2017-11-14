@@ -107,14 +107,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AlternativeRowListView\AlternateRowListView.cs" />
-    <Compile Include="GroupHeaderDataTemplateSelector.cs" />
-    <Compile Include="ImageEx\BitmapCache.cs" />
-    <Compile Include="ImageEx\BitmapTools.cs" />
-    <Compile Include="ImageEx\ImageEx.cs" />
-    <Compile Include="ImageEx\ImageEx.Members.cs" />
-    <Compile Include="ImageEx\ImageEx.Source.cs" />
-    <Compile Include="ImageEx\SizeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\BreadPlayer.Controls.rd.xml" />
   </ItemGroup>
@@ -132,9 +124,9 @@
       <Project>{e5851a02-a8ce-4f4d-8b5f-0986013ae830}</Project>
       <Name>BreadPlayer.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BreadPlayer.Framework\BreadPlayer.Framework.csproj">
-      <Project>{f22742c9-7088-4325-9f87-0a1aa34dda74}</Project>
-      <Name>BreadPlayer.Framework</Name>
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj">
+      <Project>{412718BB-903F-482F-8577-99B8EFCD96D2}</Project>
+      <Name>BreadPlayer.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

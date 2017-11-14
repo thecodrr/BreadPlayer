@@ -53,6 +53,7 @@ using Windows.Phone.UI.Input;
 using System.IO;
 using BreadPlayer.Controls;
 using Microsoft.Toolkit.Uwp.Services.OneDrive;
+using BreadPlayer.Interfaces;
 
 namespace BreadPlayer.ViewModels
 {
@@ -1145,7 +1146,7 @@ namespace BreadPlayer.ViewModels
                     PlayPauseCommand.Execute(null);
 
                     //navigate to now playing view automatically if on mobile.
-                    if (InitializeCore.IsMobile)
+                    if (InitializeSwitch.IsMobile)
                     {
                         NavigateToNowPlayingView("NowPlayingView");
                     }

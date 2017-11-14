@@ -20,6 +20,7 @@ using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Dispatcher;
+using BreadPlayer.Interfaces;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;

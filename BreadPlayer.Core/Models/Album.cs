@@ -1,6 +1,5 @@
-﻿using BreadPlayer.Core.Common;
+﻿using BreadPlayer.Interfaces;
 using LiteDB;
-using Newtonsoft.Json;
 using System;
 
 namespace BreadPlayer.Core.Models

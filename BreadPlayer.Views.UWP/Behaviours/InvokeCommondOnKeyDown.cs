@@ -18,6 +18,7 @@
 
 using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Interfaces;
 using Microsoft.Xaml.Interactivity;
 using Windows.System;
 using Windows.UI.Core;

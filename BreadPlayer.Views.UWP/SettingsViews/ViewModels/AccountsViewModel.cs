@@ -2,6 +2,7 @@
 using BreadPlayer.Core;
 using BreadPlayer.Core.Common;
 using BreadPlayer.Helpers;
+using BreadPlayer.Interfaces;
 using BreadPlayer.Web.Lastfm;
 using IF.Lastfm.Core.Objects;
 using System.Linq;

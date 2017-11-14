@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BreadPlayer.Core.Common
+namespace BreadPlayer.Interfaces
 {
     public interface IPinnable
     {

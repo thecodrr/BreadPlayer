@@ -45,9 +45,9 @@ public class ObservableObject : INotifyPropertyChanged
     /// <param name="args">The arguments. </param>
     protected async virtual void RaisePropertyChanged(PropertyChangedEventArgs args)
     {
-        if (InitializeFramework.Dispatcher != null)
+        if (InitializeSwitch.Dispatcher != null)
         {
-            await InitializeFramework.Dispatcher?.RunAsync(() => { PropertyChanged?.Invoke(this, args); });
+            await InitializeSwitch.Dispatcher?.RunAsync(() => { PropertyChanged?.Invoke(this, args); });
         }
         else
         {

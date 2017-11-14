@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using BreadPlayer.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public async new void Add(T item)
     {
-        await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() => DoAdd(item));        
+        await InitializeSwitch.Dispatcher.RunAsync(() => DoAdd(item));        
     }
 
     private void DoAdd(T item)
@@ -69,7 +70,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public async new void Clear()
     {
-        await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(DoClear);        
+        await InitializeSwitch.Dispatcher.RunAsync(DoClear);        
     }
     
     /// <summary>
@@ -101,14 +102,14 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             if (reset)
                 OnCollectionReset();
             else
-                await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList ?? list.ToList(), startIndex)));
+                await InitializeSwitch.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, list as IList ?? list.ToList(), startIndex)));
         }
         catch (Exception ex)
         {
             BLogger.E("Error occured while adding range to TSCollection.", ex);
         }
     }
-    async void OnCollectionReset() => await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+    async void OnCollectionReset() => await InitializeSwitch.Dispatcher.RunAsync(() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
 
     void NotifyProperties(bool count = true)
     {
@@ -230,7 +231,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     public new bool Remove(T item)
     {
         bool? op = null;
-        var removeTask = BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() =>
+        var removeTask = InitializeSwitch.Dispatcher.RunAsync(() =>
         {
             op = DoRemove(item);
         });
@@ -261,7 +262,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public new async void Insert(int index, T item)
     {
-        await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() => DoInsert(index, item));
+        await InitializeSwitch.Dispatcher.RunAsync(() => DoInsert(index, item));
     }
 
     private void DoInsert(int index, T item)
@@ -277,7 +278,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     public new async void RemoveAt(int index)
     {
-        await BreadPlayer.Core.InitializeCore.Dispatcher.RunAsync(() => DoRemoveAt(index));
+        await InitializeSwitch.Dispatcher.RunAsync(() => DoRemoveAt(index));
     }
 
     private void DoRemoveAt(int index)

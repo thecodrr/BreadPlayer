@@ -192,11 +192,11 @@ namespace BreadPlayer
                 var vm = Current.Resources["AlbumArtistVM"];
                 ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
-                //the following code is needed to avoid Issue #207
+                //we need to init this in the UI thread regardless of this being the launch code. (Consult issue #207)
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, 
                 () =>
-                {
-                        InitializeCore.Dispatcher = new BreadDispatcher();
+                {                    
+                    new InitializeSwitch(SharedLogic.Instance.NotificationManager, new SettingsHelper(), new BreadDispatcher(), ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
                 });
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)

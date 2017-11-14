@@ -105,7 +105,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public async Task ChangeDevice(string deviceName = null)
         {
             if (deviceName != null)
-                await InitializeCore.NotificationManager.ShowMessageAsync($"Transitioning to {deviceName}.", 5);
+                await InitializeSwitch.NotificationManager.ShowMessageAsync($"Transitioning to {deviceName}.", 5);
 
             await Task.Run(() =>
             {
@@ -122,7 +122,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                             PlayerState = PlayerState.Paused;
                         }
 
-                        if (InitializeCore.IsMobile)
+                        if (InitializeSwitch.IsMobile)
                             NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, (int)DeviceBufferSize);
 
                         Bass.Init();
@@ -138,7 +138,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             });
 
             if (deviceName != null)
-                await InitializeCore.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
+                await InitializeSwitch.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
         public async Task<bool> LoadURLAsync(Mediafile mediafile, string uri)
         {
@@ -241,7 +241,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             else
             {
                 string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-                await InitializeCore.NotificationManager.ShowMessageAsync(error);                
+                await InitializeSwitch.NotificationManager.ShowMessageAsync(error);                
                 return false;
             }
         }
@@ -253,7 +253,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             try
             {
-                await InitializeCore.Dispatcher.RunAsync(() =>
+                await InitializeSwitch.Dispatcher.RunAsync(() =>
                 {
                     MediaChanging?.Invoke(this, new EventArgs());
                 });
@@ -273,7 +273,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         Bass.ChannelSetSync(_handle, SyncFlags.Position, Bass.ChannelSeconds2Bytes(_handle, Length - 15), _posSync);
 
                     });
-                if (InitializeCore.IsMobile)
+                if (InitializeSwitch.IsMobile)
                     await ChangeDevice();
                 if (Equalizer == null)
                 {
@@ -290,7 +290,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             catch (Exception ex)
             {
                 BLogger.E("An error occured while loading music. Action {action}", ex, LoadMusicAction.ToString());
-                await InitializeCore.NotificationManager.ShowMessageAsync(ex.Message);
+                await InitializeSwitch.NotificationManager.ShowMessageAsync(ex.Message);
                 return false;
             }
         }
