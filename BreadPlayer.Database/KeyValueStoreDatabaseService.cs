@@ -17,7 +17,7 @@ namespace BreadPlayer.Database
         private static DBreezeEngine _db;
         public static bool IsDisposed { get; set; }
 
-        public static DBreezeEngine GetDatabaseEngineAsync(string dbPath)
+        public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
             if (_db == null || DbPath != dbPath)
             {

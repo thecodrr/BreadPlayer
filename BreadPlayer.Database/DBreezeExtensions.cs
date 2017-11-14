@@ -17,15 +17,16 @@ namespace BreadPlayer.Database
             _dbPath = dbPath;
             CustomSerializator.ByteArraySerializator = o => JsonConvert.SerializeObject(o).To_UTF8Bytes();
             CustomSerializator.ByteArrayDeSerializator = (bt, t) => JsonConvert.DeserializeObject(bt.UTF8_GetString(), t);
-            return StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
+            return StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
         }
-        public static async void Reinitialize(this DBreeze.DBreezeEngine engine, string dbPath)
+        public static void Reinitialize(this DBreeze.DBreezeEngine engine, string dbPath)
         {
-            if (StaticKeyValueDatabase.IsDisposed || engine == null || !engine.IsDatabaseOperable)
+            if (StaticKeyValueDatabase.IsDisposed || engine == null || !engine.IsDatabaseOperable || engine.Disposed)
             {
                 BLogger.I("Database is not operable or it was disposed. Reinitializing. Message: {message}", engine.DatabaseNotOperableReason);
                 _dbPath = dbPath;
-                engine = StaticKeyValueDatabase.GetDatabaseEngineAsync(dbPath);
+                StaticDocumentDatabase.DisposeDatabaseEngine();
+                engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
                 BLogger.I("Engine reintialized. Path: {path}", dbPath);
             }
         }
@@ -35,7 +36,7 @@ namespace BreadPlayer.Database
             {
                 BLogger.I("Getting transaction.");
                 engine.Reinitialize(_dbPath);
-                return engine.GetTransaction();
+                return engine.GetTransaction();                
             }
             catch(Exception ex)
             {

@@ -259,6 +259,7 @@ namespace BreadPlayer
         public static void DisposeObjects()
         {
             BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
+            //@TODO Possible issue here #205
             _smtc.DisplayUpdater.ClearAll();
             _player?.Dispose();
         }
