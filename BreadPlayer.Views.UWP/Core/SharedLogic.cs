@@ -36,8 +36,7 @@ namespace BreadPlayer.Core
         #region Ctor
 
         public SharedLogic()
-        {
-            InitializeCore.Dispatcher = new BreadDispatcher();
+        { 
             InitializeCore.NotificationManager = NotificationManager;
             InitializeCore.EqualizerSettingsHelper = new SettingsHelper();
             InitializeCore.IsMobile = ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1);

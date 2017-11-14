@@ -39,6 +39,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
+using BreadPlayer.Dispatcher;
+
 namespace BreadPlayer
 {
     /// <summary>
@@ -190,6 +192,12 @@ namespace BreadPlayer
                 var vm = Current.Resources["AlbumArtistVM"];
                 ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
+                //the following code is needed to avoid Issue #207
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, 
+                () =>
+                {
+                        InitializeCore.Dispatcher = new BreadDispatcher();
+                });
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {
