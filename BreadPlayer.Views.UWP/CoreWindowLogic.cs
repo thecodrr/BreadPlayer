@@ -44,6 +44,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
+using BreadPlayer.Extensions;
 
 namespace BreadPlayer
 {
@@ -162,9 +163,9 @@ namespace BreadPlayer
                 _smtc.DisplayUpdater.ClearAll();
                 if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
                 {
-                    musicProps.Title = SharedLogic.Instance.Player.CurrentlyPlayingFile.Title;
-                    musicProps.Artist = SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist;
-                    musicProps.AlbumTitle = SharedLogic.Instance.Player.CurrentlyPlayingFile.Album;
+                    musicProps.Title = SharedLogic.Instance.Player.CurrentlyPlayingFile.Title.GetStringForNullOrEmptyProperty("Unknown Title");
+                    musicProps.Artist = SharedLogic.Instance.Player.CurrentlyPlayingFile.LeadArtist.GetStringForNullOrEmptyProperty("Unknown Artist");
+                    musicProps.AlbumTitle = SharedLogic.Instance.Player.CurrentlyPlayingFile.Album.GetStringForNullOrEmptyProperty("Unknown Album");
                     if (!string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture))
                     {
                         _smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(await StorageFile.GetFileFromPathAsync(SharedLogic.Instance.Player.CurrentlyPlayingFile.AttachedPicture));
