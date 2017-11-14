@@ -19,7 +19,7 @@ namespace BreadPlayer.SentryAPI
             null, null, new SentryUserFactory())
             {
                 Logger = "user",
-                Release = "v2.7.6.0"
+                Release = "v2.7.7.0"
             };
         }
         public async Task SendMessageAsync(string message, Exception ex, string errorLevel)
