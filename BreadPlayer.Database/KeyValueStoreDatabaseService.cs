@@ -178,10 +178,9 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetSafeTransaction())
                 {
-                    if (records.Any())
+                    if (tran != null && records?.Any() == true)
                     {
-                        //tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
-
+                        tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
                         foreach (var record in records.ToList())
                         {
                             record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
