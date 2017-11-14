@@ -36,7 +36,7 @@ namespace BreadPlayer.Helpers
             {
                 var hostname =
                   NetworkInformation.GetHostNames()
-                      .SingleOrDefault(
+                      .FirstOrDefault(
                           hn =>
                               hn.IPInformation?.NetworkAdapter != null && hn.IPInformation.NetworkAdapter.NetworkAdapterId
                               == internetConnectionProfile.NetworkAdapter.NetworkAdapterId);
