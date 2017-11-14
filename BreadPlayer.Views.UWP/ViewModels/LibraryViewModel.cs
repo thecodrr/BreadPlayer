@@ -306,9 +306,23 @@ namespace BreadPlayer.ViewModels
             try
             {
                 var musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                StorageFolder folder = null; 
+                StorageFolder folder = null;
                 if (musicLibrary != null)
+                {
                     folder = await musicLibrary.RequestAddFolderAsync();
+                }
+                else
+                {
+                    BLogger.I("Music Library is not declared on this device. Using Folder Picker to import folder.");
+                    FolderPicker folderPicker = new FolderPicker()
+                    {
+                        CommitButtonText = "Import folder",
+                        ViewMode = PickerViewMode.List,
+                        SuggestedStartLocation = PickerLocationId.MusicLibrary,
+                    };
+                    folderPicker.FileTypeFilter.Add("*");
+                    folder = await folderPicker.PickSingleFolderAsync();
+                }
                 if (folder != null)
                 {
                     StorageApplicationPermissions.FutureAccessList.Add(folder);

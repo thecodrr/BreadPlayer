@@ -223,8 +223,8 @@ namespace BreadPlayer
                 switch (e.NewState)
                 {
                     case PlayerState.Playing:
+                        //@TODO Potential issue here. Github issue: #211. Related to Github issue: #205
                         _player?.Play();
-
                         //check if the player was paused by another app
                         if (externalPaused)
                         {
@@ -235,12 +235,10 @@ namespace BreadPlayer
                         break;
 
                     case PlayerState.Paused:
-                        // BLogger.I("state has been changed to paused.");
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Paused;
                         break;
 
                     case PlayerState.Stopped:
-                        // BLogger.I("state has been changed to stopped.");
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Stopped;
                         break;
 
@@ -250,7 +248,7 @@ namespace BreadPlayer
             }
             catch(Exception ex)
             {
-                BLogger.E("CoreWindowLogic.Player_MediaStateChanged PlayerState: {state}.", ex, e.NewState.ToString());
+                BLogger.E($"CoreWindowLogic.Player_MediaStateChanged PlayerState: {e.NewState.ToString()}.", ex);
             }
         }
 
