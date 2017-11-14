@@ -19,7 +19,7 @@ namespace BreadPlayer.Database
 
         public static DBreezeEngine GetDatabaseEngine(string dbPath)
         {
-            if (_db == null || DbPath != dbPath)
+            if (_db == null || DbPath != dbPath || _db.Disposed || !_db.IsDatabaseOperable)
             {
                 BLogger.I("Initializing db engine. Path: {path}", dbPath);
                 DbPath = dbPath;
