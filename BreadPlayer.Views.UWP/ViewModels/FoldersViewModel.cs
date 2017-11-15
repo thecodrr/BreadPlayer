@@ -146,6 +146,11 @@ namespace BreadPlayer.ViewModels
         private async Task BrowseItemAsync(DiskItem item)
         {
             currentDiskItem = item;
+            if (item == null)
+            {
+                GoHome();
+                return;
+            }
             switch (item.Path)
             {
                 case "Music Library":
