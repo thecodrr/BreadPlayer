@@ -181,9 +181,12 @@ namespace BreadPlayer
 
         private static async void _smtc_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            //we do not want to pause the background player.
-            //pausing may cause stutter, that's why.
-            _player?.Play();
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                //we do not want to pause the background player.
+                //pausing may cause stutter, that's why.
+                _player?.Play();
+            }
             await BreadDispatcher.InvokeAsync(() =>
             {
                 switch (args.Button)
@@ -223,13 +226,15 @@ namespace BreadPlayer
                 switch (e.NewState)
                 {
                     case PlayerState.Playing:
-                        //@TODO Potential issue here. Github issue: #211. Related to Github issue: #205
-                        _player?.Play();
-                        //check if the player was paused by another app
-                        if (externalPaused)
+                        if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                         {
-                            UpdateSmtc();
-                            externalPaused = false;
+                            _player?.Play();
+                            //check if the player was paused by another app
+                            if (externalPaused)
+                            {
+                                UpdateSmtc();
+                                externalPaused = false;
+                            }
                         }
                         _smtc.PlaybackStatus = MediaPlaybackStatus.Playing;
                         break;
@@ -259,9 +264,11 @@ namespace BreadPlayer
         public static void DisposeObjects()
         {
             BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
-            //@TODO Possible issue here #205
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                _player?.Dispose();
+            }
             _smtc.DisplayUpdater.ClearAll();
-            _player?.Dispose();
         }
 
         #endregion CoreWindow Dispose Methods
