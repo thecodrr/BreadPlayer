@@ -15,6 +15,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Custom;
+using Windows.Devices.Enumeration;
+using Windows.Devices.Portable;
 using Windows.Foundation;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
@@ -349,9 +352,24 @@ namespace BreadPlayer.ViewModels
         private async Task GetDevicesAsync()
         {
             Clear();
-            var devices = await GetStorageItemsInFolderAsync(KnownFolders.MediaServerDevices);
-            devices.Concat(await GetStorageItemsInFolderAsync(KnownFolders.RemovableDevices));
-            StorageItems.AddRange(devices);
+            var devices = await KnownFolders.RemovableDevices.GetFoldersAsync();
+            devices.Concat(await KnownFolders.MediaServerDevices.GetFoldersAsync());
+            List<DiskItem> devicesList = new List<DiskItem>();
+            foreach (var folder in devices)
+            {
+                if (folder is StorageFolder folderInformation && !folder.DisplayName.StartsWith("."))
+                {
+                    devicesList.Add(new DiskItem
+                    {
+                        Title = folderInformation.DisplayName,
+                        Icon = "\uE8B7",
+                        Path = folderInformation.Path,
+                        Cache = folder,
+                        DiskItemLocation = DiskItemLocationType.Local,
+                    });
+                }                
+            }
+            StorageItems.AddRange(devicesList);
         }
         private async Task BrowseNetworkAsync(DiskItem item)
         {
