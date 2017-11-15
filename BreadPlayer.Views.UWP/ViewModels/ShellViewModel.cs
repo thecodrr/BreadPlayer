@@ -158,7 +158,7 @@ namespace BreadPlayer.ViewModels
         }
         private async void HandleLibraryLoadedMessage(Message message)
         {
-            message.HandledStatus = MessageHandledStatus.HandledCompleted;
+            message.HandledStatus = MessageHandledStatus.HandledContinue;
             if (message.Payload is ThreadSafeObservableCollection<Mediafile> tMediaFile)
             {
                 PlaylistSongCollection = tMediaFile;

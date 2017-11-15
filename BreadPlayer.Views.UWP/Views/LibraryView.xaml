@@ -400,6 +400,43 @@
                             </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
+                    <Button Background="{ThemeResource EvenRowBackground}" 
+                Foreground="{ThemeResource TextBrush}"
+                Style="{StaticResource HyperlinkBtn}"
+                Grid.ColumnSpan="2"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Margin="0,90,0,0"
+                Command="{Binding Path=ImportFolderCommand}"
+                Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
+                Padding="20,10,0,10">
+                        <Grid HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <FontIcon Glyph="&#xE8B7;"
+                          Grid.RowSpan="2"
+                          VerticalAlignment="Center"
+                          Margin="0,0,15,0"/>
+                            <TextBlock x:Uid="noToastsTB" Text=""
+                           Grid.Column="1"/>
+                            <TextBlock x:Uid="importToastsTB" Text=""
+                           FontWeight="SemiBold"
+                           Grid.Column="1"
+                           Grid.Row="1"/>
+                        </Grid>
+                    </Button>
+                    <ProgressRing Width="30" 
+                      Height="30" 
+                      IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}"
+                      Grid.ColumnSpan="2"
+                      Foreground="{ThemeResource TextBrush}"/>
                 </Grid>
             </PivotItem>
             <PivotItem x:Uid="breadsPivot" Header="Breads">
@@ -463,43 +500,7 @@
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </Button>
-        <Button Background="{ThemeResource EvenRowBackground}" 
-                Foreground="{ThemeResource TextBrush}"
-                Style="{StaticResource HyperlinkBtn}"
-                Grid.ColumnSpan="2"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Left"
-                Margin="0,90,0,0"
-                Command="{Binding Path=ImportFolderCommand}"
-                Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
-                Padding="20,10,0,10">
-            <Grid HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <FontIcon Glyph="&#xE8B7;"
-                          Grid.RowSpan="2"
-                          VerticalAlignment="Center"
-                          Margin="0,0,15,0"/>
-                <TextBlock x:Uid="noToastsTB" Text=""
-                           Grid.Column="1"/>
-                <TextBlock x:Uid="importToastsTB" Text=""
-                           FontWeight="SemiBold"
-                           Grid.Column="1"
-                           Grid.Row="1"/>
-            </Grid>
-        </Button>
-        <ProgressRing Width="30" 
-                      Height="30" 
-                      IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}"
-                      Grid.ColumnSpan="2"
-                      Foreground="{ThemeResource TextBrush}"/>
+
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">
                 <Core:InvokeCommandAction Command="{Binding InitCommand}" CommandParameter="{Binding ElementName=Grid}" />

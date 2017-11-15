@@ -30,17 +30,17 @@ namespace BreadPlayer
             {
                 if (_currentState == "AlbumView")
                 {
+                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
                     albumListView.ItemsSource = null;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).AlbumCollection;
                     await (grid.DataContext as AlbumArtistViewModel).AlbumCollection.RefreshAsync();
-                    (grid.DataContext as AlbumArtistViewModel).LoadAlbums();
                 }
                 else if (_currentState == "ArtistView")
                 {
+                    (grid.DataContext as AlbumArtistViewModel).LoadArtists();
                     albumListView.ItemsSource = null;
                     albumListView.ItemsSource = (grid.DataContext as AlbumArtistViewModel).ArtistsCollection;
                     await (grid.DataContext as AlbumArtistViewModel).ArtistsCollection.RefreshAsync();
-                    (grid.DataContext as AlbumArtistViewModel).LoadArtists();
                 }
                 SetTemplate();
             });

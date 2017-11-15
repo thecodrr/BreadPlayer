@@ -239,7 +239,6 @@ namespace BreadPlayer.ViewModels
         {
             if (folder == null)
                 return;
-            Messenger.Instance.NotifyColleagues(MessageTypes.MsgUpdateSongCount, (short)2);
             LibraryFoldersCollection.Add(folder);
             await LibraryHelper.ImportFolderIntoLibraryAsync(folder);
         }
