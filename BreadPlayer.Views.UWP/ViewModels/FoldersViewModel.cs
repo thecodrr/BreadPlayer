@@ -483,6 +483,7 @@ namespace BreadPlayer.ViewModels
             }
             catch (Exception ex)
             {
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync(ex.Message, 3);
                 BLogger.E("Error while browsing OneDrive folder.", ex);
             }
         }
