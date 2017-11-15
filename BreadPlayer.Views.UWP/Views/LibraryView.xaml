@@ -437,6 +437,39 @@
                       IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}"
                       Grid.ColumnSpan="2"
                       Foreground="{ThemeResource TextBrush}"/>
+
+                    <Button
+            x:Name="backBtn"
+            x:Uid="backBtn"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            x:DeferLoadStrategy="Lazy"
+            Background="{x:Null}"
+            BorderThickness="0"
+            Content="&#xE72B;"
+            FontFamily="Segoe MDL2 Assets"
+            FontSize="30"
+            Style="{StaticResource HyperlinkBtn}"
+            ToolTipService.ToolTip=""
+            Visibility="Collapsed">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
+                                <Core:EventTriggerBehavior.Actions>
+                                    <Core:ChangePropertyAction
+                            PropertyName="IsZoomedInViewActive"
+                            TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
+                            Value="True" />
+                                    <Core:ChangePropertyAction
+                            PropertyName="Visibility"
+                            TargetObject="{Binding ElementName=backBtn}"
+                            Value="Collapsed" />
+                                </Core:EventTriggerBehavior.Actions>
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Button>
                 </Grid>
             </PivotItem>
             <PivotItem x:Uid="breadsPivot" Header="Breads">
@@ -468,38 +501,6 @@
                 </Style>
             </Pivot.Resources>
         </Pivot>
-        <Button
-            x:Name="backBtn"
-            x:Uid="backBtn"
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            x:DeferLoadStrategy="Lazy"
-            Background="{x:Null}"
-            BorderThickness="0"
-            Content="&#xE72B;"
-            FontFamily="Segoe MDL2 Assets"
-            FontSize="30"
-            Style="{StaticResource HyperlinkBtn}"
-            ToolTipService.ToolTip=""
-            Visibility="Collapsed">
-            <Interactivity:Interaction.Behaviors>
-                <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
-                    <Core:EventTriggerBehavior.Actions>
-                        <Core:ChangePropertyAction
-                            PropertyName="IsZoomedInViewActive"
-                            TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
-                            Value="True" />
-                        <Core:ChangePropertyAction
-                            PropertyName="Visibility"
-                            TargetObject="{Binding ElementName=backBtn}"
-                            Value="Collapsed" />
-                    </Core:EventTriggerBehavior.Actions>
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
-        </Button>
 
         <Interactivity:Interaction.Behaviors>
             <Core:EventTriggerBehavior EventName="Loaded">

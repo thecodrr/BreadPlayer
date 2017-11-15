@@ -85,6 +85,7 @@ namespace BreadPlayer
         {
             if (e.IsSourceZoomedInView)
             {
+                (this.FindName("backBtn") as Button).Visibility = Visibility.Visible;
                 (this.FindName("alphabetList") as GridView).Visibility = Visibility.Visible;
                 return;
             }
