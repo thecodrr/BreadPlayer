@@ -1,5 +1,24 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.7-beta:
+### What's Fixed:
+1. Fixed error while getting database transactions. #206
+3. Fixed issue where a song would not play. #208
+4. Fixed issue where import folder dialog failed to show up on some devices. #212
+5. Fixed issues with SMTC. #209, #211, #205
+6. Fixed issue where bluetooth audio device would not play. #203
+7. Fixed issue where no device would show up in "My Devices" even though the SD Card was connected. #214
+8. Fixed crash when inserting records into database. #213
+9. Fixed startup crashes. #204, #207
+10. Fixed app crash when loading an album. #202
+11. Fixed MusixMatch lyrics fetching.
+12. Fixed crash when refreshing a folder in Folders.
+13. Fixed crash when a log report was sent to Sentry.io
+
+### What's Improved:
+1. Improved library navigation.
+2. Various UI improvements.
+
 ## Version 2.7.6-beta:
 ### What's Fixed:
 1. Fixed all audio glitches. #191
