@@ -2,6 +2,8 @@
   "supports": {},
   "dependencies": {
     "AngleSharp": "0.9.9",
+    "FubarCoder.RestSharp.Portable": "3.3.0",
+    "FubarCoder.RestSharp.Portable.HttpClient": "4.0.8",
     "Inflatable.Lastfm": "1.0.1.307",
     "LiteDB": "4.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",

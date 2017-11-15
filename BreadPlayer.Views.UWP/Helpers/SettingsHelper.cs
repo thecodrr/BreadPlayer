@@ -32,7 +32,7 @@ namespace BreadPlayer.Helpers
         public (IEqualizerSettings settings, float PreAMP) LoadEqualizerSettings(string eqConfigName)
         {
             var eqJson = GetRoamingSetting<string>(eqConfigName, "{}");
-            var settings = JsonConvert.DeserializeObject<IEqualizerSettings>(eqJson);
+            var settings = JsonConvert.DeserializeObject<EqualizerSettings>(eqJson);
             return (settings, GetRoamingSetting<float>("PreAMP", 1.0f));
         }
 
@@ -51,7 +51,7 @@ namespace BreadPlayer.Helpers
 
         public IEnumerable<IEqualizerSettings> LoadEqualizerPresets()
         {
-            var presets = JsonConvert.DeserializeObject<IEnumerable<IEqualizerSettings>>(GetLocalSetting<string>("Presets", "[]"));
+            var presets = JsonConvert.DeserializeObject<IEnumerable<EqualizerSettings>>(GetLocalSetting<string>("Presets", "[]"));
             return presets;
         }
     }

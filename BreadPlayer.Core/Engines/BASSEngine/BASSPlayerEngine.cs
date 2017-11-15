@@ -105,40 +105,51 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         public async Task ChangeDevice(string deviceName = null)
         {
             if (deviceName != null)
-                await InitializeSwitch.NotificationManager.ShowMessageAsync($"Transitioning to {deviceName}.", 5);
+                await InitializeSwitch.NotificationManager.ShowStatusBarMessageAsync($"Transitioning to {deviceName}.");
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                var count = Bass.DeviceCount;
-                for (var i = 0; i < count; i++)
+                try
                 {
-                    var deviceInfo = Bass.GetDeviceInfo(i);
-                    if (deviceInfo.IsDefault && deviceInfo.IsEnabled)
+                    var count = Bass.DeviceCount;
+                    for (var i = 0; i < count; i++)
                     {
-                        var isPlaying = PlayerState == PlayerState.Playing;
-                        if (isPlaying)
+                        var deviceInfo = Bass.GetDeviceInfo(i);
+                        if (deviceInfo.IsDefault && deviceInfo.IsEnabled)
                         {
-                            Bass.ChannelPause(_handle);
-                            PlayerState = PlayerState.Paused;
-                        }
+                            var isPlaying = PlayerState == PlayerState.Playing;
+                            if (isPlaying)
+                            {
+                                Bass.ChannelPause(_handle);
+                                PlayerState = PlayerState.Paused;
+                            }
 
-                        if (InitializeSwitch.IsMobile)
-                            NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, (int)DeviceBufferSize);
+                            if (InitializeSwitch.IsMobile)
+                                NativeMethods.BASS_SetConfig(NativeMethods.BassConfigDevBuffer, (int)DeviceBufferSize);
 
-                        Bass.Init();
-                        Bass.ChannelSetDevice(_handle, i);
-                        if (isPlaying)
-                        {
-                            Bass.ChannelPlay(_handle);
-                            PlayerState = PlayerState.Playing;
+                            Bass.Init();
+                            Bass.ChannelSetDevice(_handle, i);
+                            if (isPlaying)
+                            {
+                                Bass.ChannelPlay(_handle);
+                                PlayerState = PlayerState.Playing;
+                            }
+                            return;
                         }
-                        return;
                     }
+                }
+                catch(Exception ex)
+                {
+                    BLogger.E($"Transition failed.", ex);
+                    await InitializeSwitch.NotificationManager.ShowStatusBarMessageAsync($"Failed to transtion. Reason: {Bass.LastError}");
+                }
+                finally
+                {
+                    if (deviceName != null)
+                        await InitializeSwitch.NotificationManager.ShowStatusBarMessageAsync($"Transition to {deviceName} complete.");
                 }
             });
 
-            if (deviceName != null)
-                await InitializeSwitch.NotificationManager.ShowMessageAsync($"Transition to {deviceName} complete.", 5);
         }
         public async Task<bool> LoadURLAsync(Mediafile mediafile, string uri)
         {

@@ -9,9 +9,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Xml.Dom;
+using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
 namespace BreadPlayer.NotificationManager
@@ -22,7 +24,7 @@ namespace BreadPlayer.NotificationManager
         private ICommand _closeCommand;
         private DispatcherTimer _hideTimer;
         private string _status = string.Empty;
-
+        private StatusBar statusBar;
         public ICommand CloseCommand
         {
             get => _closeCommand ?? (_closeCommand = new DelegateCommand(HideStaticMessage));
@@ -118,6 +120,24 @@ namespace BreadPlayer.NotificationManager
             if (NotificationQueue.Count > 0)
             {
                 await ShowMessageAsync(NotificationQueue.Dequeue()).ConfigureAwait(false);
+            }
+        }
+
+        public async Task ShowStatusBarMessageAsync(string message)
+        {
+            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            {
+                await BreadDispatcher.InvokeAsync(async () =>
+                {
+                    if(statusBar == null)
+                        statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+                    await statusBar.ShowAsync();
+                    statusBar.ProgressIndicator.Text = message;
+                    await statusBar.ProgressIndicator.ShowAsync();
+                    await Task.Delay(3000);
+                    await statusBar.ProgressIndicator.HideAsync();
+                    await statusBar.HideAsync();
+                });
             }
         }
     }

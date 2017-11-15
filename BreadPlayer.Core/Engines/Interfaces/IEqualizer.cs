@@ -23,7 +23,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
               new[] {16000f, 1f, 0f }
         };
         public IEqualizerSettings EqualizerSettings { get; set; }
-        public ObservableCollection<IEqualizerSettings> Presets { get; set; }
+        public ObservableCollection<EqualizerSettings> Presets { get; set; }
         private int _selectedPreset = -1;
 
         public int SelectedPreset

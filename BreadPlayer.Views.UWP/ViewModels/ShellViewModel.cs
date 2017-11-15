@@ -103,6 +103,7 @@ namespace BreadPlayer.ViewModels
             PropertyChanged += ShellViewModel_PropertyChanged;
             SharedLogic.Instance.Player.MediaAboutToEnd += Player_MediaAboutToEnd;
             SharedLogic.Instance.Player.MediaChanging += OnMediaChanging;
+
             //these events are for detecting when the default audio
             //device is changed in PC and Mobile.
             if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
@@ -647,7 +648,10 @@ namespace BreadPlayer.ViewModels
 
                 //get next/prev group index
                 int nextGroupIndex = prev ? TracksCollection.IndexOf(currentGroup) - 1 : TracksCollection.IndexOf(currentGroup) + 1;
-
+                if (nextGroupIndex >= TracksCollection.Count - 1)
+                {
+                    nextGroupIndex = 0;
+                }
                 //get next/prev group.
                 Grouping<IGroupKey, Mediafile> nextGroup = nextGroupCondition ? TracksCollection.ElementAt(nextGroupIndex) : currentGroup;
 
@@ -760,8 +764,7 @@ namespace BreadPlayer.ViewModels
         #region Events
 
         private int eventCount = 0; //used in AudioEndpointChangedEvent
-
-        private void OnAudioEndpointChanged(AudioRoutingManager sender, object args)
+        private async void OnAudioEndpointChanged(AudioRoutingManager sender, object args)
         {
             var currentEndpoint = sender.GetAudioEndpoint();
             //when this event is initialized, it is invoked 2 times.
@@ -769,7 +772,7 @@ namespace BreadPlayer.ViewModels
             if (eventCount > 1)
             {
                 BLogger.I($"Switching audio render device to [{currentEndpoint.ToString()}].");
-                SharedLogic.Instance.Player.ChangeDevice(currentEndpoint.ToString());
+                await SharedLogic.Instance.Player.ChangeDevice(currentEndpoint.ToString());
             }
             //increase the event count
             eventCount += 1;
