@@ -1,23 +1,19 @@
 ﻿What's Fixed:
-1. Fixed all audio glitches. #191
-2. Fixed crash on resetting player. #193
-3. Fixed issue where playing next song gave an error. #194
-4. Fixed crash due to out of memory exceptions. #195
-5. Fixed issues with database which caused many crashes. #196
-6. Fixed issue where internet status was always not connected causing Lyrics/Bio to not work. #197
-7. Fixed crash when opening Now Playing screen. #199
-8. Fixed crash when opening app with arguments i.e. playing a song from File Explorer. #201
-9. Fixed other crashes and issues.
-
-What's New:
-1. Added FOLDER NAVIGATION.**
-2. Added OneDrive streaming support.*
-3. Added Media Server/LAN streaming support.**
+1. Fixed error while getting database transactions. #206
+3. Fixed issue where a song would not play. #208
+4. Fixed issue where import folder dialog failed to show up on some devices. #212
+5. Fixed issues with SMTC. #209, #211, #205
+6. Fixed issue where bluetooth audio device would not play. #203
+7. Fixed issue where no device would show up in "My Devices" even though the SD Card was connected. #214
+8. Fixed crash when inserting records into database. #213
+9. Fixed startup crashes. #204, #207
+10. Fixed app crash when loading an album. #202
+11. Fixed MusixMatch lyrics fetching.
+12. Fixed crash when refreshing a folder in Folders.
+13. Fixed crash when a log report was sent to Sentry.io
 
 What's Improved:
-1. The usual things: performance, UI, animations etc.
-
-* Currently only streaming is possible no download or anything like that.
-** LAN/FOLDER NAVIGATION support is largely experimental so expect some bugs and crashes.
+1. Improved library navigation.
+2. Various UI improvements.
 
 Support by donating!
