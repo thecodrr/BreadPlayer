@@ -2,8 +2,7 @@
 using SharpRaven.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using BreadPlayer.Extensions;
 using System.Threading.Tasks;
 using BreadPlayer.Core;
 
@@ -24,6 +23,8 @@ namespace BreadPlayer.SentryAPI
         }
         public async Task SendMessageAsync(string message, Exception ex, string errorLevel)
         {
+            if (string.IsNullOrEmpty(message) || ex == null || string.IsNullOrEmpty(errorLevel))
+                return;
             var sentryMessage = new SentryMessage(string.Format(
                        "Message: {0} \r\n\r\nException:{1}",
                        message,
@@ -32,13 +33,13 @@ namespace BreadPlayer.SentryAPI
             {
                 Level = ErrorLevel.Error,
                 Tags = new Dictionary<string, string>()
-            {
-                { "device.model", DeviceInfoHelper.DeviceModel},
-                { "device.arch", DeviceInfoHelper.SystemArchitecture},
-                { "app.version", DeviceInfoHelper.ApplicationVersion},
-                { "system.version", DeviceInfoHelper.SystemVersion},
-                { "system.family", DeviceInfoHelper.SystemFamily},
-            }
+                {
+                    { "device.model", DeviceInfoHelper.DeviceModel.GetStringForNullOrEmptyProperty("0")},
+                    { "device.arch", DeviceInfoHelper.SystemArchitecture.GetStringForNullOrEmptyProperty("unknown")},
+                    { "app.version", DeviceInfoHelper.ApplicationVersion.GetStringForNullOrEmptyProperty("2.7.7.0")},
+                    { "system.version", DeviceInfoHelper.SystemVersion.GetStringForNullOrEmptyProperty("0")},
+                    { "system.family", DeviceInfoHelper.SystemFamily.GetStringForNullOrEmptyProperty("unknown")},
+                }
             };
 
             var result = await ravenClient.CaptureAsync(sentryEvent).ConfigureAwait(false);

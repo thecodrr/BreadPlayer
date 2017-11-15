@@ -205,6 +205,8 @@ namespace BreadPlayer.ViewModels
 
         private void LoadArtistSongs(Artist artist)
         {
+            if (artist == null || string.IsNullOrEmpty(artist.Name))
+                return;
             Songs.AddRange(SettingsViewModel.TracksCollection.Elements.Where(t => t.LeadArtist == artist.Name));
             Refresh();
             Messenger.Instance.NotifyColleagues(MessageTypes.MsgPlaylistLoaded, Songs);
@@ -213,6 +215,8 @@ namespace BreadPlayer.ViewModels
 
         private void LoadAlbumSongs(Album album)
         {
+            if (album == null || string.IsNullOrEmpty(album.AlbumName))
+                return;
             var s = SettingsViewModel.TracksCollection.Elements.Where(t => t.Album == album.AlbumName).OrderBy(t => t.TrackNumber);
             Songs.AddRange(s);
             Refresh();
