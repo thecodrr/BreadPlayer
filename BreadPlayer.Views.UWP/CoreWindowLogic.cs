@@ -268,7 +268,7 @@ namespace BreadPlayer
             {
                 _player?.Dispose();
             }
-            _smtc.DisplayUpdater.ClearAll();
+            _smtc?.DisplayUpdater.ClearAll();
         }
 
         #endregion CoreWindow Dispose Methods
@@ -363,6 +363,7 @@ namespace BreadPlayer
 
             InitSmtc();
             Window.Current.SizeChanged += Current_SizeChanged;
+            InitializeSwitch.IsMobile = Window.Current.Bounds.Width <= 600;
         }
 
         private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)

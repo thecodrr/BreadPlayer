@@ -122,7 +122,7 @@ namespace BreadPlayer.ViewModels
             {
                 IsBusy = true;
                 NavigationStack.Push(currentDiskItem);
-                UseMobileTemplate = false;
+                UseMobileTemplate = !InitializeSwitch.IsMobile ? false : true;
                 await BrowseItemAsync(item);
                 IsBusy = false;
             }

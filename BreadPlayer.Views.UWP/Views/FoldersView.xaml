@@ -263,7 +263,6 @@
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600" />
-                        <StateTrigger IsActive="{Binding Path=UseMobileTemplate, Converter={StaticResource TrueToFalse}}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>                        
                     </VisualState.Setters>
