@@ -187,17 +187,19 @@ namespace BreadPlayer
             try
             {
                 BLogger.I("Loading frame started...");
+                //we need to init this in the UI thread regardless of this being the launch code. (Consult issue #207)
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    BLogger.I("Initializing switch...");
+                    new InitializeSwitch(SharedLogic.Instance.NotificationManager, new SettingsHelper(), new BreadDispatcher(), ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
+                });
                 Frame rootFrame = Window.Current.Content as Frame;
                 new InternetConnectivityHelper();
                 var vm = Current.Resources["AlbumArtistVM"];
                 ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
-                //we need to init this in the UI thread regardless of this being the launch code. (Consult issue #207)
-                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, 
-                () =>
-                {                    
-                    new InitializeSwitch(SharedLogic.Instance.NotificationManager, new SettingsHelper(), new BreadDispatcher(), ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1));
-                });
+                
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {

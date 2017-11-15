@@ -375,16 +375,12 @@ namespace BreadPlayer.Controls
             {
                 return BottomNavigationItems.SingleOrDefault(p => p.DestinationPage == sourcePagetype);
             }
-            if (sourcePagetype == typeof(AlbumArtistView))
-            {
-                return TopNavigationItems[2];
-            }
             return null;
         }
 
         private static NavMenuListView GetParentListViewFromItem(INavigationMenuItem item)
         {
-            if (item.DestinationPage == typeof(LibraryView) || item.DestinationPage == typeof(AlbumArtistView))
+            if (item.DestinationPage == typeof(LibraryView))
             {
                 return _navTopMenuListView;
             }            

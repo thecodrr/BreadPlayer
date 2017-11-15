@@ -19,7 +19,12 @@
     <Page.Resources>
         <ResourceDictionary>
             <Converter:BoolToSelectionModeConverter x:Key="BoolToSelectionMode" />
-
+            <ItemsPanelTemplate x:Key="MobileItemsPanelTemplate">
+                <ItemsWrapGrid
+                    HorizontalAlignment="Center"
+                    CacheLength="1"
+                    Orientation="Horizontal" />
+            </ItemsPanelTemplate>
             <BPControls:GroupHeaderDataTemplateSelector
                 x:Key="GroupHeaderTemplateSelector"
                 AlbumDataTemplate="{StaticResource AlbumGroupHeaderTemplate}"
@@ -175,9 +180,11 @@
         <Pivot
             x:Name="mainPivot"
             Grid.ColumnSpan="2"
-            Foreground="{ThemeResource TextBrush}"
-            SelectionChanged="Pivot_SelectionChanged">
-            <PivotItem x:Uid="toastsPivot" Foreground="{ThemeResource TextBrush}" Header="Toasts">
+            Foreground="{ThemeResource TextBrush}">
+            <PivotItem
+                x:Uid="toastsPivot"
+                Foreground="{ThemeResource TextBrush}"
+                Header="Toasts">
                 <Grid Margin="0,-10,0,0">
                     <SemanticZoom
                         x:Name="semanticZoom"
@@ -213,13 +220,11 @@
                                             <Button
                                                 Margin="0,0,10,0"
                                                 Background="Transparent"
-                                                Foreground="{ThemeResource TextBrush}"
                                                 Command="{Binding Path=ImportFolderCommand}"
+                                                Foreground="{ThemeResource TextBrush}"
                                                 Style="{StaticResource HyperlinkBtn}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <FontIcon
-                                                        Margin="0,3,0,0"
-                                                        Glyph="&#xE8B5;" />
+                                                    <FontIcon Margin="0,3,0,0" Glyph="&#xE8B5;" />
                                                     <TextBlock
                                                         x:Uid="importFolderTB"
                                                         Margin="10,0,0,0"
@@ -233,9 +238,7 @@
                                                 Foreground="{ThemeResource TextBrush}"
                                                 Style="{StaticResource HyperlinkBtn}">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <FontIcon
-                                                        Margin="0,3,0,0"
-                                                        Glyph="&#xE8B1;" />
+                                                    <FontIcon Margin="0,3,0,0" Glyph="&#xE8B1;" />
                                                     <TextBlock Margin="10,0,0,0">
                                                         <Run x:Uid="shuffleAllRun" Text="Shuffle all" />
                                                         <Run Text="(" />
@@ -249,7 +252,10 @@
                                 </BPControls:AlternatingRowListView.Header>
                                 <BPControls:AlternatingRowListView.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <ItemsStackPanel x:Name="libraryItemsPanel" Opacity="0" Orientation="Vertical">
+                                        <ItemsStackPanel
+                                            x:Name="libraryItemsPanel"
+                                            Opacity="0"
+                                            Orientation="Vertical">
                                             <ItemsStackPanel.ChildrenTransitions>
                                                 <TransitionCollection>
                                                     <EntranceThemeTransition FromHorizontalOffset="200" />
@@ -400,72 +406,79 @@
                             </GridView>
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
-                    <Button Background="{ThemeResource EvenRowBackground}" 
-                Foreground="{ThemeResource TextBrush}"
-                Style="{StaticResource HyperlinkBtn}"
-                Grid.ColumnSpan="2"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Left"
-                Margin="0,50,0,0"
-                Command="{Binding Path=ImportFolderCommand}"
-                Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
-                Padding="20,10,0,10">
+                    <Button
+                        Grid.ColumnSpan="2"
+                        Margin="0,50,0,0"
+                        Padding="20,10,0,10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        HorizontalContentAlignment="Left"
+                        Background="{ThemeResource EvenRowBackground}"
+                        Command="{Binding Path=ImportFolderCommand}"
+                        Foreground="{ThemeResource TextBrush}"
+                        Style="{StaticResource HyperlinkBtn}"
+                        Visibility="{Binding Path=SongCount, Converter={StaticResource BoolToVisibility}, FallbackValue=Collapsed, TargetNullValue=Collapsed}">
                         <Grid HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
-                            <FontIcon Glyph="&#xE8B7;"
-                          Grid.RowSpan="2"
-                          VerticalAlignment="Center"
-                          Margin="0,0,15,0"/>
-                            <TextBlock x:Uid="noToastsTB" Text=""
-                           Grid.Column="1"/>
-                            <TextBlock x:Uid="importToastsTB" Text=""
-                           FontWeight="SemiBold"
-                           Grid.Column="1"
-                           Grid.Row="1"/>
+                            <FontIcon
+                                Grid.RowSpan="2"
+                                Margin="0,0,15,0"
+                                VerticalAlignment="Center"
+                                Glyph="&#xE8B7;" />
+                            <TextBlock
+                                x:Uid="noToastsTB"
+                                Grid.Column="1"
+                                Text="" />
+                            <TextBlock
+                                x:Uid="importToastsTB"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontWeight="SemiBold"
+                                Text="" />
                         </Grid>
                     </Button>
-                    <ProgressRing Width="30" 
-                      Height="30" 
-                      IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}"
-                      Grid.ColumnSpan="2"
-                      Foreground="{ThemeResource TextBrush}"/>
+                    <ProgressRing
+                        Grid.ColumnSpan="2"
+                        Width="30"
+                        Height="30"
+                        Foreground="{ThemeResource TextBrush}"
+                        IsActive="{Binding Path=IsLibraryLoading, UpdateSourceTrigger=Explicit}" />
 
                     <Button
-            x:Name="backBtn"
-            x:Uid="backBtn"
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            x:DeferLoadStrategy="Lazy"
-            Background="{x:Null}"
-            BorderThickness="0"
-            Content="&#xE72B;"
-            FontFamily="Segoe MDL2 Assets"
-            FontSize="30"
-            Style="{StaticResource HyperlinkBtn}"
-            ToolTipService.ToolTip=""
-            Visibility="Collapsed">
+                        x:Name="backBtn"
+                        x:Uid="backBtn"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        x:DeferLoadStrategy="Lazy"
+                        Background="{x:Null}"
+                        BorderThickness="0"
+                        Content="&#xE72B;"
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="30"
+                        Style="{StaticResource HyperlinkBtn}"
+                        ToolTipService.ToolTip=""
+                        Visibility="Collapsed">
                         <Interactivity:Interaction.Behaviors>
                             <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=backBtn}">
                                 <Core:EventTriggerBehavior.Actions>
                                     <Core:ChangePropertyAction
-                            PropertyName="IsZoomedInViewActive"
-                            TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
-                            Value="True" />
+                                        PropertyName="IsZoomedInViewActive"
+                                        TargetObject="{Binding ElementName=semanticZoom, Mode=OneWay}"
+                                        Value="True" />
                                     <Core:ChangePropertyAction
-                            PropertyName="Visibility"
-                            TargetObject="{Binding ElementName=backBtn}"
-                            Value="Collapsed" />
+                                        PropertyName="Visibility"
+                                        TargetObject="{Binding ElementName=backBtn}"
+                                        Value="Collapsed" />
                                 </Core:EventTriggerBehavior.Actions>
                             </Core:EventTriggerBehavior>
                         </Interactivity:Interaction.Behaviors>
@@ -473,22 +486,84 @@
                 </Grid>
             </PivotItem>
             <PivotItem x:Uid="breadsPivot" Header="Breads">
-                <Frame
-                    Name="BreadsFrame"/>
+                <GridView
+                    x:Name="albumGridView"
+                    HorizontalContentAlignment="Center"
+                    Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
+                    IsItemClickEnabled="True"
+                    ItemTemplate="{StaticResource AlbumTemplate}"
+                    ItemsSource="{Binding Source={StaticResource AlbumArtistVM}, Path=AlbumCollection}"
+                    SelectionChanged="OnSelectionChanged">
+                    <GridView.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                            <AddDeleteThemeTransition />
+                        </TransitionCollection>
+                    </GridView.Transitions>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid
+                                HorizontalAlignment="Stretch"
+                                CacheLength="1"
+                                Orientation="Horizontal">
+                                <ItemsWrapGrid.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                                        <AddDeleteThemeTransition />
+                                    </TransitionCollection>
+                                </ItemsWrapGrid.Transitions>
+                            </ItemsWrapGrid>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="20" />
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </GridView>
             </PivotItem>
             <PivotItem x:Uid="bakersPivot" Header="Bakers">
-                <Frame
-                    Name="BakersFrame"/>
+                <GridView
+                    x:Name="artistGridView"
+                    HorizontalContentAlignment="Center"
+                    Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
+                    IsItemClickEnabled="True"
+                    ItemTemplate="{StaticResource ArtistTemplate}"
+                    ItemsSource="{Binding Source={StaticResource AlbumArtistVM}, Path=ArtistsCollection}"
+                    SelectionChanged="OnSelectionChanged">
+                    <GridView.Transitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                            <AddDeleteThemeTransition />
+                        </TransitionCollection>
+                    </GridView.Transitions>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid
+                                HorizontalAlignment="Stretch"
+                                CacheLength="1"
+                                Orientation="Horizontal">
+                                <ItemsWrapGrid.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
+                                        <AddDeleteThemeTransition />
+                                    </TransitionCollection>
+                                </ItemsWrapGrid.Transitions>
+                            </ItemsWrapGrid>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="Margin" Value="20" />
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </GridView>
             </PivotItem>
             <PivotItem x:Uid="playlistsPivot" Header="Playlists">
-                <Frame
-                    Name="PlaylistsFrame"
-                    SourcePageType="local:PlaylistsCollectionView"/>
+                <Frame Name="PlaylistsFrame" SourcePageType="local:PlaylistsCollectionView" />
             </PivotItem>
             <PivotItem x:Uid="foldersPivot" Header="Folders">
-                <Frame
-                    x:Name="FoldersFrame"
-                    SourcePageType="local:FoldersView"/>
+                <Frame x:Name="FoldersFrame" SourcePageType="local:FoldersView" />
             </PivotItem>
             <Pivot.ItemContainerStyle>
                 <Style TargetType="PivotItem">
@@ -527,6 +602,10 @@
                         <Setter Target="alphabetList.Margin" Value="0,60,0,0" />
                         <Setter Target="semanticZoom.(Grid.Row)" Value="1" />
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="albumGridView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
+                        <Setter Target="artistGridView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
+                        <Setter Target="albumGridView.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
+                        <Setter Target="artistGridView.ItemTemplate" Value="{StaticResource ArtistMobileTemplate}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

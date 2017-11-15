@@ -103,17 +103,16 @@ namespace BreadPlayer
             }
             catch { }
         }
-
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((sender as Pivot).SelectedIndex == 1)
+            foreach (ISelectable record in e.RemovedItems)
             {
-                BreadsFrame.Navigate(typeof(AlbumArtistView), "AlbumView");
+                record.IsSelected = false;
             }
-            else if ((sender as Pivot).SelectedIndex == 2)
+            foreach (ISelectable record in e.AddedItems)
             {
-                BakersFrame.Navigate(typeof(AlbumArtistView), "ArtistView");
+                record.IsSelected = true;
             }
-        }
+        }        
     }
 }

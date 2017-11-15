@@ -44,6 +44,8 @@ namespace BreadPlayer.ViewModels
         public AlbumArtistViewModel()
         {
             InitDb();
+            LoadAlbums();
+            LoadArtists();
             Messenger.Instance.Register(MessageTypes.MsgAddAlbums, new Action<Message>(HandleAddAlbumMessage));
         }
 
@@ -135,14 +137,15 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        public void LoadAlbums()
+        public async void LoadAlbums()
         {
             AlbumCollection.OnStartLoading = () => RecordsLoading = true;
             AlbumCollection.OnEndLoading = () => RecordsLoading = false;
-            AlbumCollection.OnError = (ex) => RecordsLoading = false;            
+            AlbumCollection.OnError = (ex) => RecordsLoading = false;
+            await AlbumCollection.RefreshAsync().ConfigureAwait(false);
         }
 
-        public void LoadArtists()
+        public async void LoadArtists()
         {
             ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
             ArtistsCollection.OnStartLoading = () => RecordsLoading = true;
@@ -151,6 +154,7 @@ namespace BreadPlayer.ViewModels
                  RecordsLoading = false;
             };
             ArtistsCollection.OnError = (ex) => RecordsLoading = false;
+            await ArtistsCollection.RefreshAsync().ConfigureAwait(false);
         }
 
         private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
