@@ -2,6 +2,7 @@
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BreadPlayer.ViewModels
@@ -75,17 +76,17 @@ namespace BreadPlayer.ViewModels
                 QueryArtists = new ThreadSafeObservableCollection<Artist>();
 
                 var queryresults = (await StartSearch(query.ToLower()));
-                if (queryresults.Songs != null)
+                if (queryresults.Songs?.Any() == true)
                 {
                     ToastsVisible = true;
                     QuerySongs.AddRange(queryresults.Songs);
                 }
-                if (queryresults.Albums != null)
+                if (queryresults.Albums?.Any() == true)
                 {
                     AlbumsVisible = true;
                     QueryAlbums.AddRange(queryresults.Albums);
                 }
-                if (queryresults.Artists != null)
+                if (queryresults.Artists?.Any() == true)
                 {
                     ArtistsVisible = true;
                     QueryArtists.AddRange(queryresults.Artists);

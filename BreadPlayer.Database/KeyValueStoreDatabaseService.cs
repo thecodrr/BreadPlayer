@@ -211,7 +211,7 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetSafeTransaction())
                 {
-                    var recordList = new List<T>(limit);
+                    var recordList = new List<T>();
                     var ids = tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs().ToArray();
                     for (int i =0; i<= limit; i++)
                     {

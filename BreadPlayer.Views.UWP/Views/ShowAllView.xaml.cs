@@ -24,7 +24,7 @@ namespace BreadPlayer.Views
         string _recordType = "";
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
-            //UpdateTemplate(e.Size.Width);
+            UpdateTemplate(e.Size.Width);
         }
         private void UpdateTemplate(double width)
         {
@@ -42,14 +42,23 @@ namespace BreadPlayer.Views
             switch (_recordType)
             {
                 case "Toasts":
-                    searchResultsList.ItemTemplate = toastTemplate as DataTemplate;
-                    searchResultsList.ItemContainerStyle = Resources["ToastItemStyle"] as Style;
+                    if (searchResultsList.ItemTemplate != toastTemplate)
+                    {
+                        searchResultsList.ItemTemplate = toastTemplate as DataTemplate;
+                        searchResultsList.ItemContainerStyle = Resources["ToastItemStyle"] as Style;
+                    }
                     break;
                 case "Breads":
-                    searchResultsList.ItemTemplate = albumTemplate as DataTemplate;
+                    if (searchResultsList.ItemTemplate != albumTemplate)
+                    {
+                        searchResultsList.ItemTemplate = albumTemplate as DataTemplate;
+                    }
                     break;
                 case "Bakers":
-                    searchResultsList.ItemTemplate = artistTemplate as DataTemplate;
+                    if (searchResultsList.ItemTemplate != artistTemplate)
+                    {
+                        searchResultsList.ItemTemplate = artistTemplate as DataTemplate;
+                    }
                     break;
             }
         }
@@ -57,25 +66,28 @@ namespace BreadPlayer.Views
         {
             base.OnNavigatedTo(e);
             var parameter = (ValueTuple<Query, string>)e.Parameter;
-            var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             _recordType = parameter.Item2;
             switch (parameter.Item2)
             {
                 case "Toasts":
+                    var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
                     LibraryService libraryService = new LibraryService(documentStore);
-                    searchResultsList.ItemsSource = await libraryService.Query(parameter.Item1.QueryWord);
+                    var mediaFiles = await libraryService.Query(parameter.Item1.QueryWord);
+                    if(mediaFiles != null)
+                        searchResultsList.ItemsSource = mediaFiles;
                     break;
-
                 case "Bakers":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
-                    AlbumArtistService artistService = new AlbumArtistService(documentStore);
-                    searchResultsList.ItemsSource = await artistService.QueryArtistsAsync(parameter.Item1.QueryWord);
+                    var artists = await SharedLogic.Instance.AlbumArtistService.QueryArtistsAsync(parameter.Item1.QueryWord);
+                    if(artists != null)
+                        searchResultsList.ItemsSource = artists;
                     break;
 
                 case "Breads":
                     searchResultsList.ItemsPanel = this.Resources["BreadsBakersPanel"] as ItemsPanelTemplate;
-                    AlbumArtistService albumService = new AlbumArtistService(documentStore);
-                    searchResultsList.ItemsSource = await albumService.QueryAlbumsAsync(parameter.Item1.QueryWord);
+                    var albums = await SharedLogic.Instance.AlbumArtistService.QueryAlbumsAsync(parameter.Item1.QueryWord);
+                    if(albums != null)
+                        searchResultsList.ItemsSource = albums; 
                     break;
             }
             UpdateTemplate(Window.Current.Bounds.Width);
