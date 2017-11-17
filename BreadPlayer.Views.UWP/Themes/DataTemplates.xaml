@@ -152,9 +152,8 @@
                 Width="200"
                 Height="200"
                 HorizontalAlignment="Stretch"
-                x:Phase="2"
                 Opacity="0"
-                Source="{x:Bind AlbumArt, Mode=OneWay}"
+                Source="{Binding AlbumArt, Mode=OneWay}"
                 Stretch="Uniform">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="ImageOpened">
@@ -335,9 +334,8 @@
                 Width="130"
                 Height="130"
                 HorizontalAlignment="Stretch"
-                x:Phase="2"
                 Opacity="0"
-                Source="{x:Bind AlbumArt, Mode=OneWay}"
+                Source="{Binding AlbumArt, Mode=OneWay}"
                 Stretch="Uniform">
                 <Interactivity:Interaction.Behaviors>
                     <Core:EventTriggerBehavior EventName="ImageOpened">

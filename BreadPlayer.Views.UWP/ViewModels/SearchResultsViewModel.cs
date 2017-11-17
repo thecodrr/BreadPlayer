@@ -1,7 +1,9 @@
 ﻿using BreadPlayer.Core;
 using BreadPlayer.Core.Models;
 using BreadPlayer.Database;
+using BreadPlayer.Messengers;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +11,18 @@ namespace BreadPlayer.ViewModels
 {
     public class SearchResultsViewModel : ObservableObject
     {
+        public SearchResultsViewModel()
+        {
+            Messenger.Instance.Register(Messengers.MessageTypes.MsgSearch, new System.Action<Message>(HandleSearchMessage));
+        }
+        private async void HandleSearchMessage(Message message)
+        {
+            if(message.Payload is string query)
+            {
+                message.HandledStatus = MessageHandledStatus.HandledCompleted;
+                await GetAlbumsAndTracks(query).ConfigureAwait(false);
+            }
+        }
         private bool _albumsVisible;
 
         public bool AlbumsVisible
@@ -33,25 +47,25 @@ namespace BreadPlayer.ViewModels
             set => Set(ref _toastsVisible, value);
         }
 
-        private ThreadSafeObservableCollection<Mediafile> _querySongs;
+        private List<Mediafile> _querySongs;
 
-        public ThreadSafeObservableCollection<Mediafile> QuerySongs
+        public List<Mediafile> QuerySongs
         {
             get => _querySongs;
             set => Set(ref _querySongs, value);
         }
 
-        private ThreadSafeObservableCollection<Album> _queryAlbums;
+        private List<Album> _queryAlbums;
 
-        public ThreadSafeObservableCollection<Album> QueryAlbums
+        public List<Album> QueryAlbums
         {
             get => _queryAlbums;
             set => Set(ref _queryAlbums, value);
         }
 
-        private ThreadSafeObservableCollection<Artist> _queryArtists;
+        private List<Artist> _queryArtists;
 
-        public ThreadSafeObservableCollection<Artist> QueryArtists
+        public List<Artist> QueryArtists
         {
             get => _queryArtists;
             set => Set(ref _queryArtists, value);
@@ -59,37 +73,31 @@ namespace BreadPlayer.ViewModels
 
         public async Task<(IEnumerable<Mediafile> Songs, IEnumerable<Album> Albums, IEnumerable<Artist> Artists)> StartSearch(string query)
         {
-            var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
+            var documentStore = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
             LibraryService service = new LibraryService(documentStore);
-            AlbumArtistService albumArtistService = new AlbumArtistService(documentStore);
-            return (await service.Query(query, 10),
-                    await albumArtistService.QueryAlbumsAsync(query, 5),
-                    await albumArtistService.QueryArtistsAsync(query, 5));
+            return (await service.Query(query).ConfigureAwait(false),
+                    await SharedLogic.Instance.AlbumArtistService.QueryAlbumsAsync(query, 5).ConfigureAwait(false),
+                    await SharedLogic.Instance.AlbumArtistService.QueryArtistsAsync(query, 5).ConfigureAwait(false));
         }
-
         public async Task GetAlbumsAndTracks(string query)
         {
             if (!string.IsNullOrEmpty(query))
             {
-                QueryAlbums = new ThreadSafeObservableCollection<Album>();
-                QuerySongs = new ThreadSafeObservableCollection<Mediafile>();
-                QueryArtists = new ThreadSafeObservableCollection<Artist>();
-
-                var queryresults = (await StartSearch(query.ToLower()));
+                var queryresults = (await StartSearch(query.ToLower()).ConfigureAwait(false));
                 if (queryresults.Songs?.Any() == true)
                 {
                     ToastsVisible = true;
-                    QuerySongs.AddRange(queryresults.Songs);
+                    QuerySongs = new List<Mediafile>(queryresults.Songs);
                 }
                 if (queryresults.Albums?.Any() == true)
                 {
                     AlbumsVisible = true;
-                    QueryAlbums.AddRange(queryresults.Albums);
+                    QueryAlbums = new List<Album>(queryresults.Albums);
                 }
                 if (queryresults.Artists?.Any() == true)
                 {
                     ArtistsVisible = true;
-                    QueryArtists.AddRange(queryresults.Artists);
+                    QueryArtists = new List<Artist>(queryresults.Artists);
                 }
             }
         }

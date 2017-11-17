@@ -225,7 +225,9 @@ namespace BreadPlayer.Controls
             if (sender.Text.Any())
             {
                 UnSelectAll();
-                NavigationService.Instance.Frame.Navigate(typeof(SearchResultsView), new Query { QueryWord = sender.Text });
+                if(_pageFrame.CurrentSourcePageType != typeof(SearchResultsView))
+                    _pageFrame.Navigate(typeof(SearchResultsView));
+                Messengers.Messenger.Instance.NotifyColleagues(Messengers.MessageTypes.MsgSearch, sender.Text);
             }
         }
 

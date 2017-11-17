@@ -24,7 +24,7 @@ namespace BreadPlayer.Database
 
         public Task<IEnumerable<Mediafile>> Query(string term, int limit = int.MaxValue)
         {
-            return Database.QueryRecords<Mediafile>(term, limit);
+            return Database.QueryRecords<Mediafile>(string.Format("{0}&{1}&{2}", term, term, term), limit);
         }
 
         public Task<IEnumerable<Mediafile>> GetAllMediafiles()

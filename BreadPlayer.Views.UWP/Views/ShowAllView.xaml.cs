@@ -19,6 +19,7 @@ namespace BreadPlayer.Views
         public ShowAllView()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
             Window.Current.SizeChanged += Current_SizeChanged;
         }
         string _recordType = "";
@@ -70,7 +71,7 @@ namespace BreadPlayer.Views
             switch (parameter.Item2)
             {
                 case "Toasts":
-                    var documentStore = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
+                    var documentStore = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks");
                     LibraryService libraryService = new LibraryService(documentStore);
                     var mediaFiles = await libraryService.Query(parameter.Item1.QueryWord);
                     if(mediaFiles != null)

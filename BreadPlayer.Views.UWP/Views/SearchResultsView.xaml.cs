@@ -15,22 +15,14 @@ namespace BreadPlayer.Views
     /// </summary>
     public sealed partial class SearchResultsView : Page
     {
-        private Query CurrentQuery;
-
         public SearchResultsView()
         {
             InitializeComponent();
-        }
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            CurrentQuery = e.Parameter as Query;
+            this.NavigationCacheMode = NavigationCacheMode.Required;
             SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            await viewModel.GetAlbumsAndTracks((e.Parameter as Query).QueryWord);
             DataContext = viewModel;
         }
-
+        
         private void AlbumsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             foreach (ISelectable record in e.RemovedItems)
@@ -45,7 +37,7 @@ namespace BreadPlayer.Views
 
         private void OnShowAllClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            NavigationService.Instance.Frame.Navigate(typeof(ShowAllView), (CurrentQuery, (sender as Button).Tag.ToString()));
+            //NavigationService.Instance.Frame.Navigate(typeof(ShowAllView), (CurrentQuery, (sender as Button).Tag.ToString()));
         }
     }
 }

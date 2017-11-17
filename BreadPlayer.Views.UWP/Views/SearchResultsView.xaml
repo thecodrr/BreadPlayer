@@ -29,8 +29,7 @@
                 FontSize="22"
                 FontWeight="SemiBold"
                 Foreground="{ThemeResource TextBrush}"
-                Text="Bakers"
-                Visibility="{Binding Path=ArtistsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+                Text="Bakers"/>
             <Button
                 Margin="0,0,20,0"
                 HorizontalAlignment="Right"
@@ -38,8 +37,7 @@
                 Click="OnShowAllClicked"
                 Foreground="{ThemeResource TextBrush}"
                 Style="{StaticResource HyperlinkBtn}"
-                Tag="Bakers"
-                Visibility="{Binding ElementName=artistsHeader, Path=Visibility}">
+                Tag="Bakers">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="0,3,0,0"
@@ -64,8 +62,7 @@
                 ScrollViewer.HorizontalScrollMode="Auto"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                SelectionChanged="AlbumsList_SelectionChanged"
-                Visibility="{Binding ElementName=artistsHeader, Path=Visibility}">
+                SelectionChanged="AlbumsList_SelectionChanged">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" />
@@ -80,8 +77,7 @@
                 FontSize="22"
                 FontWeight="SemiBold"
                 Foreground="{ThemeResource TextBrush}"
-                Text="Breads"
-                Visibility="{Binding Path=AlbumsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+                Text="Breads"/>
             <Button
                 Grid.Row="2"
                 Margin="0,0,20,0"
@@ -90,8 +86,7 @@
                 Click="OnShowAllClicked"
                 Foreground="{ThemeResource TextBrush}"
                 Style="{StaticResource HyperlinkBtn}"
-                Tag="Breads"
-                Visibility="{Binding ElementName=albumsHeader, Path=Visibility}">
+                Tag="Breads">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="0,3,0,0"
@@ -116,8 +111,7 @@
                 ScrollViewer.HorizontalScrollMode="Auto"
                 ScrollViewer.VerticalScrollMode="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                SelectionChanged="AlbumsList_SelectionChanged"
-                Visibility="{Binding ElementName=albumsHeader, Path=Visibility}">
+                SelectionChanged="AlbumsList_SelectionChanged">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" />
@@ -132,8 +126,7 @@
                 FontSize="22"
                 FontWeight="SemiBold"
                 Foreground="{ThemeResource TextBrush}"
-                Text="Toasts"
-                Visibility="{Binding Path=ToastsVisible, FallbackValue=Collapsed, TargetNullValue=Collapsed}" />
+                Text="Toasts"/>
             <Button
                 Grid.Row="4"
                 Margin="0,0,20,0"
@@ -142,8 +135,7 @@
                 Click="OnShowAllClicked"
                 Foreground="{ThemeResource TextBrush}"
                 Style="{StaticResource HyperlinkBtn}"
-                Tag="Toasts"
-                Visibility="{Binding ElementName=songsHeader, Path=Visibility}">
+                Tag="Toasts">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="0,3,0,0"
@@ -163,8 +155,7 @@
                 EvenRowBackground="{ThemeResource EvenRowBackground}"
                 ItemTemplate="{StaticResource MediafileTemplate}"
                 ItemsSource="{Binding Path=QuerySongs, UpdateSourceTrigger=PropertyChanged}"
-                OddRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                Visibility="{Binding ElementName=songsHeader, Path=Visibility}">
+                OddRowBackground="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

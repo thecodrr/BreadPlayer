@@ -2,6 +2,7 @@
 using BreadPlayer.Interfaces;
 using DBreeze;
 using DBreeze.Objects;
+using DBreeze.TextSearch;
 using DBreeze.Transactions;
 using DBreeze.Utils;
 using Newtonsoft.Json;
@@ -180,7 +181,7 @@ namespace BreadPlayer.Database
                 {
                     if (tran != null && records?.Any() == true)
                     {
-                        tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
+                        //tran.Technical_SetTable_OverwriteIsNotAllowed(_tableName);
                         foreach (var record in records.ToList())
                         {
                             record.Id = tran.ObjectGetNewIdentity<long>(_tableName);
@@ -192,9 +193,8 @@ namespace BreadPlayer.Database
                                         },
                                 NewEntity = true,
                                 //Changes Select-Insert pattern to Insert (speeds up insert process)
-                                Entity = record //Entity itself
-                            },
-                                true);
+                                Entity = record, //Entity itself
+                            });
                             //Using text-search engine for the free text search
                             tran.TextInsert(_textTableName, record.Id.To_8_bytes_array_BigEndian(), record.TextSearchKey);
                         }
@@ -211,15 +211,23 @@ namespace BreadPlayer.Database
             {
                 using (var tran = _engine.GetSafeTransaction())
                 {
+                    var terms = term.Split('&');
                     var recordList = new List<T>();
-                    var ids = tran.TextSearch(_textTableName).Block(term.ToLower()).GetDocumentIDs().ToArray();
-                    for (int i =0; i<= limit; i++)
+                    var search = tran.TextSearch(_textTableName).Block(term.ToLower(), ignoreOnEmptyParameters: true);
+                    for(int a = 0; a < terms.Length; a++)
                     {
-                        if (i > ids.Length - 1)
-                            break;
-                        var o = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(ids[i])).ObjectGet<T>();
-                        recordList.Add(o.Entity);
+                        search = search.Or(terms[a]);
                     }
+                    var ids = search.GetDocumentIDs();
+                    int index = -1;
+                    foreach(var id in ids)
+                    {
+                        index++;
+                        if (index > limit)
+                            break;
+                        var o = tran.Select<byte[], byte[]>(_tableName, 1.ToIndex(id)).ObjectGet<T>();
+                        recordList.Add(o.Entity);
+                    }                  
                     return recordList.Take(limit);
                 }
             });

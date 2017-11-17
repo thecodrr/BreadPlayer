@@ -75,7 +75,7 @@ namespace BreadPlayer.ViewModels
 
         private PlaylistService PlaylistService =>
                                             _playlistService ?? (_playlistService = new PlaylistService(
-                new KeyValueStoreDatabaseService(
+                new DocumentStoreDatabaseService(
                     SharedLogic.Instance.DatabasePath,
                     "Playlists")));
         private void AddPlaylist(Playlist playlist)
@@ -207,7 +207,7 @@ namespace BreadPlayer.ViewModels
                        SongId = x.Id,
                        PlaylistId = plist.Id
                    });
-                    var db = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "PlaylistSongs");
+                    var db = new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "PlaylistSongs");
                     await db.InsertRecords(playlistSongs);
                     var s = await db.GetRecords<ChildSong>();
                     //await AddSongsToPlaylist(plist, songs.ToList());
@@ -243,7 +243,7 @@ namespace BreadPlayer.ViewModels
                 {
                     if (menu?.DataContext is Album album)
                     {
-                        var albumSongs = await new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query((album.AlbumName));
+                        var albumSongs = await new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")).Query((album.AlbumName));
                         if (albumSongs?.Any() == true)
                             songList.AddRange(albumSongs);
                     }

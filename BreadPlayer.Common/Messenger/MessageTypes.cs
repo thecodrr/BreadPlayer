@@ -14,10 +14,10 @@
         MsgAddAlbums,
         MsgPlaylistLoaded,
         MsgUpdateSongCount,
-        MsgSearchStarted,
         MsgStopAfterSong,
         MsgImportFolder,
-        MsgNavigate
+        MsgNavigate,
+        MsgSearch
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
     }
 }
