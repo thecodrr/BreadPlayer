@@ -1,0 +1,676 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aboutSettingsText" xml:space="preserve">
+    <value>عن</value>
+  </data>
+  <data name="noToastsTB.Text" xml:space="preserve">
+    <value>لا يوجد خبز محمص فى تجميعتك</value>
+  </data>
+  <data name="importToastsTB.Text" xml:space="preserve">
+    <value>اضغط هنا لاستيراد البعض</value>
+  </data>
+  <data name="albumsHeader.Text" xml:space="preserve">
+    <value>الخبز</value>
+  </data>
+  <data name="appearenceHeader.Text" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+  <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العودة لقائمه الخبز المحمص</value>
+  </data>
+  <data name="suggestionRB.Content" xml:space="preserve">
+    <value>اقتراح</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="questionRB.Content" xml:space="preserve">
+    <value>سؤال</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="kudosRB.Content" xml:space="preserve">
+    <value>حسنه</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="changeAccentCheckBox.Content" xml:space="preserve">
+    <value>غير لون التطبيق بغلاف الالبوم</value>
+  </data>
+  <data name="changeAccentHelpText.Text" xml:space="preserve">
+    <value>تفعيل هذه الميزة يجعل التطبيق يغير لونه لالوان غلاف البوم الاغنيه الحاليه</value>
+    <comment>Enabling this makes the player adapt the accent color according to the album art of the currently playing song.</comment>
+  </data>
+  <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
+    <value>غير غلاف الالبوم</value>
+  </data>
+  <data name="contactMeTB.Text" xml:space="preserve">
+    <value>اتصل بى:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="contributorsHeader.Text" xml:space="preserve">
+    <value>مساهمين</value>
+  </data>
+  <data name="creditsHeader.Text" xml:space="preserve">
+    <value>لوحه الشرف</value>
+  </data>
+  <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
+    <value>احذف من قائمه التشغيل</value>
+  </data>
+  <data name="deletePlaylistMenuItem.Text" xml:space="preserve">
+    <value>احذف قائمه التشغيل</value>
+  </data>
+  <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>عطل الاختيار المتعدد</value>
+  </data>
+  <data name="enableBlurCheckBox.Content" xml:space="preserve">
+    <value>تفعيل الضبابيه</value>
+  </data>
+  <data name="enableBlurHelpText.Text" xml:space="preserve">
+    <value>الضبابيه غير مستحسنه للاجهزة الضعيف و قد تسبب بطئ فى الاداء</value>
+  </data>
+  <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
+    <value>الموازن مغلق</value>
+  </data>
+  <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
+    <value>الموازن مفعل</value>
+  </data>
+  <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>تفعيل الاختيار المتعدد</value>
+  </data>
+  <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضغط للذهاب لصفحتنا على الفيس بوك</value>
+  </data>
+  <data name="favoritesMenuItem.Label" xml:space="preserve">
+    <value>الخبز المحمص المفضل</value>
+  </data>
+  <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
+    <value>اذهب لخبزى المحمص المفضل</value>
+  </data>
+  <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضغط لفتح صفحه المشروع على github.</value>
+  </data>
+  <data name="importFolderTB.Text" xml:space="preserve">
+    <value>استورد مجلدات</value>
+  </data>
+  <data name="importPlaylistTB.Text" xml:space="preserve">
+    <value>استورد قوائم تشغيل</value>
+  </data>
+  <data name="newPlaylistTB.Text" xml:space="preserve">
+    <value>قائمه تشغيل جديدة</value>
+  </data>
+  <data name="lastfmCredit.Text" xml:space="preserve">
+    <value>بيانات الالبوم من Last.fm للمطرب &amp;amp; .</value>
+  </data>
+  <data name="lastfmLoginBtn.Content" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تسجيل الدخول لحسابك على Last.fm</value>
+  </data>
+  <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ادخل كلمه مرور Last.fm هنا...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmPasswordTextBlock.Header" xml:space="preserve">
+    <value>كلمه المرور:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ادخل اسم مستخدمك على Last.fm هنا...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.Header" xml:space="preserve">
+    <value>اسم المستخدم:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="leaveReviewBtn.Content" xml:space="preserve">
+    <value>اترك مراجعه</value>
+  </data>
+  <data name="toastsPivot.Header" xml:space="preserve">
+    <value>خبز محمص</value>
+  </data>
+  <data name="licenseHeader.Text" xml:space="preserve">
+    <value>الرخصه</value>
+  </data>
+  <data name="licenseText.Text" xml:space="preserve">
+    <value>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</value>
+    <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
+  </data>
+  <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضف هذا الخبز المحمص لقائمه التشغيل او لانتظار الخبز</value>
+    <comment>Add this toast to a playlist or now baking queue</comment>
+  </data>
+  <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>شغل الخبز المحمص</value>
+  </data>
+  <data name="lockscreenHeader.Text" xml:space="preserve">
+    <value>شاشه القفل</value>
+  </data>
+  <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضغط لتراسلنا عبر البريد الالكترونى.</value>
+  </data>
+  <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اكتم الصوت</value>
+  </data>
+  <data name="nowBakingMenuItem.Label" xml:space="preserve">
+    <value>يخبز الان</value>
+  </data>
+  <data name="nowBakingMenuItem.Tooltip" xml:space="preserve">
+    <value>اذهب لخبزك المحمص المخبوز الان</value>
+  </data>
+  <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح ملف للتشغيل</value>
+  </data>
+  <data name="openSongLocationMenuItem.Text" xml:space="preserve">
+    <value>افتح مكان الخبز المحمص</value>
+  </data>
+  <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اظهر اعدادات اكتر.</value>
+  </data>
+  <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>شغل كل الخبز المحمص فى هذه القائمه</value>
+  </data>
+  <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
+    <value>تشغيل الكل</value>
+    <comment>(Respect the whitespace at the beginning.)</comment>
+  </data>
+  <data name="playMenuItem.Text" xml:space="preserve">
+    <value>تشغيل</value>
+  </data>
+  <data name="preventScreenLockingCheckBox.Content" xml:space="preserve">
+    <value>امنع قفل الشاشه</value>
+  </data>
+  <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
+    <value>هذه الميزة تستهلك الكثير من البطاريه, كما انها غير ثابته</value>
+    <comment>This feature is extremely battery consuming and hence, is not persisted through sessions.</comment>
+  </data>
+  <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
+    <value>تفعيل هذه سيمنع النظام من اغلاق الشاشه</value>
+  </data>
+  <data name="propertiesMenuItem.Text" xml:space="preserve">
+    <value>خصائص</value>
+  </data>
+  <data name="musicHistoryMenuItem.Label" xml:space="preserve">
+    <value>تاريخ الخبز المحمص</value>
+  </data>
+  <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
+    <value>اذهب لتاريخ الخبز المحمص</value>
+  </data>
+  <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضغط هنا للذهب للصفحتنا الشخصيه على ريديت</value>
+  </data>
+  <data name="relocateSongMenuItem.Text" xml:space="preserve">
+    <value>اعاده تعيين الخبز المحمص</value>
+  </data>
+  <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
+    <value>اعاده تسميه قائمه التشغيل</value>
+  </data>
+  <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
+    <value>غير خلفيه شاشه القفل بغلاف الالبوم</value>
+  </data>
+  <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
+    <value>استرح خلفيتك ستعود مره اخرى بمجرد اغلاق التطبيق</value>
+  </data>
+  <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
+    <value>هذه الخاصيه ستغيير خلفيه شاشه القفل بصورة البوم الاغنيه الحاليه</value>
+  </data>
+  <data name="reportIssueBtn.Content" xml:space="preserve">
+    <value>ابلغ عن مشكله</value>
+  </data>
+  <data name="requestFeatureBtn.Content" xml:space="preserve">
+    <value>اطلب ميزة</value>
+  </data>
+  <data name="resetEverythingBtn.Content" xml:space="preserve">
+    <value>اعاده تعيين كل شئ</value>
+  </data>
+  <data name="resetEverythingHelpText.Text" xml:space="preserve">
+    <value>هذه سيعيد تعيين مكتبه الخبز, قوائم التشغيل, الاعدادات، تاريخ التشغيل الخ</value>
+    <comment>This will reset your library, playlists, settings, play history etc.</comment>
+  </data>
+  <data name="resetHeader.Text" xml:space="preserve">
+    <value>اعاده تعيين مشغل الخبز</value>
+  </data>
+  <data name="sendFeedbackBtn.Content" xml:space="preserve">
+    <value>ارسل المراجعه</value>
+  </data>
+  <data name="settingsMenuItem.Label" xml:space="preserve">
+    <value>الاعدادات</value>
+  </data>
+  <data name="settingsMenuItem.Tooltip" xml:space="preserve">
+    <value>اذهب لاعدادات مشغل الخبز</value>
+  </data>
+  <data name="showEqualizerBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اظهر الموازن</value>
+  </data>
+  <data name="showMoreBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اظهر المزيد من الخيارات</value>
+  </data>
+  <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اخلط</value>
+  </data>
+  <data name="songsHeader.Text" xml:space="preserve">
+    <value>الخبز المحمص</value>
+  </data>
+  <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
+    <value>اوقف التشغيل بعد هذا الخبز</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
+    <value>مظلم</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OnContent" xml:space="preserve">
+    <value>مظئ</value>
+  </data>
+  <data name="themeHelpText.Text" xml:space="preserve">
+    <value>تغيير السمه يتطلب اعاده تشغيل التطبيق</value>
+  </data>
+  <data name="themeText.Text" xml:space="preserve">
+    <value>السمه:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="yourMusicMenuItem.Label" xml:space="preserve">
+    <value>سله الخبز المحمص</value>
+  </data>
+  <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
+    <value>اذهب لسله خبزك المحمص</value>
+  </data>
+  <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اضغط لتذهب لصفحتنا الشخصيه على تويتر.</value>
+  </data>
+  <data name="version.Text" xml:space="preserve">
+    <value>v2.7.7.0-تجريبى</value>
+    <comment>beta = تجريبى</comment>
+  </data>
+  <data name="versionHeader.Text" xml:space="preserve">
+    <value>الاصدار</value>
+    <comment>represents the version header</comment>
+  </data>
+  <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الصوت</value>
+  </data>
+  <data name="bakerInfoPivot.Header" xml:space="preserve">
+    <value>السيرة الذاتيه للخباز</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>كلمات الاغانى</value>
+  </data>
+  <data name="nowPlayingPivot.Header" xml:space="preserve">
+    <value>الان يخبز</value>
+  </data>
+  <data name="addToFavCmd.Text" xml:space="preserve">
+    <value>اضافه للمفضله</value>
+  </data>
+  <data name="basicCommandsHeader.Text" xml:space="preserve">
+    <value>الاوامر الاساسيه</value>
+  </data>
+  <data name="basicCommandsInfo.Text" xml:space="preserve">
+    <value>هذه الاوامر ستعمل من اى مكان.</value>
+  </data>
+  <data name="commandsHeader.Text" xml:space="preserve">
+    <value>اوامر</value>
+  </data>
+  <data name="contactSettingsText" xml:space="preserve">
+    <value>اتصل</value>
+  </data>
+  <data name="deleteSongCmd.Text" xml:space="preserve">
+    <value>احذف الخبز المحمص</value>
+  </data>
+  <data name="helpfulLinksHeader.Text" xml:space="preserve">
+    <value>روابط مفيدة</value>
+  </data>
+  <data name="keyBindingsHeader.Text" xml:space="preserve">
+    <value>تطويع الازرار</value>
+  </data>
+  <data name="keyBindingsPivot.Header" xml:space="preserve">
+    <value>تطويعات الزرار</value>
+  </data>
+  <data name="muteCmd.Text" xml:space="preserve">
+    <value>اكتم</value>
+  </data>
+  <data name="nextCmd.Text" xml:space="preserve">
+    <value>التالى</value>
+  </data>
+  <data name="openFileCmd.Text" xml:space="preserve">
+    <value>افتح ملف</value>
+  </data>
+  <data name="playPauseCmd.Text" xml:space="preserve">
+    <value>تشغيل/ايقاف مؤقت</value>
+  </data>
+  <data name="playSongCmd.Text" xml:space="preserve">
+    <value>شغل الخبز المحمص</value>
+  </data>
+  <data name="prevCmd.Text" xml:space="preserve">
+    <value>السابق</value>
+  </data>
+  <data name="repeatCmd.Text" xml:space="preserve">
+    <value>اعاده تشغيل</value>
+  </data>
+  <data name="seekBackwardCmd.Text" xml:space="preserve">
+    <value>التراجع</value>
+  </data>
+  <data name="seekForwardCmd.Text" xml:space="preserve">
+    <value>التقدم</value>
+  </data>
+  <data name="showEQCmd.Text" xml:space="preserve">
+    <value>اظهر الموازن</value>
+  </data>
+  <data name="showPropsCmd.Text" xml:space="preserve">
+    <value>اظهر الخصائص</value>
+  </data>
+  <data name="showTagsCmd.Text" xml:space="preserve">
+    <value>اظهر الاذونات</value>
+  </data>
+  <data name="shuffleCmd.Text" xml:space="preserve">
+    <value>اخلط</value>
+  </data>
+  <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
+    <value>اوامر مكتبه الخبز المحمص</value>
+  </data>
+  <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
+    <value>هذه الاوامر ستعمل فقط اذا كان التركيز على مشغل الخبز</value>
+  </data>
+  <data name="volDownCmd.Text" xml:space="preserve">
+    <value>خفض الصوت</value>
+  </data>
+  <data name="volUpCmd.Text" xml:space="preserve">
+    <value>رفع الصوت</value>
+  </data>
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
+    <value>ساهم بالكود</value>
+  </data>
+  <data name="contributeSettingsText" xml:space="preserve">
+    <value>ساهم</value>
+  </data>
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
+    <value>ساعدنا فى الترجمه</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="testForUsTxt.Text" xml:space="preserve">
+    <value>ساعدنا فى اكتشاف المشاكل</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="donatePatreonTxt.Text" xml:space="preserve">
+    <value>تبرع من خلال Patreon</value>
+  </data>
+  <data name="crossfadeSwitch.Header" xml:space="preserve">
+    <value>تقاطع التلاشى اثناء تغيير الاغنيه</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="generalHeader.Text" xml:space="preserve">
+    <value>عام</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="watchAnAdMenuItem.Label" xml:space="preserve">
+    <value>تبرع</value>
+  </data>
+  <data name="watchAnAdMenuItem.Tooltip" xml:space="preserve">
+    <value>اضغط لترى خيارات التبرع</value>
+  </data>
+  <data name="bugReportRB.Content" xml:space="preserve">
+    <value>ابلغ عن مشكله</value>
+  </data>
+  <data name="otherRB.Content" xml:space="preserve">
+    <value>اخرى</value>
+  </data>
+  <data name="sendBtn.Content" xml:space="preserve">
+    <value>ارسل</value>
+  </data>
+  <data name="backgroundOverlayHelpText.Text" xml:space="preserve">
+    <value>هذا هو لون غلاف الالبوم على خلفية البرنامج.
+اعاده التشغيل مطلوبه ليعمل.</value>
+    <comment>This is the overlay color of album art on the player background. Restart is required for this change to take effect.</comment>
+  </data>
+  <data name="backgroundOverlayHeader.Text" xml:space="preserve">
+    <value>لون غطاء ضباب الخلفية:</value>
+  </data>
+  <data name="personlizationSettingsText" xml:space="preserve">
+    <value>التشخيص</value>
+  </data>
+  <data name="indebtedTB.Text" xml:space="preserve">
+    <value>مشغل الخبز فى دين هولاء الاشخاص العظماء لاخلاصهم و دعمهم</value>
+    <comment>BreadPlayer is indebted to these great people for their dedication and support.</comment>
+  </data>
+  <data name="shuffleAllRun.Text" xml:space="preserve">
+    <value>اخلط الكل</value>
+  </data>
+  <data name="lastfmLogoutBtn.Content" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="lastfmLogoutBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تسجيل خروج حسابك على Last.fm</value>
+  </data>
+  <data name="breadsHeader" xml:space="preserve">
+    <value>الخبز</value>
+  </data>
+  <data name="playlistsHeader" xml:space="preserve">
+    <value>قوائم التشغيل</value>
+  </data>
+  <data name="donationTipTB.Text" xml:space="preserve">
+    <value>ادعمنى من خلال صفحتى على Patreon .
+سيتم مكافئتك باصدارات تجريبيه مبكره, القدره على التصويت على المميزات الجديدة و الوصول لمنشوراتى على الموقع</value>
+    <comment>Support me financially by becoming my Patron on Patreon. Patrons will get awesome rewards like early betas, ability to vote on ideas, and access to my Patreon post stream.</comment>
+  </data>
+  <data name="patronBtn.Content" xml:space="preserve">
+    <value>ادعمنا عن طريق Patron</value>
+  </data>
+  <data name="translationTipTB.Text" xml:space="preserve">
+    <value>ساعدنا فى ترجمه هذا الوحش للغتك الام و اجعل مشغل الخبز سهل للاستخدام لاخوانك فى اللغه.
+يتم اضافه اسماء كل المترجمين فى قائمه المساهمين</value>
+    <comment>Help me translate this beast into your native language and make BreadPlayer easy for your countrymen to use. All translators get their name in the contributors list.</comment>
+  </data>
+  <data name="translatorBtn.Content" xml:space="preserve">
+    <value>اصبح مترجما</value>
+  </data>
+  <data name="becomeACoderBtn.Content" xml:space="preserve">
+    <value>اصبح مبرمج</value>
+  </data>
+  <data name="codeContributionTipTB.Text" xml:space="preserve">
+    <value>لو كنت مطور ارحب جدا بمساعدتك.
+لا تقلق ساكون معاك طوال الوقت، كما ان اسمك سيكون فى قائمه المساهمين</value>
+    <comment>If you are a developer, I would tremendously appreciate your help. No need to worry, you will have my help all the way. All developers get their names in the contributors list.</comment>
+  </data>
+  <data name="testerBtn.Content" xml:space="preserve">
+    <value>اصبح مجرب</value>
+  </data>
+  <data name="testingTipTB.Text" xml:space="preserve">
+    <value>اصبح مجرب و ساعدنا فى اكتشاف المشاكل فى التطبيق، انه امر سهل
+فقط تصفح و استخدم اجزاء التطبيق المختلفه و ابلغ عن اى مشكله تواجهها</value>
+    <comment>testingTipTB.Text	Become a tester and help us debug. Debugging is really easy; just play around and report the bugs you encounter.</comment>
+  </data>
+  <data name="deviceBufferSizeTB.Text" xml:space="preserve">
+    <value> مساحه التخزين المؤقت للجهاز:</value>
+  </data>
+  <data name="deviceBufferSizeHelpText.Text" xml:space="preserve">
+    <value>زود هذه القيمه اذا كنت تعانى من تقطيع فى الصوت.
+اعاده التشغيل مطلوبه للتفعيل</value>
+    <comment>Increase this value if you are experiencing clipping or interruptions in audio. Restart is needed for this change to take effect.</comment>
+  </data>
+  <data name="songNotificationsCheckBox.Content" xml:space="preserve">
+    <value>اظهر اشعار بالاغنيه القادمه</value>
+  </data>
+  <data name="tileNotificationsCheckBox.Content" xml:space="preserve">
+    <value>اظهر الاشعارات فى البلاطه</value>
+  </data>
+  <data name="keyboardSettingsText" xml:space="preserve">
+    <value>تطويعات لوحه المفاتيح</value>
+  </data>
+  <data name="coreSettingsText" xml:space="preserve">
+    <value>النواه</value>
+  </data>
+  <data name="audioSettingsText" xml:space="preserve">
+    <value>الصوت</value>
+  </data>
+  <data name="accountsSettingsText" xml:space="preserve">
+    <value>حسابات</value>
+  </data>
+  <data name="accountsSettingsSubtitle" xml:space="preserve">
+    <value>Last.fm, كلمات الاغانى</value>
+  </data>
+  <data name="personalizationSettingsSubtitle" xml:space="preserve">
+    <value>الخلفية، الخط، التصميم</value>
+  </data>
+  <data name="coreSettingsSubtitle" xml:space="preserve">
+    <value>اعاجه تعيين،الاشعارات،شاشه القفل</value>
+  </data>
+  <data name="audioSettingsSubtitle" xml:space="preserve">
+    <value>الموازن,الصوت, تقاطع التلاشى</value>
+  </data>
+  <data name="keyboardSettingsSubtitle" xml:space="preserve">
+    <value>اختصارات لوحه المفاتيع</value>
+  </data>
+  <data name="contactSettingsSubtitle" xml:space="preserve">
+    <value>Facebook, email, github</value>
+  </data>
+  <data name="aboutSettingsSubtitle" xml:space="preserve">
+    <value>معلومات الاصدار, الترخيص, لوحه الشرف</value>
+  </data>
+  <data name="contributeSettingsSubtitle" xml:space="preserve">
+    <value>ترجمه، برمجه، ابلاغ غن مشكله</value>
+  </data>
+  <data name="recentlyPlayedPivot.Header" xml:space="preserve">
+    <value>شغل ماخرا</value>
+  </data>
+  <data name="mostPlayedPivot.Header" xml:space="preserve">
+    <value>الاكثر تشغيلا</value>
+  </data>
+  <data name="recentlyAddedPivot.Header" xml:space="preserve">
+    <value>اضيف ماخرا</value>
+  </data>
+  <data name="bakersHeader.Text" xml:space="preserve">
+    <value>الخبازين</value>
+  </data>
+  <data name="showAllTB.Text" xml:space="preserve">
+    <value>اظهر الكل</value>
+  </data>
+  <data name="bakersInfoTB.Text" xml:space="preserve">
+    <value>معلومات الخبازين</value>
+  </data>
+  <data name="bakersInfoCB.Header" xml:space="preserve">
+    <value>اختار عدد من الخبازين لجلب بياناتهم:</value>
+  </data>
+  <data name="lyricsTB.Text" xml:space="preserve">
+    <value>كلمات الاغانى</value>
+  </data>
+  <data name="lyricTypeCB.Header" xml:space="preserve">
+    <value>اختار نوع الكلمات:</value>
+  </data>
+  <data name="lyricSourceCB.Header" xml:space="preserve">
+    <value>اختر مصدر الكلمات:</value>
+  </data>
+  <data name="notificationsHeader.Text" xml:space="preserve">
+    <value>اشعارات</value>
+  </data>
+</root>
