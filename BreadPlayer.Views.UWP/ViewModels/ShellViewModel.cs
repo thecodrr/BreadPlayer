@@ -229,7 +229,7 @@ namespace BreadPlayer.ViewModels
         private async Task<Mediafile> FromNetworkStorageFile(StorageFile file)
         {
             var mediaFile = await TagReaderHelper.CreateMediafile(file);
-            mediaFile.MediaLocation = MediaLocationType.Network;
+            mediaFile.MediaLocation = MediaLocationType.Device;
             mediaFile.ByteArray = await(await file.OpenStreamForReadAsync()).ToByteArray();
             return mediaFile;
         }
@@ -1124,6 +1124,7 @@ namespace BreadPlayer.ViewModels
         {
             switch (mediafile.MediaLocation)
             {
+                case MediaLocationType.Device
                 case MediaLocationType.Network:
                     return SharedLogic.Instance.Player.LoadStreamAsync(mediafile, mediafile.ByteArray);
                 case MediaLocationType.Internet:

@@ -10,6 +10,7 @@ namespace BreadPlayer.Core.Models
     {
         Local,
         Internet,
-        Network
+        Network,
+        Device
     }
 }

@@ -388,7 +388,7 @@ namespace BreadPlayer.Core.Engines
                 exInfo.length = (uint)array.Length;
                 var loadResult = _fmodSys.CreateStream(array, Mode.OpenMemory, ref exInfo, out _fmodSound);
 
-                if (mediafile.MediaLocation != MediaLocationType.Local)
+                if (mediafile.MediaLocation != MediaLocationType.Device)
                 {
                     ID3TagParser.WriteTagsToMediafile(mediafile, array, Length);
                     CurrentlyPlayingFile = mediafile;
