@@ -31,7 +31,8 @@ namespace BreadPlayer.Helpers
             uint index = 0;
             IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(index, stepSize);
             index += stepSize;
-            
+            if (!files.Any())
+                return null;
             var count = await queryResult.GetItemCountAsync();
             if (count <= 0)
             {
@@ -91,6 +92,8 @@ namespace BreadPlayer.Helpers
                     {
                         songs = await GetSongsFromFolderAsync(folder, false, 400).ConfigureAwait(false);
                     }
+                    else
+                        return;
                 }
 
                 Messenger.Instance.NotifyColleagues(MessageTypes.MsgImportFolder, songs);

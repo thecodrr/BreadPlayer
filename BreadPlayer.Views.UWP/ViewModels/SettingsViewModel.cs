@@ -119,7 +119,7 @@ namespace BreadPlayer.ViewModels
             PersonalizationVM = new PersonalizationViewModel();
             CoreSettingsVM = new CoreSettingsViewModel();
 
-            LibraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+            LibraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
             Messenger.Instance.Register(MessageTypes.MsgLibraryLoaded, new Action<Message>(HandleLibraryLoadedMessage));
             StorageLibraryService = new StorageLibraryService();
             StorageLibraryService.StorageItemsUpdated += StorageLibraryService_StorageItemsUpdated;

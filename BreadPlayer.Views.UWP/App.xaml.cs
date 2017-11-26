@@ -60,16 +60,19 @@ namespace BreadPlayer
         }
         private async void InitializeEverything()
         {
-            var logPath = System.IO.Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music)).SaveFolder.Path, ".breadplayerLogs", "BreadPlayer.log");
-            BLogger.InitLogger(logPath, new SentryAPI.SentryMessageSender());
-            CoreApplication.EnablePrelaunch(true);
-            Suspending += OnSuspending;
-            EnteredBackground += App_EnteredBackground;
-            LeavingBackground += App_LeavingBackground;
-            UnhandledException += App_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            BLogger.I("App started.");
-            BLogger.I("Events initialized.");
+            if ((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music))?.SaveFolder != null)
+            {
+                var logPath = System.IO.Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music))?.SaveFolder?.Path, ".breadplayerLogs", "BreadPlayer.log");
+                BLogger.InitLogger(logPath, new SentryAPI.SentryMessageSender());
+                CoreApplication.EnablePrelaunch(true);
+                Suspending += OnSuspending;
+                EnteredBackground += App_EnteredBackground;
+                LeavingBackground += App_LeavingBackground;
+                UnhandledException += App_UnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+                BLogger.I("App started.");
+                BLogger.I("Events initialized.");
+            }
         }
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {

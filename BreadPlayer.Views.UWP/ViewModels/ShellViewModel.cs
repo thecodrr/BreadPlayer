@@ -65,7 +65,7 @@ namespace BreadPlayer.ViewModels
         private SymbolIcon _repeatIcon = new SymbolIcon(Symbol.Sync);
         private Mediafile _songToStopAfter;
         private DispatcherTimer _timer;
-        private LibraryService _service = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+        private LibraryService _service = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
         private int _songCount;
         private string _audioDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
         private int _indexOfCurrentlyPlayingFile = -1;
@@ -1124,7 +1124,7 @@ namespace BreadPlayer.ViewModels
         {
             switch (mediafile.MediaLocation)
             {
-                case MediaLocationType.Device
+                case MediaLocationType.Device:
                 case MediaLocationType.Network:
                     return SharedLogic.Instance.Player.LoadStreamAsync(mediafile, mediafile.ByteArray);
                 case MediaLocationType.Internet:

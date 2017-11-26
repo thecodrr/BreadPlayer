@@ -25,7 +25,7 @@ namespace BreadPlayer.Database
             {
                 BLogger.I("Database is not operable or it was disposed. Reinitializing. Message: {message}", engine.DatabaseNotOperableReason);
                 _dbPath = dbPath;
-                StaticDocumentDatabase.DisposeDatabaseEngine();
+                StaticKeyValueDatabase.DisposeDatabaseEngine();
                 engine = StaticKeyValueDatabase.GetDatabaseEngine(dbPath);
                 BLogger.I("Engine reintialized. Path: {path}", dbPath);
             }

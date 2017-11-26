@@ -27,7 +27,7 @@ namespace BreadPlayer.ViewModels
 
         public void InitDb()
         {
-            AlbumArtistService = new AlbumArtistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
+            AlbumArtistService = new AlbumArtistService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Albums"));
         }
 
         #endregion Database Methods
@@ -137,15 +137,14 @@ namespace BreadPlayer.ViewModels
             });
         }
 
-        public async void LoadAlbums()
+        public void LoadAlbums()
         {
             AlbumCollection.OnStartLoading = () => RecordsLoading = true;
             AlbumCollection.OnEndLoading = () => RecordsLoading = false;
             AlbumCollection.OnError = (ex) => RecordsLoading = false;
-            await AlbumCollection.RefreshAsync().ConfigureAwait(false);
         }
 
-        public async void LoadArtists()
+        public void LoadArtists()
         {
             ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
             ArtistsCollection.OnStartLoading = () => RecordsLoading = true;
@@ -154,7 +153,6 @@ namespace BreadPlayer.ViewModels
                  RecordsLoading = false;
             };
             ArtistsCollection.OnError = (ex) => RecordsLoading = false;
-            await ArtistsCollection.RefreshAsync().ConfigureAwait(false);
         }
 
         private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

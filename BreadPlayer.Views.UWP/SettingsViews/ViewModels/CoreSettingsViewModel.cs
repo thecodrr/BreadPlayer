@@ -27,7 +27,7 @@ namespace BreadPlayer.SettingsViews.ViewModels
                 ResetCommand.IsEnabled = false;
                 await Task.Delay(200);
                 ResetCommand.IsEnabled = true;
-                var libraryService = new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
+                var libraryService = new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks"));
                 libraryService = null;
             }
             catch (Exception ex)

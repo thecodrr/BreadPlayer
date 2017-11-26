@@ -176,7 +176,7 @@ namespace BreadPlayer.ViewModels
         }
         public PlaylistViewModel()
         {
-            PlaylistService = new PlaylistService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
+            PlaylistService = new PlaylistService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Playlists"));
         }
 
         public async Task Init(object data)

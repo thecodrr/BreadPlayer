@@ -325,8 +325,8 @@ namespace BreadPlayer.Core
             });
         }
 
-        public AlbumArtistService AlbumArtistService => new AlbumArtistService(new DocumentStoreDatabaseService(DatabasePath, "Artists"));
-        public PlaylistService PlaylistService => new PlaylistService(new DocumentStoreDatabaseService(DatabasePath, "Playlists"));
+        public AlbumArtistService AlbumArtistService => new AlbumArtistService(new KeyValueStoreDatabaseService(DatabasePath, "Artists"));
+        public PlaylistService PlaylistService => new PlaylistService(new KeyValueStoreDatabaseService(DatabasePath, "Playlists"));
 
         private async void NavigateToArtistPage(object para)
         {
@@ -356,7 +356,7 @@ namespace BreadPlayer.Core
                 return false;
             }
 
-            var service = new LibraryService(new DocumentStoreDatabaseService(DatabasePath, "Tracks"));
+            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks"));
 
             SettingsViewModel.TracksCollection.Elements.Insert(index == -1 ? SettingsViewModel.TracksCollection.Elements.Count : index, file);
             service.AddMediafile(file);
@@ -369,7 +369,7 @@ namespace BreadPlayer.Core
             {
                 return false;
             }
-            var service = new LibraryService(new DocumentStoreDatabaseService(DatabasePath, "Tracks"));
+            var service = new LibraryService(new KeyValueStoreDatabaseService(DatabasePath, "Tracks"));
             SettingsViewModel.TracksCollection.Elements.Remove(file);
             await service.RemoveMediafile(file);
             return true;

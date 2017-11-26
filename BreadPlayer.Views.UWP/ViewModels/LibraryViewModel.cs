@@ -85,8 +85,7 @@ namespace BreadPlayer.ViewModels
             if (message.Payload is IEnumerable<Mediafile> songs)
             {
                 message.HandledStatus = MessageHandledStatus.HandledCompleted;
-                Messenger.Instance.DeRegister(MessageTypes.MsgImportFolder, new Action<Message>(HandleImportFolder));
-
+               
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync("Saving songs into database. Please wait...", 3);
                 await LibraryService.AddMediafiles(songs).ConfigureAwait(false);
 
@@ -215,12 +214,12 @@ namespace BreadPlayer.ViewModels
         private LibraryService LibraryService
         {
             get => _libraryservice ?? (_libraryservice =
-                       new LibraryService(new DocumentStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")));
+                       new LibraryService(new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "Tracks")));
             set => Set(ref _libraryservice, value);
         }
         private PlaylistService PlaylistService =>
             _playlistService ?? (_playlistService = new PlaylistService(
-                new DocumentStoreDatabaseService(
+                new KeyValueStoreDatabaseService(
                     SharedLogic.Instance.DatabasePath,
                     "Playlists")));
         private string Sort
