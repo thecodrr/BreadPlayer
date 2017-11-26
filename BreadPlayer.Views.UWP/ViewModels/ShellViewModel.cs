@@ -745,7 +745,8 @@ namespace BreadPlayer.ViewModels
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
-                var mp3File = await TagReaderHelper.CreateMediafile(file, true);
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(file);
+                var mp3File = await TagReaderHelper.CreateMediafile(file);
                 if (SharedLogic.Instance.Player.PlayerState == PlayerState.Paused || SharedLogic.Instance.Player.PlayerState == PlayerState.Stopped)
                 {
                     await Load(mp3File);

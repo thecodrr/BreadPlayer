@@ -11,8 +11,8 @@
     <AssemblyName>BreadPlayer</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -91,7 +91,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SDKVERSION_14393;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CPU_X64;SDKVERSION_14393;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
     <Optimize>false</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
@@ -211,6 +211,7 @@
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Common\DirectoryWalker.cs" />
     <Compile Include="Common\NotificationManager.cs" />
+    <Compile Include="Helpers\FmodFileSystem.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Converters\BoolToSelectionModeConverter.cs" />
     <Compile Include="Converters\BrushToThemeConverter.cs" />
@@ -420,10 +421,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <!--<Content Include="Assets\lib\x86\fmod_X86.dll">
+    <Content Include="Assets\lib\x86\fmod_X86.dll">
       <Link>fmod_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>-->
+    </Content>
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'x64'">
     <Content Include="Assets\lib\x64\bass.dll">
@@ -434,10 +435,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <!--<Content Include="Assets\lib\x64\fmod_X64.dll">
+    <Content Include="Assets\lib\x64\fmod_X64.dll">
       <Link>fmod_x64.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>-->
+    </Content>
   </ItemGroup>
   <ItemGroup Condition="'$(Platform)' == 'ARM'">
     <Content Include="Assets\lib\ARM\bass.dll">
@@ -448,10 +449,10 @@
       <Link>bass_fx.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <!--<Content Include="Assets\lib\ARM\fmod_ARM.dll">
+    <Content Include="Assets\lib\ARM\fmod_ARM.dll">
       <Link>fmod_ARM.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>-->
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -579,10 +580,10 @@
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-    <SDKReference Include="WindowsDesktop, Version=10.0.15063.0">
+    <SDKReference Include="WindowsDesktop, Version=10.0.16299.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
-    <SDKReference Include="WindowsMobile, Version=10.0.15063.0">
+    <SDKReference Include="WindowsMobile, Version=10.0.16299.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
