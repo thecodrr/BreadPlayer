@@ -57,7 +57,14 @@ namespace BreadPlayer.Helpers
                             Mediafile mp3File = await TagReaderHelper.CreateMediafile(files[i], false).ConfigureAwait(false); //the core of the whole method.
                             if (mp3File != null)
                             {
-                                mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                if (files[i].Path.Length < 260)
+                                {
+                                    mp3File.FolderPath = Path.GetDirectoryName(files[i].Path);
+                                }
+                                else
+                                {
+                                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("The path of the file is longer than 260 characters. File: " + files[i].Path);
+                                }
                                 await SaveSingleFileAlbumArtAsync(mp3File, files[i]).ConfigureAwait(false);
                                 SharedLogic.Instance.NotificationManager.ShowStaticMessage(progress + "\\" + count + " Song(s) Loaded");
                                 tempList.Add(mp3File);
