@@ -34,13 +34,16 @@ namespace BreadPlayer.Helpers
             ConnectionProfile internetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
             if (internetConnectionProfile?.NetworkAdapter != null)
             {
-                var hostname =
-                  NetworkInformation.GetHostNames()
-                      .FirstOrDefault(
-                          hn =>
-                              hn.IPInformation?.NetworkAdapter != null && hn.IPInformation.NetworkAdapter.NetworkAdapterId
-                              == internetConnectionProfile.NetworkAdapter.NetworkAdapterId);
-                LocalIp = hostname?.CanonicalName;
+                var hostnames = NetworkInformation.GetHostNames();
+                if (hostnames != null || hostnames.Any())
+                {
+                    var hostname =
+                        hostnames.FirstOrDefault(
+                            hn =>
+                                hn.IPInformation?.NetworkAdapter != null && hn.IPInformation.NetworkAdapter.NetworkAdapterId
+                                == internetConnectionProfile.NetworkAdapter.NetworkAdapterId);
+                    LocalIp = hostname?.CanonicalName;
+                }
             }
             IsInternetConnected = internetConnectionProfile != null && internetConnectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
             IsConnectedToNetwork = internetConnectionProfile != null;
