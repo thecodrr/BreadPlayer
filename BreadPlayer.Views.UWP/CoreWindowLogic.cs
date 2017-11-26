@@ -265,9 +265,9 @@ namespace BreadPlayer
         {
             try
             {
-                BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
                 if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
                 {
+                    BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
                     _player?.Dispose();
                 }
                 _smtc?.DisplayUpdater.ClearAll();
