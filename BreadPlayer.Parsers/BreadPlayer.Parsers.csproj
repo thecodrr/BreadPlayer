@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Taglib-Sharp-NetStandard" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BreadPlayer.Common\BreadPlayer.Common.csproj" />
+    <ProjectReference Include="..\BreadPlayer.Interfaces\BreadPlayer.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

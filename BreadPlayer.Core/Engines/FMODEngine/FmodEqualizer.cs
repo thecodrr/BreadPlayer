@@ -74,18 +74,19 @@ namespace BreadPlayer.Core.Engines
                 if (band == null)
                 {
                     continue;
-                } ((FmodEqualizerBand) band).PropertyChanged += (sender, e) =>
+                } 
+                if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))
+                {
+                    band.Gain = savedValue;
+                } 
+
+                ((FmodEqualizerBand)band).PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == "Gain")
                     {
                         SaveEqualizerSettings();
                     }
                 };
-
-                if (gainValues != null && gainValues.TryGetValue(band.BandCaption, out float savedValue))
-                {
-                    band.Gain = savedValue;
-                }
                 Bands.Add(band);
             }
             FSystem.UnlockDsp();

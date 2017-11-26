@@ -20,6 +20,7 @@ using BreadPlayer.Core.Common;
 using BreadPlayer.Core.Engines.Interfaces;
 using BreadPlayer.Core.Events;
 using BreadPlayer.Core.Models;
+using BreadPlayer.Parsers;
 using ManagedBass;
 using System;
 using System.Collections.Generic;
@@ -196,7 +197,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         //HTTP HEADER Removal END
 
                         var h = StringToHttpHeaders(headers);
-                        WriteTagsToMediafile(mediafile, id3TagArray);
+                        ID3TagParser.WriteTagsToMediafile(mediafile, array, Length);
                         CurrentlyPlayingFile = mediafile;
                         MediaChanged?.Invoke(this, new EventArgs());
 
@@ -232,7 +233,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 _handle = Bass.CreateStream(array, 0, array.Length, BassFlags.Float);
                 if (mediafile.MediaLocation != MediaLocationType.Local)
                 {
-                    WriteTagsToMediafile(mediafile, array);
+                    ID3TagParser.WriteTagsToMediafile(mediafile, array, Length);
                     CurrentlyPlayingFile = mediafile;
                     MediaChanged?.Invoke(this, new EventArgs());
                 }
@@ -305,34 +306,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 return false;
             }
         }
-        private void WriteTagsToMediafile(Mediafile mediaFile, byte[] array)
-        {
-            using (var stream = new MemoryStream(array))
-            {
-                try
-                {
-                    var file = TagLib.File.Create(new TagLib.StreamFileAbstraction(mediaFile.Title, stream, stream));
-                    mediaFile.OrginalFilename = mediaFile.Title;
-                    mediaFile.Title = file.Tag.Title ?? mediaFile.Title;
-                    mediaFile.LeadArtist = file.Tag.FirstPerformer ?? "Unknown Artist";
-                    mediaFile.Album = file.Tag.Album ?? "Unknown Album";
-                    mediaFile.TrackNumber = Convert.ToInt32(file.Tag.Track);
-                    mediaFile.Year = file.Tag.Year.ToString();
-                    mediaFile.Path = "Playing from Network.";
-                    mediaFile.Genre = file.Tag.FirstGenre;
-                    if (file.Tag.Pictures.Length > 0)
-                        mediaFile.AttachedPictureBytes = file.Tag.Pictures[0].Data.Data;
-                    if (Length <= 1)
-                    {
-                        int intKiloBitFileSize = (int)((8 * Convert.ToInt64(mediaFile.Size)) / 1000);
-                        Length = intKiloBitFileSize / file.Properties.AudioBitrate;
-                    }
-                    mediaFile.Length = TimeSpan.FromSeconds(Length).ToString(@"mm\:ss");
-                }
-                catch { }
-            }
-        }
-
+        
         /// <summary>
         /// Pauses the audio playback.
         /// </summary>

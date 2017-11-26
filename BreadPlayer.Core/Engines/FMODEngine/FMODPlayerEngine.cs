@@ -13,6 +13,7 @@ using BreadPlayer.Fmod.Structs;
 using BreadPlayer.Interfaces;
 using System.IO;
 using System.Runtime.InteropServices;
+using BreadPlayer.Parsers;
 
 namespace BreadPlayer.Core.Engines
 {
@@ -49,47 +50,27 @@ namespace BreadPlayer.Core.Engines
                 _channelEndCallback = new ChannelCallback(ChannelEndCallback);
             });
         }
-        public async Task<bool> Load(Mediafile mediaFile)
+        /// <summary>
+        /// Loads the specified file into the player.
+        /// </summary>
+        /// <returns>Boolean</returns>
+        private async Task<bool> LoadMusicAsync(Action LoadMusicAction)
         {
-            if (mediaFile != null && mediaFile.Length != "00:00")
+            try
             {
-                //tell all listeners that we are about to change media
-                await InitializeSwitch.Dispatcher.RunAsync(() => { MediaChanging?.Invoke(this, new EventArgs()); });
-
-                //stop currently playing track and free the channel
+                await InitializeSwitch.Dispatcher.RunAsync(() =>
+                {
+                    MediaChanging?.Invoke(this, new EventArgs());
+                });
                 await Stop();
                 Result loadResult = Result.Ok;
                 await Task.Run(() =>
                 {
-                    //create a stream of the new track
-                    loadResult = _fmodSys.CreateStream(mediaFile.Path, _isMobile ? Mode.LowMem | Mode.IgnoreTags : Mode.Default | Mode.CreateCompressedSample, out _fmodSound);
+                    PlayerState = PlayerState.Stopped;
+                    LoadMusicAction(); //loads the respective stream
                     //load the stream into the channel but don't play it yet.
                     loadResult = _fmodSys.PlaySound(_fmodSound, null, true, out _fmodChannel);
                 });
-                //this checks if looping is enabled and then sets the loop
-                SetLoop();
-
-                //START EXPERIMENT!
-                //volume normalization code.
-                //FMODSys.CreateDSPByType(Fmod.CoreDSP.DspType.NORMALIZE, out DSP dsp);
-
-                //FMODChannel.addDSP(ChannelControlDspIndex.HEAD, dsp);
-
-                //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.THRESHHOLD, 1.0f);
-                //dsp.setParameterFloat((int)Fmod.CoreDSP.DspNormalize.MAXAMP, 2.0f);
-
-                //dsp.setActive(true);
-                //END EXPERIMENT!
-
-                //load equalizer
-                if (Equalizer == null)
-                {
-                    Equalizer = new FmodEqualizer(_fmodSys, _fmodChannel);
-                }
-                else
-                {
-                    (Equalizer as FmodEqualizer).ReInit(_fmodSys, _fmodChannel);
-                }
 
                 //get and update length of the track.
                 Length = TimeSpan.FromMilliseconds(_fmodSound.LengthInMilliseconds).TotalSeconds;
@@ -111,22 +92,26 @@ namespace BreadPlayer.Core.Engines
                 //all the sync points and callbacks are saved and updated.
                 loadResult = _fmodSys.Update();
 
-                PlayerState = PlayerState.Stopped;
-                CurrentlyPlayingFile = mediaFile;
-
-                //check if all was successful
-                return loadResult == Result.Ok;
+                await InitializeSwitch.Dispatcher.RunAsync(() =>
+                {
+                    if (Equalizer == null)
+                    {
+                        Equalizer = new FmodEqualizer(_fmodSys, _fmodChannel);
+                    }
+                    else
+                    {
+                        (Equalizer as FmodEqualizer).ReInit(_fmodSys, _fmodChannel);
+                    }
+                    MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
+                });
+                return true;
             }
-            string error = "The file " + mediaFile.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-            if (IgnoreErrors)
+            catch (Exception ex)
             {
-                await InitializeSwitch.NotificationManager.ShowMessageAsync(error);
+                BLogger.E("An error occured while loading music. Action {action}", ex, LoadMusicAction.ToString());
+                await InitializeSwitch.NotificationManager.ShowMessageAsync(ex.Message);
+                return false;
             }
-            else
-            {
-                await InitializeSwitch.NotificationManager.ShowMessageBoxAsync(error, "File corrupt");
-            }
-            return false;
         }
 
         public Task Pause()
@@ -168,8 +153,8 @@ namespace BreadPlayer.Core.Engines
 
                 PlayerState = PlayerState.Playing;
             });
-        }      
-       
+        }
+
         public Task Stop()
         {
             MediaStateChanged?.Invoke(this, new MediaStateChangedEventArgs(PlayerState.Stopped));
@@ -349,21 +334,67 @@ namespace BreadPlayer.Core.Engines
             // GC.SuppressFinalize(this);
         }
 
-        public Task<bool> LoadLocalFileAsync(Mediafile mediaFile)
+        public async Task<bool> LoadLocalFileAsync(Mediafile mediaFile)
         {
-            return Load(mediaFile);
+            if ((mediaFile != null && mediaFile.Length != "00:00"))
+            {
+                return await LoadMusicAsync(() =>
+                {
+                    //create a stream of the new track
+                    var loadResult = _fmodSys.CreateStream(mediaFile.Path, _isMobile ? Mode.LowMem | Mode.IgnoreTags : Mode.Default | Mode.CreateCompressedSample, out _fmodSound);
+                    //load the stream into the channel but don't play it yet.
+                    loadResult = _fmodSys.PlaySound(_fmodSound, null, true, out _fmodChannel);
+                    CurrentlyPlayingFile = mediaFile;
+                    MediaChanged?.Invoke(this, new EventArgs());
+                });
+            }
+            else
+            {
+                string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
+                await InitializeSwitch.NotificationManager.ShowMessageAsync(error);
+                return false;
+            }
         }
 
-        public Task<bool> LoadURLAsync(Mediafile mediafile, string uri)
+        public async Task<bool> LoadURLAsync(Mediafile mediafile, string uri)
         {
-            return null;
-            //throw new NotImplementedException();
-        }
+            if (string.IsNullOrEmpty(uri))
+                return false;
+            return await LoadMusicAsync(() =>
+            {
+                //create a stream of the new track
+                _fmodSys.SetStreamBufferSize(64 * 1024, TimeUnit.Rawbytes);
+                
+                var loadResult = _fmodSys.CreateStream(uri, Mode.CreateStream, out _fmodSound);
+                while (_fmodSound.GetTag(null, -1, out Tag tag) == Result.Ok)
+                {
+                    if(tag.datatype == TagDataType.String)
+                    {
 
-        public Task<bool> LoadStreamAsync(Mediafile mediafile, byte[] array)
+                    }
+                }
+                CurrentlyPlayingFile = mediafile;
+                MediaChanged?.Invoke(this, new EventArgs());
+            });
+        }
+        public async Task<bool> LoadStreamAsync(Mediafile mediafile, byte[] array)
         {
-            return null;
-            //throw new NotImplementedException();
+            if (array?.Length <= 0)
+                return false;
+            return await LoadMusicAsync(() =>
+            {
+                var exInfo = new CreateSoundExInfo();
+                exInfo.cbsize = Marshal.SizeOf(exInfo);
+                exInfo.length = (uint)array.Length;
+                var loadResult = _fmodSys.CreateStream(array, Mode.OpenMemory, ref exInfo, out _fmodSound);
+
+                if (mediafile.MediaLocation != MediaLocationType.Local)
+                {
+                    ID3TagParser.WriteTagsToMediafile(mediafile, array, Length);
+                    CurrentlyPlayingFile = mediafile;
+                    MediaChanged?.Invoke(this, new EventArgs());
+                }
+            });
         }
 
         public Task ChangeDevice(string deviceName)

@@ -229,7 +229,7 @@ namespace BreadPlayer.ViewModels
         private async Task<Mediafile> FromNetworkStorageFile(StorageFile file)
         {
             var mediaFile = await TagReaderHelper.CreateMediafile(file);
-            mediaFile.MediaLocation = MediaLocationType.Local;
+            mediaFile.MediaLocation = MediaLocationType.Network;
             mediaFile.ByteArray = await(await file.OpenStreamForReadAsync()).ToByteArray();
             return mediaFile;
         }

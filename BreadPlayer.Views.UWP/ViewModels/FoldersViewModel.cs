@@ -37,7 +37,7 @@ namespace BreadPlayer.ViewModels
         {
             get => storageItems;
             set => Set(ref storageItems, value);
-        }        
+        }
         bool isBusy;
         public bool IsBusy
         {
@@ -62,7 +62,7 @@ namespace BreadPlayer.ViewModels
             RefreshCommand = new DelegateCommand(Refresh);
 
             NavigationStack = new Stack<DiskItem>();
-            GoHome();           
+            GoHome();
         }
         private void Clear()
         {
@@ -114,7 +114,7 @@ namespace BreadPlayer.ViewModels
             });
         }
         private async void OpenItem(object para)
-        {            
+        {
             var item = (DiskItem)para;
             if (item == null || item.Path == "Empty")
                 return;
@@ -138,7 +138,7 @@ namespace BreadPlayer.ViewModels
                 var item = NavigationStack.Pop();
                 if (item != null)
                 {
-                    await BrowseItemAsync(item);                   
+                    await BrowseItemAsync(item);
                 }
                 else
                 {
@@ -251,6 +251,12 @@ namespace BreadPlayer.ViewModels
                 case DiskItemLocationType.Local:
                     items = await GetStorageItemsInFolderAsync((StorageFolder)item.Cache);
                     break;
+                case DiskItemLocationType.PortableDevice:
+                    var storageItems = new List<IStorageItem>();
+                    storageItems.AddRange(await ((StorageFolder)item.Cache).GetFoldersAsync());
+                    storageItems.AddRange(await ((StorageFolder)item.Cache).GetFilesAsync());
+                    items = await GetStorageItemsInDeviceFolderAsync(storageItems);
+                    break;
             }
             if (items != null)
             {
@@ -349,27 +355,46 @@ namespace BreadPlayer.ViewModels
 
             return storageItems.OrderBy(t => t.IsFile);
         }
+        private async Task<IEnumerable<DiskItem>> GetStorageItemsInDeviceFolderAsync(IEnumerable<IStorageItem> storageItems)
+        {
+            List<DiskItem> storageItemsList = new List<DiskItem>();
+            foreach (var item in storageItems)
+            {
+                if (item is StorageFolder folderInformation && !folderInformation.DisplayName.StartsWith("."))
+                {
+                    storageItemsList.Add(new DiskItem
+                    {
+                        Title = folderInformation.DisplayName,
+                        Icon = "\uE8B7",
+                        Path = folderInformation.Path,
+                        Cache = item,
+                        DiskItemLocation = DiskItemLocationType.PortableDevice,
+                    });
+                }
+                else if (item is StorageFile fileInformation)
+                {
+                    var musicProperties = await fileInformation.Properties.GetMusicPropertiesAsync();
+                    storageItemsList.Add(new DiskItem
+                    {
+                        Icon = "\uEC4F",
+                        Path = fileInformation.Path,
+                        Title = musicProperties?.Title.GetStringForNullOrEmptyProperty(fileInformation.DisplayName) ?? fileInformation.DisplayName,
+                        Artist = musicProperties?.Artist.GetStringForNullOrEmptyProperty("Unknown Artist"),
+                        Album = musicProperties?.Album.GetStringForNullOrEmptyProperty("Unkonwn Album"),
+                        IsFile = true,
+                        Cache = item,
+                        DiskItemLocation = DiskItemLocationType.Local,
+                    });
+                }
+            }
+            return storageItemsList;
+        }
         private async Task GetDevicesAsync()
         {
             Clear();
             var devices = await KnownFolders.RemovableDevices.GetFoldersAsync();
             devices.Concat(await KnownFolders.MediaServerDevices.GetFoldersAsync());
-            List<DiskItem> devicesList = new List<DiskItem>();
-            foreach (var folder in devices)
-            {
-                if (folder is StorageFolder folderInformation && !folder.DisplayName.StartsWith("."))
-                {
-                    devicesList.Add(new DiskItem
-                    {
-                        Title = folderInformation.DisplayName,
-                        Icon = "\uE8B7",
-                        Path = folderInformation.Path,
-                        Cache = folder,
-                        DiskItemLocation = DiskItemLocationType.Local,
-                    });
-                }                
-            }
-            StorageItems.AddRange(devicesList);
+            StorageItems.AddRange(await GetStorageItemsInDeviceFolderAsync(devices));
         }
         private async Task BrowseNetworkAsync(DiskItem item)
         {
