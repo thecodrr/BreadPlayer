@@ -428,12 +428,8 @@ namespace BreadPlayer.Controls
                     if (container != null)
                     {
                         container.IsTabStop = false;
-                    }
-
-                    GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
-                    container.IsSelected = true;
-                    if (container != null)
-                    {
+                        GetParentListViewFromItem(item as SimpleNavMenuItem).SetSelectedItem(container);
+                        container.IsSelected = true;
                         container.IsTabStop = true;
                     }
                 }
