@@ -579,17 +579,20 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        toPlayFile = _indexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && _indexOfCurrentlyPlayingFile != -1 
-                                    ? playingCollection.ElementAt(_indexOfCurrentlyPlayingFile + 1) 
-                                    : Repeat == "Repeat List" || isNext 
-                                    ? playingCollection.ElementAt(0) 
-                                    : null;
+                        if (playingCollection[_indexOfCurrentlyPlayingFile + 1] != null)
+                        {
+                            toPlayFile = _indexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && _indexOfCurrentlyPlayingFile != -1
+                                        ? playingCollection[_indexOfCurrentlyPlayingFile + 1]
+                                        : Repeat == "Repeat List" || isNext
+                                        ? playingCollection.ElementAt(0)
+                                        : null;
+                        }
                     }
                     return toPlayFile;
                 }
                 catch (Exception ex)
                 {
-                    BLogger.E("An error occured while trying to play next song.", ex);
+                    BLogger.E(string.Format("An error occured while trying to play next song. IsShuffle: {0} IsSourceGrouped: {1}", Shuffle, IsSourceGrouped), ex);
                     await SharedLogic.Instance.NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
                     ClearPlayerState();
                     PlayNext();
