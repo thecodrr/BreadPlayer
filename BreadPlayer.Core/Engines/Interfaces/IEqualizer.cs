@@ -23,7 +23,7 @@ namespace BreadPlayer.Core.Engines.Interfaces
               new[] {16000f, 1f, 0f }
         };
         public IEqualizerSettings EqualizerSettings { get; set; }
-        public ObservableCollection<EqualizerSettings> Presets { get; set; }
+        public ThreadSafeObservableCollection<EqualizerSettings> Presets { get; set; }
         private int _selectedPreset = -1;
 
         public int SelectedPreset
@@ -39,8 +39,8 @@ namespace BreadPlayer.Core.Engines.Interfaces
             Init();
             SaveEqualizerSettings();
         }
-        ObservableCollection<IEqualizerBand> bands;
-        public ObservableCollection<IEqualizerBand> Bands
+        ThreadSafeObservableCollection<IEqualizerBand> bands;
+        public ThreadSafeObservableCollection<IEqualizerBand> Bands
         {
             get => bands;
             set => Set(ref bands, value);

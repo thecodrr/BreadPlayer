@@ -19,8 +19,8 @@ namespace BreadPlayer.Core.Engines
             IsPreampAvailable = false;
             FSystem = system;
             FChannel = channel;
-            Bands = new ObservableCollection<IEqualizerBand>();
-            Presets = new ObservableCollection<EqualizerSettings>((IEnumerable<EqualizerSettings>)new ConfigSaver().GetSettings());
+            Bands = new ThreadSafeObservableCollection<IEqualizerBand>();
+            Presets = new ThreadSafeObservableCollection<EqualizerSettings>((IEnumerable<EqualizerSettings>)new ConfigSaver().GetSettings());
             EqualizerSettings = InitializeSwitch.EqualizerSettingsHelper.LoadEqualizerSettings("CustomEq").settings;
             Name = EqualizerSettings.Name;
             SelectedPreset = Presets.IndexOf(Presets.FirstOrDefault(t => t.Name == EqualizerSettings.Name));

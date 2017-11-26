@@ -263,12 +263,20 @@ namespace BreadPlayer
 
         public static void DisposeObjects()
         {
-            BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
-            if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+            try
             {
-                _player?.Dispose();
+                BLogger.I("Background Player ran for: " + _player?.PlaybackSession.Position.TotalSeconds);
+                if (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1))
+                {
+                    _player?.Dispose();
+                }
+                _smtc?.DisplayUpdater.ClearAll();
             }
-            _smtc?.DisplayUpdater.ClearAll();
+            catch(Exception)
+            {
+                //if we are here, there is nothing to be done.
+                //because this function is only called when the app is suspending.
+            }
         }
 
         #endregion CoreWindow Dispose Methods
