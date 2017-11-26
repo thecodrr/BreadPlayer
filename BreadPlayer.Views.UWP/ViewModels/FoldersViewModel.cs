@@ -392,8 +392,9 @@ namespace BreadPlayer.ViewModels
         private async Task GetDevicesAsync()
         {
             Clear();
-            var devices = await KnownFolders.RemovableDevices.GetFoldersAsync();
-            devices.Concat(await KnownFolders.MediaServerDevices.GetFoldersAsync());
+            List<StorageFolder> devices = new List<StorageFolder>();
+            devices.AddRange(await KnownFolders.RemovableDevices.GetFoldersAsync());
+            devices.AddRange(await KnownFolders.MediaServerDevices.GetFoldersAsync());
             StorageItems.AddRange(await GetStorageItemsInDeviceFolderAsync(devices));
         }
         private async Task BrowseNetworkAsync(DiskItem item)
