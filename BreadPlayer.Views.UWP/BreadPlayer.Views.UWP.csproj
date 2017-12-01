@@ -170,6 +170,7 @@
     <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />
+    <PRIResource Include="Strings\ar-eg\Resources.resw" />
     <PRIResource Include="Strings\fr\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>

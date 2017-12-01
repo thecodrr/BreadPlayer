@@ -38,21 +38,21 @@ build:
 environment:
   UseTemporarySignCert: True
 after_build:
-- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.7.0_FastBuild_Release_Test\*
+- cmd: 7z a BreadPlayer.zip %APPVEYOR_BUILD_FOLDER%\BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.8.0_FastBuild_Release_Test\*
 artifacts:
 - path: BreadPlayer.zip
   name: BreadPlayer App Package
   type: Auto
 
-- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.7.0_x64_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\x64\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.8.0_x64_FastBuild_Release.appx
   name: BreadPlayer x64 APPX Package
   type: Auto
 
-- path: BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.7.0_x86_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\BreadPlayer.Views.UWP_2.7.8.0_x86_FastBuild_Release.appx
   name: BreadPlayer X86 APPX Package
   type: Auto
   
-- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.7.0_ARM_FastBuild_Release.appx
+- path: BreadPlayer.Views.UWP\bin\x86\Release\arm\BreadPlayer.Views.UWP\BreadPlayer.Views.UWP_2.7.8.0_ARM_FastBuild_Release.appx
   name: BreadPlayer ARM APPX Package
   type: Auto
 
@@ -64,6 +64,6 @@ artifacts:
   name: BreadPlayer AppXBundle
   type: Auto
   
-- path: BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.7.0_FastBuild_Release_Test\Dependencies
+- path: BreadPlayer.Views.UWP\AppPackages\BreadPlayer.Views.UWP_2.7.8.0_FastBuild_Release_Test\Dependencies
   name: BreadPlayer Dependencies
   type: Auto
