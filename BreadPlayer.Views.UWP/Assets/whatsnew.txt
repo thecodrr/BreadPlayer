@@ -5,9 +5,9 @@
 5. Fixed error while trying to play next song. #222
 6. Fixed error while navigating back. #223
 7. Fixed startup crash due to internetconnectivityhelper.
-8. Fixed album and artist loading. #213
+8. Fixed album and artist loading.
 9. Fixed streaming speed.
-10. Fixed issue where media servers were not detected. #202
+10. Fixed issue where media servers were not detected.
 11. Fixed streaming from portable devices.
 
 What's New:
