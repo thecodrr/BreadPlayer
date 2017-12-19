@@ -254,6 +254,7 @@ namespace BreadPlayer.ViewModels
                     List<Mediafile> mediafileList = new List<Mediafile>(files.Count);
                     foreach (IStorageItem item in files)
                     {
+                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(item);
                         if (item.IsOfType(StorageItemTypes.File))
                         {
                             mediafileList.Add(await TagReaderHelper.CreateMediafile(item as StorageFile));
