@@ -1,5 +1,21 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.8-beta:
+### What's Fixed:
+1. Fixed exception during folder import if file path is longer than 260 characters. #220
+3. Fixed thread error when loading music. #219
+4. Fixed NullReferenceException when re initializing database. #221
+5. Fixed error while trying to play next song. #222
+6. Fixed error while navigating back. #223
+7. Fixed startup crash due to internetconnectivityhelper.
+8. Fixed album and artist loading.
+9. Fixed streaming speed.
+10. Fixed issue where media servers were not detected.
+11. Fixed streaming from portable devices.
+
+### What's New:
+1. Added arabic translation.
+
 ## Version 2.7.7-beta:
 ### What's Fixed:
 1. Fixed error while getting database transactions. #206
