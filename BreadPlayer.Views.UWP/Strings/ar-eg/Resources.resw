@@ -391,7 +391,7 @@
     <value>اضغط لتذهب لصفحتنا الشخصيه على تويتر.</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.7.8.0-تجريبى</value>
+    <value>v2.7.9.0-تجريبى</value>
     <comment>beta = تجريبى</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">

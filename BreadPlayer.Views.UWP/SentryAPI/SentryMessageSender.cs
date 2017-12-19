@@ -18,7 +18,7 @@ namespace BreadPlayer.SentryAPI
             null, null, new SentryUserFactory())
             {
                 Logger = "user",
-                Release = "v2.7.8.0"
+                Release = "v2.7.9.0"
             };
         }
         public async Task SendMessageAsync(string message, Exception ex, string errorLevel)
@@ -36,7 +36,7 @@ namespace BreadPlayer.SentryAPI
                 {
                     { "device.model", DeviceInfoHelper.DeviceModel.GetStringForNullOrEmptyProperty("0")},
                     { "device.arch", DeviceInfoHelper.SystemArchitecture.GetStringForNullOrEmptyProperty("unknown")},
-                    { "app.version", DeviceInfoHelper.ApplicationVersion.GetStringForNullOrEmptyProperty("2.7.8.0")},
+                    { "app.version", DeviceInfoHelper.ApplicationVersion.GetStringForNullOrEmptyProperty("2.7.9.0")},
                     { "system.version", DeviceInfoHelper.SystemVersion.GetStringForNullOrEmptyProperty("0")},
                     { "system.family", DeviceInfoHelper.SystemFamily.GetStringForNullOrEmptyProperty("unknown")},
                 }
