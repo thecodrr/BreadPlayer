@@ -163,62 +163,45 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
             throw new ArgumentNullException("collection");
         }
 
-        Sync.EnterWriteLock();
-        Clear();
-        foreach (var i in collection)
+        SafeEnterWriteLock<object>(() =>
         {
-            Insert(base.Count - 1, i);
-        }
-
-        Sync.ExitWriteLock();
+            Clear();
+            foreach (var i in collection)
+            {
+                Insert(base.Count - 1, i);
+            }
+            return null;
+        });             
     }
 
     private void DoClear()
     {
-        if (!Sync.IsWriteLockHeld)
+        SafeEnterWriteLock<object>(() =>
         {
-            Sync.EnterWriteLock();
-        }
-
-        base.Clear();
-        Sync.ExitWriteLock();
+            base.Clear();
+            return null;
+        });
     }
 
     public new bool Contains(T item)
     {
-        if (!Sync.IsReadLockHeld)
-        {
-            Sync.EnterReadLock();
-        }
-
-        var result = base.Contains(item);
-        Sync.ExitReadLock();
-        return result;
+        return SafeEnterReadLock(() => base.Contains(item));
     }
 
     public new void CopyTo(T[] array, int arrayIndex)
     {
-        Sync.EnterWriteLock();
-        base.CopyTo(array, arrayIndex);
-        Sync.ExitWriteLock();
+        SafeEnterWriteLock<object>(() => 
+        {
+            base.CopyTo(array, arrayIndex);
+            return null;
+        });
     }
 
     public new int Count
     {
         get
         {
-            if (!Sync.IsWriteLockHeld)
-            {
-                Sync.EnterReadLock();
-            }
-
-            var result = base.Count;
-            if (Sync.IsReadLockHeld)
-            {
-                Sync.ExitReadLock();
-            }
-
-            return result;
+            return SafeEnterReadLock(() => base.Count);
         }
     }
     public int FastCount
@@ -246,18 +229,12 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private bool DoRemove(T item)
     {
-        Sync.EnterWriteLock();
-        var result = base.Remove(item);
-        Sync.ExitWriteLock();
-        return result;
+        return SafeEnterWriteLock(() => base.Remove(item));
     }
 
     public new int IndexOf(T item)
     {
-        Sync.EnterReadLock();
-        var result = base.IndexOf(item);
-        Sync.ExitReadLock();
-        return result;
+        return SafeEnterReadLock(() => base.IndexOf(item));
     }
 
     public new async void Insert(int index, T item)
@@ -267,13 +244,11 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
 
     private void DoInsert(int index, T item)
     {
-        if (!Sync.IsWriteLockHeld)
+        SafeEnterWriteLock<object>(() => 
         {
-            Sync.EnterWriteLock();
-        }
-
-        base.Insert(index, item);
-        Sync.ExitWriteLock();
+            base.Insert(index, item);
+            return null;
+        });
     }
 
     public new async void RemoveAt(int index)
@@ -298,10 +273,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         get
         {
-            Sync.EnterReadLock();
-            var result = base[index];
-            Sync.ExitReadLock();
-            return result;
+            return SafeEnterReadLock(() => base[index]);
         }
         set
         {
@@ -320,7 +292,38 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     {
         return new ThreadSafeObservableCollectionEnumerableWrapper<T>(this);
     }       
-    
+    private TResult SafeEnterWriteLock<TResult>(Func<TResult> action)
+    {
+        if (!Sync.IsWriteLockHeld)
+        {
+            Sync.EnterWriteLock();
+        }
+
+        var result = action();
+
+        if (!Sync.IsWriteLockHeld)
+        {
+            Sync.ExitWriteLock();
+        }
+
+        return result;
+    }
+    private TResult SafeEnterReadLock<TResult>(Func<TResult> action)
+    {
+        if (!Sync.IsReadLockHeld)
+        {
+            Sync.EnterReadLock();
+        }
+
+        var result = action.Invoke();
+
+        if (Sync.IsReadLockHeld)
+        {
+            Sync.ExitReadLock();
+        }
+
+        return result;
+    }
 }
 
 public class ThreadSafeObservableCollectionEnumerableWrapper<T> : IEnumerable<T>

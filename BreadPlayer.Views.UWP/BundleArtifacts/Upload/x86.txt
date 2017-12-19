@@ -1,1 +1,1 @@
-MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\x86\Release\Upload\BreadPlayer.Views.UWP_2.7.7.0_x86.appx
+MainPackage=C:\Users\Arkane Elayne\Source\Repos\BreadPlayer\BreadPlayer.Views.UWP\bin\x86\Release\Upload\BreadPlayer.Views.UWP_2.7.8.0_x86.appx
