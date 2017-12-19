@@ -310,7 +310,7 @@ public class ThreadSafeObservableCollection<T> : ObservableCollection<T>, INotif
     }
     private TResult SafeEnterReadLock<TResult>(Func<TResult> action)
     {
-        if (!Sync.IsReadLockHeld)
+        if (!Sync.IsReadLockHeld && !Sync.IsWriteLockHeld)
         {
             Sync.EnterReadLock();
         }

@@ -17,7 +17,8 @@
         MsgStopAfterSong,
         MsgImportFolder,
         MsgNavigate,
-        MsgSearch
+        MsgSearch,
+        MsgChangePlaylist
         //MSG_CUSTOMER_SAVED				// Sent when a Customer is updated to the repository
     }
 }

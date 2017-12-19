@@ -50,7 +50,7 @@
         <BPControls:ImageEx
             x:Name="MainBackgroundImage"
             Margin="0,0,0,70"
-            Source="{Binding Source={StaticResource Core}, Path=Instance.Player.CurrentlyPlayingFile.AttachedPicture, Converter={StaticResource PathToImage}, ConverterParameter='null'}"
+            Source="{Binding Source={StaticResource Core}, Path=Instance.Player.CurrentlyPlayingFile.AttachedPicture}"
             Stretch="UniformToFill">
             <Image
                 x:Name="backgroundImage"

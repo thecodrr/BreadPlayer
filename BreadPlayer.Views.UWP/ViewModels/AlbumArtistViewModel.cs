@@ -131,8 +131,8 @@ namespace BreadPlayer.ViewModels
                 }
             }).ContinueWith(async (task) =>
             {
-                await AlbumArtistService.InsertAlbums(albums).ConfigureAwait(false);
-                await AlbumArtistService.InsertArtists(artists).ConfigureAwait(false);
+                await AlbumArtistService.InsertAlbums(albums);
+                await AlbumArtistService.InsertArtists(artists);
                 ArtistsCollection.CollectionChanged += ArtistsCollection_CollectionChanged;
             });
         }

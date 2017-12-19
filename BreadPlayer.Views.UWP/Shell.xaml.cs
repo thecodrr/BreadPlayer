@@ -100,6 +100,10 @@ namespace BreadPlayer
                     }
                     NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
                 }
+                else if(payload.pageType == typeof(PlaylistView))
+                {
+                    NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
+                }
                 if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
                 {
                     Windows.Phone.UI.Input.HardwareButtons.BackPressed += BackButtonPressed;
