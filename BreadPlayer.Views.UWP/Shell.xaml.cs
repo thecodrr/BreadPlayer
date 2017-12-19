@@ -89,15 +89,15 @@ namespace BreadPlayer
             if (message.Payload != null)
             {
                 dynamic payload = message.Payload;
-                if (NowPlayingFrame.CurrentSourcePageType != payload.pageType)
-                {                    
-                    if (!InitializeSwitch.IsMobile)
+                if (!InitializeSwitch.IsMobile)
+                {
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
-                        });
-                    }
+                        NowPlayingFrame.Width = payload.parameter is string ? 700 : 900;
+                    });
+                }
+                if (NowPlayingFrame.CurrentSourcePageType != payload.pageType)
+                {
                     NowPlayingFrame.Navigate(payload.pageType, payload.parameter, new Windows.UI.Xaml.Media.Animation.SlideNavigationTransitionInfo());
                 }
                 else if(payload.pageType == typeof(PlaylistView))

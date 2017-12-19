@@ -209,27 +209,24 @@ namespace BreadPlayer.ViewModels
                    });
                     var db = new KeyValueStoreDatabaseService(SharedLogic.Instance.DatabasePath, "PlaylistSongs");
                     await db.InsertRecords(playlistSongs);
-                    var s = await db.GetRecords<ChildSong>();
-                    //await AddSongsToPlaylist(plist, songs.ToList());
+                    await AddSongsToPlaylist(plist);
                 }
             });
         }
 
-        private async Task AddSongsToPlaylist(Playlist list, IReadOnlyCollection<Mediafile> songsToadd)
+        private async Task AddSongsToPlaylist(Playlist list)
         {
-            if (songsToadd.Any())
-            {
-                await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
-                var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
+            //await PlaylistService.InsertTracksAsync(songsToadd.Where(t => !PlaylistService.Exists(t.Id)), list);
+            var pSongs = (await PlaylistService.GetTracksAsync(list.Id)).ToList();
 
-                //update duration and songs count
-                var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
-                collectionPlaylist.SongsCount = pSongs.Count + " songs";
-                collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
-                collectionPlaylist.ImageColor = (await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(list.ImagePath))).ToHexString();
-                collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
-                await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
-            }
+            //update duration and songs count
+            var collectionPlaylist = Playlists.FirstOrDefault(t => t.Name == list.Name);
+            collectionPlaylist.SongsCount = pSongs.Count + " songs";
+            collectionPlaylist.ImagePath = pSongs.First(t => t.AttachedPicture != null)?.AttachedPicture ?? "";
+            if(!string.IsNullOrEmpty(collectionPlaylist.ImagePath))
+                collectionPlaylist.ImageColor = (await SharedLogic.Instance.GetDominantColor(await StorageFile.GetFileFromPathAsync(collectionPlaylist.ImagePath))).ToHexString();
+            collectionPlaylist.Duration = string.Format("{0:0.0}", Math.Truncate(pSongs.Sum(t => TimeSpan.ParseExact(IsHour(t.Length) ? t.Length : "00:" + t.Length, @"hh\:mm\:ss", CultureInfo.InvariantCulture).TotalMinutes) * 10) / 10) + " Minutes";
+            await PlaylistService.UpdatePlaylistAsync(collectionPlaylist).ConfigureAwait(false);
         }
 
         private async void AddToPlaylist(object file)

@@ -1,4 +1,5 @@
 ﻿using BreadPlayer.Controls;
+using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -22,7 +23,7 @@ namespace BreadPlayer
             if (e.ClickedItem != null)
             {
                 SplitViewMenu.UnSelectAll();
-                NavigationService.Instance.Frame.Navigate(typeof(PlaylistView), e.ClickedItem);
+                Messenger.Instance.NotifyColleagues(MessageTypes.MsgNavigate, new { pageType = typeof(PlaylistView), parameter = e.ClickedItem });
             }
         }
     }

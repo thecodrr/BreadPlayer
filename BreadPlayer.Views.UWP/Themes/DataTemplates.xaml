@@ -89,9 +89,8 @@
     <MenuFlyout x:Key="Flyout">
         <Extensions:MenuFlyoutIconItem
             x:Name="playMenuItem"
-            Command="{Binding Path=PlayCommand}"
+            Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
             CommandParameter="{Binding}"
-            DataContext="{StaticResource LibVM}"
             Glyph="&#xE768;"
             Text="Play" />
         <Extensions:MenuFlyoutIconItem
