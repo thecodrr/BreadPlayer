@@ -547,7 +547,7 @@ namespace BreadPlayer.ViewModels
             }
         }
 
-        public async Task<Mediafile> GetUpcomingSong(bool isNext = false)
+        public async Task<Mediafile> GetUpcomingSong(bool isNext = false, bool raiseException = true)
         {
             var playingCollection = GetPlayingCollection();
             NowPlayingQueue = playingCollection;
@@ -579,7 +579,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        if (playingCollection[_indexOfCurrentlyPlayingFile + 1] != null)
+                        if (playingCollection.Count <= _indexOfCurrentlyPlayingFile + 1)
                         {
                             toPlayFile = _indexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && _indexOfCurrentlyPlayingFile != -1
                                         ? playingCollection[_indexOfCurrentlyPlayingFile + 1]
@@ -592,10 +592,13 @@ namespace BreadPlayer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    BLogger.E(string.Format("An error occured while trying to play next song. IsShuffle: {0} IsSourceGrouped: {1}", Shuffle, IsSourceGrouped), ex);
-                    await SharedLogic.Instance.NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
-                    ClearPlayerState();
-                    PlayNext();
+                    if (raiseException)
+                    {
+                        BLogger.E(string.Format("An error occured while trying to play next song. IsShuffle: {0} IsSourceGrouped: {1}", Shuffle, IsSourceGrouped), ex);
+                        await SharedLogic.Instance.NotificationManager.ShowMessageAsync("An error occured while trying to play next song. Trying again...");
+                        ClearPlayerState();
+                        PlayNext();
+                    }
                 }
             }
             return null;
@@ -1168,9 +1171,6 @@ namespace BreadPlayer.ViewModels
             else
             {
                 BLogger.I("Failed to load file. Loading next file...");
-                var playingCollection = GetPlayingCollection();
-                int indexoferrorfile = playingCollection.IndexOf(playingCollection.FirstOrDefault(t => t.Path == mp3File.Path));
-                UpdateCurrentlyPlayingSongIndex();
                 await Load(await GetUpcomingSong(true), true);
             }
 
