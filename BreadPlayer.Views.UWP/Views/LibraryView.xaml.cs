@@ -116,6 +116,11 @@ namespace BreadPlayer
             {
                 record.IsSelected = true;
             }
-        }        
+        }
+
+        private void OnArtistClicked(object sender, ItemClickEventArgs e)
+        {
+            BreadPlayer.Core.SharedLogic.Instance.NavigateToArtistPageCommand.Execute(e.ClickedItem);
+        }
     }
 }

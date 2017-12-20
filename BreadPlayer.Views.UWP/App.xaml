@@ -197,6 +197,7 @@
             <Converter:HexToColorConverter x:Key="HexToColor" />
             <Converter:RecordTypeToVisibilityConverter x:Key="RecordTypeToVisibility" />
             <Converter:BrushToThemeConverter x:Key="BrushToTheme" />
+            <Converter:ColorDarknessChanger x:Key="ColorDarknessChanger" />
 
             <MenuFlyout x:Key="SortMenuFlyout" MenuFlyoutPresenterStyle="{StaticResource CustomFlyoutPresenter}">
                 <MenuFlyoutItem

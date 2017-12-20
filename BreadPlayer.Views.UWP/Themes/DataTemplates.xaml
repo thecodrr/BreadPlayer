@@ -7,7 +7,8 @@
     xmlns:Extensions="using:BreadPlayer.Extensions"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:Media="using:Microsoft.Xaml.Interactions.Media"
-    xmlns:local="using:BreadPlayer.Themes"
+    xmlns:local="using:BreadPlayer.Themes"    
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:models="using:BreadPlayer.Core.Models">
 
     <Extensions:BindableFlyout
@@ -1002,28 +1003,47 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+
+            <toolkit:DropShadowPanel
+                            x:Name="dropShadow"
+                            Grid.ColumnSpan="5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            BlurRadius="30"
+                            OffsetX="0"
+                            OffsetY="0"
+                            Opacity="1"
+                            ShadowOpacity="0"
+                            Color="{Binding Path=PictureColor, Converter={StaticResource ColorDarknessChanger}, ConverterParameter='-0.7Color'}">
+                <Ellipse Width="150"
+                         Height="150"
+                         Fill="Black"/>
+            </toolkit:DropShadowPanel>
             <Border
                 Width="150"
                 Height="150"
                 Background="#ccdbdbdb"
                 CornerRadius="100">
-                <Grid
+                
+                    <Grid
                     x:Name="artistImageGrid"
                     CornerRadius="100"
                     Opacity="1">
-                    <Grid.Background>
-                        <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
-                            <ImageBrush.ImageSource>
-                                <BitmapImage
+                        <Grid.Background>
+                            <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
+                                <ImageBrush.ImageSource>
+                                    <BitmapImage
                                     DecodePixelHeight="150"
                                     DecodePixelType="Logical"
                                     DecodePixelWidth="150"
                                     UriSource="{Binding Picture, UpdateSourceTrigger=PropertyChanged}">
-                                </BitmapImage>
-                            </ImageBrush.ImageSource>                           
-                        </ImageBrush>
-                    </Grid.Background>
-                    <FontIcon
+                                    </BitmapImage>
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                        </Grid.Background>
+                        <FontIcon
                         x:Name="PlaceHolder"
                         Width="150"
                         Height="150"
@@ -1031,8 +1051,8 @@
                         Foreground="{ThemeResource ThemeForeground}"
                         Glyph="&#xE13D;"                        
                         Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"  />
-                    <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}" />-->
-                </Grid>
+                        <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}" />-->
+                    </Grid>
             </Border>
             <TextBlock
                 x:Name="artistName"
@@ -1056,14 +1076,13 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 CornerRadius="100"
-                Opacity="0"
-                Visibility="Collapsed">
-                <Grid.Background>
+                Opacity="0">
+                <!--<Grid.Background>
                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                         <GradientStop Offset="0" Color="Transparent" />
                         <GradientStop Offset="0.95" Color="{Binding Path=PictureColor}" />
                     </LinearGradientBrush>
-                </Grid.Background>
+                </Grid.Background>-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -1109,10 +1128,6 @@
                         ComparisonCondition="Equal"
                         Value="True">
                         <Core:ChangePropertyAction
-                            PropertyName="Visibility"
-                            TargetObject="{Binding ElementName=ButtonsStack}"
-                            Value="Visible" />
-                        <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
                             Value="{StaticResource SystemAccentForeground}" />
@@ -1123,6 +1138,12 @@
                         <Media:ControlStoryboardAction>
                             <Media:ControlStoryboardAction.Storyboard>
                                 <Storyboard>
+                                    <DoubleAnimation
+                                                EnableDependentAnimation="True"
+                                                Storyboard.TargetName="dropShadow"
+                                                Storyboard.TargetProperty="ShadowOpacity"
+                                                To="1"
+                                                Duration="0:0:0.5" />
                                     <DoubleAnimation
                                         Storyboard.TargetName="ButtonsStack"
                                         Storyboard.TargetProperty="Opacity"
@@ -1137,10 +1158,25 @@
                         Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}"
                         ComparisonCondition="Equal"
                         Value="False">
-                        <Core:ChangePropertyAction
-                            PropertyName="Visibility"
-                            TargetObject="{Binding ElementName=ButtonsStack}"
-                            Value="Collapsed" />
+                        <Media:ControlStoryboardAction>
+                            <Media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ButtonsStack"
+                                        Storyboard.TargetProperty="Opacity"
+                                        From="1"
+                                        To="0"
+                                        Duration="0:0:0.3" />
+                                    <DoubleAnimation
+                                                EnableDependentAnimation="True"
+                                                Storyboard.TargetName="dropShadow"
+                                                Storyboard.TargetProperty="ShadowOpacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="0:0:0.5" />
+                                </Storyboard>                                
+                            </Media:ControlStoryboardAction.Storyboard>
+                        </Media:ControlStoryboardAction>
                         <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
@@ -1160,6 +1196,48 @@
                 </Core:EventTriggerBehavior>
                 <Core:EventTriggerBehavior EventName="Holding">
                     <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
+                </Core:EventTriggerBehavior>
+                <Core:EventTriggerBehavior EventName="PointerEntered">
+                    <Media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <Media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                                EnableDependentAnimation="True"
+                                                Storyboard.TargetName="dropShadow"
+                                                Storyboard.TargetProperty="ShadowOpacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="0:0:0.5" />
+                                <DoubleAnimation
+                                                Storyboard.TargetName="ButtonsStack"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="0:0:0.5" />
+                            </Storyboard>
+                        </Media:ControlStoryboardAction.Storyboard>
+                    </Media:ControlStoryboardAction>
+                </Core:EventTriggerBehavior>
+                <Core:EventTriggerBehavior EventName="PointerExited">
+                    <Media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <Media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                                EnableDependentAnimation="True"
+                                                Storyboard.TargetName="dropShadow"
+                                                Storyboard.TargetProperty="ShadowOpacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="0:0:0.5" />
+                                <DoubleAnimation
+                                                Storyboard.TargetName="ButtonsStack"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="0:0:0.5" />
+                            </Storyboard>
+                        </Media:ControlStoryboardAction.Storyboard>
+                    </Media:ControlStoryboardAction>
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </Grid>

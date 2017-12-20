@@ -523,21 +523,21 @@
                 </GridView>
             </PivotItem>
             <PivotItem x:Uid="bakersPivot" Header="Bakers">
-                <GridView
+                <ListView
                     x:Name="artistGridView"
                     HorizontalContentAlignment="Center"
-                    Behaviours:ItemClickCommand.Command="{Binding Source={StaticResource Core}, Path=NavigateToAlbumPageCommand}"
                     IsItemClickEnabled="True"
+                    ItemClick="OnArtistClicked"
                     ItemTemplate="{StaticResource ArtistTemplate}"
                     ItemsSource="{Binding Source={StaticResource AlbumArtistVM}, Path=ArtistsCollection}"
                     SelectionChanged="OnSelectionChanged">
-                    <GridView.Transitions>
+                    <ListView.Transitions>
                         <TransitionCollection>
                             <EntranceThemeTransition FromHorizontalOffset="200" IsStaggeringEnabled="True" />
                             <AddDeleteThemeTransition />
                         </TransitionCollection>
-                    </GridView.Transitions>
-                    <GridView.ItemsPanel>
+                    </ListView.Transitions>
+                    <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsWrapGrid
                                 HorizontalAlignment="Stretch"
@@ -551,13 +551,43 @@
                                 </ItemsWrapGrid.Transitions>
                             </ItemsWrapGrid>
                         </ItemsPanelTemplate>
-                    </GridView.ItemsPanel>
-                    <GridView.ItemContainerStyle>
-                        <Style TargetType="GridViewItem">
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
                             <Setter Property="Margin" Value="20" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ListViewItemPresenter
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              SelectionCheckMarkVisualEnabled="True"
+                                              CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                              CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                              DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                              DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                              FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                              FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                              PlaceholderBackground="Transparent"
+                                              PointerOverBackground="Transparent"
+                                              PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                              SelectedBackground="Transparent"
+                                              SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                              SelectedPointerOverBackground="Transparent"
+                                              PressedBackground="Transparent"
+                                              SelectedPressedBackground="Transparent"
+                                              DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                              DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                              ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              ContentMargin="{TemplateBinding Padding}"
+                                              CheckMode="Inline"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
-                    </GridView.ItemContainerStyle>
-                </GridView>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </PivotItem>
             <PivotItem x:Uid="playlistsPivot" Header="Playlists">
                 <Frame Name="PlaylistsFrame" SourcePageType="local:PlaylistsCollectionView" />

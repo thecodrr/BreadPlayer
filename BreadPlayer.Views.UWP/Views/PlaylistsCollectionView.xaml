@@ -14,7 +14,6 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
-        <Converters:ColorDarknessChanger x:Key="ColorDarknessChanger" />
         <DataTemplate x:Key="NarrowPlaylistTemplate">
             <Grid
                 x:Name="mainGrid"

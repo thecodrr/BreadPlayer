@@ -306,14 +306,7 @@ namespace BreadPlayer.Core
         }
 
         private async void NavigateToAlbumPage(object para)
-        {
-            //because the gridview for both artists and albums is the same we need to handle,
-            //item selection this way.
-            if (para is Artist artist)
-                {
-                    NavigateToArtistPage(artist);
-                    return;
-                }
+        {            
             var album = para is Album ? (Album)para : await AlbumArtistService.GetAlbumAsync(para.ToString()).ConfigureAwait(false);
             await BreadDispatcher.InvokeAsync(() =>
             {
