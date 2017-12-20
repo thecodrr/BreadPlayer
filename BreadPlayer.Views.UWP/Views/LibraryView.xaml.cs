@@ -70,9 +70,6 @@ namespace BreadPlayer
             LibVM.MusicLibraryLoaded += async (s, a) =>
             {
                 var pVm = App.Current.Resources["PlaylistsCollectionVM"];
-                //var albumArtistVM = (Application.Current.Resources["AlbumArtistVM"] as AlbumArtistViewModel);
-                //await albumArtistVM.ArtistsCollection.RefreshAsync().ConfigureAwait(false);
-                //await albumArtistVM.AlbumCollection.RefreshAsync().ConfigureAwait(false);
             };
         }
         private void fileBox_DragOver(object sender, DragEventArgs e)
