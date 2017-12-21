@@ -1,5 +1,19 @@
 # Release Notes for Bread Player.
 
+## Version 2.7.9-beta:
+### What's Fixed:
+1. Fixed app crash when performing functions on TSCollection. #225
+3. Fixed issue where player was showing the first opened album/artist again and again. #226
+4. Fixed app crash when getting next/upcoming song. #227
+5. Fixed issue where player couldn't open files from outside Music Library. #228
+6. Fixed issue where player couldn't play song by clicking "Play" from context menu. #229
+7. Fixed issue where playlists were not opening correctly. #230
+8. Fixed issue where some albums and artists missing. #231
+9. Fixed crash when audio device was disabled. #232
+
+### What's Improved:
+1. Improved Artists Listing UI
+
 ## Version 2.7.8-beta:
 ### What's Fixed:
 1. Fixed exception during folder import if file path is longer than 260 characters. #220
