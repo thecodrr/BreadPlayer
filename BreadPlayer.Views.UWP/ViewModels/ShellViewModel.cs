@@ -254,7 +254,6 @@ namespace BreadPlayer.ViewModels
                     List<Mediafile> mediafileList = new List<Mediafile>(files.Count);
                     foreach (IStorageItem item in files)
                     {
-                        Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add(item);
                         if (item.IsOfType(StorageItemTypes.File))
                         {
                             mediafileList.Add(await TagReaderHelper.CreateMediafile(item as StorageFile));
@@ -788,16 +787,33 @@ namespace BreadPlayer.ViewModels
 
         private async void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
         {
+            // If we have a device ID but Play is disabled, enable it. This handles when an audio device has been been reset.
+            if (!String.IsNullOrEmpty(args.Id) && !PlayPauseCommand.IsEnabled)
+                PlayPauseCommand.IsEnabled = true;
             if (args.Role != AudioDeviceRole.Default || args.Id == _audioDeviceId)
                 return;
+            // If no device ID is supplied we cannot play media.
+            if (String.IsNullOrEmpty(args.Id))
+            {
+                if (SharedLogic.Instance.Player.PlayerState == PlayerState.Playing)
+                {
+                    PlayPause();
+                }
+                PlayPauseCommand.IsEnabled = false;
+                BLogger.I("Audio device disabled or not found.");
+                await SharedLogic.Instance.NotificationManager.ShowMessageAsync("It appears your audio device has been disabled or stopped functioning. Please re-enable your audio device to continue. You may need to restart BreadPlayer to resume playback.");
+            }
+            else
+            {
+                PlayPauseCommand.IsEnabled = true;
+                var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+                var device = await DeviceInformation.CreateFromIdAsync(args.Id);
+                BLogger.I($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
 
-            var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
-            var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-            BLogger.I($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+                _audioDeviceId = args.Id;
 
-            _audioDeviceId = args.Id;
-
-            await SharedLogic.Instance.Player.ChangeDevice(device.Name);
+                await SharedLogic.Instance.Player.ChangeDevice(device.Name);
+            }
         }
 
         private async void Player_MediaAboutToEnd(object sender, MediaAboutToEndEventArgs e)
