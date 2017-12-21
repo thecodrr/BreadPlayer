@@ -24,7 +24,6 @@ using BreadPlayer.Messengers;
 using BreadPlayer.Services;
 using BreadPlayer.Themes;
 using Microsoft.Services.Store.Engagement;
-using SharpRaven;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,7 +62,7 @@ namespace BreadPlayer
             if ((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music))?.SaveFolder != null)
             {
                 var logPath = System.IO.Path.Combine((await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music))?.SaveFolder?.Path, ".breadplayerLogs", "BreadPlayer.log");
-                BLogger.InitLogger(logPath, new SentryAPI.SentryMessageSender());
+                BLogger.InitLogger(logPath, new Helpers.LogReportSender());
                 CoreApplication.EnablePrelaunch(true);
                 Suspending += OnSuspending;
                 EnteredBackground += App_EnteredBackground;

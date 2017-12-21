@@ -8,7 +8,7 @@ using BreadPlayer.Core;
 
 namespace BreadPlayer.SentryAPI
 {
-    public class SentryMessageSender : ISentryMessageSender
+    public class SentryMessageSender : ILogReportSender
     {
         private RavenClient ravenClient;
         public void InitSentry()

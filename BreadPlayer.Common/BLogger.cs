@@ -11,10 +11,10 @@ public class BLogger
     }
    
     private static ILogger _logger;
-    static ISentryMessageSender SentryMessageSender;
-    public static void InitLogger(string path, ISentryMessageSender sentryMessageSender)
+    static ILogReportSender LogReportSender;
+    public static void InitLogger(string path, ILogReportSender logReportSender)
     {
-        SentryMessageSender = sentryMessageSender;
+        LogReportSender = logReportSender;
         const string fileOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}";
 
         Log.Logger = new LoggerConfiguration()
@@ -23,19 +23,19 @@ public class BLogger
                                 .CreateLogger();
         Logger = Log.Logger;
         I("Logger initialized.");
-        SentryMessageSender.InitSentry();
+        LogReportSender.Init();
         I("Raven initialized.");
     }
 
-    public static async void E(string message, Exception exception, params object[] propertyValues)
+    public static void E(string message, Exception exception, params object[] propertyValues)
     {
         Logger?.Error(exception, message, propertyValues);
-        await SentryMessageSender.SendMessageAsync(message, exception, "Error").ConfigureAwait(false);
+        //await LogReportSender.SendReportAsync(message, exception, "Error").ConfigureAwait(false);
     }
-    public static async void F(string message, Exception exception, params object[] propertyValues)
+    public static void F(string message, Exception exception, params object[] propertyValues)
     {
         Logger?.Fatal(exception, message, propertyValues);
-        await SentryMessageSender.SendMessageAsync(message, exception, "Fatal").ConfigureAwait(false);
+        //await LogReportSender.SendReportAsync(message, exception, "Fatal").ConfigureAwait(false);
     }
     public static void I(string message, params object[] propertyValues)
     {

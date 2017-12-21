@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BreadPlayer.Core
 {
-    public interface ISentryMessageSender
+    public interface ILogReportSender
     {
-        Task SendMessageAsync(string message, Exception ex, string errorLevel);
-        void InitSentry();
+        Task SendReportAsync(string message, Exception ex, string errorLevel);
+        void Init();
     }
 }
