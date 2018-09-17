@@ -518,7 +518,7 @@
                         <SplitView x:Name="RootSplitView"
                                    DisplayMode="Inline"
                                     Grid.Row="1"
-                                   OpenPaneLength="375"
+                                   OpenPaneLength="320"
                                    CompactPaneLength="48"
                                    IsTabStop="False" Template="{StaticResource SplitViewControlTemplate1}"
                                   PaneBackground="{ThemeResource ThemeBackground}">
@@ -539,7 +539,7 @@
                                 </Storyboard>
                             </SplitView.Resources>
                             <SplitView.Pane>
-                                <Grid x:Name="Pane" Padding="80,70,5,0" Background="{ThemeResource PlaybarBrush}">
+                                <Grid x:Name="Pane" Padding="50,70,5,0" Background="{ThemeResource PlaybarBrush}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />

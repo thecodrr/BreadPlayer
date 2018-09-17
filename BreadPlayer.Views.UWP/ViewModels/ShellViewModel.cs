@@ -579,7 +579,7 @@ namespace BreadPlayer.ViewModels
                     }
                     else
                     {
-                        if (playingCollection.Count <= _indexOfCurrentlyPlayingFile + 1)
+                        if (_indexOfCurrentlyPlayingFile + 1 <= playingCollection.Count)
                         {
                             toPlayFile = _indexOfCurrentlyPlayingFile <= playingCollection.Count - 2 && _indexOfCurrentlyPlayingFile != -1
                                         ? playingCollection[_indexOfCurrentlyPlayingFile + 1]
@@ -1184,14 +1184,15 @@ namespace BreadPlayer.ViewModels
                     DontUpdatePosition = true;
                     CurrentPosition = currentPos;
                 }
+
+                await UpdateUi(mp3File);
             }
             else
             {
                 BLogger.I("Failed to load file. Loading next file...");
-                await Load(await GetUpcomingSong(true), true);
+                await UpdateUi(mp3File);
+                await Load(UpcomingSong, true);
             }
-
-            await UpdateUi(mp3File);
         }
 
         #endregion Methods
