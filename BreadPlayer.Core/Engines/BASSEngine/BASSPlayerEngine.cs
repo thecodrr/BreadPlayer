@@ -66,7 +66,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             await Task.Run(() =>
              {
                  Bass.UpdatePeriod = 230;
-                 Bass.Start();
+                 var ss = Bass.Start();
 
                  if (isMobile)
                  {
@@ -77,7 +77,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                  else
                      Bass.Configure(Configuration.IncludeDefaultDevice, true);
 
-                 Bass.Init();
+                 var s = Bass.Init();
              });
         }
 
@@ -139,7 +139,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     BLogger.E($"Transition failed.", ex);
                     await InitializeSwitch.NotificationManager.ShowStatusBarMessageAsync($"Failed to transtion. Reason: {Bass.LastError}");
@@ -156,7 +156,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             if (string.IsNullOrEmpty(uri))
                 return false;
-            return await LoadMusicAsync(() => 
+            return await LoadMusicAsync(() =>
             {
                 int metaSize = 1024 * 200; //1MB
                 MemoryStream metadataStream = new MemoryStream();
@@ -253,7 +253,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
             else
             {
                 string error = "The file " + mediaFile?.OrginalFilename + " is either corrupt, incomplete or unavailable. \r\n\r\n Exception details: No data available.";
-                await InitializeSwitch.NotificationManager.ShowMessageAsync(error);                
+                await InitializeSwitch.NotificationManager.ShowMessageAsync(error);
                 return false;
             }
         }
@@ -275,7 +275,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                         PlayerState = PlayerState.Stopped;
 
                         LoadMusicAction(); //loads the respective stream
-                        if(Length <= 1)
+                        if (Length <= 1)
                             Length = Bass.ChannelBytes2Seconds(_handle, Bass.ChannelGetLength(_handle));
                         IsSeekable = Bass.ChannelGetLength(_handle) != -1;
                         Bass.FloatingPointDSP = true;
@@ -306,7 +306,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Pauses the audio playback.
         /// </summary>
@@ -444,7 +444,7 @@ namespace BreadPlayer.Core.Engines.BASSEngine
         {
             get => _currentPlayingFile;
             set => Set(ref _currentPlayingFile, value);
-        }        
+        }
 
         private Equalizer _fmodEqualizer;
 

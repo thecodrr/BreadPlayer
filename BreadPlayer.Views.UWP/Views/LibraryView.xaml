@@ -212,7 +212,7 @@
                                 SelectionMode="{Binding Path=IsMultiSelectModeEnabled, Converter={StaticResource BoolToSelectionMode}, UpdateSourceTrigger=PropertyChanged}"
                                 Tag="{StaticResource Source}">
                                 <BPControls:AlternatingRowListView.Header>
-                                    <toolkit:ScrollHeader Mode="QuickReturn" TargetListViewBase="{x:Bind fileBox}">
+                                    <toolkit:ScrollHeader Mode="QuickReturn">
                                         <StackPanel
                                             x:Name="scrollHeaderPanel"
                                             Padding="10"

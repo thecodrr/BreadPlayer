@@ -18,7 +18,7 @@ namespace BreadPlayer.Web.Lastfm
         {
             DatabasePath = databasePath;
 
-            CacheEnabled = true;
+            //CacheEnabled = true;
         }
 
         public override Task<IEnumerable<Scrobble>> GetCachedAsync()
@@ -61,6 +61,35 @@ namespace BreadPlayer.Web.Lastfm
                     scrobblesCollection.Insert(scrobble);
                 }
             }
+        }
+
+        public override Task RemoveFromCacheAsync(ICollection<Scrobble> scrobbles)
+        {
+            return Task.Run(() =>
+            {
+                using (var disk = new FileDiskService(DatabasePath, new FileOptions { FileMode = FileMode.Exclusive }))
+                using (var db = new LiteDatabase(disk))
+                {
+                    var scrobblesCollection = db.GetCollection<Scrobble>("scrobbles");
+                    foreach (var scrobble in scrobbles)
+                    {
+                        scrobblesCollection.Delete(t => t.Id == scrobble.Id);
+                    }
+                }
+            });
+        }
+
+        public override Task<int> GetCachedCountAsync()
+        {
+            return Task.Run(() =>
+            {
+                using (var disk = new FileDiskService(DatabasePath, new FileOptions { FileMode = FileMode.Exclusive }))
+                using (var db = new LiteDatabase(disk))
+                {
+                    var scrobblesCollection = db.GetCollection<Scrobble>("scrobbles");
+                    return scrobblesCollection.Count();
+                }
+            });
         }
     }
 }

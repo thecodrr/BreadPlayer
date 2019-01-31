@@ -52,7 +52,6 @@ using Microsoft.Services.Store.Engagement;
 using Windows.Phone.UI.Input;
 using System.IO;
 using BreadPlayer.Controls;
-using Microsoft.Toolkit.Uwp.Services.OneDrive;
 using BreadPlayer.Interfaces;
 
 namespace BreadPlayer.ViewModels
@@ -230,7 +229,7 @@ namespace BreadPlayer.ViewModels
         {
             var mediaFile = await TagReaderHelper.CreateMediafile(file);
             mediaFile.MediaLocation = MediaLocationType.Device;
-            mediaFile.ByteArray = await(await file.OpenStreamForReadAsync()).ToByteArray();
+            mediaFile.ByteArray = await (await file.OpenStreamForReadAsync()).ToByteArray();
             return mediaFile;
         }
         private async void HandleExecuteCmdMessage(Message message)
@@ -277,7 +276,7 @@ namespace BreadPlayer.ViewModels
                         }
                     }
                 }
-                
+
                 await Load(libraryMediaFile, (bool)list[2], (double)list[1], volume);
             }
             else
@@ -359,6 +358,8 @@ namespace BreadPlayer.ViewModels
         #region Implementation
         private async void ShuffleAll()
         {
+            if (TracksCollection.Count <= 0)
+                return;
             Shuffle = true;
             await Load((await ShuffledCollection().ConfigureAwait(false))[0], true).ConfigureAwait(false);
         }
@@ -375,7 +376,7 @@ namespace BreadPlayer.ViewModels
             string myAppId = "9nblggh42srx";
             string myAdUnitId = "11701839";
             ad.Keywords = "music,software,apps";
-            ad.AdReady += async (r, a) => 
+            ad.AdReady += async (r, a) =>
             {
                 if (InterstitialAdState.Ready == ad.State)
                 {
@@ -384,17 +385,17 @@ namespace BreadPlayer.ViewModels
                     await SharedLogic.Instance.NotificationManager.ShowMessageBoxAsync("Please click at least one link to help me more! Thanks!", "Thank you so much!");
                 }
             };
-            ad.Completed += async (r, a) => 
+            ad.Completed += async (r, a) =>
             {
                 logger.Log("WatchAnAdCompleted");
                 await NotifyAndDeselect("Thanks!");
             };
-            ad.Cancelled += async (r, a) => 
+            ad.Cancelled += async (r, a) =>
             {
                 await NotifyAndDeselect("No worries!");
             };
             int retryCount = 0;
-            ad.ErrorOccurred += async (r, a) => 
+            ad.ErrorOccurred += async (r, a) =>
             {
                 if (retryCount < 2)
                 {
@@ -610,7 +611,7 @@ namespace BreadPlayer.ViewModels
             if (playingCollection != null)
             {
                 try
-                {                    
+                {
                     Mediafile previousSong = null;
                     if (IsSourceGrouped)
                     {
@@ -633,7 +634,7 @@ namespace BreadPlayer.ViewModels
             if (playingCollection != null)
             {
                 _indexOfCurrentlyPlayingFile = playingCollection.GetCurrentlyPlayingIndex();
-            }            
+            }
         }
         private Mediafile GetNextOrPrevSongInGroup(bool prev = false)
         {
@@ -674,7 +675,7 @@ namespace BreadPlayer.ViewModels
                 return null;
             }
         }
-        
+
         private async void PlayNext()
         {
             if (SharedLogic.Instance.Player.CurrentlyPlayingFile != null)
@@ -944,7 +945,7 @@ namespace BreadPlayer.ViewModels
         {
             get => _nowPlayingQueue;
             set => Set(ref _nowPlayingQueue, value);
-        }        
+        }
 
         private string _repeat = "No Repeat";
 
@@ -1141,7 +1142,7 @@ namespace BreadPlayer.ViewModels
             }
             UpdateCurrentlyPlayingSongIndex();
             UpcomingSong = await GetUpcomingSong(true);
-            PreviousSong = GetPreviousSong();            
+            PreviousSong = GetPreviousSong();
         }
         private Task<bool> DynamicLoadMusicAsync(Mediafile mediafile)
         {

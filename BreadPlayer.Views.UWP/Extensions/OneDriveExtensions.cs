@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Services.OneDrive;
+﻿using Microsoft.Graph;
+using Microsoft.Toolkit.Services.OneDrive;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace BreadPlayer.Extensions
     {
         public static async Task<string> GetDownloadURL(this OneDriveStorageFile oneDriveFile)
         {
-            var requestMessage = OneDriveService.Instance.Provider.Drive.Items[oneDriveFile.OneDriveItem.Id].Content.Request().GetHttpRequestMessage();
-            await OneDriveService.Instance.Provider.AuthenticationProvider.AuthenticateRequestAsync(requestMessage).AsAsyncAction().AsTask();
+            var _service = OneDriveService.Instance;
+            var requestMessage = ((IGraphServiceClient)_service.Provider.GraphProvider).Drive.Items[oneDriveFile.OneDriveItem.Id].Content.Request().GetHttpRequestMessage();
+            await _service.Provider.GraphProvider.AuthenticationProvider.AuthenticateRequestAsync(requestMessage).AsAsyncAction().AsTask();
             string headerStr = "\r\n";
             foreach (var header in requestMessage.Headers)
             {

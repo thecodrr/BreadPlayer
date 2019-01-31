@@ -7,7 +7,8 @@ using BreadPlayer.Extensions;
 using BreadPlayer.Helpers;
 using BreadPlayer.Interfaces;
 using BreadPlayer.Messengers;
-using Microsoft.Toolkit.Uwp.Services.OneDrive;
+using Microsoft.Toolkit.Services.OneDrive;
+using Microsoft.Toolkit.Services.Services.MicrosoftGraph;
 using SharpCifs.Smb;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,6 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Controls;
-using static Microsoft.Toolkit.Uwp.Services.OneDrive.OneDriveEnums;
 
 namespace BreadPlayer.ViewModels
 {
@@ -507,7 +507,7 @@ namespace BreadPlayer.ViewModels
                 if (item.Cache == null)
                 {
 #if DEBUG
-                    if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadWrite))           
+                    if (OneDriveService.Instance.Initialize("dc915f45-42b6-4835-b581-c5d0547d05b2", new string[] { MicrosoftGraphScope.FilesReadWriteAll }, null, "https://google.com/"))
 #else
                     if (OneDriveService.Instance.Initialize("000000004C1B185C", AccountProviderType.Msa, OneDriveScopes.OfflineAccess | OneDriveScopes.ReadOnly | OneDriveScopes.WlSignin))                  
 #endif
@@ -516,7 +516,8 @@ namespace BreadPlayer.ViewModels
                         {
                             throw new Exception("Unable to sign in");
                         }
-                        var folder = await OneDriveService.Instance.RootFolderAsync();
+                        var folder = await OneDriveService.Instance.RootFolderForMeAsync();
+                        var s = await folder.GetItemsAsync(10);
                         StorageItems.AddRange(await GetOneDriveFolderItemsAsync(folder));
                     }
                 }
@@ -533,8 +534,10 @@ namespace BreadPlayer.ViewModels
         }
         private async Task<IEnumerable<DiskItem>> GetOneDriveFolderItemsAsync(OneDriveStorageFolder folder)
         {
+            //if (folder.OneDriveItem.Folder.ChildCount <= 0)
+            //  return null;
             List<DiskItem> oneDriveStorageItems = new List<DiskItem>();
-            foreach (var item in await folder.GetItemsAsync(folder.OneDriveItem.Folder.ChildCount ?? short.MaxValue))
+            foreach (var item in await folder.GetItemsAsync(0, int.MaxValue))
             {
                 if (!item.IsOneNote())
                 {

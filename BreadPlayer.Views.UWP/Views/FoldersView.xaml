@@ -102,13 +102,13 @@
     <Grid DataContext="{StaticResource FoldersVM}">
         <ListView
             x:Name="foldersList"
-            helpers:ListViewBase.AlternateColor="{ThemeResource OddRowBackground}"
-            helpers:ListViewBase.StretchItemContainerDirection="Both"
+            helpers:ListViewExtensions.AlternateColor="{ThemeResource OddRowBackground}"
+            helpers:ListViewExtensions.StretchItemContainerDirection="Both"
             IsItemClickEnabled="True"
             ItemClick="OnItemClicked"
             ItemsSource="{Binding Path=StorageItems}">
             <ListView.Header>
-                <controls:ScrollHeader Mode="QuickReturn" TargetListViewBase="{x:Bind foldersList}">
+                <controls:ScrollHeader Mode="QuickReturn">
                     <StackPanel
                         Margin="0,0,0,0"
                         Padding="15"
@@ -264,7 +264,7 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>                        
+                    <VisualState.Setters>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

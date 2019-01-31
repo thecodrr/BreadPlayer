@@ -1,13 +1,13 @@
 ﻿{
   "supports": {},
   "dependencies": {
-    "AngleSharp": "0.9.9",
+    "AngleSharp": "0.10.1",
     "FubarCoder.RestSharp.Portable": "3.3.0",
     "FubarCoder.RestSharp.Portable.HttpClient": "4.0.8",
-    "Inflatable.Lastfm": "1.0.1.307",
-    "LiteDB": "4.0.0",
+    "Inflatable.Lastfm": "1.1.0.339",
+    "LiteDB": "4.1.4",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "2.0.3"
   },
   "frameworks": {
     "netstandard1.4": {}

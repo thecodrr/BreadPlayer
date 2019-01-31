@@ -78,7 +78,7 @@ namespace BreadPlayer
             BLogger.E(string.Format("Task ({0}) terminating...", e.Exception.Source), e.Exception);
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             BLogger.F("Something caused the app to crash! Sender: {sender}", e.Exception, sender);
         }
@@ -95,7 +95,7 @@ namespace BreadPlayer
                 RequestedTheme = (ApplicationTheme)theme;
                 BLogger.I("Theme set: {theme}", theme);
             }
-         }
+        }
 
         private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
@@ -163,7 +163,7 @@ namespace BreadPlayer
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             BLogger.I("App suspending. Saving state.");
-            await LockscreenHelper.ResetLockscreenImage();            
+            await LockscreenHelper.ResetLockscreenImage();
             CoreWindowLogic.SaveSettings();
             CoreWindowLogic.DisposeObjects();
             _sessionWatch?.Stop();
@@ -201,7 +201,7 @@ namespace BreadPlayer
                 var vm = Current.Resources["AlbumArtistVM"];
                 ThemeManager.SetThemeColor(SettingsHelper.GetLocalSetting<string>("NowPlayingPicture", null));
 
-                
+
                 // Do not repeat app initialization when the Window already has content
                 if (rootFrame == null)
                 {
