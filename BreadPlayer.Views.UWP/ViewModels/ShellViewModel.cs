@@ -807,10 +807,16 @@ namespace BreadPlayer.ViewModels
             else
             {
                 PlayPauseCommand.IsEnabled = true;
-                var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
                 var device = await DeviceInformation.CreateFromIdAsync(args.Id);
-                BLogger.I($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
-
+                if (!String.IsNullOrEmpty(_audioDeviceId))
+                {
+                    var oldDevice = await DeviceInformation.CreateFromIdAsync(_audioDeviceId);
+                    BLogger.I($"Switching audio render device from [{oldDevice.Name}] to [{device.Name}]");
+                }
+                else
+                {
+                    BLogger.I($"New audio render device connected. {device.Name}");
+                }
                 _audioDeviceId = args.Id;
 
                 await SharedLogic.Instance.Player.ChangeDevice(device.Name);
