@@ -1,16 +1,22 @@
-﻿What's Fixed:
-1. Fixed exception during folder import if file path is longer than 260 characters. #220
-3. Fixed thread error when loading music. #219
-4. Fixed NullReferenceException when re initializing database. #221
-5. Fixed error while trying to play next song. #222
-6. Fixed error while navigating back. #223
-7. Fixed startup crash due to internetconnectivityhelper.
-8. Fixed album and artist loading.
-9. Fixed streaming speed.
-10. Fixed issue where media servers were not detected.
-11. Fixed streaming from portable devices.
+﻿First of all, sorry for the loooong delay in releasing this. I got immensely busy and still am so I don't think any big release after this will be coming anytime soon. I am extremely sorry though. Thank you everyone for your support. Here's something to keep you occupied.
+What's Fixed:
+I fixed all the bugs I could find and were reported to me by you guys. Some of which (the major ones) are:
+1. Fixed the next/previous song button (annoying bug)
+2. Fixed OneDrive integration
+3. Fixed Last.fm support
+4. Fixed crashes when going to now playing screen
+5. Fixed many other minor pesky bugs.
 
-What's New:
-1. Added arabic translation.
+What's improved:
+1. I tweaked the album list UI a bit.
 
-Support by donating!
+What's bad:
+1. Sorry guys, I had to remove support for Windows Mobile. Couldn't improve/fix things without it.
+
+Some other news:
+* If any of you guys have switched to or use Android I have shifted there and I will start the development of all my apps (2 in number) there very soon. In fact, HandBook is already under development.
+I go by the name of "thecodrr" there so I hope to see some of you guys there! :D
+
+Support by donating, reviewing and rating!
+
+Love you all!

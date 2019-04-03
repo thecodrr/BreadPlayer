@@ -357,7 +357,7 @@
     <value>Kliknij, aby przejść na nasz Twitter</value>
   </data>
   <data name="version.Text" xml:space="preserve">
-    <value>v2.7.9.0-beta</value>
+    <value>v2.8.0-beta</value>
     <comment>represents current version of Bread Player</comment>
   </data>
   <data name="versionHeader.Text" xml:space="preserve">

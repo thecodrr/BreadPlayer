@@ -29,8 +29,8 @@
     <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="('$(UseTemporarySignCert)' != 'true')">
-    <PackageCertificateThumbprint>1A3213ADD2C8D2F881976AC2C45DBE52A3C3A205</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>2C13C5CC238E0685868DA3BFCB84FB69C5C92D9A</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>BreadPlayer.Views.UWP_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -167,6 +167,7 @@
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\breadplayer.ttf" />
+    <None Include="BreadPlayer.Views.UWP_StoreKey.pfx" />
     <None Include="BreadPlayer.Views.UWP_TemporaryKey.pfx" />
     <None Include="BreadPlayer_StoreKey.pfx" />
     <None Include="Macalifa.licenseheader" />

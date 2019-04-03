@@ -2,6 +2,7 @@
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=C12EF191-B051-4B71-922F-A3597A07F49E</Publisher>
   <PublisherDisplayName>thecodrr</PublisherDisplayName>
+  <DeveloperAccountType>MSA</DeveloperAccountType>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
   <SupportedLocales>
     <Language Code="af" InMinimumRequirementSet="true" />
@@ -361,11 +362,15 @@
     <MainPackageIdentityName>22102thecodrr.BreadPlayer</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>Bread Player</ReservedName>
+      <ReservedName>Bread Music Player</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>22102thecodrr.FeatherFacebookLite</MainPackageIdentityName>
+    <MainPackageIdentityName>22102thecodrr.HandBook-DownloadAnyeBook</MainPackageIdentityName>
     <MainPackageIdentityName>22102thecodrr.Macalifa</MainPackageIdentityName>
+    <MainPackageIdentityName>22102thecodrr.Moowiz-ClientforIMDb</MainPackageIdentityName>
+    <MainPackageIdentityName>22102thecodrr.reBay</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NBLGGH42SRX" />
 </StoreAssociation>
