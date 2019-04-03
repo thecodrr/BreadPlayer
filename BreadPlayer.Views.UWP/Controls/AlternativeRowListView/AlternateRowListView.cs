@@ -1,6 +1,7 @@
 ﻿using BreadPlayer.Core.Models;
 using BreadPlayer.Extensions;
 using BreadPlayer.Interfaces;
+using System;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,31 +37,36 @@ namespace BreadPlayer.Controls
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
-
-            if (element is ListViewItem listViewItem)
-
+            try
             {
-                var index = IndexFromContainer(element);
-
-                var isOdd = (index + 1) % 2 == 1;
-
-                //support for adjusting to groups(each group should be treated individually)
-
-                var collectionViewSource = Tag as CollectionViewSource;
-                if (collectionViewSource?.Source is GroupedObservableCollection<IGroupKey, Mediafile> groups)
+                if (element is ListViewItem listViewItem)
                 {
-                    var o = Items?[index];
-                    if (o != null)
-                    {
-                        var currentGroup = groups.FirstOrDefault(p => p.Contains(o));
-                        index = currentGroup.IndexOf(o as Mediafile);
-                        isOdd = (index + 1) % 2 == 1;
-                    }
-                }
+                    var index = IndexFromContainer(element);
 
-                listViewItem.Background = isOdd
-                    ? OddRowBackground
-                    : EvenRowBackground;
+                    var isOdd = (index + 1) % 2 == 1;
+
+                    //support for adjusting to groups(each group should be treated individually)
+
+                    var collectionViewSource = Tag as CollectionViewSource;
+                    if (collectionViewSource?.Source is GroupedObservableCollection<IGroupKey, Mediafile> groups)
+                    {
+                        var o = Items?[index];
+                        if (o != null)
+                        {
+                            var currentGroup = groups.FirstOrDefault(p => p.Contains(o));
+                            index = currentGroup.IndexOf(o as Mediafile);
+                            isOdd = (index + 1) % 2 == 1;
+                        }
+                    }
+
+                    listViewItem.Background = isOdd
+                        ? OddRowBackground
+                        : EvenRowBackground;
+                }
+            }
+            catch (Exception ex)
+            {
+                BLogger.E("Error while preparing alternative listview.", ex);
             }
         }
     }
