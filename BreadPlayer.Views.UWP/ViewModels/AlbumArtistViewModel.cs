@@ -116,7 +116,6 @@ namespace BreadPlayer.ViewModels
                             AlbumName = mediafile.Album,
                             AlbumArt = string.IsNullOrEmpty(mediafile?.AttachedPicture) ? null : mediafile?.AttachedPicture
                         };
-
                         albums.Add(album);
                     }
                     if (artists.All(t => t.Name != mediafile.LeadArtist))
@@ -150,14 +149,14 @@ namespace BreadPlayer.ViewModels
             ArtistsCollection.OnStartLoading = () => RecordsLoading = true;
             ArtistsCollection.OnEndLoading = () =>
             {
-                 RecordsLoading = false;
+                RecordsLoading = false;
             };
             ArtistsCollection.OnError = (ex) => RecordsLoading = false;
         }
 
         private async void ArtistsCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if(e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
             {
                 await CacheArtists(e.NewItems.Cast<Artist>()).ConfigureAwait(false);
             }
@@ -185,7 +184,7 @@ namespace BreadPlayer.ViewModels
                     break;
                 }
                 var collectionArtist = ArtistsCollection.FirstOrDefault(t => t.Name == artist.Name);
-                if(collectionArtist == null)
+                if (collectionArtist == null)
                 {
                     BLogger.I("No artist found for: {name}", artist.Name);
                     continue;

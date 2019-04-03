@@ -21,7 +21,7 @@ namespace BreadPlayer.Web.XiamiLyricsAPI
         {
             XiamiHttpClient.CancelPendingRequests();
             var results = await SearchAsync(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist));
-            if (results.Data.Songs.Any(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower())))
+            if (results?.Data?.Songs?.Any(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower())) == true)
             {
                 var xResult = results.Data.Songs.First(t => t.SongName.ToLower().Contains(mediaFile.Title.ToLower()));
                 var xSong = await GetSongDetailAsync(xResult.SongId.ToString());

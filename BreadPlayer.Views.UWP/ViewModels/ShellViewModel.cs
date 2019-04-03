@@ -94,7 +94,7 @@ namespace BreadPlayer.ViewModels
             DontUpdatePosition = false;
             _timer = new DispatcherTimer(new BreadDispatcher())
             {
-                Interval = TimeSpan.FromMilliseconds(500)
+                Interval = TimeSpan.FromMilliseconds(1)
             };
             _timer.Tick += Timer_Tick;
             _timer.Stop();

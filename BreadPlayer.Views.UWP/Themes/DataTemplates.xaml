@@ -137,54 +137,67 @@
     </MenuFlyout>
 
     <DataTemplate x:Key="AlbumTemplate" x:DataType="models:Album">
-        <Grid
+        <toolkit:DropShadowPanel                            
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            BlurRadius="25"
+                            OffsetX="0"
+                            OffsetY="0"
+                            Opacity="1"
+                            ShadowOpacity="0.4"
+                            Color="Black">
+            <Grid
             x:Name="LayoutRoot"
-            Width="200"
-            Height="290"
+            Width="150"
+            Height="220"
+            CornerRadius="10"
             Background="{ThemeResource ThemeBackground}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Image
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Image
                 x:Name="AlbumArt"
-                Width="200"
-                Height="200"
+                Width="150"
+                Height="150"
                 HorizontalAlignment="Stretch"
                 Opacity="0"
                 Source="{Binding AlbumArt, Mode=OneWay}"
                 Stretch="Uniform">
-                <Interactivity:Interaction.Behaviors>
-                    <Core:EventTriggerBehavior EventName="ImageOpened">
-                        <Media:ControlStoryboardAction>
-                            <Media:ControlStoryboardAction.Storyboard>
-                                <Storyboard>
-                                    <DoubleAnimation
+                    <Interactivity:Interaction.Behaviors>
+                        <Core:EventTriggerBehavior EventName="ImageOpened">
+                            <Media:ControlStoryboardAction>
+                                <Media:ControlStoryboardAction.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
                                         Storyboard.TargetName="AlbumArt"
                                         Storyboard.TargetProperty="Opacity"
                                         From="0"
                                         To="1"
                                         Duration="0:0:0.8" />
-                                </Storyboard>
-                            </Media:ControlStoryboardAction.Storyboard>
-                        </Media:ControlStoryboardAction>
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </Image>
-            <FontIcon
+                                    </Storyboard>
+                                </Media:ControlStoryboardAction.Storyboard>
+                            </Media:ControlStoryboardAction>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Image>
+                <FontIcon
                 x:Name="PlaceHolder"
-                Width="200"
-                Height="200"
+                Width="150"
+                Height="150"
                 x:Phase="2"
                 FontSize="112"
                 Foreground="{ThemeResource ThemeForeground}"
                 Glyph="&#xE93C;"
                 Visibility="{x:Bind Path=AlbumArt, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
-            <TextBlock
+                <TextBlock
                 x:Name="albumTitle"
                 Grid.Row="1"
-                Margin="5,10,5,0"
+                Margin="5,5,5,0"
                 HorizontalAlignment="Center"
                 x:Phase="0"
                 FontSize="16"
@@ -194,128 +207,119 @@
                 TextAlignment="Center"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="Wrap" />
-            <TextBlock
+                <TextBlock
                 x:Name="albumArtist"
                 Grid.Row="2"
-                Margin="5,10,5,0"
+                Margin="5,0,5,0"
                 HorizontalAlignment="Center"
                 x:Phase="1"
                 FontSize="13"
                 Text="{x:Bind Artist, Mode=OneWay}"
                 TextAlignment="Center"
                 TextTrimming="CharacterEllipsis" />
-            <Grid
+                <Grid
                 x:Name="ButtonsStack"
                 Grid.Row="0"
-                Height="46"
                 Margin="0,0,0,0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                VerticalAlignment="Center"
+                Background="Transparent"
                 Opacity="0"
                 Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button
-                    Width="46"
-                    Height="46"
-                    Padding="0,0,0,0"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <AppBarButton
+                    Width="40"
+                    Height="40"
                     HorizontalAlignment="Right"
-                    Background="Transparent"
-                    BorderThickness="0"
+                        VerticalAlignment="Center"
+                        BorderBrush="WhiteSmoke"
+                        Icon="Play"
+                        Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
                     Command="{Binding Source={StaticResource LibVM}, Path=PlayCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content}"
-                    Style="{StaticResource HyperlinkBtn}">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="20"
-                        RequestedTheme="Dark"
-                        Text="&#xE102;" />
-                </Button>
-                <Button
+                    Style="{StaticResource CustomAppBarButtonStyle}">
+                    </AppBarButton>
+                    <AppBarButton
                     x:Name="button2"
                     Grid.Column="1"
-                    Width="46"
-                    Height="46"
-                    Padding="0,0,0,0"
-                    HorizontalAlignment="Left"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Style="{StaticResource HyperlinkBtn}"
-                    Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                    <TextBlock
+                    Width="40"
+                    Height="40"
                         VerticalAlignment="Center"
-                        FontFamily="Segoe MDL2 Assets"
-                        FontSize="20"
-                        RequestedTheme="Dark"
-                        Text="&#59152;" />
+                        BorderBrush="WhiteSmoke"
+                    HorizontalAlignment="Left"
+                        Icon="Add"
+                        Background="{ThemeResource SystemControlHighlightListAccentMediumBrush}"
+                    Style="{StaticResource CustomAppBarButtonStyle}"
+                    Tag="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                        <Interactivity:Interaction.Behaviors>
+                            <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
+                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}" />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </AppBarButton>
                     <Interactivity:Interaction.Behaviors>
-                        <Core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=button2}">
-                            <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource PlaylistsFlyout}" />
-                        </Core:EventTriggerBehavior>
-                    </Interactivity:Interaction.Behaviors>
-                </Button>
-                <Interactivity:Interaction.Behaviors>
-                    <Core:DataTriggerBehavior
+                        <Core:DataTriggerBehavior
                         Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}"
                         ComparisonCondition="Equal"
                         Value="True">
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Visibility"
                             TargetObject="{Binding ElementName=ButtonsStack}"
                             Value="Visible" />
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
                             Value="{StaticResource ThemeForeground}" />
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumArtist}"
                             Value="{StaticResource ThemeForeground}" />
-                        <Media:ControlStoryboardAction>
-                            <Media:ControlStoryboardAction.Storyboard>
-                                <Storyboard>
-                                    <DoubleAnimation
+                            <Media:ControlStoryboardAction>
+                                <Media:ControlStoryboardAction.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
                                         Storyboard.TargetName="ButtonsStack"
                                         Storyboard.TargetProperty="Opacity"
                                         From="0"
                                         To="1"
                                         Duration="0:0:0.3" />
-                                </Storyboard>
-                            </Media:ControlStoryboardAction.Storyboard>
-                        </Media:ControlStoryboardAction>
-                    </Core:DataTriggerBehavior>
-                    <Core:DataTriggerBehavior
+                                    </Storyboard>
+                                </Media:ControlStoryboardAction.Storyboard>
+                            </Media:ControlStoryboardAction>
+                        </Core:DataTriggerBehavior>
+                        <Core:DataTriggerBehavior
                         Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}"
                         ComparisonCondition="Equal"
                         Value="False">
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Visibility"
                             TargetObject="{Binding ElementName=ButtonsStack}"
                             Value="Collapsed" />
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumTitle}"
                             Value="{StaticResource ThemeForeground}" />
-                        <Core:ChangePropertyAction
+                            <Core:ChangePropertyAction
                             PropertyName="Foreground"
                             TargetObject="{Binding ElementName=albumArtist}"
                             Value="{StaticResource ThemeForeground}" />
-                    </Core:DataTriggerBehavior>
-                    <Core:EventTriggerBehavior EventName="RightTapped">
-                        <Core:EventTriggerBehavior.Actions>
+                        </Core:DataTriggerBehavior>
+                        <Core:EventTriggerBehavior EventName="RightTapped">
+                            <Core:EventTriggerBehavior.Actions>
+                                <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
+                            </Core:EventTriggerBehavior.Actions>
+                        </Core:EventTriggerBehavior>
+                        <Core:EventTriggerBehavior EventName="Holding">
                             <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
-                        </Core:EventTriggerBehavior.Actions>
-                    </Core:EventTriggerBehavior>
-                    <Core:EventTriggerBehavior EventName="Holding">
-                        <Behaviours:OpenMenuFlyoutAction Parameter="{StaticResource AlbumArtistFlyout}" />
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Grid>
             </Grid>
-        </Grid>
+
+        </toolkit:DropShadowPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="AlbumMobileTemplate" x:DataType="models:Album">
@@ -1015,7 +1019,7 @@
                             OffsetX="0"
                             OffsetY="0"
                             Opacity="1"
-                            ShadowOpacity="0"
+                            ShadowOpacity="0.3"
                             Color="{Binding Path=PictureColor, Converter={StaticResource ColorDarknessChanger}, ConverterParameter='-0.7Color'}">
                 <Ellipse Width="150"
                          Height="150"
@@ -1026,24 +1030,24 @@
                 Height="150"
                 Background="#ccdbdbdb"
                 CornerRadius="100">
-                
-                    <Grid
+
+                <Grid
                     x:Name="artistImageGrid"
                     CornerRadius="100"
                     Opacity="1">
-                        <Grid.Background>
-                            <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
-                                <ImageBrush.ImageSource>
-                                    <BitmapImage
+                    <Grid.Background>
+                        <ImageBrush x:Name="ArtistPicture" Stretch="Uniform">
+                            <ImageBrush.ImageSource>
+                                <BitmapImage
                                     DecodePixelHeight="150"
                                     DecodePixelType="Logical"
                                     DecodePixelWidth="150"
                                     UriSource="{Binding Picture, UpdateSourceTrigger=PropertyChanged}">
-                                    </BitmapImage>
-                                </ImageBrush.ImageSource>
-                            </ImageBrush>
-                        </Grid.Background>
-                        <FontIcon
+                                </BitmapImage>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </Grid.Background>
+                    <FontIcon
                         x:Name="PlaceHolder"
                         Width="150"
                         Height="150"
@@ -1051,8 +1055,8 @@
                         Foreground="{ThemeResource ThemeForeground}"
                         Glyph="&#xE13D;"                        
                         Visibility="{x:Bind Path=Picture, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"  />
-                        <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}" />-->
-                    </Grid>
+                    <!--<Grid CornerRadius="100" Background="{Binding Path=PictureColor, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HexToColor}}" />-->
+                </Grid>
             </Border>
             <TextBlock
                 x:Name="artistName"
@@ -1172,9 +1176,9 @@
                                                 Storyboard.TargetName="dropShadow"
                                                 Storyboard.TargetProperty="ShadowOpacity"
                                                 From="1"
-                                                To="0"
+                                                To="0.2"
                                                 Duration="0:0:0.5" />
-                                </Storyboard>                                
+                                </Storyboard>
                             </Media:ControlStoryboardAction.Storyboard>
                         </Media:ControlStoryboardAction>
                         <Core:ChangePropertyAction
@@ -1205,13 +1209,13 @@
                                                 EnableDependentAnimation="True"
                                                 Storyboard.TargetName="dropShadow"
                                                 Storyboard.TargetProperty="ShadowOpacity"
-                                                From="0"
+                                                From="0.2"
                                                 To="1"
                                                 Duration="0:0:0.5" />
                                 <DoubleAnimation
                                                 Storyboard.TargetName="ButtonsStack"
                                                 Storyboard.TargetProperty="Opacity"
-                                                From="0"
+                                                From="0.2"
                                                 To="1"
                                                 Duration="0:0:0.5" />
                             </Storyboard>
@@ -1227,7 +1231,7 @@
                                                 Storyboard.TargetName="dropShadow"
                                                 Storyboard.TargetProperty="ShadowOpacity"
                                                 From="1"
-                                                To="0"
+                                                To="0.2"
                                                 Duration="0:0:0.5" />
                                 <DoubleAnimation
                                                 Storyboard.TargetName="ButtonsStack"
@@ -1271,7 +1275,7 @@
                                     DecodePixelType="Logical"
                                     DecodePixelWidth="150"
                                     UriSource="{Binding Picture, UpdateSourceTrigger=PropertyChanged}" />
-                            </ImageBrush.ImageSource>                           
+                            </ImageBrush.ImageSource>
                         </ImageBrush>
                     </Grid.Background>
                     <FontIcon

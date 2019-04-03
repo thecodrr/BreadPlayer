@@ -15,8 +15,8 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
         public async Task<string> FetchLyrics(Mediafile mediaFile)
         {
             var results = await Search(WebUtility.UrlEncode(mediaFile.Title + " " + mediaFile.LeadArtist)).ConfigureAwait(false);
-            if (results.Result.SongInfo?.SongList?.Any() == true
-                && results.Result.SongInfo?.SongList?.Any(t => t.Title.Contains(mediaFile.Title)) == true)
+            if (results?.Result?.SongInfo?.SongList?.Any() == true
+                && results?.Result?.SongInfo?.SongList?.Any(t => t.Title.Contains(mediaFile.Title)) == true)
             {
                 var bSong = results.Result.SongInfo.SongList.First(t => t.Title.Contains(mediaFile.Title));
                 return (await RequestSongLrc(bSong.SongId).ConfigureAwait(false)).LrcContent;
@@ -28,16 +28,25 @@ namespace BreadPlayer.Web.BaiduLyricsAPI
         {
             var url = _helpers.GetCallUrl(Endpoints.MethodSongLrc, _helpers.GetSongsInfoParameterString(songId));
             string response = await _helpers.MakeRequest(url).ConfigureAwait(false);
-            var obj = (Lrc)JsonConvert.DeserializeObject(response, typeof(Lrc));
-            return obj;
+            if (response != null)
+            {
+                var obj = JsonConvert.DeserializeObject<Lrc>(response);
+                if (obj != null)
+                    return obj;
+            }
+            return null;
         }
 
         public async Task<QueryMergeResponse> Search(string query)
         {
             var url = _helpers.GetCallUrl(Endpoints.MethodQueryMerge, _helpers.GetQueryParameterString(query));
             string response = await _helpers.MakeRequest(url).ConfigureAwait(false);
-            var obj = (QueryMergeResponse)JsonConvert.DeserializeObject(response, typeof(QueryMergeResponse));
-            return obj;
+            if (response != null)
+            {
+                var obj = JsonConvert.DeserializeObject<QueryMergeResponse>(response);
+                return obj;
+            }
+            return null;
         }
     }
 }

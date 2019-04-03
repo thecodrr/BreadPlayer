@@ -80,7 +80,7 @@ namespace BreadPlayer.Helpers
                 string message = ex.Message + "||" + ex.InnerException;
                 BLogger.E("Error while importing folder.", ex);
                 await SharedLogic.Instance.NotificationManager.ShowMessageAsync(message);
-            }        
+            }
             return tempList.DistinctBy(f => f.OrginalFilename);
         }
         public static async Task ImportFolderIntoLibraryAsync(StorageFolder folder)

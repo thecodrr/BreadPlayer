@@ -13,6 +13,7 @@ using IF.Lastfm.Core.Api;
 using IF.Lastfm.Core.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -168,7 +169,7 @@ namespace BreadPlayer.ViewModels
 
             timer = new Core.PortableAPIs.DispatcherTimer(new BreadDispatcher())
             {
-                Interval = TimeSpan.FromMilliseconds(10)
+                Interval = TimeSpan.FromMilliseconds(1)
             };
             string lyricsText = "";
             if (string.IsNullOrEmpty(SharedLogic.Instance.Player.CurrentlyPlayingFile?.SynchronizedLyric))
@@ -210,13 +211,15 @@ namespace BreadPlayer.ViewModels
             timer.Tick += (s, e) =>
             {
                 var currentPosition = TimeSpan.FromSeconds(SharedLogic.Instance.Player.Position);
-                if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && (t.Timestamp.Milliseconds - currentPosition.Milliseconds) < 50) == true)
+                if (Lyrics?.Any(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && currentPosition.Milliseconds - t.Timestamp.Milliseconds < 20) == true)
                 {
-                    var currentLyric = Lyrics.First(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds);
+                    var currentLyric = Lyrics.FirstOrDefault(t => t.Timestamp.Minutes == currentPosition.Minutes && t.Timestamp.Seconds == currentPosition.Seconds && currentPosition.Milliseconds - t.Timestamp.Milliseconds < 20);
+                    Debug.WriteLine(currentPosition.Milliseconds % currentLyric.Timestamp.Milliseconds);
                     if (currentLyric == null)
                         return;
-
                     var previousLyric = Lyrics.FirstOrDefault(t => t.IsActive) ?? null;
+                    if (previousLyric != null && previousLyric.Timestamp == currentLyric.Timestamp)
+                        return;
                     if (previousLyric != null && previousLyric.IsActive == true)
                         previousLyric.IsActive = false;
                     if (!currentLyric.IsActive)

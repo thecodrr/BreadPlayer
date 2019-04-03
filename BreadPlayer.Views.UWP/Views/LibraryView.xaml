@@ -518,6 +518,36 @@
                     <GridView.ItemContainerStyle>
                         <Style TargetType="GridViewItem">
                             <Setter Property="Margin" Value="20" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="GridViewItem">
+                                        <ListViewItemPresenter
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              SelectionCheckMarkVisualEnabled="True"
+                                              CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                              CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                              DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
+                                              DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                                              FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                                              FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                              PlaceholderBackground="Transparent"
+                                              PointerOverBackground="Transparent"
+                                              PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                              SelectedBackground="Transparent"
+                                              SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
+                                              SelectedPointerOverBackground="Transparent"
+                                              PressedBackground="Transparent"
+                                              SelectedPressedBackground="Transparent"
+                                              DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                              DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                              ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              ContentMargin="{TemplateBinding Padding}"
+                                              CheckMode="Inline"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
                     </GridView.ItemContainerStyle>
                 </GridView>
@@ -634,7 +664,6 @@
                         <Setter Target="semanticZoom.(Grid.RowSpan)" Value="2" />
                         <Setter Target="albumGridView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
                         <Setter Target="artistGridView.ItemsPanel" Value="{StaticResource MobileItemsPanelTemplate}" />
-                        <Setter Target="albumGridView.ItemTemplate" Value="{StaticResource AlbumMobileTemplate}" />
                         <Setter Target="artistGridView.ItemTemplate" Value="{StaticResource ArtistMobileTemplate}" />
                     </VisualState.Setters>
                 </VisualState>

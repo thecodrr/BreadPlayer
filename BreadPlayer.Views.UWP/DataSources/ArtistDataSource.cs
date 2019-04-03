@@ -15,7 +15,7 @@ namespace BreadPlayer.DataSources
         public Task<IEnumerable<Artist>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
         {
             return SharedLogic.Instance.AlbumArtistService.GetRangeOfArtistsAsync(pageIndex * pageSize, pageSize);
-        }        
+        }
     }
     public class AlbumDataSource : IIncrementalSource<Album>
     {
