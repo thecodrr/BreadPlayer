@@ -194,7 +194,7 @@
     <value>Klicke hier, um unsere Facebook-Seite zu besuchen.</value>
   </data>
   <data name="favoritesMenuItem.Label" xml:space="preserve">
-    <value>favorisierte Toasts</value>
+    <value>Favorisierte Toasts</value>
   </data>
   <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
     <value>Navigiere zu deinen favorisierten Songs.</value>
@@ -283,7 +283,7 @@
     <value>Spiele alle Toasts von dieser Playlist</value>
   </data>
   <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
-    <value> alle abspielen</value>
+    <value> Alle abspielen</value>
     <comment>(Respect the whitespace at the beginning.)</comment>
   </data>
   <data name="playMenuItem.Text" xml:space="preserve">
@@ -293,7 +293,7 @@
     <value>Sperrbildschirm verhindern.</value>
   </data>
   <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
-    <value>Dieses Feature verbraucht extrem viel Akku. Deswegen wird der Bildschirm nach einer Zeit automatisch ausgeschaltet.</value>
+    <value>Dieses Feature verbraucht extrem viel Akku, weswegen diese Einstellung nur bis zum nächsten Neustart gespeichert wird.</value>
   </data>
   <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
     <value>Wenn du diesen Haken setzt, dann wird der Bildschirm deines Gerätes nicht nach der regulären Zeit gesperrt.</value>
@@ -347,7 +347,7 @@
     <value>Einstellungen</value>
   </data>
   <data name="settingsMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiert zu den Einstellungen von BreadPlayer.</value>
+    <value>Navigiere zu deinen BreadPlayer Einstellungen.</value>
   </data>
   <data name="showEqualizerBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Zeige Equalizer</value>
@@ -362,7 +362,7 @@
     <value>Toasts</value>
   </data>
   <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
-    <value>Wiederagbe stoppen nach diesem Song</value>
+    <value>Wiederagbe nach diesem Song stoppen</value>
   </data>
   <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
     <value>Dunkel</value>
@@ -381,7 +381,7 @@
     <value>Toast-Sammlung</value>
   </data>
   <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
-    <value>Navigiert zu deiner Song-Sammlung.</value>
+    <value>Navigiere zu deiner Song-Sammlung.</value>
   </data>
   <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Klicke hier um auf unser Twitter-Profil zu gelangen.</value>
@@ -404,10 +404,10 @@
     <value>Songtext</value>
   </data>
   <data name="nowPlayingPivot.Header" xml:space="preserve">
-    <value>wird gebacken</value>
+    <value>Wird gebacken</value>
   </data>
   <data name="addToFavCmd.Text" xml:space="preserve">
-    <value>Zu favoriten hinzufügen</value>
+    <value>Zu Favoriten hinzufügen</value>
   </data>
   <data name="basicCommandsHeader.Text" xml:space="preserve">
     <value>Allgemeine Befehle</value>
@@ -449,16 +449,16 @@
     <value>Toast abspielen</value>
   </data>
   <data name="prevCmd.Text" xml:space="preserve">
-    <value>vorheriger</value>
+    <value>Vorheriger</value>
   </data>
   <data name="repeatCmd.Text" xml:space="preserve">
-    <value>wiederholen</value>
+    <value>Wiederholen</value>
   </data>
   <data name="seekBackwardCmd.Text" xml:space="preserve">
-    <value>Seek Backward</value>
+    <value>Zurück springen</value>
   </data>
   <data name="seekForwardCmd.Text" xml:space="preserve">
-    <value>Seek Forward</value>
+    <value>Vorwärts springen</value>
   </data>
   <data name="showEQCmd.Text" xml:space="preserve">
     <value>Equalizer</value>
@@ -473,22 +473,22 @@
     <value>Zufallswiedergabe</value>
   </data>
   <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
-    <value>Toast Library Befehle</value>
+    <value>Toast Bibliotheksbefehle</value>
   </data>
   <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
     <value>Funktionieren nur, wenn ein Song ausgewählt ist.</value>
   </data>
   <data name="volDownCmd.Text" xml:space="preserve">
-    <value>leiser</value>
+    <value>Leiser</value>
   </data>
   <data name="volUpCmd.Text" xml:space="preserve">
-    <value>lauter</value>
+    <value>Lauter</value>
   </data>
   <data name="contributeCodeTxt.Text" xml:space="preserve">
-    <value>Contribute Code</value>
+    <value>Steuere dein Code dabei</value>
   </data>
   <data name="contributeSettingsText" xml:space="preserve">
-    <value>mitwirken</value>
+    <value>Mitwirken</value>
   </data>
   <data name="helpTranslateTxt.Text" xml:space="preserve">
     <value>Helfe bei der Übersetzung</value>
@@ -499,7 +499,7 @@
     <comment>!!!NEW!!!</comment>
   </data>
   <data name="donatePatreonTxt.Text" xml:space="preserve">
-    <value>Spenden via Patreon</value>
+    <value>Spenden über Patreon</value>
   </data>
   <data name="crossfadeSwitch.Header" xml:space="preserve">
     <value>Crossfade beim Songwechsel</value>
@@ -525,7 +525,7 @@
     <value>Senden</value>
   </data>
   <data name="backgroundOverlayHelpText.Text" xml:space="preserve">
-    <value>This is the overlay color of album art on the player background. Ein Neustart wird benötigt um diese Änderungen wirksam zu machen.</value>
+    <value>Dies ist die Überlagerungsfarbe von Albumcover auf dem Hintergrund des Musik-Player. Ein Neustart wird benötigt um diese Änderungen wirksam zu machen.</value>
   </data>
   <data name="backgroundOverlayHeader.Text" xml:space="preserve">
     <value>Hintergrundfarbe des Unschärfe-Effekts:</value>
@@ -534,7 +534,7 @@
     <value>Anpassung</value>
   </data>
   <data name="indebtedTB.Text" xml:space="preserve">
-    <value>BreadPlayer is indebted to these great people for their dedication and support.</value>
+    <value>BreadPlayer ist diesen großartigen Menschen für ihren Einsatz und ihre Unterstützung zu Dank verpflichtet.</value>
   </data>
   <data name="shuffleAllRun.Text" xml:space="preserve">
     <value>Zufallswiedergabe</value>
@@ -552,7 +552,7 @@
     <value>Playlists</value>
   </data>
   <data name="donationTipTB.Text" xml:space="preserve">
-    <value>Unterstütze mich finanziell mit Spenden auf Patreon und werde zu einem Patron. Patrons werden coole extras erhalten, wie Zugang zu frühen Beta-Versionen, die Möglichkeit über Ideen abzustimmen und der Zugang zu allen Beiträgen auf meiner Patreon-Seite.</value>
+    <value>Unterstütze mich finanziell mit Spenden auf Patreon und werde zu einem Patron. Patronen werden coole extras erhalten, wie Zugang zu frühen Beta-Versionen, die Möglichkeit über Ideen abzustimmen und der Zugang zu allen Beiträgen auf meiner Patreon-Seite.</value>
   </data>
   <data name="patronBtn.Content" xml:space="preserve">
     <value>Auf Patreon unterstützen</value>
@@ -579,7 +579,7 @@
     <value>Gerät Buffer-Größe:</value>
   </data>
   <data name="deviceBufferSizeHelpText.Text" xml:space="preserve">
-    <value>Erhöhe den Wert falls die Wiedergabe nicht flüssig läuft. Neustart ist erforderlich damit Änderungen wirksam werden.</value>
+    <value>Erhöhe den Wert falls die Wiedergabe nicht flüssig läuft. Neustart ist erforderlich damit diese Änderung wirksam wird.</value>
   </data>
   <data name="songNotificationsCheckBox.Content" xml:space="preserve">
     <value>Zeige folgende Songs als Benachrichtigung</value>
@@ -642,7 +642,7 @@
     <value>Künstler Informationen</value>
   </data>
   <data name="bakersInfoCB.Header" xml:space="preserve">
-    <value>Choose no. of artist(s) to fetch info for:</value>
+    <value>Wähle die Künstler, für die du Informationen suchen möchtest:</value>
   </data>
   <data name="lyricsTB.Text" xml:space="preserve">
     <value>Songtexte</value>
