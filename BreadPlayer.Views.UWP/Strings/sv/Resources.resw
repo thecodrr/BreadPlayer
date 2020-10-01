@@ -1,0 +1,659 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aboutSettingsText" xml:space="preserve">
+    <value>Om</value>
+  </data>
+  <data name="noToastsTB.Text" xml:space="preserve">
+    <value>Det finns inga mackor i din samling.</value>
+  </data>
+  <data name="importToastsTB.Text" xml:space="preserve">
+    <value>Klicka här för att importera några.</value>
+  </data>
+  <data name="albumsHeader.Text" xml:space="preserve">
+    <value>Bröd</value>
+  </data>
+  <data name="appearenceHeader.Text" xml:space="preserve">
+    <value>Utseende</value>
+  </data>
+  <data name="backBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gå tillbaka till listan över mackor</value>
+  </data>
+  <data name="suggestionRB.Content" xml:space="preserve">
+    <value>Förslag</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="questionRB.Content" xml:space="preserve">
+    <value>Fråga</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="kudosRB.Content" xml:space="preserve">
+    <value>Beröm</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="changeAccentCheckBox.Content" xml:space="preserve">
+    <value>Byt accentfärg med albumomslagen</value>
+  </data>
+  <data name="changeAccentHelpText.Text" xml:space="preserve">
+    <value>Den här inställningen gör att spelaren automatiskt anpassar accentfärgen baserat på den nuvarande låtens albumomslag.</value>
+  </data>
+  <data name="changeAlbumArtMenuItem.Text" xml:space="preserve">
+    <value>Byt albumomslag</value>
+  </data>
+  <data name="contactMeTB.Text" xml:space="preserve">
+    <value>Kontakta mig:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="contributorsHeader.Text" xml:space="preserve">
+    <value>Bidragare</value>
+  </data>
+  <data name="creditsHeader.Text" xml:space="preserve">
+    <value>Tack till</value>
+  </data>
+  <data name="deleteFromPlaylistMenuItem.Text" xml:space="preserve">
+    <value>Ta bort från spellistan</value>
+  </data>
+  <data name="deletePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Ta bort spellistan</value>
+  </data>
+  <data name="disableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Inaktivera multival</value>
+  </data>
+  <data name="enableBlurCheckBox.Content" xml:space="preserve">
+    <value>Aktivera oskärpa</value>
+  </data>
+  <data name="enableBlurHelpText.Text" xml:space="preserve">
+    <value>Oskärpa är prestanda tungt och rekommenderas inte för low-end-enheter. Vänligen använd med försiktighet.</value>
+  </data>
+  <data name="enableEqToggleSwitch.OffContent" xml:space="preserve">
+    <value>Equalizer av</value>
+  </data>
+  <data name="enableEqToggleSwitch.OnContent" xml:space="preserve">
+    <value>Equalizer på</value>
+  </data>
+  <data name="enableMultiSelectMenuItem.Text" xml:space="preserve">
+    <value>Aktivera multival</value>
+  </data>
+  <data name="facebookBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicka är för att visa vår facebook sida.</value>
+  </data>
+  <data name="favoritesMenuItem.Label" xml:space="preserve">
+    <value>Favorit mackor</value>
+  </data>
+  <data name="favoritesMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigera till dina favorit mackor.</value>
+  </data>
+  <data name="githubBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicka här för att visa vår GitHub sida.</value>
+  </data>
+  <data name="importFolderTB.Text" xml:space="preserve">
+    <value>Importera mapp</value>
+  </data>
+  <data name="importPlaylistTB.Text" xml:space="preserve">
+    <value>Importera spellistor</value>
+  </data>
+  <data name="newPlaylistTB.Text" xml:space="preserve">
+    <value>Ny spellista</value>
+  </data>
+  <data name="lastfmCredit.Text" xml:space="preserve">
+    <value>Last.fm för artist &amp;amp; album info.</value>
+  </data>
+  <data name="lastfmLoginBtn.Content" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="lastfmLoginBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Logga in på ditt Last.fm konto</value>
+  </data>
+  <data name="lastfmPasswordTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Skriv ditt Last.fm lösenord här...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmPasswordTextBlock.Header" xml:space="preserve">
+    <value>Lösenord:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Skriv ditt Last.fm användarnamn här...</value>
+    <comment>(Respect the ellipsis at the end.)</comment>
+  </data>
+  <data name="lastfmUsernameTextBlock.Header" xml:space="preserve">
+    <value>Användarnamn:</value>
+    <comment>(Do not omit the semicolon at the end.)</comment>
+  </data>
+  <data name="leaveReviewBtn.Content" xml:space="preserve">
+    <value>Lämna en recension</value>
+  </data>
+  <data name="toastsPivot.Header" xml:space="preserve">
+    <value>Mackor</value>
+  </data>
+  <data name="licenseHeader.Text" xml:space="preserve">
+    <value>Licens</value>
+  </data>
+  <data name="licenseText.Text" xml:space="preserve">
+    <value>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</value>
+    <comment>Just Google for your language's version of GNU GPL License OR DONT CHANGE THIS AT ALL!!</comment>
+  </data>
+  <data name="listItemAddBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lägg till mackan i en spellista eller i kön till ugnen.</value>
+  </data>
+  <data name="listItemPlayBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Spela macka</value>
+  </data>
+  <data name="lockscreenHeader.Text" xml:space="preserve">
+    <value>Låsskärm</value>
+  </data>
+  <data name="mailBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicka för att maila oss.</value>
+  </data>
+  <data name="muteBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tysta volymen</value>
+  </data>
+  <data name="nowBakingMenuItem.Label" xml:space="preserve">
+    <value>Kö till ugnen</value>
+  </data>
+  <data name="nowBakingMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigera till mackor i kön till ugnen.</value>
+  </data>
+  <data name="openFileBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Öppna fil att spela</value>
+  </data>
+  <data name="openSongLocationMenuItem.Text" xml:space="preserve">
+    <value>Öppna platsen för mackan</value>
+  </data>
+  <data name="playlistMore.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Visa fler alternative.</value>
+  </data>
+  <data name="playlistPlayAllBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Spela allar mackor i den här spellistan</value>
+  </data>
+  <data name="playlistPlayAllTextBlock.Text" xml:space="preserve">
+    <value>Spela alla</value>
+    <comment>(Respect the whitespace at the beginning.)</comment>
+  </data>
+  <data name="playMenuItem.Text" xml:space="preserve">
+    <value>Spela</value>
+  </data>
+  <data name="preventScreenLockingCheckBox.Content" xml:space="preserve">
+    <value>Förhindra skärmen från att låsas.</value>
+  </data>
+  <data name="preventScreenLockingFurtherInfoText.Text" xml:space="preserve">
+    <value>Det här alternativet drar extremt mycket batteri, och kommer därför inte sparas mellan sessioner.</value>
+  </data>
+  <data name="preventScreenLockingInfoText.Text" xml:space="preserve">
+    <value>Det här alternativet förhindrar att OSet låster skärmen efter utsatt tid.</value>
+  </data>
+  <data name="propertiesMenuItem.Text" xml:space="preserve">
+    <value>Egenskaper</value>
+  </data>
+  <data name="musicHistoryMenuItem.Label" xml:space="preserve">
+    <value>Mack historik</value>
+  </data>
+  <data name="musicHistoryMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigera till din mack historik.</value>
+  </data>
+  <data name="redditBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicka här för att visa vår reddit profil.</value>
+  </data>
+  <data name="relocateSongMenuItem.Text" xml:space="preserve">
+    <value>Flytta mackan</value>
+  </data>
+  <data name="renamePlaylistMenuItem.Text" xml:space="preserve">
+    <value>Byt namn på spellistan.</value>
+  </data>
+  <data name="replaceLockscreenCheckBox.Content" xml:space="preserve">
+    <value>Ersätt låsskärmens bakgrund med albumomslag.</value>
+  </data>
+  <data name="replaceLockscreenFurtherInfoText.Text" xml:space="preserve">
+    <value>Din låsskärms bakgrund kommer att automatiskt återställas när appen stängs.</value>
+  </data>
+  <data name="replaceLockscreenInfoText.Text" xml:space="preserve">
+    <value>Det här alternativet kommer att ersätta låsskärmens bakgrund med den spelande låtens albumomslag.</value>
+  </data>
+  <data name="reportIssueBtn.Content" xml:space="preserve">
+    <value>Rapportera ett fel.</value>
+  </data>
+  <data name="requestFeatureBtn.Content" xml:space="preserve">
+    <value>Begär en funktion.</value>
+  </data>
+  <data name="resetEverythingBtn.Content" xml:space="preserve">
+    <value>Återställ allt</value>
+  </data>
+  <data name="resetEverythingHelpText.Text" xml:space="preserve">
+    <value>Det här kommer att återställa ditt bibliotek, spellistor, inställningar, historik m.m.</value>
+  </data>
+  <data name="resetHeader.Text" xml:space="preserve">
+    <value>Återställ BreadPlayer</value>
+  </data>
+  <data name="sendFeedbackBtn.Content" xml:space="preserve">
+    <value>Skicka feedback</value>
+  </data>
+  <data name="settingsMenuItem.Label" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="settingsMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigera till din BreadPlayers inställningar.</value>
+  </data>
+  <data name="showEqualizerBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Visa equalizern</value>
+  </data>
+  <data name="showMoreBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Visa fler alternative</value>
+  </data>
+  <data name="shuffleBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Blanda</value>
+  </data>
+  <data name="songsHeader.Text" xml:space="preserve">
+    <value>Mackor</value>
+  </data>
+  <data name="stopPlayingAfterMenuItem.Text" xml:space="preserve">
+    <value>Sluta uppspelningen efter den här mackan</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OffContent" xml:space="preserve">
+    <value>Mörkt</value>
+  </data>
+  <data name="themeChangeToggleSwitch.OnContent" xml:space="preserve">
+    <value>Ljust</value>
+  </data>
+  <data name="themeHelpText.Text" xml:space="preserve">
+    <value>Temabyte kräver omstart.</value>
+  </data>
+  <data name="themeText.Text" xml:space="preserve">
+    <value>Tema:</value>
+    <comment>(Do not omit the semi colon here.)</comment>
+  </data>
+  <data name="yourMusicMenuItem.Label" xml:space="preserve">
+    <value>Macksamling</value>
+  </data>
+  <data name="yourMusicMenuItem.Tooltip" xml:space="preserve">
+    <value>Navigera till din macksamling.</value>
+  </data>
+  <data name="twitterBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Klicka här för att visa vår twitter profil.</value>
+  </data>
+  <data name="version.Text" xml:space="preserve">
+    <value>v2.8.0-beta</value>
+    <comment>represents current version of Bread Player</comment>
+  </data>
+  <data name="versionHeader.Text" xml:space="preserve">
+    <value>Version</value>
+    <comment>represents the version header</comment>
+  </data>
+  <data name="volumeBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Volym</value>
+  </data>
+  <data name="bakerInfoPivot.Header" xml:space="preserve">
+    <value>Bagarens biografi</value>
+  </data>
+  <data name="lyricsPivot.Header" xml:space="preserve">
+    <value>Låttext</value>
+  </data>
+  <data name="nowPlayingPivot.Header" xml:space="preserve">
+    <value>I ugnen</value>
+  </data>
+  <data name="addToFavCmd.Text" xml:space="preserve">
+    <value>Lägg till i favoriter</value>
+  </data>
+  <data name="basicCommandsHeader.Text" xml:space="preserve">
+    <value>Grundläggande kommandon</value>
+  </data>
+  <data name="basicCommandsInfo.Text" xml:space="preserve">
+    <value>Dessa kommandon fungerar överallt.</value>
+  </data>
+  <data name="commandsHeader.Text" xml:space="preserve">
+    <value>Kommandon</value>
+  </data>
+  <data name="contactSettingsText" xml:space="preserve">
+    <value>Kontakt</value>
+  </data>
+  <data name="deleteSongCmd.Text" xml:space="preserve">
+    <value>Ta bort mackan</value>
+  </data>
+  <data name="helpfulLinksHeader.Text" xml:space="preserve">
+    <value>Hjälpsamma länkar</value>
+  </data>
+  <data name="keyBindingsHeader.Text" xml:space="preserve">
+    <value>Kortkommandon</value>
+  </data>
+  <data name="keyBindingsPivot.Header" xml:space="preserve">
+    <value>Kortkommandon</value>
+  </data>
+  <data name="muteCmd.Text" xml:space="preserve">
+    <value>Tysta</value>
+  </data>
+  <data name="nextCmd.Text" xml:space="preserve">
+    <value>Nästa</value>
+  </data>
+  <data name="openFileCmd.Text" xml:space="preserve">
+    <value>Öppna fil</value>
+  </data>
+  <data name="playPauseCmd.Text" xml:space="preserve">
+    <value>Spela/Pausa</value>
+  </data>
+  <data name="playSongCmd.Text" xml:space="preserve">
+    <value>Spela mackan</value>
+  </data>
+  <data name="prevCmd.Text" xml:space="preserve">
+    <value>Föregående</value>
+  </data>
+  <data name="repeatCmd.Text" xml:space="preserve">
+    <value>Upprepa</value>
+  </data>
+  <data name="seekBackwardCmd.Text" xml:space="preserve">
+    <value>Sök bakåt</value>
+  </data>
+  <data name="seekForwardCmd.Text" xml:space="preserve">
+    <value>Sök frammåt</value>
+  </data>
+  <data name="showEQCmd.Text" xml:space="preserve">
+    <value>Visa equalizern</value>
+  </data>
+  <data name="showPropsCmd.Text" xml:space="preserve">
+    <value>Visa egenskaper</value>
+  </data>
+  <data name="showTagsCmd.Text" xml:space="preserve">
+    <value>Visa taggar</value>
+  </data>
+  <data name="shuffleCmd.Text" xml:space="preserve">
+    <value>Blanda</value>
+  </data>
+  <data name="toastLibraryCmdsHeader.Text" xml:space="preserve">
+    <value>Mackbibliotek-kommandon</value>
+  </data>
+  <data name="toastLibraryCmdsInfoText.Text" xml:space="preserve">
+    <value>De här kommandonen fungerar endast när en macka är i fokus.</value>
+  </data>
+  <data name="volDownCmd.Text" xml:space="preserve">
+    <value>Sänk volymen</value>
+  </data>
+  <data name="volUpCmd.Text" xml:space="preserve">
+    <value>Höj volymen</value>
+  </data>
+  <data name="contributeCodeTxt.Text" xml:space="preserve">
+    <value>Bidrag med kod</value>
+  </data>
+  <data name="contributeSettingsText" xml:space="preserve">
+    <value>Bidrag</value>
+  </data>
+  <data name="helpTranslateTxt.Text" xml:space="preserve">
+    <value>Bidrag med översättningar</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="testForUsTxt.Text" xml:space="preserve">
+    <value>Hjälp oss avlusa</value>
+    <comment>!!!NEW!!!</comment>
+  </data>
+  <data name="donatePatreonTxt.Text" xml:space="preserve">
+    <value>Donera via Patreon</value>
+  </data>
+  <data name="crossfadeSwitch.Header" xml:space="preserve">
+    <value>Cross-fade mellan låtar</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="generalHeader.Text" xml:space="preserve">
+    <value>Allmänt</value>
+    <comment>**NEW**</comment>
+  </data>
+  <data name="watchAnAdMenuItem.Label" xml:space="preserve">
+    <value>Donera</value>
+  </data>
+  <data name="watchAnAdMenuItem.Tooltip" xml:space="preserve">
+    <value>Knacka för att se sätt att donera.</value>
+  </data>
+  <data name="bugReportRB.Content" xml:space="preserve">
+    <value>Rapportera buggar</value>
+  </data>
+  <data name="otherRB.Content" xml:space="preserve">
+    <value>Annat</value>
+  </data>
+  <data name="sendBtn.Content" xml:space="preserve">
+    <value>Skicka</value>
+  </data>
+  <data name="backgroundOverlayHelpText.Text" xml:space="preserve">
+    <value>Det här är färgen som läggs över albumomslaget i spelarens bakgrund. Omstart krävs för full effekt.</value>
+  </data>
+  <data name="backgroundOverlayHeader.Text" xml:space="preserve">
+    <value>Färg för oskärpa i bakgrunden:</value>
+  </data>
+  <data name="personlizationSettingsText" xml:space="preserve">
+    <value>Anpassning</value>
+  </data>
+  <data name="indebtedTB.Text" xml:space="preserve">
+    <value>BreadPlayer står i skulld till dessa fantastiska människor för deras engagemang och bidrag.</value>
+  </data>
+  <data name="shuffleAllRun.Text" xml:space="preserve">
+    <value>Blanda alla</value>
+  </data>
+  <data name="lastfmLogoutBtn.Content" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="lastfmLogoutBtn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Logga ut från ditt Last.fm konto</value>
+  </data>
+  <data name="breadsHeader" xml:space="preserve">
+    <value>Bröd</value>
+  </data>
+  <data name="playlistsHeader" xml:space="preserve">
+    <value>Spellistor</value>
+  </data>
+  <data name="donationTipTB.Text" xml:space="preserve">
+    <value>Hjälp mig finnansiskt genom att donera på Patreon. Patron-donatorer får grymma bonusar, så som tidig beta, rösträtt på förslag och tillgång till mina inlägg på Pateron.</value>
+  </data>
+  <data name="patronBtn.Content" xml:space="preserve">
+    <value>Donnera på Pateron</value>
+  </data>
+  <data name="translationTipTB.Text" xml:space="preserve">
+    <value>Hjälp mig att översätta appen till ditt modersmål och gör BreadPlayer lätt för dina landsmän att använda. Alla översättare får med sitt namn i listan över bidragare.</value>
+  </data>
+  <data name="translatorBtn.Content" xml:space="preserve">
+    <value>Bli en översättare</value>
+  </data>
+  <data name="becomeACoderBtn.Content" xml:space="preserve">
+    <value>Bli en programmerare</value>
+  </data>
+  <data name="codeContributionTipTB.Text" xml:space="preserve">
+    <value>Om du är en utvecklare, skulle jag oerhört uppskatta din hjälp. Ingen anledning att oroa sig, du kommer att få min hjälp hela vägen. Alla utvecklare får sina namn i listan över bidragare.</value>
+  </data>
+  <data name="testerBtn.Content" xml:space="preserve">
+    <value>Bli en BetaTester</value>
+  </data>
+  <data name="testingTipTB.Text" xml:space="preserve">
+    <value>Bli en testare och hjälp oss avlusa. Avlusning är enkelt; lek runt i appen och rapportera alla buggar du hittar.</value>
+  </data>
+  <data name="deviceBufferSizeTB.Text" xml:space="preserve">
+    <value>Enhetens bufferstorlek:</value>
+  </data>
+  <data name="deviceBufferSizeHelpText.Text" xml:space="preserve">
+    <value>Öka det här värdet om du upplever avbrott i ljudet Omstart krävs för full effekt.</value>
+  </data>
+  <data name="songNotificationsCheckBox.Content" xml:space="preserve">
+    <value>Visa ett meddelande för kommande låtar</value>
+  </data>
+  <data name="tileNotificationsCheckBox.Content" xml:space="preserve">
+    <value>Visa panel meddelanden</value>
+  </data>
+  <data name="keyboardSettingsText" xml:space="preserve">
+    <value>Tangentbordsgenvägar</value>
+  </data>
+  <data name="coreSettingsText" xml:space="preserve">
+    <value>Allmänt</value>
+  </data>
+  <data name="audioSettingsText" xml:space="preserve">
+    <value>Ljud</value>
+  </data>
+  <data name="accountsSettingsText" xml:space="preserve">
+    <value>Konton</value>
+  </data>
+  <data name="accountsSettingsSubtitle" xml:space="preserve">
+    <value>Last.fm, låttext</value>
+  </data>
+  <data name="personalizationSettingsSubtitle" xml:space="preserve">
+    <value>Bakgrund, typsnitt, tema</value>
+  </data>
+  <data name="coreSettingsSubtitle" xml:space="preserve">
+    <value>Återställning, meddelanden, låsskärm</value>
+  </data>
+  <data name="audioSettingsSubtitle" xml:space="preserve">
+    <value>Equalizer, volym, cross-fade</value>
+  </data>
+  <data name="keyboardSettingsSubtitle" xml:space="preserve">
+    <value>Tangentbordsbindningar</value>
+  </data>
+  <data name="contactSettingsSubtitle" xml:space="preserve">
+    <value>Facebook, email, github</value>
+  </data>
+  <data name="aboutSettingsSubtitle" xml:space="preserve">
+    <value>Versionsinformation, licens, tack till</value>
+  </data>
+  <data name="contributeSettingsSubtitle" xml:space="preserve">
+    <value>Översättning, avlusning, programmering</value>
+  </data>
+  <data name="recentlyPlayedPivot.Header" xml:space="preserve">
+    <value>Nyligen spelade</value>
+  </data>
+  <data name="mostPlayedPivot.Header" xml:space="preserve">
+    <value>Mest spelade</value>
+  </data>
+  <data name="recentlyAddedPivot.Header" xml:space="preserve">
+    <value>Nyligen tillagda</value>
+  </data>
+  <data name="bakersHeader.Text" xml:space="preserve">
+    <value>Bagare</value>
+  </data>
+  <data name="showAllTB.Text" xml:space="preserve">
+    <value>Visa alla</value>
+  </data>
+  <data name="bakersInfoTB.Text" xml:space="preserve">
+    <value>Bagarens information</value>
+  </data>
+  <data name="bakersInfoCB.Header" xml:space="preserve">
+    <value>Välj antal artister att hämta info för:</value>
+  </data>
+  <data name="lyricsTB.Text" xml:space="preserve">
+    <value>Låttext</value>
+  </data>
+  <data name="lyricTypeCB.Header" xml:space="preserve">
+    <value>Välj låttexttyp:</value>
+  </data>
+  <data name="lyricSourceCB.Header" xml:space="preserve">
+    <value>Välj källa för låttexter:</value>
+  </data>
+  <data name="notificationsHeader.Text" xml:space="preserve">
+    <value>Meddelanden</value>
+  </data>
+</root>
